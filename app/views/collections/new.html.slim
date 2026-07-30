@@ -1,0 +1,57 @@
+- content_for(:title, t("desks.new"))
+
+.py-6.space-y-5
+  header.space-y-1
+    = render("shared/page_help", key: "desks", title: t("desks.new"))
+
+  nav.flex.flex-wrap.gap-1.text-sm
+    - CollectionsController::TABS.each do |tab|
+      = link_to t("desks.tabs.#{tab}"), new_desk_path(tab: tab),
+        class: class_names("rounded-full px-3 py-1 font-medium", @tab == tab ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+
+  - case @tab
+  - when "text"
+    = form_with url: desk_preview_path, method: :post, multipart: true, data: {turbo: false}, class: "space-y-4" do |form|
+      div.space-y-1
+        = form.label :name, t("desks.name_label"), class: "text-sm font-medium"
+        = form.text_field :name, placeholder: t("desks.name_placeholder"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+
+      div.space-y-1
+        = form.label :text, t("desks.paste_label"), class: "text-sm font-medium"
+        = form.text_area :text, rows: 8, dir: "auto", lang: "zh-TW", placeholder: t("desks.paste_placeholder"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-base"
+        p.text-xs.text-muted-foreground = t("desks.paste_hint")
+
+      div.space-y-1
+        = form.label :file, t("desks.file_label"), class: "text-sm font-medium"
+        = form.file_field :file, accept: ".txt,.csv,.md,text/plain", class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+
+      = form.submit t("desks.preview"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+
+  - when "song"
+    p.text-sm.text-muted-foreground = t("desks.song_hint")
+
+    = form_with url: new_desk_path, method: :get, class: "flex flex-wrap items-center gap-2" do |form|
+      = hidden_field_tag :tab, "song"
+      = form.search_field :q, value: @query, placeholder: t("songs.search_placeholder"), lang: "zh-TW",
+        class: "min-w-48 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
+      = form.submit t("songs.search"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+
+    - if @songs.any?
+      .grid.gap-2
+        - @songs.each do |row|
+          .flex.items-center.justify-between.gap-3.rounded-xl.border.border-border.bg-card.px-4.py-3
+            .min-w-0
+              .truncate.font-semibold lang="zh-TW" = row["track"]
+              .truncate.text-sm.text-muted-foreground
+                = row["artist"]
+                - if row["album"].present?
+                  span.mx-1 ·
+                  = row["album"]
+            = button_to t("desks.song_words"), desk_song_path, params: {lrclib_id: row["id"], q: @query}, form: {class: "shrink-0", data: {turbo: false}}, class: "rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+
+    p.text-xs.leading-relaxed.text-muted-foreground = t("desks.song_note")
+
+  - else
+    .rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.space-y-2
+      p.text-sm.font-medium = t("desks.photo_soon")
+      p.mx-auto.max-w-md.text-sm.text-muted-foreground = t("desks.photo_hint")

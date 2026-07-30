@@ -1,0 +1,10 @@
+- content_for(:title, @text)
+
+.py-6.space-y-6
+  = link_to characters_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("characters.back")
+
+  .mx-auto.max-w-md.rounded-3xl.border.border-dashed.border-border.px-6.py-16.text-center
+    .text-6xl lang="zh-TW" = @text
+    p.mt-4.text-sm.text-muted-foreground = t("characters.not_in_dictionary")

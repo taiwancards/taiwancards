@@ -1,0 +1,14 @@
+.mx-auto.max-w-md.rounded-3xl.border.border-dashed.border-border.px-6.py-14.text-center.space-y-4
+  div
+    p.text-lg.font-medium = t("study.done_title")
+    p.mt-1.text-sm.text-muted-foreground = t("study.done_body")
+
+  - if (nudge = study_next_suggestion)
+    .rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+      p.text-sm.font-medium = t("study.next_heading")
+      p.text-sm.text-muted-foreground = nudge[:body]
+      = link_to nudge[:label], nudge[:path],
+        class: "inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+
+  = link_to t("study.back_to_desk"), desk_path,
+    class: "inline-block text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"

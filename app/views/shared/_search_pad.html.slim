@@ -1,0 +1,66 @@
+- drawable = SharedAssets.carried?("json", HandwritingController::DATA)
+
+.hidden.rounded-xl.border.border-border.bg-background.shadow-xl[
+  data-search-pad-target="panel"
+  class="p-1.5 xl:w-72 max-xl:fixed max-xl:bottom-2 max-md:bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] max-xl:left-1/2 max-xl:z-50 max-xl:-translate-x-1/2 max-xl:w-[min(22rem,calc(100vw-1rem))]" ]
+
+  .flex.items-center.border-b.border-border class="gap-0.5 pb-1.5"
+    - modes = [["zhuyin", "ㄅ"], ["pinyin", "á"]]
+    - modes << ["draw", "✎"] if drawable
+    - modes.each_with_index do |(mode, glyph), index|
+      button.flex-1.rounded-md.text-xs.font-medium.transition-colors[
+        type="button" data-action="search-pad#pick" data-mode=mode
+        data-search-pad-target="tab" aria-pressed=(index.zero?).to_s
+        class="px-1 py-1 aria-pressed:bg-muted aria-pressed:text-foreground text-muted-foreground hover:bg-muted" ]
+        span.mr-1 lang="zh-TW" = glyph
+        = t("search.pad.#{mode}")
+
+  .pt-1.5 data-search-pad-target="pane" data-mode="zhuyin"
+    - Huayu::ZhuyinKeyboard.layout.each do |row|
+      .flex.justify-center class="gap-0.5 mb-0.5"
+        - row.each do |key|
+          - symbol = key[:symbol] || key[:tone]
+          - next if symbol.blank?
+          button.min-w-0.rounded.border.border-border.leading-none[
+            type="button" lang="zh-TW" data-action="search-pad#insert" data-symbol=symbol
+            class="h-7 flex-1 basis-0 text-xs hover:bg-muted" ]
+            = symbol
+
+  .hidden.pt-1.5 data-search-pad-target="pane" data-mode="pinyin"
+    - [%w[a ā á ǎ à], %w[e ē é ě è], %w[i ī í ǐ ì], %w[o ō ó ǒ ò], %w[u ū ú ǔ ù], %w[ü ǖ ǘ ǚ ǜ]].each do |row|
+      .flex.justify-center class="gap-0.5 mb-0.5"
+        - row.each_with_index do |mark, column|
+          button.min-w-0.rounded.border.leading-none[
+            type="button" data-action="search-pad#insert" data-symbol=mark
+            class=class_names("h-7 flex-1 basis-0 text-xs hover:bg-muted", column.zero? ? "border-transparent bg-muted font-semibold" : "border-border") ]
+            = mark
+    p.mt-1.5.text-center.text-2xs.text-muted-foreground = t("search.pad.pinyin_hint")
+
+  - if drawable
+    .hidden.pt-1.5[
+      data-search-pad-target="pane" data-mode="draw"
+      data-controller="handwriting"
+      data-handwriting-url-value=SharedAssets.url_for("json", HandwritingController::DATA)
+      data-handwriting-emit-value="true"
+      data-action="handwriting:pick->search-pad#accept" ]
+      canvas.mx-auto.aspect-square.w-full.touch-none.rounded-lg.border.border-border.bg-card[
+        class="max-w-[10rem]" data-handwriting-target="canvas" ]
+      .mt-1.5.flex.min-h-9.flex-wrap.items-center.justify-center class="gap-1" data-handwriting-target="results"
+      .mt-1.flex.items-center.justify-between.gap-2
+        span.text-2xs.text-muted-foreground[
+          data-handwriting-target="status" data-loading=t("handwriting.loading") data-failed=t("handwriting.failed") ]
+        .flex class="gap-0.5"
+          button.rounded.border.border-border.text-2xs[
+            type="button" data-action="handwriting#undo" class="px-1.5 py-1 hover:bg-muted" ]
+            = t("handwriting.undo")
+          button.rounded.border.border-border.text-2xs[
+            type="button" data-action="handwriting#clear" class="px-1.5 py-1 hover:bg-muted" ]
+            = t("handwriting.clear")
+
+  .mt-1.5.flex.items-center.justify-between.gap-2.border-t.border-border class="pt-1.5"
+    button.rounded.border.border-border.text-2xs.text-muted-foreground[
+      type="button" data-action="search-pad#backspace" class="px-2 py-1 hover:bg-muted" ]
+      = t("search.backspace")
+    button.rounded.bg-primary.text-2xs.font-semibold.text-primary-foreground[
+      type="button" data-action="search-pad#close" class="px-2.5 py-1 hover:opacity-90" ]
+      = t("search.pad.done")

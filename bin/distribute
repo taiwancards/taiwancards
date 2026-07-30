@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+. bin/_env.sh
+load_env
+
+ARCHIVE_DIRS=(
+  dict_and_corpora
+  media/pronunciation
+  data/pronunciation/tokens
+  data/pronunciation/tokens_mainland
+  data/corpora
+)
+
+MEDIA_DIRS=(moe_audio moe_audio_words cns_voice)
+IMMUTABLE="public, max-age=31536000, immutable"
+REMOTE_ROOT=/var/data
+
+UNPACKED_FROM_XZ=(dict_and_corpora/corpora/moedict/dict-revised.json)
+
+usage() {
+  cat << 'TEXT'
+usage: bin/distribute [archive|media|assets|disk|all|pull|status] [--dry-run]
+
+  archive  source corpora and the speech corpus      -> private R2 bucket
+  media    MOE and CNS11643 audio clips              -> public R2 bucket behind the CDN
+  assets   web fonts and browser data files          -> public assets bucket behind the CDN
+  disk     dictionaries, templates, restricted audio -> /var/data on Render
+  all      all four, in that order
+
+  pull     restore the archive from R2 onto this machine
+  status   how much each bucket holds
+
+Every target is incremental: unchanged files are compared and skipped.
+TEXT
+  exit 64
+}
+
+need() {
+  for var in "$@"; do
+    [ -n "${!var:-}" ] || {
+      echo "distribute: $var is not set — see .env.dev" >&2
+      exit 1
+    }
+  done
+}
+
+r2() {
+  need R2_ENDPOINT R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY
+  export AWS_ACCESS_KEY_ID="$R2_ACCESS_KEY_ID"
+  export AWS_SECRET_ACCESS_KEY="$R2_SECRET_ACCESS_KEY"
+  export AWS_DEFAULT_REGION=auto
+  export AWS_REQUEST_CHECKSUM_CALCULATION=when_required
+  export AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
+  aws s3 "$@" --endpoint-url "$R2_ENDPOINT"
+}
+
+skip_args() {
+  local dir=$1 file
+  SKIP=()
+  for file in "${UNPACKED_FROM_XZ[@]}"; do
+    case "$file" in "$dir"/*) SKIP+=(--exclude "${file#"$dir"/}") ;; esac
+  done
+}
+
+do_archive() {
+  need R2_BUCKET
+  echo "== archive -> s3://$R2_BUCKET"
+  for dir in "${ARCHIVE_DIRS[@]}"; do
+    [ -d "$dir" ] || {
+      echo "   skip $dir (absent)"
+      continue
+    }
+    echo "   $dir"
+    skip_args "$dir"
+    r2 sync "$dir" "s3://$R2_BUCKET/$dir" --no-progress \
+      ${SKIP[@]+"${SKIP[@]}"} ${DRY[@]+"${DRY[@]}"}
+  done
+}
+
+do_assets() {
+  need R2_ASSETS_BUCKET
+  echo "== assets -> s3://$R2_ASSETS_BUCKET"
+
+  if [ -d storage/fonts ]; then
+    echo "   fonts"
+    r2 sync storage/fonts "s3://$R2_ASSETS_BUCKET/fonts" \
+      --content-type font/woff2 --cache-control "$IMMUTABLE" \
+      --exclude '*' --include '*.woff2' \
+      --no-progress ${DRY[@]+"${DRY[@]}"}
+  fi
+
+  if [ -d storage/json ]; then
+    echo "   json"
+    r2 sync storage/json "s3://$R2_ASSETS_BUCKET/json" \
+      --content-type application/json --cache-control "$IMMUTABLE" \
+      --exclude '*' --include '*.json' \
+      --no-progress ${DRY[@]+"${DRY[@]}"}
+  fi
+}
+
+media_type() {
+  case "$1" in
+  cns_voice) echo audio/mpeg ;;
+  *) echo audio/ogg ;;
+  esac
+}
+
+do_media() {
+  need R2_MEDIA_BUCKET
+  echo "== media -> s3://$R2_MEDIA_BUCKET"
+  for dir in "${MEDIA_DIRS[@]}"; do
+    local src="media/$dir/audio"
+    [ -d "$src" ] || {
+      echo "   skip $dir (absent)"
+      continue
+    }
+    echo "   $dir"
+    r2 sync "$src" "s3://$R2_MEDIA_BUCKET/$dir/audio" \
+      --content-type "$(media_type "$dir")" --cache-control "$IMMUTABLE" \
+      --no-progress ${DRY[@]+"${DRY[@]}"}
+  done
+}
+
+do_disk() {
+  echo "== disk -> $REMOTE_ROOT on Render"
+  if [ ${#DRY[@]} -gt 0 ]; then
+    DRY_RUN=1 bin/rebuild-data-render.sh
+  else
+    CONFIRM=yes bin/rebuild-data-render.sh
+  fi
+}
+
+[ $# -ge 1 ] || usage
+target="$1"
+shift
+DRY=()
+RSYNC_DRY=()
+if [ "${1:-}" = "--dry-run" ]; then
+  DRY=(--dryrun)
+  RSYNC_DRY=(--dry-run)
+fi
+
+do_pull() {
+  need R2_BUCKET
+  echo "== pull <- s3://$R2_BUCKET"
+  for dir in "${ARCHIVE_DIRS[@]}"; do
+    echo "   $dir"
+    mkdir -p "$dir"
+    r2 sync "s3://$R2_BUCKET/$dir" "$dir" --no-progress ${DRY[@]+"${DRY[@]}"}
+  done
+
+  [ ${#DRY[@]} -eq 0 ] || return 0
+
+  local file
+  for file in "${UNPACKED_FROM_XZ[@]}"; do
+    [ -f "$file" ] && continue
+    [ -f "$file.xz" ] || {
+      echo "   missing $file.xz; cannot restore $file" >&2
+      continue
+    }
+    echo "   unpacking $file.xz"
+    xz -dk "$file.xz"
+  done
+}
+
+do_status() {
+  need R2_BUCKET R2_MEDIA_BUCKET R2_ASSETS_BUCKET
+  for bucket in "$R2_BUCKET" "$R2_MEDIA_BUCKET" "$R2_ASSETS_BUCKET"; do
+    echo "== s3://$bucket"
+    r2 ls "s3://$bucket" --recursive --summarize | tail -2 | sed 's/^/   /'
+  done
+}
+
+case "$target" in
+archive) do_archive ;;
+media) do_media ;;
+assets) do_assets ;;
+disk) do_disk ;;
+pull) do_pull ;;
+status) do_status ;;
+all)
+  do_archive
+  do_media
+  do_assets
+  do_disk
+  ;;
+*) usage ;;
+esac

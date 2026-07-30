@@ -1,0 +1,114 @@
+- readings_label = lexeme.reading_set.map { |r| r["zhuyin"].presence || r["pinyin"] }.compact_blank.join(" · ")
+- front_hanzi = %w[recognition reading tone].include?(facet)
+- listening = facet == "listening"
+- clip = listening ? audio_for(lexeme) : nil
+- grade_button = "flex min-h-16 w-full items-center justify-center rounded-2xl border border-border px-2 py-3 text-center text-sm font-semibold transition-colors"
+
+.select-none data-controller="swipe-card"
+  = form_with url: study_review_path, method: :post, data: { swipe_card_target: "form", turbo_stream: true } do |form|
+    = form.hidden_field :lexeme_id, value: lexeme.id
+    = form.hidden_field :facet, value: facet
+    = form.hidden_field :session_id, value: session_id
+    = form.hidden_field :rating, value: "good", data: { swipe_card_target: "rating" }
+    = form.hidden_field :elapsed_ms, value: "", data: { swipe_card_target: "elapsed" }
+
+  .mx-auto class="max-w-3xl"
+    .grid.items-center.gap-3 class="grid-cols-[1fr_1.7fr_1fr]"
+      div.w-full class="col-start-2 row-start-1"
+        button[ type="button" data-action="swipe-card#rateEasy"
+          class="#{grade_button} text-violet-500 hover:border-violet-400 hover:bg-violet-500/10" ]
+          = t("study.grade.easy")
+
+      div.w-full class="col-start-1 row-start-2"
+        button[ type="button" data-action="swipe-card#rateAgain"
+          class="#{grade_button} text-red-500 hover:border-red-400 hover:bg-red-500/10" ]
+          = t("study.grade.again")
+
+      .relative class="col-start-2 row-start-2"
+        .pointer-events-none.absolute.left-4.top-4.z-10.rounded-lg.border-2.border-red-500.px-2.py-1.text-sm.font-bold.uppercase.text-red-500 style="opacity:0" data-swipe-card-target="againLabel"
+          = t("study.grade.again")
+        .pointer-events-none.absolute.right-4.top-4.z-10.rounded-lg.border-2.border-emerald-500.px-2.py-1.text-sm.font-bold.uppercase.text-emerald-600 style="opacity:0" data-swipe-card-target="goodLabel"
+          = t("study.grade.good")
+        .pointer-events-none.absolute.top-4.z-10.rounded-lg.border-2.border-violet-500.px-2.py-1.text-sm.font-bold.uppercase.text-violet-500 style="opacity:0;left:50%;transform:translateX(-50%)" data-swipe-card-target="easyLabel"
+          = t("study.grade.easy")
+        .pointer-events-none.absolute.bottom-4.z-10.rounded-lg.border-2.border-amber-500.px-2.py-1.text-sm.font-bold.uppercase.text-amber-500 style="opacity:0;left:50%;transform:translateX(-50%)" data-swipe-card-target="hardLabel"
+          = t("study.grade.hard")
+
+        .touch-none.cursor-pointer.rounded-3xl.border.border-border.bg-card.px-6.py-10.shadow-xl[
+          data-swipe-card-target="card"
+          data-action="pointerdown->swipe-card#start pointermove->swipe-card#move pointerup->swipe-card#end pointercancel->swipe-card#cancel click->swipe-card#flip" ]
+          .flex.flex-col.items-center.justify-center.gap-4.text-center style="min-height: 15rem"
+            .flex.items-center.gap-2.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground
+              = icon(facet_icon(facet), css: "size-4")
+              = t("study.ask.#{facet}")
+            - if listening
+              button.inline-flex.items-center.justify-center.rounded-full.border.border-border.p-5.text-muted-foreground[
+                type="button" data-no-swipe="" data-controller="audio"
+                data-audio-url-value=clip&.fetch(:url) data-audio-stop-ms-value=clip&.fetch(:stop_ms)
+                data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
+                aria-label=t("study.play") ]
+                = icon(:speaker, css: "size-10")
+            - elsif front_hanzi
+              .text-6xl.font-semibold lang="zh-TW" = lexeme.text
+            - elsif facet == "writing"
+              .text-3xl.font-medium = lexeme.meaning
+              - if readings_label.present?
+                .text-xl.text-muted-foreground = readings_label
+            - else
+              .text-3xl.font-medium = lexeme.meaning
+
+            .hidden.w-full.space-y-2 data-swipe-card-target="back"
+              hr.border-border
+              - if listening
+                .text-5xl.font-semibold lang="zh-TW" = lexeme.text
+                - if readings_label.present?
+                  .text-xl.font-medium lang="zh-TW" = readings_label
+                - if lexeme.meaning.present?
+                  .text-lg.text-muted-foreground = lexeme.meaning
+              - elsif front_hanzi
+                - if readings_label.present?
+                  .text-2xl.font-medium = readings_label
+                - if lexeme.meaning.present?
+                  .text-lg.text-muted-foreground = lexeme.meaning
+              - else
+                .text-5xl.font-semibold lang="zh-TW" = lexeme.text
+                - if readings_label.present?
+                  .text-xl.font-medium = readings_label
+              - if (audio = audio_for(lexeme))
+                button.mx-auto.inline-flex.items-center.justify-center.rounded-full.p-2.text-muted-foreground[
+                  type="button" data-no-swipe="" data-controller="audio" data-audio-url-value=audio[:url]
+                  data-audio-stop-ms-value=audio[:stop_ms]
+                  data-action="click->audio#play" class="hover:bg-muted hover:text-foreground" aria-label="audio" ]
+                  = icon(:speaker, css: "size-6")
+              - if facet == "tone"
+                .pt-1
+                  = link_to t("study.drill_tone"), pronunciation_path(lexeme_id: lexeme.id), data: { no_swipe: "" },
+                    class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+              - elsif facet == "writing"
+                .pt-1
+                  = link_to t("study.drill_writing"), writing_path(lexeme_id: lexeme.id), data: { no_swipe: "" },
+                    class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+              - elsif lexeme.character?
+                .pt-1
+                  = link_to t("study.open_entry"), character_path(lexeme.text), data: { no_swipe: "" },
+                    class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+
+      div.w-full class="col-start-3 row-start-2"
+        button[ type="button" data-action="swipe-card#rateGood"
+          class="#{grade_button} text-emerald-600 hover:border-emerald-400 hover:bg-emerald-500/10" ]
+          = t("study.grade.good")
+
+      div.w-full class="col-start-2 row-start-3"
+        button[ type="button" data-action="swipe-card#rateHard"
+          class="#{grade_button} text-amber-500 hover:border-amber-400 hover:bg-amber-500/10" ]
+          = t("study.grade.hard")
+
+  .mx-auto.mt-5.max-w-3xl.space-y-2.rounded-xl.border.border-border.p-4 class="bg-muted/30"
+    - {again: "text-red-500", hard: "text-amber-500", good: "text-emerald-600", easy: "text-violet-500"}.each do |key, color|
+      p.text-xs.leading-relaxed
+        span.font-semibold class=color = t("study.grade.#{key}")
+        span.text-muted-foreground
+          = " — "
+          = t("study.grade_help.#{key}")
+
+  p.mx-auto.mt-3.max-w-3xl.text-center.text-xs.text-muted-foreground = t("study.hint")

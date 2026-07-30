@@ -1,0 +1,40 @@
+- pattern = local_assigns.fetch(:pattern)
+- entries = local_assigns.fetch(:entries, [])
+
+article.rounded-2xl.border.border-border.p-4.space-y-2 class=("bg-muted/30" if pattern.staff?)
+  .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1
+    - if pattern.staff?
+      span.rounded-full.border.border-border.px-2.text-2xs.uppercase.tracking-wide.text-muted-foreground
+        = t("phrases.roles.staff")
+    p.text-lg.font-medium lang="zh-TW"
+      - pattern.parts.each do |literal, name|
+        = literal
+        - if name
+          span.rounded.px-1.text-primary class="bg-primary/10" = phrase_slot_label(name)
+    span.pinyin.text-sm.text-muted-foreground = pattern.pinyin
+
+  - if pattern.zhuyin.present?
+    p.text-2xs.text-muted-foreground lang="zh-TW" = pattern.zhuyin
+
+  p.text-sm = pattern.name(I18n.locale)
+
+  - if (note = pattern.note(I18n.locale)).present?
+    p.text-xs.text-muted-foreground = note
+
+  - if pattern.avoid.present?
+    p.text-xs.text-destructive
+      span.line-through lang="zh-TW" = pattern.avoid["wrong"]
+      span.mx-1 →
+      span.font-medium lang="zh-TW" = pattern.avoid["use"]
+      span.ml-2.text-muted-foreground = pattern.avoid[I18n.locale.to_s] || pattern.avoid["en"]
+
+  - if pattern.replies.any?
+    .flex.flex-wrap.items-baseline.gap-2
+      span.text-2xs.uppercase.tracking-wide.text-muted-foreground = t("phrases.replies")
+      - pattern.replies.each do |reply|
+        span.rounded-lg.border.border-border.px-2.py-0.5.text-sm lang="zh-TW" = reply
+
+  - if entries.any?
+    .flex.flex-wrap.gap-1
+      - entries.each do |entry|
+        = render("shared/word_chip", entry:)

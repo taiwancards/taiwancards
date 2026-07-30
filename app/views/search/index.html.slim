@@ -1,0 +1,40 @@
+- content_for(:title, t("search.title"))
+
+.py-6.space-y-5
+  = render("shared/page_help", key: "search", title: t("search.title"))
+
+  = render("fields", corpus: @corpus)
+
+  - if !@corpus.any_query?
+    p.rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("search.prompt")
+  - elsif @corpus.sentences?
+    = render("concordance", result: @concordance, corpus: @corpus)
+  - else
+    - if @compatibility&.any?
+      = render("compatibility", check: @compatibility)
+
+    - if @result.empty?
+      p.rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+        = t("search.empty", query: @corpus.fields.join(" "))
+    - else
+      p.text-sm.text-muted-foreground = t("search.found", count: @result.total)
+
+      .grid.gap-2 class="sm:grid-cols-2"
+        - @result.results.each do |entry|
+          - lexeme = entry.lexeme
+          - path = lexeme_search_path(lexeme)
+          .flex.min-w-0.items-stretch.gap-1
+            = link_to (path || search_path), class: "flex min-w-0 flex-1 items-center gap-3 rounded-xl border border-border bg-card px-3 transition-colors hover:border-primary/50 hover:bg-muted py-2.5" do
+              span.shrink-0.text-2xl.font-semibold lang="zh-TW" = lexeme.text
+              .min-w-0.flex-1
+                .flex.items-center.gap-2
+                  span.truncate.text-sm.font-medium = search_reading(lexeme, @corpus.pinyin.presence || @corpus.text)
+                  span.shrink-0.rounded.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground class="px-1.5 py-0.5" = lexeme_kind_label(lexeme)
+                - if lexeme.meaning.present?
+                  .truncate.text-sm.text-muted-foreground = lexeme.meaning
+            - if lexeme.word? || lexeme.character?
+              = render("shared/quick_add", lexeme:)
+
+      - base = ->(number) { search_path(request.query_parameters.merge(page: number)) }
+      = render("shared/pager", page: @result.page, pages: @result.pages, path: base)

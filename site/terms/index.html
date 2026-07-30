@@ -1,0 +1,70 @@
+<!-- BEGIN app/views/layouts/application.html.slim -->
+<!DOCTYPE html><html class="font-kai no-pinyin" lang="en"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport" /><!-- BEGIN app/views/shared/_meta.html.slim -->
+<title>Terms of Service · TaiwanCards</title><meta content="TaiwanCards is an ad-free flashcard app for learning Taiwanese Mandarin: traditional characters, zhuyin beside every reading, TOCFL levels, spaced repetition, and vocabulary lists built for daily life in Taiwan." name="description" /><meta content="TaiwanCards" name="application-name" /><meta content="TaiwanCards" name="apple-mobile-web-app-title" /><link href="https://taiwancards.app/terms" rel="canonical" /><meta content="TaiwanCards" property="og:site_name" /><meta content="TaiwanCards — Taiwanese Mandarin" property="og:title" /><meta content="Traditional characters, zhuyin, spaced repetition, dictionaries, pronunciation and TOCFL levels." property="og:description" /><meta content="website" property="og:type" /><meta content="https://taiwancards.app/terms" property="og:url" /><meta content="en_US" property="og:locale" /><meta content="https://taiwancards.app/og.png?v=3" property="og:image" /><meta content="1200" property="og:image:width" /><meta content="630" property="og:image:height" /><meta content="TaiwanCards — Taiwanese Mandarin" property="og:image:alt" /><meta content="summary_large_image" name="twitter:card" /><meta content="TaiwanCards — Taiwanese Mandarin" name="twitter:title" /><meta content="Traditional characters, zhuyin, spaced repetition, dictionaries, pronunciation and TOCFL levels." name="twitter:description" /><meta content="https://taiwancards.app/og.png?v=3" name="twitter:image" /><meta content="index, follow" name="robots" /><meta content="telephone=no" name="format-detection" /><!-- END app/views/shared/_meta.html.slim -->
+<meta content="yes" name="apple-mobile-web-app-capable" /><meta content="yes" name="mobile-web-app-capable" /><meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color" /><meta content="#0a0a0a" media="(prefers-color-scheme: dark)" name="theme-color" /><link href="/favicon.ico?v=6" rel="icon" sizes="16x16 32x32" /><link href="/icon.svg?v=6" rel="icon" type="image/svg+xml" /><link href="/apple-touch-icon.png?v=6" rel="apple-touch-icon" /><script>
+//<![CDATA[
+document.documentElement.classList.toggle("dark", localStorage.getItem("theme") === "dark");
+//]]>
+</script><link rel="stylesheet" href="/assets/fonts-0ce29cc7.css" data-turbo-track="reload" />
+<link rel="stylesheet" href="/assets/kai_faces-ee2de0fd.css" data-turbo-track="reload" />
+<link rel="stylesheet" href="/assets/tailwind-c059f3f5.css" data-turbo-track="reload" /><script type="module">import "application"</script>
+<link rel="preconnect" href="https://study.taiwancards.app" crossorigin>
+<link rel="preconnect" href="https://assets.taiwancards.app" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://assets.taiwancards.app/fonts/tw-kai-core.woff2?v=652c215f">
+<script>
+(function () {
+  var root = document.documentElement;
+  var stored = localStorage.getItem("hanzi_font");
+  if (stored !== null) root.classList.toggle("font-kai", stored === "kai");
+  if (localStorage.getItem("theme") === "light") root.classList.remove("dark");
+
+  var warming = false;
+  function warmKai() {
+    var url = document.body && document.body.getAttribute("data-kai-font-url-value");
+    if (warming || !url || !window.FontFace) return;
+    warming = true;
+    var load = function () {
+      var face = new FontFace("TW Kai", 'url(' + url + ') format("woff2")', {
+        style: "normal", weight: "400", display: "swap"
+      });
+      face.load().then(function (ready) { document.fonts.add(ready); }, function () { warming = false; });
+    };
+    if (window.requestIdleCallback) requestIdleCallback(load, {timeout: 3000});
+    else setTimeout(load, 1200);
+  }
+  if (root.classList.contains("font-kai")) {
+    if (document.readyState === "complete") warmKai();
+    else window.addEventListener("load", warmKai, {once: true});
+  }
+
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest("[data-controller~='theme']");
+    if (button) {
+      var dark = root.classList.toggle("dark");
+      localStorage.setItem("theme", dark ? "dark" : "light");
+      return;
+    }
+    var pref = event.target.closest("[data-controller~='display-pref']");
+    if (!pref) return;
+    var name = pref.dataset.displayPrefNameValue;
+    var css = pref.dataset.displayPrefCssValue;
+    var on = pref.dataset.displayPrefOnValue;
+    var next = localStorage.getItem(name) === on ? pref.dataset.displayPrefOffValue : on;
+    localStorage.setItem(name, next);
+    root.classList.toggle(css, next === on);
+    if (css === "font-kai" && next === on) warmKai();
+  });
+})();
+</script>
+
+</head><body class="min-h-dvh bg-background text-foreground antialiased" data-controller="kai-font" data-kai-font-url-value="https://assets.taiwancards.app/fonts/tw-kai-full.woff2?v=66bd85b5"><!-- BEGIN app/views/landing/_nav.html.slim -->
+<header class="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70"><div class="mx-auto flex h-14 w-full max-w-5xl items-center gap-2 px-4 sm:gap-3"><a class="flex min-w-0 shrink items-center gap-2 text-lg tracking-tight" href="/"><img alt="" width="36" height="36" class="size-9 shrink-0" src="/icon.svg?v=6" /><span class="hidden sm:inline"><span class="font-bold">Taiwan</span><span class="font-normal text-muted-foreground">Cards</span></span></a><div class="ml-auto flex shrink-0 items-center gap-1"><!-- BEGIN app/views/shared/_script_prefs.html.slim -->
+<div class="flex items-center rounded-lg border border-border" data-tour="script-setup" title="How the language is shown: face, pinyin, the Chinese word, how much a dictionary page shows — and the language you read the site in."><button aria-label="Character face" class="inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" data-action="display-pref#toggle display-pref:reflect-&gt;display-pref#reflect" data-controller="display-pref" data-display-pref-css-value="font-kai" data-display-pref-name-value="hanzi_font" data-display-pref-off-value="sans" data-display-pref-on-value="kai" data-tour="pref-kai" title="Character face. On: kaishu, the calligraphic face that shows strokes the way a hand writes them. Off: a plain sans. On by default." type="button"><span class="pref-mark-kai flex items-center justify-center rounded-full border border-current size-6 text-[13px] font-light leading-none" lang="zh-TW">臺</span></button></div><!-- END app/views/shared/_script_prefs.html.slim -->
+<button aria-label="Theme" class="rounded-md text-muted-foreground transition-colors inline-flex size-9 items-center justify-center hover:bg-muted hover:text-foreground" data-action="theme#toggle" data-controller="theme" type="button"><span class="dark:hidden"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor" class="size-4" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" /></svg></span><span class="hidden dark:inline"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor" class="size-4" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg></span></button><a class="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90" href="https://study.taiwancards.app/login">Log in</a></div></div></header><!-- END app/views/landing/_nav.html.slim -->
+<main class="mx-auto w-full max-w-3xl px-4 pb-24 md:pb-16"><!-- BEGIN app/views/shared/_flash.html.slim -->
+<!-- END app/views/shared/_flash.html.slim -->
+<!-- BEGIN app/views/pages/terms_of_service.html.slim -->
+<div class="py-6 space-y-6"><div><h1 class="text-2xl font-bold tracking-tight">Terms of Service</h1><p class="text-muted-foreground">Effective date: 2025-03-01</p></div><section class="space-y-2"><h2 class="text-lg font-semibold">The service</h2><p class="text-sm leading-6 text-muted-foreground">TaiwanCards is a web application for learning Taiwanese Mandarin, run by one independent developer.It is free to use, carries no advertising, and is offered as-is. Features may change or be removed.</p></section><section class="space-y-2"><h2 class="text-lg font-semibold">Your account</h2><ul class="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground"><li>Give accurate account details and keep your credentials to yourself.</li><li>One person per account. You are responsible for what happens under yours.</li><li>You can delete your account at any time by asking at the address below.</li></ul></section><section class="space-y-2"><h2 class="text-lg font-semibold">Acceptable use</h2><ul class="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground"><li>Do not attempt to reach data, systems or other people's accounts you have no right to.</li><li>Do not scrape the site in bulk, or place automated load on it beyond ordinary study.</li><li>Do not upload unlawful or malicious content.</li><li>Respect the licenses of the dictionaries, corpora and fonts listed on the licenses page.</li></ul></section><section class="space-y-2"><h2 class="text-lg font-semibold">What you make</h2><p class="text-sm leading-6 text-muted-foreground">Decks, notes and progress you create stay yours. You grant only the permission needed to store anddisplay them back to you. You can export your progress at any time, including to your own Google Drive.</p></section><section class="space-y-2"><h2 class="text-lg font-semibold">What we use</h2><p class="text-sm leading-6 text-muted-foreground">The application code and original text belong to their author. Dictionaries, corpora, audio and fontscome from third parties and are used under their own licenses, each named on the licenses page.Nothing in these terms grants you rights to that third-party material beyond those licenses.</p></section><section class="space-y-2"><h2 class="text-lg font-semibold">Availability</h2><p class="text-sm leading-6 text-muted-foreground">The service is provided on an "as is" and "as available" basis, without any warranty of uninterruptedoperation, and without a guarantee that the linguistic data is free of error. It is a study aid,not an authority on the language.</p></section><section class="space-y-2"><h2 class="text-lg font-semibold">Suspension</h2><p class="text-sm leading-6 text-muted-foreground">Accounts that break these terms, or that put the service at risk, may be suspended or removed.</p></section><section class="space-y-2"><h2 class="text-lg font-semibold">Liability</h2><p class="text-sm leading-6 text-muted-foreground">To the maximum extent permitted by law, the developer is not liable for indirect, incidental orconsequential damages arising from use of the service.</p></section><section class="space-y-2"><h2 class="text-lg font-semibold">Changes</h2><p class="text-sm leading-6 text-muted-foreground">These terms may be updated. The effective date above changes when they do, and continued use afterthat date means you accept the revised terms.</p></section><section class="space-y-2"><h2 class="text-lg font-semibold">Contact</h2><p class="text-sm leading-6 text-muted-foreground">Questions about these terms: <a class="text-foreground hover:underline" href="mailto:taiwancards@pm.me">taiwancards@pm.me</a></p></section><section class="space-y-2"><h2 class="text-lg font-semibold">Related links</h2><p class="text-sm leading-6"><a class="text-foreground hover:underline" href="/privacy">Privacy Policy</a> · <a class="text-foreground hover:underline" href="/licenses">Licenses</a></p></section></div><!-- END app/views/pages/terms_of_service.html.slim -->
+</main><!-- BEGIN app/views/shared/_footer.html.slim -->
+<footer class="border-t border-border text-muted-foreground mt-10"><div class="mx-auto w-full max-w-3xl px-4 pt-8 text-sm flex flex-wrap items-center gap-x-2 gap-y-1 pb-[calc(env(safe-area-inset-bottom)+5rem)] md:pb-8"><span>Made in Taipei 🇹🇼 by <a rel="noopener" target="_blank" class="font-medium text-foreground hover:underline" href="https://github.com/denpatin">丹丹</a> · 2024–2026</span><span>·</span><a class="text-foreground hover:underline" href="/licenses">Licenses &amp; credits</a><span>·</span><a class="text-foreground hover:underline" href="/privacy">Privacy</a><span>·</span><a class="text-foreground hover:underline" href="/terms">Terms</a></div></footer><!-- END app/views/shared/_footer.html.slim -->
+</body></html><!-- END app/views/layouts/application.html.slim -->

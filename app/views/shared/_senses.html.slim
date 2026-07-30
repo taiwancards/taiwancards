@@ -1,0 +1,33 @@
+- senses = profile.translated_senses
+- if senses.any?
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("words.senses")
+    ol.space-y-3
+      - senses.each_with_index do |sense, index|
+        li.rounded-xl.border.border-border.p-3
+          .flex.items-baseline.gap-2
+            span.shrink-0.text-sm.font-semibold.text-muted-foreground.tabular-nums = "#{index + 1}."
+            div class="space-y-1.5"
+              - reading = profile.sense_reading(sense)
+              p.text-sm
+                - if reading
+                  span.mr-2.rounded.bg-muted.text-2xs.text-muted-foreground class="px-1.5 py-0.5" lang="zh-TW" = reading
+                = sense.meaning(I18n.locale)
+              - sentences = sense.examples.select(&:sentence?)
+              - collocations = sense.examples.select(&:collocation?)
+              - if sentences.any?
+                ul.space-y-1
+                  - sentences.first(3).each do |example|
+                    li.text-sm.text-muted-foreground lang="zh-TW"
+                      - if example.lexeme
+                        = link_to example.text, sentence_path(example.lexeme), class: "hover:text-foreground hover:underline"
+                      - else
+                        = example.text
+              - if collocations.any?
+                .flex.flex-wrap class="gap-1.5"
+                  - collocations.first(8).each do |example|
+                    - if example.lexeme
+                      = link_to example.text, lexeme_page_path(example.lexeme), class: "rounded bg-muted px-1.5 py-0.5 text-xs hover:bg-muted-foreground/20", lang: "zh-TW", title: example.lexeme.meaning(I18n.locale).presence
+                    - else
+                      span.rounded.bg-muted.text-xs class="px-1.5 py-0.5" lang="zh-TW" = example.text
+    p.text-xs.text-muted-foreground = t("words.senses_source")

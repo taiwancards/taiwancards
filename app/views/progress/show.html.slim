@@ -1,0 +1,54 @@
+- breakdown = @report.memory_breakdown
+- retention = @report.actual_retention
+- by_day = @report.reviews_by_day
+- max_count = [by_day.map(&:last).max, 1].max
+
+= render layout: "progress/shell" do
+  .grid.grid-cols-2.gap-3.sm:grid-cols-4
+    = render RubyUI::Card.new(class: "p-4 text-center") do
+      .text-2xl.font-bold = @report.streak
+      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.streak")
+    = render RubyUI::Card.new(class: "p-4 text-center") do
+      .text-2xl.font-bold
+        - if retention
+          = number_to_percentage(retention * 100, precision: 1)
+        - else
+          | —
+      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground
+        = t("stats.retention", target: number_to_percentage(@settings.desired_retention * 100, precision: 0))
+    = render RubyUI::Card.new(class: "p-4 text-center") do
+      .text-2xl.font-bold
+        - if @report.average_answer_ms
+          = "#{(@report.average_answer_ms / 1000.0).round(1)}s"
+        - else
+          | —
+      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.answer_time")
+    = render RubyUI::Card.new(class: "p-4 text-center") do
+      .text-2xl.font-bold = breakdown[:mature]
+      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.mature")
+
+  section
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("stats.reviews_by_day")
+    .mt-3.flex.h-32.items-end.gap-1
+      - by_day.each do |date, count|
+        .group.relative.flex-1.rounded-t.bg-primary style="height: #{count.zero? ? 2 : (count * 100.0 / max_count).clamp(4, 100)}%" title="#{l(date, format: :short)}: #{count}"
+    .mt-1.flex.justify-between.text-xs.text-muted-foreground
+      span = l(by_day.first.first, format: :short)
+      span = l(by_day.last.first, format: :short)
+
+  section
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("stats.breakdown")
+    .mt-3.grid.grid-cols-2.gap-3.text-center.sm:grid-cols-4
+      - {unseen: "text-muted-foreground", learning: "text-amber-500", young: "text-sky-500", mature: "text-emerald-500"}.each do |key, color|
+        div
+          .text-xl.font-bold class=color = breakdown[key]
+          .text-xs.text-muted-foreground = t("stats.states.#{key}")
+
+  - if @report.leeches.any?
+    section
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-destructive = t("stats.leeches")
+      .mt-3.space-y-2
+        - @report.leeches.each do |lexeme|
+          .flex.items-center.gap-3.rounded-lg.border.border-border.bg-card.px-4.py-3
+            span.font-hanzi.text-xl lang="zh-TW" = lexeme.text
+            span.text-sm.text-muted-foreground = lexeme.meaning

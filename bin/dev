@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+if ! gem list foreman -i --silent; then
+  echo "Installing foreman..."
+  gem install foreman
+fi
+
+export APP_PORT="${APP_PORT:-3000}"
+export RUBY_DEBUG_OPEN="true"
+export RUBY_DEBUG_LAZY="true"
+
+for pid_file in tmp/pids/dev.pid tmp/pids/server.pid; do
+  [ -f "$pid_file" ] || continue
+  pid=$(cat "$pid_file")
+  if kill -0 "$pid" 2> /dev/null; then
+    [ "$pid_file" = "tmp/pids/dev.pid" ] || continue
+    echo "bin/dev: a server started by bin/dev is already running (pid $pid). Stop it with: kill $pid"
+    exit 1
+  fi
+  rm -f "$pid_file"
+done
+
+other=$(cat tmp/pids/server.pid 2> /dev/null)
+if [ -n "$other" ] && kill -0 "$other" 2> /dev/null; then
+  echo "bin/dev: note — another Rails server is running (pid $other). It is left alone; bin/dev uses its own pid file."
+fi
+
+exec foreman start -f Procfile.dev "$@"

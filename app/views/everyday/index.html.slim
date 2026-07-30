@@ -1,0 +1,126 @@
+- content_for(:title) { t("everyday.title") }
+
+.py-6.space-y-6
+  div
+    = render("shared/page_help", key: "everyday", title: t("everyday.title"))
+
+  - if @counts.empty?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("everyday.empty")
+
+  - elsif @sections.nil?
+    p.max-w-2xl.text-sm.text-muted-foreground = t("everyday.pick_scenario")
+
+    .space-y-8
+      - EverydayHelper::GROUPS.each do |group, domains|
+        section.space-y-3 data-tour=("everyday-domains" if group == EverydayHelper::GROUPS.keys.first)
+          h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("everyday.groups.#{group}")
+          .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+            - domains.each do |domain|
+              - count = @counts[domain].to_i
+              - next if count.zero?
+              = link_to everyday_path(area: domain),
+                class: "flex items-start gap-3 rounded-2xl border border-border p-4 transition-colors hover:border-brand hover:bg-muted/40" do
+                span.flex.shrink-0.items-center.justify-center.rounded-xl.text-2xl.font-semibold.text-brand[
+                  lang="zh-TW" class="size-11 bg-brand/10" ]
+                  = everyday_glyph(domain)
+                .min-w-0.space-y-1
+                  .font-semibold.leading-tight = t("everyday.scenarios.#{domain}")
+                  - if (sample = @samples[domain]).present?
+                    p.truncate.text-sm.text-muted-foreground lang="zh-TW" = sample.join(" · ")
+                  p.text-xs.text-muted-foreground = t("everyday.word_count", count: count)
+
+    - if @origins.any?
+      section.space-y-2
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("everyday.by_origin")
+        .flex.flex-wrap.items-center.gap-2
+          - @origins.each do |origin|
+            = link_to t("everyday.origins.#{origin.tr("-", "_")}"), everyday_path(origin:),
+              class: "rounded-full border border-border px-3 py-1 text-xs transition-colors hover:bg-muted"
+
+  - else
+    .flex.flex-wrap.items-center.gap-2
+      = link_to t("everyday.all_scenarios"), everyday_path,
+        class: "rounded-full border border-border px-3 py-1 text-xs font-medium transition-colors hover:bg-muted"
+      - if @area
+        span.rounded-full.border.border-primary.bg-primary.px-3.py-1.text-xs.font-medium.text-primary-foreground
+          = t("everyday.scenarios.#{@area}")
+      - if @origin
+        span.rounded-full.border.border-primary.bg-primary.px-3.py-1.text-xs.font-medium.text-primary-foreground
+          = t("everyday.origins.#{@origin.tr("-", "_")}")
+
+    - if @tags.size > 1
+      .flex.flex-wrap.items-center.gap-2
+        - @tags.each do |tag|
+          = link_to everyday_path(area: @area, origin: @origin, tag: (tag unless @tag == tag)),
+            class: class_names("rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+              @tag == tag ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted") do
+            span lang="zh-TW" = tag
+            span.ml-1.text-muted-foreground class=(@tag == tag ? "text-primary-foreground" : nil)
+              = everyday_tag_label(tag)
+
+    .flex.flex-wrap.items-center.gap-x-3.gap-y-1.text-xs.text-muted-foreground
+      - [[t("everyday.tier_core"), "bg-brand"], [t("everyday.taiwan_marked"), "bg-emerald-500"], [t("everyday.registers.vulgar"), "bg-red-500"]].each do |label, tone|
+        span.inline-flex.items-center class="gap-1.5"
+          span.inline-block.rounded-full class="size-[5px] #{tone}"
+          = label
+
+    - if everyday_scales?(@area)
+      = render("scales")
+
+    - if @area == "drinks" && Huayu::TeaClasses.any?
+      = render("tea")
+
+    .flex.flex-wrap.items-center.gap-2
+      span.text-xs.text-muted-foreground = t("everyday.sort_label")
+      - EverydayController::SORTS.each do |sort|
+        = link_to t("everyday.sorts.#{sort}"), everyday_path(area: @area, origin: @origin, tag: @tag, sort: (sort unless sort == "category")),
+          class: class_names("rounded-full border px-2.5 py-1 text-xs transition-colors",
+            @sort == sort ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted")
+
+    .relative.flex.justify-end data-controller="menu"
+      button.inline-flex.items-center.gap-1.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
+        type="button" data-action="menu#toggle" class="hover:bg-muted"
+        title=t("everyday.make_deck", count: @lexemes.size) aria-label=t("everyday.make_deck_button") ]
+        span.text-sm.leading-none aria-hidden="true" +
+        span = t("everyday.make_deck_button")
+
+      .absolute.right-0.top-full.z-50.hidden.mt-1.rounded-xl.border.border-border.bg-background.p-4.shadow-xl[
+        class="w-[min(22rem,88vw)]" data-menu-target="panel" ]
+        = form_with url: desks_path, method: :post, class: "space-y-3" do |form|
+          p.text-sm.font-medium = t("everyday.make_deck", count: @lexemes.size)
+          p.text-xs.text-muted-foreground = t("everyday.make_deck_hint")
+
+          - @lexemes.each do |lexeme|
+            = hidden_field_tag "lexeme_ids[]", lexeme.id, id: nil
+
+          = text_field_tag :name, default_deck_name, class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+          = render("shared/facet_picker", scope: "everyday")
+
+          .flex.flex-wrap.gap-2
+            = form.submit t("everyday.make_deck_button"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+            - if @collection.present?
+              = link_to t("everyday.study"), study_path(mode: "collection", collection_id: @collection.id),
+                class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+
+    - if @sort != "category"
+      .grid class="gap-1.5 sm:grid-cols-2 lg:grid-cols-3"
+        - @lexemes.each do |lexeme|
+          = render("word", lexeme:)
+
+    - else
+      .space-y-2
+        - @sections.each do |group, lexemes|
+          details.rounded-xl.border.border-border open=(@sections.one? || @tag.present?)
+            summary.flex.cursor-pointer.list-none.items-baseline.gap-x-2.px-3.py-2 class="[&::-webkit-details-marker]:hidden hover:bg-muted/40"
+              h2.text-sm.font-semibold.uppercase.tracking-wide
+                - if @area
+                  = group.present? ? everyday_tag_label(group) : t("everyday.other")
+                - else
+                  = t("everyday.domains.#{group}", default: t("everyday.other"))
+              - if @area && group.present?
+                span.text-xs.text-muted-foreground lang="zh-TW" = group
+              span.ml-auto.shrink-0.rounded-full.px-2.text-xs.text-muted-foreground class="py-0.5 bg-muted"
+                = lexemes.size
+            .grid.border-t.border-border.p-2 class="gap-1.5 sm:grid-cols-2 lg:grid-cols-3"
+              - lexemes.each do |lexeme|
+                = render("word", lexeme:)

@@ -1,0 +1,66 @@
+- content_for(:title, @entry.text)
+
+.py-6.space-y-6
+  = link_to liangci_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("liangci.back")
+
+  header.space-y-3
+    .flex.items-center.gap-3
+      span.text-5xl.font-bold lang="zh-TW" = @entry.text
+      div
+        .text-lg.font-medium = @entry.readings["zhuyin"].presence || @entry.readings["pinyin"]
+        .text-sm.text-muted-foreground = @entry.readings["pinyin"]
+    .flex.flex-wrap.gap-2.text-xs
+      span.rounded-full.font-medium.text-primary class="bg-primary/10 px-2.5 py-1"
+        = t("liangci.categories.#{@entry.data["category"]}")
+      - if @character
+        = link_to t("liangci.as_character"), character_path(@entry.text), class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
+      - if @word
+        = link_to t("liangci.as_word"), dict_entry_path(@entry.text), class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
+    p.text-base = @entry.meaning
+    - if @entry.data.dig("notes", I18n.locale.to_s).present?
+      p.rounded-lg.border.border-border.bg-card.px-3.py-2.text-sm.text-muted-foreground
+        = @entry.data.dig("notes", I18n.locale.to_s)
+    - if detailed? && @entry.data["moe_gloss"].present?
+      details.rounded-lg.border.border-border.px-3.py-2
+        summary.cursor-pointer.text-xs.text-muted-foreground = t("liangci.moe_gloss")
+        p.mt-2.text-sm lang="zh-TW" = @entry.data["moe_gloss"]
+
+  - nouns = detailed? ? @nouns : @nouns.first(24)
+  - if nouns.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("liangci.used_with")
+      p.text-xs.text-muted-foreground = t("liangci.used_with_hint", count: @nouns.size)
+      .grid.gap-2 class="sm:grid-cols-2"
+        - nouns.each do |noun|
+          - path = noun.character? ? character_path(noun.text) : dict_entry_path(noun.text)
+          = link_to path, class: "flex items-baseline justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
+            .min-w-0
+              .flex.items-baseline.gap-2
+                span.text-lg.font-semibold lang="zh-TW"
+                  span.text-primary = @entry.text
+                  span = noun.text
+                span.text-xs.text-muted-foreground = noun.readings["pinyin"]
+              .truncate.text-sm.text-muted-foreground = noun.meaning
+            - if Array(noun.data["classifiers"]).any? { |row| row["text"] == @entry.text && row["main"] }
+              span.shrink-0.text-xs.text-muted-foreground = t("liangci.main_short")
+
+  - if @examples.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("liangci.examples")
+      p.text-xs.text-muted-foreground = t("liangci.examples_hint")
+      ul.space-y-2
+        - @examples.each do |example|
+          li.rounded-xl.border.border-border.bg-card.px-3.py-2.space-y-1
+            p.text-base lang="zh-TW"
+              = example.prefix
+              mark.rounded.bg-transparent.font-semibold.text-primary = example.highlight
+              = example.suffix
+            - if example.sentence.meaning.present?
+              p.text-sm.text-muted-foreground = example.sentence.meaning
+            - else
+              p.text-xs.text-muted-foreground
+                span lang="zh-TW" = "#{@entry.text}#{example.noun.text}"
+                span>  —
+                = example.noun.meaning

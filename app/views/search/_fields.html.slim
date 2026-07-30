@@ -1,0 +1,100 @@
+- corpus = local_assigns.fetch(:corpus)
+
+= form_with url: search_path, method: :get, class: "space-y-4 rounded-2xl border border-border p-4" do |form|
+  .space-y-2
+    label.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground for="q" = t("search.field_text")
+    = form.search_field :q, value: corpus.text, id: "q", placeholder: t("search.field_text_hint"),
+      class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-base"
+    .flex.flex-wrap.gap-1.text-xs
+      - Search::Corpus::KINDS.each do |kind|
+        label.relative.inline-flex.cursor-pointer.items-center.rounded-md.border class=("px-2 py-1 #{corpus.kind?(kind) ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+          = check_box_tag("kinds[]", kind, corpus.kind?(kind), id: "kind_#{kind}", class: "sr-only")
+          = t("search.kind.#{kind}")
+
+  .grid.gap-4 class="sm:grid-cols-2"
+    .space-y-2 data-controller="keypad"
+      label.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground for="pinyin" = t("search.field_pinyin")
+      = form.search_field :pinyin, value: corpus.pinyin, id: "pinyin", placeholder: "ni3hao3",
+        class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-base", data: {keypad_target: "input"}
+      .flex.flex-wrap class="gap-1"
+        - %w[ā á ǎ à ē é ě è ī í ǐ ì ō ó ǒ ò ū ú ǔ ù ǖ ǘ ǚ ǜ ü].each do |mark|
+          button.rounded.border.border-border.bg-card.font-medium.leading-none[
+            type="button" class="px-1.5 py-1 text-sm hover:bg-muted"
+            data-keypad-symbol=mark data-action="keypad#insert" ]
+            = mark
+      p.text-2xs.text-muted-foreground = t("search.field_pinyin_hint")
+
+    .space-y-2 data-controller="keypad"
+      .flex.items-center.justify-between
+        label.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground for="zhuyin" = t("search.field_zhuyin")
+        button.text-xs.text-muted-foreground.underline.underline-offset-2[
+          type="button" data-action="keypad#toggle" class="hover:text-foreground" ]
+          = t("search.keyboard")
+      = form.search_field :zhuyin, value: corpus.zhuyin, id: "zhuyin", placeholder: "ㄋㄧˇㄏㄠˇ",
+        class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-base", lang: "zh-TW",
+        data: {keypad_target: "input"}
+      .hidden.space-y-1.rounded-lg.border.border-border.bg-card.p-2 data-keypad-target="panel"
+        - Huayu::ZhuyinKeyboard.layout.each do |row|
+          .flex.flex-wrap class="gap-1"
+            - row.each do |key|
+              - symbol = key[:symbol] || key[:tone]
+              - next if symbol.blank?
+              button.rounded.border.border-border.leading-none[
+                type="button" lang="zh-TW" class="min-w-8 px-2 py-1.5 text-sm hover:bg-muted"
+                data-keypad-symbol=symbol data-action="keypad#insert" ]
+                = symbol
+        .flex.gap-1
+          button.rounded.border.border-border.leading-none[
+            type="button" class="px-2 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+            data-action="keypad#backspace" ]
+            = t("search.backspace")
+          button.rounded.border.border-border.leading-none[
+            type="button" class="px-2 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+            data-action="keypad#clear" ]
+            = t("search.clear_field")
+      p.text-2xs.text-muted-foreground = t("search.field_zhuyin_hint")
+
+  .space-y-2.rounded-xl.border.border-dashed.border-border.p-3
+    label.inline-flex.cursor-pointer.items-center.gap-2.text-sm.font-medium
+      = check_box_tag("sentences", "1", corpus.sentences?)
+      = t("search.sentences_only")
+    p.text-xs.text-muted-foreground = t("search.sentences_only_hint")
+
+    - if corpus.sentences?
+      - SentenceProfile::SCHEMES.each do |scheme, config|
+        .flex.items-center.gap-2
+          .w-20.shrink-0.text-2xs.font-medium.uppercase.tracking-wide.text-muted-foreground
+            = t("sentences.schemes.#{scheme}")
+          .flex.flex-1.gap-1.overflow-x-auto class="py-0.5"
+            - config[:levels].each do |level|
+              - selected = corpus.levels[scheme] == level
+              label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border class=("px-2 py-0.5 text-xs #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+                = radio_button_tag("levels[#{scheme}]", level, selected, class: "sr-only")
+                = scheme_level_label(scheme, level)
+            label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border.border-border class="px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+              = radio_button_tag("levels[#{scheme}]", "", corpus.levels[scheme].nil?, class: "sr-only")
+              = t("sentences.any_level")
+
+      .flex.flex-wrap.items-center.gap-3.text-xs
+        label.inline-flex.cursor-pointer.items-center.gap-2
+          = check_box_tag("guaranteed", "1", corpus.guaranteed?)
+          = t("sentences.guaranteed_only")
+        - Search::Corpus::ORDERS.each do |value|
+          label.inline-flex.cursor-pointer.items-center.gap-1
+            = radio_button_tag("order", value, corpus.order == value)
+            = t("search.order.#{value}")
+
+  - if corpus.available_registers.any?
+    .flex.items-center.gap-2
+      .w-20.shrink-0.text-2xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("sentences.register")
+      .flex.flex-1.flex-wrap.gap-1
+        - corpus.available_registers.each do |register|
+          - selected = corpus.registers.include?(register)
+          label.inline-flex.cursor-pointer.items-center.rounded-md.border class=("px-2 py-0.5 text-xs #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+            = check_box_tag("registers[]", register, selected, id: "register_#{register}", class: "sr-only")
+            = t("admin.sources.registers.#{register}")
+
+  .flex.flex-wrap.items-center.gap-3
+    = submit_tag(t("search.title"), class: "cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90")
+    - if corpus.any_query?
+      = link_to(t("sentences.reset"), search_path, class: "text-sm text-muted-foreground underline underline-offset-2")

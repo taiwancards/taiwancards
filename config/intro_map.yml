@@ -1,0 +1,154 @@
+version: 1
+
+essential:
+  - id: language
+    kind: choice
+    version: 1
+  - id: welcome
+    path: /desk
+    version: 1
+  - id: search
+    path: /desk
+    target: search
+    version: 1
+  - id: sections
+    path: /desk
+    target: nav
+    version: 1
+  - id: display
+    path: /desk
+    target: pref-pinyin
+    interactive: true
+    version: 1
+  - id: guide
+    path: /desk
+    version: 1
+
+chapters:
+  - id: dictionary
+    icon: book
+    steps:
+      - id: search_deep
+        path: /desk
+        target: search
+        version: 1
+      - id: entry
+        path: /dict
+        target: dict-entry
+        version: 1
+      - id: detail_level
+        path: /dict
+        target: pref-detail
+        version: 1
+      - id: mainland
+        path: /dict
+        target: pref-mainland
+        version: 1
+      - id: sentences
+        path: /sentences
+        target: sentence-filters
+        version: 1
+
+  - id: cards
+    icon: decks
+    steps:
+      - id: what_is_card
+        path: /desk
+        target: learn
+        version: 1
+      - id: decks
+        path: /desks
+        target: new-desk
+        version: 1
+      - id: facets
+        path: /desk
+        version: 1
+      - id: add_from_dictionary
+        path: /dict
+        target: dict-add
+        version: 1
+
+  - id: taiwan
+    icon: desk
+    steps:
+      - id: everyday_lists
+        path: /everyday
+        target: everyday-domains
+        version: 1
+      - id: calendar
+        path: /calendar
+        version: 1
+      - id: metro
+        path: /metro
+        version: 1
+
+  - id: phonetics
+    icon: speaker
+    steps:
+      - id: zhuyin_first
+        path: /practice/zhuyin
+        version: 1
+      - id: tones
+        path: /tones
+        version: 1
+      - id: pronunciation
+        path: /pronunciation
+        version: 1
+      - id: warmup
+        path: /pronunciation/warmup
+        version: 1
+
+  - id: trainers
+    icon: pencil
+    steps:
+      - id: writing
+        path: /writing
+        version: 1
+      - id: handwriting
+        path: /handwriting
+        version: 1
+      - id: reader
+        path: /reader
+        version: 1
+
+  - id: display
+    icon: settings
+    steps:
+      - id: font_kai
+        path: /dict
+        target: pref-kai
+        version: 1
+      - id: pinyin_toggle
+        path: /dict
+        target: pref-pinyin
+        version: 1
+      - id: mainland_toggle
+        path: /dict
+        target: pref-mainland
+        version: 1
+      - id: detail_toggle
+        path: /dict
+        target: pref-detail
+        version: 1
+
+  - id: profile
+    icon: user
+    steps:
+      - id: visible_level
+        path: /profile/level
+        target: profile-level
+        version: 1
+      - id: mobile_tabs
+        path: /profile/display
+        target: profile-tabs
+        version: 1
+      - id: stats
+        path: /progress
+        version: 1
+      - id: history
+        path: /progress/history
+        version: 1
+      - id: backup
+        path: /profile/backup
+        target: profile-backup
+        version: 1

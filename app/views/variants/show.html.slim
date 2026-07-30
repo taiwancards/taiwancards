@@ -1,0 +1,72 @@
+- content_for(:title) { t("variants.title") }
+
+.py-6.space-y-6
+  div
+    = render("shared/page_help", key: "variants", title: t("variants.title"))
+
+  .flex.flex-wrap.items-center.gap-2
+    - @sections.each do |section|
+      = link_to t("variants.sections.#{section}"), variants_path(section:),
+        class: class_names("rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+          @section == section ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted")
+
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("variants.intro.#{@section}")
+
+  - preload_lexeme_links(VariantsHelper::READINGS.map(&:first) + VariantsHelper::GLYPHS.map(&:first) + VariantsHelper::WORDS.map { |row| row[1] })
+
+  - if @section == "reading"
+    .overflow-x-auto.rounded-2xl.border.border-border
+      table.w-full.border-collapse.text-sm
+        thead
+          tr.border-b.border-border.bg-muted
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.word")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("variants.taiwan")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.mainland")
+        tbody
+          - VariantsHelper::READINGS.each do |text, tw_pinyin, tw_zhuyin, cn_pinyin|
+            tr.border-b.border-border class="last:border-b-0"
+              td.px-3.py-2.text-lg.font-semibold = lexeme_link(text)
+              td.px-3.py-2
+                .text-brand lang="zh-TW" = tw_zhuyin
+                .text-xs.text-muted-foreground = tw_pinyin
+              td.px-3.py-2.text-muted-foreground = cn_pinyin
+
+  - elsif @section == "glyph"
+    .overflow-x-auto.rounded-2xl.border.border-border
+      table.w-full.border-collapse.text-sm
+        thead
+          tr.border-b.border-border.bg-muted
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("variants.taiwan")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.hongkong")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.mainland")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.reading")
+        tbody
+          - VariantsHelper::GLYPHS.each do |tw, hk, cn, reading|
+            tr.border-b.border-border class="last:border-b-0"
+              td.px-3.py-2.text-2xl.font-semibold.text-brand = lexeme_link(tw)
+              td.px-3.py-2.text-2xl lang="zh-TW" = hk
+              td.px-3.py-2.text-2xl.text-muted-foreground lang="zh-TW" = cn
+              td.px-3.py-2.text-xs.text-muted-foreground = reading
+
+  - else
+    .overflow-x-auto.rounded-2xl.border.border-border
+      table.w-full.border-collapse.text-sm
+        thead
+          tr.border-b.border-border.bg-muted
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.meaning")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("variants.taiwan")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.mainland")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.hongkong")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.singapore")
+        tbody
+          - VariantsHelper::WORDS.each do |meaning, tw, pinyin, cn, hk, sg|
+            tr.border-b.border-border class="last:border-b-0"
+              td.px-3.py-2.text-xs.text-muted-foreground = meaning
+              td.px-3.py-2
+                .font-semibold.text-brand = lexeme_link(tw)
+                .text-xs.text-muted-foreground = pinyin
+              td.px-3.py-2 lang="zh-TW" = cn
+              td.px-3.py-2.text-muted-foreground lang="zh-TW" = hk || "—"
+              td.px-3.py-2.text-muted-foreground lang="zh-TW" = sg || "—"
+
+  p.max-w-3xl.text-xs.leading-relaxed.text-muted-foreground = t("variants.checked")

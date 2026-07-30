@@ -1,0 +1,37 @@
+- abbr = lexeme.data["abbr"]
+- full = lexeme.data["full"]
+- capital = lexeme.data["capital"]
+
+- if capital.present?
+  .flex.flex-wrap.items-baseline.gap-x-2.text-xs
+    span.text-muted-foreground = t("everyday.capital_label")
+    span.text-sm.font-semibold lang="zh-TW" = capital["text"]
+    - if capital["zhuyin"].present?
+      span.text-brand lang="zh-TW" = capital["zhuyin"]
+    - if capital["pinyin"].present?
+      span.pinyin.text-muted-foreground = capital["pinyin"]
+    - if capital.dig("meaning", I18n.locale.to_s).present?
+      span.text-muted-foreground = capital.dig("meaning", I18n.locale.to_s)
+
+- if abbr.present? || full.present?
+  .flex.flex-wrap.items-baseline.gap-x-2.gap-y-1
+    - [["abbr", abbr], ["full", full]].each do |kind, form|
+      - next if form.blank?
+      - linked = form["text"] != lexeme.text && word_exists?(form["text"])
+      - body = capture do
+        span.text-muted-foreground = t("everyday.#{kind}_label")
+        span.text-sm.font-semibold.text-brand lang="zh-TW" = form["text"]
+        - if form["zhuyin"].present?
+          span.text-muted-foreground lang="zh-TW" = form["zhuyin"]
+        - if form["pinyin"].present?
+          span.pinyin.text-muted-foreground = form["pinyin"]
+      - css = "inline-flex flex-wrap items-baseline gap-x-1 rounded-lg border px-2 text-xs py-0.5 border-brand/40 bg-brand/5"
+      - if linked
+        = link_to dict_entry_path(form["text"]), class: "#{css} transition-colors hover:bg-brand/10" do
+          = body
+      - else
+        span class=css
+          = body
+    - note = (abbr && abbr.dig("note", I18n.locale.to_s)) || (full && full.dig("note", I18n.locale.to_s))
+    - if note.present?
+      span.text-xs.text-muted-foreground = note

@@ -1,0 +1,21 @@
+- content_for(:title, t("tbcl.title"))
+
+.py-6.space-y-6
+  header.space-y-1
+    = render("shared/page_help", key: "tbcl", title: t("tbcl.title"))
+
+  .space-y-3
+    - @levels.each do |level|
+      = link_to tbcl_level_path(level.grade),
+        class: "block rounded-2xl border border-border bg-card px-4 py-4 hover:bg-muted/50" do
+        .flex.flex-wrap.items-center.justify-between.gap-2
+          .font-semibold = t("tbcl.grade", n: level.grade)
+          .text-sm.text-muted-foreground
+            = t("tbcl.words_count", count: level.total)
+            span.mx-1 ·
+            = t("tocfl.known_of", known: level.known, total: level.total)
+        .mt-3.h-2.w-full.overflow-hidden.rounded-full.bg-muted
+          .h-full.rounded-full.bg-primary style="width: #{level.readiness}%"
+        .mt-1.flex.justify-between.text-xs.text-muted-foreground
+          span = t("tocfl.readiness", percent: level.readiness)
+          span = t("tocfl.started_count", count: level.started)

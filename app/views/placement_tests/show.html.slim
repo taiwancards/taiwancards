@@ -1,0 +1,22 @@
+- content_for(:title, t("placement.title"))
+
+.py-6.space-y-6
+  header.space-y-1
+    = render("shared/page_help", key: "placement", title: t("placement.title"))
+
+  - if @test.nil? || @test.status_applied?
+    section.space-y-4
+      - if @test&.status_applied?
+        .rounded-xl.border.border-border.bg-card.p-4.space-y-1
+          p.font-semibold = t("placement.result_level", grade: @test.result_grade, band: placement_band(@test.result_grade))
+          p.text-sm.text-muted-foreground = t("placement.already_applied", count: @test.seeded_count)
+      p.text-muted-foreground = t("placement.intro")
+      = render("placement_tests/intake", questions: @questions)
+      p
+        = link_to t("placement.later"), desk_path, class: "text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+
+  - elsif @test.status_finished?
+    = render("placement_tests/result", test: @test)
+
+  - elsif @item.present?
+    = render("placement_tests/question", test: @test, item: @item)

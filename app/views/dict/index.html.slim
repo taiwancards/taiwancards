@@ -1,0 +1,86 @@
+- content_for(:title, t("dict.title"))
+
+.py-6.space-y-5
+  header.space-y-1
+    = render("shared/page_help", key: "dict", title: t("dict.title"))
+
+  - base = ->(overrides) { dict_path({level: @level, school: @school, q: @q.presence, progress: @progress, sort: (@sort == "level" ? nil : @sort)}.merge(overrides)) }
+
+  .text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("words.tocfl_levels")
+  .-mx-4.overflow-x-auto.px-4 class="[scrollbar-width:none]"
+    .flex.w-max.gap-2
+      = link_to base.call(level: nil), class: class_names("shrink-0 rounded-xl border px-3 py-2 text-sm font-medium",
+          @level.nil? ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:bg-muted") do
+        = t("words.all_levels")
+      - @levels.each do |stat|
+        - tag = stat.collection.level_tag
+        = link_to base.call(level: tag), class: class_names("shrink-0 rounded-xl border px-3 py-2",
+            @level == tag ? "border-primary bg-primary/10" : "border-border hover:bg-muted") do
+          .text-sm.font-medium = stat.collection.name.sub("TOCFL ", "")
+          .text-xs.text-muted-foreground class="mt-0.5" = "#{stat.known} / #{stat.total}"
+          .mt-1.h-1.w-full.overflow-hidden.rounded-full.bg-muted
+            .h-full.rounded-full.bg-primary style="width: #{stat.readiness}%"
+
+  .text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("words.school_levels")
+  .flex.flex-wrap.gap-1.text-sm
+    = link_to t("words.all_levels"), base.call(school: nil),
+      class: class_names("rounded-full px-3 py-1 font-medium", @school.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+    - (1..7).each do |grade|
+      = link_to t("words.grade", n: grade), base.call(school: grade),
+        class: class_names("rounded-full px-3 py-1 font-medium", @school == grade.to_s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+
+  = form_with url: dict_path, method: :get, data: { turbo_frame: "_top" } do |form|
+    - if @level
+      = form.hidden_field :level, value: @level
+    - if @school
+      = form.hidden_field :school, value: @school
+    - if @progress
+      = form.hidden_field :progress, value: @progress
+    .flex.flex-wrap.items-center.gap-2
+      = form.search_field :q, value: @q, placeholder: t("dict.search_placeholder"),
+        class: "min-w-40 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
+      = form.submit t("words.search"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+
+  nav.flex.flex-wrap.gap-1.text-sm
+    - [["", "all"], ["new", "new"], ["learning", "learning"], ["known", "known"]].each do |value, key|
+      - active = (@progress.to_s == value) || (value == "" && @progress.nil?)
+      = link_to t("words.progress.#{key}"), base.call(progress: value.presence),
+        class: class_names("rounded-full px-3 py-1 font-medium",
+          active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+
+  nav.flex.flex-wrap.items-center.gap-1.text-sm
+    span.mr-1.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("words.sort_label")
+    - [["level", "level"], ["freq", "freq"]].each do |value, key|
+      = link_to t("words.sort.#{key}"), base.call(sort: value),
+        class: class_names("rounded-full px-3 py-1 font-medium",
+          @sort == value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+
+  p.text-sm.text-muted-foreground = t("dict.found", count: @total)
+
+  - if @entries.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("words.empty")
+  - else
+    .grid.gap-2 class="sm:grid-cols-2"
+      - @entries.each_with_index do |entry, position|
+        - state = @known_ids.include?(entry.id) ? :known : (@started_ids.include?(entry.id) ? :learning : :new)
+        .flex.min-w-0.items-stretch.gap-1 data-tour=("dict-entry" if position.zero?)
+          = link_to dict_entry_path(entry.text), class: "flex min-w-0 flex-1 items-center justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition-colors hover:border-primary/50 hover:bg-muted" do
+            .min-w-0
+              .flex.items-baseline.gap-2
+                span.text-lg.font-semibold lang="zh-TW" = entry.text
+                - entry_zhuyin = entry.reading_set.first&.dig("zhuyin").presence
+                span.text-xs.text-muted-foreground lang=(entry_zhuyin ? "zh-TW" : nil) class=(entry_zhuyin ? nil : "pinyin")
+                  = entry_zhuyin || entry.reading_set.first&.dig("pinyin")
+              - if entry.meaning.present?
+                .truncate.text-sm.text-muted-foreground = entry.meaning
+            span.size-2.shrink-0.rounded-full class=word_state_dot(state)
+          = render("shared/quick_add", lexeme: entry)
+
+    - if @pages > 1
+      .flex.items-center.justify-center.gap-3.pt-2
+        - if @page > 1
+          = link_to "←", base.call(page: @page - 1), class: "rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+        span.text-sm.text-muted-foreground = t("words.page", page: @page, pages: @pages)
+        - if @page < @pages
+          = link_to "→", base.call(page: @page + 1), class: "rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"

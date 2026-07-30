@@ -1,0 +1,32 @@
+- content_for(:title) { t("help.title") }
+- if Donate.offered?
+  - content_for(:head) do
+    meta name="turbo-visit-control" content="reload"
+- sections = [ \
+    [:search, search_path], \
+    [:study, study_path], \
+    [:dictionary, characters_path], \
+    [:tocfl, tocfl_levels_path], \
+    [:pronunciation, pronunciation_path], \
+    [:writing, writing_path], \
+    [:history, progress_history_path], \
+    [:profile, profile_path] \
+  ]
+
+.py-6.space-y-6
+  div
+    h1.text-2xl.font-bold.tracking-tight = t("help.title")
+    p.mt-2.text-muted-foreground = t("help.intro")
+  .space-y-3
+    - sections.each do |key, path|
+      section.rounded-xl.border.border-border.p-4
+        = link_to t("help.sections.#{key}.title"), path, class: "font-semibold text-foreground hover:underline"
+        p.mt-1.text-sm.text-muted-foreground = t("help.sections.#{key}.body")
+
+  - if Donate.offered?
+    section.border-t.border-border.pt-6.text-center
+      p.mx-auto.max-w-md.text-xs.leading-relaxed.text-muted-foreground = t("help.donate")
+      .mt-3.flex.justify-center.opacity-70.transition-opacity class="scale-90 hover:opacity-100"
+        script[ type="text/javascript" src=Donate.script_url data-name="bmc-button" data-slug=Donate.slug
+          data-color="#6b7280" data-emoji="" data-font="Inter" data-text=t("help.donate_button")
+          data-outline-color="#6b7280" data-font-color="#ffffff" data-coffee-color="#e5e7eb" ]

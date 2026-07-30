@@ -1,0 +1,20 @@
+- content_for(:title, t("languages.zh-TW"))
+
+.py-6.space-y-6
+  .grid.grid-cols-3.gap-3
+    = render RubyUI::Card.new(class: "p-4 text-center") do
+      .text-3xl.font-bold.text-primary = @counts[:on_desk]
+      .mt-1.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("desk.on_desk")
+    = render RubyUI::Card.new(class: "p-4 text-center") do
+      .text-3xl.font-bold.text-amber-500 = @counts[:due]
+      .mt-1.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("desk.due")
+    = render RubyUI::Card.new(class: "p-4 text-center") do
+      .text-3xl.font-bold.text-emerald-500 = @counts[:unseen]
+      .mt-1.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("desk.unseen")
+
+  = link_to @start_path, data: {tour: "learn"},
+    class: "block w-full rounded-2xl bg-primary py-6 text-center text-primary-foreground shadow-lg transition hover:opacity-90 active:scale-[0.99]" do
+    .text-2xl.font-bold.uppercase.tracking-wide = t("desk.start")
+    - if @next_step.present?
+      .mt-1.text-sm class="text-primary-foreground/80" = t("desk.next_step.#{@next_step.kind}")
+

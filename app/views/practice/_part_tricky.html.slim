@@ -1,0 +1,26 @@
+section.space-y-2
+  h2.text-lg.font-semibold = t("practice.rimes")
+  p.max-w-3xl.text-sm.text-muted-foreground = t("practice.rimes_lede")
+  - if @rimes.present?
+    = render "practice/rimes_table", rows: @rimes
+
+section.space-y-3.rounded-2xl.border.border-border.p-5
+  h2.text-lg.font-semibold = t("practice.drill.mismatch_title")
+  p.text-sm.leading-relaxed.text-muted-foreground = t("practice.drill.mismatch_body")
+  .overflow-x-auto
+    table.w-full.border-collapse.text-sm
+      thead
+        tr.border-b.border-border
+          th.py-2.pr-3.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("practice.drill.mismatch_pinyin")
+          th.py-2.pr-3.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("practice.drill.mismatch_zhuyin")
+          th.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("practice.drill.mismatch_why")
+      tbody
+        - %w[zhong jiu hui yu zhi weng].each do |key|
+          tr.border-b.border-border class="last:border-b-0"
+            td.py-2.pr-3.font-mono = t("practice.drill.mismatch.#{key}.pinyin")
+            td.py-2.pr-3.text-lg.whitespace-nowrap lang="zh-TW" = t("practice.drill.mismatch.#{key}.zhuyin")
+            td.py-2.text-xs.leading-relaxed.text-muted-foreground = t("practice.drill.mismatch.#{key}.why")
+
+  .space-y-2.rounded-xl.border.border-border.p-4 class="bg-muted/30"
+    h3.text-sm.font-semibold = t("practice.drill.mismatch_more_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("practice.drill.mismatch_more_body")

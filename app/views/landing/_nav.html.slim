@@ -1,0 +1,21 @@
+header.sticky.top-0.z-40.border-b.border-border class="bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70"
+  .mx-auto.flex.h-14.w-full.max-w-5xl.items-center.gap-2.px-4 class="sm:gap-3"
+    = link_to root_path, class: "flex min-w-0 shrink items-center gap-2 text-lg tracking-tight" do
+      = image_tag "/icon.svg?v=6", alt: "", width: 36, height: 36, class: "size-9 shrink-0"
+      span.hidden class="sm:inline"
+        span.font-bold Taiwan
+        span.font-normal.text-muted-foreground Cards
+
+    .ml-auto.flex.shrink-0.items-center.gap-1
+      = render "shared/script_prefs"
+
+      button.rounded-md.text-muted-foreground.transition-colors[
+        class="inline-flex size-9 items-center justify-center hover:bg-muted hover:text-foreground"
+        type="button" data-controller="theme" data-action="theme#toggle" aria-label=t("nav.theme") ]
+        span.dark:hidden = icon(:moon, css: "size-4")
+        span.hidden.dark:inline = icon(:sun, css: "size-4")
+
+      - if authenticated?
+        = link_to t("landing.open_app"), desk_path, class: "rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+      - else
+        = link_to t("auth.login"), login_path, class: "rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"

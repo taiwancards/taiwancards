@@ -1,0 +1,2802 @@
+---
+en:
+  audio:
+    play: Play
+    source_whole: MOE — whole-word recording
+    source_per_char: MOE — character by character (no whole-word recording)
+  privacy_google:
+    heading: Signing in with Google, and your data
+    body: Signing in with Google is an optional way to create an account. You can register with an ordinary email address and password instead, in which case no Google data is requested at all.
+    signin: When you sign in with Google, TaiwanCards receives your email address and the name on your profile. These are used to create your account and attach your learning progress to it.
+    drive: If you separately press 'Back up to Google Drive', the app creates a single file on your Drive holding a backup of your learning progress, and can read and overwrite only that file.
+    limits: 'Access is limited to the drive.file scope: the app can only reach files it created itself. TaiwanCards cannot see or open any other file on your Drive. No backup is made automatically — only when you press the button.'
+    privacy: Privacy policy
+    terms: Terms of service
+  glossary_labels:
+    fsrs: FSRS-6
+    tocfl: TOCFL
+    tbcl: TBCL
+    zhuyin: zhuyin
+    pinyin: pinyin
+    putonghua: Putonghua
+    hokkien: Hokkien
+    hanzi: traditional characters
+  glossary:
+    fsrs: 'A spaced-repetition algorithm: from your own ratings it predicts the moment you are about to forget a card, and shows it then.'
+    tocfl: Taiwan's national Mandarin proficiency exam and its level scale, from Novice up to Band C.
+    tbcl: 'Taiwan''s benchmarks for Chinese language: the grades the island''s own schools teach to.'
+    zhuyin: Taiwan's phonetic alphabet, ㄅㄆㄇㄈ. Children learn it instead of pinyin, and it is how people type.
+    pinyin: Writing Mandarin syllables in Latin letters. Primary in China, a secondary aid in Taiwan.
+    putonghua: The standard variety of Mandarin in China.
+    hokkien: Taiwanese Southern Min, spoken by a large share of the island.
+    hanzi: The full character forms kept in Taiwan, Hong Kong and Macau, as opposed to the simplified set used in China.
+  locales:
+    en: English
+    ru: Русский
+  app:
+    name: TaiwanCards
+  languages:
+    zh-TW: Taiwanese Mandarin
+    ja: Japanese
+    ro: Romanian
+  nav:
+    more: More
+    radicals: Radicals
+    today: Today
+    typing: Zhuyin typing trainer
+    group_taiwan: Taiwan
+    group_sounds: Sounds
+    progress: Progress
+    settings: Settings
+    help: Help
+    language: Language
+    interface_language: >-
+      The language of the interface and of everything in it. It switches more than buttons and menus: word
+      meanings, notes, grammar explanations and breakdowns are all written in both languages and move with
+      it.
+    hanzi_font_toggle: Character face
+    hanzi_font_hint: >-
+      Character face. On: kaishu, the calligraphic face that shows strokes the way a hand writes them. Off:
+      a plain sans. On by default.
+    pinyin_toggle: Show or hide pinyin
+    detail_toggle: How much a dictionary page shows
+    detail_hint: >-
+      How much a dictionary page shows. 詳 — everything we hold: rarity score, register mix, memory cards,
+      thesaurus, origin stories. 簡 — the working set: readings, meanings, part of speech, measure word,
+      synonyms and antonyms, stroke practice, a handful of sentences. Starts at 簡 until you are past TOCFL
+      Novice, then at 詳; after that it stays wherever you put it.
+    script_setup_hint: >-
+      How the language is shown: face, pinyin, the Chinese word, how much a dictionary page shows — and the
+      language you read the site in.
+    mainland_toggle: Show the Chinese word
+    mainland_hint: >-
+      The word used in China. On: a small line on the card shows what China says instead. Off: nothing
+      extra. Off by default — this app teaches the Taiwanese word; the Chinese one is reference only.
+    pinyin_hint: >-
+      Pinyin next to zhuyin. Zhuyin is always shown and cannot be turned off. On: the romanisation appears
+      beside it. Off: zhuyin alone. Off by default — Taiwan reads by zhuyin.
+    theme: Theme
+    locale_switch: EN
+    textbook: Textbook
+    my_desks: My decks
+    reader: Read texts
+    songs: Songs
+    placement: Level test
+    numbers: Numbers
+    triage: Quick sweep
+    roadmap: Where to start
+    plan: Exam plan
+    hanzi: How a character is built
+    characters: Characters
+    study: Study now
+    handwriting: Look up by drawing
+    writing: Character writing
+    pronunciation: Pronunciation check
+    tocfl: TOCFL word lists
+    tbcl: TBCL word lists
+    chengyu: Idioms 成語
+    dict: Words & phrases
+    cangjie: Cangjie trainer
+    sentences: Sentences
+    liangci: Measure words 量詞
+    phrases: "Phrasebook"
+    everyday: Everyday life
+    variants: Vocabulary differences
+    metro: Taipei metro
+    calendar: Festivals & calendar
+    sounds_drill: Zhuyin ↔ pinyin
+    group_learn: My study
+    group_dictionary: Dictionary
+    group_practice: Practice
+    group_basics: Basics
+    pinyin: Pinyin
+    phonetics: Zhuyin and pinyin
+    tones: Tones
+    zhuyin_trainer: Zhuyin by ear
+    zhuyin: Zhuyin (bopomofo)
+    tones_sounds: Tones & sounds
+    practice_progress: My progress in sounds
+    group_language: About the language
+    group_settings: Settings
+    tones_drill: Tones by ear
+    profile: Profile
+  textbook:
+    marked_known: 'Marked as known: %{count}'
+    mark_known_hint: The words move to distant reviews without disappearing altogether
+    mark_known_confirm: Mark every word in this lesson as well known?
+    mark_known: I know this lesson
+    title: Textbook
+    empty: No lessons here yet.
+    book: Book %{number}
+    lessons_count:
+      one: 1 lesson
+      other: "%{count} lessons"
+    words_count:
+      zero: no words
+      one: 1 word
+      other: "%{count} words"
+    lesson_label: Book %{book} — Lesson %{lesson}
+    back_to_curriculum: "← Curriculum"
+    previous: "← Prev"
+    next: Next →
+    tabs:
+      summary: Summary
+      vocabulary: Vocabulary
+    study_lesson: Study this lesson
+    no_summary: No summary for this lesson.
+    play_audio: Play audio
+  common:
+    search: Search…
+    save: Save
+    cancel: Cancel
+    edit: Edit
+    confirm: Are you sure?
+  desk:
+    next_step:
+      zhuyin: 'Right now: get to grips with the zhuyin sounds'
+      drill: 'Right now: drill recognizing the sounds'
+      typing: 'Right now: typing in zhuyin'
+      study: 'Right now: today''s cards'
+    on_desk: On deck
+    due: Due
+    unseen: New
+    start: Learn
+  desks:
+    paste_hint: >-
+      One per line or separated by commas — whichever suits. You can also paste running text and the system
+      will split it into words. Translations come from our dictionary; you never type them.
+    file_label: "…or upload a file with the list"
+    stat_cards: "%{count} cards"
+    stat_duplicates: "%{count} duplicates removed"
+    stat_known: "%{count} already familiar"
+    stat_missing: "%{count} not found"
+    missing_title: Not in the dictionary
+    missing_hint: >-
+      We do not have these yet — possibly a typo, a simplified spelling, or a very rare word. They will
+      not go into the deck.
+    order_hint: Easiest first, by our difficulty rank. Untick anything you do not want.
+    known_title: Know all of this already?
+    known_action: Mark as familiar
+    redo_hint: >-
+      Goes through every item in the deck whether you know it or not. Progress is recorded, but the interval
+      barely moves for things you already know well.
+    redo_all: Run through again
+    title: My decks
+    new: Create deck
+    create: Create deck
+    preview: Review words
+    preview_hint:
+      one: 1 word found — untick anything you don't want.
+      other: "%{count} words found — untick anything you don't want."
+    name_label: Name
+    name_placeholder: 'Leave blank for Random #N'
+    paste_label: Paste text
+    paste_placeholder: Paste any Chinese text — signs, chats, articles…
+    empty: No decks yet. Create one from any text.
+    empty_text: No known words found in that text.
+    created: Deck created.
+    updated: Deck updated.
+    deleted: Deck deleted.
+    delete_confirm: Delete this deck? Your progress on the words stays.
+    items_count:
+      zero: no words
+      one: 1 word
+      other: "%{count} words"
+    study: Study
+    cram_all: Cram all
+    open: Open
+    back: "← My decks"
+    facets_label: What to drill
+    facets_hint: Pick which exercises this deck includes. Tones and Handwriting add Speak and Write buttons.
+    facets_create_hint: >-
+      Pick what this deck should drill. You can change it later on the deck page — and if you only want
+      to hear and say these words for now, leave Handwriting off.
+    presets_label: 'Quick picks:'
+    presets:
+      all: Everything
+      spoken: Sound and meaning
+      meaning: Meaning only
+    quick_add: Add to a deck
+    quick_added: Added to %{name}
+    quick_add_failed: Couldn't add that word.
+    pick_desk: Pick a deck
+    new_desk_option: New deck…
+    tabs:
+      text: Text or a list
+      song: A song
+      photo: A photo
+    song_hint: >-
+      Find the song and its words become a deck. The lyrics themselves are not kept: they are fetched, split
+      into words, and dropped.
+    song_words: Take this song
+    song_note: >-
+      Lyrics come from the open LRCLIB database and belong to their authors. Nothing but the word list stays
+      here.
+    photo_soon: Photos are still being built
+    photo_hint: >-
+      Reading characters off a photo is not ready yet. Until it is, draw a character you cannot read straight
+      into the search box and the app will name it.
+  progress:
+    title: Progress
+    tabs:
+      summary: Summary
+      history: History
+      data: Data
+  stats:
+    title: Statistics
+    streak: Day streak
+    retention: Retention (goal %{target})
+    answer_time: Avg. answer
+    mature: Mature
+    reviews_by_day: Reviews per day
+    breakdown: Deck memory states
+    states:
+      unseen: New
+      learning: Learning
+      young: Young
+      mature: Mature
+    leeches: Leeches (8+ lapses)
+  settings:
+    title: Settings
+    updated: Settings saved.
+    desired_retention: Desired retention
+    desired_retention_hint: Probability of recall FSRS aims for at review time. Higher = more frequent reviews. Default 0.9.
+    daily_new_limit: New cards per day
+    learn_ahead_minutes: Learn-ahead window (minutes)
+    export_title: Export for LLM prompts
+    export_hint: JSON with your known and learning words — paste into a generation prompt so examples only use vocabulary you know.
+    export_link: Download export
+  memories:
+    listening: Listening
+    recognition: Recognition
+    production: Recall
+    reading: Reading
+    tone: Tones
+    writing: Handwriting
+    short:
+      recognition: R
+      production: P
+  characters:
+    series:
+      title: "Phonetic series"
+      payoff: "%{count} characters share it; %{percent}%% of them still read %{rime} today."
+      diverged: "They rhymed together in Middle Chinese (%{group} group) and have drifted apart since — learn these one by one."
+    confusable:
+      title: "Easy to confuse"
+      note: "Same components, different character. Look twice."
+    by_component: Meaning component
+    found:
+      one: "%{count} character"
+      other: "%{count} characters"
+    play_reading: Play this reading
+    title: Characters
+    subtitle: "%{count} traditional characters (MOE 4808 common set) — tap any to see readings, etymology, words and your progress."
+    search: Search
+    search_placeholder: Search a character…
+    clear: Clear
+    radical: Radical
+    all_radicals: All radicals
+    empty: No characters match.
+    page: "%{page} / %{pages}"
+    back: Characters
+    strokes:
+      one: "%{count} stroke"
+      other: "%{count} strokes"
+    moe_index: 'MOE #%{number}'
+    moe_index_hint: 'Position in the MOE frequency list: the lower, the more common'
+    not_studied: Not studied yet.
+    not_in_dictionary: This character isn't in the common dictionary yet.
+    cangjie: Cangjie
+    stroke_order: Stroke order
+    animate: Animate
+    practice: Practice writing
+    practicing: Draw the strokes…
+    practice_done: "✓ Well done"
+    due: Due %{when}
+    etymology: Etymology
+    decomposition: Decomposition
+    ids:
+      left_right: left · right
+      top_bottom: top · bottom
+      left_mid_right: left · mid · right
+      top_mid_bottom: top · mid · bottom
+      surround: surround
+      surround_top: surround from top
+      surround_bottom: surround from bottom
+      surround_left: surround from left
+      surround_tl: surround upper-left
+      surround_tr: surround upper-right
+      surround_bl: surround lower-left
+      overlap: overlaid
+    semantic: Semantic
+    phonetic: Phonetic
+    readings: Readings
+    several_readings:
+      one: '破音字: this character has %{count} reading, each with its own meaning and words'
+      other: '破音字: this character has %{count} readings, each with its own meaning and words'
+    reading_unknown: Reading not established
+    words: Words
+    top_words: Common words with it
+    no_words: No linked words yet.
+    phrases: Phrases & sentences
+    states:
+      unseen: New
+      learning: Learning
+      review: Review
+      relearning: Relearning
+  pos:
+    tocfl:
+      "n": noun
+      v: verb
+      vi: intransitive verb
+      vs: state verb
+      vst: transitive state verb
+      vp: process verb
+      vpt: transitive process verb
+      v_sep: separable verb
+      vp_sep: separable process verb
+      vs_sep: separable state verb
+      vs_attr: attributive-only state verb
+      vs_pred: predicative-only state verb
+      vaux: auxiliary verb
+      adv: adverb
+      conj: conjunction
+      det: determiner
+      m: measure word
+      ptc: particle
+      prep: preposition
+    moe:
+      名: noun
+      動: verb
+      形: adjective
+      副: adverb
+      代: pronoun
+      助: particle
+      介: preposition
+      連: conjunction
+      歎: interjection
+      嘆: interjection
+      擬: onomatopoeia
+      量: measure word
+      綴: affix
+  thesaurus:
+    title: Thesaurus
+    synonyms: Synonyms
+    antonyms: Antonyms
+    related: Close in meaning
+    collocates: Frequent neighbors
+  liangci:
+    title: Measure words 量詞
+    subtitle: Taiwan Mandarin classifiers — what each one counts, which nouns it goes with, and how it looks in real sentences.
+    all: All
+    play: Play
+    game_title: Classifier game
+    game_hint: Swipe the noun toward the correct measure word (arrow keys work too).
+    game_prompt: Which measure word?
+    back: Measure words
+    used_with: Nouns it counts
+    used_with_hint: "%{count} nouns, easiest first."
+    examples: In sentences
+    examples_hint: From our corpora, simplest sentences first. The number + classifier + noun is highlighted.
+    as_character: As a character
+    as_word: As a word
+    as_measure_word: As a measure word
+    for_noun: Measure words it takes
+    main_short: usual
+    moe_gloss: Definition from 教育部國語辭典簡編本
+    next: Next
+    empty: No measure words loaded yet.
+    not_found: Not a known measure word.
+    categories:
+      individual: Individual
+      collective: Collective
+      container: Containers
+      partition: Portions
+      temporary: Improvised
+      verbal: Verbal
+      measurement: Units
+      time: Time
+    category_hints:
+      individual: Count single things, people and animals.
+      collective: Count groups, sets and bundles.
+      container: 'Count by the vessel: a cup, a box, a spoon.'
+      partition: Count parts, pieces and portions of a whole.
+      temporary: 'Improvised: an ordinary thing serves as a measure — an armful, a handful, a face covered in something.'
+      verbal: 'Count actions rather than things: how many times, how many goes.'
+      measurement: Units of length, weight, money and area.
+      time: Units of time.
+  auth:
+    data_hint: All of it is yours and comes out in a single file.
+    data_since: With us since %{date}
+    data_rows:
+      memories: Cards in memory
+      reviews: Reviews
+      syllables: Syllables practiced
+      attempts: Pronunciation attempts
+      collections: Decks
+      reading_texts: Your own texts
+      study_plans: Study plans
+      placement_tests: Placement tests
+    data_voice: Voice
+    data_voice_none: No warm-up yet — tone is judged without absolute pitch.
+    data_voice_range: Range %{low}–%{high} Hz, center %{median} Hz
+    data_voice_frames: from %{count} frames of audio
+    data_voice_redo: Redo the warm-up
+    data_voice_start: Do the warm-up
+    data_pron: Pronunciation
+    data_pron_none: Nothing recorded yet.
+    data_pron_line: "%{syllables} syllables, %{attempts} attempts, average %{average}"
+    data_excluded: 'Not exported: the page-visit log, your password and Google tokens — those are credentials, not progress.'
+    export_full: Download all my data
+    mobile_tabs: Bottom bar on your phone
+    google_backup_hint: Link your Google account and your whole progress can be backed up and restored with one button, no files to juggle.
+    font_recommendation: 'Character face and pinyin now live in the top bar: the 臺 button switches between the kaishu brush face and a plain sans one, and the ㄅa button shows or hides pinyin. Both are remembered in this browser. Kaishu is the default and worth keeping — it shows a character the way it is written by hand, which is what Taiwan teaches at school.'
+    security: Access
+    save_failed: Not saved
+    saved: Saved
+    tabs:
+      show: Account
+      display: Display
+      level: Level
+      guide: Guide
+      backup: Backups
+    level_title: Level
+    level_field: Your level
+    level_test: take the placement test
+    level_note: 'It decides what gets suggested as new. Cards you have already started keep their progress —'
+    levels:
+      zero: Starting from scratch
+      phonetics: I know pinyin and zhuyin
+    mobile_tabs_hint: Pick the %{count} places you use most. More is always the last tab.
+    interface_language: Interface language
+    login_title: Log in
+    login_subtitle: Log in to continue studying.
+    login: Log in
+    logout: Log out
+    email: Email
+    name: Name
+    new_password: New password
+    leave_blank: Leave blank to keep current
+    profile: Profile
+    account: Account
+    save: Save
+    progress: Progress
+    progress_counts: "%{memories} tracked skills · %{reviews} reviews"
+    export: Export progress
+    import: Import
+    import_done: 'Imported: %{memories} skills, %{reviews} reviews (%{skipped} skipped).'
+    import_no_file: Choose a file to import.
+    import_bad: That file isn't a valid progress export.
+    signed_in: Welcome back.
+    signed_out: Logged out.
+    profile_saved: Profile saved.
+    reading_title: Reading Chinese text
+    projection_field: What you get to see
+    projection_open: Everything, no limit
+    projection_chars: 'MOE characters: %{name} and below'
+    projection_option: '%{scale}: %{level} and below'
+    projection_note: 'Applies across every section and both searches. Cards and decks you already have stay put.'
+    projection_hides: 'Hiding %{hidden} of %{total} words and characters — %{share}%.'
+    projection_shows_all: 'Nothing hidden: all %{total} words and characters.'
+    projection_advanced: Fine tuning
+    projection_tolerance: Tolerance for the unfamiliar
+    projection_tolerance_note: 'How large a share of above-level words you accept inside a sentence.'
+    projection_steps:
+      at0: strictly at level
+      third: a third of the way to the next
+      half: halfway to the next
+      twothirds: two thirds of the way to the next
+    outside_projection: Beyond the level you picked
+    projection_scales:
+      tbcl: TBCL
+      tocfl: TOCFL
+    zhuyin_position: Zhuyin placement
+    zhuyin_positions:
+      right: To the right of each character
+      over: Above each character
+    text_direction: Text direction
+    text_directions:
+      horizontal: Horizontal, left to right
+      vertical: Vertical, top to bottom, columns right to left
+    email_locked: Email can't be changed.
+    continue_google: Continue with Google
+    google_only_note: Your account is created on first sign-in. There is no separate signup and no password.
+    google: Google account
+    link_google: Connect Google
+    google_connected: Connected as %{email}.
+    google_linked: Google account connected.
+    oauth_failed: Google sign-in didn't work. Try again.
+    drive_backup: Back up to Google Drive
+    drive_restore: Restore from Drive
+    drive_restore_confirm: Restore your latest Drive backup? This adds any missing progress.
+    drive_saved: Backed up to Drive as %{name}.
+    drive_needs_link: Connect your Google account first.
+    drive_error: 'Google Drive error: %{message}'
+    reset: Reset all progress
+    reset_confirm: Delete ALL your progress? This can't be undone. Back up first if unsure.
+    reset_hint: Wipes your memories and review history. Dictionaries and lessons stay untouched.
+    reset_done: Your progress has been reset.
+  hanzi:
+    evolution_title: How the shapes changed
+    evolution_lede: The same characters across three thousand years. Watch the drawing straighten into a set of strokes — and see why a pictogram still shows its object while the modern form no longer does.
+    evolution_gap: Clerical script appears only where an openly licensed form was available. A dash means the image is missing, not that the form never existed.
+    era:
+      modern: Today
+      oracle: oracle bone
+      oracle_zh: 甲骨文
+      bronze: bronze
+      bronze_zh: 金文
+      seal: seal
+      seal_zh: 篆書
+      clerical: clerical
+      clerical_zh: 隸書
+    show_all_with: Show every character with %{component}
+    title: How a character is built
+    empty: The material has not been loaded yet.
+    why_title: Why it is not a pile of strokes
+    categories_title: The six categories, 六書
+    semantics_title: Meaning components
+    semantics_lede: The component sets the field of meaning. The squeezed form next to the free one is how it actually appears inside a character.
+    series_title: Phonetic series
+    series_lede: Characters sharing a phonetic component. Watch where the reading holds and where it drifts.
+    phonetic_label: phonetic
+    walkthrough_title: Reading a character you have never seen
+    misses: fails here
+    strokes_title: Strokes and stroke order
+    strokes_basic: Basic strokes
+    strokes_compound: Compound strokes
+    yongzi_title: The eight principles in 永
+    watch_title: Watch a character assemble
+    watch_lede: Stroke order is easier seen once than read about. 永 is the character the eight principles are taught on.
+    order_title: Order of writing
+    limits_title: What this does not give you
+  history:
+    title: History
+    subtitle: What you've studied lately and how solid each character and word is.
+    ago: ago
+    empty: Nothing studied in this period yet.
+    ranges:
+      today: Today
+      yesterday: Yesterday
+      week: 7 days
+      month: 30 days
+      all: All time
+    overview:
+      strong: Strong
+      familiar: Familiar
+      learning: Learning
+      weak: Needs work
+      due: Due
+    summary:
+      reviews: Reviews
+      entities: Entities
+      accuracy: Accuracy
+      breakdown: again · hard · good · easy
+    table:
+      entity: Entity
+      meaning: Meaning
+      facets: Skills
+      reps: Reps
+      last: Last seen
+    strength:
+      strong: strong
+      familiar: familiar
+      learning: learning
+      weak: needs work
+      new: new
+    facets:
+      recognition: Recognition
+      production: Production
+      reading: Reading
+      tone: Tone
+      writing: Writing
+    facet_short:
+      recognition: rec
+      production: prod
+      reading: read
+      tone: tone
+      writing: write
+  sketch:
+    title: "How it combines"
+    relations:
+      modifier: "described as"
+      modified: "heads it takes"
+      manner: "done how"
+      complement: "result of it"
+      degree: "with degree"
+      resultative: "with a complement"
+      aspect: "with an aspect"
+      negated: "negated by"
+      preposition: "after a preposition"
+      disposal: "in a 把 sentence"
+      passive: "agent in a passive"
+      classifier: "counted with"
+      construction: "in a construction"
+  search:
+    title: Search
+    placeholder: Search anything — hanzi, pinyin, zhuyin, meaning…
+    prompt: Type hanzi, pinyin with or without tones, zhuyin, or a meaning.
+    empty: Nothing found for “%{query}”.
+    show_all: Show everything
+    showing_best: the %{count} closest are here
+    found: 'Found: %{count}'
+    found_capped: More than %{count} — showing the first %{count}
+    field_text: Writing or meaning
+    field_text_hint: Hanzi, or a word in English or Russian
+    field_pinyin: Pinyin
+    field_pinyin_hint: 'Tones as marks or as digits, spaced or not: nǐhǎo = ni3hao3 = ni hao'
+    field_zhuyin: Zhuyin
+    field_zhuyin_hint: With tone marks the tones are taken literally; without them any tone matches.
+    keyboard: keyboard
+    backspace: erase
+    clear_field: clear
+    sentences_only: Search the sentence bank instead
+    sentences_only_hint: 'The kinds above are ignored: every hit is a sentence, with the word marked in
+      it.'
+    order:
+      easy: simplest first
+      corpus: corpus order
+    compatibility: Do these go together?
+    pair_is_collocation: "— the dictionary holds this as a set phrase:"
+    pair_never_together: "— never seen side by side in the corpus."
+    pair_together: "— found side by side in %{count} sentences."
+    pair_capped: Counting stopped at the search ceiling; there may be more.
+    register_gap: >-
+      Styles pull apart: %{left} is mostly %{left_style} (%{left_share}%), %{right} mostly %{right_style}
+      (%{right_share}%). Together they will sound odd.
+    classifier_main: "%{measure} is the usual measure word for %{noun}."
+    classifier_ok: "%{measure} counts %{noun} — the dictionary lists the pair."
+    classifier_not_listed: "%{measure} is not listed as a measure word for %{noun}."
+    classifier_instead: 'The dictionary gives: %{list}.'
+    kind:
+      character: Character
+      word: Word
+      phrase: Phrase
+      radical: Radical
+      sentence: Sentence
+      collocation: Collocation
+      measure_word: Measure word
+    pad:
+      open: Zhuyin, pinyin or draw
+      zhuyin: Zhuyin
+      pinyin: Pinyin
+      draw: Draw
+      pinyin_hint: Type the letters yourself; tap here for the tone marks.
+      done: Done
+  errors:
+    not_found:
+      title: Page not found
+      hint: That address looks like a typo. The dictionary covers the core of Taiwanese Mandarin — check the spelling and try again.
+      home: Go home
+  sentences:
+    back: Back to sentences
+    browse: Browse sentences
+    missing_title: No such sentence
+    missing_hint: The link is out of date or mistyped. The sentence may have been removed during a corpus cleanup, or hidden because of its source license.
+    at_most_hint: and below
+    any_level: any
+    guaranteed_only: guaranteed levels only
+    apply: Show
+    reset: Reset
+    found: 'Found: %{count}'
+    empty: Nothing matches those filters.
+    register: Register
+    top_n: top %{n}
+    approximate_hint: 'units not covered: %{count}'
+    difficulty: difficulty %{value}
+    source_link: source
+    by_word: By word
+    by_character: By character
+    by_character_hint: 'Easiest first: by level, then by frequency.'
+    not_in_dictionary: not in the dictionary
+    grade: grade %{n}
+    prev: Previous
+    next: Next
+    page_of: "%{page} of %{pages}"
+    schemes:
+      tocfl: TOCFL
+      tbcl: TBCL
+      freq: Frequency
+    sort_label: 'Order:'
+    sort:
+      easy: Simplest first
+      mine: Matched to my progress
+      long: Longest first
+    sort_mine_hint: Sentences using words you have worked on recently come first.
+    add_to_deck: Add to a deck
+    title: Sentences
+    subtitle: Full example sentences — each word links to its dictionary entry.
+    all_sources: All
+    search: Search
+    search_placeholder: Search text or meaning…
+    page: "%{page} / %{pages}"
+  collocations:
+    words: Made of words
+    appears_in: Appears in dictionary entries
+  dict:
+    revised:
+      title: "Also in the full dictionary"
+      note: "From %{source}. Shown only where our own entry has no senses yet, and only above Novice level."
+    title: Words & phrases
+    back: Back to the dictionary
+    found: "%{count} entries in the dictionary"
+    search_placeholder: Search a word, phrase or meaning…
+  chengyu:
+    title: Idioms 成語
+    found: "%{count} idioms found"
+    search_placeholder: Search an idiom or meaning…
+    usage: How it is used
+    origin: Where it comes from
+    source_label: Source
+    examples: Examples
+    synonyms: Close in meaning
+    antonyms: Opposites
+    moe_credit: Definition, origin and examples — 教育部《成語典》
+    filter_level: Level
+    filter_tone: Tone
+    filter_kind: Kind
+    filter_band: Difficulty
+    tones:
+      all: All
+      positive: approving
+      neutral: neutral
+      negative: disapproving
+    kinds:
+      all: All
+      classic: 成語 (classical)
+      colloquial: 慣用語 (colloquial)
+    grades:
+      all: All
+      advanced: Beyond the syllabus
+    bands:
+      all: Any
+      easy: Easier
+      medium: Middling
+      hard: Harder
+  tbcl:
+    title: TBCL word lists
+    back: Back to grades
+    grade: Grade %{n}
+    badge: TBCL %{n}
+    words_count: "%{count} in the dictionary"
+  words:
+    no_corpus: no written data
+    no_corpus_hint: 'This one lives in speech: it does not occur in our written corpora, so no corpus frequency has been measured.'
+    collocations: Collocations
+    senses: Senses
+    senses_source: Sense order and examples follow 教育部《國語辭典簡編本》; translations are ours.
+    etymology: Origin
+    taiwan_specific: Taiwanese
+    taiwan_specific_hint: Marked as specifically used in Taiwan
+    score_hint: 'Difficulty rank across the whole dictionary: 1 — simplest and most frequent, 999 — rarest and hardest'
+    register_mix: Speech styles
+    register_mix_note: 'Shares are rescaled so that every register weighs the same as in a balanced corpus: a flat %{neutral} % means a stylistically neutral word. Measured on %{count} occurrences.'
+    register_mix_thin: Few occurrences, so the profile is pulled toward neutral.
+    register_mix_missing: no corpus for this register — not estimated
+    register_mix_sentence_note: 'Assembled from the styles of the words in it: the more a word is tied to one register, the heavier its vote, while words that live everywhere do not vote at all. Words that voted: %{count}; a flat %{neutral} % means a stylistically neutral sentence.'
+    all_sentences: All sentences with this word →
+    all_levels: All
+    tocfl_levels: TOCFL level
+    school_levels: TBCL level
+    grade: Grade %{n}
+    sort_label: Sort
+    sort:
+      level: By level
+      freq: By frequency
+    search: Search
+    search_placeholder: Search a word or meaning…
+    empty: No words match.
+    page: "%{page} / %{pages}"
+    back: Words
+    characters: Characters
+    sentences: Sentences & phrases
+    add_study: Add to study
+    added: Added to your study set.
+    not_studied: Not studied yet.
+    not_in_dictionary: This word isn't in the dictionary yet.
+    progress:
+      all: All
+      new: New
+      learning: Learning
+      known: Known
+  tones:
+    names:
+      "1": "First tone"
+      "2": "Second tone"
+      "3": "Third tone"
+      "4": "Fourth tone"
+    segments_title: Not only the tones
+    segments_lede: Two differences in the segments themselves, audible constantly and worth knowing from the start.
+    segments:
+      retroflex: The retroflexes ㄓ ㄔ ㄕ often merge with ㄗ ㄘ ㄙ in Taiwanese speech. In everyday talk 知 and 資 can sound alike.
+      nasal: The finals -ing and -eng have largely merged with -in and -en. This is a settled feature, not carelessness.
+    practice_cta: Open the tone drill →
+    chart:
+      taipei: Taipei
+      beijing: Beijing
+      aria: "%{tone}: pitch contour"
+      taipei_note: How the tones sound in Taiwan. There are several differences from the norm in China; they are listed below.
+      beijing_note: The norm in China, for comparison. The figures are the conventional prescriptive notation.
+      scale: 'Five notional pitch steps, low to high. Read each line left to right: where it starts and where it goes. No figures are given for Taipei on purpose — there is no settled prescriptive notation for the Taiwanese realisation, and inventing one is not something I will do.'
+    hacks_title: What actually helps
+    hacks:
+      low: The third tone is simply a low tone, the opposite of the first. It only produces the deep dip-and-rise in isolation and at the end of an utterance; in Taiwan the rise is almost never pronounced. Do not try to draw a tick — just go low and stay there.
+      pair: 'Treat the first and third as a pair: one high level, one low level. That is easier to hold on to than ''level versus dipping''.'
+      start: 'The second and third are the ones most often confused. The cue is not where the tone ends up but where it begins: the second starts mid and rises, the third starts low and stays low.'
+      after_third: 'When a second tone follows a third, the low of the third is your run-up: you are already at the bottom, and the second rises straight from there. Do not climb back to the middle between the syllables — that is what breaks the join.'
+      fourth: 'The fourth usually comes easiest: it is the intonation of a firm statement, sharply top to bottom. If it sounds too soft, you probably did not start high enough.'
+      relative: Pitch is relative, not absolute. The five steps are measured inside your own vocal range, not against musical notes. A low voice is no obstacle to tones.
+      neutral: 'A neutral syllable has no pitch of its own — it takes one from the syllable before. After a first tone it lands mid, after a fourth it lands low. There is nothing to learn separately: it comes out right if the preceding tone is right.'
+    title: Tones
+    lede: The fourth part of the phonetics, without which the first three do not work. What a tone is, how it behaves in Taiwan, and why you cannot simply not produce one.
+    why_title: A tone is not decoration
+    why_body: In Mandarin the tone belongs to the syllable just as much as its consonants and vowels do. Ignore tone and the language has roughly four hundred distinguishable syllables; count it and there are about thirteen hundred. Dropping tone cuts the distinctions available to you by two thirds and multiplies the number of words that sound identical coming out of your mouth.
+    myth_title: On the myth that context will carry you
+    myth_body: Context genuinely helps, and words never occur in a vacuum. But context corrects what the listener has already heard; it does not stand in for hearing. A native speaker parses tone automatically, before any interpretation, and a wrong tone is not received as an absent tone. It is received as a different tone — so it misleads actively rather than passively.
+    cannot_title: Not producing a tone is not an option
+    cannot_body: This point is technical rather than motivational. Any syllable you utter has a pitch and a pitch movement, or it would not have sounded at all. The only question is whether that contour matches the one required. Skipping tone work does not give you neutral speech; it gives you speech with random tones. The tone may not exist for your ear, but it always exists for the person listening.
+    cumulative_title: It is not really about minimal pairs
+    cumulative_body: 'Tones are usually introduced through 媽 麻 馬 罵, which leaves the impression that the risk is limited to rare collisions. In practice the damage is cumulative rather than lexical: with systematically wrong tones each individual word may still be guessable, while a whole sentence is not, because the listener has to try alternatives faster than you are speaking.'
+    four_title: The four tones
+    four_lede: The figures in brackets are Chao's five-point pitch notation, from 1 (low) to 5 (high).
+    tones:
+      t1:
+        name: First — high level
+        contour: '55'
+        zhuyin: no mark
+        note: Held at one pitch. Zhuyin marks it with nothing at all — the absence of a mark is the first tone.
+      t2:
+        name: Second — rising
+        contour: '35'
+        zhuyin: ˊ
+        note: Travels upwards, much like the intonation of an English question.
+      t3:
+        name: Third — low
+        contour: 214 / 21
+        zhuyin: ˇ
+        note: Textbooks draw a dip that rises again, but the rise is mostly audible on an isolated syllable or at the end of an utterance. In running speech the third tone usually stays low and does not come back up.
+      t4:
+        name: Fourth — falling
+        contour: '51'
+        zhuyin: ˋ
+        note: Sharply from top to bottom, short and decisive.
+    neutral_title: The fifth, or rather the neutral one
+    neutral_body: 'Strictly it is not a fifth tone but the absence of a tone of its own: the syllable loses its contour, shortens, and takes its pitch from the syllable before it. Zhuyin marks it with a dot ˙ and, unlike pinyin, places it BEFORE the syllable: ˙ㄉㄜ. There is no point testing it in a drill — by ear it is simply a very short unstressed syllable.'
+    neutral_taiwan: 'And here is an important Taiwanese difference: the neutral tone is markedly less common in Taiwan than in the norm used in China. Many words whose second syllable is reduced in China keep their full tone here.'
+    taiwan_title: How tones differ in Taiwan
+    taiwan_body: The differences are not in the system — there are the same four tones — but in how they are realized.
+    taiwan_points:
+      range: The range overall is lower and narrower. Taiwanese speech fits into a smaller pitch interval than speech in China, which is why the tones sound restrained rather than flat.
+      second: The second tone does not rise as high. It also often picks up a slight dip at the start, coming to resemble the prescriptive third tone in shape.
+      third: The third tone does not come back up out of the low, creaky range. The full 214 contour is essentially not produced in Taiwan.
+      neutral: The neutral tone occurs less often, and final syllables generally keep their own tone.
+      erhua: Erhua — the 兒 suffix — is very rare in Taiwanese Mandarin.
+      merge: The second and third tones come closer together by ear than in broadcast pronunciation. This is the norm, not a speech defect.
+    sandhi_title: Two rules that change the tone
+    sandhi_lede: 'One tone is written and another is spoken. The written tone does not change: the dictionary, the zhuyin and the pinyin all keep the original.'
+    third_title: A third tone before a third tone
+    third_body: When two third tones follow each other, the first is pronounced as a second. 你好 is written ㄋㄧˇ ㄏㄠˇ but sounds like ní hǎo. The rule works on what is spoken rather than on the dictionary form, so it applies across word boundaries too.
+    third_three: 'With three third tones in a row the result depends on how the phrase divides in meaning. 我很好 usually comes out as wó hén hǎo, because 很好 holds together more tightly. There is nothing to memorize: the rule applies to whichever syllables you actually group together.'
+    yi_title: 一 and 不
+    yi_body: The tone of these two syllables depends on what follows.
+    yi_rules:
+      yi_alone: '一 on its own, at the end, and in ordinals — first tone: yī, 第一 dì yī.'
+      yi_before4: '一 before a fourth tone — second: 一定 yí dìng, 一樣 yí yàng.'
+      yi_other: '一 before a first, second or third tone — fourth: 一天 yì tiān, 一年 yì nián, 一起 yì qǐ.'
+      bu_before4: '不 before a fourth tone — second: 不是 bú shì, 不要 bú yào.'
+      bu_other: '不 everywhere else — fourth: 不好 bù hǎo, 不能 bù néng.'
+    practice_title: Practice
+    practice_body: 'Below is a listening drill: a syllable sounds, you name the tone. It records no progress and feeds nothing into your reviews — it is pure drilling, and you can leave at any moment.'
+    practice_pending: 'Practicing tone production aloud is not available yet: it arrives once speech recognition with contour checking and Taiwanese norms is connected. For now only recognition by ear is trained.'
+    drill:
+      title: Tone drill by ear
+      lede: 'A syllable sounds and you name the tone. Nothing is recorded and your reviews are untouched: this is pure practice, and you can leave whenever you like.'
+      back: "← Back to the explanation"
+      prompt: Which tone is this?
+      replay: Play again
+      keys: Up, right, down, left for first, second, third, fourth. Or tap an option.
+      tone1: 1st level
+      tone2: 2nd rising
+      tone3: 3rd low
+      tone4: 4th falling
+      score: 'Correct: %{correct} of %{total}'
+      more: More syllables
+      leave: Leave
+      empty: The drill needs audio — it appears once the recordings are installed on the server.
+  typing:
+    modes:
+      pinyin: From pinyin
+      hanzi: From characters
+    mode_hint:
+      pinyin: You see the Latin spelling and type it in zhuyin. No characters needed.
+      hanzi: Only the characters and words you have already studied.
+    fell_back: You have not studied enough characters yet, so we are typing from pinyin. Come back once you have your first words.
+    title: Type in zhuyin
+    reveal: Show the reading
+    skip: Skip
+    hint: Type the reading on your keyboard, then press space or Enter. Backspace deletes. You can also tap the keys below.
+    accuracy: Correct
+    done: Words done
+    how_title: Why learn to type this way
+    how_body: 'This is the layout printed on every keyboard sold in Taiwan, and it is how most people here type. You do not need to install anything to practice: press the same keys you would press on a Taiwanese keyboard and the zhuyin appears. Tones live on 6, 3, 4 and 7; the neutral tone is 7. Once the layout is in your fingers, typing Chinese stops being a lookup exercise and becomes muscle memory — and because you type the sound, it drills the reading at the same time.'
+  cangjie:
+    title: Cangjie input
+    subtitle: Cangjie 5 (五代) — type Latin keys to compose traditional Taiwan characters. Every character's card also shows its Cangjie code.
+    data_missing: 'Cangjie data isn''t built yet. Run: rake huayu:import_cangjie'
+    output_placeholder: Type Cangjie codes here…
+    code: Code
+    hint: Type letters to build a code, then Space (or a number) to pick a character. Backspace edits the code, Esc clears it.
+  tocfl:
+    title: TOCFL readiness
+    subtitle: Your progress toward each official level — counts every character and word you've learned anywhere.
+    back: TOCFL
+    known_of: "%{known} / %{total} known"
+    readiness: "%{percent}% ready"
+    started_count: "%{count} in progress"
+    study_level: Study this level
+    has_audio: Has audio
+  pronunciation:
+    sections:
+      all: All
+      tones: Tones
+      initials: Initials
+      finals: Finals
+      no_tone: "— tone not graded"
+    skip: Skip
+    attempts_left: 'Attempts left: %{count}'
+    not_recognized: Not recognized
+    sounded_like: Sounded like %{key}
+    blocked: Needs green to continue
+    title: Pronunciation
+    subtitle: Say the word — your tones and syllables are graded locally against the Taiwan reading.
+    another: Another word
+    auto: Auto mode
+    auto_hint: Records, grades and moves on by itself.
+    prelisten: Pre-listen
+    prelisten_hint: Plays the word first, then records after half a second.
+    drill: Say the whole word, but watch
+    drill_skip: We'll come back to this one — moving on.
+    empty: No word with a reading to practice yet.
+    record: Record
+    stop: Stop
+    recording: Recording… tap to stop
+    grading: Grading…
+    retry: Not quite — say it again…
+    unavailable: The reference recordings are not installed — there is nothing to grade against.
+    mic_denied: No access to the microphone. Allow recording in your browser's site settings.
+    mic_missing: No microphone found. Connect one and reload the page.
+    mic_insecure: Browsers only grant microphone access over HTTPS or on localhost.
+    network: Could not reach the server — check your connection.
+    error: Couldn't grade that take — try again, a bit louder and closer to the mic.
+    hint: Each syllable turns green if its tone is right, red with the correction if not.
+  numbers:
+    rules_title: Rules worth knowing before you drill
+    rules:
+      truncation:
+        title: A trailing digit means the next unit down
+        body: This is the main source of confusion. A lone digit at the end is not added to the number — it multiplies the next unit down, which simply goes unsaid. So 三百五 is 350, not 305.
+        rows:
+        - huayu: 三百五
+          value: '350'
+          note: full form 三百五十, with 十 dropped
+        - huayu: 兩千三
+          value: '2300'
+          note: full form 兩千三百, with 百 dropped
+        - huayu: 一萬五
+          value: '15,000'
+          note: full form 一萬五千, with 千 dropped
+      zero:
+        title: 零 is not a pause, it blocks the shortcut
+        body: 'To say 305 it is not enough to name three and five: you need 零 between them. It announces that a place is empty and so cancels the reading above. One 零 covers a gap of any width.'
+        rows:
+        - huayu: 三百零五
+          value: '305'
+          note: without 零 this would be 350
+        - huayu: 一千零五
+          value: '1005'
+          note: both hundreds and tens are empty — still one 零
+        - huayu: 一千零五十
+          value: '1050'
+          note: 十 is spoken, so these are tens, not units
+        - huayu: 一萬零五
+          value: '10,005'
+          note: 零 works across the 萬 boundary too
+      liang:
+        title: 兩 or 二 depends on what follows
+        body: '二 is the digit itself: when counting, in numbers, in 十二 and in 二十. 兩 goes where the two measures something: before a measure word and before 百, 千, 萬, 億. There is one important exception: before 十 it is always 二.'
+        rows:
+        - huayu: 二
+          value: '2'
+          note: the bare digit, when counting
+        - huayu: 二十
+          value: '20'
+          note: never 兩 before 十
+        - huayu: 十二
+          value: '12'
+          note: a two in the units is 二 as well
+        - huayu: 兩百
+          value: '200'
+          note: 兩 before 百; Taiwan does not say 二百
+        - huayu: 兩千三百二十二
+          value: '2322'
+          note: 兩 twice up top, 二 below — all in one number
+        - huayu: 兩個人
+          value: 2 people
+          note: always 兩 before a measure word
+      shi:
+        title: 十 at the start needs no 一
+        body: From 10 to 19, 十 stands on its own. As soon as a higher unit appears in front of it, the one comes back.
+        rows:
+        - huayu: 十五
+          value: '15'
+          note: nobody says 一十五
+        - huayu: 一百一十五
+          value: '115'
+          note: here the 一 before 十 is required
+        - huayu: 一百一
+          value: '110'
+          note: the colloquial shortening from the trailing-digit rule
+    title: Numbers and numerals
+    keys: Arrow keys, or tap an option.
+    done_title: Run complete
+    restart: Again
+    system_title: Digits group in fours, not threes
+    system_body: European languages cut a number every three digits; Chinese cuts every four. That is why 'million' is not its own word but 一百萬 — a hundred lots of 萬. The easiest way in is to mentally place a space every four digits from the right instead of every three.
+    col_digits: In digits
+    col_huayu: In characters
+    col_western: What we would call it
+    western:
+      ten_thousand: ten thousand
+      hundred_thousand: hundred thousand
+      million: million
+      ten_million: ten million
+      hundred_million: hundred million
+      billion: billion
+    stages:
+      glyphs: Characters
+      myriads: Magnitudes
+      reading: Reading
+      traps: Traps
+      taiwan: 民國
+    stage_hint:
+      glyphs: 'Every character numbers need: the ten digits, 十百千萬億兆 and 兩. There are few of them, but you need all of them.'
+      myriads: The anchor magnitudes. Digits are grouped in fours, the way Chinese actually counts them.
+      reading: 'A random number in characters: say it back in digits.'
+      traps: 'Where people slip most: 兩 versus 二, a dropped 零, and 十 in the middle of a number.'
+      taiwan: 'Republic years: Taiwanese documents, ID cards and forms use 民國. Add 1911 to get the year you are used to.'
+  zhuyin_trainer:
+    scoped:
+      initials: Just the initials for now — the ones you have only just read.
+      finals: Just the finals for now.
+      all: All 37 symbols
+    onward:
+      finals: 'Next: the finals in the chart →'
+      tricky: 'Next: the tricky cases →'
+      typing: 'Next: learn to type →'
+    lede: 'You hear a sound and pick the symbol. There is deliberately no Latin: the link runs straight from symbol to sound.'
+    title: Zhuyin by ear
+    prompt: What do you hear?
+    replay: Play again
+    replay_hint: Space replays the sound
+    keys: Arrow keys, or tap an option.
+    progress: "%{done} of %{total} symbols mastered"
+    block_hint: "%{done} of %{total} mastered in this block. The next block opens once this one is done."
+    done_title: Run complete
+    done_heading: Every symbol mastered
+    done_body: On to words and characters. You can come back here whenever you like.
+    restart: Another run
+    leave: Go to words
+    exit_hint: You can leave whenever you like — your progress is saved and the trainer will wait here.
+    blocks:
+      labial: 'Labials: ㄅㄆㄇㄈ'
+      alveolar: 'Alveolars: ㄉㄊㄋㄌ'
+      velar: 'Velars: ㄍㄎㄏ'
+      palatal: 'Palatals: ㄐㄑㄒ'
+      retroflex: 'Retroflexes: ㄓㄔㄕㄖ'
+      sibilant: 'Sibilants: ㄗㄘㄙ'
+      medial: 'Medials: ㄧㄨㄩ'
+      open: 'Simple vowels: ㄚㄛㄜㄝ'
+      diphthong: 'Diphthongs: ㄞㄟㄠㄡ'
+      nasal: 'Nasal finals: ㄢㄣㄤㄥ'
+      rhotic: 'Rhotic: ㄦ'
+  practice:
+    about_title: Where zhuyin came from
+    about:
+      origin: The symbols were devised by Zhang Binglin, who took regularised forms of ancient Chinese characters whose readings contain the sound in question. That is why ㄅ, ㄆ and ㄇ look like characters — they once were.
+      adopted: Taiwan adopted the system in 1945, and it remains the principal way Mandarin pronunciation is taught in primary school.
+      size: Thirty-seven symbols and five tone marks are enough to write any sound in Mandarin. The first tone is usually left unmarked, and a dot above stands for the neutral tone.
+      today: Today zhuyin is the most common way in Taiwan to type characters on a computer or phone and to look them up in a dictionary. Textbooks print it as ruby annotation above the line.
+      hokkien: Twenty-three further symbols were created for Taiwanese Hokkien — the same system extended to another language of Taiwan.
+    practice_now:
+      title: Practice it right away
+      initials: Twenty-one initials, in blocks by manner of articulation. Read on once these come back by ear without hesitation.
+      finals: Sixteen finals. The same trainer, with no Latin on screen.
+      cta: To the listening trainer →
+    drill_progress_title: Sound practice
+    drill_progress_hint: Fills up as you work through the sound-recognition cards and the zhuyin typing drill. Every completed run counts.
+    voice_progress_title: Spoken pronunciation
+    weak_sounds: Where you slip most often
+    runs:
+      drill: runs of the sound drill
+      typing: runs of zhuyin typing
+      open: Open →
+    parts_nav: Sections of this page
+    parts:
+      intro: Introduction
+      initials: Initials
+      finals: Finals
+      tricky: Tricky cases
+    part_next: 'Next: %{title} →'
+    part_previous: "← Back: %{title}"
+    to_drill: Read it — on to the practice →
+    back_to_chart: "← Back to the zhuyin and pinyin chart"
+    initials_lede: 'Twenty-one symbols — everything a syllable can begin with. The button plays Taiwan''s Ministry of Education recording: listen before you read the breakdown.'
+    finals_lede: 'Everything left in the syllable after the initial consonant: a vowel, a diphthong, or a vowel with a nasal. For compound finals the individual symbols are voiced — run together they do not sound like the two parts in sequence.'
+    why_title: Why this is not a detail
+    why_body: 'You can read pinyin without any preparation, and that is exactly what makes it dangerous: the letters drag your English reading along with them, and the error sets in silently. There is nothing behind a zhuyin symbol but the sound you teach it. That is precisely why Taiwan annotates readings with it.'
+    compound_audio: 'A compound final: the individual symbols are voiced. Run together it does not sound like the two parts in sequence — see the notes on the right.'
+    play_symbol: Play %{symbol}
+    phonetics_card: 'The full sound chart: zhuyin, pinyin, IPA, an anchor in English, and examples.'
+    phonetics_title: Zhuyin and pinyin
+    col_explanation: The catch
+    col_written: Written as
+    col_real_sound: Actual sound
+    rimes_lede: For a number of finals, pinyin does not write what you will actually hear. Zhuyin is usually closer to the real sound in exactly these cases — this is where, and why.
+    rimes: Where the spelling and the sound diverge
+    study: Study
+    speak: Speak
+    write: Write
+    title: Basics
+    intro: Learn the sounds of Mandarin from the ground up — the reading systems first, then pronunciation.
+    initials: Initials (consonants)
+    finals: Finals (vowels)
+    play: Play
+    col_pinyin: Pinyin
+    col_palladius: Palladius
+    palladius_note: ''
+    col_zhuyin: Zhuyin
+    col_ipa: IPA
+    col_analogy: Sounds like
+    col_example: Example
+    pinyin_intro: The romanization used across the app. Each sound with its IPA, a plain-language analogy, and an example word.
+    zhuyin_intro: Taiwan's phonetic script. You can learn it next to pinyin, or straight from the sounds. Same table, showing both.
+    drill:
+      lede: 'Matching the two scripts: see a symbol, name the Latin spelling, and back again. Pinyin is a bridge here, not the foundation.'
+      title: Zhuyin ↔ pinyin
+      direction_zhuyin: Zhuyin → pinyin
+      direction_pinyin: Pinyin → zhuyin
+      systems_html: 'Zhuyin is 37 symbols that Taiwan uses to write sounds. Each one always reads the same way, and you cannot invent a reading for it — you simply learn how it sounds. Pinyin writes those same sounds with Latin letters; it is there as a prop, nothing more. What to do: work through the charts below until you can recognize the symbols by ear.'
+      stage_hint: 'Work through it in order: consonants first, then the vowels and glides, then the full rimes, and only then whole syllables.'
+      stages:
+        consonants: Consonants
+        vowels: Vowels
+        finals: Rimes
+        syllables: Whole syllables
+      prompt_zhuyin: Which pinyin is this?
+      prompt_pinyin: Which zhuyin is this?
+      keys: Swipe the card toward your answer, or use the arrow keys
+      done_title: Round finished
+      restart: Go again
+      see_chart_zhuyin: Zhuyin chart
+      see_chart_pinyin: Pinyin chart
+      card: Match zhuyin against pinyin in both directions, by swiping.
+      syllable_title: How a Taiwanese Mandarin syllable is built
+      syllable_body: Every syllable is at most three slots. Only the last one is compulsory — 一 is a bare final, 四 is an initial with no vowel written at all. Zhuyin spells the slots out; pinyin often merges or omits them.
+      slots:
+        initial_label: Initial 聲母
+        initial_glyph: ㄓ
+        initial_body: One of 21 consonants. Optional — many syllables begin with the vowel.
+        medial_label: Medial 介音
+        medial_glyph: ㄨ
+        medial_body: One of three glides, ㄧ ㄨ ㄩ. This is the slot pinyin hides most often.
+        final_label: Final 韻母
+        final_glyph: ㄥ
+        final_body: The rime — a vowel, a diphthong, or a vowel with -n or -ng. The only compulsory slot.
+      tones_title: Where the tone goes
+      tones_body: 'Pinyin puts a diacritic over the main vowel: mā má mǎ mà. Zhuyin leaves the first tone unmarked and writes ˊ ˇ ˋ after the symbols — ㄇㄚ ㄇㄚˊ ㄇㄚˇ ㄇㄚˋ. The neutral tone is the exception in both: pinyin simply drops the mark, zhuyin puts a dot ˙ in front, as in ˙ㄉㄜ. Written down the page, zhuyin runs vertically to the right of the character it annotates, tone mark included.'
+      mismatch_title: Where pinyin misleads you
+      mismatch_body: 'These are not exceptions to learn by heart. They follow from one decision: to keep the spelling short, pinyin drops vowels from the middle of the syllable, reuses one letter for different sounds, and sometimes writes a letter where there is no sound at all. Zhuyin writes nothing that is not pronounced — so the zhuyin column shows what the syllable is actually made of.'
+      mismatch_pinyin: Pinyin
+      mismatch_zhuyin: Zhuyin
+      mismatch_why: What is really happening
+      mismatch:
+        zhong:
+          pinyin: zhong
+          zhuyin: ㄓㄨㄥ
+          why: zh is ㄓ, but that o is not ㄛ. The rime -ong is really -ung, so zhuyin writes the glide ㄨ and the rime ㄥ.
+        jiu:
+          pinyin: jiu
+          zhuyin: ㄐㄧㄡ
+          why: The rime is -iou; pinyin drops the middle vowel to keep the spelling short. Zhuyin keeps ㄧ and ㄡ both.
+        hui:
+          pinyin: hui
+          zhuyin: ㄏㄨㄟ
+          why: The same trick — the rime is -uei, and pinyin swallows the e. Zhuyin writes ㄨ and ㄟ.
+        yu:
+          pinyin: yu
+          zhuyin: ㄩ
+          why: The y is not a consonant, it is there to carry the vowel, and the u is really ü. One sound, so zhuyin writes one symbol.
+        zhi:
+          pinyin: zhi
+          zhuyin: ㄓ
+          why: That i spells no vowel at all — it is the held retroflex tongue. Zhuyin writes nothing after ㄓ, because nothing is there.
+        weng:
+          pinyin: weng / -ong
+          zhuyin: ㄨㄥ
+          why: Two different pinyin spellings for one and the same rime, depending on whether a consonant precedes it. In zhuyin it is ㄨㄥ either way.
+      mismatch_more_title: What to take away
+      mismatch_more_body: 'A pinyin reader is constantly making silent corrections: here o is really u, here a vowel is missing, here i is not a vowel at all, here u is really ü. Every one of those corrections is a place where a wrong pronunciation can set, and usually the learner never notices, because the spelling looks perfectly reasonable. Zhuyin asks for none of them: what is written is what is said.'
+    tones_title: Tones & sounds
+    tones_card: Say syllables aloud and get tone-by-tone feedback until they're right.
+    progress_title: Practice progress
+    progress_card: How your tones and sounds are coming along.
+    progress_intro: Built from your speaking attempts — where your tones and sounds are strong, and what to work on.
+    progress_empty: No speaking attempts yet. Practice pronunciation and your tone and sound stats will show up here.
+    by_tone: By tone
+    by_sound: By sound (initials)
+    confusions: Most-confused tones
+    confusions_hint: Tones you said where a different tone was heard, most frequent first.
+    tone_names:
+      '1': 1st · high ˉ
+      '2': 2nd · rising ˊ
+      '3': 3rd · dipping ˇ
+      '4': 4th · falling ˋ
+      '5': neutral ·
+  plan:
+    title: TOCFL plan
+    new_title: Plan your TOCFL
+    new_intro: Pick a level and a target date. We'll work out how much to learn and how much per day.
+    level: Target level
+    date: Target date
+    calculate: Save plan
+    saved: Plan saved.
+    none: No plan yet. Set a target level and date to get a daily study load.
+    create: Set a plan
+    edit: Change plan
+    by_date: by %{date}
+    per_day_html: About <strong>%{count} new items a day</strong> — roughly <strong>%{minutes} min/day</strong> including reviews.
+    today_title: Today's deck
+    today_counts: "%{due} due for review · %{fresh} new"
+    today_button: Study today's deck
+    overload: That's %{count} cards for today — a lot piled up. Push your target date back in the plan to spread it out, or power through.
+    stat:
+      total: to learn
+      known: known
+      remaining: remaining
+      days: days left
+    kinds:
+      character: characters
+      word: words
+      phrase: phrases
+    levels:
+      Novice1: TOCFL Novice 1
+      Novice2: TOCFL Novice 2
+      A1: TOCFL A1
+      A2: TOCFL A2
+      B1: TOCFL B1
+      B2: TOCFL B2
+      C: TOCFL Band C (C1–C2)
+  writing:
+    title: Writing
+    subtitle: Recall the character from its meaning and reading, then write it stroke by stroke.
+    another: Another
+    empty: No character with stroke data to practice yet.
+    reveal: Show me
+    correct: Written correctly ✓
+    shaky: Written, with a few misses
+    revealed: Revealed — study it
+    hint: Draw each character in the right stroke order. Green when a character is complete.
+  handwriting:
+    title: Handwriting
+    subtitle: Draw a traditional character stroke by stroke — it's recognized offline and linked to the dictionary.
+    loading: Loading recognizer…
+    failed: Failed to load data
+    matches: Best matches
+    hint: Draw in roughly the right stroke order for best results. Tap a match to open its dictionary entry.
+    undo: Undo
+    clear: Clear
+    data_missing: 'Handwriting data isn''t downloaded yet. Run: rake lang:zh_tw:fetch'
+  radicals:
+    title: Radicals
+    subtitle: The 214 Kangxi radicals — the building blocks every character is filed under.
+    back: Radicals
+    showing_first: Showing the %{shown} most common of %{total}. Switch the panel to 詳 for the full list.
+    number: Radical %{number}
+    strokes_group:
+      one: "%{count} stroke"
+      other: "%{count} strokes"
+    chars_count:
+      one: "%{count} char"
+      other: "%{count} chars"
+    characters:
+      one: "%{count} character"
+      other: "%{count} characters"
+  triage:
+    title: Quick sweep for what you know
+    kinds:
+      character: Characters
+      word: Words
+    remaining: "%{count} still unsorted"
+    known: I know it
+    known_hint: we will not ask for a long while
+    normal: Not sure
+    normal_hint: keep it in the usual queue
+    keys: Right arrow for known, left to keep it. Swiping works too.
+    done_title: Batch sorted
+    next_batch: Next batch
+    empty: Everything is sorted. Come back when the dictionary grows.
+  study:
+    up_next:
+      zhuyin: Work through zhuyin
+      zhuyin_body: Start with the sounds — everything after that goes faster.
+      drill: Open the zhuyin trainer
+      drill_body: Fix the symbols by ear while they are fresh.
+      typing: Learn to type
+      typing_body: Typing in zhuyin comes in useful every day.
+      ahead: Pull new material forward
+      ahead_body: Everything due is done. You can take the next words early.
+    next_heading: What comes next
+    play: Play
+    grade_help:
+      again: brand new, or nothing came back at all — it returns within this same session
+      hard: 'partly recalled: the meaning is there but the reading or tone slipped — the interval barely grows'
+      good: you thought about it and got it right — a normal step forward
+      easy: recognized instantly, no effort — the interval grows much further and you will see it far less often
+    hint: Tap the card to reveal the answer. Grade it by swiping, by button or with the arrow keys — the buttons sit where the swipe goes.
+    title: Study
+    subtitle: Swipe the whole batch once — only the ones you miss come back.
+    open_entry: Open dictionary entry
+    drill_tone: Check with the mic →
+    drill_writing: Practice the strokes →
+    ask:
+      listening: What did you hear?
+      recognition: What does it mean?
+      production: Which word is it?
+      reading: How is it read?
+      tone: Say it out loud
+      writing: Write the character
+    grade:
+      again: Don't know
+      hard: Mistake
+      good: Know
+      easy: Easy
+    progress:
+      done: "%{done} / %{total} done"
+      remaining:
+        one: "%{count} left"
+        other: "%{count} left"
+    modes:
+      daily: Daily deck
+      cram: Learn new
+      collection: Set
+    all_again: All again
+    all_easy: All easy
+    next: Next
+    done_title: All done for now
+    done_body: Nothing left in this session. Come back later or switch mode.
+    back_to_desk: Back to deck
+    counts:
+      due: due
+      fresh: new
+      total: in set
+  access:
+    language_denied: That language is not enabled for your account.
+    restricted_denied: This section isn't available on your account.
+    admin_denied: Admins only.
+  admin:
+    activity: Activity
+    activity_intro: What people are doing, last %{days} days (%{total} events recorded in total).
+    activity_empty: Nothing recorded yet.
+    by_user: By person
+    by_section: By section
+    by_day: By day
+    recent: Latest activity
+    impersonate: View as
+    impersonating: You are now viewing the app as %{email}.
+    impersonating_banner: Viewing as %{email} — your admin session is untouched.
+    impersonation_stop: Back to my account
+    impersonation_stopped: Back to your own account.
+    impersonate_self: That is already your own account.
+    sources:
+      title: Content sources
+      intro: Words and characters belong to the language and carry no source. Sentences, translations and audio do — switch them off here. Clearing "Show to everyone" removes that source's material for all users; "Keep for admins" keeps it visible on your own account.
+      saved: Source "%{name}" saved.
+      enabled: Show to everyone
+      enabled_for_admins: Keep for admins
+      false: 'off'
+      commercial_ok: commercial use permitted
+      commercial_no: commercial use unconfirmed
+      measurement_hint: "%{count} sources are not cleared for commercial use. They are measured during the rebuild — frequency, registers, difficulty — and none of their sentences are kept in the database."
+      counts:
+        sentences: sentences
+        collocations: collocations
+        audio: audio
+        translations: translations
+      registers:
+        colloquial: colloquial
+        literary: literary
+        publicistic: journalistic
+        official: official
+        academic: academic
+        internet: internet
+        subtitles: subtitles
+    delete: Delete
+    delete_confirm: Permanently delete %{email} and every trace of their data — progress, decks, texts, plans? This cannot be undone.
+    deleted: "%{email} and all their data were deleted."
+    delete_self: You cannot delete your own account here.
+    demote_self: You cannot remove your own admin rights here.
+    save_failed: Those changes could not be saved.
+    unverified: unconfirmed
+    title: Users
+    intro: Toggle which languages each account sees and whether it can access restricted (non-open-source) content and audio.
+    is_admin: Admin
+    restricted: Restricted content + audio
+    languages: Active languages
+    save: Save
+    saved: Saved %{email}
+  footer:
+    made: Made in Taipei
+    by: by
+    licenses: Licenses & credits
+  licenses:
+    moe_notice: 使用說明 — the official usage notice, retained in full as the license requires
+    title: Licenses & credits
+    intro: TaiwanCards is built with gratitude on freely licensed open resources and official Taiwan language data. Each is linked to its source and license.
+    open_source_title: Open source
+    fonts_title: Fonts
+    fonts_note: All three are self-hosted. Two of them we ship modified, and that is stated below.
+    corpora_title: Corpora and dictionaries
+    corpora_note: Every text corpus in the database, with the license it arrives under. Only sources whose license permits both free and commercial use are published here; the rest are used for statistics alone and no sentence from them is stored.
+    data_title: Reference data
+    data_note: 'Bodies whose published reference material the app builds on: level lists, stroke inventories, character standards, calendar tables and classification scales. These are factual lists rather than creative works, and are credited here rather than licensed. Where a body released its material under a named license, that license is stated.'
+    outro: All Chinese content is Taiwan traditional characters, cross-checked against the Ministry of Education dictionaries. Names, brands and lesson texts remain the property of their respective owners.
+    items:
+      moe_audio: Audio for characters and words. Recordings by Taiwan's Ministry of Education, data version 20260626. Files are served unmodified; the app only limits playback to the headword.
+      cc_cedict: Community Chinese–English dictionary — readings, meanings and traditional/simplified pairs.
+      makemeahanzi: Stroke-order graphics, radical decomposition and character etymology.
+      hanzi_writer: The stroke-by-stroke writing and animation engine used in the writing trainer.
+      hanzilookup: Handwriting recognition that turns your drawn strokes into a character, fully offline. Its recognition data (mmah.json) is derived from Make Me a Hanzi stroke data and carries that project's LGPL / Arphic PL terms, not the MIT of the engine itself.
+      unihan: The Unicode Han database — canonical readings and character properties.
+      opencc: The STCharacters table, used to convert simplified characters into traditional ones when you paste in text. Every substitution it makes is listed back to you.
+      roboto: The interface face, used for Latin text and for pinyin. Self-hosted rather than loaded from Google, so no request leaves for a third party when you open a page.
+      noto_sans_tc: The default face for traditional characters. Also self-hosted.
+      tw_kai: 'Taiwan''s own kaishu brush face from the CNS11643 全字庫, published by 數位發展部. This is the face behind the handwriting option, and its 臺 outline is what the site logo is drawn from. We ship a subset of it: the file is reduced to the characters this app actually uses, and the logo embeds outlines taken from it, so the copy here is modified rather than original.'
+      moe: Ministry of Education standard character forms, the 4808 common-character set and character frequency.
+      bopomofo_audio: Zhuyin symbol recordings from the MOE 國語注音符號手冊 open-components bundle, released separately under CC BY 4.0. 2017 © 教育部,國語注音符號手冊-開放部件.
+      tocfl: The official TOCFL graded vocabulary lists, level by level.
+      naer: National Academy for Educational Research — the TBCL benchmark, COCT corpus and general word-frequency table.
+      moe_strokes: The normative list of stroke names behind the basic and compound stroke inventory.
+      moe_idioms: 'The official dictionary of 成語: definition, classical source, origin story and examples for every idiom. The Chinese text is shown verbatim — the license forbids adaptation; the English and Russian glosses and notes are written by us.'
+      cwa: Rainfall scales, typhoon categories and the UV index bands.
+      tbrs: Tea classification, processing stages and oxidation levels for Taiwanese cultivars.
+      hko: The lunar calendar and solar term tables the festival dates are computed from.
+      xiaoxuetang: Traced ancient character forms — oracle bone, bronze and seal script. Released into the public domain.
+  help:
+    title: Help
+    intro: >-
+      A quick tour of what you can do here. Everything is shared — dictionaries, lessons, lists — but your
+      progress is yours alone.
+    sections:
+      search:
+        title: Search
+        body: >-
+          The box at the top searches everything at once — type in Russian, English, pinyin (with or without
+          tones, or tone numbers like xiao3), zhuyin, or even a mistyped character. Results are ranked;
+          the closest match comes first.
+      study:
+        title: Deck & Study
+        body: >-
+          Your Deck is the active pile. Pick cards into it, then Study runs spaced repetition (FSRS) — swipe
+          to grade yourself. Cards come back exactly when you're about to forget them.
+      dictionary:
+        title: Dictionary
+        body: >-
+          Browse Characters, Words, Sentences, Collocations, Measure words and Radicals. Every entry shows
+          readings (zhuyin + pinyin), meanings, and how strong your memory of it is.
+      tocfl:
+        title: TOCFL
+        body: >-
+          The official graded vocabulary, level by level. See how ready you are for each band and study
+          any level directly.
+      pronunciation:
+        title: Speaking
+        body: >-
+          Say a word into the mic and get per-syllable feedback on your tones and sounds. Auto mode moves
+          on when you're right and keeps the mic open until you get it.
+      writing:
+        title: Writing & Lookup
+        body: >-
+          Writing quizzes you to draw each character from its meaning and reading. Lookup recognises what
+          you draw; Cangjie drills input codes.
+      history:
+        title: History & Stats
+        body: >-
+          History is your recent timeline — what you studied and how well it's sticking. Stats shows retention,
+          workload and weak spots over time.
+      profile:
+        title: Profile & backup
+        body: >-
+          Edit your name, and export your whole progress to a file. After rebuilding the database you import
+          it back and pick up exactly where you left off.
+    donate: >-
+      Nothing here is bought and a donation unlocks nothing — the app is exactly the same either way. If
+      you feel like chipping in toward the servers, the button is here. Walking past it is entirely fine.
+    donate_button: Chip in for the servers
+  phrases:
+    title: "Taiwan phrasebook"
+    intro: "Patterns Taiwanese people actually say, with the half you have to understand: what the staff says back."
+    empty: No phrases here yet.
+    replies: "You answer"
+    roles:
+      all: "Everything"
+      you: "You say"
+      staff: "They say"
+  everyday:
+    origin_hint: Where the word came into Taiwanese Mandarin from.
+    title: Taiwan everyday
+    intro: The words Taiwan actually uses that no exam list will teach you.
+    empty: No entries here yet.
+    all: All
+    study: Study these
+    abbr_label: people say
+    capital_label: capital
+    full_label: full form
+    mainland_says: 'in China:'
+    taiwan_marked: Taiwan-marked
+    pick_scenario: Pick a situation and get the words it actually calls for.
+    all_scenarios: All situations
+    by_origin: By origin
+    tier_core: core
+    play: Play audio
+    other: Other
+    word_count:
+      one: "%{count} word"
+      other: "%{count} words"
+    groups:
+      daily: Every day
+      errands: Errands
+      moving: Out and about
+      society: People and society
+    scenarios:
+      food: Eating out
+      drinks: Tea and coffee
+      breakfast: At the breakfast shop
+      produce: Shopping for groceries
+      life: Everyday routine
+      health: Doctor and pharmacy
+      money: At the bank
+      payments: Paying at the counter
+      housing: Finding a place
+      admin: Dealing with paperwork
+      work: At work
+      transport: Getting across town
+      places: Around Taiwan
+      nature: Weather and landscape
+      travel: Going abroad
+      people: People and family
+      slang: How people actually talk
+      civics: News and society
+      leisure: Somewhere to go
+    tea:
+      title: 'Tea: six classes and the Taiwanese scale'
+      hint: Classes differ by what was done to the leaf, not by the plant. Percentages are accepted ballparks, not constants.
+      scale: Taiwanese teas by rising oxidation
+      notes:
+        hongcha_black: Why 紅茶 is black tea and 黑茶 is not
+        qingcha_wulong: '青茶 vs 烏龍茶: the class and the everyday name'
+        fajiao_oxidation: 發酵 means oxidation, not fermentation
+        two_axes: 'Two independent axes: oxidation and roast'
+        taiwan_focus: Why Taiwan means oolong
+    sort_label: 'Order:'
+    sorts:
+      category: by category
+      freq: by frequency
+      difficulty: easiest first
+    tags:
+      大樓: The building and deliveries
+      設備: Utilities and appliances
+      房屋問題: What can go wrong
+      程度: Turning it up
+      稱讚: Praise and reactions
+      外來語: English words in speech
+      茶種: Kinds of tea
+      茶行: Tea shops and tea culture
+      咖啡: Coffee
+      咖啡店: Cafes and chains
+      唱歌: Singing and KTV
+      爬山: Hills and hiking
+      泡湯: Hot springs
+      其他: Other things to do
+      夜市: At the night market
+      點菜: Reading a menu and ordering
+      下雨: Rain and damp
+      太陽: Sun and sun protection
+      安全: Warnings and safety
+      飲料店: Drink shops and chains
+      飲品種類: What's on the menu
+      配料: Toppings
+      點餐說法: Ordering shorthand
+      早餐店: The everyday breakfast shop
+      超商: Convenience stores
+      付款: Paying at the till
+      夜市小吃: Night-market street food
+      飯類: Rice dishes and lunchboxes
+      點餐: Placing your order
+      外食場合: 'Eating out: places and occasions'
+      調味與口感: Sauces, seasonings and texture
+      小菜滷味: Cold sides and braised snacks
+      甜點冰品: Sweets, jellies and shaved ice
+      根莖瓜類: Roots, gourds and squash
+      葉菜類: Leafy greens
+      水果: Fruit
+      海鮮: Fish and seafood
+      交通: Getting around
+      卡片: Stored-value cards
+      居家: Home and renting
+      買東西: Errands and shopping
+      證件: IDs and paperwork
+      學校: School and studying
+      上班: Work life
+      上網: Online life
+      電腦: Computer gear
+      罵人: Cursing someone out
+      口頭禪: Everyday filler words
+      心情: Moods and bad luck
+      評價: Sizing people up
+      討厭鬼: People you'd rather avoid
+      沒骨氣: Softies and mama's boys
+      網路用語: Internet slang
+      人生勝負: Winners and losers
+      帳戶: Opening and using an account
+      錢包: What's in your wallet
+      發票報稅: Receipts and tax
+      電子支付: Payment apps and wallets
+      銀行: Taiwanese banks
+      找房子: House hunting
+      房型: Kinds of buildings
+      租屋: Renting a place
+      政府: Government
+      總統: Presidents
+      權利: Rights and freedoms
+      政黨: Political parties
+      歷史: History
+      族群: Ethnic groups
+      居留證: Residence permits
+      簽證: Visas and the border
+      辦手續: Offices and applications
+      搭飛機: Flying
+      路線: Lines and networks
+      景點: Sights
+      離島: Outlying islands
+      縣市: Cities and counties
+      麵食: Noodles and dumplings
+      豆漿店: The soy-milk breakfast shop
+      地方名產: Regional specialities and edible souvenirs
+      蛋餅: Egg crêpe rolls
+      冰塊: Ice and temperature
+      甜度: Sugar level
+      文湖線: Brown Line (Wenhu)
+      淡水信義線: Red Line (Tamsui–Xinyi)
+      松山新店線: Green Line (Songshan–Xindian)
+      中和新蘆線: Orange Line (Zhonghe–Xinlu)
+      板南線: Blue Line (Bannan)
+      環狀線: Yellow Circular Line
+      淡海輕軌: Danhai Light Rail
+      安坑輕軌: Ankeng Light Rail
+      搭車: Getting around
+      邦交國: Diplomatic allies
+      亞洲: Asia
+      中東: The Middle East
+      歐洲: Europe
+      美洲: The Americas
+      非洲: Africa
+      大洋洲: Oceania
+      城市: World cities
+      外交: Diplomacy
+      前蘇聯: Post-Soviet states
+      海域: Seas and straits
+      河川: Rivers
+      水庫: Reservoirs
+      地震: Earthquakes
+      颱風: Typhoons
+      政治: Politics
+      同志: LGBT
+      原住民族: Indigenous peoples
+      兩岸: Cross-strait politics
+      醫院: Hospitals and clinics
+      看病: Seeing a doctor
+      大學: Universities
+      火鍋: Hot pot and winter tonic pots
+      吐司三明治: Toast and sandwiches
+      菇類: Mushrooms
+      市場: At the wet market
+      疫苗: Vaccines
+      疾病: Illnesses and infections
+      症狀: Symptoms
+      電器行: Electronics shopping
+      書店: Bookshops
+      圖書館: Libraries
+      速食店: Fast-food chains
+    make_deck:
+      one: Turn this 1 word into a deck
+      other: Turn these %{count} words into a deck
+    make_deck_hint: Filter the list first and the deck takes exactly what you are looking at.
+    make_deck_button: Create deck
+    scales:
+      title: Sugar and ice, from most to none
+      hint: Every drink shop asks for both. They are ordered scales, so the answer is one word from each row.
+      sugar: Sugar 甜度
+      ice: Ice 冰塊
+      note: 'Chains differ: 50嵐 prints 不要太甜 as 九分糖, and gives 常溫, 溫 and 熱 as three separate steps only in the north. Note that 微冰 is less ice than 少冰, not more.'
+      sugar_levels:
+        full: full sugar; some shops print 正常甜
+        nine: not too sweet — a real step, 90%
+        less: less sugar, about 70%
+        half: half sugar, about 50%
+        light: lightly sweet, about 30%
+        one: a tenth; you have to ask for it
+        none: no sugar at all
+      ice_levels:
+        normal: normal ice, the default
+        less: less ice
+        little: barely any ice
+        none: no ice, but still a cold drink
+        room: room temperature, not chilled
+        warm: warm
+        hot: hot
+    domains:
+      food: Food and drink
+      drinks: Drink shops and tea
+      breakfast: Breakfast
+      produce: Market and produce
+      life: Daily life
+      slang: Slang
+      people: People
+      work: Work and study
+      transport: Getting around
+      money: Money and banking
+      payments: Paying for things
+      housing: Renting a place
+      civics: State and civics
+      nature: Land, sea and weather
+      places: Places in Taiwan
+      travel: Travel and the world
+      admin: Paperwork and residency
+      health: Health and medicine
+      leisure: Leisure and days out
+    origins:
+      hokkien: from Hokkien
+      japanese: from Japanese
+      internet: internet
+      abbreviation: abbreviation
+      taiwan_mandarin: Taiwan Mandarin
+    registers:
+      neutral: neutral
+      casual: casual
+      vulgar: strong language
+  variants:
+    title: Taiwan vs elsewhere
+    word: Word
+    reading: Reading
+    meaning: Meaning
+    taiwan: Taiwan
+    mainland: China
+    hongkong: Hong Kong
+    singapore: Singapore / Malaysia
+    checked: Readings checked against the Ministry of Education dictionaries; vocabulary against the MOE cross-strait comparison table and regional sources. Where a form is contested or the standard has shifted, the note says so rather than picking a side.
+    sections:
+      reading: Same characters, different reading
+      glyph: Same word, different character
+      word: Different word entirely
+    intro:
+      reading: 'These are written the same way in Taiwan and in China but said differently. 垃圾 is the one everybody notices — say lājī in Taipei and you have announced where you learned your Mandarin. Two entries need a caveat: 和 read hàn is genuinely in the Ministry of Education dictionary as the conjunction reading, but it is receding toward older speakers and broadcast news, so treat it as something to recognize rather than to produce; and 說服 really is shuìfú here, though not because China changed anything — the viral 2019 story about readings being revised was officially denied.'
+      glyph: 'Both Taiwan and Hong Kong write traditional characters, but they do not always pick the same one. These are separate Unicode characters, not font differences, so they genuinely look different on the page. 著 is the one you will meet constantly: Taiwan writes it for every reading, while Hong Kong and China split it against 着. Two of these are cases where the official standard and ordinary handwriting disagree even inside Taiwan — 汙 and 脣 are the standard forms, but you will see 污 and 唇 everywhere.'
+      word: 'Here the regions simply use different words. Note that the Hong Kong column is mostly Cantonese vocabulary written in characters rather than a Mandarin variant — a Mandarin speaker reading 雪櫃 aloud is reading a Cantonese word. The sharpest trap in the table is 土豆: peanut in Taiwan, potato in China. They are two different words that collided in writing.'
+  metro:
+    title: Taipei and New Taipei metro
+    hint: Tap any station to see how it is read.
+    open_entry: Full entry
+    close: Close
+    station_count:
+      one: 1 station
+      other: "%{count} stations"
+    attribution: Map drawn from open station coordinates — OpenStreetMap contributors, and station data published by Taipei Rapid Transit Corporation under Taiwan's Open Government Data License. Positions are real; hollow circles are interchanges. Branch lines are drawn as separate segments, so a gap in a color is a branch, not missing track.
+  calendar:
+    title: Festivals and the lunar calendar
+    year_label: Year
+    today: Today is %{date} — %{lunar} in the lunar calendar.
+    day_off: Public holiday
+    observed: Observed
+    aka: Also called
+    rule: When
+    food: What is eaten
+    words_heading: Words for this festival
+    no_lexeme: not in the dictionary yet
+    sources: Sources
+    lunar:
+      title: How the lunar calendar actually works
+      months_html: "<p>A lunar month begins on the new moon and runs until the next one. That takes about 29.53 days, so a month is either <strong>29</strong> or <strong>30</strong> days — never 31, and never a fixed length you can memorize. Twelve of them come to roughly 354 days, about eleven days short of a solar year.</p><p>That shortfall is the whole story. If nothing corrected it, the new year would drift backward through the seasons and 春節 would eventually land in the summer.</p>"
+      days_html: "<p>Days of a lunar month are not written as bare numbers. The first ten take the prefix <strong>初</strong>: 初一, 初二, 初三 … up to 初十. Days 11 to 19 use 十 — 十一, 十二 … 十九 — and 二十 is the twentieth. From 21 the prefix is <strong>廿</strong>: 廿一, 廿二 … 廿九, and a 30-day month ends on 三十.</p><p>So <strong>初五</strong> simply means the fifth day of the month. When someone says 正月初五 they mean the fifth day of the first lunar month — no year attached, and no Gregorian date implied.</p>"
+      drift_html: "<p>This is why 春節 never falls on the same Gregorian date twice in a row. The lunar year is about eleven days shorter than the solar one, so the new year slides earlier each time — and when it slides too far, a whole extra month is inserted and it jumps back late again. Over the 1950–2050 range it moves between 21 January and 20 February.</p>"
+      leap_html: "<p>The correction is a <strong>leap month</strong>, 閏月. Roughly seven times in every nineteen years an extra month is inserted, giving that year thirteen months and about 384 days. It is not appended at the end — it is slotted in after an existing month and takes its number: a leap month after the sixth is 閏六月, and that year has both 六月 and 閏六月.</p><p>Which month gets doubled is decided by the sun, not by a fixed rule you can recite: it depends on where the 24 solar terms fall. 2025 had 閏六月; 2033 has the rare 閏十一月.</p>"
+      terms_html: "<p>Two of the festivals here are not lunar at all. <strong>清明</strong> and <strong>冬至</strong> are <em>solar terms</em> — points on the sun's annual path — which is why they sit almost still in the Gregorian calendar while everything lunar wanders.</p>"
+    minguo:
+      title: 民國 year converter
+      gregorian: Gregorian year
+      minguo: 民國 year
+      note: "%{gregorian} is 民國%{minguo}."
+      before: The 民國 count starts at 1912, so there is no 民國 year here.
+      explain_html: "<p>Taiwan dates official documents by the <strong>民國</strong> era, counted from the founding of the Republic of China in <strong>1912</strong>. That year is 民國1, so the arithmetic is simply <strong>民國 = Gregorian − 1911</strong>, and it works in both directions. You will meet it on ID cards, train tickets, receipts, contracts and expiry dates, usually written as 114.09.28 rather than 2025.</p>"
+    converter:
+      title: Lunar ↔ Gregorian date converter
+      to_gregorian: Lunar date → Gregorian
+      to_lunar: Gregorian date → lunar
+      lunar_year: Lunar year
+      lunar_month: Month
+      lunar_day: Day
+      date: Date
+      gregorian_result: "%{date}, %{weekday}"
+      lunar_result: "%{year} %{month}%{day}"
+      out_of_range: Outside the covered range.
+      bounds: Covers %{from} to %{to}. The table is taken from the Hong Kong Observatory's Gregorian-Lunar Calendar Conversion Table and every date in it was checked back against that source.
+  page_help:
+    desks_html: >-
+      <p>A deck is built from whatever you paste: a list one per line, separated by commas, or plain running
+      text — the system works it out. You can upload a file, or pull the words out of a song instead.</p><p>The
+      key difference from Anki: <strong>you never type translations</strong>. Reading, meaning, character
+      breakdown and audio all come from our dictionary. You supply only the words.</p><p>Before the deck
+      is created you get a preview: how many cards it will make, what was a duplicate, and what is not in
+      the dictionary. Entries run easiest first. If you already know the whole list, one button sends it
+      into long-range review instead of the new-card queue.</p>
+    hanzi_html: >-
+      This page takes a character apart and shows what to do with the pieces. The meaning component points
+      at a field of meaning, the phonetic one at a rough reading. In our own data the phonetic gets the
+      rime right about four times in five, so an unfamiliar character is often readable on the first try.
+      Open the sections one at a time.
+    triage_html: >-
+      <p>A quick way to establish where you stand if you already know some of this. Swipe right if you know
+      the character, left if you are unsure.</p><p><strong>I know it</strong> pushes the entry into distant
+      reviews: roughly three weeks out and beyond, spread out so they never pile into one day. Nothing is
+      lost for good.</p><p><strong>Not sure</strong> leaves the entry in the ordinary queue, to come round
+      with everything else.</p><p>Anything you have genuinely studied is left out of the sweep and untouched.</p>
+    zhuyin_trainer_html: >-
+      <p>Here zhuyin is learned as a script in its own right, with no Latin crutch. You hear a sound and
+      pick the symbol — there is deliberately no pinyin on screen, otherwise what sets in is 'ㄅ equals the
+      letter b' rather than 'ㄅ equals this sound'.</p><p>Symbols come in blocks by manner of articulation
+      rather than straight down the chart. A new block opens once the previous one is done. The options
+      are deliberately close: similar shapes and sounds from the same place of articulation — random options
+      would only create an illusion of progress.</p><p>A symbol counts as mastered after three correct answers
+      in a row, and quick ones: answering correctly but slowly means you are working it out rather than
+      recognizing it, and the counter does not move. You can leave at any time.</p>
+    numbers_html: >-
+      <p>Numbers need only a handful of characters and you do need all of them — but the real difficulty
+      is not the characters, it is the magnitudes.</p><p>Chinese groups digits in fours: 萬 is 10,000, and
+      everything above builds on it. That is why a million is 一百萬 and a billion is 十億. The five sections
+      below run from the characters to the traps; the last covers 民國 years, which appear on every Taiwanese
+      form.</p>
+    practice_phonetics_html: >-
+      <p><strong>Zhuyin</strong> (ㄅㄆㄇㄈ, also called bopomofo) is a phonetic alphabet: 37 symbols, each tied
+      to one Mandarin sound, plus tone marks. The symbols mean nothing on their own, so there is no way
+      to read them out of habit. They annotate readings in Taiwanese dictionaries and school textbooks,
+      and they are how text gets typed here.</p><p><strong>Pinyin</strong> is an orthography — a way of
+      writing those same sounds with Latin letters under rules of its own. Those rules were built for brevity,
+      not accuracy: one letter can stand for different sounds, and some vowels drop out of the spelling
+      altogether. It is a useful prop, and it misleads the moment you read it as English.</p><p>In the charts
+      below the <strong>anchor</strong> comes first: one line telling you what to say right now. Then comes
+      the articulation — how the speech organs move. At the end of each row, in orange, is the mistake to
+      avoid.</p>
+    roadmap_html: >-
+      <p>The order worth working through the app in if you are starting from scratch. Nothing here is compulsory
+      — all of it is reachable from the menu anyway.</p><p>Steps backed by a drill tick themselves off:
+      after one run of the sound drill, after ten words typed correctly, after twenty reviews. Mark the
+      rest by hand once you feel ready to move on.</p><p>Optional steps can be skipped with no consequences
+      — the path counts as complete without them.</p>
+    label: How this page works
+    typing_html: >-
+      <p>The keyboard shown here is the Taiwan bopomofo layout — the one printed on keyboards sold in Taiwan
+      and used by most people here. Nothing needs installing: press the same keys and the zhuyin appears.</p><p>Type
+      the reading of the word shown, then press space or Enter to check it. Tone keys are 6 (ˊ), 3 (ˇ),
+      4 (ˋ) and 7 (˙); a first-tone syllable needs no tone key.</p><p>Words come from your dictionary in
+      learning order, so this drills readings and typing at the same time.</p>
+    reader_html: >-
+      <p>Read real Chinese with the dictionary built in. Words you already know are muted; everything new
+      is colored by level and underlined, with its reading printed above.</p><p>Tap any word for the full
+      entry, audio and a button to start learning it. The whole text can be turned into a deck in one click.</p><p>Paste
+      anything yourself, or import song lyrics. Simplified characters are always converted to Taiwan traditional
+      first.</p>
+    placement_html: >-
+      <p>An adaptive test that finds your level in about five minutes, then offers to mark everything at
+      or below it as already known.</p><p>Questions get harder while you answer correctly and easier when
+      you miss. The estimate is deliberately rough — you can adjust it on the result screen before applying.</p><p>Marking
+      is safe: anything you are already studying keeps its progress, and the seeded items are spread over
+      the coming weeks so you never get a wall of reviews.</p>
+    phrases_html: >-
+      <p>Whole utterances, not vocabulary. Each card is a pattern with slots you fill from the dictionary,
+      so one line covers a hundred orders at a drink shop.</p><p>Cards marked <strong>They say</strong> are
+      the half every phrasebook omits: the questions staff fire at you at the counter. Understanding those
+      matters more than producing perfect sentences.</p><p>Where a Chinese form would be understood but
+      sounds imported, the Taiwanese form is given and the other is struck through.</p>
+    everyday_html: >-
+      <p>Vocabulary that is genuinely Taiwanese and sits outside every exam list — drink-ordering shorthand,
+      Hokkien-derived slang, the words Taiwan uses where China uses something else.</p><p>Filter
+      by area of life or by where the word came from. Anything marked as strong language is exactly that.
+      Where a Chinese equivalent exists it is shown, so you can see the contrast rather than memorize a
+      single form.</p>
+    variants_html: >-
+      <p>Where Taiwan diverges from China, Hong Kong and Singapore — in how a word is read, in which
+      character is written, or in the word chosen outright.</p><p>These are the differences that mark you
+      out as having learned your Mandarin somewhere else. Anything contested or recently changed is flagged
+      in the text rather than presented as settled.</p>
+    calendar_html: >-
+      <p>The twelve festivals that actually structure a year in Taiwan, each with the rule that fixes its
+      date rather than a date you would have to look up again next year.</p><p>The lunar section explains
+      the counting itself — why 初五 means what it means, and why 春節 moves. Both converters run in the browser:
+      the 民國 one is pure arithmetic, and the lunar one uses a table checked against the Hong Kong Observatory.</p><p>Words
+      tied to each festival can be added to your study straight from the list, where the dictionary already
+      has them.</p>
+    metro_html: >-
+      <p>Every line of the Taipei and New Taipei network, with its stations in official order. Tap a station
+      and the card at the top shows its zhuyin, pinyin and meaning; from there you can open the full dictionary
+      entry or add it to a deck.</p><p>Hollow dots are interchanges — the card lists every line that station
+      belongs to. The layout is deliberately schematic rather than geographic.</p>
+    dict_html: >-
+      <p>One dictionary: single words and set phrases are simply entries here, with no split between them.
+      The line is arbitrary anyway — 便利商店 and 超商 mean the same thing, and hunting for them in two separate
+      lists made no sense.</p><p>The <strong>TOCFL level</strong> pills narrow to one exam band, the grade
+      row to the school-based TBCL scale, and the progress filter shows only new, learning or known entries.</p><p>Within
+      a level, entries are ordered by <strong>frequency</strong> — the most common come first. Switch the
+      sort to compare pure frequency. Tap any entry for its full article, or use the <strong>+</strong>
+      button to drop it straight into a deck.</p>
+    chengyu_html: >-
+      <p>成語 are four-syllable set expressions that come out of classical texts and parables. What they say
+      literally is often nowhere near what they mean: 雪中送炭 is literally «to send charcoal in the snow»,
+      but it means «to help at exactly the moment help is needed». So every idiom here carries not just
+      a translation but a <strong>tone</strong> — approving, neutral or disapproving. Calling something
+      十拿九穩 and calling it 莫名其妙 are worlds apart.</p><p>The list is drawn from the dictionary: some idioms
+      are tagged from dictionary labels, others were checked by hand — those carry a note on when it is
+      actually said, plus a real example. Tap an idiom for the full entry with audio, a character breakdown
+      and sentences.</p>
+    tbcl_html: >-
+      <p>TBCL (臺灣華語文能力基準) is the scale Mandarin is actually taught on in Taiwan: seven grades, from one
+      up to seven. It is built differently from the TOCFL exam — it follows the school curriculum rather
+      than a test format.</p><p>Within a grade, entries run from the most frequent to the rarest. The bar
+      shows how much of the grade you already know — it counts everything learned anywhere in the app, not
+      only here.</p>
+    characters_html: >-
+      <p>The 4808 common traditional characters from the Ministry of Education set. Each tile shows the
+      character; tap it for readings (zhuyin + pinyin), stroke order, etymology, the words it appears in,
+      and how strong your memory is.</p><p>Characters are ordered by frequency, so the ones you meet most
+      often come first.</p>
+    sentences_html: >-
+      <p>Full example sentences drawn from the lessons. Each word in a sentence is a link to its dictionary
+      entry, so you can tap anything unfamiliar. Use the source filter to focus on one book or lesson.</p>
+    search_html: >-
+      <p>Three fields that stack. <strong>Writing or meaning</strong> takes hanzi or a word in English or
+      Russian. <strong>Pinyin</strong> and <strong>zhuyin</strong> take a reading; tones may be written
+      as marks, as digits after each syllable, or left out — <code>nǐhǎo</code>, <code>ni3hao3</code> and
+      <code>ni hao</code> all reach the same word. When you do write tones, the entries with exactly those
+      tones come first, and only then the rest.</p><p>Tick <strong>search the sentence bank</strong> and
+      the kinds are set aside: every hit is a sentence with your word marked in it, ten to a page, filtered
+      by level and style. With two words in the query the page also says whether they go together.</p>
+    radicals_html: >-
+      <p>The 214 Kangxi radicals — the building blocks every character is filed under. Tap a radical to
+      see the characters that contain it.</p>
+    liangci_html: >-
+      <p>Taiwan Mandarin classifiers (量詞) are the little words between a number and a noun: 一<b>本</b>書,
+      三<b>隻</b>貓. Each entry shows what it counts, which nouns actually take it and how it looks in real
+      sentences. The lists come from 教育部國語辭典簡編本, CC-CEDICT and our Taiwanese corpora. There is also a game
+      for matching the right classifier.</p>
+    tocfl_html: >-
+      <p>Your progress toward each official TOCFL level. The counts include every character and word you
+      have learned anywhere in the app, not just here. Open a level to study it directly or see exactly
+      what is left.</p>
+    study_html: >-
+      <p>Swipe the whole batch once — the cards you miss come back, the ones you know leave. <strong>Swipe
+      right</strong> = I knew it, <strong>left</strong> = I did not, <strong>up</strong> = too easy, <strong>down</strong>
+      = hard. The arrow keys work too, and tapping a card flips it.</p><p>New items are introduced a batch
+      at a time, mixed with everything that is due for review. Scheduling is FSRS, so a card returns right
+      as you are about to forget it.</p>
+    pronunciation_html: >-
+      <p>Say the word into the mic; each syllable is graded on its <strong>tone</strong> and its <strong>initial/final
+      sounds</strong>. Green means correct, amber close, red off. In auto mode it moves on once you are
+      right and keeps the mic open until you get it. Both standard and Taiwanese pronunciations are accepted.</p>
+    writing_html: >-
+      <p>Recall the character from its meaning and reading, then write it stroke by stroke. Strokes are
+      checked in order; a wrong stroke is nudged back. Miss-heavy characters resurface first, then the rest
+      come easiest-first.</p>
+    handwriting_html: >-
+      <p>Draw a traditional character stroke by stroke and it is recognized offline — no network, nothing
+      leaves your device. Use it as a quick lookup when you know the shape but not the reading.</p>
+    cangjie_html: >-
+      <p>Cangjie 5 input for traditional Taiwan characters. Type the Latin keys that make up a character
+      to compose it. Each character page also shows its Cangjie code.</p>
+    history_html: >-
+      <p>What you have studied lately and how solid each item is. The dots show memory strength per facet
+      (recognition, reading, tone, writing). Use it to spot what is slipping before it is due.</p>
+    practice_drill_html: >-
+      <p>Cards that drill the two phonetic systems against each other. Pick a direction — see a zhuyin symbol
+      and recall the pinyin, or the reverse — then swipe right if you knew it and left if you did not.</p><p>Anything
+      you miss comes back later in the round and is remembered, so the next round starts with your weak
+      sounds. Initials and finals can be drilled separately.</p>
+    practice_progress_html: >-
+      <p>Two different things in one place, and they come from different trainers.</p><p><strong>Sound practice</strong>
+      counts your runs through the recognition cards and the zhuyin typing drill, and shows the symbols
+      you miss most. It appears as soon as you finish your first run.</p><p><strong>Spoken pronunciation</strong>
+      is built from microphone attempts: which tones and initials come out reliably and which do not. Until
+      you have spoken into the mic this section is empty — that is expected, it is not connected to the
+      cards.</p>
+  placement:
+    mainland:
+      title: "You learned the variety spoken in China"
+      body: "Be straight with you: there are no simplified characters here at all, and no vocabulary from China. Nothing in this app will walk you from 简体 to 正體 — it only ever shows you the Taiwan side."
+      traditional: "You read %{percent}%% of the traditional forms we showed you."
+      offer: "The good news is that almost everything transfers. Spoken Mandarin is the same language; what changes is the script and a few hundred words. Start with those two and the rest of your vocabulary comes with you."
+      variants: "See what differs"
+      phrases: "Hear how Taiwan says it"
+    start_short: "Quick version, %{count} questions"
+    play: "Play"
+    skip: "Skip this one"
+    by_axis: "What each part came out at"
+    result_split: "Two different levels"
+    split_hint: "Your ear is well ahead of your reading, so a single number would be misleading. Pick whichever you want the app tuned to."
+    tolerance_hint: "We also set your visibility tolerance to %{tolerance}. You can change it any time in the profile."
+    axes:
+      listening: "Listening"
+      tones: "Tones"
+      characters: "Characters"
+      lexis: "Vocabulary"
+      sentences: "Sentences"
+      traditional: "Traditional forms"
+      writing: "Writing"
+    sides:
+      listening: "By ear"
+      reading: "By reading"
+    intake:
+      experience:
+        question: "Have you studied Mandarin before?"
+        options:
+          none: "Never"
+          some: "A little"
+          year: "A year or two"
+          more: "Longer than that"
+      script:
+        question: "Which transcription do you know?"
+        options:
+          none: "Neither"
+          pinyin: "Pinyin"
+          zhuyin: "Zhuyin"
+          both: "Both"
+      characters:
+        question: "And the characters?"
+        options:
+          none: "I do not read them"
+          few: "I recognize a few"
+          read: "I read them"
+          write: "I read and write them"
+      variety:
+        question: "Which variety did you learn?"
+        options:
+          taiwan: "Taiwanese Mandarin"
+          mainland: "China, in simplified characters"
+          unsure: "Not sure"
+          none: "Neither, I am starting now"
+    what_to_expect: What to expect
+    expect_length: "Up to %{max} questions — each axis stops as soon as it is clear"
+    expect_time: About five minutes, four answers to choose from each time
+    expect_skip: You can retake it or adjust the result afterward
+    later: Skip for now
+    title: Placement test
+    intro: A short adaptive test — a few words and characters at a time, getting harder while you keep up and easier when you slip. Takes about five minutes. At the end everything at or below your level can be marked as already known, so you are not taught the basics from scratch.
+    start: Start the test
+    retake: Take it again
+    progress: Question %{n}
+    answered:
+      one: 1 question answered
+      other: "%{count} questions answered"
+    kinds:
+      word: What does this word mean?
+      character: What does this character mean?
+      reading: How is this character read?
+      measure: Which measure word fits?
+    result_title: Your estimated level
+    result_level: TBCL %{grade} · TOCFL %{band}
+    result_zero: Complete beginner
+    adjust_label: Adjust if this looks off
+    apply: Mark everything below as known
+    apply_hint: Words and characters at or below this level get a light memory — they come back occasionally instead of being taught as new. Anything you are already studying is left untouched.
+    applied:
+      zero: Nothing new to mark — your progress already covers this level.
+      one: Marked 1 item as already known.
+      other: Marked %{count} items as already known.
+    already_applied:
+      zero: No items were marked.
+      one: 1 item is marked as already known.
+      other: "%{count} items are marked as already known."
+    keyboard_hint: 'Tip: the 1-4 keys work too.'
+  intro:
+    label: Getting started
+    label_whats_new: What's new
+    click_target: Tap the highlighted item to continue.
+    skip: Skip
+    dismiss: Got it
+    back: Back
+    next: Next
+    done: Start
+    language:
+      en: English
+      ru: Русский
+    guide:
+      title: Full guide
+      body: Short chapters on everything the app can do. Take them in any order, as many times as you like.
+      launch: Start chapter
+      again: Read again
+      done: Done
+      steps: "%{count} steps"
+    steps:
+      language:
+        title: Which language do you read most easily?
+        body: >-
+          This sets the interface language. Everything you study stays Taiwan Mandarin either way. You can
+          change it later from the header.
+      welcome:
+        title: Welcome to TaiwanCards
+        body: >-
+          Five short steps, under a minute. They cover the parts you will use every day. You cannot skip
+          this one; the full guide later is optional.
+      search:
+        title: Search is the fastest way in
+        body: >-
+          Type Chinese, pinyin, zhuyin or an English meaning. It finds characters, words, idioms and whole
+          sentences from the corpus.
+      guide:
+        title: That is everything you need
+        body: >-
+          The full guide is in Settings → Profile whenever you want it: short chapters on the dictionary,
+          the trainers, phonetics and the rest. Take them in any order, as often as you like.
+      sections:
+        title: Everything lives in six sections
+        body: >-
+          My study is your daily queue and decks. Dictionary holds characters, words, sentences and idioms.
+          About the language explains zhuyin, tones and how characters are built. Practice is the trainers.
+          Taiwan is everyday life here. Settings is your profile, statistics and preferences.
+      display:
+        title: Show what you want to see
+        body: >-
+          These switches control the calligraphic font, pinyin above characters, Chinese equivalents, and
+          how much detail an entry shows. Change them any time — they apply everywhere at once.
+    chapters:
+      dictionary:
+        title: Dictionary and search
+        summary: How entries are built and how to find anything
+        steps:
+          search_deep:
+            title: Four ways to search
+            body: >-
+              Chinese characters, pinyin with or without tones, zhuyin, or an English or Russian meaning.
+              Mixing them narrows the result.
+          entry:
+            title: Reading an entry
+            body: >-
+              Readings first, then meanings numbered as the source dictionary numbers them, then examples
+              drawn from the corpus.
+          detail_level:
+            title: Brief or full
+            body: >-
+              Brief keeps an entry to its core meaning. Full adds collocations, the thesaurus, etymology
+              and every sense.
+          mainland:
+            title: Chinese equivalents
+            body: >-
+              Turn this on to see where the standard in China differs — different word, different character,
+              or a different tone.
+          sentences:
+            title: The sentence corpus
+            body: >-
+              Filter by register and by level. Guaranteed means every word in the sentence is at or below
+              the level you picked.
+      cards:
+        title: Cards and decks
+        summary: What a card is and how repetition works
+        steps:
+          what_is_card:
+            title: What a card is
+            body: >-
+              A card is one lexeme seen through one facet. The same word can be tested by recognition, production,
+              reading, listening, tone or writing.
+          decks:
+            title: Decks
+            body: >-
+              A deck is a set of lexemes you chose. Build one from a list, from search results, or from
+              a text you pasted into the reader.
+          facets:
+            title: Six independent memories
+            body: >-
+              Each facet is scheduled on its own. Recognizing a word and being able to write it are different
+              states with different intervals.
+          add_from_dictionary:
+            title: Adding as you read
+            body: Anything in the dictionary can go straight into study from the entry itself.
+      taiwan:
+        title: Taiwanese life
+        summary: Vocabulary tied to living here
+        steps:
+          everyday_lists:
+            title: By domain
+            body: Food, transport, paperwork, weather, festivals. Each item is tagged by where you actually
+              meet it.
+          calendar:
+            title: The calendar
+            body: Lunar dates, solar terms, public holidays, and the Minguo year conversion.
+          metro:
+            title: The metro
+            body: Every Taipei station with its reading, so announcements and signs stop being a guess.
+      phonetics:
+        title: Sounds and zhuyin
+        summary: Zhuyin, tones and pronunciation scoring
+        steps:
+          zhuyin_first:
+            title: Zhuyin first
+            body: >-
+              Taiwan teaches reading through zhuyin, not pinyin. The trainer builds the keyboard layout
+              into your fingers.
+          tones:
+            title: Tones
+            body: Drills for hearing tones apart, including the pairs that stay hard long after the basics.
+          pronunciation:
+            title: Pronunciation scoring
+            body: >-
+              Record a syllable and it is compared against a template on tone contour, voice onset, formants
+              and nasality. Nothing leaves the server.
+          warmup:
+            title: Calibration
+            body: >-
+              A short warm-up teaches the scorer your voice, so its judgment is about your accent and not
+              your pitch.
+      trainers:
+        title: Trainers
+        summary: Writing, handwriting and reading tools
+        steps:
+          writing:
+            title: Writing from meaning
+            body: You are given the meaning and reading, and write the characters from memory, stroke by
+              stroke.
+          handwriting:
+            title: Handwriting search
+            body: Draw a character you met somewhere and the app tells you what it is.
+          reader:
+            title: The reader
+            body: Paste any text. It is segmented, annotated with readings, and colored by what you already
+              know.
+      display:
+        title: What you see
+        summary: The four switches in the header
+        steps:
+          font_kai:
+            title: Calligraphic font
+            body: >-
+              Switches to TW-Kai, the standard Taiwanese teaching form. Some characters are genuinely shaped
+              differently from the fonts used in China.
+          pinyin_toggle:
+            title: Pinyin
+            body: Hide pinyin once zhuyin is comfortable, so you stop leaning on the alphabet.
+          mainland_toggle:
+            title: Notes on Chinese usage
+            body: Show or hide the Chinese equivalent next to Taiwanese usage.
+          detail_toggle:
+            title: Brief or full entries
+            body: >-
+              How much an entry unfolds. Start brief; switch to full when the extra detail helps rather
+              than crowds.
+      profile:
+        title: Profile and progress
+        summary: Level, layout, statistics and backup
+        steps:
+          visible_level:
+            title: The level you see
+            body: >-
+              Project the whole corpus onto the MOE character charts, TBCL or TOCFL. Below your level you
+              see everything; above it, nothing — but search stays unrestricted.
+          mobile_tabs:
+            title: Your phone tabs
+            body: Pick the four sections that sit in the bottom bar on a phone.
+          stats:
+            title: Statistics
+            body: What you have learned, what is due, and how strong each memory is.
+          history:
+            title: History
+            body: Every review, by day and by facet, so you can see where the effort actually went.
+          backup:
+            title: Backup and export
+            body: >-
+              Your progress to your own Google Drive, or a file you keep. The dictionary is shared; your
+              progress is yours.
+    try_it: Try it — tap the highlighted control.
+  reader:
+    title: Reader
+    new_text: Paste a text
+    new_hint: >-
+      Anything in Chinese — an article, a chat, a page from a book. Simplified characters are converted
+      to Taiwan traditional automatically.
+    title_label: Title
+    kind_label: Kind
+    level_label: Level (optional)
+    body_label: Text
+    body_placeholder: Paste the Chinese text here…
+    save: Save and read
+    untitled: Untitled text
+    created: Text saved.
+    deleted: Text deleted.
+    delete_confirm: Delete this text? Your word progress stays.
+    empty_body: There was no text to save.
+    empty: Nothing to read yet. Paste a text or import a song.
+    back: Reader
+    build_desk: Turn into a deck
+    normalized_hint: 'Simplified characters were converted to traditional: %{chars}'
+    legend_known: Muted = you already know it
+    legend_unknown: Colored + underlined = new, color shows the level
+    tabs:
+      all: All
+      article: Articles
+      song: Songs
+      news: News
+      graded: Graded texts
+    attribution_pts: 'Source: 公視 PTS — used for personal study.'
+    fetched: Fetched %{count} news items.
+    add: Add to study
+    added: Added ✓
+  songs:
+    search: Search
+    search_placeholder: Artist or song — 五月天, 周杰倫…
+    no_results: Nothing found. Try the artist in Chinese.
+    error_network: Could not reach the lyrics service. Try again in a moment.
+  meta:
+    title: TaiwanCards — learn Taiwanese Mandarin with zhuyin and traditional characters
+    share_description: Traditional characters, zhuyin, spaced repetition, dictionaries, pronunciation and TOCFL levels.
+    share_title: TaiwanCards — Taiwanese Mandarin
+    description: 'TaiwanCards is an ad-free flashcard app for learning Taiwanese Mandarin: traditional characters, zhuyin beside every reading, TOCFL levels, spaced repetition, and vocabulary lists built for daily life in Taiwan.'
+  landing:
+    open_app: Open the app
+    hero:
+      eyebrow: 臺灣華語 · 正體字 · 注音 · 成語 · 華語文能力測驗
+      heading: Your all-in-one hub for Taiwanese Mandarin
+      lede:
+        variety:
+          - Not Mandarin from China, converted into traditional characters.
+          - No vocabulary from China, Hong Kong, Singapore, or Malaysia.
+          - Zhuyin (ㄅㄆㄇㄈ) throughout — Taiwan's own phonetic script.
+          - Only Taiwan readings, Taiwan usage, Taiwan norms.
+          - Everything here is pure Taiwan.
+        life:
+          - "Every word, sentence, and situation comes from real life in Taiwan:"
+          - convenience store, tea shop, noodle shop, MRT, clinic, typhoon day off.
+        audience:
+          - For people starting from zero, already studying,
+          - about to move to Taiwan, or already living here.
+        behind:
+          - "Behind it: quantitative linguistics, verified sources,"
+          - my own teaching method, a great deal of work by hand,
+          - and a boundless love for Taiwan 🇹🇼
+      cta: Start learning
+      secondary: See what's inside
+      note: Free to use. No ads. Not now, not ever.
+      specimen:
+        meaning: pineapple
+        caption: One word. Five separate things to remember, each with its own review date.
+    is:
+      heading: What this is
+      items:
+        taiwan: >-
+          Taiwan's Mandarin and nothing else — traditional characters, zhuyin, TOCFL bands and Taiwanese
+          school grades
+        decks: >-
+          Like Anki, only without decks by strangers or evenings lost to typing your own — and a word here
+          is five separate memories, not one know / don't-know swipe
+        dictionary: >-
+          Like Pleco, only it is not just a reference — the same entry feeds the trainers and a schedule
+          that decides what you see next, with Taiwan first rather than as a footnote
+        writing: >-
+          Like Skritter, only writing is not a separate app with a separate list — you draw the characters
+          you are already learning this week, and it counts toward the same progress
+        reading: >-
+          Like Du Chinese, only nobody picks the text for you: a song you love, a news piece, a class
+          handout or a message — paste it and get it back split into words, ready to become a deck
+        photo: >-
+          Photograph a menu on the wall or a sign in the street, and the characters you could not read come
+          back split into words, ready to become a deck
+        speaking: >-
+          Not a recogniser answering yes or no — every syllable you say is scored for quality on nineteen
+          acoustic properties, against the way Taiwan says it rather than the way China does
+        everyday: >-
+          The Taiwan no course teaches: ordering at a drink shop, the invoice lottery, renting a flat, the
+          clinic, typhoon days
+        corpus: >-
+          Every example sentence is one somebody in Taiwan actually wrote, kept together with its source and
+          its licence
+        measured: >-
+          Nothing here is guessed: how common a word is, how hard it is and which level it belongs to all
+          come from counting a real Taiwanese corpus
+        memory: >-
+          One progress record behind every screen: learn a word in the reader and it counts in the
+          dictionary, the drills and the writing trainer
+    isnt:
+      heading: What this is not
+      items:
+        game: >-
+          Not a game — no streaks, no XP, no badges, no leaderboards and no cartoon animal guilt-tripping
+          you into coming back tomorrow
+        machine: >-
+          Not machine-translated — no generated meanings, no invented example sentences, nothing at all
+          written by a model rather than a person
+        decks: >-
+          Not a pile of shared decks where nobody can tell you who made them, from which textbook, or
+          whether the readings are even right for Taiwan
+        china: >-
+          Not a course from China with traditional characters swapped in — the vocabulary, the readings and
+          half the everyday realities differ as well
+        words: >-
+          A course from China is unlikely to spend much time on 自由, 民主 or 人權. Here there is no shortage
+          of words like that, and no list they are missing from
+        course: >-
+          Not a syllabus to sit through from the first lesson to the last — you start where you already are,
+          take what you need and skip what you do not
+        teacher: >-
+          Not a replacement for a teacher — this is the half you do between classes, the half nobody watches
+          you do, and the half that decides whether you get anywhere
+        hsk: >-
+          Not HSK preparation — different vocabulary, different readings and different realities behind the
+          words, even if you sit the exam in traditional characters
+        simplified: >-
+          No simplified characters anywhere and no switch to turn them on — there is only ever the Taiwan
+          side, in the dictionary, the examples and the trainers alike
+        ads: >-
+          Not funded by advertising and never will be — nothing flashes, nothing interrupts, nothing pulls
+          you away from studying or from simply looking a word up
+        tracking: >-
+          Not watching you — no third-party analytics, no trackers of any kind, and your whole progress
+          exports to a file you keep whenever you ask for it
+    counts:
+      heading: Already in place
+      radicals: Kangxi radicals
+      characters: Characters
+      words: Dictionary entries
+      collocations: Idioms and collocations
+      sentences: Sentences and examples
+    quality:
+      heading: Where the quality comes from
+      items:
+        audio:
+          title: Official recordings
+          body: >-
+            Characters and words as recorded for Taiwan's Ministry of Education state dictionary — not synthesized,
+            not crowdsourced.
+        sources:
+          title: Taiwanese sources
+          body: The state dictionary, the official level lists and frequency tables, statutes, city news.
+        human:
+          title: A person behind every entry
+          body: >-
+            Meanings, examples and links are read through by hand. Nothing is generated and nothing is machine-translated.
+        written:
+          title: Written for an English speaker
+          body: Explanations start from what English has put in your ear and the traps its spelling sets
+            in pinyin.
+    tools:
+      heading: Everything you would otherwise install five apps for
+      lede: Open it and it is all already there — nothing to set up, nothing to hunt for.
+      items:
+        study:
+          title: Flashcards
+          body: Everything due today, plus a measured helping of new
+        speaking:
+          title: Pronunciation
+          body: Say it out loud and see which syllable slipped, and how far
+        writing:
+          title: Handwriting
+          body: Recall the character, then draw it stroke by stroke, in order
+        zhuyin:
+          title: Zhuyin
+          body: By ear and by hand, until the alphabet stops getting in the way
+        tones:
+          title: Tones
+          body: Heard, drawn and spoken, one syllable at a time
+        typing:
+          title: Typing
+          body: Zhuyin and Cangjie, the way people type in Taiwan
+        reader:
+          title: Reader
+          body: Paste an article and read it with the dictionary already open
+        everyday:
+          title: Daily life in Taiwan
+          body: Ordering food, renting a flat, the bank, the paperwork — what classes skip
+        placement:
+          title: Placement test
+          body: Five minutes to find where to carry on from
+        plan:
+          title: Exam plan
+          body: Name the TOCFL band and the date; the daily quota works itself out
+    core:
+      heading: Look one word up, and see the whole picture
+      lede: >-
+        Radicals build characters, characters build words, words build sentences. Every page shows the rest
+        of the web: what a word is made of, where it turns up, and how firmly you know each piece.
+      layers:
+        radicals: Radicals
+        characters: Characters
+        words: Words
+      facets_note: >-
+        Knowing a word is not one thing. You can read it on the page and still freeze when you have to say
+        it. So every word carries five separate memories, and only the one that has slipped comes back.
+      facets:
+        recognition: you see it and know it
+        production: you go from meaning to word
+        reading: you read it aloud correctly
+        tone: the contour holds, checked by voice
+        writing: from memory, stroke by stroke
+    progress:
+      heading: You always know where you stand
+      lede: The same knowledge measured three ways. Take whichever one means something to you.
+      items:
+        tocfl:
+          title: By TOCFL band
+          body: how close the next exam actually is
+        school:
+          title: By Taiwanese school grade
+          body: what a pupil here is expected to know at that stage
+        frequency:
+          title: By frequency
+          body: how much of an ordinary page you can already read
+    bring:
+      heading: Anything that catches your eye becomes a deck
+      lede: >-
+        Paste in a text and it is split into words, looked up, and turned into a deck that joins the same
+        progress as everything else.
+      soon: soon
+      items:
+        menu:
+          title: A cafe menu or a street sign
+          body: Photograph it, and the characters you could not read come back split into words
+        textbook:
+          title: New words from a textbook or a class
+          body: Paste the list whole; no typing translations out by hand
+        song:
+          title: A song you love
+          body: Lyrics laid out word by word, with readings, tones and meanings
+        feed:
+          title: A news piece, a chapter, a comment on Threads
+          body: Read it with the dictionary at hand and send what is new straight to a deck
+    instead:
+      heading: Next to what you may already be using
+      lede: >-
+        Each of those apps does its own job well. The trouble is keeping five of them open with nothing
+        joined up in between.
+      closing: >-
+        Look something up, check it, send it to a deck, watch your level rise and prepare for TOCFL — in
+        one place rather than five tabs.
+      note: >-
+        It will not prepare you for HSK: the vocabulary and the realities behind it are different, even
+        if you sit the exam in traditional characters.
+    compare:
+      heading: Next to what you may already be using
+      summary: >-
+        Apps that teach Mandarin nearly always teach the Chinese one, and the strong general-purpose tools
+        leave the hard choices to you: which deck, which word next, how often. TaiwanCards is narrower on
+        purpose, and makes those choices itself.
+      honest: >-
+        None of that makes the others bad software, and most of them are not trying to teach Taiwanese Mandarin
+        at all. Anki's ecosystem is unmatched. Pleco's dictionaries are far deeper than anything here. Skritter's
+        stroke-level handwriting grading is the best in the category. And Duolingo is better than anyone at
+        getting you back tomorrow.
+      toggle: Show the full comparison table
+      checked: >-
+        Checked in July 2026 against official documentation and store listings. Features and prices change
+        — verify anything that matters to you.
+      rows:
+        target: Taiwanese Mandarin as the target
+        traditional: Traditional characters
+        zhuyin: Zhuyin
+        tocfl: TOCFL and TBCL levels
+        order: Decides what you learn next
+        facets: Skills tracked per entry
+        tone: Tone feedback from your voice
+        handwriting: Handwriting checked stroke by stroke
+        placement: Placement test
+        scheduler: Scheduling
+        price: Price
+      notes:
+        all_of_it: all of it
+        simplified: Simplified
+        generic: generic engine
+        deck: deck-dependent
+        chinese_wide: Chinese-wide
+        only: only
+        unclear: undocumented
+        with_pinyin: with pinyin
+        instead_of_pinyin: instead of pinyin
+        seven_bands: seven bands
+        cefr: CEFR
+        community_decks: community decks
+        some_decks: some decks
+        community_imports: community imports
+        level_freq: level then frequency
+        fixed_path: fixed path
+        five: five
+        four: four
+        one: one
+        if_configured: if you configure it
+        configurable: configurable
+        companion_service: companion service
+        speech_no_tone: speech, no tone score
+        addon_no_tone: add-ons, no tones
+        drawn_not_spoken: drawn, not spoken
+        addons: add-ons
+        best_in_class: best in class
+        lookup_only: lookup only
+        fsrs6: FSRS-6
+        fsrs_builtin: FSRS built in
+        proprietary: proprietary
+        leitner: Leitner ladder
+        not_published: not published
+        no_charge: no charge
+        freemium: freemium
+        free_tier: 20-card tier
+        free_paid_ios: no charge, iOS paid
+        per_year: from $99.99/yr
+        one_time: from $29.99 once
+    wider:
+      heading: The wider field
+      lede: >-
+        The same questions asked of the popular Chinese apps on Android and iOS. A question mark means the
+        product does not document the feature either way — absence of evidence, not evidence of absence.
+      checked: >-
+        Compiled in July 2026 from each product's own store listing or official site. Claims that appear
+        only in marketing copy are marked as claimed.
+      product: App
+      type: Type
+      types:
+        course: course
+        reader: reader
+        dictionary: dictionary
+        trainer: trainer
+        audio: audio course
+      notes:
+        hsk: HSK instead
+        cefr: CEFR instead
+        no_exam: none claimed
+        ios_only: iOS listing only
+        tw_textbooks: and TW textbooks
+        tagging: vocabulary tagging
+        claimed: claimed
+        simplified_implied: Simplified implied
+        no_srs: no scheduling
+        training_only: drills, not scored
+    complement:
+      heading: Your teacher's right hand
+      limits: >-
+        Phonetics is best set up with a live teacher, and this does not replace real classes. What you get
+        is tone and pronunciation checking — there is no conversation partner and no listening comprehension
+        here, and the app does not set out to provide them.
+    honest:
+      heading: Why this exists
+      body: >-
+        I am a linguist, I live in Taiwan, and this is the app I kept wishing for while learning the language
+        here. It grew out of a master's thesis in computational linguistics and a lot of ordinary daily
+        practice — signs, menus, asking again when I miss it. There is no advertising and there never will
+        be, and that is half the reason it exists.
+    final:
+      heading: Start with one question
+      body: >-
+        New to Mandarin? It starts from the sounds. Studied some already? Five minutes and it knows where
+        to pick you up.
+      cta: Create an account
+    gold_card: Taiwan Gold Card
+    disclaimer_html: >-
+      I build and maintain TaiwanCards alone. I am a linguist, I have loved Taiwan for half my life, and I
+      hold a %{gold_card}. Ministries, examinations and publications are named only to credit the source of
+      the data — the project is not affiliated with or endorsed by any of them. Everything here was
+      assembled by hand, so mistakes are possible: no guarantees of accuracy, availability or fitness for
+      any purpose. Use it as a study aid, and keep your own export of your progress.
+  onboarding:
+    title: Where to start
+    lede: One question, and the app shapes your first few weeks around the answer. You can change it whenever you like.
+    question: How much Mandarin do you already have?
+    pick_one: Pick one of the options.
+    levels:
+      zero:
+        title: Absolute beginner
+        body: No characters, no tones, no phonetics — starting from nothing.
+        next: We start with the sounds, and characters follow almost immediately
+      phonetics:
+        title: I know pinyin and tones
+        body: I can read pinyin and hear tones, but zhuyin is new to me and I know few characters.
+        next: Straight to zhuyin — it is the system Taiwan actually uses
+      characters:
+        title: I know zhuyin and some characters
+        body: I read ㄅㄆㄇㄈ, recognize traditional characters and have some vocabulary.
+        next: A placement test to find where you are
+      experienced:
+        title: I already have a level
+        body: I read texts, know hundreds of words, and may be working toward TOCFL.
+        next: Placement test first, then a plan up to your exam date
+    limits:
+      heading: What to expect, and what not to
+      body: The app will explain how to read and how to write, show you zhuyin and pinyin, and decide what you study next. You can load any words and any texts into it, drill them, watch your progress, and sharpen your pronunciation, tones and vocabulary.
+      gap: 'But phonetics is best set up with a native teacher, and none of this replaces real classes. What you get here is tone and pronunciation checking — and no live conversation, no speaking with another person, and no listening comprehension: the app does not set out to do those. Treat it as a teacher''s right hand rather than a substitute for one.'
+    not_for:
+      heading: This may not be the app for you
+      lede: Better to find out now than a month from now.
+      cards: 'You just want flashcards. This is a good deal more than that: a dictionary, a reader, pronunciation, handwriting, and one shared record of progress underneath all of it. For flashcards alone it is overkill.'
+      course: 'You want a course that takes you from zero to fluent. This is not a textbook: it does not teach grammar, and you will need to work through that elsewhere.'
+      mainland: 'You are moving to China. Everything here is Taiwanese Mandarin: traditional characters, zhuyin, Taiwanese vocabulary. There is no Chinese variant, and simplified characters cannot be switched on.'
+      nudging: You want to be chased. There are no reminders, no streaks and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular.
+      close: If none of that puts you off, pick an option above and let us begin.
+    path:
+      done_cta: To the home screen and your cards →
+      back: "← Back to the step list"
+      title: Your path
+      lede: The order worth going through. Steps tick themselves off as you use the app, but you can also mark them by hand.
+      counter: "%{done} of %{total} done"
+      optional: optional
+      now: now
+      open: Open
+      mark_done: Mark as done
+      undo: Unmark
+      progress: "%{done} of %{target} reviews"
+      done_heading: Path complete
+      done_body: The groundwork is in place. Your first cards are waiting — the app decides what to show and in what order from here.
+      after_heading: What comes next
+      after_body: 'Once the groundwork is there, the app decides what to show you: level first, frequency within the level. Take the rest as you need it — the reader, pronunciation, handwriting, and your own decks built from any text.'
+      change: Change your starting level
+      steps:
+        tones:
+          title: "Hear the four tones"
+          body: "Taiwanese tones are not the textbook ones from China: the third stays low and never rises. Train on studio recordings of every syllable, alternating a male and a female voice."
+        phrases:
+          title: "Learn what people actually say"
+          body: "Patterns that carry a day in Taiwan, including the half you only have to understand: what the cashier asks you."
+        bridge:
+          title: "Move from pinyin to zhuyin"
+          body: "You already know the sounds. This maps them onto the symbols Taiwan writes them with, and flags the traps: the empty rime, y and w, the contracted finals iu, ui and un."
+        readings:
+          title: "Relearn the Taiwan readings"
+          body: "Words Taiwan reads differently from China, and the full tones it keeps where a textbook gives you a neutral one."
+        placement:
+          title: "Find your level"
+          body: "A short adaptive test across listening, tones, characters, vocabulary and sentences. It sets your starting level and marks what you already know."
+        zhuyin:
+          title: Zhuyin (ㄅㄆㄇㄈ)
+          body: 'Taiwan''s phonetic script: 37 symbols and four tone marks. Next to pinyin it looks like extra work at first — but it is what annotates readings in Taiwanese dictionaries and textbooks, and it is how text gets typed here. Learn it once and everything afterward is easier.'
+        drill:
+          title: Recognizing the sounds
+          body: A drill over initials, finals and tones until you recognize them without stopping to think. One run is enough to tick the step off, but it is worth coming back to.
+        typing:
+          title: Typing in zhuyin
+          body: The very layout printed on keyboards in Taiwan. Without it you cannot write a message or a search query. The step counts once you have typed ten words correctly.
+        pinyin:
+          title: Pinyin alongside
+          body: 'Worth having: it labels streets and stations, and it is what foreigners will use with you. But zhuyin is the primary system here, with pinyin second.'
+        first_cards:
+          title: Your first characters and words
+          body: 'Characters start straight away rather than being put off: you begin with the most frequent ones. Twenty reviews and the step is done.'
+        plan:
+          title: A plan up to your exam
+          body: If you need TOCFL, name the level and the date and the app works out a daily quota. If you do not, skip it.

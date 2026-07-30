@@ -1,0 +1,45 @@
+= render layout: "profiles/shell" do
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-4 data-controller="autosave" data-tour="profile-level"
+    .flex.items-center.justify-between.gap-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.level_title")
+      = render "profiles/saved_badge"
+
+    = form_with model: @user, url: profile_path, method: :patch, class: "space-y-5",
+      data: {action: "change->autosave#save"} do |form|
+      = hidden_field_tag :tab, "level"
+
+      .space-y-1
+        label.block.space-y-1
+          span.text-xs.font-medium.text-muted-foreground = t("auth.level_field")
+          = form.select :level,
+            User::LEVELS.map { |value| [level_label(value), value] },
+            {selected: @user.level},
+            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+        p.text-xs.text-muted-foreground
+          = t("auth.level_note")
+          = " "
+          = link_to t("auth.level_test"), placement_path, class: "font-medium text-primary hover:underline"
+
+      .space-y-1.border-t.border-border.pt-4
+        label.block.space-y-1
+          span.text-xs.font-medium.text-muted-foreground = t("auth.projection_field")
+          = form.select :projection,
+            projection_options,
+            {selected: @user.projection},
+            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+        p.text-xs.text-muted-foreground = t("auth.projection_note")
+        p.text-xs.font-medium
+          - if @hidden.hidden.zero?
+            = t("auth.projection_shows_all", total: number_with_delimiter(@hidden.total))
+          - else
+            = t("auth.projection_hides", hidden: number_with_delimiter(@hidden.hidden), total: number_with_delimiter(@hidden.total), share: @hidden.share)
+
+      details.border-t.border-border.pt-4
+        summary.cursor-pointer.text-xs.font-medium.text-muted-foreground = t("auth.projection_advanced")
+        label.mt-3.block.space-y-1
+          span.text-xs.font-medium.text-muted-foreground = t("auth.projection_tolerance")
+          = form.select :visibility_tolerance,
+            @user.tolerance_steps.map { |value| [t("auth.projection_steps.#{value}"), value] },
+            {selected: @user.visibility_tolerance},
+            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+          p.text-xs.text-muted-foreground = t("auth.projection_tolerance_note")

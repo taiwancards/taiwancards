@@ -1,0 +1,20 @@
+- lexeme = local_assigns.fetch(:lexeme)
+- compact = local_assigns.fetch(:compact, false)
+- desks = recent_desks
+
+- if compact
+  = button_to quick_add_path(lexeme_id: lexeme.id), form: {class: "inline-flex"},
+    class: "inline-flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+    title: t("desks.quick_add"), aria: {label: t("desks.quick_add")}
+    span.text-sm.leading-none aria-hidden="true" +
+- else
+  .relative.inline-flex.items-center data-controller="menu"
+    = button_to quick_add_path(lexeme_id: lexeme.id), form: {class: "inline-flex"}, class: "inline-flex items-center rounded-l-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted", title: t("desks.quick_add") do
+      span aria-hidden="true" +
+    - if desks.any?
+      button type="button" data-action="menu#toggle" class="-ml-px rounded-r-md border border-border px-1.5 py-1 text-xs hover:bg-muted" aria-label=t("desks.pick_desk")
+        span aria-hidden="true" ▾
+      .absolute.right-0.top-full.z-50.hidden.mt-1.w-48.rounded-xl.border.border-border.bg-background.p-1.shadow-xl data-menu-target="panel"
+        - desks.each do |desk|
+          = button_to desk.name, quick_add_path(lexeme_id: lexeme.id, collection_id: desk.id), form: {class: "block"}, class: "block w-full truncate rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
+        = link_to t("desks.new_desk_option"), new_desk_path, class: "block rounded-md px-2 py-1.5 text-sm hover:bg-muted text-primary"

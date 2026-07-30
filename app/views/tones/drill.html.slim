@@ -1,0 +1,13 @@
+- content_for(:title) { t("tones.drill.title") }
+
+.py-6.space-y-5.pinyin-locked
+  div
+    h1.text-2xl.font-bold.tracking-tight = t("tones.drill.title")
+    p.mt-1.max-w-3xl.text-sm.text-muted-foreground = t("tones.drill.lede")
+    = link_to t("tones.drill.back"), tones_path, class: "mt-1 inline-block text-sm text-primary hover:underline"
+
+  - if @items.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
+      = t("tones.drill.empty")
+  - else
+    = render "tones/drill", items: @items

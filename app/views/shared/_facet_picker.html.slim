@@ -1,0 +1,18 @@
+.space-y-2.rounded-xl.border.border-border.p-4
+  div
+    span.text-sm.font-medium = t("desks.facets_label")
+    p.mt-1.text-xs.leading-relaxed.text-muted-foreground = t("desks.facets_create_hint")
+
+  .flex.flex-wrap.gap-2 data-controller="facet-presets"
+    - Study::CardSet::SESSION_FACETS.each do |facet|
+      label.inline-flex.cursor-pointer.items-center.gap-2.rounded-lg.border.border-border.px-3.py-2.text-sm class="has-[:checked]:border-primary has-[:checked]:bg-primary/10"
+        = check_box_tag "facets[]", facet, Study::CardSet::SWIPE_FACETS.include?(facet), class: "size-4", id: "#{scope}_facet_#{facet}", data: {facet_presets_target: "box", facet: facet}
+        span = t("memories.#{facet}")
+
+    .flex.w-full.flex-wrap.items-center.gap-2.pt-1
+      span.text-xs.text-muted-foreground = t("desks.presets_label")
+      - {all: "recognition production reading tone writing", spoken: "recognition production reading tone", meaning: "recognition"}.each do |key, list|
+        button.rounded-full.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
+          type="button" class="hover:bg-muted"
+          data-action="facet-presets#apply" data-facet-presets-list-param=list ]
+          = t("desks.presets.#{key}")

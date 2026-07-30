@@ -1,0 +1,136 @@
+- content_for(:title) { t("calendar.title") }
+
+.py-6.space-y-8
+  header.space-y-2
+    = render("shared/page_help", key: "calendar", title: t("calendar.title"))
+    - if @today_lunar
+      p.text-sm.text-muted-foreground
+        = t("calendar.today", date: l(@today, format: :long), lunar: lunar_label(@today_lunar))
+
+  section.space-y-3
+    .flex.flex-wrap.items-center.justify-between.gap-3
+      .flex.items-center.gap-2
+        - if @first_year && @year > @first_year
+          = link_to "←", calendar_path(year: @year - 1), class: "rounded-md border border-border px-2.5 py-1 text-sm hover:bg-muted"
+        span.text-lg.font-semibold = @year
+        - if @last_year && @year < @last_year
+          = link_to "→", calendar_path(year: @year + 1), class: "rounded-md border border-border px-2.5 py-1 text-sm hover:bg-muted"
+      - if @lunar_year&.leap_month&.positive?
+        span.rounded-full.py-1.text-xs class="px-2.5 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+          = Huayu::LunarCalendar.month_label(@lunar_year.leap_month, leap: true)
+
+    .space-y-2
+      - @holidays.each do |row|
+        - entry = row[:entry]
+        details.group.rounded-xl.border.border-border.bg-card
+          summary.flex.cursor-pointer.items-center.gap-3.px-3 class="py-2.5"
+            .w-20.shrink-0.text-sm.font-medium.text-muted-foreground.tabular-nums
+              = l(row[:date], format: :short)
+            .min-w-0.flex-1
+              .flex.flex-wrap.items-baseline.gap-x-2.gap-y-1
+                span.text-base.font-semibold lang="zh-TW" = entry.traditional
+                span.text-xs.text-muted-foreground.pinyin = entry.pinyin
+            span.shrink-0.rounded-full.px-2.text-xs class="py-0.5 #{holiday_badge_class(entry.public_holiday)}"
+              = entry.public_holiday ? t("calendar.day_off") : t("calendar.observed")
+
+          .space-y-4.border-t.border-border.px-3.py-3
+            - if entry.aka.any?
+              p.text-sm
+                span.text-muted-foreground = "#{t("calendar.aka")}: "
+                - entry.aka.each_with_index do |name, index|
+                  span lang="zh-TW" = name["traditional"]
+                  span.text-xs.text-muted-foreground.pinyin = " #{name["pinyin"]}"
+                  = index < entry.aka.size - 1 ? " · " : ""
+
+            div
+              p.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("calendar.rule")
+              p.text-sm = entry.rule_text
+
+            p.text-sm.leading-relaxed = entry.summary
+
+            div
+              p.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("calendar.food")
+              p.text-sm.leading-relaxed = entry.food
+
+            div.space-y-2
+              p.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("calendar.words_heading")
+              .grid.gap-2 class="sm:grid-cols-2"
+                - entry.words.each do |word|
+                  - lexeme = @lexemes[word.traditional]
+                  .flex.min-w-0.items-stretch.gap-1
+                    - if lexeme
+                      - state = @known_ids.include?(lexeme.id) ? :known : (@started_ids.include?(lexeme.id) ? :learning : :new)
+                      = link_to dict_entry_path(lexeme.text), class: "flex min-w-0 flex-1 items-center justify-between gap-3 rounded-lg border border-border px-2.5 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
+                        .min-w-0
+                          .flex.items-baseline.gap-2
+                            span.font-semibold lang="zh-TW" = word.traditional
+                            span.text-xs.text-muted-foreground.pinyin = word.pinyin
+                          .truncate.text-xs.text-muted-foreground = word.gloss
+                        span.size-2.shrink-0.rounded-full class=word_state_dot(state)
+                      = render("shared/quick_add", lexeme: lexeme)
+                    - else
+                      .min-w-0.flex-1.rounded-lg.border.border-dashed.border-border.py-2 class="px-2.5"
+                        .flex.items-baseline.gap-2
+                          span.font-semibold lang="zh-TW" = word.traditional
+                          span.text-xs.text-muted-foreground.pinyin = word.pinyin
+                        .truncate.text-xs.text-muted-foreground = word.gloss
+
+  section.space-y-4
+    h2.text-lg.font-semibold = t("calendar.lunar.title")
+    .space-y-3.text-sm.leading-relaxed class="[&_p]:mb-2 [&_p:last-child]:mb-0"
+      = raw(t("calendar.lunar.months_html"))
+      = raw(t("calendar.lunar.days_html"))
+      = raw(t("calendar.lunar.drift_html"))
+      = raw(t("calendar.lunar.leap_html"))
+      = raw(t("calendar.lunar.terms_html"))
+
+  .space-y-4
+    section.space-y-3.rounded-xl.border.border-border.bg-card.p-4 data-controller="minguo"
+      h2.text-lg.font-semibold = t("calendar.minguo.title")
+      .flex.flex-wrap.items-end.gap-3
+        label.min-w-0.flex-1.space-y-1
+          span.block.text-xs.font-medium.text-muted-foreground = t("calendar.minguo.gregorian")
+          input.w-full.rounded-md.border.border-border.bg-background.px-3.py-2.text-sm type="number" inputmode="numeric" value=@today.year data-minguo-target="gregorian" data-action="input->minguo#fromGregorian"
+        span.pb-2.text-muted-foreground ↔
+        label.min-w-0.flex-1.space-y-1
+          span.block.text-xs.font-medium.text-muted-foreground = t("calendar.minguo.minguo")
+          input.w-full.rounded-md.border.border-border.bg-background.px-3.py-2.text-sm type="number" inputmode="numeric" data-minguo-target="minguo" data-action="input->minguo#fromMinguo"
+      p.text-sm.font-medium data-minguo-target="note" data-template=t("calendar.minguo.note") data-before=t("calendar.minguo.before")
+      .text-sm.leading-relaxed.text-muted-foreground class="[&_p]:mb-2 [&_p:last-child]:mb-0"
+        = raw(t("calendar.minguo.explain_html"))
+
+    section.space-y-4.rounded-xl.border.border-border.bg-card.p-4 data-controller="lunar-converter" data-lunar-converter-table-value=@table.to_json
+      h2.text-lg.font-semibold = t("calendar.converter.title")
+
+      .space-y-2
+        p.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("calendar.converter.to_gregorian")
+        .grid.grid-cols-3.gap-2
+          label.space-y-1
+            span.block.text-xs.text-muted-foreground = t("calendar.converter.lunar_year")
+            select.w-full.rounded-md.border.border-border.bg-background.px-2.py-2.text-sm data-lunar-converter-target="year" data-action="change->lunar-converter#yearChanged"
+              - ((@first_year || @year)..(@last_year || @year)).each do |year|
+                option value=year selected=(year == @year) = year
+          label.space-y-1
+            span.block.text-xs.text-muted-foreground = t("calendar.converter.lunar_month")
+            select.w-full.rounded-md.border.border-border.bg-background.px-2.py-2.text-sm lang="zh-TW" data-lunar-converter-target="month" data-action="change->lunar-converter#monthChanged"
+          label.space-y-1
+            span.block.text-xs.text-muted-foreground = t("calendar.converter.lunar_day")
+            select.w-full.rounded-md.border.border-border.bg-background.px-2.py-2.text-sm lang="zh-TW" data-lunar-converter-target="day" data-action="change->lunar-converter#toGregorian"
+        p.text-sm.font-medium data-lunar-converter-target="gregorianOut" data-template=t("calendar.converter.gregorian_result")
+
+      .space-y-2.border-t.border-border.pt-4
+        p.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("calendar.converter.to_lunar")
+        label.space-y-1
+          span.block.text-xs.text-muted-foreground = t("calendar.converter.date")
+          input.w-full.rounded-md.border.border-border.bg-background.px-3.py-2.text-sm type="date" value=@today.to_s min=Huayu::LunarCalendar.min_date.to_s max=Huayu::LunarCalendar.max_date.to_s data-lunar-converter-target="date" data-action="input->lunar-converter#toLunar"
+        p.text-sm.font-medium lang="zh-TW" data-lunar-converter-target="lunarOut" data-template=t("calendar.converter.lunar_result") data-out-of-range=t("calendar.converter.out_of_range")
+
+      - if Huayu::LunarCalendar.available?
+        p.text-xs.leading-relaxed.text-muted-foreground
+          = t("calendar.converter.bounds", from: Huayu::LunarCalendar.min_date.year, to: Huayu::LunarCalendar.max_date.year - 1)
+
+  section.space-y-2
+    h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("calendar.sources")
+    ul.space-y-1.text-xs.text-muted-foreground
+      - Huayu::Holidays.source.each do |source|
+        li = source

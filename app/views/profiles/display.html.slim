@@ -1,0 +1,39 @@
+= render layout: "profiles/shell" do
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-4 data-controller="autosave"
+    .flex.items-center.justify-between.gap-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.reading_title")
+      = render "profiles/saved_badge"
+
+    = form_with model: @user, url: profile_path, method: :patch, class: "space-y-4",
+      data: {action: "change->autosave#save"} do |form|
+      = hidden_field_tag :tab, "display"
+      .grid.gap-3 class="sm:grid-cols-2"
+        label.block.space-y-1
+          span.text-xs.font-medium.text-muted-foreground = t("auth.zhuyin_position")
+          = form.select :zhuyin_position,
+            User::ZHUYIN_POSITIONS.map { |value| [t("auth.zhuyin_positions.#{value}"), value] },
+            {selected: @user.zhuyin_position},
+            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+        label.block.space-y-1
+          span.text-xs.font-medium.text-muted-foreground = t("auth.text_direction")
+          = form.select :text_direction,
+            User::TEXT_DIRECTIONS.map { |value| [t("auth.text_directions.#{value}"), value] },
+            {selected: @user.text_direction},
+            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+
+      p.text-xs.leading-relaxed.text-muted-foreground = t("auth.font_recommendation")
+
+      .space-y-2.border-t.border-border.pt-4 data-tour="profile-tabs"
+        div
+          span.text-sm.font-medium = t("auth.mobile_tabs")
+          p.text-xs.text-muted-foreground = t("auth.mobile_tabs_hint", count: NavHelper::MOBILE_TAB_SLOTS)
+        - chosen = @user.mobile_tabs.presence || default_mobile_tabs
+        - mobile_tab_groups.each do |group, entries|
+          .space-y-1
+            p.text-2xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = group
+            .grid.gap-2 class="grid-cols-2"
+              - entries.each do |path, icon_key, label|
+                label.flex.min-h-10.cursor-pointer.items-center.gap-2.rounded-lg.border.border-border.px-3.text-sm class="has-[:checked]:border-primary has-[:checked]:bg-primary/10"
+                  = check_box_tag "user[mobile_tabs][]", path, chosen.include?(path), class: "size-4 shrink-0", id: "tab_#{path.parameterize}"
+                  = icon(icon_key, css: "size-4 shrink-0 text-muted-foreground")
+                  span.truncate = label

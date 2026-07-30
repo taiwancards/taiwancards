@@ -1,0 +1,8 @@
+= turbo_stream.update "study-card" do
+  - if @lexeme && @facet
+    = render "card", lexeme: @lexeme, facet: @facet, session_id: @session_id
+  - else
+    = render "empty"
+
+= turbo_stream.update "study-progress" do
+  = render "progress", done: @done, total: @total, remaining: @remaining

@@ -1,0 +1,32 @@
+- content_for(:title) { t("practice.phonetics_title") }
+
+.py-6.space-y-6.pinyin-locked
+  div
+    = render("shared/page_help", key: "practice_phonetics", title: t("practice.phonetics_title"))
+
+  nav.flex.flex-wrap.gap-1.rounded-full.border.border-border.p-1 aria-label=t("practice.parts_nav")
+    - PracticeController::PHONETICS_PARTS.each_with_index do |part, index|
+      = link_to practice_zhuyin_path(part: part),
+        class: class_names("rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+          part == @part ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground") do
+        span.mr-1.opacity-60 = index + 1
+        = t("practice.parts.#{part}")
+
+  = render "practice/part_#{@part}"
+
+  .flex.flex-wrap.items-center.justify-between.gap-3.border-t.border-border.pt-4
+    - if (previous_part = @part_neighbors[:previous])
+      = link_to t("practice.part_previous", title: t("practice.parts.#{previous_part}")), practice_zhuyin_path(part: previous_part),
+        class: "text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+    - else
+      span
+
+    .flex.flex-wrap.items-center.gap-2
+      - if (practice = practice_target_for(@part))
+        = link_to practice[:label], practice[:path],
+          class: "rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      - if (next_part = @part_neighbors[:next])
+        = link_to t("practice.part_next", title: t("practice.parts.#{next_part}")), practice_zhuyin_path(part: next_part),
+          class: "rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+
+  = render("shared/roadmap_return")

@@ -1,0 +1,186 @@
+en:
+  pron:
+    legend:
+      title: "What the colors mean"
+      body: "Nobody scores 100 — Taiwanese broadcasters don't either. Green means there is nothing left to fix. Amber means you will be understood first time. Only red is worth acting on."
+    levels:
+      green:
+        name: "Excellent"
+        note: "Sounds natural. Nothing left to improve here."
+      amber:
+        name: "Understandable"
+        note: "An accent is audible, but the syllable is recognized correctly. That is enough to be understood."
+      red:
+        name: "Worth fixing"
+        note: "The syllable is hard to recognize. Read the note and try again."
+      dark:
+        name: "Unintelligible"
+        note: "A listener would hear a different syllable, or nothing at all."
+      gray:
+        name: "Not measured"
+        note: "We have no reliable reference for this syllable, so no score is shown rather than a misleading one."
+    parts:
+      initial: "Initial"
+      medial: "Medial"
+      final: "Final"
+      tone: "Tone"
+      absent: "none"
+      empty_rime: "空韻"
+    weight: "weight %{percent}%"
+    weight_hint: "The weight shows how much this part matters in this particular syllable: the more real syllables differ from it by this part alone, the more it moves the overall score."
+    chart:
+      title: "Tone contour"
+      reference: "reference"
+      yours: "you"
+      band: "speaker spread"
+      semitones: "semitones"
+    ui:
+      chart_hint: "Dashed is the reference, the band is the spread across real speakers, the solid line is you."
+      parts_title: "What the score is made of"
+      fix_title: "What to fix"
+      reference: "How this works"
+      not_measured: "not measured"
+      no_template: "We have no reference for this syllable, so there is nothing to score against. This is not a pronunciation error."
+      risky: "We recognize this syllable less reliably than the rest, so the score may be harsher than you deserve. Beginners never see these — here they are at your own risk."
+      no_part: "none in this syllable"
+      details: "Details"
+      hide: "Collapse"
+      focus_title: "What to work on"
+      focus_empty: "Practice a little and personal recommendations will appear here."
+      focus_attempts:
+        one: "%{count} attempt"
+        other: "%{count} attempts"
+      focus_bias: "Systematic deviation"
+      focus_drill: "Drill this"
+      trend_up: "improving"
+      trend_down: "slipping"
+      trend_flat: "flat"
+      mastered: "mastered"
+      warmup_title: "Voice warm-up"
+      warmup_hint: "Half a minute makes tone scoring sharper: the system learns the pitch and timbre of your voice."
+      warmup_start: "Start warm-up"
+      warmup_redo: "Do it again"
+      warmup_done: "Voice calibrated"
+      warmup_next: "Next"
+      warmup_skip: "Skip"
+      warmup_saved: "Recorded"
+      warmup_listen: "Play it again"
+      warmup_anchors: "Tone 1 and tone 3 came out at nearly the same pitch, so tone scoring will be imprecise. Just the four syllables again: 媽 clearly above your speaking voice, 馬 at the very bottom, with an audible gap between them."
+      metrics: "Details"
+      copy: "Copy"
+      sandhi: "Careful: this is not read as written —"
+      warmup_why: "Without a warm-up the tone is judged by the shape of the curve but not by absolute pitch: a bass and a soprano sing the same tone at different frequencies. The warm-up provides the reference point."
+    codes:
+      near: "No clear error, but it falls short of the reference."
+      tone:
+        wrong: "That was tone %{got}; tone %{tone} is needed."
+        shape: "Tone %{tone} is recognisable, but the contour drifts from the reference."
+      initial:
+        under_aspirated: "Not enough aspiration: %{initial} came out closer to %{pair}."
+        over_aspirated: "Too much aspiration: %{initial} came out closer to %{pair}."
+        vot_off: "Voicing starts at the wrong moment relative to the release."
+      sibilant:
+        too_front: "The friction is too high and too far forward for /%{ipa}/."
+        too_back: "The friction is too low and too far back for /%{ipa}/."
+      medial:
+        weak: "The medial almost disappeared."
+      vowel:
+        open: "The vowel is more open than the reference."
+        close: "The vowel is more closed than the reference."
+        front: "The vowel is shifted forward."
+        back: "The vowel is shifted back."
+      coda:
+        weak: "The nasal coda barely sounded."
+        heavy: "The nasal is too heavy — the vowel is nasalised too early."
+        ng_for_n: "The -n coda came out as -ng."
+        n_for_ng: "The -ng coda came out as -n."
+      duration:
+        long: "The syllable runs longer than the reference."
+        short: "The syllable is too short — the tone has no room to unfold."
+        neutral_long: "A neutral tone should be short."
+      timbre:
+        drift: "The overall color of the syllable drifts from the reference."
+    fixes:
+      near: "Try again, following the reference."
+      tone:
+        wrong: "Follow the reference curve on the chart."
+        shape: "Check the chart and see where your line parts from the reference."
+      initial:
+        under_aspirated: "Push more air after the release — the puff must clearly precede the voice."
+        over_aspirated: "Start voicing immediately after the release, with no puff in between."
+        vot_off: "Watch the join between the consonant and the vowel."
+      sibilant:
+        too_front: "Pull the tongue further back."
+        too_back: "Bring the tongue further forward."
+      medial:
+        weak: "The medial is short, but it cannot be swallowed — make it audible."
+      vowel:
+        open: "Close the jaw a little and raise the tongue."
+        close: "Drop the jaw."
+        front: "Pull the tongue back."
+        back: "Bring the tongue forward."
+      coda:
+        weak: "Hold the end of the syllable: let the air go through the nose instead of stopping on the vowel."
+        heavy: "Keep the vowel clean and let the nose in only at the very end."
+        ng_for_n: "Tongue tip to the ridge behind the teeth; keep the back of the tongue down."
+        n_for_ng: "Back of the tongue to the soft palate; leave the tip free."
+      duration:
+        long: "Take a natural pace."
+        short: "Let the syllable finish."
+        neutral_long: "Shorten it — a neutral syllable is unstressed."
+      timbre:
+        drift: "Listen to the reference and copy it whole."
+    confusion:
+      tone_only: "Sounds are right, but that was tone %{tone} instead of %{expected_tone}"
+      segments_only: "Tone is right, but that was /%{syllable}/ instead of /%{expected_syllable}/"
+      both: "That was /%{syllable}/ in tone %{tone} instead of /%{expected_syllable}/ in tone %{expected_tone}"
+    tones:
+      "1": "Flat and high, held level to the end. English has no level tones, so it feels like you are holding it too long."
+      "2": "Rising, like the English question 'Huh?'. Start lower than feels natural, or there is nowhere to rise to."
+      "3": "In Taiwan this is a low tone: drop to the bottom of your range and stay there, often with a creak. The textbook final rise (214) is absent in ordinary speech."
+      "4": "A sharp fall from high, like a curt 'Stop!'. Start high and drop fast."
+      "5": "Neutral: short, weak, with no melody of its own — its pitch comes from the syllable before."
+    initials:
+      b: "Voiceless and unaspirated, like the p in 'spin' — not the b in 'bin'."
+      p: "Strongly aspirated, like the p in 'pin': a puff you can feel on your hand."
+      m: "As in English."
+      f: "As in English."
+      d: "Like the t in 'stop', not the d in 'dog'."
+      t: "Like the t in 'top', with a clear puff of air."
+      n: "As in English, tongue tip at the ridge behind the teeth."
+      l: "As in 'leaf' — keep it light, never the dark l of 'full'."
+      g: "Like the k in 'skip', not the g in 'go'."
+      k: "Like the k in 'kite' — the puff is the only thing separating it from ㄍ."
+      h: "Rougher than English h: friction at the back, like the ch in Scottish 'loch'."
+      j: "Tongue tip down behind the lower teeth, blade against the hard palate. Not the j in 'jam'."
+      q: "Same place as ㄐ, but with a strong puff. Not the ch in 'chin' — that one is further back."
+      x: "Not the sh in 'she': the tongue tip stays down at the lower teeth."
+      zh: "Curl the tongue tip up and back. Close to the j in 'jar', but voiceless and further back."
+      ch: "Like ㄓ with a strong puff of air."
+      sh: "Like 'sh', but with the tongue tip curled up and back."
+      r: "Not the English r. Set the tongue as for ㄕ and add voice — it buzzes."
+      z: "The 'ds' in 'kids', but at the start of the syllable."
+      c: "The 'ts' in 'cats' with a strong puff — that puff separates it from ㄗ."
+      s: "As in English."
+    medials:
+      i: "A quick 'ee' glide — brief, but it must be audible."
+      u: "A quick 'oo' glide; round the lips before the vowel starts."
+      ü: "Lips rounded as for 'oo', tongue placed as for 'ee' — hold both at once."
+    rimes:
+      a: "An open 'ah' with the jaw dropped."
+      o: "A rounded 'aw'; after ㄅㄆㄇㄈ it comes out almost as 'wo'."
+      e: "No English equivalent: like the u in 'duh', but further back and with unrounded lips."
+      ê: "An open 'eh', as in 'bed'."
+      ai: "'Eye', with a full open first element."
+      ei: "'Ay' as in 'day', shorter and closer than ㄞ."
+      ao: "'Ow' as in 'how', with the lips rounding toward the end."
+      ou: "'Oh' as in 'go'."
+      an: "'An' with the tongue tip at the ridge behind the teeth; the vowel stays front."
+      en: "'Un' as in 'sun' — a weak, short vowel."
+      ang: "A deep back 'ah' plus 'ng' as in 'song' — no hard g at the end."
+      eng: "A weak vowel plus 'ng' as in 'sung': back of the tongue to the soft palate."
+      er: "Like the American 'are'."
+      i: "A clear, long 'ee' with no glide at the end."
+      u: "A clear 'oo' with strong lip rounding."
+      ü: "Lips rounded as for 'oo', tongue placed as for 'ee'."
+      empty: "A buzzing vowel with no symbol of its own: leave the tongue exactly where the consonant left it and keep voicing. Neither 'ee' nor 'uh'."

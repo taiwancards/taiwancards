@@ -1,0 +1,86 @@
+- content_for(:title) { t("licenses.title") }
+- link_opts = {rel: "noopener", target: "_blank", class: "text-foreground hover:underline"}
+- credits = [ \
+    ["CC-CEDICT", "https://cc-cedict.org/", "CC BY-SA 4.0", "https://creativecommons.org/licenses/by-sa/4.0/", :cc_cedict], \
+    ["Make Me a Hanzi", "https://github.com/skishore/makemeahanzi", "LGPL / Arphic PL", "https://github.com/skishore/makemeahanzi/blob/master/LICENSE", :makemeahanzi], \
+    ["Hanzi Writer", "https://hanziwriter.org/", "MIT", "https://github.com/chanind/hanzi-writer/blob/master/LICENSE", :hanzi_writer], \
+    ["HanziLookupJS", "https://github.com/gugray/HanziLookupJS", "MIT", "https://github.com/gugray/HanziLookupJS/blob/master/LICENSE", :hanzilookup], \
+    ["Unicode Unihan", "https://www.unicode.org/charts/unihan.html", "Unicode License", "https://www.unicode.org/license.txt", :unihan], \
+    ["#{Huayu::MoeAudio::ATTRIBUTION}", Huayu::MoeAudio::SOURCE_URL, "CC BY-ND 3.0 TW", "https://creativecommons.org/licenses/by-nd/3.0/tw/legalcode", :moe_audio], \
+    ["OpenCC", "https://github.com/BYVoid/OpenCC", "Apache-2.0", "https://github.com/BYVoid/OpenCC/blob/master/LICENSE", :opencc] \
+  ]
+- fonts = [ \
+    ["Roboto", "https://fonts.google.com/specimen/Roboto", "SIL OFL 1.1", "https://openfontlicense.org/", :roboto], \
+    ["Noto Sans TC", "https://fonts.google.com/noto/specimen/Noto+Sans+TC", "SIL OFL 1.1", "https://openfontlicense.org/", :noto_sans_tc], \
+    ["全字庫正楷體 · TW-Kai", "https://www.cns11643.gov.tw/", "SIL OFL 1.1 · 政府資料開放授權條款 v1", "https://data.gov.tw/license", :tw_kai] \
+  ]
+- sources = [ \
+    ["教育部 · Taiwan MOE", "https://language.moe.gov.tw/", :moe], \
+    ["SC-TOP · TOCFL", "https://tocfl.edu.tw/", :tocfl], \
+    ["國家教育研究院 · NAER / COCT / TBCL", "https://coct.naer.edu.tw/", :naer], \
+    ["國語注音符號手冊 · 開放部件 (CC BY 4.0)", "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/juyin/index.html", :bopomofo_audio], \
+    ["教育部異體字字典 · 國字筆畫併類表", "https://dict.variants.moe.edu.tw/page.jsp?ID=298", :moe_strokes], \
+    ["教育部《成語典》 (CC BY-ND 3.0 TW)", "https://dict.idioms.moe.edu.tw/", :moe_idioms], \
+    ["中央氣象署 · Central Weather Administration", "https://www.cwa.gov.tw/", :cwa], \
+    ["茶及飲料作物改良場 · TBRS", "https://www.tbrs.gov.tw/", :tbrs], \
+    ["香港天文台 · Hong Kong Observatory", "https://www.hko.gov.hk/", :hko], \
+    ["小學堂 · Academia Sinica (CC0 1.0)", "https://xiaoxue.iis.sinica.edu.tw/", :xiaoxuetang] \
+  ]
+
+.py-6.space-y-6
+  div
+    h1.text-2xl.font-bold.tracking-tight = t("licenses.title")
+    p.mt-2.text-muted-foreground = t("licenses.intro")
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("licenses.open_source_title")
+    .space-y-3
+      - credits.each do |name, url, lic, lic_url, key|
+        .rounded-xl.border.border-border.p-4
+          p
+            = link_to name, url, link_opts
+            span.text-muted-foreground = " — "
+            = link_to lic, lic_url, link_opts
+          p.mt-1.text-sm.text-muted-foreground = t("licenses.items.#{key}")
+          - if key == :moe_audio && Huayu::MoeAudio.notice?
+            p.mt-2.text-sm
+              = link_to t("licenses.moe_notice"), moe_notice_path, link_opts
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("licenses.fonts_title")
+    p.text-sm.text-muted-foreground = t("licenses.fonts_note")
+    .space-y-3
+      - fonts.each do |name, url, lic, lic_url, key|
+        .rounded-xl.border.border-border.p-4
+          p
+            = link_to name, url, link_opts
+            span.text-muted-foreground = " — "
+            = link_to lic, lic_url, link_opts
+          p.mt-1.text-sm.text-muted-foreground = t("licenses.items.#{key}")
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("licenses.corpora_title")
+    p.text-sm.text-muted-foreground = t("licenses.corpora_note")
+    .space-y-3
+      - ContentSource.publishable.ordered.each do |source|
+        .rounded-xl.border.border-border.p-4
+          p
+            = source.url.present? ? link_to(source.name, source.url, link_opts) : source.name
+            - if source.name_en.present?
+              span.text-muted-foreground = " · #{source.name_en}"
+          p.mt-1.text-sm
+            - if source.license_url.present?
+              = link_to source.license_name, source.license_url, link_opts
+            - else
+              span.text-muted-foreground = source.license_name
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("licenses.data_title")
+    p.text-sm.text-muted-foreground = t("licenses.data_note")
+    .space-y-3
+      - sources.each do |name, url, key|
+        .rounded-xl.border.border-border.p-4
+          = link_to name, url, link_opts
+          p.mt-1.text-sm.text-muted-foreground = t("licenses.items.#{key}")
+
+  p.text-sm.text-muted-foreground = t("licenses.outro")

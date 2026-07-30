@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+idle() {
+  echo "tunnel: $1"
+  exec tail -f /dev/null
+}
+
+[ -n "$NGROK_DOMAIN" ] || idle "NGROK_DOMAIN is not set, tunnel disabled (see .env.dev)"
+command -v ngrok > /dev/null 2>&1 || idle "ngrok is not installed, tunnel disabled"
+
+port="${APP_PORT:-3000}"
+echo "tunnel: https://$NGROK_DOMAIN -> localhost:$port"
+exec ngrok http --url="$NGROK_DOMAIN" --log=stdout --log-format=term "$port"

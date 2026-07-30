@@ -1,0 +1,27 @@
+= render layout: "profiles/shell" do
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-4
+    div
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground data-tour="profile-backup" = t("auth.progress")
+      p.mt-1.text-sm.text-muted-foreground = t("auth.progress_counts", memories: @memory_count, reviews: @review_count)
+
+    .flex.flex-wrap.items-center.gap-3
+      = link_to t("auth.export"), profile_export_path(format: :json),
+        class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+      = form_with url: profile_import_path, method: :post, multipart: true, class: "flex min-w-0 flex-wrap items-center gap-2" do |form|
+        = form.file_field :file, accept: "application/json,.json", required: true, class: "min-w-0 max-w-full text-sm"
+        = form.submit t("auth.import"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+
+    - if @user.google_linked?
+      .flex.flex-wrap.items-center.gap-3.border-t.border-border.pt-3
+        = button_to t("auth.drive_backup"), profile_drive_backup_path,
+          class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+        = button_to t("auth.drive_restore"), profile_drive_restore_path,
+          data: {turbo_confirm: t("auth.drive_restore_confirm")},
+          class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+
+  section.rounded-2xl.border.border-red-500.p-5.space-y-2 class="bg-red-500/5"
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-red-600 = t("auth.reset")
+    p.text-xs.text-muted-foreground = t("auth.reset_hint")
+    = button_to t("auth.reset"), profile_reset_path, method: :delete,
+      data: {turbo_confirm: t("auth.reset_confirm")},
+      class: "rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-500/10"

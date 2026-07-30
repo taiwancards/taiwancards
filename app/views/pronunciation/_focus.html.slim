@@ -1,0 +1,44 @@
+- colors = {"green" => "#10b981", "amber" => "#f59e0b", "red" => "#ef4444", "dark" => "#b91c1c", "gray" => "#9ca3af"}
+
+section.space-y-3.rounded-2xl.border.border-border.p-5
+  .flex.flex-wrap.items-baseline.justify-between.gap-2
+    h2.text-lg.font-semibold = t("pron.ui.focus_title")
+    - if summary
+      p.text-xs.text-muted-foreground
+        = t("pron.ui.focus_attempts", count: summary["attempts"])
+        - if summary["mastered"].to_i.positive?
+          span.ml-2 = "#{summary["mastered"]} #{t("pron.ui.mastered")}"
+
+  - if weaknesses.blank?
+    p.text-sm.text-muted-foreground = t("pron.ui.focus_empty")
+  - else
+    ul.space-y-3
+      - weaknesses.each do |row|
+        li.rounded-xl.border.border-border.p-4 class="space-y-1.5"
+          .flex.items-start.gap-3
+            .flex.h-11.w-11.shrink-0.items-center.justify-center.rounded-lg.border-2 style="border-color: #{colors[row["level"]]}"
+              span.text-lg.font-semibold lang="zh-TW" = row["zhuyin"]
+            .min-w-0.flex-1 class="space-y-0.5"
+              .flex.flex-wrap.items-baseline.gap-x-2
+                span.text-sm.font-medium = row["label"]
+                - if row["ipa"].present?
+                  span.text-xs.text-muted-foreground = "/#{row["ipa"]}/"
+                span.text-xs.text-muted-foreground = t("pron.ui.focus_attempts", count: row["n"])
+              - if row["problem"].present?
+                p.text-sm = row["problem"]
+              - if row["advice"].present?
+                p.text-sm.text-muted-foreground = row["advice"]
+            .shrink-0.text-right
+              .text-xl.font-bold.tabular-nums style="color: #{colors[row["level"]]}" = row["score"]
+              - if row["trend"].present? && row["trend"].abs >= 1
+                .text-3xs.text-muted-foreground
+                  = row["trend"].positive? ? t("pron.ui.trend_up") : t("pron.ui.trend_down")
+
+          - if row["cue"].present?
+            p.rounded-lg.bg-muted/60.px-3.py-2.text-xs.leading-relaxed.text-muted-foreground = row["cue"]
+
+          .flex.flex-wrap.items-center.gap-2
+            - if row["section"].present?
+              = link_to t("pron.ui.focus_drill"), pronunciation_path(section: row["section"]), class: "rounded-full border border-primary/50 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/10"
+            - Array(row["keys"]).first(4).each do |key|
+              span.rounded-full.border.border-border.px-2.text-3xs.tabular-nums.text-muted-foreground class="py-0.5" = key

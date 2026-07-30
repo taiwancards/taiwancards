@@ -1,0 +1,46 @@
+.bar
+  span = "#{@sentence.id} · score #{@sentence.score.round(1)}"
+  span = "translated: #{@counts[:done]} · pending: #{@counts[:todo]}"
+  = link_to("translated", markup_path(lang: @locale, mode: "done"))
+  = link_to("pending", markup_path(lang: @locale, mode: "todo"))
+  = link_to("EN", markup_sentence_path(@sentence, lang: "en", mode: @mode))
+  = link_to("RU", markup_sentence_path(@sentence, lang: "ru", mode: @mode))
+
+p.zh = @sentence.text
+
+ul.words
+  - @words.each do |text, gloss|
+    li
+      b = text
+      span = gloss.presence || "—"
+
+= form_with(url: markup_sentence_path(@sentence), method: :patch, id: "markup-form") do
+  = hidden_field_tag(:lang, @locale)
+  = hidden_field_tag(:mode, @mode)
+  label English
+  = text_area_tag(:en, @sentence.meanings["en"], autofocus: true)
+  label Русский
+  = text_area_tag(:ru, @sentence.meanings["ru"])
+  .actions
+    button type="submit" Save
+    = link_to("Next", @next_path, class: "btn", id: "markup-next")
+
+.actions
+  = button_to("Delete sentence", markup_sentence_path(@sentence, lang: @locale, mode: @mode), method: :delete, class: "danger", form: {data: {turbo_confirm: "Delete this sentence?"}})
+
+p.hint Enter — save and go on · Shift+Enter — newline · → — next without saving
+
+= javascript_tag nonce: true do
+  | document.addEventListener("keydown", (event) => {
+      const form = document.getElementById("markup-form");
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+        return;
+      }
+      const editing = event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement;
+      if (event.key === "ArrowRight" && !editing) {
+        event.preventDefault();
+        document.getElementById("markup-next").click();
+      }
+    });

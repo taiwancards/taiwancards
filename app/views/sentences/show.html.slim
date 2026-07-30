@@ -1,0 +1,62 @@
+- content_for(:title, @sentence.text.truncate(40))
+
+.py-6.space-y-6
+  div
+    p.text-2xl.leading-relaxed.tracking-wide = @sentence.text
+
+    - if @sentence.meaning.present?
+      p.mt-2.text-base.leading-relaxed.text-muted-foreground = @sentence.meaning
+
+    - if detailed?
+      .mt-3.flex.flex-wrap.items-center.gap-2.text-xs
+        = score_badge(@sentence)
+        - if @profile
+          = render("sentences/badges", profile: @profile, sources: @sentence.content_sources)
+
+  - if detailed?
+    = render("shared/register_mix", lexeme: @sentence)
+
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("sentences.by_word")
+    .flex.flex-wrap.gap-2
+      - @breakdown.words.each do |word|
+        - if word.lexeme
+          = link_to lexeme_page_path(word.lexeme), class: "group rounded-lg border border-border px-3 py-2 hover:bg-muted" do
+            .flex.items-baseline.gap-2
+              span.text-lg = word.text
+              = render("shared/speak", lexeme: word.lexeme, size: :sm)
+            - if word.lexeme.reading("zhuyin").present?
+              .text-xs.text-muted-foreground = word.lexeme.reading("zhuyin")
+            - gloss = word.senses.filter_map { |sense| sense.meaning(I18n.locale) }.first.presence || word.lexeme.meaning(I18n.locale)
+            - if gloss.present?
+              .mt-1.max-w-56.text-xs.text-muted-foreground = gloss
+        - else
+          .rounded-lg.border.border-dashed.border-border.px-3.py-2.text-muted-foreground
+            span.text-lg = word.text
+            .text-xs = t("sentences.not_in_dictionary")
+
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+      = t("sentences.by_character")
+    p.text-xs.text-muted-foreground = t("sentences.by_character_hint")
+    .flex.flex-wrap.gap-2
+      - @breakdown.characters.each do |char|
+        - if char.lexeme
+          = link_to character_path(char.lexeme.text), class: "flex items-center gap-2 rounded-lg border border-border px-2.5 py-1.5 hover:bg-muted" do
+            span.text-lg = char.text
+            .flex.min-w-0.flex-col
+              - if detailed?
+                .flex.items-center.gap-1
+                  - if char.level
+                    span.text-2xs.rounded.bg-primary/10.px-1.font-medium = char.level
+                  - elsif char.grade
+                    span.text-2xs.rounded.bg-muted.px-1.text-muted-foreground = t("sentences.grade", n: char.grade)
+                  - if char.rank&.positive?
+                    span.text-2xs.text-muted-foreground = "##{char.rank}"
+              - char_reading = char.lexeme.reading_set.first
+              - if char_reading
+                span.text-2xs.text-muted-foreground lang="zh-TW" = char_reading["zhuyin"].presence || char_reading["pinyin"]
+              - if char.lexeme.meaning.present?
+                span.truncate.text-2xs.text-muted-foreground style="max-width: 9rem" = char.lexeme.meaning
+        - else
+          .rounded-lg.border.border-dashed.border-border.text-lg.text-muted-foreground class="px-2.5 py-1.5" = char.text

@@ -1,0 +1,7 @@
+- return unless impersonating?
+
+.border-b.border-violet-500 class="bg-violet-500/10"
+  .mx-auto.flex.w-full.max-w-3xl.flex-wrap.items-center.justify-between.gap-2.px-4.py-2.text-sm
+    span.min-w-0.text-foreground
+      = t("admin.impersonating_banner", email: current_user.email)
+    = button_to t("admin.impersonation_stop"), admin_stop_impersonating_path, method: :delete, class: "shrink-0 rounded-md border border-violet-500 px-3 py-1 text-xs font-medium text-foreground hover:bg-violet-500/20"

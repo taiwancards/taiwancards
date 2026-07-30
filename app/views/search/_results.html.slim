@@ -1,0 +1,32 @@
+- if @query.blank?
+  .px-4.py-6.text-center.text-sm.text-muted-foreground = t("search.prompt")
+- elsif @results.empty?
+  .px-4.py-6.text-center.text-sm.text-muted-foreground = t("search.empty", query: @query)
+- else
+  ul.divide-y.divide-border
+    - @results.each do |result|
+      - lexeme = result.lexeme
+      - path = lexeme_search_path(lexeme)
+      li.flex.min-w-0.items-center.gap-1.pr-3
+        - inner = capture do
+          .flex.items-center.gap-3.px-4 class="py-2.5 hover:bg-muted"
+            .shrink-0.text-2xl.font-semibold lang="zh-TW" = lexeme.text
+            .min-w-0.flex-1
+              .flex.items-center.gap-2
+                span.truncate.text-sm.font-medium = search_reading(lexeme, @query)
+                span.shrink-0.rounded.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground class="px-1.5 py-0.5" = lexeme_kind_label(lexeme)
+              - if lexeme.meaning.present?
+                .truncate.text-sm.text-muted-foreground = lexeme.meaning
+        - if path
+          = link_to inner, path, class: "block min-w-0 flex-1", data: {search_target: "row"}
+        - else
+          .block.min-w-0.flex-1 = inner
+        - if lexeme.word? || lexeme.character?
+          = render("shared/quick_add", lexeme:)
+
+- if @query.present?
+  = link_to search_path(search_query_param(@query) => @query), class: "flex items-center gap-2 border-t border-border px-4 text-sm font-medium hover:bg-muted py-2.5" do
+    span = t("search.show_all")
+    - if @page.truncated
+      span.text-xs.font-normal.text-muted-foreground = t("search.showing_best", count: @results.size)
+    span.ml-auto.text-muted-foreground →

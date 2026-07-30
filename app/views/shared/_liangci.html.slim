@@ -1,0 +1,15 @@
+- sidecar = local_assigns.fetch(:sidecar)
+- if sidecar&.classifiers&.any?
+  section.space-y-2.rounded-2xl.border.p-3 class="border-primary/30 bg-primary/5"
+    .flex.flex-wrap.items-center.gap-x-3.gap-y-2
+      h2.text-2xs.font-semibold.uppercase.tracking-wide.text-primary = t("liangci.for_noun")
+      .flex.flex-wrap.gap-1
+        - sidecar.classifiers.each do |row|
+          = render("shared/word_chip", entry: row[:entry], accent: row[:main], note: (row[:main] ? t("liangci.main_short") : nil))
+    - if sidecar.examples.any?
+      ul.space-y-1
+        - sidecar.examples.each do |example|
+          li.rounded-lg.border.border-border.bg-card.text-sm lang="zh-TW" class="px-3 py-1.5"
+            = example.prefix
+            mark.rounded.bg-transparent.font-semibold.text-primary = example.highlight
+            = example.suffix

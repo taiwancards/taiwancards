@@ -1,0 +1,29 @@
+section.space-y-3
+  .rounded-xl.border.border-border.p-4 class="bg-muted/40"
+    p.text-sm.leading-relaxed = t("practice.drill.systems_html")
+
+section.space-y-4.rounded-2xl.border.border-border.p-5
+  h2.text-lg.font-semibold = t("practice.drill.syllable_title")
+  p.text-sm.leading-relaxed.text-muted-foreground = t("practice.drill.syllable_body")
+
+  .grid.gap-2 class="sm:grid-cols-3"
+    - %w[initial medial final].each do |slot|
+      .rounded-xl.border.border-border.p-3
+        .text-xs.uppercase.tracking-wide.text-muted-foreground = t("practice.drill.slots.#{slot}_label")
+        .mt-1.text-2xl.font-semibold.text-brand lang="zh-TW" = t("practice.drill.slots.#{slot}_glyph")
+        p.mt-1.text-xs.leading-relaxed.text-muted-foreground = t("practice.drill.slots.#{slot}_body")
+
+  h3.pt-2.text-sm.font-semibold = t("practice.drill.tones_title")
+  p.text-sm.leading-relaxed.text-muted-foreground = t("practice.drill.tones_body")
+
+section.space-y-3.rounded-2xl.border.border-border.bg-card.p-5
+  h2.text-lg.font-semibold = t("practice.about_title")
+  ul.space-y-2
+    - %w[origin adopted size today hokkien].each do |key|
+      li.flex.items-start.gap-2.text-sm.leading-relaxed.text-muted-foreground
+        span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
+        span = t("practice.about.#{key}")
+
+section.space-y-2.rounded-2xl.border.border-brand.p-5 class="bg-brand-soft"
+  h2.text-lg.font-semibold = t("practice.why_title")
+  p.text-sm.leading-relaxed = t("practice.why_body")

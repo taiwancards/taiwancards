@@ -1,0 +1,231 @@
+- lexeme = @profile.lexeme
+- content_for(:title, lexeme.text)
+
+.py-6.space-y-5
+  header.space-y-3
+    .flex.flex-wrap.items-start.justify-between.gap-x-6.gap-y-3
+      .min-w-0 class="space-y-1.5"
+        = link_to dict_path, class: "inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground" do
+          span ←
+          span = t("dict.back")
+        .flex.items-center.gap-3
+          - zhuyin = lexeme.reading_set.first&.dig("zhuyin")
+          - if zhuyin.present?
+            h1.text-4xl.font-bold = zhuyin_ruby(lexeme.text, zhuyin)
+          - else
+            h1.text-4xl.font-bold lang="zh-TW" = hanzi(lexeme.text)
+          = render("shared/speak", lexeme:)
+        - reading = zhuyin.present? ? @profile.pinyin_label : @profile.reading_label
+        - if reading.present?
+          .text-base.font-medium.text-muted-foreground class=(zhuyin.present? ? "pinyin" : nil) = reading
+        - if @profile.show_flat_meaning? && lexeme.meaning.present?
+          p.text-base = lexeme.meaning
+        = render("shared/short_form", lexeme:)
+      .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-md sm:justify-end"
+        - if detailed?
+          = score_badge(lexeme)
+        - parts_of_speech(lexeme).each do |label|
+          span.rounded-full.bg-muted.font-medium class="px-2.5 py-1" = label
+        - if @profile.tocfl_level
+          = link_to @profile.tocfl_level.name, tocfl_level_path(@profile.tocfl_level),
+            class: "rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20"
+        - grade = lexeme.data["tbcl_grade"]
+        - if grade.present?
+          = link_to t("tbcl.badge", n: grade), tbcl_level_path(grade),
+            class: "rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20"
+        - if @liangci&.measure_word
+          = link_to liangci_entry_path(lexeme.text), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
+            span lang="zh-TW" 量詞
+            span = t("liangci.as_measure_word")
+        - if lexeme.data["chengyu"]
+          = link_to chengyu_path, class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
+            span lang="zh-TW" 成語
+            - chengyu_tone = lexeme.data["chengyu_tone"]
+            - if detailed? && chengyu_tone.present?
+              span.size-2.rounded-full class=chengyu_tone_dot(chengyu_tone)
+              span = t("chengyu.tones.#{chengyu_tone}")
+        - if detailed? && @sentence_profile
+          = render("sentences/badges", profile: @sentence_profile, sources: lexeme.content_sources)
+        - if @profile.taiwan_specific?
+          span.rounded-full.bg-primary/10.font-medium.text-primary class="px-2.5 py-1" title=t("words.taiwan_specific_hint")
+            = t("words.taiwan_specific")
+        - origin = lexeme.data["origin"].to_s.tr("-", "_").presence
+        - if origin && origin != "taiwan_mandarin"
+          span.rounded-full.bg-brand/10.font-medium.text-brand class="px-2.5 py-1" title=t("everyday.origin_hint")
+            = t("everyday.origins.#{origin}", default: origin)
+        - register = lexeme.data["register"].to_s.presence
+        - if register && register != "neutral"
+          span.rounded-full.bg-muted.font-medium class="px-2.5 py-1"
+            = t("everyday.registers.#{register}", default: register)
+        - if detailed? && lexeme.data["corpus_attested"] == false
+          span.rounded-full.border.border-dashed.border-border.text-muted-foreground class="px-2.5 py-1" title=t("words.no_corpus_hint")
+            = t("words.no_corpus")
+        - if detailed?
+          - @profile.sources.each do |source|
+            span.rounded-full.border.border-border.text-muted-foreground class="px-2.5 py-1" = source
+        .flex.shrink-0.items-center.gap-2
+          = button_to t("words.add_study"), dict_activate_path(lexeme.text), data: {tour: "dict-add"},
+            class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+          = render("shared/quick_add", lexeme:)
+
+  - everyday_note = lexeme.data.dig("note", I18n.locale.to_s).presence
+  - if everyday_note
+    p.rounded-xl.border.border-border.p-3.text-sm.leading-relaxed = everyday_note
+
+  = render("shared/liangci", sidecar: @liangci)
+
+  = render("shared/senses", profile: @profile)
+
+  - chengyu_note = lexeme.data.dig("chengyu_note", I18n.locale.to_s).presence
+  - chengyu_example = lexeme.data["chengyu_example"]
+  - if chengyu_note || chengyu_example.present?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("chengyu.usage")
+      .space-y-3.rounded-xl.border.border-border.p-3
+        - if chengyu_note
+          p.text-sm.leading-relaxed = chengyu_note
+        - if chengyu_example.present? && chengyu_example["zh"].present?
+          .space-y-1
+            p.text-base lang="zh-TW" = hanzi(chengyu_example["zh"])
+            - example_gloss = chengyu_example[I18n.locale.to_s].presence || chengyu_example["en"].presence
+            - if example_gloss
+              p.text-sm.text-muted-foreground = example_gloss
+
+  = render("shared/thesaurus", thesaurus: @thesaurus, groups: detailed? ? Lexemes::Thesaurus::GROUPS : %w[synonyms antonyms])
+
+  - if detailed?
+    = render("shared/word_sketch", sketch: @sketch, lexemes: @sketch_lexemes)
+
+  - if @revised.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("dict.revised.title")
+      .space-y-2
+        - @revised.each do |sense|
+          .rounded-xl.border.border-border.p-3.space-y-1
+            p.text-sm lang="zh-TW" = sense.gloss
+            - if sense.pos.present? || sense.reading.present?
+              p.text-2xs.text-muted-foreground lang="zh-TW" = [sense.pos, sense.reading].compact_blank.join(" · ")
+      p.text-2xs.text-muted-foreground = t("dict.revised.note", source: Huayu::MoeRevised::ATTRIBUTION)
+
+  - if detailed? && @profile.collocations.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("words.collocations")
+      .flex.flex-wrap.gap-2
+        - @profile.collocations.each do |collocation|
+          = link_to dict_entry_path(collocation.text), class: "rounded-lg border border-border px-3 py-1.5 hover:bg-muted" do
+            span.text-base lang="zh-TW" = collocation.text
+            - if collocation.meaning.present?
+              span.ml-2.text-xs.text-muted-foreground = truncate(collocation.meaning, length: 34)
+
+  - if detailed? && (lexeme.data["chengyu_gloss"].present? || lexeme.data["chengyu_story"].present?)
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("chengyu.origin")
+      .space-y-3.rounded-xl.border.border-border.p-3
+        - chengyu_origin = lexeme.data.dig("chengyu_origin", I18n.locale.to_s).presence
+        - if chengyu_origin
+          p.text-sm.leading-relaxed = chengyu_origin
+        - if lexeme.data["chengyu_gloss"].present?
+          p.text-sm.leading-relaxed lang="zh-TW" = lexeme.data["chengyu_gloss"]
+        - if lexeme.data["chengyu_source"].present?
+          p.text-xs.text-muted-foreground
+            = t("chengyu.source_label") + ": "
+            span lang="zh-TW" = lexeme.data["chengyu_source"]
+        - if lexeme.data["chengyu_story"].present?
+          p.text-sm.leading-relaxed.text-muted-foreground lang="zh-TW" = lexeme.data["chengyu_story"]
+        - if lexeme.data["chengyu_category"].present?
+          p.text-xs.text-muted-foreground lang="zh-TW" = lexeme.data["chengyu_category"]
+        p.text-xs.text-muted-foreground = t("chengyu.moe_credit")
+
+  - if detailed? && lexeme.data["chengyu_examples"].present?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("chengyu.examples")
+      div class="space-y-1.5"
+        - lexeme.data["chengyu_examples"].each do |example|
+          p.rounded-lg.border.border-border.px-3.py-2.text-sm lang="zh-TW" = hanzi(example, skip: lexeme.text)
+
+  - relations = %w[synonyms antonyms].to_h { |name| [name, lexeme.data["chengyu_#{name}"].presence] }.compact
+  - preload_lexeme_links(relations.values.flatten) if relations.any?
+  - relations.each do |relation, related|
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("chengyu.#{relation}")
+      .flex.flex-wrap.gap-2
+        - related.each do |other|
+          - path = lexeme_link_path(other)
+          - if path
+            = link_to other, path, class: "rounded-lg border border-border px-3 py-1.5 text-base hover:bg-muted", lang: "zh-TW"
+          - else
+            span.rounded-lg.border.border-dashed.border-border.px-3.text-base.text-muted-foreground class="py-1.5" lang="zh-TW" = other
+
+  - if detailed? && @profile.appears_in.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("collocations.appears_in")
+      div class="space-y-1.5"
+        - @profile.appears_in.each do |sense|
+          = link_to lexeme_page_path(sense.lexeme), class: "flex flex-wrap items-baseline gap-x-2 rounded-lg border border-border px-3 py-2 hover:bg-muted" do
+            span.text-base.font-medium lang="zh-TW" = sense.lexeme.text
+            - if sense.meaning(I18n.locale).present?
+              span.text-sm.text-muted-foreground = sense.meaning(I18n.locale)
+
+  - if detailed? && @profile.etymology.present?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("words.etymology")
+      p.rounded-xl.border.border-border.p-3.text-sm.leading-relaxed = @profile.etymology
+
+  - if detailed?
+    = render("shared/register_mix", lexeme:)
+
+  - if detailed? && @profile.component_words.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("collocations.words")
+      .flex.flex-wrap.gap-2
+        - @profile.component_words.each do |word|
+          = link_to dict_entry_path(word.text), class: "group rounded-lg border border-border px-3 py-2 hover:bg-muted" do
+            .flex.items-baseline.gap-2
+              span.text-lg lang="zh-TW" = word.text
+            - if word.reading("zhuyin").present?
+              .text-xs.text-muted-foreground = word.reading("zhuyin")
+            - if word.meaning(I18n.locale).present?
+              .mt-1.max-w-56.text-xs.text-muted-foreground = word.meaning(I18n.locale)
+
+  - if @profile.component_characters.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("words.characters")
+      .flex.flex-wrap.gap-2
+        - @profile.component_characters.each do |char|
+          = link_to character_path(char.text), class: "flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
+            span.text-2xl lang="zh-TW" = char.text
+            div.min-w-0
+              .text-xs.font-medium = char.reading_set.first&.dig("zhuyin").presence || char.reading_set.first&.dig("pinyin")
+              - if char.meaning.present?
+                .truncate.text-xs.text-muted-foreground style="max-width: 9rem" = char.meaning
+
+  - if detailed?
+    - if @profile.memories.any?
+      section.grid.gap-2 class="sm:grid-cols-2"
+        - @profile.memories.each do |facet, memory|
+          .rounded-xl.border.border-border.bg-card.px-4.py-3
+            .text-xs.uppercase.tracking-wide.text-muted-foreground = t("memories.#{facet}")
+            .mt-1.text-sm.font-medium = t("characters.states.#{memory.state}")
+            - if memory.due_at.present?
+              .text-xs.text-muted-foreground = t("characters.due", when: l(memory.due_at, format: :short))
+    - else
+      p.rounded-lg.border.border-dashed.border-border.px-4.py-3.text-sm.text-muted-foreground
+        = t("words.not_studied")
+
+  - sentences = detailed? ? @profile.sentences : @profile.sentences.first(10)
+  - if sentences.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("words.sentences")
+      div class="space-y-1.5"
+        - sentences.each do |sentence|
+          .relative.rounded-lg.border.border-border.bg-card.px-3.py-2 class="hover:bg-muted"
+            = link_to("", sentence_path(sentence), class: "absolute inset-0", aria: {label: sentence.text})
+            .text-sm lang="zh-TW"
+              = hanzi(sentence.text, skip: lexeme.text, css: "relative rounded transition-colors hover:bg-primary/15 hover:text-primary")
+            - if sentence.meaning.present?
+              .mt-1.text-sm.text-muted-foreground = sentence.meaning
+            - if detailed? && sentence.sentence_profile
+              .mt-1.flex.flex-wrap.items-center.gap-2.text-xs.text-muted-foreground
+                = render("sentences/badges", profile: sentence.sentence_profile, sources: sentence.content_sources)
+      .pt-1
+        = link_to t("words.all_sentences"), sentences_path(word: lexeme.text), class: "text-sm underline underline-offset-2 text-muted-foreground hover:text-foreground"

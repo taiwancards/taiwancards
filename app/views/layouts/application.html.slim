@@ -1,0 +1,44 @@
+doctype html
+html lang=I18n.locale class=html_preference_classes
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"
+    = render "shared/meta"
+    meta name="apple-mobile-web-app-capable" content="yes"
+    meta name="mobile-web-app-capable" content="yes"
+    meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"
+    meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)"
+    = csrf_meta_tags
+    = csp_meta_tag
+    = yield :head
+    link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32"
+    link rel="icon" href="/icon.svg?v=6" type="image/svg+xml"
+    link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6"
+    link rel="manifest" href=pwa_manifest_path
+    = javascript_tag nonce: true do
+      | document.documentElement.classList.toggle("dark", localStorage.getItem("theme") === "dark");
+    = stylesheet_link_tag :app, "data-turbo-track": "reload"
+    = javascript_importmap_tags
+
+  body.min-h-dvh.bg-background.text-foreground.antialiased[ data-controller="kai-font" data-kai-font-url-value=FontAssets.kai_full_url ]
+    - if authenticated? && !turbo_native_app? && !content_for?(:full_bleed)
+      = render "shared/header"
+      = render "shared/impersonation_banner"
+    - elsif !authenticated? && !content_for?(:full_bleed)
+      = render "landing/nav"
+    - if content_for?(:full_bleed)
+      .mx-auto.w-full.max-w-3xl.px-4
+        = render "shared/flash"
+      = yield
+    - else
+      main.mx-auto.w-full.max-w-3xl.px-4 class="pb-24 md:pb-16"
+        = render "shared/flash"
+        = yield
+    - if authenticated? && !turbo_native_app?
+      - unless content_for?(:full_bleed)
+        = render "shared/footer"
+      = render "shared/bottom_nav"
+      - unless content_for?(:full_bleed)
+        = render "shared/intro_tour"
+    - elsif !authenticated? && !content_for?(:full_bleed)
+      = render "shared/footer"

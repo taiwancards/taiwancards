@@ -1,0 +1,37 @@
+- content_for(:title) { t("plan.title") }
+
+.py-6.space-y-6
+  header.flex.flex-wrap.items-center.justify-between.gap-3
+    h1.text-2xl.font-bold.tracking-tight = t("plan.title")
+    = link_to (@plan ? t("plan.edit") : t("plan.create")), new_study_plan_path, class: "rounded-md border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+
+  - if @plan.nil?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("plan.none")
+  - else
+    section.rounded-2xl.border.border-border.bg-card.p-5.space-y-4
+      .flex.flex-wrap.items-baseline.justify-between.gap-2
+        .text-lg.font-semibold = t("plan.levels.#{@plan.target_level}")
+        .text-sm.text-muted-foreground = t("plan.by_date", date: l(@plan.target_date))
+
+      .grid.gap-3 class="sm:grid-cols-4"
+        - [[:total, @calculator.total], [:known, @calculator.known], [:remaining, @calculator.remaining], [:days, @calculator.days_left]].each do |key, value|
+          .rounded-xl.border.border-border.p-3.text-center
+            .text-2xl.font-bold = value
+            .text-xs.text-muted-foreground = t("plan.stat.#{key}")
+
+      p.text-sm
+        = t("plan.per_day_html", count: @calculator.daily_new_quota, minutes: @calculator.est_minutes_per_day).html_safe
+      .flex.flex-wrap.gap-2.text-xs.text-muted-foreground
+        - @calculator.remaining_by_kind.each do |kind, count|
+          - next if count.zero?
+          .rounded-full.border.border-border.px-2.py-1 = "#{t("plan.kinds.#{kind}")}: #{count}"
+
+    section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("plan.today_title")
+      - if @today[:overloaded]
+        .rounded-lg.border.border-amber-500.px-3.py-2.text-sm.text-amber-700 class="bg-amber-500/10"
+          = t("plan.overload", count: @today[:total])
+      p.text-sm.text-muted-foreground
+        = t("plan.today_counts", due: @today[:due], fresh: @today[:new])
+      = link_to t("plan.today_button"), study_path(mode: "today"), class: "inline-block rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"

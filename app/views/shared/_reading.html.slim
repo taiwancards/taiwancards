@@ -1,0 +1,19 @@
+- lexeme = local_assigns[:lexeme]
+- reading = local_assigns.fetch(:reading)
+- size = local_assigns.fetch(:size, :large)
+- zhuyin = reading["zhuyin"].to_s.strip
+- pinyin = reading["pinyin"].to_s.strip
+- clip = lexeme && zhuyin.present? ? moe_clip_for(lexeme, zhuyin) : nil
+
+.inline-flex.items-center.gap-2.rounded-xl.border.border-border.bg-card.px-3.py-2
+  div
+    - if zhuyin.present?
+      .font-semibold.leading-tight lang="zh-TW" class=(size == :large ? "text-2xl" : "text-lg") = zhuyin
+    - if pinyin.present?
+      .pinyin.leading-tight.text-muted-foreground class=(size == :large ? "text-sm" : "text-xs") = pinyin
+  - if clip
+    button.inline-flex.shrink-0.items-center.justify-center.rounded-full.p-2.text-muted-foreground[
+      type="button" data-controller="audio" data-audio-url-value=clip[:url]
+      data-audio-stop-ms-value=clip[:stop_ms] data-action="click->audio#play"
+      class="hover:bg-muted hover:text-foreground" aria-label=t("characters.play_reading") ]
+      = icon(:speaker, css: "size-4")

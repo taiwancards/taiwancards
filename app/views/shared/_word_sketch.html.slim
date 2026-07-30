@@ -1,0 +1,19 @@
+- sketch = local_assigns.fetch(:sketch)
+- lexemes = local_assigns.fetch(:lexemes, {})
+- return unless sketch.any?
+
+section.space-y-2
+  h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("sketch.title")
+  .space-y-1.5
+    - sketch.relations.each do |relation|
+      .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1
+        span.w-full.text-2xs.uppercase.tracking-wide.text-muted-foreground class="sm:w-36 sm:shrink-0"
+          = t("sketch.relations.#{relation.name}", default: relation.name)
+        .flex.flex-wrap.gap-1
+          - relation.collocates.each do |collocate|
+            - entry = lexemes[collocate.text]
+            - if entry
+              = render("shared/word_chip", entry:)
+            - else
+              span.rounded-lg.border.border-border.px-2.py-1.text-base lang="zh-TW" title=collocate.count
+                = collocate.text

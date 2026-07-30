@@ -1,0 +1,101 @@
+- content_for(:title) { t("tones.title") }
+
+.py-6.space-y-8
+  div
+    h1.text-2xl.font-bold.tracking-tight = t("tones.title")
+    p.mt-1.max-w-3xl.text-sm.text-muted-foreground = t("tones.lede")
+
+  section.space-y-4
+    - %w[why myth cannot cumulative].each do |key|
+      .rounded-2xl.border.border-border.bg-card.p-5
+        h2.font-semibold = t("tones.#{key}_title")
+        p.mt-2.text-sm.leading-relaxed.text-muted-foreground = t("tones.#{key}_body")
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("tones.four_title")
+    p.text-sm.text-muted-foreground = t("tones.four_lede")
+    .rounded-2xl.border.p-5.space-y-3 class="border-2 border-emerald-500/70 bg-emerald-500/10 shadow-sm"
+      .flex.flex-wrap.items-baseline.gap-2
+        h3.text-base.font-bold.text-emerald-700 class="dark:text-emerald-400" = t("tones.chart.taipei")
+        span.text-xs.font-medium.text-emerald-700 class="dark:text-emerald-400/90" = t("tones.chart.taipei_note")
+      .grid.gap-3 class="grid-cols-2 sm:grid-cols-4"
+        - %w[t1 t2 t3 t4].each do |key|
+          .rounded-xl.border.p-3.text-center class="border-emerald-500/50 bg-background text-emerald-600 dark:text-emerald-400"
+            = tone_chart("taipei", key)
+            .mt-1.text-xs.font-semibold.text-foreground = t("tones.tones.#{key}.name")
+
+    .rounded-2xl.border.border-dashed.p-5.space-y-3 class="border-rose-500/45 bg-rose-500/[0.06]"
+      .flex.flex-wrap.items-baseline.gap-2
+        h3.text-base.font-semibold class="text-rose-700/85 dark:text-rose-400/85" = t("tones.chart.beijing")
+        span.text-xs class="text-rose-700/70 dark:text-rose-400/70" = t("tones.chart.beijing_note")
+      .grid.gap-3 class="grid-cols-2 sm:grid-cols-4"
+        - %w[t1 t2 t3 t4].each do |key|
+          .rounded-xl.border.p-3.text-center class="border-rose-500/35 opacity-85 text-rose-600/85 dark:text-rose-400/80"
+            = tone_chart("beijing", key)
+            code.mt-1.inline-block.rounded.px-1.font-mono class="text-[0.8em] bg-rose-500/10" = ToneChartHelper::CONTOURS["beijing"][key][:label]
+
+    p.text-xs.text-muted-foreground = t("tones.chart.scale")
+
+    .grid.gap-3 class="sm:grid-cols-2"
+      - %w[t1 t2 t3 t4].each do |key|
+        .rounded-2xl.border.border-border.bg-card.p-4
+          .flex.flex-wrap.items-baseline.gap-2
+            span.font-semibold = t("tones.tones.#{key}.name")
+            span.text-lg lang="zh-TW" = t("tones.tones.#{key}.zhuyin")
+          p.mt-2.text-sm.leading-relaxed.text-muted-foreground = t("tones.tones.#{key}.note")
+
+    .rounded-2xl.border.border-dashed.border-border.p-5.space-y-2
+      h3.font-semibold = t("tones.neutral_title")
+      p.text-sm.leading-relaxed.text-muted-foreground = t("tones.neutral_body")
+      p.text-sm.leading-relaxed = t("tones.neutral_taiwan")
+
+  section.space-y-3.rounded-2xl.border.border-brand.p-5 class="bg-brand-soft"
+    h2.text-lg.font-semibold = t("tones.taiwan_title")
+    p.text-sm.text-muted-foreground = t("tones.taiwan_body")
+    ul.space-y-2
+      - %w[range second third neutral erhua merge].each do |key|
+        li.flex.items-start.gap-2.text-sm.leading-relaxed
+          span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
+          span = t("tones.taiwan_points.#{key}")
+
+  section.space-y-3.rounded-2xl.border.border-border.bg-card.p-5
+    h2.text-lg.font-semibold = t("tones.segments_title")
+    p.text-sm.text-muted-foreground = t("tones.segments_lede")
+    ul.space-y-2
+      - %w[retroflex nasal].each do |key|
+        li.flex.items-start.gap-2.text-sm.leading-relaxed
+          span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
+          span = t("tones.segments.#{key}")
+
+  section.space-y-4
+    h2.text-lg.font-semibold = t("tones.sandhi_title")
+    p.max-w-3xl.text-sm.text-muted-foreground = t("tones.sandhi_lede")
+
+    .rounded-2xl.border.border-border.bg-card.p-5.space-y-2
+      h3.font-semibold = t("tones.third_title")
+      p.text-sm.leading-relaxed.text-muted-foreground = t("tones.third_body")
+      p.text-sm.leading-relaxed.text-muted-foreground = t("tones.third_three")
+
+    .rounded-2xl.border.border-border.bg-card.p-5.space-y-2
+      h3.font-semibold = t("tones.yi_title")
+      p.text-sm.text-muted-foreground = t("tones.yi_body")
+      ul.space-y-1
+        - %w[yi_alone yi_before4 yi_other bu_before4 bu_other].each do |key|
+          li.flex.items-start.gap-2.text-sm.leading-relaxed
+            span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
+            span = t("tones.yi_rules.#{key}")
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("tones.hacks_title")
+    .grid.gap-3 class="md:grid-cols-2"
+      - %w[low pair start after_third fourth relative neutral].each do |key|
+        .rounded-2xl.border.border-border.bg-card.p-4
+          p.text-sm.leading-relaxed = t("tones.hacks.#{key}")
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("tones.practice_title")
+    p.max-w-3xl.text-sm.text-muted-foreground = t("tones.practice_body")
+    p.rounded-xl.border.border-amber-500.px-4.py-3.text-sm class="bg-amber-500/10"
+      = t("tones.practice_pending")
+    = link_to t("tones.practice_cta"), tones_drill_path,
+      class: "inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"

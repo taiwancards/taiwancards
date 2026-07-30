@@ -1,0 +1,76 @@
+- content_for(:title) { t("typing.title") }
+
+.py-6.space-y-6.pinyin-locked[
+  data-controller="zhuyin-typing"
+  data-zhuyin-typing-words-value=@words.to_json
+  data-zhuyin-typing-keys-value=Huayu::ZhuyinKeyboard::KEYS.to_json
+  data-zhuyin-typing-result-url-value=practice_typing_result_path
+  data-zhuyin-typing-goal-value=10 ]
+
+  div
+    = render("shared/page_help", key: "typing", title: t("typing.title"))
+
+  .flex.flex-wrap.items-center.gap-2
+    .inline-flex.rounded-full.border.border-border.p-1
+      - PracticeController::TYPING_MODES.each do |mode|
+        = link_to practice_typing_path(mode: mode),
+          class: class_names("rounded-full px-3 py-1 text-xs font-medium transition-colors",
+            @mode == mode ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground") do
+          = t("typing.modes.#{mode}")
+    span.text-xs.text-muted-foreground = t("typing.mode_hint.#{@mode}")
+
+  - if @fell_back
+    p.rounded-lg.border.border-amber-500.px-3.py-2.text-xs class="bg-amber-500/10"
+      = t("typing.fell_back")
+
+  .rounded-2xl.border.border-border.bg-card.p-6.text-center.space-y-3
+    .text-5xl.font-bold lang=(@mode == "hanzi" ? "zh-TW" : nil) class=(@mode == "hanzi" ? nil : "pinyin") data-zhuyin-typing-target="prompt"
+    p.text-sm.text-muted-foreground data-zhuyin-typing-target="meaning"
+
+    .min-h-12.rounded-xl.border.border-dashed.px-4.py-3.text-3xl.tracking-widest.transition-colors[
+      lang="zh-TW" data-zhuyin-typing-target="buffer" data-state=""
+      class="border-border text-brand data-[state=bad]:border-red-500 data-[state=bad]:text-red-500 data-[state=ok]:border-emerald-500 data-[state=ok]:text-emerald-600" ]
+
+    .flex.flex-wrap.items-center.justify-center.gap-3.text-sm
+      span.text-2xl.font-bold[
+        data-zhuyin-typing-target="verdict"
+        class="data-[state=ok]:text-emerald-600 data-[state=bad]:text-red-600" ]
+      span.rounded-lg.border.border-border.px-3.py-1.text-muted-foreground[
+        lang="zh-TW" data-zhuyin-typing-target="expected"
+        class="opacity-0 data-[shown=true]:opacity-100 transition-opacity" ]
+
+    .flex.flex-wrap.items-center.justify-center.gap-2
+      button.rounded-lg.border.border-border.px-3.py-2.text-sm.font-medium[
+        type="button" data-action="zhuyin-typing#reveal" class="hover:bg-muted" ]
+        = t("typing.reveal")
+      button.rounded-lg.border.border-border.px-3.py-2.text-sm.font-medium[
+        type="button" data-action="zhuyin-typing#skip" class="hover:bg-muted" ]
+        = t("typing.skip")
+
+    p.text-xs.text-muted-foreground = t("typing.hint")
+
+    .flex.flex-wrap.justify-center.gap-4.text-xs.text-muted-foreground
+      span
+        => t("typing.accuracy")
+        span.font-semibold.text-foreground data-zhuyin-typing-target="score"
+      span
+        => t("typing.done")
+        span.font-semibold.text-foreground data-zhuyin-typing-target="streak"
+
+  .overflow-x-auto.rounded-2xl.border.border-border.p-3 class="bg-muted/30"
+    .mx-auto.w-max.space-y-1
+      - @layout.each_with_index do |row, index|
+        .flex.gap-1 style="margin-left: #{index * 14}px"
+          - row.each do |cell|
+            button.flex.flex-col.items-center.justify-center.rounded-lg.border.border-border.bg-card.transition-colors[
+              type="button" data-key=cell[:key] data-hit="false"
+              data-action="zhuyin-typing#tap" data-zhuyin-typing-target="key"
+              class="size-12 hover:bg-muted data-[hit=true]:bg-brand data-[hit=true]:text-white" ]
+              span.text-lg.font-semibold lang="zh-TW" = cell[:symbol] || cell[:tone]
+              span class="text-[10px] text-muted-foreground" = cell[:key] == " " ? "␣" : cell[:key]
+
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("typing.how_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("typing.how_body")
+
+  = render("shared/roadmap_return")

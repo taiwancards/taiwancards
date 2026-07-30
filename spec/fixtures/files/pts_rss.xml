@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>公視新聞網</title>
+    <item>
+      <title>台北捷運今天起延長營運時間</title>
+      <link>https://news.pts.org.tw/article/000001</link>
+      <description><![CDATA[<p>台北捷運宣布，从今天起週末延長營運時間一小時。</p>]]></description>
+    </item>
+    <item>
+      <title>中央氣象署發布大雨特報</title>
+      <link>https://news.pts.org.tw/article/000002</link>
+      <description><![CDATA[<p>氣象署提醒民眾注意山區道路狀況。</p>]]></description>
+    </item>
+  </channel>
+</rss>

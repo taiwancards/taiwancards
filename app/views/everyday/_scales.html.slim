@@ -1,0 +1,29 @@
+section.space-y-4.rounded-2xl.border.border-border.p-4
+  div
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("everyday.scales.title")
+    p.mt-1.text-xs.text-muted-foreground = t("everyday.scales.hint")
+
+  .grid.gap-6 class="sm:grid-cols-2"
+    div
+      h3.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("everyday.scales.sugar")
+      ul.mt-2.space-y-2
+        - EverydayHelper::SUGAR.each do |text, pinyin, key, fill|
+          li.space-y-1
+            .flex.flex-wrap.items-baseline.gap-x-2
+              span.text-base.font-semibold lang="zh-TW" = text
+              span.pinyin.text-xs.text-muted-foreground = pinyin
+              span.text-xs.text-muted-foreground = t("everyday.scales.sugar_levels.#{key}")
+            = everyday_scale_bar(fill, warm: false)
+
+    div
+      h3.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("everyday.scales.ice")
+      ul.mt-2.space-y-2
+        - EverydayHelper::ICE.each do |text, pinyin, key, fill, warm|
+          li.space-y-1
+            .flex.flex-wrap.items-baseline.gap-x-2
+              span.text-base.font-semibold lang="zh-TW" = text
+              span.pinyin.text-xs.text-muted-foreground = pinyin
+              span.text-xs.text-muted-foreground = t("everyday.scales.ice_levels.#{key}")
+            = everyday_scale_bar(fill, warm:)
+
+  p.text-xs.text-muted-foreground = t("everyday.scales.note")

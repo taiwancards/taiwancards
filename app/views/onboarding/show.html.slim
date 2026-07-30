@@ -1,0 +1,30 @@
+- content_for(:title, t("onboarding.title"))
+
+.py-6.space-y-8
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("onboarding.title")
+    p.max-w-2xl.text-muted-foreground = t("onboarding.lede")
+
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-2
+    h2.font-semibold = t("onboarding.limits.heading")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.limits.body")
+    p.text-sm.leading-relaxed = t("onboarding.limits.gap")
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("onboarding.question")
+    .grid.gap-3
+      - User::START_LEVELS.each do |level|
+        = button_to onboarding_start_path, method: :post, params: {start_level: level}, class: "block w-full rounded-2xl border border-border bg-card p-5 text-left transition-colors hover:border-primary/60 hover:bg-muted" do
+          span.block.font-semibold = t("onboarding.levels.#{level}.title")
+          span.mt-1.block.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.levels.#{level}.body")
+          span.mt-2.block.text-xs.font-medium.text-brand = t("onboarding.levels.#{level}.next")
+
+  section.rounded-2xl.border.border-dashed.border-border.p-5.space-y-3 class="bg-muted/30"
+    h2.font-semibold = t("onboarding.not_for.heading")
+    p.text-sm.text-muted-foreground = t("onboarding.not_for.lede")
+    ul.space-y-2.text-sm.text-muted-foreground
+      - %w[cards course mainland nudging].each do |key|
+        li.flex.items-start.gap-2
+          span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
+          span = t("onboarding.not_for.#{key}")
+    p.text-sm.text-muted-foreground = t("onboarding.not_for.close")

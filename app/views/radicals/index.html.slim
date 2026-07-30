@@ -1,0 +1,18 @@
+- content_for(:title, t("radicals.title"))
+
+.py-6.space-y-6
+  header.space-y-1
+    = render("shared/page_help", key: "radicals", title: t("radicals.title"))
+
+  - @radicals.group_by { |radical| radical.data["strokes"] }.each do |strokes, radicals|
+    section
+      .mb-2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("radicals.strokes_group", count: strokes)
+      .grid class="gap-1.5" style="grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr))"
+        - radicals.each do |radical|
+          = link_to radical_path(radical.text),
+            class: "group flex flex-col items-center gap-0.5 rounded-lg border border-border py-2 hover:bg-muted" do
+            .flex.items-baseline.gap-1
+              span.text-muted-foreground class="text-[10px]" = radical.data["number"]
+              span.text-2xl.leading-none lang="zh-TW" = radical.text
+            span.text-muted-foreground class="text-[10px]" = radical.meaning
+            span.text-muted-foreground class="text-[10px] opacity-60" = t("radicals.chars_count", count: @counts[radical.data["number"]].to_i)

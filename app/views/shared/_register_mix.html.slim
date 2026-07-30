@@ -1,0 +1,29 @@
+- mix = lexeme.data["register_mix"]
+- sample = lexeme.data["register_n"].to_i
+- effective = lexeme.data["register_eff"].to_f
+- if mix.present? && mix.compact.sum(&:to_f).positive?
+  - colors = {"colloquial" => "#10b981", "literary" => "#8b5cf6", "publicistic" => "#0ea5e9", "official" => "#f59e0b", "academic" => "#64748b", "internet" => "#ec4899", "subtitles" => "#14b8a6"}
+  - neutral = 100.0 / mix.compact.size
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+      = t("words.register_mix")
+    .flex.flex-wrap.items-end.gap-3
+      - bars = ContentSource.registers.keys.each_with_index.sort_by { |_style, index| [mix[index].nil? ? 1 : 0, -mix[index].to_f, index] }
+      - bars.each do |style, index|
+        - fraction = mix[index]
+        - percent = fraction.nil? ? nil : (fraction.to_f * 100).round
+        - hint = percent.nil? ? t("words.register_mix_missing") : "#{percent}%"
+        .flex.flex-col.items-center.gap-1 title="#{t("admin.sources.registers.#{style}")}: #{hint}"
+          .relative.flex.h-24.w-10.items-end.overflow-hidden.rounded-md class=(percent.nil? ? "border border-dashed border-border" : "bg-muted")
+            - if percent
+              .absolute.inset-x-0.border-t.border-dashed class="border-muted-foreground/40" style="bottom: #{neutral.round(1)}%"
+              .relative.w-full.rounded-md style="height: #{[percent, fraction.to_f.positive? ? 3 : 0].max}%; background: #{colors[style]}"
+          span.text-2xs.text-muted-foreground = t("admin.sources.registers.#{style}")
+          span.text-2xs.font-medium class=(percent.nil? ? "text-muted-foreground" : nil)
+            = percent.nil? ? "—" : "#{percent}%"
+    - if lexeme.sentence?
+      p.text-xs.text-muted-foreground = t("words.register_mix_sentence_note", count: sample, neutral: neutral.round)
+    - else
+      p.text-xs.text-muted-foreground = t("words.register_mix_note", count: sample, neutral: neutral.round)
+    - if effective.positive? && effective < (lexeme.sentence? ? 1.0 : 5)
+      p.text-xs.text-muted-foreground = t("words.register_mix_thin")

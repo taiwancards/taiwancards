@@ -1,0 +1,191 @@
+- content_for(:title) { t("hanzi.title") }
+- s = Huayu::HanziStructure
+
+.py-6.space-y-10
+  div
+    = render("shared/page_help", key: "hanzi", title: t("hanzi.title"))
+
+  - if !s.any?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("hanzi.empty")
+
+  - else
+    section.space-y-3
+      h2.text-lg.font-semibold = t("hanzi.why_title")
+      p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = s.note("why_xingsheng")
+      .rounded-2xl.border.border-border.p-4 class="bg-brand/5"
+        p.text-sm.leading-relaxed = s.note("prediction_stats")
+
+    - if evolution_rows.any?
+      section.space-y-3
+        h2.text-lg.font-semibold = t("hanzi.evolution_title")
+        p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("hanzi.evolution_lede")
+        .overflow-x-auto
+          table.w-full.min-w-md.border-separate class="border-spacing-y-1"
+            thead
+              tr
+                th.px-2.text-left.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("hanzi.era.modern")
+                - HanziHelper::ERAS.each do |era|
+                  th.px-2.text-left.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground
+                    span lang="zh-TW" = t("hanzi.era.#{era}_zh")
+                    span.ml-1.font-normal = t("hanzi.era.#{era}")
+            tbody
+              - evolution_rows.each do |char, eras|
+                tr.rounded-xl class="hover:bg-muted/40"
+                  td.px-2.py-1
+                    = link_to char, character_path(char), class: "text-3xl font-semibold hover:text-brand", lang: "zh-TW"
+                  - HanziHelper::ERAS.each do |era|
+                    td.px-2.py-1
+                      - if eras.include?(era)
+                        = image_tag evolution_image(char, era), alt: "#{char} #{t("hanzi.era.#{era}")}",
+                          class: "size-10 object-contain dark:invert", loading: "lazy"
+                      - else
+                        span.text-xs.text-muted-foreground —
+        p.text-xs.leading-relaxed.text-muted-foreground = t("hanzi.evolution_gap")
+
+    section.space-y-4
+      h2.text-lg.font-semibold = t("hanzi.categories_title")
+      .space-y-3
+        - s.categories.each do |row|
+          details.rounded-2xl.border.border-border
+            summary.flex.cursor-pointer.list-none.items-baseline.gap-x-2.px-4.py-3 class="[&::-webkit-details-marker]:hidden hover:bg-muted/40"
+              span.text-2xl.font-semibold.text-brand lang="zh-TW" = row["text"]
+              span.pinyin.text-xs.text-muted-foreground = row["pinyin"]
+              span.text-sm.font-medium = s.name(row)
+              span.ml-auto.shrink-0.text-xs.text-muted-foreground = row["examples"].to_a.size
+            .space-y-3.border-t.border-border.p-4
+              p.text-sm.leading-relaxed.text-muted-foreground = s.text(row)
+              .grid.gap-2 class="sm:grid-cols-2"
+                - row["examples"].to_a.each do |ex|
+                  = link_to character_path(ex["char"]), class: "rounded-xl border border-border p-3 transition-colors hover:bg-muted/40" do
+                    .flex.flex-wrap.items-baseline.gap-x-2
+                      span.text-2xl.font-semibold lang="zh-TW" = ex["char"]
+                      span.pinyin.text-xs.text-muted-foreground = ex["pinyin"]
+                      span.text-sm = s.text(ex)
+                    - if s.note_for(ex).present?
+                      p.mt-1.text-xs.leading-relaxed.text-muted-foreground = s.note_for(ex)
+
+    section.space-y-3
+      h2.text-lg.font-semibold = t("hanzi.semantics_title")
+      p.max-w-3xl.text-sm.text-muted-foreground = t("hanzi.semantics_lede")
+      .grid.gap-2 class="sm:grid-cols-2 lg:grid-cols-3"
+        - s.semantics.each do |row|
+          .rounded-xl.border.border-border.p-3
+            .flex.flex-wrap.items-baseline.gap-x-2
+              span.text-2xl.font-semibold.text-brand lang="zh-TW" = row["text"]
+              - if row["full"].present? && row["full"] != row["text"]
+                span.text-sm.text-muted-foreground lang="zh-TW" = row["full"]
+              span.text-sm.font-medium = s.text(row)
+              - if row["count"].present?
+                = link_to characters_path(component: row["text"]),
+                  class: "ml-auto shrink-0 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-brand hover:text-brand",
+                  title: t("hanzi.show_all_with", component: row["text"]) do
+                  = row["count"]
+            - if s.note_for(row).present?
+              p.mt-1.text-xs.leading-relaxed.text-muted-foreground = s.note_for(row)
+            .mt-2.flex.flex-wrap.gap-x-3.gap-y-1
+              - row["examples"].to_a.each do |ex|
+                = link_to character_path(ex["char"]), class: "inline-flex items-baseline gap-1 text-xs hover:underline" do
+                  span.text-base.font-semibold lang="zh-TW" = ex["char"]
+                  span.pinyin.text-muted-foreground = ex["pinyin"]
+                  span.text-muted-foreground = s.text(ex)
+
+    section.space-y-3
+      h2.text-lg.font-semibold = t("hanzi.series_title")
+      p.max-w-3xl.text-sm.text-muted-foreground = t("hanzi.series_lede")
+      .space-y-3
+        - s.series.each do |row|
+          .space-y-2.rounded-2xl.border.border-border.p-4
+            .flex.flex-wrap.items-baseline.gap-x-2
+              span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("hanzi.phonetic_label")
+              span.text-2xl.font-semibold.text-brand lang="zh-TW" = row["phonetic"]
+              span.pinyin.text-xs.text-muted-foreground = row["pinyin"]
+            .flex.flex-wrap.gap-x-3.gap-y-1
+              - row["members"].to_a.each do |m|
+                = link_to character_path(m["char"]), class: "inline-flex items-baseline gap-1 hover:underline" do
+                  span.text-lg.font-semibold lang="zh-TW" = m["char"]
+                  span.pinyin.text-xs.text-muted-foreground = m["pinyin"]
+            p.text-sm.leading-relaxed.text-muted-foreground = s.text(row)
+
+    section.space-y-3
+      h2.text-lg.font-semibold = t("hanzi.walkthrough_title")
+      p.max-w-3xl.text-sm.text-muted-foreground = s.note("algorithm")
+      .space-y-3
+        - s.walkthroughs.each do |row|
+          .space-y-2.rounded-2xl.border.p-4 class=(row["works"] ? "border-border" : "border-amber-500/50 bg-amber-500/5")
+            .flex.flex-wrap.items-baseline.gap-x-3
+              span.text-3xl.font-semibold lang="zh-TW" = row["char"]
+              span.pinyin.text-sm.text-muted-foreground = row["pinyin"]
+              span.text-xs.text-muted-foreground
+                = "#{row["semantic"]} + #{row["phonetic"]}"
+              - unless row["works"]
+                span.ml-auto.shrink-0.rounded-full.border.border-amber-500.px-2.text-xs.text-amber-600 class="py-0.5"
+                  = t("hanzi.misses")
+            p.text-sm.leading-relaxed.text-muted-foreground = s.text(row)
+
+    section.space-y-4
+      h2.text-lg.font-semibold = t("hanzi.strokes_title")
+      p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = s.note("basic_eight")
+      .rounded-2xl.border.p-4 class="border-amber-500/50 bg-amber-500/5"
+        p.text-sm.leading-relaxed = s.note("tw_vs_cn")
+        p.mt-2.text-sm.leading-relaxed = s.note("false_friend")
+
+      - [["strokes_basic", s.strokes_basic], ["strokes_compound", s.strokes_compound]].each do |key, rows|
+        - next if rows.empty?
+        .space-y-2
+          h3.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+            = t("hanzi.#{key}")
+            span.ml-2.font-normal = rows.size
+          .grid.gap-2 class="sm:grid-cols-2 lg:grid-cols-3"
+            - rows.each do |row|
+              .rounded-xl.border.border-border.p-3
+                .flex.flex-wrap.items-baseline.gap-x-2
+                  - if row["glyph"].present?
+                    span.text-2xl.leading-none.text-brand lang="zh-TW" = row["glyph"]
+                  span.font-semibold lang="zh-TW" = row["text"]
+                  span.text-brand lang="zh-TW" class="text-[11px]" = row["zhuyin"]
+                  span.pinyin.text-muted-foreground class="text-[10px]" = row["pinyin"]
+                  - if row["example"].present?
+                    = link_to character_path(row["example"]), class: "ml-auto shrink-0 text-lg font-semibold hover:text-brand", lang: "zh-TW" do
+                      = row["example"]
+                p.mt-1.text-xs.leading-relaxed.text-muted-foreground = s.text(row)
+                - if s.note_for(row).present?
+                  p.mt-1.text-xs.leading-relaxed.text-amber-600 = s.note_for(row)
+
+      .space-y-3.rounded-2xl.border.border-border.p-4
+        h3.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("hanzi.watch_title")
+        p.text-sm.leading-relaxed.text-muted-foreground = t("hanzi.watch_lede")
+        .flex.flex-wrap.gap-4
+          - %w[永 好 河].each do |char|
+            .space-y-2[
+              data-controller="hanzi-writer" data-hanzi-writer-char-value=char
+              data-hanzi-writer-url-value=character_strokes_path(char) ]
+              .flex.size-40.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
+                data-hanzi-writer-target="canvas" ]
+              .flex.items-center.justify-between.gap-2
+                = link_to char, character_path(char), class: "text-lg font-semibold hover:text-brand", lang: "zh-TW"
+                button.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium[
+                  type="button" data-action="hanzi-writer#animate" class="hover:bg-muted" ]
+                  = t("characters.animate")
+
+      - if s.yongzi.any?
+        .space-y-2.rounded-2xl.border.border-border.p-4
+          h3.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("hanzi.yongzi_title")
+          p.text-sm.leading-relaxed.text-muted-foreground = s.note("yongzi")
+          .grid.gap-2 class="sm:grid-cols-2"
+            - s.yongzi.each do |row|
+              .flex.items-baseline.gap-x-2.text-sm
+                span.font-semibold.text-brand lang="zh-TW" = row["text"]
+                span.pinyin.text-xs.text-muted-foreground = row["pinyin"]
+                span.text-xs.text-muted-foreground lang="zh-TW" = row["stroke"]
+                span.text-xs.text-muted-foreground = s.text(row)
+
+      .space-y-2.rounded-2xl.border.border-border.p-4
+        h3.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("hanzi.order_title")
+        ol.list-decimal.space-y-1.pl-5.text-sm.leading-relaxed.text-muted-foreground
+          - s.order_rules.each do |row|
+            li = s.text(row)
+
+    section.space-y-3
+      h2.text-lg.font-semibold = t("hanzi.limits_title")
+      p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = s.note("limits")
+      p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = s.note("payoff")

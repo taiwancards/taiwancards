@@ -1,0 +1,36 @@
+- content_for(:title, @radical.text)
+
+.py-6.space-y-6
+  = link_to radicals_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("radicals.back")
+
+  header.flex.flex-wrap.items-center.gap-5
+    .flex.size-24.shrink-0.items-center.justify-center.rounded-2xl.border.border-border.bg-card.shadow-sm
+      span.text-5xl lang="zh-TW" = @radical.text
+    .space-y-1
+      .text-sm.text-muted-foreground = t("radicals.number", number: @radical.data["number"])
+      .flex.items-center.gap-2
+        - if @radical.readings["zhuyin"].present?
+          span.rounded-full.bg-muted.px-3.py-1.text-sm.font-medium
+            span.font-semibold = @radical.readings["zhuyin"]
+            span.ml-1.text-muted-foreground = @radical.readings["pinyin"]
+      - if @radical.meaning.present?
+        p.text-base = @radical.meaning
+      .text-xs.text-muted-foreground = t("radicals.strokes_group", count: @radical.data["strokes"])
+
+  - shown = detailed? ? @characters : @characters.first(60)
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+      = t("radicals.characters", count: @characters.size)
+    - if shown.size < @characters.size
+      p.text-xs.text-muted-foreground = t("radicals.showing_first", shown: shown.size, total: @characters.size)
+    .grid.gap-1 style="grid-template-columns: repeat(auto-fill, minmax(3.25rem, 1fr))"
+      - shown.each do |character|
+        = link_to character_path(character.text),
+          class: class_names("group flex aspect-square flex-col items-center justify-center rounded-lg border transition-colors",
+            @studied_ids.include?(character.id) ? "border-primary/60 bg-primary/10" : "border-border hover:bg-muted") do
+          span.text-2xl.leading-none lang="zh-TW" = character.text
+          - reading = character.reading_set.first
+          - if reading
+            span.text-muted-foreground class="text-[9px] leading-none mt-0.5" = reading["zhuyin"].presence || reading["pinyin"]

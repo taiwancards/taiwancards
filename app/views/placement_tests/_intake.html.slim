@@ -1,0 +1,23 @@
+- questions = local_assigns.fetch(:questions)
+
+= form_with url: placement_path, method: :post, class: "space-y-5" do |form|
+  - questions.each do |name, options|
+    fieldset.space-y-2
+      legend.text-sm.font-medium = t("placement.intake.#{name}.question")
+      .grid.gap-2 class="sm:grid-cols-2"
+        - options.each_with_index do |option, index|
+          label.flex.cursor-pointer.items-start.gap-2.rounded-xl.border.border-border.p-3.text-sm.transition-colors[
+            class="hover:border-primary/50 hover:bg-muted" ]
+            = form.radio_button "intake[#{name}]", option, checked: index.zero?, class: "mt-1"
+            span = t("placement.intake.#{name}.options.#{option}")
+
+  .rounded-xl.border.border-border.bg-card.p-4.space-y-1
+    p.text-sm.font-medium = t("placement.what_to_expect")
+    ul.space-y-1.text-sm.text-muted-foreground
+      li = t("placement.expect_length", max: Placement::Intake::FULL_BUDGET)
+      li = t("placement.expect_time")
+      li = t("placement.expect_skip")
+
+  .flex.flex-wrap.items-center.gap-2
+    = form.submit t("placement.start"), class: "cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+    = form.submit t("placement.start_short", count: Placement::Intake::SHORT_BUDGET), name: "short", class: "cursor-pointer rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"

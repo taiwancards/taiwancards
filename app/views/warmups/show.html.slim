@@ -1,0 +1,58 @@
+- content_for(:title, t("pron.ui.warmup_title"))
+
+.mx-auto.max-w-md.space-y-5.py-6[
+  data-controller="warmup"
+  data-warmup-url-value=pronunciation_warmup_path
+  data-warmup-done-url-value=pronunciation_path
+  data-warmup-prompts-value=@prompts.to_json
+  data-warmup-label-record-value=t("pronunciation.record")
+  data-warmup-label-stop-value=t("pronunciation.stop")
+  data-warmup-label-recording-value=t("pronunciation.recording")
+  data-warmup-label-saved-value=t("pron.ui.warmup_saved")
+  data-warmup-label-error-value=t("pronunciation.error")
+  data-warmup-label-mic-denied-value=t("pronunciation.mic_denied")
+  data-warmup-label-mic-missing-value=t("pronunciation.mic_missing")
+  data-warmup-label-mic-insecure-value=t("pronunciation.mic_insecure")
+  data-warmup-label-done-value=t("pron.ui.warmup_done")
+  data-warmup-label-anchors-value=t("pron.ui.warmup_anchors") ]
+
+  header.space-y-1
+    h1.text-xl.font-semibold = t("pron.ui.warmup_title")
+    p.text-sm.text-muted-foreground = t("pron.ui.warmup_hint")
+
+  .rounded-2xl.border.border-border.bg-card.p-5.text-center.space-y-4
+    .text-2xs.uppercase.tracking-wide.text-muted-foreground data-warmup-target="step"
+    .text-2xl.font-semibold data-warmup-target="prompt"
+    .text-sm.text-muted-foreground.tracking-wide.hidden data-warmup-target="reading"
+    button.mx-auto.rounded-full.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors.hidden[
+      type="button" data-warmup-target="replay" data-action="warmup#replay" class="hover:bg-muted" ]
+      = t("pron.ui.warmup_listen")
+    .text-sm.text-muted-foreground data-warmup-target="hint"
+
+    .flex.w-full.gap-1 class="h-1.5"
+      - @prompts.each_with_index do |_, index|
+        .flex-1.rounded-full.bg-muted class="h-1.5" data-warmup-target="pip" data-index=index
+
+    button.rounded-full.border.border-border.px-8.py-3.text-base.font-semibold.transition-colors[
+      type="button" data-warmup-target="record" data-action="warmup#toggle" class="hover:bg-muted" ]
+      = t("pronunciation.record")
+
+    .min-h-5.text-sm.text-muted-foreground data-warmup-target="status"
+
+  - if @profile.calibrated?
+    .space-y-2.rounded-2xl.border.border-border.bg-card.p-4
+      .text-sm.font-medium = t("pron.ui.warmup_done")
+      dl.grid.grid-cols-3.gap-2.text-center
+        - {f0_low: "Hz ↓", f0_median: "Hz", f0_high: "Hz ↑"}.each do |key, unit|
+          - value = @profile.summary[key]
+          - next if value.nil?
+          div
+            dt.text-3xs.uppercase.tracking-wide.text-muted-foreground = unit
+            dd.text-lg.font-semibold.tabular-nums = value
+      = button_to t("pron.ui.warmup_redo"), pronunciation_warmup_path, method: :delete, class: "w-full rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+
+  p.rounded-xl.bg-muted/60.px-4.py-3.text-xs.leading-relaxed.text-muted-foreground
+    = t("pron.ui.warmup_why")
+
+  .text-center
+    = link_to t("pron.ui.warmup_skip"), pronunciation_path, class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"

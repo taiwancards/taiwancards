@@ -1,0 +1,28 @@
+- content_for(:title, t("textbook.title"))
+
+.py-6.space-y-8
+  header.space-y-1
+    .flex.flex-wrap.items-center.justify-between.gap-3
+      h1.text-2xl.font-bold.tracking-tight = t("textbook.title")
+
+  - if @books.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("textbook.empty")
+
+  - @books.each do |book, lessons|
+    section
+      .flex.items-baseline.justify-between
+        h2.text-lg.font-semibold = t("textbook.book", number: book)
+        span.text-xs.text-muted-foreground = t("textbook.lessons_count", count: lessons.size)
+      .mt-3.grid.gap-2.sm:grid-cols-2
+        - lessons.each do |lesson|
+          = link_to textbook_lesson_path(lesson.book, lesson.lesson),
+            class: "group flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 hover:bg-muted/50" do
+            span.flex.size-8.shrink-0.items-center.justify-center.rounded-full.bg-muted.text-xs.font-semibold.text-muted-foreground
+              = lesson.lesson
+            .min-w-0
+              .truncate.text-sm.font-medium = lesson.title_for
+              .truncate.text-xs.text-muted-foreground
+                - if lesson.title_zh.present?
+                  span.mr-2 = lesson.title_zh
+                = t("textbook.words_count", count: lesson.vocabulary.size)

@@ -1,0 +1,12 @@
+- key = local_assigns.fetch(:key)
+- title = local_assigns.fetch(:title)
+details
+  summary.cursor-pointer.list-none class="[&::-webkit-details-marker]:hidden"
+    h1.text-2xl.font-bold.tracking-tight
+      = title
+      sup.inline-flex.items-center.justify-center.rounded-full.border.border-current.align-super.font-semibold.text-muted-foreground.transition-colors[
+        class="ml-0.5 size-[0.95rem] text-[0.6rem] leading-none hover:text-foreground"
+        title=t("page_help.label") aria-label=t("page_help.label") ]
+        | ?
+  .mt-2.max-w-2xl.space-y-2.text-sm.leading-relaxed.text-muted-foreground
+    = t("page_help.#{key}_html")

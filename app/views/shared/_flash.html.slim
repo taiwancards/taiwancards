@@ -1,0 +1,5 @@
+- flash.each do |type, message|
+  .pointer-events-none.fixed.inset-x-0.top-16.z-50.flex.justify-center.px-4 data-controller="toast"
+    .pointer-events-auto.flex.items-center.gap-2.rounded-full.border.px-4.py-2.text-sm.font-medium.shadow-lg[
+      class=(type.to_s == "alert" ? "border-destructive/30 bg-destructive/10 text-destructive backdrop-blur" : "border-border bg-card text-card-foreground") ]
+      = message

@@ -1,0 +1,95 @@
+- content_for(:title) { t("numbers.title") }
+
+.py-6.space-y-6[
+  data-controller="number-drill"
+  data-number-drill-items-value=@items.to_json
+  data-number-drill-result-url-value=practice_numbers_result_path ]
+
+  div
+    = render("shared/page_help", key: "numbers", title: t("numbers.title"))
+
+  .flex.flex-wrap.items-center.gap-2
+    .inline-flex.flex-wrap.rounded-full.border.border-border.p-1
+      - @stages.each do |stage|
+        = link_to practice_numbers_path(stage: stage),
+          class: class_names("rounded-full px-3 py-1 text-xs font-medium transition-colors",
+            stage == @stage ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground") do
+          = t("numbers.stages.#{stage}")
+    span.ml-auto.text-sm.text-muted-foreground data-number-drill-target="counter"
+
+  p.max-w-3xl.text-sm.text-muted-foreground = t("numbers.stage_hint.#{@stage}")
+
+  div data-number-drill-target="board"
+    .mx-auto class="max-w-lg"
+      .grid.items-center.gap-3 class="grid-cols-[1fr_1.6fr_1fr]"
+        - option = "flex min-h-16 w-full items-center justify-center rounded-2xl border border-border bg-background px-3 py-3 text-center text-lg font-semibold transition-colors"
+
+        div.w-full class="col-start-2 row-start-1"
+          button[ type="button" data-direction="up" data-number-drill-target="option"
+            data-action="number-drill#choose" class=option ]
+            span data-label=""
+
+        div.w-full class="col-start-1 row-start-2"
+          button[ type="button" data-direction="left" data-number-drill-target="option"
+            data-action="number-drill#choose" class=option ]
+            span data-label=""
+
+        .select-none.w-full.rounded-3xl.border.border-border.bg-card.px-4.py-10.text-center.shadow-sm class="col-start-2 row-start-2"
+          .text-4xl.font-semibold.leading-tight.tracking-wide data-number-drill-target="prompt"
+          .mt-3.text-sm.text-muted-foreground data-number-drill-target="note"
+
+        div.w-full class="col-start-3 row-start-2"
+          button[ type="button" data-direction="right" data-number-drill-target="option"
+            data-action="number-drill#choose" class=option ]
+            span data-label=""
+
+        div.w-full class="col-start-2 row-start-3"
+          button[ type="button" data-direction="down" data-number-drill-target="option"
+            data-action="number-drill#choose" class=option ]
+            span data-label=""
+
+      .mt-3.h-6.text-center.text-sm.font-medium data-number-drill-target="feedback"
+      p.mt-3.text-center.text-xs.text-muted-foreground = t("numbers.keys")
+
+  .hidden.mx-auto.rounded-2xl.border.border-border.bg-card.p-6.text-center class="max-w-md" data-number-drill-target="summary"
+    p.text-sm.text-muted-foreground = t("numbers.done_title")
+    p.mt-2.text-3xl.font-bold
+      span data-number-drill-target="correct"
+      | /
+      span data-number-drill-target="total"
+    button.mt-5.rounded-xl.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground[
+      type="button" data-action="number-drill#begin" class="hover:opacity-90" ]
+      = t("numbers.restart")
+
+  section.space-y-4.rounded-2xl.border.border-border.p-5
+    h2.text-lg.font-semibold = t("numbers.rules_title")
+
+    - %w[truncation zero liang shi].each do |rule|
+      .space-y-2
+        h3.text-sm.font-semibold = t("numbers.rules.#{rule}.title")
+        p.text-sm.leading-relaxed.text-muted-foreground = t("numbers.rules.#{rule}.body")
+        .overflow-x-auto
+          table.w-full.border-collapse.text-sm
+            tbody
+              - t("numbers.rules.#{rule}.rows").each do |row|
+                tr.border-b.border-border class="last:border-b-0"
+                  td.py-2.pr-3.text-lg.whitespace-nowrap lang="zh-TW" = row[:huayu]
+                  td.py-2.pr-3.font-mono.whitespace-nowrap = row[:value]
+                  td.py-2.text-xs.leading-relaxed.text-muted-foreground = row[:note]
+
+  section.space-y-3.rounded-2xl.border.border-border.p-5
+    h2.text-lg.font-semibold = t("numbers.system_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("numbers.system_body")
+    .overflow-x-auto
+      table.w-full.border-collapse.text-sm
+        thead
+          tr.border-b.border-border
+            th.py-2.pr-3.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("numbers.col_digits")
+            th.py-2.pr-3.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("numbers.col_huayu")
+            th.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("numbers.col_western")
+        tbody
+          - {10_000 => "ten_thousand", 100_000 => "hundred_thousand", 1_000_000 => "million", 10_000_000 => "ten_million", 100_000_000 => "hundred_million", 1_000_000_000 => "billion"}.each do |value, key|
+            tr.border-b.border-border class="last:border-b-0"
+              td.py-2.pr-3.font-mono.whitespace-nowrap = value.to_s.reverse.scan(/\d{1,4}/).join(" ").reverse
+              td.py-2.pr-3.text-lg.whitespace-nowrap lang="zh-TW" = Huayu::Numerals.spell(value)
+              td.py-2.text-xs.text-muted-foreground = t("numbers.western.#{key}")

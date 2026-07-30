@@ -1,0 +1,43 @@
+- content_for(:title, t("writing.title"))
+
+.py-6.space-y-6.pinyin-locked
+  header.flex.flex-wrap.items-center.justify-between.gap-3
+    div.space-y-1
+      = render("shared/page_help", key: "writing", title: t("writing.title"))
+      - if @collection
+        p.text-xs.font-medium.text-primary = @collection.name
+    = link_to t("writing.another"), @advance_url, class: "rounded-md border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+
+  - if @lexeme.nil? || @chars.empty? || @chars.any? { |char| !char["strokes"] }
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("writing.empty")
+  - else
+    .mx-auto.max-w-md.space-y-6[
+      data-controller="writing-quiz"
+      data-writing-quiz-grade-url-value=writing_grade_path
+      data-writing-quiz-advance-url-value=@advance_url
+      data-writing-quiz-lexeme-id-value=@lexeme.id
+      data-writing-quiz-label-good-value=t("writing.correct")
+      data-writing-quiz-label-hard-value=t("writing.shaky")
+      data-writing-quiz-label-again-value=t("writing.revealed") ]
+
+      .rounded-3xl.border.border-border.bg-card.px-6.py-6.text-center.shadow-sm
+        .text-xl.font-semibold = @lexeme.meaning
+        - if @lexeme.reading("pinyin").present?
+          .mt-1.text-sm.text-muted-foreground = @lexeme.reading("pinyin")
+
+      .flex.flex-wrap.justify-center.gap-3
+        - @chars.each do |char|
+          .flex.flex-col.items-center.gap-1
+            .text-sm.font-medium.text-muted-foreground = char["zhuyin"].presence || char["pinyin"]
+            .rounded-xl.border-2.border-dashed.border-border.bg-background[
+              data-writing-quiz-target="square" data-char=char["char"] data-url=character_strokes_path(char["char"]) ]
+
+      .flex.flex-col.items-center.gap-2
+        .text-sm.font-medium.text-muted-foreground data-writing-quiz-target="status"
+        .text-lg.font-semibold data-writing-quiz-target="result"
+        button.rounded-full.border.border-border.px-6.py-2.text-sm.font-medium[
+          type="button" data-writing-quiz-target="reveal" data-action="writing-quiz#reveal" class="hover:bg-muted" ]
+          = t("writing.reveal")
+
+      p.text-center.text-xs.text-muted-foreground = t("writing.hint")

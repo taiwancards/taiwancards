@@ -1,0 +1,10 @@
+.mx-auto.flex.max-w-md.items-center.justify-center.gap-6.text-center.text-xs.text-muted-foreground
+  div
+    .text-base.font-semibold.text-foreground = counts[:due]
+    = t("study.counts.due")
+  div
+    .text-base.font-semibold.text-foreground = counts[:fresh]
+    = t("study.counts.fresh")
+  div
+    .text-base.font-semibold.text-foreground = counts[:total]
+    = t("study.counts.total")

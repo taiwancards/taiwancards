@@ -1,0 +1,29 @@
+- content_for(:title) { t("phrases.title") }
+
+.py-6.space-y-6
+  div
+    = render("shared/page_help", key: "phrases", title: t("phrases.title"))
+
+  - if @scenes.empty?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("phrases.empty")
+  - else
+    nav.flex.flex-wrap.gap-2
+      - @scenes.each do |scene|
+        = link_to phrases_path(scene: scene.id, role: @role), class: phrase_chip_class(scene.id == @scene&.id) do
+          span lang="zh-TW" = scene.zh
+          span.ml-1.opacity-70 = @counts[scene.id]
+
+    .flex.flex-wrap.items-center.gap-2
+      = link_to t("phrases.roles.all"), phrases_path(scene: @scene&.id), class: phrase_chip_class(@role.nil?)
+      - PhrasesController::ROLES.each do |role|
+        = link_to t("phrases.roles.#{role}"), phrases_path(scene: @scene&.id, role:), class: phrase_chip_class(@role == role)
+
+    - if @scene
+      p.max-w-2xl.text-sm.text-muted-foreground = @scene.name(I18n.locale)
+
+    .space-y-3
+      - @patterns.each do |pattern|
+        = render("phrases/pattern", pattern:, entries: @lexicon.for(pattern))
+
+    - @slots.each do |slot|
+      = render("phrases/slot", slot:)

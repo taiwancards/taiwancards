@@ -1,0 +1,52 @@
+- view = intro_view
+- return if view.nil?
+
+#intro-tour.pointer-events-none.fixed.inset-0.z-50[
+  data-controller="intro"
+  data-intro-anchor-value=view.step.target.to_s
+  data-intro-blocking-value=view.blocking?.to_s
+  data-intro-await-click-value=view.step.waits_for_click?.to_s
+  data-intro-interactive-value=view.step.interactive?.to_s ]
+
+  - 4.times do
+    .pointer-events-auto.fixed[ style="background:rgba(0,0,0,.72)" data-intro-target="panel" ]
+
+  .pointer-events-auto.fixed[ style="display:none" data-intro-target="block" ]
+
+  .pointer-events-none.fixed.rounded-xl.transition-all[
+    style="opacity:0;border:2px solid rgba(255,255,255,.85)" data-intro-target="spotlight" ]
+
+  .pointer-events-auto.fixed.z-10.rounded-2xl.border.border-border.bg-background.shadow-2xl[
+    data-intro-target="popover" class="w-[min(22rem,calc(100vw-1.5rem))] p-4" ]
+
+    .flex.items-baseline.justify-between.gap-2
+      p.text-xs.font-medium.uppercase.tracking-wide class=(view.blocking? ? "text-brand" : "text-muted-foreground")
+        = intro_label(view)
+      span.shrink-0.text-xs.tabular-nums.text-muted-foreground = view.counter
+
+    h2.mt-1.text-base.font-bold.leading-snug = intro_title(view)
+    p.mt-1.text-sm.leading-relaxed.text-muted-foreground = intro_body(view)
+
+    - if view.step.choice?
+      .mt-4.grid.gap-2 class="grid-cols-2"
+        - %w[en ru].each do |code|
+          = button_to t("intro.language.#{code}"), intro_language_path(code),
+            class: "w-full rounded-xl border border-border px-3 py-3 text-sm font-semibold hover:bg-muted"
+    - else
+      p.mt-3.hidden.text-xs.font-medium.text-brand data-intro-target="hint" = t("intro.try_it")
+
+      .mt-4.flex.items-center.justify-between.gap-3
+        - if view.skippable?
+          = button_to t("intro.skip"), (view.mode == :chapter ? intro_close_chapter_path : intro_seen_path),
+            method: (view.mode == :chapter ? :delete : :post),
+            class: "text-sm text-muted-foreground hover:text-foreground"
+        - else
+          span
+
+        .flex.items-center.gap-2
+          - if view.position.positive?
+            = button_to t("intro.back"), intro_back_path,
+              class: "rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted"
+          span data-intro-target="forward"
+            = button_to (view.last? ? t("intro.done") : t("intro.next")), intro_next_path,
+              class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"

@@ -1,0 +1,18 @@
+- content_for(:title, @collection.name)
+
+.py-6.space-y-6
+  = link_to tocfl_levels_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("tocfl.back")
+
+  header.flex.flex-wrap.items-start.justify-between.gap-3
+    div.space-y-1
+      h1.text-2xl.font-bold.tracking-tight = @collection.name
+      p.text-sm.text-muted-foreground
+        = t("tocfl.known_of", known: @stat.known, total: @stat.total)
+        span.mx-1 ·
+        = t("tocfl.readiness", percent: @stat.readiness)
+    = render "shared/practice_links", collection: @collection
+
+  = render("shared/lexeme_grid", lexemes: @lexemes, known_ids: @known_ids, started_ids: @started_ids)
+  = render("shared/pager", page: @page, pages: @pages, path: ->(n) { tocfl_level_path(@collection, page: n) })

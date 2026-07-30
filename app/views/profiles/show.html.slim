@@ -1,0 +1,36 @@
+= render layout: "profiles/shell" do
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-4 data-controller="autosave"
+    .flex.items-center.justify-between.gap-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.account")
+      = render "profiles/saved_badge"
+
+    = form_with model: @user, url: profile_path, method: :patch, class: "grid gap-3 sm:grid-cols-2",
+      data: {action: "change->autosave#save"} do |form|
+      label.block.space-y-1
+        span.text-xs.font-medium.text-muted-foreground = t("auth.name")
+        = form.text_field :name, class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+      label.block.space-y-1
+        span.text-xs.font-medium.text-muted-foreground = t("auth.interface_language")
+        = form.select :locale, locale_options, {}, class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.security")
+    label.block.space-y-1
+      span.text-xs.font-medium.text-muted-foreground = t("auth.email")
+      = email_field_tag :email, @user.email, disabled: true, class: "w-full rounded-lg border border-border bg-muted px-3 py-2 text-sm text-muted-foreground"
+      span.text-xs.text-muted-foreground = t("auth.email_locked")
+    = form_with model: @user, url: profile_path, method: :patch, class: "space-y-3" do |form|
+      label.block.space-y-1
+        span.text-xs.font-medium.text-muted-foreground = t("auth.new_password")
+        = form.password_field :password, autocomplete: "new-password", placeholder: t("auth.leave_blank"),
+          class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+      = form.submit t("auth.save"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.google")
+    - if @user.google_linked?
+      p.text-sm.text-muted-foreground = t("auth.google_connected", email: @user.google_email)
+    - else
+      p.text-sm.text-muted-foreground = t("auth.google_backup_hint")
+      = button_to t("auth.link_google"), "/auth/google_oauth2", data: {turbo: false},
+        class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"

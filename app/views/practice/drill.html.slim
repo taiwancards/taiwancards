@@ -1,0 +1,94 @@
+- content_for(:title) { t("practice.drill.title") }
+
+.py-6.space-y-6.pinyin-locked[
+  data-controller="phonetics-drill"
+  data-phonetics-drill-items-value=@items.to_json
+  data-phonetics-drill-weak-value=@weak.to_json
+  data-phonetics-drill-url-value=practice_drill_path
+  data-phonetics-drill-size-value=@size
+  data-phonetics-drill-stage-value="consonants" ]
+
+  div
+    = render("shared/page_help", key: "practice_drill", title: t("practice.drill.title"))
+    p.mt-1.max-w-2xl.text-sm.text-muted-foreground = t("practice.drill.lede")
+
+  .space-y-3
+    .flex.flex-wrap.items-center.gap-2
+      .inline-flex.flex-wrap.rounded-full.border.border-border.p-1
+        - @stages.each do |stage|
+          button.rounded-full.px-3.py-1.text-xs.font-medium.transition-colors[
+            type="button" data-stage-option=stage data-active=(stage == "consonants")
+            class="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
+            data-action="phonetics-drill#setStage" data-phonetics-drill-stage-param=stage ]
+            = t("practice.drill.stages.#{stage}")
+
+      .inline-flex.rounded-full.border.border-border.p-1
+        - {zhuyin: t("practice.drill.direction_zhuyin"), pinyin: t("practice.drill.direction_pinyin")}.each do |key, label|
+          button.rounded-full.px-3.py-1.text-xs.font-medium.transition-colors[
+            type="button" data-direction-option=key data-active=(key == :zhuyin)
+            class="data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
+            data-action="phonetics-drill#setDirection" data-phonetics-drill-direction-param=key ]
+            = label
+
+      span.ml-auto.text-sm.text-muted-foreground data-phonetics-drill-target="counter"
+
+    p.text-xs.text-muted-foreground = t("practice.drill.stage_hint")
+
+  div data-phonetics-drill-target="board"
+    .mx-auto class="max-w-lg"
+      .grid.items-center.gap-3 class="grid-cols-[1fr_1.6fr_1fr]"
+        - option = "flex min-h-16 w-full items-center justify-center rounded-2xl border border-border bg-background px-3 py-3 text-center text-lg font-semibold transition-colors"
+
+        div.w-full class="col-start-2 row-start-1"
+          button[ type="button" data-direction="up" data-phonetics-drill-target="option"
+            data-action="phonetics-drill#choose" class=option ]
+            span data-label=""
+
+        div.w-full class="col-start-1 row-start-2"
+          button[ type="button" data-direction="left" data-phonetics-drill-target="option"
+            data-action="phonetics-drill#choose" class=option ]
+            span data-label=""
+
+        .select-none.w-full.rounded-3xl.border.border-border.bg-card.px-4.py-10.text-center.shadow-sm[
+          class="col-start-2 row-start-2"
+          data-phonetics-drill-target="card"
+          data-action="pointerdown->phonetics-drill#start pointermove->phonetics-drill#move pointerup->phonetics-drill#end pointercancel->phonetics-drill#end" ]
+          p.text-xs.uppercase.tracking-widest.text-muted-foreground[
+            data-phonetics-drill-target="promptKind"
+            data-zhuyin=t("practice.drill.prompt_zhuyin") data-pinyin=t("practice.drill.prompt_pinyin") ]
+          .mt-4.text-7xl.font-semibold.leading-none data-phonetics-drill-target="prompt"
+
+        div.w-full class="col-start-3 row-start-2"
+          button[ type="button" data-direction="right" data-phonetics-drill-target="option"
+            data-action="phonetics-drill#choose" class=option ]
+            span data-label=""
+
+        div.w-full class="col-start-2 row-start-3"
+          button[ type="button" data-direction="down" data-phonetics-drill-target="option"
+            data-action="phonetics-drill#choose" class=option ]
+            span data-label=""
+
+      .mt-3.h-6.text-center.text-sm.font-medium data-phonetics-drill-target="feedback"
+        span.mr-1 lang="zh-TW" data-phonetics-drill-target="feedbackZhuyin"
+        span.pinyin data-phonetics-drill-target="feedbackPinyin"
+      .min-h-6.text-center.text-sm.text-muted-foreground
+        span.text-base lang="zh-TW" data-phonetics-drill-target="exampleHanzi"
+        span.ml-1 lang="zh-TW" data-phonetics-drill-target="exampleZhuyin"
+        span.ml-1.pinyin data-phonetics-drill-target="examplePinyin"
+        span.ml-1 data-phonetics-drill-target="exampleGloss"
+
+      p.mt-3.text-center.text-xs.text-muted-foreground = t("practice.drill.keys")
+
+  .hidden.mx-auto.rounded-2xl.border.border-border.bg-card.p-6.text-center class="max-w-md" data-phonetics-drill-target="summary"
+    p.text-sm.text-muted-foreground = t("practice.drill.done_title")
+    p.mt-2.text-3xl.font-bold
+      span data-phonetics-drill-target="correct"
+      | /
+      span data-phonetics-drill-target="total"
+    p.mt-3.text-sm.text-muted-foreground lang="zh-TW" data-phonetics-drill-target="weakList"
+    button.mt-5.rounded-xl.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground[
+      type="button" data-action="phonetics-drill#begin" class="hover:opacity-90" ]
+      = t("practice.drill.restart")
+
+  p.text-center.text-sm
+    = link_to t("practice.back_to_chart"), practice_zhuyin_path, class: "font-medium underline underline-offset-4"

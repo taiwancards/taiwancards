@@ -1,0 +1,62 @@
+- content_for(:title) { t("triage.title") }
+- payload = @items.map { |lexeme| {id: lexeme.id, text: lexeme.text, zhuyin: lexeme.reading_set.first&.dig("zhuyin")} }
+
+.py-6.space-y-6[
+  data-controller="triage"
+  data-triage-items-value=payload.to_json
+  data-triage-url-value=triage_path ]
+
+  div
+    = render("shared/page_help", key: "triage", title: t("triage.title"))
+
+  .flex.flex-wrap.items-center.gap-2
+    .inline-flex.rounded-full.border.border-border.p-1
+      - %w[character word].each do |kind|
+        = link_to triage_path(kind: kind),
+          class: class_names("rounded-full px-3 py-1 text-xs font-medium transition-colors",
+            @kind == kind ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground") do
+          = t("triage.kinds.#{kind}")
+    span.text-xs.text-muted-foreground = t("triage.remaining", count: @remaining)
+    span.ml-auto.text-sm.text-muted-foreground data-triage-target="counter"
+
+  - if @items.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("triage.empty")
+  - else
+    div data-triage-target="board"
+      .mx-auto class="max-w-2xl"
+        .grid.items-center.gap-3 class="grid-cols-[1fr_1.6fr_1fr]"
+          - side = "flex min-h-24 w-full flex-col items-center justify-center gap-1 rounded-2xl border border-border px-3 py-4 text-center text-sm font-semibold transition-colors"
+
+          div.w-full class="col-start-1 row-start-1"
+            button[ type="button" data-action="triage#markNormal"
+              class="#{side} text-amber-500 hover:border-amber-400 hover:bg-amber-500/10" ]
+              span = t("triage.normal")
+              span.text-xs.font-normal.text-muted-foreground = t("triage.normal_hint")
+
+          .select-none.touch-none.cursor-grab.rounded-3xl.border.border-border.bg-card.px-6.py-12.text-center.shadow-sm[
+            class="col-start-2 row-start-1"
+            data-triage-target="card"
+            data-action="pointerdown->triage#start pointermove->triage#move pointerup->triage#end pointercancel->triage#end" ]
+            .text-7xl.font-semibold.leading-none lang="zh-TW" data-triage-target="glyph"
+            .mt-4.text-xl.text-muted-foreground lang="zh-TW" data-triage-target="reading"
+
+          div.w-full class="col-start-3 row-start-1"
+            button[ type="button" data-action="triage#markKnown"
+              class="#{side} text-emerald-600 hover:border-emerald-400 hover:bg-emerald-500/10" ]
+              span = t("triage.known")
+              span.text-xs.font-normal.text-muted-foreground = t("triage.known_hint")
+
+        p.mt-4.text-center.text-xs.text-muted-foreground = t("triage.keys")
+
+    .hidden.mx-auto.rounded-2xl.border.border-border.bg-card.p-6.text-center class="max-w-md" data-triage-target="summary"
+      p.text-sm.text-muted-foreground = t("triage.done_title")
+      p.mt-3.flex.justify-center.gap-6
+        span
+          span.block.text-2xl.font-bold.text-emerald-600 data-triage-target="known"
+          span.block.text-xs.text-muted-foreground = t("triage.known")
+        span
+          span.block.text-2xl.font-bold.text-amber-500 data-triage-target="normal"
+          span.block.text-xs.text-muted-foreground = t("triage.normal")
+      = link_to t("triage.next_batch"), triage_path(kind: @kind),
+        class: "mt-5 inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"

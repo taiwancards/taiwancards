@@ -1,0 +1,67 @@
+- content_for(:title) { t("practice.progress_title") }
+- has_data = @tone_accuracy.values.any? { |v| v[:total].positive? }
+
+.py-6.space-y-6
+  div
+    = render("shared/page_help", key: "practice_progress", title: t("practice.progress_title"))
+
+  section.space-y-3.rounded-2xl.border.border-border.p-5
+    h2.text-lg.font-semibold = t("practice.drill_progress_title")
+    p.text-sm.text-muted-foreground = t("practice.drill_progress_hint")
+    .grid.gap-3 class="sm:grid-cols-2"
+      - {drill: practice_drill_path, typing: practice_typing_path}.each do |key, path|
+        .rounded-xl.border.border-border.p-4
+          .text-2xl.font-bold = @runs[key.to_s].to_i
+          .mt-1.text-xs.text-muted-foreground = t("practice.runs.#{key}")
+          = link_to t("practice.runs.open"), path, class: "mt-2 inline-block text-xs font-medium text-primary hover:underline"
+
+    - if @misses.any?
+      div
+        p.text-sm.font-medium = t("practice.weak_sounds")
+        .mt-2.flex.flex-wrap.gap-2
+          - @misses.each do |key, count|
+            span.rounded-full.border.border-border.px-3.py-1.text-sm lang="zh-TW"
+              = key
+              span.ml-1.text-xs.text-muted-foreground = count
+
+  = render("pronunciation/focus", weaknesses: @focus, summary: @focus_summary)
+
+  section.space-y-3
+    h2.text-lg.font-semibold = t("practice.voice_progress_title")
+    - unless has_data
+      p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
+        = t("practice.progress_empty")
+        = link_to t("practice.runs.open"), pronunciation_path, class: "ml-1 font-medium text-primary hover:underline"
+
+  - if has_data
+    section.space-y-3
+      h2.text-lg.font-semibold = t("practice.by_tone")
+      .space-y-2
+        - @tone_accuracy.each do |tone, stat|
+          - next if stat[:total].zero?
+          - pct = accuracy_pct(stat[:correct], stat[:total])
+          .flex.items-center.gap-3
+            .w-28.shrink-0.text-sm.font-medium = tone_name(tone)
+            .h-2.flex-1.overflow-hidden.rounded-full.bg-muted
+              .h-full.rounded-full.bg-primary style="width: #{pct}%"
+            .w-24.shrink-0.text-right.text-xs.text-muted-foreground = "#{pct}% · #{stat[:correct]}/#{stat[:total]}"
+
+    - if @tone_confusions.any?
+      section.space-y-2
+        h2.text-lg.font-semibold = t("practice.confusions")
+        p.text-sm.text-muted-foreground = t("practice.confusions_hint")
+        .flex.flex-wrap.gap-2
+          - @tone_confusions.first(6).each do |(expected, detected), count|
+            .rounded-full.border.border-border.px-3.py-1.text-sm
+              span.font-medium = "#{tone_name(expected)} → #{tone_name(detected)}"
+              span.ml-1.text-muted-foreground = "×#{count}"
+
+    - if @initial_accuracy.any?
+      section.space-y-2
+        h2.text-lg.font-semibold = t("practice.by_sound")
+        .flex.flex-wrap.gap-2
+          - @initial_accuracy.each do |row|
+            - pct = accuracy_pct(row[:correct], row[:total])
+            .rounded-lg.border.border-border.px-3.text-sm class="py-1.5"
+              span.font-semibold = row[:initial]
+              span.ml-1.text-muted-foreground = "#{pct}%"

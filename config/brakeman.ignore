@@ -1,0 +1,133 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "0322c54a33e02d1cb612b3e868993419b1c14886a829375c97e14e41a860e362",
+      "note": "The voice is checked against an allowlist and the syllable key against an anchored regex before either reaches the filesystem, so no traversal sequence can survive."
+    },
+    {
+      "fingerprint": "0809fdd38c6824e49b5a848bb85fda6c009e9e898eb485a6b1faf947c5b5e799",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "0d136b8ab3ac8eed78a536cc701f2e6fdcd949427a2286d595f7c00aeeadd177",
+      "note": "The filename is matched against an anchored allowlist regex before it reaches the filesystem, so no traversal sequence can survive."
+    },
+    {
+      "fingerprint": "39f44074d18408c452298e5fe59ca985d7b3fe4b57cca4f897968b5a7aa2ba6d",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "3a610c326330f3676c7e558718663a09ed70e471b5d877ad66914a02c0b61cac",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "3dacc933cf132f787fd1ac72547d4aedbea4875c5394134a1285112edefa3ac5",
+      "note": "Marshal reads only from a pipe this process forked and wrote itself; no external input reaches it."
+    },
+    {
+      "fingerprint": "3dbfd602a1e10d3662eff7bba5f781e44aebf18a7000b5666aa402453012f8a5",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "3ecbccce06bcd540509df70a3a6aa57bb226ab4dbbc82aa06f78699e7504fcca",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "4a94683f54772110078be2784f460cae9000ae383c098130a370c6a9535761a9",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "5fd99cec4b1b2a92fa99c9f2e1bc5e3b6cd194cbf0d9196b0a9902eff4603858",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "644b89c088954fda837663b3857266a3ec440c3fd35a44e12823f28481eb1013",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "68f8d84913634036e634dac11699749f2358008da5795fa14e9529b749c35d64",
+      "note": "Marshal reads only from a pipe this process forked and wrote itself; no external input reaches it."
+    },
+    {
+      "fingerprint": "6b52d528b9a6382439c8029420f13133926a2158186db2c27efbf42d05f8dcf9",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "781e5e39fdf38e25dc2f9b1627c5f01e8bc8a4f16561a6a93f4a41628047efa2",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "7914003ea53457b5b16bfcc7a7db459cc523406444251a2ec2278f45eb80c34d",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "7983ae9dbe284e3b769d08ae4bb8b14a0993aec7dc535f925b94a3e8d220d40a",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "8294a552f8bbf92cc716dbc106904ad2068f931a23ea8f52bbcf7b2c552a7a44",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "82bc311bafd97511fbcdf98ab02c388954157ddb219803227b1eeb13be5c4f80",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "83539882004a50ccdde57e64bd56ad3e980ea9fd325638b62d125eac278ce778",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "86a799a72e8bdc33b2db39680e33cc8c5674e08cda934a8489f523af79e76979",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "9852aba12b0d5cc53d4ed69846ecedc4c6007a011a1bd6f0dadc5a18e20f2d0f",
+      "note": "The _html translation interpolates numbers computed by the planner, never user text."
+    },
+    {
+      "fingerprint": "9ddcbaed171ad701cdc30bb952d830e3b3d420ea6919a90d34a4959146d82b69",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "a79a148cfdb3fda79aea1c284cb33df2d6208f552dcf64d6105c3dde29289dcb",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "ab061bbb5f9a88023c208bd56b1ace06ab28aa5072fa314cc46365fe37c4e7c0",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "b39b6fb7f4b08dd9f4e228815cca0e29f69633372131bfde8bf477669fedec12",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "b6a0443dd2e3a5a584afd01adb885d0c8ec95fc37277d52c9b4f2546d93e93a0",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "bc4565806e2f52ac3fc4dafd1b4c59f0426b0558904621ac12e21e76f073c50e",
+      "note": "Marshal reads only from a pipe this process forked and wrote itself; no external input reaches it."
+    },
+    {
+      "fingerprint": "bd48632fb6e7d5dd186ca9e22e40040d42a554135e7fdbf5b7cc027c630bf222",
+      "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
+    },
+    {
+      "fingerprint": "c1df5a00ded1cb1c61d730635f862231654df9301aa62cb258bf72e8f5b63ef2",
+      "note": "The filename is matched against an anchored allowlist regex before it reaches the filesystem, so no traversal sequence can survive."
+    },
+    {
+      "fingerprint": "d62b13c2fb78d0134f613e17b0fb2eb7f2dc0d8bb95c80805b4927d32d19af02",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "dffa7b7fa9a53ad584ee9c52492c85e4b6c2f468d3474aaa5dcb22bbf2ffa82e",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "e2f86b7ac54261f8e1cce6137abce0eb634294d3e5a6220ac512a625f955cba9",
+      "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    }
+  ],
+  "brakeman_version": "8.0.5"
+}

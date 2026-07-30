@@ -1,0 +1,34 @@
+- content_for(:title, t("cangjie.title"))
+
+.py-6.space-y-6.pinyin-locked
+  header.space-y-1
+    = render("shared/page_help", key: "cangjie", title: t("cangjie.title"))
+
+  - unless @available
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("cangjie.data_missing")
+
+  - if @available
+    .space-y-4[
+      data-controller="cangjie" data-cangjie-url-value=SharedAssets.url_for("json", CangjieController::DATA) ]
+
+      textarea.w-full.rounded-xl.border.border-border.bg-card.px-4.py-3.text-2xl.leading-relaxed[
+        lang="zh-TW" rows="3" placeholder=t("cangjie.output_placeholder")
+        data-cangjie-target="output" data-action="keydown->cangjie#keydown" ]
+
+      .flex.items-center.gap-3.text-sm
+        span.text-muted-foreground = t("cangjie.code") + ":"
+        span.font-mono.text-lg.uppercase.tracking-widest.min-w-16 data-cangjie-target="code"
+        span.text-lg lang="zh-TW" data-cangjie-target="radicals"
+      .flex.flex-wrap.gap-1.min-h-9 data-cangjie-target="candidates"
+
+      .space-y-1.select-none
+        - @rows.each do |row|
+          .flex.justify-center.gap-1
+            - row.each do |letter|
+              .flex.h-14.w-14.flex-col.items-center.justify-center.rounded-lg.border.border-border.bg-card[
+                data-cangjie-target="key" data-key=letter ]
+                span.text-lg.font-medium lang="zh-TW" = @keys[letter]
+                span.text-muted-foreground class="text-[10px] uppercase" = letter
+
+      p.text-center.text-xs.text-muted-foreground = t("cangjie.hint")

@@ -1,0 +1,17 @@
+- colors = {"green" => "#10b981", "amber" => "#f59e0b", "red" => "#ef4444", "dark" => "#b91c1c"}
+- heading = true unless defined?(heading)
+
+section.space-y-2.p-4 class=(heading ? "rounded-2xl border border-border bg-card" : nil)
+  - if heading
+    h2.text-sm.font-semibold = t("pron.legend.title")
+  p.text-xs.leading-relaxed.text-muted-foreground = t("pron.legend.body")
+
+  ul class="space-y-1.5"
+    - legend.each do |row|
+      li.flex.items-start class="gap-2.5"
+        span.mt-1.shrink-0.rounded-full class="h-2.5 w-2.5" style="background-color: #{colors[row["level"]]}"
+        div.min-w-0
+          .flex.items-baseline class="gap-1.5"
+            span.text-xs.font-medium = row["name"]
+            span.text-3xs.tabular-nums.text-muted-foreground = "#{row["from"]}+"
+          p.text-3xs.leading-snug.text-muted-foreground = row["note"]

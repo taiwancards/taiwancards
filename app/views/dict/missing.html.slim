@@ -1,0 +1,6 @@
+- content_for(:title, @text)
+
+.py-10.space-y-4.text-center
+  .text-5xl.font-semibold lang="zh-TW" = @text
+  p.text-sm.text-muted-foreground = t("words.not_in_dictionary")
+  = link_to t("dict.back"), dict_path, class: "inline-flex items-center gap-1 text-sm text-primary hover:underline"

@@ -1,0 +1,12 @@
+# Open Chinese Convert (OpenCC) Dictionary — trimmed fixture
+# Format: key	value(s) (values separated by spaces)
+没	沒
+时	時
+从	從
+听	聽
+采	採
+后	後 后
+来	來
+学	學
+发	發 髮
+台	台 臺 檯 颱

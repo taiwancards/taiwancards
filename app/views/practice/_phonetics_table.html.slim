@@ -1,0 +1,48 @@
+- show_palladius = phon_palladius?
+
+.space-y-2
+  .overflow-x-auto.rounded-xl.border.border-border
+    table.w-full.text-sm
+      thead.bg-muted
+        tr.text-left
+          th.px-3.py-2.font-semibold.text-foreground = t("practice.col_zhuyin")
+          th.px-3.py-2.font-semibold.text-foreground = t("practice.col_ipa")
+          th.px-3.py-2.font-normal.text-muted-foreground class="text-[11px]" = t("practice.col_pinyin")
+          - if show_palladius
+            th.px-3.py-2.font-normal class="text-[10px] text-muted-foreground/70" = t("practice.col_palladius")
+          th.px-3.py-2.text-muted-foreground = t("practice.col_analogy")
+          th.px-3.py-2.text-muted-foreground = t("practice.col_example")
+      tbody
+        - rows.each do |row|
+          tr.border-t.border-border.align-top
+            td.px-3.py-2
+              .flex.items-center.gap-2
+                span.text-2xl.leading-none.text-foreground lang="zh-TW" = row["zhuyin"]
+                - clips = zhuyin_clips(row["zhuyin"])
+                - clips.each do |symbol, clip|
+                  button.inline-flex.items-center.justify-center.rounded-full.p-1.text-muted-foreground[
+                    type="button" data-controller="audio" data-audio-url-value=clip
+                    data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
+                    aria-label=t("practice.play_symbol", symbol: symbol) ]
+                    = icon(:speaker, css: "size-4")
+              - if clips.size > 1
+                .mt-1 class="text-[11px] text-muted-foreground" = t("practice.compound_audio")
+            td.px-3.py-2
+              code.rounded.bg-muted.px-2.py-1.font-mono.text-lg.font-medium.text-foreground = row["ipa"]
+            td.px-3.py-2.text-muted-foreground class="text-[11px]" = row["pinyin"]
+            - if show_palladius
+              td.px-3.py-2 class="text-[10px] text-muted-foreground/70" = row["palladius"].presence || "—"
+            td.px-3.py-2 class="min-w-[20rem]"
+              - if (anchor = phon_anchor(row)).present?
+                .font-medium.text-foreground = phon_markup(anchor)
+              .mt-1.text-muted-foreground = phon_markup(phon_analogy(row))
+              - if (note = phon_note(row)).present?
+                .mt-1.text-xs.text-amber-600 = phon_markup(note)
+            td.px-3.py-2 class="min-w-[7rem]"
+              - example = row["example"]
+              - if example.present?
+                span.text-lg lang="zh-TW" = example["hanzi"]
+                span.ml-1.text-muted-foreground class="text-[11px]" = example["pinyin"]
+                .text-xs.text-muted-foreground = phon_example_gloss(example)
+
+  = render("practice/palladius_note")

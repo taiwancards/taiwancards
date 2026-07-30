@@ -1,0 +1,25 @@
+nav.sticky.z-30.hidden.border-b.border-border.md:block data-tour="nav" style="top: 3.5rem" class="bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70"
+  .mx-auto.flex.max-w-5xl.flex-wrap.items-stretch.justify-center.gap-0.px-2
+    - language_nav.each do |entry|
+      - active = nav_entry_active?(entry)
+      - if entry[:type] == :link
+        = link_to entry[:path], data: {tour: entry[:tour]}, class: nav_top_classes(active) do
+          = icon(entry[:key], css: "size-4", stroke: active ? 2 : 1.6)
+          span.hidden class="min-[420px]:inline" = entry[:label]
+      - else
+        .relative data-controller="menu" data-tour=entry[:tour]
+          button type="button" data-action="menu#toggle" class=nav_top_classes(active)
+            = icon(entry[:key], css: "size-4", stroke: active ? 2 : 1.6)
+            span = entry[:label]
+            = icon(:chevron_down, css: "size-3.5 opacity-60")
+          .absolute.left-0.top-full.z-50.hidden.mt-1.w-48.rounded-xl.border.border-border.bg-background.p-1.shadow-xl data-menu-target="panel"
+            - entry[:items].each do |key, label, path|
+              - item_active = current_page?(path)
+              = link_to path, class: nav_menu_item_classes(item_active) do
+                = icon(key, css: "size-4", stroke: item_active ? 2 : 1.6)
+                span = label
+            - if entry[:key] == :settings
+              button.w-full type="button" data-controller="theme" data-action="theme#toggle" class=nav_menu_item_classes(false)
+                span.dark:hidden = icon(:moon, css: "size-4")
+                span.hidden.dark:inline = icon(:sun, css: "size-4")
+                span = t("nav.theme")

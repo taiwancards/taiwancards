@@ -1,0 +1,190 @@
+- lexeme = @profile.lexeme
+- content_for(:title, lexeme.text)
+
+.py-6.space-y-5
+  header.flex.flex-wrap.items-start.justify-between.gap-x-6.gap-y-3
+    .flex.min-w-0.items-start.gap-4
+      .flex.size-24.shrink-0.items-center.justify-center.rounded-2xl.border.border-border.bg-card.shadow-sm
+        span.text-5xl lang="zh-TW" = lexeme.text
+      .min-w-0.space-y-2
+        = link_to characters_path, class: "inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground" do
+          span ←
+          span = t("characters.back")
+        .flex.flex-wrap.items-center.gap-2
+          - @profile.readings.each do |reading|
+            = render "shared/reading", lexeme: lexeme, reading: reading
+        - if @profile.several_readings?
+          p.text-xs.text-muted-foreground = t("characters.several_readings", count: @profile.readings.size)
+        - if lexeme.meaning.present?
+          p.text-base = lexeme.meaning
+    .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-sm sm:justify-end"
+      - if detailed?
+        = score_badge(lexeme)
+        - if @profile.moe_index.present?
+          span.rounded-full.bg-muted.font-medium class="px-2.5 py-1" title=t("characters.moe_index_hint")
+            = t("characters.moe_index", number: @profile.moe_index)
+        - parts_of_speech(lexeme).each do |label|
+          span.rounded-full.bg-muted.font-medium class="px-2.5 py-1" = label
+      - if @profile.radical.present?
+        - canonical = lexeme.data["radical_canonical"]
+        - radical_body = capture do
+          span.text-muted-foreground = t("characters.radical")
+          span.font-semibold lang="zh-TW" = @profile.radical
+        - if canonical
+          = link_to radical_path(canonical), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-primary hover:bg-primary/20" do
+            = radical_body
+        - else
+          span.inline-flex.items-center.rounded-full.bg-muted class="gap-1.5 px-2.5 py-1"
+            = radical_body
+      - if @profile.strokes.present?
+        span.rounded-full.bg-muted class="px-2.5 py-1" = t("characters.strokes", count: @profile.strokes)
+      - if detailed? && (cangjie = lexeme.data["cangjie"]).present?
+        span.inline-flex.items-center.rounded-full.bg-muted class="gap-1.5 px-2.5 py-1"
+          span.text-muted-foreground = t("characters.cangjie")
+          span.font-semibold lang="zh-TW" = Huayu::Cangjie.radicals(cangjie)
+          span.uppercase.text-muted-foreground = cangjie
+      - if @liangci&.measure_word
+        = link_to liangci_entry_path(lexeme.text), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
+          span lang="zh-TW" 量詞
+          span = t("liangci.as_measure_word")
+      - if @word
+        = link_to t("liangci.as_word"), dict_entry_path(lexeme.text),
+          class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
+
+  - if @profile.strokes_available?
+    section.rounded-2xl.border.border-border.bg-card.p-4[
+      data-controller="hanzi-writer" data-hanzi-writer-char-value=lexeme.text
+      data-hanzi-writer-url-value=character_strokes_path(lexeme.text) ]
+      .flex.flex-wrap.items-center.gap-4
+        .flex.size-56.shrink-0.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
+          data-hanzi-writer-target="canvas" ]
+        .min-w-0.flex-1.space-y-3
+          h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("characters.stroke_order")
+          .flex.flex-wrap.gap-2
+            button.rounded-lg.border.border-border.px-4.py-2.text-sm.font-medium[
+              type="button" data-action="hanzi-writer#animate" class="hover:bg-muted" ]
+              = t("characters.animate")
+            button.rounded-lg.border.border-border.px-4.py-2.text-sm.font-medium.text-emerald-600[
+              type="button" data-action="hanzi-writer#quiz" class="hover:bg-emerald-500/10 hover:border-emerald-400" ]
+              = t("characters.practice")
+          .text-2xl.font-semibold.text-emerald-600.min-h-8[
+            data-hanzi-writer-target="status" data-practicing=t("characters.practicing") data-done=t("characters.practice_done") ]
+
+  - narrative = detailed? && @profile.etymology_text.present?
+  - if @profile.etymology.present? || @profile.decomposition.present? || narrative
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("characters.etymology")
+      .space-y-1.rounded-xl.border.border-border.bg-card.px-4.py-3.text-sm
+        - if @profile.decomposition.present?
+          .flex.flex-wrap.items-center.gap-2
+            span.text-muted-foreground = t("characters.decomposition") + ":"
+            span.text-lg lang="zh-TW" = decomposition_html(@profile.decomposition, skip: lexeme.text)
+        - if @profile.etymology.present?
+          - if @profile.etymology["type"].present?
+            .text-xs.uppercase.tracking-wide.text-muted-foreground = @profile.etymology["type"]
+          - if @profile.etymology["hint"].present?
+            p = @profile.etymology["hint"]
+          - if @profile.etymology["phonetic"].present? || @profile.etymology["semantic"].present?
+            p.text-muted-foreground
+              - if @profile.etymology["semantic"].present?
+                span = t("characters.semantic") + ": "
+                span.text-foreground lang="zh-TW" = @profile.etymology["semantic"]
+              - if @profile.etymology["phonetic"].present?
+                span.ml-3 = t("characters.phonetic") + ": "
+                span.text-foreground lang="zh-TW" = @profile.etymology["phonetic"]
+        - if narrative
+          .mt-2.space-y-1.border-t.border-border.pt-2
+            p.leading-relaxed = @profile.etymology_text
+            - if @profile.etymology_source
+              p.text-xs.text-muted-foreground = @profile.etymology_source.attribution
+
+  - if detailed? || @profile.several_readings?
+    - groups = @profile.reading_groups(limit: detailed? ? nil : 6)
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+        = @profile.several_readings? ? t("characters.readings") : t("characters.words")
+      - if groups.empty?
+        p.text-sm.text-muted-foreground = t("characters.no_words")
+      - groups.each do |group|
+        section.space-y-2 class=(@profile.several_readings? ? "rounded-xl border border-border p-3" : nil)
+          - if @profile.several_readings?
+            .flex.flex-wrap.items-start.gap-3
+              - if group.reading
+                = render "shared/reading", lexeme: lexeme, reading: group.reading, size: :small
+              - else
+                span.rounded-xl.border.border-dashed.border-border.px-3.py-2.text-xs.text-muted-foreground
+                  = t("characters.reading_unknown")
+              - if group.senses.any?
+                ol.min-w-0.flex-1.space-y-1.text-sm
+                  - group.senses.first(4).each_with_index do |sense, index|
+                    li.flex.items-baseline.gap-2
+                      span.shrink-0.text-xs.text-muted-foreground.tabular-nums = "#{index + 1}."
+                      - meaning = sense.meaning(I18n.locale)
+                      - if meaning.present?
+                        span = meaning
+                      - else
+                        span.text-muted-foreground lang="zh-TW" = sense.gloss_zh
+          .flex.flex-wrap.gap-2
+            - group.words.each do |word|
+              = render("characters/word_card", word: word)
+  - else
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("characters.top_words")
+      - top_words = @profile.top_words
+      - if top_words.empty?
+        p.text-sm.text-muted-foreground = t("characters.no_words")
+      - else
+        .flex.flex-wrap.gap-2
+          - top_words.each do |word|
+            = render("characters/word_card", word: word)
+
+  - if detailed?
+    - if @word.nil?
+      = render("shared/liangci", sidecar: @liangci)
+
+      = render("shared/thesaurus", thesaurus: @thesaurus)
+
+      - if (series = @profile.series)
+        section.rounded-2xl.border.border-border.p-4.space-y-2
+          h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("characters.series.title")
+          p.text-sm
+            span.text-2xl.font-semibold lang="zh-TW" = series.component
+            span.ml-3.text-muted-foreground
+              = t("characters.series.payoff", percent: series.percent, rime: series.rime, count: series.size)
+          - if series.diverged?
+            p.text-xs.text-amber-600 = t("characters.series.diverged", group: series.group)
+          .flex.flex-wrap.gap-1
+            - series.members.each do |member|
+              = link_to member, character_path(member), lang: "zh-TW",
+                class: class_names("rounded-lg border px-2 py-1 text-lg", "border-primary bg-primary/10" => member == lexeme.text, "border-border hover:bg-muted" => member != lexeme.text)
+
+      - if @profile.confusable.any?
+        section.rounded-2xl.border.border-border.p-4.space-y-2
+          h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("characters.confusable.title")
+          p.text-xs.text-muted-foreground = t("characters.confusable.note")
+          .flex.flex-wrap.gap-1
+            - @profile.confusable.each do |other|
+              = link_to other, character_path(other), lang: "zh-TW",
+                class: "rounded-lg border border-border px-2 py-1 text-lg hover:bg-muted"
+
+    - if @profile.phrases.any?
+      section.space-y-2
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("characters.phrases")
+        div class="space-y-1.5"
+          - @profile.phrases.each do |phrase|
+            .rounded-lg.border.border-border.bg-card.px-3.py-2
+              .text-sm lang="zh-TW" = hanzi(phrase.text, skip: lexeme.text)
+              - if phrase.meaning.present?
+                .text-xs.text-muted-foreground = phrase.meaning
+
+    - if @profile.memories.any?
+      section.grid.gap-2.sm:grid-cols-2
+        - @profile.memories.each do |facet, memory|
+          .rounded-xl.border.border-border.bg-card.px-4.py-3
+            .text-xs.uppercase.tracking-wide.text-muted-foreground = t("memories.#{facet}")
+            .mt-1.text-sm.font-medium = t("characters.states.#{memory.state}")
+            - if memory.due_at.present?
+              .text-xs.text-muted-foreground = t("characters.due", when: l(memory.due_at, format: :short))
+    - else
+      p.rounded-lg.border.border-dashed.border-border.px-4.py-3.text-sm.text-muted-foreground
+        = t("characters.not_studied")

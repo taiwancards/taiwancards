@@ -1,0 +1,37 @@
+- content_for(:title) { t("admin.title") }
+
+.py-6.space-y-4
+  div
+    h1.text-2xl.font-bold.tracking-tight = t("admin.title")
+    p.mt-1.text-sm.text-muted-foreground = t("admin.intro")
+    p.mt-2.flex.flex-wrap.gap-x-4
+      = link_to t("admin.activity"), admin_activity_path, class: "text-sm font-medium underline underline-offset-2"
+      = link_to t("admin.sources.title"), admin_content_sources_path, class: "text-sm font-medium underline underline-offset-2"
+
+  .divide-y.divide-border.rounded-xl.border.border-border
+    - @users.each do |user|
+      .flex.flex-wrap.items-center.gap-x-4.gap-y-2.p-3.text-sm
+        = form_with model: user, url: admin_user_path(user), method: :patch, class: "flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-2" do |f|
+          .min-w-0 class="flex-1 basis-48"
+            .truncate.font-medium = user.email
+            .flex.flex-wrap.items-center.gap-x-2.text-xs.text-muted-foreground
+              - if user.name.present?
+                span = user.name
+              - unless user.verified?
+                span.text-amber-600 = t("admin.unverified")
+              - if user.google_linked?
+                span Google
+
+          label.inline-flex.shrink-0.items-center.gap-1
+            = f.check_box :admin
+            = t("admin.is_admin")
+          label.inline-flex.shrink-0.items-center.gap-1
+            = f.check_box :restricted_content
+            = t("admin.restricted")
+
+          = f.submit t("admin.save"), class: "shrink-0 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90 cursor-pointer"
+
+        - if user != current_user
+          .flex.shrink-0.items-center.gap-1
+            = button_to t("admin.impersonate"), admin_impersonate_path(user), form: {class: "shrink-0"}, class: "rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted"
+            = button_to t("admin.delete"), admin_user_path(user), method: :delete, form: {class: "shrink-0", data: {turbo_confirm: t("admin.delete_confirm", email: user.email)}}, class: "rounded-md border border-red-500 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-500/10"

@@ -1,0 +1,62 @@
+- content_for(:title) { t("admin.activity") }
+
+.py-6.space-y-6
+  header.space-y-1
+    h1.text-2xl.font-bold.tracking-tight = t("admin.activity")
+    p.text-sm.text-muted-foreground = t("admin.activity_intro", days: 7, total: number_with_delimiter(@total))
+
+  .grid.gap-4 class="sm:grid-cols-2"
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.by_user")
+      - if @per_user.empty?
+        p.text-sm.text-muted-foreground = t("admin.activity_empty")
+      - else
+        - top = @per_user.values.max
+        ul.space-y-1
+          - @per_user.first(10).each do |email, count|
+            li.space-y-1
+              .flex.items-baseline.justify-between.gap-2.text-sm
+                span.truncate = email
+                span.shrink-0.tabular-nums.text-muted-foreground = count
+              .h-1.w-full.overflow-hidden.rounded-full.bg-muted
+                .h-full.rounded-full.bg-primary style="width: #{(count * 100.0 / top).round}%"
+
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.by_section")
+      - if @per_section.empty?
+        p.text-sm.text-muted-foreground = t("admin.activity_empty")
+      - else
+        - top = @per_section.values.max
+        ul.space-y-1
+          - @per_section.each do |controller, count|
+            li.space-y-1
+              .flex.items-baseline.justify-between.gap-2.text-sm
+                span.truncate = controller.split("/").last.humanize
+                span.shrink-0.tabular-nums.text-muted-foreground = count
+              .h-1.w-full.overflow-hidden.rounded-full.bg-muted
+                .h-full.rounded-full.bg-primary style="width: #{(count * 100.0 / top).round}%"
+
+  - if @per_day.any?
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.by_day")
+      .flex.items-end.gap-1 style="height: 5rem"
+        - peak = @per_day.values.max
+        - @per_day.each do |day, count|
+          .flex-1.rounded-t.bg-primary title="#{day}: #{count}" style="height: #{[(count * 100.0 / peak).round, 4].max}%"
+      .flex.justify-between.text-xs.text-muted-foreground
+        span = @per_day.keys.first
+        span = @per_day.keys.last
+
+  section.space-y-2
+    h2.text-sm.font-semibold = t("admin.recent")
+    - if @events.empty?
+      p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
+        = t("admin.activity_empty")
+    - else
+      .divide-y.divide-border.rounded-xl.border.border-border
+        - @events.each do |event|
+          .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1.px-3.py-2.text-sm
+            span.shrink-0.text-xs.tabular-nums.text-muted-foreground = l(event.created_at, format: :short)
+            span.min-w-0.flex-1.truncate.font-medium = event.user&.email
+            span.shrink-0.rounded.bg-muted.px-1.text-xs.text-muted-foreground = event.verb
+            span.min-w-0.truncate.text-xs.text-muted-foreground class="basis-full sm:basis-auto" = event.path

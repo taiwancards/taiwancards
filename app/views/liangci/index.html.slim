@@ -1,0 +1,32 @@
+- content_for(:title, t("liangci.title"))
+
+.py-6.space-y-6
+  header.flex.flex-wrap.items-start.justify-between.gap-3
+    div.space-y-1
+      = render("shared/page_help", key: "liangci", title: t("liangci.title"))
+    = link_to liangci_game_path, class: "shrink-0 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90" do
+      = t("liangci.play")
+
+  .flex.flex-wrap.text-sm class="gap-1.5"
+    = link_to t("liangci.all"), liangci_path, class: "rounded-lg border px-3 py-1.5 #{@category ? "border-border hover:bg-muted" : "border-primary bg-primary/10 font-medium text-primary"}"
+    - Liangci::CATEGORIES.each do |category|
+      - count = @counts[category].to_i
+      - next if count.zero?
+      = link_to liangci_path(category:), class: "rounded-lg border px-3 py-1.5 #{@category == category ? "border-primary bg-primary/10 font-medium text-primary" : "border-border hover:bg-muted"}" do
+        = t("liangci.categories.#{category}")
+        span.ml-1.text-xs.text-muted-foreground = count
+
+  - Liangci::CATEGORIES.each do |category|
+    - entries = @by_category[category]
+    - next if entries.blank?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+        = t("liangci.categories.#{category}")
+      p.text-xs.text-muted-foreground = t("liangci.category_hints.#{category}")
+      .grid.gap-2 style="grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr))"
+        - entries.each do |entry|
+          = link_to liangci_entry_path(entry.text), class: "rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
+            .flex.items-baseline.gap-2
+              span.text-2xl.font-semibold lang="zh-TW" = entry.text
+              span.text-xs.text-muted-foreground = entry.readings["zhuyin"].presence || entry.readings["pinyin"]
+            .line-clamp-2.text-xs.text-muted-foreground class="mt-0.5" = entry.meaning

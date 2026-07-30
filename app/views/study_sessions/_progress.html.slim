@@ -1,0 +1,7 @@
+- pct = total.positive? ? (done * 100.0 / total).round : 0
+.mx-auto.max-w-md class="space-y-1.5"
+  .flex.items-center.justify-between.text-xs.font-medium.text-muted-foreground
+    span = t("study.progress.done", done: done, total: total)
+    span = t("study.progress.remaining", count: remaining)
+  .h-2.overflow-hidden.rounded-full.bg-muted
+    .h-full.rounded-full.bg-primary.transition-all.duration-300 style="width: #{pct}%"

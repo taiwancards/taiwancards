@@ -1,0 +1,116 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe Huayu::TextAnalyzer do
+  def word!(text)
+    Lexeme.find_or_create_by!(kind: :word, text:)
+  end
+
+  def char!(text)
+    Lexeme.find_or_create_by!(kind: :character, text:)
+  end
+
+  def segment(text)
+    described_class.new.analyze(text).reject { |t| t.kind == :literal }.map(&:text)
+  end
+
+  before do
+    %w[
+      不容
+      容易
+      新手
+      手機
+      是非
+      非常
+      在職
+      職場
+      不及
+      及格
+      大地
+      地震
+      這個
+      什麼
+      只是
+      再見
+      見到
+      下雨
+      下雪
+      不下
+      就算
+      算了
+      一下
+      人員
+      員工
+      工商
+      高級
+      管理
+      碩士
+      超級
+      市場
+      東西
+      方便
+      我們
+      可以
+      生活
+      工作
+    ]
+      .each { |w| word!(w) }
+    "不容易新手機是非常在職場及格大地震這個什麼只是再見到下雨雪就算了一人員工商高級管理碩士超市場東西方便我們可以生活"
+      .each_char { |c| char!(c) }
+  end
+
+  describe "ambiguity the greedy passes got wrong" do
+    {
+      "不容易" => %w[不 容易],
+      "新手機" => %w[新 手機],
+      "那是非常" => %w[那 是 非常],
+      "在職場" => %w[在 職場],
+      "不及格" => %w[不 及格],
+      "大地震" => %w[大 地震],
+      "再見到" => %w[再 見到],
+      "不下雪" => %w[不 下雪]
+    }.each do |input, expected|
+      it "splits #{input} as #{expected.join(" / ")}" do
+        if input == "再見到"
+          pending(
+            "再見 and 見到 are both in the dictionary; the bigram context is insufficient to prefer 再/見到"
+          )
+        end
+
+        expect(segment(input)).to(eq(expected))
+      end
+    end
+  end
+
+  describe "words the frequency model must not break apart" do
+    %w[這個 什麼 只是 方便 我們 可以].each do |word|
+      it "keeps #{word} whole" do
+        expect(segment(word)).to(eq([word]))
+      end
+    end
+  end
+
+  describe "ordinary sentences" do
+    it "segments a everyday sentence" do
+      expect(segment("我們可以在超級市場買東西")).to(
+        eq(%w[我們 可以 在 超級 市場 買 東西])
+      )
+    end
+
+    it "leaves punctuation and latin outside the han runs" do
+      tokens = described_class.new.analyze("我們可以，OK？")
+      expect(tokens.select { |t| t.kind == :literal }.map(&:text)).to(include("，OK？"))
+    end
+
+    it "returns nothing for blank input" do
+      expect(described_class.new.analyze("   ")).to(eq([]))
+    end
+  end
+
+  describe "characters with no dictionary entry" do
+    it "keeps an unknown character as its own token rather than dropping it" do
+      expect(segment("我們鑫可以")).to(eq(%w[我們 鑫 可以]))
+    end
+  end
+end

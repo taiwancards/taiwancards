@@ -1,0 +1,30 @@
+- page_title = content_for(:title).presence
+- full_title = page_title ? safe_join([page_title, t("app.name")], " · ") : t("meta.title")
+- description = content_for(:meta_description).presence || t("meta.description")
+- canonical = request.original_url.split("?").first
+- share_image = "#{request.base_url}/og.png?v=3"
+
+title = full_title
+meta name="description" content=description
+meta name="application-name" content=t("app.name")
+meta name="apple-mobile-web-app-title" content=t("app.name")
+link rel="canonical" href=canonical
+
+meta property="og:site_name" content=t("app.name")
+meta property="og:title" content=t("meta.share_title")
+meta property="og:description" content=t("meta.share_description")
+meta property="og:type" content="website"
+meta property="og:url" content=canonical
+meta property="og:locale" content=(I18n.locale.to_s == "ru" ? "ru_RU" : "en_US")
+meta property="og:image" content=share_image
+meta property="og:image:width" content="1200"
+meta property="og:image:height" content="630"
+meta property="og:image:alt" content=t("meta.share_title")
+
+meta name="twitter:card" content="summary_large_image"
+meta name="twitter:title" content=t("meta.share_title")
+meta name="twitter:description" content=t("meta.share_description")
+meta name="twitter:image" content=share_image
+
+meta name="robots" content="index, follow"
+meta name="format-detection" content="telephone=no"

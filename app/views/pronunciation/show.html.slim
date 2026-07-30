@@ -1,0 +1,147 @@
+- content_for(:title, t("pronunciation.title"))
+
+.py-4.space-y-3.pinyin-locked
+  header.flex.flex-wrap.items-center.justify-between.gap-2
+    = render("shared/page_help", key: "pronunciation", title: t("pronunciation.title"))
+    .flex.items-center.gap-2
+      - if @collection
+        span.text-2xs.font-medium.text-primary = @collection.name
+      = link_to t("pronunciation.another"), @advance_url, class: "rounded-md border border-border px-2.5 py-1 text-xs font-medium hover:bg-muted"
+
+  - if @drills.available?
+    .space-y-1[
+      data-controller="drill-groups"
+      data-drill-groups-active-value=(@section ? @drills.group_of(@section["id"]) : nil) ]
+
+      .flex.flex-wrap.items-center.gap-1
+        = link_to t("pronunciation.sections.all"), pronunciation_path, class: "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors #{@section ? "border-border hover:bg-muted" : "border-primary bg-primary/10 text-primary"}"
+        span.text-border class="mx-0.5" |
+        - @drills.grouped.each do |group, _|
+          button.rounded-full.border.border-border.py-1.text-xs.font-medium.transition-colors[
+            type="button" data-drill-groups-target="tab" data-group=group
+            data-action="drill-groups#select" class="px-2.5 hover:bg-muted" ]
+            = t("pronunciation.sections.#{group}")
+
+      - @drills.grouped.each do |group, sections|
+        .hidden.flex-wrap.items-center.gap-1[
+          data-drill-groups-target="group" data-group=group ]
+          - sections.each do |sec|
+            - on = @section && @section["id"] == sec["id"]
+            = link_to @drills.short(sec["id"]), pronunciation_path(section: sec["id"]), lang: "zh-TW", title: sec.dig("title", I18n.locale.to_s) || sec.dig("title", "en"), class: "rounded-full border px-2.5 py-1 text-xs font-medium tabular-nums transition-colors #{on ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted"}"
+
+    - if @section && !@tonal
+      p.text-3xs.text-muted-foreground = t("pronunciation.sections.no_tone")
+
+  - if @lexeme.nil? || @syllables.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("pronunciation.empty")
+  - else
+    .relative.mx-auto.max-w-md.space-y-3[
+      data-controller="pronunciation"
+      data-pronunciation-url-value=@speech_url
+      data-pronunciation-advance-url-value=@advance_url
+      data-pronunciation-expected-value=@syllables.to_json
+      data-pronunciation-text-value=@lexeme.text
+      data-pronunciation-lexeme-id-value=@lexeme.id
+      data-pronunciation-audio-url-value=audio_for(@lexeme)&.fetch(:url)
+      data-pronunciation-audio-stop-value=audio_for(@lexeme)&.fetch(:stop_ms)
+      data-pronunciation-auto-delay-value=@auto[:delay_ms]
+      data-pronunciation-auto-silence-value=@auto[:silence_ms]
+      data-pronunciation-auto-max-value=@auto[:max_ms]
+      data-pronunciation-label-record-value=t("pronunciation.record")
+      data-pronunciation-label-stop-value=t("pronunciation.stop")
+      data-pronunciation-label-recording-value=t("pronunciation.recording")
+      data-pronunciation-label-grading-value=t("pronunciation.grading")
+      data-pronunciation-label-unavailable-value=t("pronunciation.unavailable")
+      data-pronunciation-label-details-value=t("pron.ui.metrics")
+      data-pronunciation-label-copy-value=t("pron.ui.copy")
+      data-pronunciation-label-mic-denied-value=t("pronunciation.mic_denied")
+      data-pronunciation-label-mic-missing-value=t("pronunciation.mic_missing")
+      data-pronunciation-label-mic-insecure-value=t("pronunciation.mic_insecure")
+      data-pronunciation-label-network-value=t("pronunciation.network")
+      data-pronunciation-label-error-value=t("pronunciation.error")
+      data-pronunciation-label-retry-value=t("pronunciation.retry")
+      data-pronunciation-label-drill-value=t("pronunciation.drill")
+      data-pronunciation-label-drill-skip-value=t("pronunciation.drill_skip")
+      data-pronunciation-label-not-recognized-value=t("pronunciation.not_recognized")
+      data-pronunciation-label-not-measured-value=t("pron.ui.not_measured")
+      data-pronunciation-label-no-part-value=t("pron.ui.no_part")
+      data-pronunciation-label-no-template-value=t("pron.ui.no_template")
+      data-pronunciation-label-parts-title-value=t("pron.ui.parts_title")
+      data-pronunciation-label-fix-title-value=t("pron.ui.fix_title")
+      data-pronunciation-label-chart-hint-value=t("pron.ui.chart_hint")
+      data-pronunciation-label-weight-value=t("pron.weight")
+      data-pronunciation-max-attempts-value=5
+      data-pronunciation-tonal-value=@tonal ]
+
+      aside.hidden class="xl:absolute xl:left-full xl:top-0 xl:ml-8 xl:block xl:w-56"
+        = render("pronunciation/legend", legend: @legend)
+
+      .flex.flex-wrap.items-center.justify-center.gap-1
+        label.inline-flex.cursor-pointer.items-center.rounded-full.border.border-border.py-1.text-xs.transition-colors class="px-2.5 gap-1.5 hover:bg-muted" title=t("pronunciation.auto_hint")
+          input.peer.sr-only type="checkbox" data-pronunciation-target="auto" data-action="pronunciation#toggleAuto"
+          span.rounded-full.bg-muted-foreground class="h-1.5 w-1.5 opacity-30 peer-checked:bg-primary peer-checked:opacity-100"
+          = t("pronunciation.auto")
+
+        - if audio_for(@lexeme)
+          label.inline-flex.cursor-pointer.items-center.rounded-full.border.border-border.py-1.text-xs.transition-colors class="px-2.5 gap-1.5 hover:bg-muted" title=t("pronunciation.prelisten_hint")
+            input.peer.sr-only type="checkbox" data-pronunciation-target="prelisten" data-action="pronunciation#togglePrelisten"
+            span.rounded-full.bg-muted-foreground class="h-1.5 w-1.5 opacity-30 peer-checked:bg-primary peer-checked:opacity-100"
+            = t("pronunciation.prelisten")
+
+        - unless @voice&.calibrated?
+          = link_to t("pron.ui.warmup_title"), pronunciation_warmup_path, title: t("pron.ui.warmup_hint"), class: "inline-flex items-center rounded-full border border-primary/40 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
+
+      .rounded-2xl.border.border-border.bg-card.px-4.py-4.text-center.shadow-sm.transition-colors[
+        class="sm:px-6 sm:py-6"
+        data-pronunciation-target="card" ]
+        .text-4xl.font-semibold class="sm:text-5xl" lang="zh-TW" = hanzi(@lexeme.text)
+        - if @lexeme.meaning.present?
+          .mt-1.line-clamp-1.text-xs.text-muted-foreground = @lexeme.meaning
+        .mt-3.flex.flex-wrap.justify-center.gap-2
+          - @syllables.each do |syllable|
+            .relative.flex.min-w-16.flex-col.items-center.overflow-hidden.rounded-xl.border-2.border-border.px-2.transition-colors[
+              class="gap-0.5 py-1.5"
+              data-pronunciation-target="syllable" ]
+              .pointer-events-none.absolute.inset-x-0.bottom-0.transition-all.duration-700 style="height:0" data-role="fill"
+              .relative.flex.flex-col.items-center class="gap-0.5"
+                span.text-2xl.leading-none lang="zh-TW" = syllable["char"]
+                - if syllable["zhuyin"].present?
+                  span.text-2xs.font-medium.leading-none lang="zh-TW" = syllable["zhuyin"]
+                - if syllable["pinyin"].present?
+                  span.pinyin.text-2xs.leading-none.text-muted-foreground = syllable["pinyin"]
+                span.min-h-4.text-sm.font-bold.leading-none.tabular-nums data-role="score"
+                .flex.h-3.items-end.gap-px data-role="parts"
+
+      - if @sandhi.any?
+        p.rounded-lg.border.border-amber-500.px-3.py-2.text-xs.leading-snug class="bg-amber-500/10"
+          span.font-semibold = t("pron.ui.sandhi")
+          '
+          - @sandhi.each do |syllable|
+            span.ml-1.font-medium lang="zh-TW"
+              = syllable["char"]
+              '
+              = syllable["surface_zhuyin"]
+
+      - if @risky.any?
+        p.text-3xs.leading-snug.text-muted-foreground
+          span.font-medium lang="zh-TW" = @risky.map { |s| s["zhuyin"].presence || s["pinyin"] }.join(" ")
+          '
+          = t("pron.ui.risky")
+
+      .flex.flex-col.items-center class="gap-1.5"
+        button.rounded-full.border.border-border.px-8.text-base.font-semibold.transition-colors[
+          class="py-2.5 hover:bg-muted"
+          type="button" data-pronunciation-target="record" data-action="pronunciation#toggle" ]
+          = t("pronunciation.record")
+        .min-h-5.text-center.text-xs.text-muted-foreground data-pronunciation-target="status"
+        .flex.items-center.gap-3
+          = link_to t("pronunciation.skip"), @advance_url, class: "text-2xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+          span.text-2xs.text-muted-foreground data-pronunciation-target="attempts"
+
+      .space-y-3 data-pronunciation-target="detail"
+
+      details.rounded-2xl.border.border-border.bg-card class="xl:hidden"
+        summary.cursor-pointer.px-4.text-sm.font-medium class="py-2.5" = t("pron.legend.title")
+        .border-t.border-border
+          = render("pronunciation/legend", legend: @legend, heading: false)

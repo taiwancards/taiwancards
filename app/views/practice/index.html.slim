@@ -1,0 +1,19 @@
+- content_for(:title) { t("practice.title") }
+- cards = [ \
+    [t("practice.drill.title"), t("practice.drill.card"), practice_drill_path], \
+    [t("practice.phonetics_title"), t("practice.phonetics_card"), practice_zhuyin_path], \
+    [t("practice.tones_title"), t("practice.tones_card"), pronunciation_path], \
+    [t("practice.progress_title"), t("practice.progress_card"), practice_progress_path] \
+  ]
+- tours = {practice_drill_path => "practice-writing", practice_zhuyin_path => "practice-zhuyin", pronunciation_path => "practice-tones"}
+
+.py-6.space-y-6
+  div
+    h1.text-2xl.font-bold.tracking-tight = t("practice.title")
+    p.mt-2.text-muted-foreground = t("practice.intro")
+
+  .grid.gap-3 class="sm:grid-cols-2"
+    - cards.each do |title, blurb, path|
+      = link_to path, data: {tour: tours[path]}, class: "block rounded-xl border border-border p-4 transition-colors hover:bg-muted" do
+        .font-semibold.text-foreground = title
+        p.mt-1.text-sm.text-muted-foreground = blurb

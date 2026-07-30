@@ -1,0 +1,10 @@
+- word = local_assigns.fetch(:word)
+- word_zhuyin = word.reading_set.first&.dig("zhuyin").presence
+
+= link_to dict_entry_path(word.text), class: "rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted", data: { turbo_frame: "_top" } do
+  .flex.items-baseline.gap-2
+    span.text-lg lang="zh-TW" = word.text
+    span.text-xs.text-muted-foreground lang=(word_zhuyin ? "zh-TW" : nil) class=(word_zhuyin ? nil : "pinyin")
+      = word_zhuyin || word.reading_set.first&.dig("pinyin")
+  - if word.meaning.present?
+    .mt-1.max-w-56.text-xs.text-muted-foreground = truncate(word.meaning, length: 40)

@@ -1,0 +1,18 @@
+- content_for(:title, t("tbcl.grade", n: @grade))
+
+.py-6.space-y-6
+  = link_to tbcl_levels_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("tbcl.back")
+
+  header.space-y-1
+    h1.text-2xl.font-bold.tracking-tight = t("tbcl.grade", n: @grade)
+    p.text-sm.text-muted-foreground
+      = t("tbcl.words_count", count: @stat.total)
+      span.mx-1 ·
+      = t("tocfl.known_of", known: @stat.known, total: @stat.total)
+      span.mx-1 ·
+      = t("tocfl.readiness", percent: @stat.readiness)
+
+  = render("shared/lexeme_grid", lexemes: @lexemes, known_ids: @known_ids, started_ids: @started_ids)
+  = render("shared/pager", page: @page, pages: @pages, path: ->(n) { tbcl_level_path(@grade, page: n) })

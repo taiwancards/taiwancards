@@ -1,0 +1,8 @@
+- return if result.pages <= 1
+
+nav.flex.flex-wrap.items-center.justify-center.gap-2.pt-2
+  - if result.page > 1
+    = link_to t("sentences.prev"), url_for(request.query_parameters.merge(page: result.page - 1)), class: "rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted"
+  span.text-sm.text-muted-foreground = t("sentences.page_of", page: result.page, pages: result.pages)
+  - if result.page < result.pages
+    = link_to t("sentences.next"), url_for(request.query_parameters.merge(page: result.page + 1)), class: "rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted"

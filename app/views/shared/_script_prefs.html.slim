@@ -1,0 +1,47 @@
+- inside_app = local_assigns.fetch(:inside_app, false)
+- compact = local_assigns.fetch(:compact, false)
+- button_classes = "inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+- wide_classes = compact ? button_classes.sub("inline-flex", "hidden md:inline-flex") : button_classes
+
+.flex.items-center.rounded-lg.border.border-border data-tour="script-setup" title=t("nav.script_setup_hint")
+  button[ type="button" class=button_classes
+    title=t("nav.hanzi_font_hint") aria-label=t("nav.hanzi_font_toggle")
+    data-controller="display-pref" data-action="display-pref#toggle display-pref:reflect->display-pref#reflect"
+    data-tour="pref-kai" data-display-pref-name-value="hanzi_font" data-display-pref-css-value="font-kai"
+    data-display-pref-on-value="kai" data-display-pref-off-value="sans" ]
+    span.pref-mark-kai.flex.items-center.justify-center.rounded-full.border.border-current[
+      lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
+      | 臺
+
+  - if inside_app
+    button[ type="button" class=button_classes
+      title=t("nav.pinyin_hint") aria-label=t("nav.pinyin_toggle")
+      data-controller="display-pref" data-action="display-pref#toggle display-pref:reflect->display-pref#reflect"
+      data-tour="pref-pinyin" data-display-pref-name-value="show_pinyin" data-display-pref-css-value="no-pinyin"
+      data-display-pref-on-value="0" data-display-pref-off-value="1" data-display-pref-invert-value="true" ]
+      span.flex.items-baseline class="gap-px"
+        span lang="zh-TW" class="text-[15px] leading-none" ㄅ
+        span.pref-mark-pinyin class="text-[11px] leading-none" a
+
+    button[ type="button" class=wide_classes
+      title=t("nav.mainland_hint") aria-label=t("nav.mainland_toggle")
+      data-controller="display-pref" data-action="display-pref#toggle display-pref:reflect->display-pref#reflect"
+      data-tour="pref-mainland" data-display-pref-name-value="show_mainland" data-display-pref-css-value="show-mainland"
+      data-display-pref-on-value="1" data-display-pref-off-value="0" ]
+      span.pref-mark-mainland.flex.items-center.justify-center.rounded-full.border.border-current[
+        lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
+        | 陸
+
+    = button_to detail_pref_path(mode: detailed? ? "brief" : "full"), method: :post,
+      form: {class: "contents"}, data: {tour: "pref-detail"}, class: wide_classes,
+      title: t("nav.detail_hint"), aria: {label: t("nav.detail_toggle"), pressed: detailed?.to_s} do
+      span.flex.items-center.justify-center.rounded-full.border.border-current[
+        lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
+        = detailed? ? "詳" : "簡"
+
+  = button_to locale_path(I18n.locale.to_s == "ru" ? :en : :ru), method: :post,
+    form: {class: "contents"}, class: wide_classes,
+    title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+    span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
+      class="size-6 text-[10px] leading-none" ]
+      = I18n.locale.to_s.upcase

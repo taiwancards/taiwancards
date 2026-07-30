@@ -1,0 +1,42 @@
+= render layout: "progress/shell" do
+  section.space-y-4
+    div
+      p.text-sm.text-muted-foreground = t("auth.data_hint")
+      - if @summary.first_seen
+        p.text-xs.text-muted-foreground = t("auth.data_since", date: l(@summary.first_seen.to_date, format: :long))
+
+    dl.grid.grid-cols-2.gap-3 class="sm:grid-cols-4"
+      - @summary.rows.each do |row|
+        div.rounded-xl.border.border-border.bg-card.p-3
+          dd.text-xl.font-bold.tabular-nums = number_with_delimiter(row[:count])
+          dt.text-2xs.leading-tight.text-muted-foreground class="mt-0.5" = t("auth.data_rows.#{row[:key]}")
+
+    .grid.gap-3 class="sm:grid-cols-2"
+      .space-y-1.rounded-xl.border.border-border.bg-card.p-4
+        .text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.data_voice")
+        - voice = @summary.voice_summary
+        - if voice && voice[:calibrated]
+          p.text-sm = t("auth.data_voice_range", low: voice[:f0_low], median: voice[:f0_median], high: voice[:f0_high])
+          p.text-2xs.text-muted-foreground = t("auth.data_voice_frames", count: number_with_delimiter(voice[:n_frames]))
+          = link_to t("auth.data_voice_redo"), pronunciation_warmup_path, class: "inline-block text-xs font-medium text-primary hover:underline"
+        - else
+          p.text-sm.text-muted-foreground = t("auth.data_voice_none")
+          = link_to t("auth.data_voice_start"), pronunciation_warmup_path, class: "inline-block text-xs font-medium text-primary hover:underline"
+
+      .space-y-1.rounded-xl.border.border-border.bg-card.p-4
+        .text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.data_pron")
+        - pron = @summary.pronunciation
+        - if pron
+          p.text-sm = t("auth.data_pron_line", syllables: pron["syllables"], attempts: pron["attempts"], average: pron["average"] || "—")
+          = link_to t("practice.progress_title"), practice_progress_path, class: "inline-block text-xs font-medium text-primary hover:underline"
+        - else
+          p.text-sm.text-muted-foreground = t("auth.data_pron_none")
+
+    .space-y-2.rounded-xl.border.border-border.bg-card.p-4
+      p.text-sm.text-muted-foreground = t("auth.progress_counts", memories: @memory_count, reviews: @review_count)
+      .flex.flex-wrap.items-center.gap-3
+        = link_to t("auth.export_full"), profile_export_path(format: :json),
+          class: "rounded-lg border border-primary/50 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+        = link_to t("auth.tabs.backup"), profile_backup_path,
+          class: "text-sm font-medium text-primary hover:underline"
+      p.text-2xs.leading-relaxed.text-muted-foreground = t("auth.data_excluded")

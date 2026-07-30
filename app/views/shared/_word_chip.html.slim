@@ -1,0 +1,19 @@
+- entry = local_assigns.fetch(:entry)
+- note = local_assigns[:note]
+- accent = local_assigns.fetch(:accent, false)
+- reading = entry.reading_set.first || {}
+- zhuyin = reading["zhuyin"].to_s.strip
+- pinyin = reading["pinyin"].to_s.strip
+- border = accent ? "border-primary/60 bg-primary/10" : "border-border bg-card"
+
+= link_to lexeme_page_path(entry), title: entry.meaning, class: "inline-flex items-baseline gap-1.5 rounded-lg border #{border} px-2 py-1 transition-colors hover:border-primary/50 hover:bg-muted" do
+  - if zhuyin.present?
+    = zhuyin_ruby(entry.text, zhuyin, css: "text-base font-medium")
+  - else
+    span.text-base.font-medium lang="zh-TW" = entry.text
+  - if pinyin.present?
+    span.pinyin.text-2xs.text-muted-foreground = pinyin
+  - if note.present?
+    span.text-2xs.text-primary = note
+  - if entry.outside_projection?(current_user)
+    span.text-2xs.text-muted-foreground title=t("auth.outside_projection") ↑

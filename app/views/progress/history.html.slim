@@ -1,0 +1,68 @@
+= render layout: "progress/shell" do
+  .grid.gap-2 style="grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr))"
+    - @overview.each do |key, value|
+      .rounded-xl.border.border-border.bg-card.px-3.py-2.text-center
+        .text-xl.font-bold = value
+        .text-xs.text-muted-foreground = t("history.overview.#{key}")
+
+  nav.flex.flex-wrap.gap-1
+    - ProgressController::RANGES.each do |range|
+      - bucket = @buckets.find { |item| item.key == range }
+      = link_to progress_history_path(range: range),
+        class: class_names("rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+          @range == range ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted") do
+        = t("history.ranges.#{range}")
+        span.ml-1.opacity-70 = bucket&.reviews
+
+  .grid.gap-3 style="grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr))"
+    .rounded-xl.border.border-border.bg-card.p-3
+      .text-2xl.font-bold = @summary[:total]
+      .text-xs.text-muted-foreground = t("history.summary.reviews")
+    .rounded-xl.border.border-border.bg-card.p-3
+      .text-2xl.font-bold = @summary[:entities]
+      .text-xs.text-muted-foreground = t("history.summary.entities")
+    .rounded-xl.border.border-border.bg-card.p-3
+      .text-2xl.font-bold = @summary[:accuracy] ? "#{@summary[:accuracy]}%" : "—"
+      .text-xs.text-muted-foreground = t("history.summary.accuracy")
+    .rounded-xl.border.border-border.bg-card.p-3
+      .flex.items-baseline.gap-2.text-sm.font-semibold
+        span.text-red-500 = @summary[:again]
+        span.text-amber-500 = @summary[:hard]
+        span.text-emerald-600 = @summary[:good]
+        span.text-sky-500 = @summary[:easy]
+      .text-xs.text-muted-foreground = t("history.summary.breakdown")
+
+  - if @entries.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("history.empty")
+  - else
+    .overflow-x-auto.rounded-xl.border.border-border
+      table.w-full.text-sm
+        thead.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground
+          tr
+            th.px-3.py-2.text-left = t("history.table.entity")
+            th.px-3.py-2.text-left = t("history.table.meaning")
+            th.px-3.py-2.text-left = t("history.table.facets")
+            th.px-3.py-2.text-right = t("history.table.reps")
+            th.px-3.py-2.text-right = t("history.table.last")
+        tbody.divide-y.divide-border
+          - @entries.each do |entry|
+            - lexeme = entry[:lexeme]
+            - path = lexeme_search_path(lexeme)
+            tr.transition-colors class="hover:bg-muted/50"
+              td.px-3.py-2
+                - if path
+                  = link_to lexeme.text, path, class: "text-lg font-semibold hover:text-primary", lang: "zh-TW"
+                - else
+                  span.text-lg.font-semibold lang="zh-TW" = lexeme.text
+                .text-xs.text-muted-foreground = lexeme.reading("zhuyin").presence || lexeme.reading("pinyin")
+              td.px-3.py-2.text-muted-foreground
+                .line-clamp-1 = lexeme.meaning
+              td.px-3.py-2
+                .flex.flex-wrap.items-center class="gap-1.5"
+                  - entry[:facets].each do |facet|
+                    span.inline-flex.items-center.gap-1 title=facet_dot_title(facet)
+                      span.inline-block.size-2.shrink-0.rounded-full class=strength_dot_class(facet[:strength])
+                      span.text-xs.text-muted-foreground = t("history.facet_short.#{facet[:facet]}")
+              td.px-3.py-2.text-right.tabular-nums = entry[:reps]
+              td.px-3.py-2.text-right.text-xs.text-muted-foreground.whitespace-nowrap = history_last_seen(entry[:last_reviewed_at])

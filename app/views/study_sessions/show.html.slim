@@ -1,0 +1,20 @@
+- content_for(:title, t("study.title"))
+
+.py-6.space-y-5
+  header.flex.flex-wrap.items-center.justify-between.gap-3
+    div
+      = render("shared/page_help", key: "study", title: t("study.modes.#{@mode}"))
+    nav.flex.gap-1.text-sm
+      - %w[daily cram].each do |mode|
+        = link_to t("study.modes.#{mode}"), study_path(mode: mode),
+          class: class_names("rounded-full px-3 py-1 font-medium",
+            @mode == mode ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+
+  #study-progress
+    = render "progress", done: @done, total: @total, remaining: @remaining
+
+  #study-card
+    - if @lexeme && @facet
+      = render "card", lexeme: @lexeme, facet: @facet, session_id: @session_id
+    - else
+      = render "empty"

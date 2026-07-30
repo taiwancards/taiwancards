@@ -1,0 +1,49 @@
+- test = local_assigns.fetch(:test)
+
+section.space-y-4
+  .rounded-xl.border.border-border.bg-card.p-5.space-y-2
+    p.text-sm.text-muted-foreground = t("placement.result_title")
+    - if test.split.present?
+      p.text-xl.font-bold = t("placement.result_split")
+      ul.space-y-1.text-sm
+        - test.split.each do |side, grade|
+          li
+            span.text-muted-foreground = t("placement.sides.#{side}")
+            span.ml-2.font-medium = t("placement.result_level", grade:, band: placement_band(grade))
+      p.text-sm.text-muted-foreground = t("placement.split_hint")
+    - elsif test.result_grade.to_i.zero?
+      p.text-xl.font-bold = t("placement.result_zero")
+    - else
+      p.text-xl.font-bold = placement_result_label(test)
+    p.text-sm.text-muted-foreground = t("placement.answered", count: test.answered_count)
+
+  - if test.axis_grades.any?
+    .rounded-xl.border.border-border.p-4.space-y-2
+      p.text-sm.font-medium = t("placement.by_axis")
+      .grid.gap-2 class="sm:grid-cols-2"
+        - test.axis_grades.each do |axis, grade|
+          .flex.items-baseline.justify-between.gap-3.text-sm
+            span.text-muted-foreground = t("placement.axes.#{axis}")
+            span.font-medium = t("placement.result_level", grade:, band: placement_band(grade))
+
+  - if test.intake_result.simplified?
+    .rounded-xl.border.p-4.space-y-2 class="border-amber-500/40 bg-amber-500/5"
+      p.text-sm.font-medium = t("placement.mainland.title")
+      p.text-sm.text-muted-foreground = t("placement.mainland.body")
+      - if (score = test.diagnostics["traditional"])
+        p.text-sm = t("placement.mainland.traditional", percent: (score * 100).round)
+      p.text-sm.text-muted-foreground = t("placement.mainland.offer")
+      .flex.flex-wrap.gap-2
+        = link_to t("placement.mainland.variants"), variants_path, class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+        = link_to t("placement.mainland.phrases"), phrases_path, class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+
+  = form_with url: placement_apply_path, method: :post, class: "space-y-3" do |form|
+    label.block.space-y-1
+      span.text-sm.font-medium = t("placement.adjust_label")
+      = form.select :grade, placement_grade_options, {selected: test.result_grade.to_i}, class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+    p.text-xs.text-muted-foreground = t("placement.apply_hint")
+    - if test.tolerance
+      p.text-xs.text-muted-foreground = t("placement.tolerance_hint", tolerance: t("profiles.tolerances.#{test.tolerance}", default: test.tolerance))
+    .flex.flex-wrap.gap-2
+      = form.submit t("placement.apply"), class: "cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      = button_to t("placement.retake"), placement_path, class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"

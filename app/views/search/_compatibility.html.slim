@@ -1,0 +1,50 @@
+- check = local_assigns.fetch(:check)
+
+section.space-y-3.rounded-2xl.border.p-4 class="border-primary/30 bg-primary/5"
+  h2.text-sm.font-semibold.uppercase.tracking-wide.text-primary = t("search.compatibility")
+
+  - pair = check.pair
+  .space-y-2
+    p.text-sm
+      span.font-semibold lang="zh-TW" = pair.texts.join(" + ")
+      - if pair.collocation
+        '
+        = t("search.pair_is_collocation")
+        = link_to pair.collocation.text, lexeme_page_path(pair.collocation), class: "font-semibold underline underline-offset-2", lang: "zh-TW"
+      - elsif pair.together.zero?
+        '
+        = t("search.pair_never_together")
+      - else
+        '
+        = t("search.pair_together", count: pair.together)
+    - if pair.capped
+      p.text-2xs.text-muted-foreground = t("search.pair_capped")
+    - if pair.examples.any?
+      ul class="space-y-1"
+        - pair.examples.each do |row|
+          li.rounded-lg.border.border-border.bg-card.text-sm class="px-3 py-1.5"
+            = link_to sentence_path(row.lexeme), class: "block hover:underline underline-offset-4" do
+              - row.parts.each do |part|
+                - if part.hit
+                  mark.rounded.bg-transparent.font-semibold.text-primary lang="zh-TW" = part.text
+                - else
+                  span lang="zh-TW" = part.text
+
+  - gap = check.register_gap
+  - if gap
+    - gap_options = {left: gap.left.text, right: gap.right.text, left_share: gap.left_share, right_share: gap.right_share}
+    - gap_options = gap_options.merge(left_style: t("admin.sources.registers.#{gap.left_style}"))
+    - gap_options = gap_options.merge(right_style: t("admin.sources.registers.#{gap.right_style}"))
+    p.text-sm = t("search.register_gap", **gap_options)
+
+  - classifier = check.classifier
+  - if classifier
+    - pair_options = {measure: classifier.measure_word.text, noun: classifier.noun.text}
+    p.text-sm
+      - if classifier.listed
+        = t(classifier.main ? "search.classifier_main" : "search.classifier_ok", **pair_options)
+      - else
+        = t("search.classifier_not_listed", **pair_options)
+        - if classifier.alternatives.any?
+          '
+          = t("search.classifier_instead", list: classifier.alternatives.join("、"))

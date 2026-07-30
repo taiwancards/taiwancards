@@ -1,0 +1,31 @@
+- test = local_assigns.fetch(:test)
+- item = local_assigns.fetch(:item)
+- audio = item["audio"]
+
+section.space-y-4 data-controller="choice-keys"
+  p.text-sm.text-muted-foreground
+    = t("placement.progress", n: test.answered_count + 1)
+    span.mx-2 ·
+    = t("placement.axes.#{item["axis"]}")
+
+  .rounded-xl.border.border-border.bg-card.p-6.text-center.space-y-3
+    - if audio.present?
+      div data-controller="audio" data-audio-url-value=audio["url"] data-audio-stop-ms-value=audio["stop_ms"].to_i
+        button.rounded-lg.border.border-border.px-4.py-2.text-sm.font-medium.transition-colors[
+          type="button" data-action="audio#play" class="hover:bg-muted" ]
+          = t("placement.play")
+    - if item["prompt"].present?
+      p.font-bold lang="zh-TW" class=(item["axis"] == "sentences" ? "text-2xl leading-relaxed" : "text-4xl")
+        = item["prompt"]
+    - if item["hint"].present? && item["axis"] == "lexis"
+      p.text-base.text-muted-foreground = item["hint"]
+
+  .grid.gap-2
+    - item["choices"].each_with_index do |choice, index|
+      = button_to placement_answer_path, method: :post, params: {choice: index}, form: {data: {choice_keys_target: "choice"}}, class: "w-full rounded-xl border border-border bg-card px-4 py-3 text-left text-base transition-colors hover:border-primary/50 hover:bg-muted" do
+        span.mr-2.text-xs.text-muted-foreground = index + 1
+        span class=("text-xl" if item["axis"] == "tones") = placement_choice_label(item["axis"], choice)
+
+  .flex.items-center.justify-between
+    p.text-xs.text-muted-foreground = t("placement.keyboard_hint")
+    = button_to t("placement.skip"), placement_answer_path, method: :post, params: {choice: ""}, class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"

@@ -1,0 +1,11 @@
+.grid.gap-2 style="grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr))"
+  - lexemes.each do |lexeme|
+    - state = known_ids.include?(lexeme.id) ? "known" : (started_ids.include?(lexeme.id) ? "started" : "new")
+    = link_to lexeme_page_path(lexeme), class: class_names("block rounded-xl border px-3 py-2 transition-colors hover:border-primary/60",
+        state == "known" ? "border-primary/60 bg-primary/10" : (state == "started" ? "border-amber-400/60 bg-amber-400/10" : "border-border")) do
+      .flex.items-baseline.justify-between.gap-1
+        span.text-lg.font-medium lang="zh-TW" = lexeme.text
+        = render("shared/speak", lexeme:, size: :sm)
+      - reading = lexeme.reading_set.first
+      - if reading
+        .text-xs.text-muted-foreground = reading["zhuyin"].presence || reading["pinyin"]

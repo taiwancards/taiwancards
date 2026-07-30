@@ -1,0 +1,27 @@
+- show_palladius = phon_palladius?
+
+.space-y-2
+  .overflow-x-auto.rounded-xl.border.border-border
+    table.w-full.text-sm
+      thead.bg-muted
+        tr.text-left
+          th.px-3.py-2.font-semibold.text-foreground = t("practice.col_zhuyin")
+          th.px-3.py-2.font-semibold.text-foreground = t("practice.col_real_sound")
+          th.px-3.py-2.font-normal.text-muted-foreground class="text-[11px]" = t("practice.col_pinyin")
+          - if show_palladius
+            th.px-3.py-2.font-normal class="text-[10px] text-muted-foreground/70" = t("practice.col_palladius")
+          th.px-3.py-2.font-normal.text-muted-foreground class="text-[11px]" = t("practice.col_written")
+          th.px-3.py-2.text-muted-foreground = t("practice.col_explanation")
+      tbody
+        - rows.each do |row|
+          tr.border-t.border-border.align-top
+            td.px-3.py-2.text-xl.leading-snug.text-foreground lang="zh-TW" = row["zhuyin"]
+            td.px-3.py-2
+              code.rounded.bg-muted.px-2.py-1.font-mono.text-base.font-medium.text-foreground = row["ipa"]
+            td.px-3.py-2.text-muted-foreground class="text-[11px]" = row["pinyin"]
+            - if show_palladius
+              td.px-3.py-2 class="text-[10px] text-muted-foreground/70" = row["palladius"].presence || "—"
+            td.px-3.py-2.text-muted-foreground class="text-[11px]" = row["written"]
+            td.px-3.py-2.leading-relaxed class="min-w-[20rem]" = phon_markup(phon_localized(row))
+
+  = render("practice/palladius_note")

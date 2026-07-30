@@ -1,0 +1,9 @@
+- return unless current_user
+- path = Onboarding::Path.new(current_user)
+- return if path.complete?
+
+.rounded-xl.border.border-dashed.border-border.px-4.py-3.text-center class="bg-muted/20"
+  p.text-xs.text-muted-foreground
+    = t("onboarding.path.counter", done: path.done_count, total: path.total_count)
+  = link_to t("onboarding.path.back"), roadmap_path,
+    class: "mt-1 inline-block text-sm font-medium text-primary hover:underline"

@@ -1,0 +1,64 @@
+- content_for(:title, "#{@textbook_lesson.label} — #{@textbook_lesson.title_en}")
+
+.py-6.space-y-6
+  header.space-y-2
+    .flex.items-center.justify-between.gap-3
+      = link_to textbook_path, class: "text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground" do
+        = t("textbook.back_to_curriculum")
+      .flex.items-center.gap-1
+        - if @neighbors[:previous]
+          = link_to t("textbook.previous"), textbook_lesson_path(*@neighbors[:previous]),
+            class: "rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+        - if @neighbors[:next]
+          = link_to t("textbook.next"), textbook_lesson_path(*@neighbors[:next]),
+            class: "rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+    p.text-xs.font-semibold.uppercase.tracking-wider.text-muted-foreground
+      = t("textbook.lesson_label", book: @textbook_lesson.book, lesson: @textbook_lesson.lesson)
+    h1.text-2xl.font-bold.tracking-tight = @textbook_lesson.title_for
+    - if @textbook_lesson.title_zh.present?
+      p.font-hanzi.text-xl.text-foreground = @textbook_lesson.title_zh
+    - if @collection
+      = render "shared/practice_links", collection: @collection
+
+  div data-controller="tabs" data-tabs-active-value="summary"
+    .flex.items-center.gap-2
+      .inline-flex.rounded-lg.border.border-border.bg-muted.p-1 role="tablist"
+        button.rounded-md.px-3.py-1.text-sm.font-medium.transition-colors[
+          type="button" role="tab" data-tabs-target="tab" data-tab-name="summary"
+          data-action="tabs#select" ]
+          = t("textbook.tabs.summary")
+        button.rounded-md.px-3.py-1.text-sm.font-medium.transition-colors[
+          type="button" role="tab" data-tabs-target="tab" data-tab-name="vocabulary"
+          data-action="tabs#select" ]
+          = "#{t('textbook.tabs.vocabulary')} #{@textbook_lesson.vocabulary.size}"
+      .ml-auto.flex.items-center.gap-2
+        = button_to t("textbook.mark_known"),
+          textbook_lesson_known_path(@textbook_lesson.book, @textbook_lesson.lesson),
+          method: :post,
+          data: {turbo_confirm: t("textbook.mark_known_confirm")},
+          title: t("textbook.mark_known_hint"),
+          class: "rounded-md border border-emerald-500 px-3 py-1.5 text-sm font-medium text-emerald-600 hover:bg-emerald-500/10"
+
+    section.mt-4 data-tabs-target="panel" data-tab-name="summary"
+      - if @textbook_lesson.summary_for.present?
+        .textbook-summary = sanitize(@textbook_lesson.summary_for, tags: %w[h2 h3 h4 p ul ol li span strong em b i table thead tbody tr th td div br blockquote], attributes: %w[colspan rowspan])
+      - else
+        p.text-sm.text-muted-foreground = t("textbook.no_summary")
+
+    section.mt-4.hidden data-tabs-target="panel" data-tab-name="vocabulary"
+      .space-y-2
+        - @textbook_lesson.vocabulary.each do |entry|
+          .flex.items-center.gap-4.rounded-lg.border.border-border.bg-card.px-4.py-3
+            .min-w-0.flex-1
+              .flex.items-baseline.gap-3
+                span.font-hanzi.text-xl lang="zh-TW" = hanzi(entry["traditional"])
+                span.text-sm.italic.text-muted-foreground = entry["pinyin"]
+                - if entry["category"].present?
+                  span.rounded.bg-muted.text-muted-foreground class="px-1.5 py-0.5 text-[10px] font-semibold uppercase"
+                    = entry["category"]
+              .mt-1.text-sm class="text-foreground/70" = @textbook_lesson.meaning_for(entry)
+            - if @textbook_lesson.audio_url(entry)
+              button.shrink-0.rounded-md.p-2.text-muted-foreground[
+                type="button" data-controller="audio" data-audio-url-value=@textbook_lesson.audio_url(entry)
+                data-action="audio#play" class="hover:bg-muted hover:text-foreground" aria-label=t("textbook.play_audio") ]
+                = icon(:speaker, css: "size-4")

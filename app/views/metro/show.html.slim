@@ -1,0 +1,87 @@
+- content_for(:title) { t("metro.title") }
+
+.py-6.space-y-4[
+  data-controller="metro-map"
+  data-metro-map-cards-value=@cards.to_json ]
+
+  div
+    = render("shared/page_help", key: "metro", title: t("metro.title"))
+
+  .sticky.top-14.z-20.rounded-2xl.border.border-border.bg-card.p-4.shadow-sm
+    .hidden.space-y-2 data-metro-map-target="card"
+      .flex.flex-wrap.items-baseline.gap-x-3
+        span.text-2xl.font-bold lang="zh-TW" data-metro-map-target="text"
+        span.text-lg.text-brand lang="zh-TW" data-metro-map-target="zhuyin"
+        span.text-sm.text-muted-foreground data-metro-map-target="pinyin"
+      p.text-sm data-metro-map-target="meaning"
+      p.text-xs.text-muted-foreground lang="zh-TW" data-metro-map-target="lines"
+      .hidden.inline-flex.flex-wrap.items-baseline.gap-x-2.rounded-lg.border.px-2.py-1.text-xs[
+        data-metro-map-target="abbr" class="border-brand/40 bg-brand/5" ]
+        span.text-muted-foreground = t("everyday.abbr_label")
+        span.text-sm.font-semibold.text-brand lang="zh-TW" data-metro-map-target="abbrText"
+        span.text-muted-foreground lang="zh-TW" data-metro-map-target="abbrReading"
+      .flex.flex-wrap.gap-2.pt-1
+        a.rounded-lg.bg-primary.px-3.py-2.text-xs.font-semibold.text-primary-foreground[
+          data-metro-map-target="link" href="#" ]
+          = t("metro.open_entry")
+        button.rounded-lg.border.border-border.px-3.py-2.text-xs.font-medium[
+          type="button" data-action="metro-map#close" class="hover:bg-muted" ]
+          = t("metro.close")
+    p.text-sm.text-muted-foreground data-metro-map-target="empty" = t("metro.hint")
+
+  .flex.flex-wrap.gap-x-4.gap-y-2
+    - @lines.each do |name, color|
+      - next if @stations[name].blank?
+      .flex.items-center.gap-2
+        span.size-3.rounded-full style="background-color: #{color}"
+        span.text-xs.font-medium lang="zh-TW" = name
+
+  .overflow-hidden.rounded-2xl.border.border-border class="bg-muted/20"
+    svg viewBox="0 0 #{MetroController::WIDTH} #{MetroController::HEIGHT}" class="w-full h-auto touch-manipulation" role="img" aria-label=t("metro.title")
+      - @lines.each do |name, color|
+        - @segments[name].to_a.each do |segment|
+          - points_attr = segment.map { |pair| pair.join(",") }.join(" ")
+          polyline fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.85" stroke-width="5" points=points_attr stroke=color
+
+      - @placed.each do |station|
+        - x, y = @points[station.text]
+        - next if x.nil?
+        - lines_on = station.data["lines"].keys
+        - interchange = lines_on.size > 1
+        - color = @lines.to_h[lines_on.first] || "#888"
+        g.cursor-pointer[ data-station=station.text data-active="false"
+          data-action="click->metro-map#open" class="[&[data-active=true]_circle]:stroke-foreground" ]
+          title = station.text
+          circle cx=x cy=y r=(interchange ? 7 : 5) fill=(interchange ? "var(--color-background)" : color) stroke=color stroke-width="3"
+          circle cx=x cy=y r="13" fill="transparent"
+
+
+  .space-y-5
+    - @lines.each do |name, color|
+      - stations = @stations[name].to_a
+      - next if stations.empty?
+      section.space-y-2
+        .flex.flex-wrap.items-center.gap-2
+          span.size-3.rounded-full style="background-color: #{color}"
+          h2.text-sm.font-semibold lang="zh-TW" = name
+          span.text-xs.text-muted-foreground = t("metro.station_count", count: stations.size)
+
+        .overflow-x-auto.rounded-xl.border.border-border.p-4 class="bg-muted/30"
+          .flex.min-w-max.items-start
+            - stations.each_with_index do |station, index|
+              - interchange = station.data["lines"].size > 1
+              .flex.flex-col.items-center
+                .flex.items-center
+                  span.block.h-1 style=("width: #{index.zero? ? 12 : 34}px; background-color: #{index.zero? ? "transparent" : color}")
+                  button.relative.z-10.block.rounded-full.border-2.transition-transform[
+                    type="button" data-station=station.text data-active="false"
+                    data-action="metro-map#open"
+                    class="size-4 hover:scale-125 data-[active=true]:scale-150 data-[active=true]:ring-2"
+                    style="border-color: #{color}; background-color: #{interchange ? "var(--color-background)" : color}"
+                    title=station.text ]
+                  - if index == stations.size - 1
+                    span.block.h-1 style="width: 12px"
+                .mt-2.w-16.text-center.text-xs.leading-tight lang="zh-TW" class=(interchange ? "font-semibold" : "text-muted-foreground")
+                  = station.text
+
+  p.text-xs.leading-relaxed.text-muted-foreground = t("metro.attribution")

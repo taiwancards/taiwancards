@@ -1,0 +1,13 @@
+- thesaurus = local_assigns.fetch(:thesaurus)
+- groups = local_assigns.fetch(:groups, Lexemes::Thesaurus::GROUPS)
+- if thesaurus && groups.any? { |group| thesaurus.groups[group].present? }
+  section class="space-y-1.5"
+    - groups.each do |group|
+      - entries = thesaurus.groups[group]
+      - next if entries.blank?
+      .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1
+        span.w-full.text-2xs.uppercase.tracking-wide.text-muted-foreground class="sm:w-36 sm:shrink-0"
+          = t("thesaurus.#{group}")
+        .flex.flex-wrap.gap-1
+          - entries.each do |entry|
+            = render("shared/word_chip", entry:)

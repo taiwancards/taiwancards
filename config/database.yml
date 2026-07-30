@@ -1,0 +1,26 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  checkout_timeout: 5
+
+development:
+  <<: *default
+  host: localhost
+  port: <%= ENV.fetch("PGPORT", 5432) %>
+  database: taiwancards_development
+
+test:
+  <<: *default
+  host: localhost
+  port: <%= ENV.fetch("PGPORT", 5432) %>
+  database: taiwancards_test<%= ENV["TEST_ENV_NUMBER"] %>
+
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
+  connect_timeout: 5
+  variables:
+    statement_timeout: <%= ENV.fetch("PG_STATEMENT_TIMEOUT", "15s") %>
+    lock_timeout: <%= ENV.fetch("PG_LOCK_TIMEOUT", "5s") %>
+    idle_in_transaction_session_timeout: 60s

@@ -1,0 +1,25 @@
+- result = local_assigns.fetch(:result)
+- corpus = local_assigns.fetch(:corpus)
+
+- if result.empty?
+  p.rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+    = t("search.empty", query: corpus.fields.join(" "))
+- else
+  p.text-sm.text-muted-foreground
+    = result.capped ? t("search.found_capped", count: result.total) : t("sentences.found", count: result.total)
+
+  .divide-y.divide-border.rounded-xl.border.border-border
+    - result.rows.each do |row|
+      .space-y-1.p-4
+        = link_to sentence_path(row.lexeme), class: "block text-lg leading-relaxed hover:underline underline-offset-4" do
+          - row.parts.each do |part|
+            - if part.hit
+              mark.rounded.bg-primary/15.font-semibold.text-primary class="px-0.5" lang="zh-TW" = part.text
+            - else
+              span lang="zh-TW" = part.text
+        - if row.lexeme.meaning.present?
+          p.text-sm.text-muted-foreground = row.lexeme.meaning
+        = render("sentences/badges", profile: row.profile, sources: row.lexeme.content_sources)
+
+  - base = ->(number) { search_path(request.query_parameters.merge(page: number)) }
+  = render("shared/pager", page: result.page, pages: result.pages, path: base)

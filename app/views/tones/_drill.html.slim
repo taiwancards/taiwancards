@@ -1,0 +1,48 @@
+.space-y-4[
+  data-controller="tone-drill"
+  data-tone-drill-items-value=items.to_json
+  data-tone-drill-url-value=tones_refill_path ]
+
+  .mx-auto class="max-w-2xl"
+    .grid.items-center.gap-3 class="grid-cols-[1fr_1.5fr_1fr]"
+      - option = "flex min-h-16 w-full flex-col items-center justify-center gap-0 rounded-2xl border border-border bg-background px-2 py-3 text-center text-sm font-semibold transition-colors"
+
+      div.w-full class="col-start-2 row-start-1"
+        button[ type="button" data-tone="1" data-tone-drill-target="option"
+          data-action="tone-drill#choose" class=option ]
+          = t("tones.drill.tone1")
+
+      div.w-full class="col-start-1 row-start-2"
+        button[ type="button" data-tone="4" data-tone-drill-target="option"
+          data-action="tone-drill#choose" class=option ]
+          = t("tones.drill.tone4")
+
+      .flex.flex-col.items-center.justify-center.gap-3.rounded-3xl.border.border-border.bg-card.px-4.py-10.text-center.shadow-sm class="col-start-2 row-start-2"
+        p.text-xs.uppercase.tracking-widest.text-muted-foreground = t("tones.drill.prompt")
+        button.inline-flex.items-center.justify-center.rounded-full.border.border-border.p-4.text-muted-foreground[
+          type="button" data-action="tone-drill#replay"
+          class="hover:bg-muted hover:text-foreground" aria-label=t("tones.drill.replay") ]
+          = icon(:speaker, css: "size-8")
+        .min-h-8.text-2xl.font-semibold lang="zh-TW" data-tone-drill-target="reveal"
+        .min-h-5.text-xs.text-muted-foreground data-tone-drill-target="gloss"
+
+      div.w-full class="col-start-3 row-start-2"
+        button[ type="button" data-tone="2" data-tone-drill-target="option"
+          data-action="tone-drill#choose" class=option ]
+          = t("tones.drill.tone2")
+
+      div.w-full class="col-start-2 row-start-3"
+        button[ type="button" data-tone="3" data-tone-drill-target="option"
+          data-action="tone-drill#choose" class=option ]
+          = t("tones.drill.tone3")
+
+    .mt-3.flex.flex-wrap.items-center.justify-between.gap-2
+      span.text-sm.text-muted-foreground data-tone-drill-target="score" data-template=t("tones.drill.score", correct: "%{correct}", total: "%{total}")
+      .flex.gap-2
+        button.rounded-lg.border.border-border.px-3.text-xs.font-medium[
+          type="button" data-action="tone-drill#more" class="py-1.5 hover:bg-muted" ]
+          = t("tones.drill.more")
+        = link_to t("tones.drill.leave"), desk_path,
+          class: "rounded-lg px-3 py-1.5 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+
+    p.mt-2.text-center.text-xs.text-muted-foreground = t("tones.drill.keys")

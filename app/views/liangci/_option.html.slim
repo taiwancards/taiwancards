@@ -1,0 +1,9 @@
+- arrows = {"up" => "↑", "right" => "→", "down" => "↓", "left" => "←"}
+button.flex.aspect-square.flex-col.items-center.justify-center.rounded-2xl.border-2.border-border.bg-card.p-2.text-center.transition-colors[
+  type="button" data-measure-game-target="option"
+  data-direction=option[:direction] data-classifier=option[:entry].text data-correct=option[:correct].to_s
+  data-action="measure-game#choose" class="gap-0.5 hover:bg-muted" ]
+  span.text-xs.text-muted-foreground = arrows[option[:direction]]
+  span.text-2xl.font-bold lang="zh-TW" = option[:entry].text
+  span.text-3xs.text-muted-foreground class="text-[0.625rem] leading-tight" = option[:entry].readings["pinyin"]
+  span.line-clamp-2.text-muted-foreground class="text-[0.625rem] leading-tight" = option[:entry].meaning

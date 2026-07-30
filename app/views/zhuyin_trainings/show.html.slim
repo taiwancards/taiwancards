@@ -1,0 +1,95 @@
+- content_for(:title) { t("zhuyin_trainer.title") }
+
+.py-6.space-y-6.pinyin-locked[
+  data-controller="zhuyin-trainer"
+  data-zhuyin-trainer-items-value=@items.to_json
+  data-zhuyin-trainer-url-value=zhuyin_training_path ]
+
+  div
+    = render("shared/page_help", key: "zhuyin_trainer", title: t("zhuyin_trainer.title"))
+    p.mt-1.max-w-2xl.text-sm.text-muted-foreground = t("zhuyin_trainer.lede")
+
+  .flex.flex-wrap.items-center.gap-3
+    .flex-1
+      .h-2.overflow-hidden.rounded-full.bg-muted
+        .h-full.rounded-full.bg-primary style="width: #{(@progress[:mastered] * 100.0 / @progress[:total]).round}%"
+      p.mt-1.text-xs.text-muted-foreground
+        = t("zhuyin_trainer.progress", done: @progress[:mastered], total: @progress[:total])
+    span.text-sm.text-muted-foreground data-zhuyin-trainer-target="counter"
+
+  - if @group
+    .flex.flex-wrap.items-center.justify-between.gap-2.rounded-xl.border.border-border.px-4.py-2 class="bg-muted/30"
+      p.text-xs.text-muted-foreground = t("zhuyin_trainer.scoped.#{@group}")
+      = link_to t("zhuyin_trainer.scoped.all"), zhuyin_training_path,
+        class: "text-xs font-medium text-primary hover:underline"
+
+  - if @complete
+    .rounded-2xl.border.border-brand.p-5.space-y-3 class="bg-brand-soft"
+      div
+        p.font-semibold = t("zhuyin_trainer.done_heading")
+        p.mt-1.text-sm.text-muted-foreground = t("zhuyin_trainer.done_body")
+      - if (onward = trainer_next_target(@group))
+        = link_to onward[:label], onward[:path],
+          class: "inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+
+  .rounded-xl.border.border-border.p-4 class="bg-muted/30"
+    p.text-sm.font-medium = t("zhuyin_trainer.blocks.#{@block[:key]}")
+    p.mt-1.text-xs.text-muted-foreground = t("zhuyin_trainer.block_hint", done: @block[:mastered], total: @block[:total])
+    .mt-2.flex.flex-wrap.gap-1
+      - @blocks.each do |block|
+        span.rounded-md.border.px-2.py-1.text-lg lang="zh-TW" class=(block[:complete] ? "border-emerald-500 text-emerald-600" : "border-border text-muted-foreground")
+          = block[:symbols].join
+
+  div data-zhuyin-trainer-target="board"
+    .mx-auto class="max-w-lg"
+      .grid.items-center.gap-3 class="grid-cols-[1fr_1.4fr_1fr]"
+        - option = "flex min-h-20 w-full items-center justify-center rounded-2xl border border-border bg-background px-3 py-3 text-center text-4xl font-semibold transition-colors"
+
+        div.w-full class="col-start-2 row-start-1"
+          button[ type="button" data-zhuyin-trainer-target="option" data-direction="up"
+            data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
+            span data-label=""
+
+        div.w-full class="col-start-1 row-start-2"
+          button[ type="button" data-zhuyin-trainer-target="option" data-direction="left"
+            data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
+            span data-label=""
+
+        .flex.flex-col.items-center.justify-center.gap-3.rounded-3xl.border.border-border.bg-card.px-4.py-10.text-center.shadow-sm class="col-start-2 row-start-2"
+          p.text-xs.uppercase.tracking-widest.text-muted-foreground = t("zhuyin_trainer.prompt")
+          button.inline-flex.items-center.justify-center.rounded-full.border.border-border.p-4.text-muted-foreground[
+            type="button" data-action="zhuyin-trainer#replay"
+            class="hover:bg-muted hover:text-foreground" aria-label=t("zhuyin_trainer.replay") ]
+            = icon(:speaker, css: "size-8")
+          p.text-xs.text-muted-foreground = t("zhuyin_trainer.replay_hint")
+
+        div.w-full class="col-start-3 row-start-2"
+          button[ type="button" data-zhuyin-trainer-target="option" data-direction="right"
+            data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
+            span data-label=""
+
+        div.w-full class="col-start-2 row-start-3"
+          button[ type="button" data-zhuyin-trainer-target="option" data-direction="down"
+            data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
+            span data-label=""
+
+      .mt-3.h-6.text-center.text-sm.font-medium lang="zh-TW" data-zhuyin-trainer-target="feedback"
+      p.mt-3.text-center.text-xs.text-muted-foreground = t("zhuyin_trainer.keys")
+
+  .hidden.mx-auto.rounded-2xl.border.border-border.bg-card.p-6.text-center class="max-w-md" data-zhuyin-trainer-target="summary"
+    p.text-sm.text-muted-foreground = t("zhuyin_trainer.done_title")
+    p.mt-2.text-3xl.font-bold
+      span data-zhuyin-trainer-target="correct"
+      | /
+      span data-zhuyin-trainer-target="total"
+    .mt-5.flex.flex-wrap.justify-center.gap-2
+      button.rounded-xl.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground[
+        type="button" data-action="zhuyin-trainer#begin" class="hover:opacity-90" ]
+        = t("zhuyin_trainer.restart")
+      = link_to t("zhuyin_trainer.leave"), study_path(mode: "today"), class: "rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+
+  .rounded-xl.border.border-dashed.border-border.p-4.text-center
+    p.text-xs.text-muted-foreground = t("zhuyin_trainer.exit_hint")
+    = link_to t("zhuyin_trainer.leave"), study_path(mode: "today"), class: "mt-1 inline-block text-sm font-medium text-primary hover:underline"
+
+  = render("shared/roadmap_return")

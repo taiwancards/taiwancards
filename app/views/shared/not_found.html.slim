@@ -1,0 +1,7 @@
+- content_for(:title, t("errors.not_found.title"))
+
+.py-6
+  .mx-auto.max-w-md.rounded-3xl.border.border-dashed.border-border.px-6.py-16.text-center
+    p.text-sm.font-medium = t("errors.not_found.title")
+    p.mt-3.text-sm.text-muted-foreground = t("errors.not_found.hint")
+    = link_to t("errors.not_found.home"), root_path, class: "mt-6 inline-flex rounded-lg border border-border px-4 py-2 text-sm hover:bg-muted"

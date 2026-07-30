@@ -1,0 +1,53 @@
+- content_for(:title, t("sentences.title"))
+
+.py-6.space-y-5
+  header.space-y-1
+    = render("shared/page_help", key: "sentences", title: t("sentences.title"))
+
+  = form_with url: sentences_path, method: :get, class: "space-y-2 rounded-xl border border-border p-3" do
+    - SentenceProfile::SCHEMES.each do |scheme, config|
+      .flex.items-center.gap-2 data-tour=("sentence-filters" if scheme == SentenceProfile::SCHEMES.keys.first)
+        .w-24.shrink-0.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground title=t("sentences.at_most_hint")
+          = t("sentences.schemes.#{scheme}")
+        .flex.flex-1.gap-1.overflow-x-auto class="py-0.5"
+          - config[:levels].each do |level|
+            - selected = @browse.level_for(scheme) == level
+            label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border class=("px-2 py-0.5 text-xs #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+              = radio_button_tag("levels[#{scheme}]", level, selected, class: "sr-only")
+              = scheme_level_label(scheme, level)
+          - if @browse.level_for(scheme)
+            label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border.border-border class="px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+              = radio_button_tag("levels[#{scheme}]", "", false, class: "sr-only")
+              = t("sentences.any_level")
+
+    - if @browse.available_registers.any?
+      .flex.items-center.gap-2
+        .w-24.shrink-0.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("sentences.register")
+        .flex.flex-1.gap-1.overflow-x-auto class="py-0.5"
+          - @browse.available_registers.each do |register|
+            - selected = @browse.registers.include?(register)
+            label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border class=("px-2 py-0.5 text-xs #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+              = check_box_tag("registers[]", register, selected, id: "register_#{register}", class: "sr-only")
+              = t("admin.sources.registers.#{register}")
+
+    .flex.flex-wrap.items-center.gap-3.pt-1
+      label.inline-flex.cursor-pointer.items-center.gap-2.text-xs
+        = check_box_tag("guaranteed", "1", @browse.guaranteed_only?)
+        = t("sentences.guaranteed_only")
+      = submit_tag(t("sentences.apply"), class: "cursor-pointer rounded-lg bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90")
+      - if @browse.any_filter?
+        = link_to(t("sentences.reset"), sentences_path, class: "text-xs text-muted-foreground underline underline-offset-2")
+
+  p.text-sm.text-muted-foreground = t("sentences.found", count: @result.total)
+
+  - if @result.rows.empty?
+    p.rounded-xl.border.border-border.p-6.text-center.text-sm.text-muted-foreground = t("sentences.empty")
+  - else
+    .divide-y.divide-border.rounded-xl.border.border-border
+      - @result.rows.each do |lexeme, profile|
+        .relative.space-y-1.p-4 class="hover:bg-muted"
+          = link_to("", sentence_path(lexeme), class: "absolute inset-0", aria: {label: lexeme.text})
+          .text-lg.leading-relaxed = lexeme.text
+          = render("sentences/badges", profile: profile, sources: lexeme.content_sources)
+
+    = render("sentences/pagination", result: @result)

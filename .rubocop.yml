@@ -1,0 +1,13 @@
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+AllCops:
+  Exclude:
+    - spec/spec_helper.rb
+    - spec/rails_helper.rb
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+Layout/SpaceInLambdaLiteral:
+  Enabled: false

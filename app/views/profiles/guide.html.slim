@@ -1,0 +1,21 @@
+= render layout: "profiles/shell" do
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3 data-tour="profile-guide"
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("intro.guide.title")
+    p.text-sm.text-muted-foreground = t("intro.guide.body")
+
+    ul.divide-y.divide-border
+      - Intro::Map.chapters.each do |chapter|
+        - done = current_user.intro.chapter_done?(chapter.id)
+        li.flex.flex-wrap.items-center.justify-between.gap-3.py-3
+          .min-w-0.flex-1
+            .flex.items-center.gap-2
+              = icon(chapter.icon.to_sym, css: "size-4 shrink-0 text-muted-foreground") if chapter.icon.present?
+              span.font-medium = t("#{chapter.i18n_key}.title")
+              - if done
+                span.shrink-0.rounded-full.bg-muted.px-2.text-2xs.text-muted-foreground class="py-0.5"
+                  = t("intro.guide.done")
+            p.mt-1.text-xs.text-muted-foreground = t("#{chapter.i18n_key}.summary", default: "")
+          .flex.shrink-0.items-center.gap-2
+            span.text-xs.tabular-nums.text-muted-foreground = t("intro.guide.steps", count: chapter.length)
+            = button_to (done ? t("intro.guide.again") : t("intro.guide.launch")), intro_chapter_path(chapter.id),
+              class: "rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted"

@@ -1,0 +1,11 @@
+- content_for(:title, t("sentences.missing_title"))
+
+.py-6.space-y-6
+  = link_to sentences_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("sentences.back")
+
+  .mx-auto.max-w-md.rounded-3xl.border.border-dashed.border-border.px-6.py-16.text-center
+    p.text-sm.font-medium = t("sentences.missing_title")
+    p.mt-3.text-sm.text-muted-foreground = t("sentences.missing_hint")
+    = link_to t("sentences.browse"), sentences_path, class: "mt-6 inline-flex rounded-lg border border-border px-4 py-2 text-sm hover:bg-muted"

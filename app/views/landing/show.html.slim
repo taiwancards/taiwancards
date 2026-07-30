@@ -1,0 +1,240 @@
+- content_for(:full_bleed, true)
+
+- is_items = %w[taiwan decks dictionary writing reading photo speaking everyday corpus measured memory]
+- is_soon = %w[photo]
+- isnt_items = %w[game machine decks china words course teacher hsk simplified ads tracking]
+- quality_items = %w[audio sources human written]
+- tool_icons = {study: :decks, speaking: :speaker, writing: :pencil, zhuyin: :characters, tones: :study, typing: :desk, reader: :book, everyday: :sentences, placement: :help, plan: :stats}
+- bring_icons = {menu: :characters, textbook: :decks, song: :speaker, feed: :book}
+- bring_soon = %i[menu]
+
+.flag-wash.pointer-events-none.fixed.inset-0 aria-hidden="true" class="-z-10"
+
+= render "landing/nav"
+
+main.pb-16
+  section.relative.overflow-hidden.border-b.border-border
+    .relative.mx-auto.w-full.max-w-5xl.px-4.py-10 class="md:py-20"
+      .grid.items-center.gap-12 class="lg:grid-cols-[1.15fr_1fr]"
+        div
+          p.text-xs.font-medium.uppercase.tracking-widest.text-brand lang="zh-TW" = t("landing.hero.eyebrow")
+          h1.mt-3.text-3xl.font-bold.leading-tight.tracking-tight class="sm:text-4xl md:text-5xl" = t("landing.hero.heading")
+          .mt-3.max-w-xl.text-sm.leading-snug.text-muted-foreground class="space-y-2"
+            - %w[variety life audience behind].each do |block|
+              - lines = Array(t("landing.hero.lede.#{block}")).map { |line| tag.span(with_glossary(mark_script(line)), class: "sm:block") }
+              p class=("text-foreground/80" if block == "variety") = safe_join(lines, " ")
+          .mt-4.flex.flex-wrap.items-center.gap-3
+            - if authenticated?
+              = link_to t("landing.open_app"), desk_path, class: "rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+            - else
+              = link_to t("landing.hero.cta"), login_path, class: "rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+            = link_to t("landing.hero.secondary"), "#tools", class: "rounded-xl border border-border px-5 py-3 text-sm font-medium transition-colors hover:bg-muted"
+          p.mt-4.text-sm.text-muted-foreground = t("landing.hero.note")
+
+        .relative.mx-auto.w-full class="max-w-sm"
+          .rounded-3xl.border.border-border.bg-card.shadow-xl.p-6
+            .text-center
+              .text-6xl.font-semibold.leading-none lang="zh-TW" 鳳梨
+              .mt-3.text-lg.text-brand lang="zh-TW" ㄈㄥˋ ㄌㄧˊ
+              .text-sm.text-muted-foreground fènglí
+              .mt-2.text-sm = t("landing.hero.specimen.meaning")
+            .mt-6.space-y-2
+              - {recognition: 4, production: 3, reading: 5, tone: 2, writing: 1}.each do |facet, filled|
+                .flex.items-center.justify-between.gap-3
+                  span.text-xs.text-muted-foreground = t("memories.#{facet}")
+                  .flex.gap-1
+                    - 5.times do |dot|
+                      span.size-2.rounded-full class=(dot < filled ? "bg-brand" : "bg-border")
+            p.mt-5.text-center.text-xs.leading-relaxed.text-muted-foreground = t("landing.hero.specimen.caption")
+
+  section.border-b.border-border
+    .mx-auto.w-full.max-w-5xl.px-4.py-16 class="md:py-20"
+      .grid.gap-6 class="md:grid-cols-2"
+        .rounded-2xl.border.border-border.bg-card.p-6
+          h2.text-xl.font-bold.tracking-tight = t("landing.is.heading")
+          ul.mt-5.space-y-3
+            - is_items.each do |key|
+              li.flex.items-start.gap-3
+                span.mt-px.flex.shrink-0.items-center.justify-center.rounded-full.text-xs.font-bold.text-brand class="size-5 bg-brand-soft" aria-hidden="true" ✓
+                span.text-sm.leading-relaxed
+                  - if is_soon.include?(key)
+                    span.mr-1.5.shrink-0.rounded-full.border.border-border.px-2.text-2xs.font-medium.uppercase.tracking-wide.text-muted-foreground class="py-0.5" = t("landing.bring.soon")
+                  = with_glossary(t("landing.is.items.#{key}"))
+
+        .rounded-2xl.border.border-border.p-6 class="bg-muted/40 dark:bg-muted/20"
+          h2.text-xl.font-bold.tracking-tight = t("landing.isnt.heading")
+          ul.mt-5.space-y-3
+            - isnt_items.each do |key|
+              li.flex.items-start.gap-3
+                span.mt-px.flex.shrink-0.items-center.justify-center.rounded-full.border.border-border.text-xs.font-bold.text-muted-foreground class="size-5" aria-hidden="true" ✕
+                span.text-sm.leading-relaxed.text-muted-foreground = mark_script(t("landing.isnt.items.#{key}"))
+
+  - if @counts.present?
+    section.border-b.border-border class="bg-muted/55 dark:bg-muted/25"
+      .mx-auto.w-full.max-w-5xl.px-4.py-10
+        p.text-xs.font-medium.uppercase.tracking-widest.text-muted-foreground = t("landing.counts.heading")
+        .mt-5.grid.gap-6 class="grid-cols-2 md:grid-cols-5"
+          - %i[radicals characters words collocations sentences].each do |key|
+            - next if @counts[key].to_i.zero?
+            div
+              .text-2xl.font-bold.tracking-tight class="md:text-3xl" = number_with_delimiter(@counts[key])
+              .mt-1.text-xs.leading-snug.text-muted-foreground class="md:text-sm" = t("landing.counts.#{key}")
+
+  section.border-b.border-border
+    .mx-auto.w-full.max-w-5xl.px-4.py-14 class="md:py-16"
+      h2.text-xs.font-medium.uppercase.tracking-widest.text-muted-foreground = t("landing.quality.heading")
+      .mt-5.grid.gap-4 class="sm:grid-cols-2 lg:grid-cols-4"
+        - quality_items.each do |key|
+          .rounded-2xl.border.border-border.bg-card.p-5
+            .text-base.font-semibold = t("landing.quality.items.#{key}.title")
+            p.mt-2.text-sm.leading-relaxed.text-muted-foreground = t("landing.quality.items.#{key}.body")
+
+  section#tools.border-b.border-border class="scroll-mt-16 bg-muted/40 dark:bg-muted/20"
+    .mx-auto.w-full.max-w-5xl.px-4.py-16 class="md:py-20"
+      h2.text-3xl.font-bold.tracking-tight = t("landing.tools.heading")
+      p.mt-3.max-w-2xl.text-base.leading-relaxed.text-muted-foreground = t("landing.tools.lede")
+      .mt-8.grid.gap-3 class="sm:grid-cols-2"
+        - tool_icons.each do |key, glyph|
+          .flex.items-start.gap-3.rounded-2xl.border.border-border.bg-background.p-4
+            .flex.size-9.shrink-0.items-center.justify-center.rounded-lg.border.border-border.text-brand class="bg-brand-soft"
+              = icon(glyph, css: "size-4")
+            .min-w-0
+              p.font-semibold.leading-snug = t("landing.tools.items.#{key}.title")
+              p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("landing.tools.items.#{key}.body")
+
+  section.mx-auto.w-full.max-w-5xl.px-4.py-20
+    h2.text-3xl.font-bold.tracking-tight = t("landing.core.heading")
+    p.mt-3.max-w-3xl.text-muted-foreground = with_glossary(t("landing.core.lede"))
+
+    .mt-10.grid.gap-3 class="md:grid-cols-3"
+      - [["radicals", "鳥", @counts[:radicals].to_i], ["characters", "鳳", @counts[:characters].to_i], ["words", "鳳梨", @counts[:words].to_i]].each_with_index do |(key, glyph, count), index|
+        .relative.flex.gap-4.rounded-2xl.border.border-border.bg-card.p-5
+          .flex.shrink-0.items-center.justify-center.rounded-xl.border.border-border.px-3.text-2xl.font-semibold.text-brand class="h-14 min-w-14 bg-brand-soft" lang="zh-TW"
+            = glyph
+          .min-w-0
+            .flex.flex-wrap.items-baseline.gap-x-2
+              span.text-sm.font-semibold.uppercase.tracking-wide = t("landing.core.layers.#{key}")
+              span.text-sm.text-muted-foreground = number_with_delimiter(count)
+          - if index < 2
+            span.pointer-events-none.absolute.z-10.hidden.items-center.justify-center.rounded-full.border.border-border.bg-background.text-muted-foreground class="md:flex size-6 -right-4 top-1/2 -translate-y-1/2"
+              | →
+
+    .mt-4.rounded-2xl.border.border-border.bg-card.p-6 class="md:p-8"
+      p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = with_glossary(t("landing.core.facets_note"))
+      ul.mt-6.grid.gap-3 class="md:grid-cols-2"
+        - %w[recognition production reading tone writing].each do |facet|
+          li.flex.items-start.gap-3.rounded-xl.border.border-border.p-3 class="bg-background/60"
+            span.mt-1.shrink-0.rounded-md.border.border-border.px-2.py-1.text-xs.font-semibold = t("memories.#{facet}")
+            span.text-sm.text-muted-foreground = t("landing.core.facets.#{facet}")
+
+  section.border-y.border-border class="bg-muted/55 dark:bg-muted/25"
+    .mx-auto.w-full.max-w-5xl.px-4.py-16
+      h2.text-3xl.font-bold.tracking-tight = t("landing.progress.heading")
+      p.mt-3.max-w-2xl.text-muted-foreground = t("landing.progress.lede")
+      .mt-8.grid.gap-4 class="md:grid-cols-3"
+        - %w[tocfl school frequency].each do |key|
+          .rounded-2xl.border.border-border.bg-card.p-5
+            .text-sm.font-semibold = with_glossary(t("landing.progress.items.#{key}.title"))
+            p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("landing.progress.items.#{key}.body")
+
+  section.mx-auto.w-full.max-w-5xl.px-4.py-20
+    h2.text-3xl.font-bold.tracking-tight = t("landing.bring.heading")
+    p.mt-3.max-w-3xl.text-muted-foreground = t("landing.bring.lede")
+    .mt-8.grid.gap-3 class="sm:grid-cols-2"
+      - bring_icons.each do |key, glyph|
+        .flex.items-start.gap-3.rounded-2xl.border.border-border.bg-card.p-5
+          .flex.size-9.shrink-0.items-center.justify-center.rounded-lg.border.border-border.text-brand class="bg-brand-soft"
+            = icon(glyph, css: "size-4")
+          .min-w-0
+            p.flex.flex-wrap.items-center.gap-2.font-semibold.leading-snug
+              = t("landing.bring.items.#{key}.title")
+              - if bring_soon.include?(key)
+                span.shrink-0.rounded-full.border.border-border.px-2.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground class="py-0.5" = t("landing.bring.soon")
+            p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("landing.bring.items.#{key}.body")
+
+  section.border-y.border-border class="bg-muted/40 dark:bg-muted/20"
+    .mx-auto.w-full.max-w-5xl.px-4.py-16
+      h2.text-3xl.font-bold.tracking-tight = t("landing.instead.heading")
+      p.mt-3.max-w-3xl.text-muted-foreground = t("landing.instead.lede")
+      p.mt-6.max-w-3xl.text-base.leading-relaxed = t("landing.instead.closing")
+      p.mt-2.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("landing.instead.note")
+
+      details.mt-8.rounded-2xl.border.border-border.bg-card
+        summary.cursor-pointer.select-none.px-5.py-4.text-sm.font-medium
+          = t("landing.compare.toggle")
+        .border-t.border-border
+          p.px-5.pt-4.text-sm.leading-relaxed.text-muted-foreground = t("landing.compare.summary")
+          p.px-5.pt-3.text-sm.leading-relaxed.text-muted-foreground = t("landing.compare.honest")
+          .mt-4.overflow-x-auto
+            table.w-full.border-collapse.text-sm
+              thead
+                tr.border-b.border-border
+                  th.px-4.py-3.text-left
+                  - LandingHelper::PRODUCTS.each_with_index do |(_key, name), index|
+                    th.px-3.py-3.text-center.text-xs.font-semibold.uppercase.tracking-wide class=(comparison_own?(index) ? "bg-muted text-foreground" : "text-muted-foreground")
+                      = name
+              tbody
+                - LandingHelper::COMPARISON.each do |label, *cells|
+                  tr.border-b.border-border class="last:border-b-0"
+                    th.px-4.py-3.text-left.align-top.font-medium = t("landing.compare.rows.#{label}")
+                    - cells.each_with_index do |(mark, note), index|
+                      - own = comparison_own?(index)
+                      td.px-3.py-3.text-center.align-top class=(own ? "bg-muted" : "")
+                        .text-base.font-semibold class=comparison_mark_class(mark, own: own) = comparison_mark(mark)
+                        - if note.present?
+                          .text-xs.leading-tight.text-muted-foreground class="mt-0.5" = t("landing.compare.notes.#{note}")
+          p.px-5.py-4.text-xs.leading-relaxed.text-muted-foreground = t("landing.compare.checked")
+
+      details.mt-3.rounded-2xl.border.border-border.bg-card
+        summary.cursor-pointer.select-none.px-5.py-4.text-sm.font-medium
+          = t("landing.wider.heading")
+        .border-t.border-border
+          p.px-5.pt-4.text-sm.leading-relaxed.text-muted-foreground = t("landing.wider.lede")
+          .mt-4.overflow-x-auto
+            table.w-full.border-collapse.text-sm
+              thead
+                tr.border-b.border-border
+                  th.px-4.py-3.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("landing.wider.product")
+                  th.px-3.py-3.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("landing.wider.type")
+                  - LandingHelper::WIDER_COLUMNS.each do |column|
+                    th.px-3.py-3.text-center.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground
+                      = t("landing.compare.rows.#{column}")
+              tbody
+                - LandingHelper::WIDER.each do |key, kind, *cells|
+                  - own = key == "taiwancards"
+                  tr.border-b.border-border class="last:border-b-0"
+                    th.px-4.py-3.text-left.font-medium.whitespace-nowrap class=(own ? "bg-muted" : "")
+                      = wider_name(key)
+                    td.px-3.py-3.text-left.text-xs.text-muted-foreground class=(own ? "bg-muted" : "")
+                      = t("landing.wider.types.#{kind}")
+                    - cells.each do |mark, note|
+                      td.px-3.py-3.text-center.align-top class=(own ? "bg-muted" : "")
+                        .text-base.font-semibold class=comparison_mark_class(mark, own: own) = comparison_mark(mark)
+                        - if note.present?
+                          .text-xs.leading-tight.text-muted-foreground class="mt-0.5"
+                            = t("landing.compare.notes.#{note}", default: t("landing.wider.notes.#{note}", default: ""))
+          p.px-5.py-4.text-xs.leading-relaxed.text-muted-foreground = t("landing.wider.checked")
+
+  section.mx-auto.w-full.max-w-5xl.px-4.py-20
+    .grid.gap-10 class="md:grid-cols-2"
+      div
+        h2.text-2xl.font-bold.tracking-tight = t("landing.complement.heading")
+        p.mt-3.text-sm.leading-relaxed.text-muted-foreground = t("landing.complement.limits")
+      div
+        h2.text-2xl.font-bold.tracking-tight = t("landing.honest.heading")
+        p.mt-3.text-sm.leading-relaxed.text-muted-foreground = with_glossary(t("landing.honest.body"))
+
+  section.mx-auto.w-full.max-w-5xl.px-4.py-24.text-center
+    - unless authenticated?
+      h2.text-3xl.font-bold.tracking-tight class="md:text-4xl" = t("landing.final.heading")
+      p.mx-auto.mt-3.max-w-xl.text-muted-foreground = t("landing.final.body")
+    .mt-8
+      - if authenticated?
+        = link_to t("landing.open_app"), desk_path, class: "inline-flex rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+      - else
+        = link_to t("landing.final.cta"), login_path, class: "inline-flex rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+
+section.mx-auto.w-full.max-w-5xl.px-4.pb-10
+  p.max-w-3xl.leading-relaxed class="text-[11px] text-muted-foreground/60" = disclaimer_html
+
+= render "shared/footer"

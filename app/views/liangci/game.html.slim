@@ -1,0 +1,39 @@
+- content_for(:title, t("liangci.game_title"))
+
+.py-6.space-y-5
+  header.flex.items-center.justify-between.gap-3
+    div.space-y-1
+      h1.text-2xl.font-bold.tracking-tight = t("liangci.game_title")
+      p.text-sm.text-muted-foreground = t("liangci.game_hint")
+    = link_to t("liangci.back"), liangci_path, class: "shrink-0 rounded-md border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+
+  - if @round.nil?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("liangci.empty")
+  - else
+    .mx-auto.max-w-sm[
+      data-controller="measure-game"
+      data-measure-game-next-url-value=liangci_game_path
+      data-measure-game-correct-value=@round[:correct] ]
+      - by_dir = @round[:options].index_by { |option| option[:direction] }
+      .grid.gap-3 style="grid-template-columns: 1fr 1fr 1fr"
+        div
+        = render("option", option: by_dir["up"]) if by_dir["up"]
+        div
+        = render("option", option: by_dir["left"]) if by_dir["left"]
+        .flex.aspect-square.select-none.touch-none.flex-col.items-center.justify-center.gap-1.rounded-2xl.border.border-border.bg-card.p-3.text-center.shadow-sm[
+          data-measure-game-target="card"
+          data-action="pointerdown->measure-game#start pointerup->measure-game#end" ]
+          span.text-3xl.font-bold lang="zh-TW" = @round[:noun].text
+          span.text-xs.text-muted-foreground = @round[:noun].readings["pinyin"]
+          - if @round[:noun].meaning.present?
+            span.line-clamp-2.text-xs.text-muted-foreground = @round[:noun].meaning
+        = render("option", option: by_dir["right"]) if by_dir["right"]
+        div
+        = render("option", option: by_dir["down"]) if by_dir["down"]
+        div
+
+      .mt-4.min-h-6.text-center.text-sm.font-medium data-measure-game-target="feedback"
+
+      .mt-2.text-center
+        = link_to t("liangci.next"), liangci_game_path, class: "inline-block rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"

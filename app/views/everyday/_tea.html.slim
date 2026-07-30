@@ -1,0 +1,35 @@
+section.space-y-4.rounded-2xl.border.border-border.p-4
+  div
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("everyday.tea.title")
+    p.mt-1.text-xs.text-muted-foreground = t("everyday.tea.hint")
+
+  .space-y-3
+    - Huayu::TeaClasses.classes.each do |row|
+      .rounded-xl.border.border-border.p-3
+        .flex.flex-wrap.items-baseline.gap-x-2
+          span.text-lg.font-semibold lang="zh-TW" = row.text
+          span.pinyin.text-xs.text-muted-foreground = row.pinyin
+          span.text-sm.font-medium = row.name
+          span.ml-auto.shrink-0.rounded-full.px-2.text-xs.text-brand class="py-0.5 bg-brand/10" = row.oxidation
+        p.mt-1.text-sm.leading-relaxed.text-muted-foreground = row.body
+
+  .space-y-2.border-t.border-border.pt-4
+    h3.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("everyday.tea.scale")
+    - Huayu::TeaClasses.scale.each do |row|
+      .rounded-lg.border.border-border.px-3.py-2
+        .flex.flex-wrap.items-baseline.gap-x-2
+          span.font-semibold lang="zh-TW" = row.text
+          span.pinyin.text-xs.text-muted-foreground = row.pinyin
+          span.ml-auto.shrink-0.text-xs.text-muted-foreground
+            = row.oxidation
+            - if row.roast.present?
+              span.ml-1 lang="zh-TW" = row.roast
+        p.mt-1.text-xs.leading-relaxed.text-muted-foreground = row.body
+
+  .space-y-3.border-t.border-border.pt-4
+    - %w[hongcha_black qingcha_wulong fajiao_oxidation two_axes taiwan_focus].each do |key|
+      - body = Huayu::TeaClasses.note(key)
+      - next if body.blank?
+      div
+        h3.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("everyday.tea.notes.#{key}")
+        p.mt-1.text-sm.leading-relaxed.text-muted-foreground = body

@@ -1,0 +1,46 @@
+- content_for(:title, t("onboarding.path.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    = render("shared/page_help", key: "roadmap", title: t("onboarding.path.title"))
+    p.max-w-2xl.text-muted-foreground = t("onboarding.path.lede")
+
+  - if @path.complete?
+    .rounded-2xl.border.border-brand.p-5.space-y-3 class="bg-brand-soft"
+      div
+        p.font-semibold = t("onboarding.path.done_heading")
+        p.mt-1.text-sm.text-muted-foreground = t("onboarding.path.done_body")
+      = link_to t("onboarding.path.done_cta"), desk_path,
+        class: "inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+
+  section.space-y-3
+    p.text-sm.text-muted-foreground = t("onboarding.path.counter", done: @path.done_count, total: @path.total_count)
+
+    ol.space-y-3
+      - @path.steps.each_with_index do |step, index|
+        li.rounded-2xl.border.p-5.space-y-2 class=roadmap_step_classes(step[:state])
+          .flex.flex-wrap.items-center.gap-2
+            span.inline-flex.size-6.shrink-0.items-center.justify-center.rounded-full.border.border-border.text-xs.font-semibold
+              = step[:state] == :done ? "✓" : index + 1
+            span.font-semibold = t("onboarding.path.steps.#{step[:key]}.title")
+            - if step[:optional]
+              span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" = t("onboarding.path.optional")
+            - if step[:state] == :current
+              span.rounded-full.border.border-brand.px-2.text-xs.font-medium.text-brand class="py-0.5" = t("onboarding.path.now")
+
+          p.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.path.steps.#{step[:key]}.body")
+
+          - if step[:progress].present?
+            p.text-xs.text-muted-foreground = t("onboarding.path.progress", done: step[:progress][:done], target: step[:progress][:target])
+
+          .flex.flex-wrap.items-center.gap-2
+            = link_to t("onboarding.path.open"), roadmap_link_for(step), class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+            - if step[:state] == :done
+              = button_to t("onboarding.path.undo"), roadmap_step_path, method: :post, params: {step: step[:key], undo: "1"}, class: "rounded-lg px-3 py-1.5 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+            - else
+              = button_to t("onboarding.path.mark_done"), roadmap_step_path, method: :post, params: {step: step[:key]}, class: "rounded-lg px-3 py-1.5 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+
+  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-2
+    h2.font-semibold = t("onboarding.path.after_heading")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.path.after_body")
+    = link_to t("onboarding.path.change"), onboarding_start_path(again: 1), class: "inline-flex text-sm underline underline-offset-2 text-muted-foreground hover:text-foreground"
