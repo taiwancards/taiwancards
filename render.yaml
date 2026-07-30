@@ -69,32 +69,13 @@ services:
         fromDatabase:
           name: taiwancards-prod
           property: connectionString
+      - fromGroup: taiwancards-production
       - key: APP_HOSTS
         value: study.taiwancards.app
       - key: SITE_URL
         value: https://taiwancards.app
       - key: APP_URL
         value: https://study.taiwancards.app
-      - key: ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY
-        sync: false
-      - key: ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY
-        sync: false
-      - key: ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
-        sync: false
-      - key: GOOGLE_OAUTH_CLIENT_ID
-        sync: false
-      - key: GOOGLE_OAUTH_CLIENT_SECRET
-        sync: false
-      - key: ADMIN_EMAIL
-        sync: false
-      - key: ADMIN_NAME
-        sync: false
-      - key: ADMIN_GOOGLE_EMAIL
-        sync: false
-      - key: PTS_FEED_URL
-        sync: false
-      - key: LRCLIB_HOST
-        sync: false
 
   - type: web
     name: taiwancards-site
