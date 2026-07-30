@@ -92,6 +92,14 @@ namespace(:deploy) do
     puts(report)
   end
 
+  desc("Mirror DATA_ROOT and import whatever changed on it. Run on the server after bin/rebuild-data-render.sh")
+  task(refresh: :environment) do
+    ActiveRecord::Base.connection.execute("SET statement_timeout = 0")
+    ActiveRecord::Base.connection.execute("SET lock_timeout = 0")
+    Rake::Task["data:install"].invoke
+    Rake::Task["deploy:sync"].invoke
+  end
+
   desc(
     "Ship absolutely everything: disk sections, dictionary rows, server tasks. Usage: CONFIRM=yes rake deploy:content"
   )
