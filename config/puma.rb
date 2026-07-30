@@ -16,7 +16,7 @@ if worker_count > 1
   before_fork { ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base) }
   before_worker_boot { ActiveRecord::Base.establish_connection if defined?(ActiveRecord::Base) }
   before_worker_shutdown { ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base) }
-  on_worker_boot { Process.warmup }
+  before_worker_boot { Process.warmup }
 else
-  on_booted { Process.warmup }
+  after_booted { Process.warmup }
 end

@@ -97,6 +97,12 @@ services:
       - path: /*
         name: Referrer-Policy
         value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000
       - path: /assets/*
         name: Cache-Control
         value: public, max-age=31536000, immutable
