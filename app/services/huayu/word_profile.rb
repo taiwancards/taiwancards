@@ -42,19 +42,22 @@ module Huayu
 
     SENTENCE_LIMIT = 12
 
+    EXAMPLE_ORDER = "(coalesce(btrim(lexemes.meanings ->> ?), '') = '') ASC, " \
+      "sentence_profiles.difficulty ASC NULLS LAST, " \
+      "sentence_words.gdex DESC, " \
+      "lexemes.id ASC"
+
     def sentences
-      @sentences ||= begin
-        ids = SentenceWord.where(lexeme: lexeme).ranked.limit(SENTENCE_LIMIT).pluck(:sentence_id)
-        if ids.empty?
-          []
-        else
-          Lexeme
-            .where(id: ids)
-            .visible
-            .includes(:content_sources, :sentence_profile)
-            .sort_by { |found| ids.index(found.id) }
-        end
-      end
+      @sentences ||= Lexeme
+        .where(kind: :sentence)
+        .visible
+        .joins("JOIN sentence_words ON sentence_words.sentence_id = lexemes.id")
+        .where(sentence_words: {lexeme_id: lexeme.id})
+        .left_joins(:sentence_profile)
+        .preload(:content_sources, :sentence_profile)
+        .order(Arel.sql(Lexeme.sanitize_sql_array([EXAMPLE_ORDER, I18n.locale.to_s])))
+        .limit(SENTENCE_LIMIT)
+        .to_a
     end
 
     COLLOCATION_LIMIT = 12

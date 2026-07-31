@@ -36,6 +36,16 @@ RSpec.describe Huayu::GlossOverrideEnricher do
     expect(lexeme.reload.meanings).to(eq({"en" => "knife", "ru" => "нож"}))
   end
 
+  it "leaves measure words to the classifier importer that owns them" do
+    word = Lexeme.create!(kind: :word, text: "小時", meanings: {"en" => "hour; CL:個|个[ge4]"})
+    classifier = Lexeme.create!(kind: :measure_word, text: "小時", meanings: {"en" => "Counts hours."})
+    write({"小時" => {"en" => "hour", "replace" => true}})
+
+    expect(described_class.new(path:).call).to(include(replaced_en: 1))
+    expect(word.reload.meanings["en"]).to(eq("hour"))
+    expect(classifier.reload.meanings["en"]).to(eq("Counts hours."))
+  end
+
   it "never empties a side the entry says nothing about" do
     lexeme = Lexeme.create!(kind: :word, text: "上面", meanings: {"en" => "above", "ru" => "сверху"})
     write({"上面" => {"ru" => "сверху; выше", "replace" => true}})

@@ -4,6 +4,8 @@ module Huayu
   class GlossOverrideEnricher
     PATH = AppData.path("huayu/gloss_overrides.json")
 
+    OWNED_ELSEWHERE = %i[measure_word].freeze
+
     def initialize(path: PATH)
       @path = Pathname(path)
     end
@@ -16,7 +18,7 @@ module Huayu
 
       overrides.each_slice(500) do |slice|
         texts = slice.to_h
-        Lexeme.where(text: texts.keys).find_each do |lexeme|
+        Lexeme.where(text: texts.keys).where.not(kind: OWNED_ELSEWHERE).find_each do |lexeme|
           data = texts[lexeme.text]
           meanings = lexeme.meanings.dup
 
