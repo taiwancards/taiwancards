@@ -42,15 +42,21 @@ module Huayu
 
     def forms(row)
       variants = parse_variants(row["Variants"])
-      return variants if variants.any?
+      return taiwanese(variants) if variants.any?
 
       pinyin = row["Pinyin"].to_s.strip
-      row["Traditional"]
+      plain = row["Traditional"]
         .to_s
         .split(%r{[/／]})
         .filter_map { |form| form.strip.presence }
         .select { |form| form.match?(HAN) }
         .map { |form| [form, pinyin] }
+
+      taiwanese(plain)
+    end
+
+    def taiwanese(pairs)
+      pairs.reject { |form, _pinyin| MainlandGuard.marker?(form) }
     end
 
     def parse_variants(raw)

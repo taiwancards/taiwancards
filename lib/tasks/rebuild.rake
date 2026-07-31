@@ -125,6 +125,11 @@ namespace(:huayu) do
     Huayu::SentenceMeaningFiller.new.call
   end
 
+  desc("Remove the sentences listed as unusable in sentence_rejects.jsonl. DRY_RUN=1 to only list them")
+  task(purge_rejected_sentences: :environment) do
+    pp(Huayu::SentenceRejectPurge.new.call(dry_run: ENV["DRY_RUN"].present?))
+  end
+
   desc("Split single words from collocations using MOE headword status")
   task(classify_collocations: :environment) do
     Huayu::CollocationClassifier.new.call(dry_run: ENV["DRY_RUN"].present?)
@@ -138,6 +143,11 @@ namespace(:huayu) do
   desc("Load the verified mainland-marker word list")
   task(import_mainland_markers: :environment) do
     Huayu::MainlandMarkerImporter.new.call
+  end
+
+  desc("Remove dictionary entries that are mainland usage, erhua included. DRY_RUN=1 to only list them")
+  task(purge_mainland_vocabulary: :environment) do
+    pp(Huayu::MainlandVocabularyPurge.new.call(dry_run: ENV["DRY_RUN"].present?))
   end
 
   desc("Add vocabulary Wiktionary labels as Taiwanese Mandarin")

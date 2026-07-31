@@ -37,6 +37,7 @@ module Huayu
       味兒
       頭兒
       當兒
+      特兒
     ]
       .freeze
 
