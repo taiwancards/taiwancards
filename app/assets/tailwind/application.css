@@ -48,6 +48,7 @@
   --success-foreground: hsl(0 0% 100%);
   --brand: oklch(0.52 0.16 258);
   --brand-soft: oklch(0.95 0.03 258);
+
 }
 
 .dark {
@@ -90,6 +91,7 @@
   --success-foreground: hsl(0 0% 100%);
   --brand: oklch(0.72 0.14 258);
   --brand-soft: oklch(0.28 0.05 258);
+
 }
 
 @theme inline {
@@ -451,4 +453,74 @@ abbr.glossary {
   textarea {
     font-size: 1rem;
   }
+}
+
+.preview-line {
+  margin: 0 0 0.35rem;
+  min-height: 1.25rem;
+}
+
+.tok {
+  border-radius: 0.25rem;
+  padding: 0 0.05rem;
+}
+
+.tok-word + .tok-word,
+.tok-unlisted + .tok-word,
+.tok-word + .tok-unlisted {
+  margin-left: 0.28em;
+}
+
+.tok-word {
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: background-color 0.1s ease, border-color 0.1s ease;
+}
+
+.tok-word:hover {
+  background-color: color-mix(in oklch, var(--muted) 70%, transparent);
+}
+
+.tok-word:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.tok-known {
+  background-color: color-mix(in oklch, var(--muted-foreground) 14%, transparent);
+  color: var(--muted-foreground);
+}
+
+.tok-on {
+  border-bottom-color: currentColor;
+  background-color: color-mix(in oklch, var(--primary) 12%, transparent);
+}
+
+.tok-unlisted {
+  color: var(--muted-foreground);
+}
+
+.tok-foreign {
+  color: color-mix(in oklch, var(--muted-foreground) 65%, transparent);
+  white-space: pre-wrap;
+}
+
+.row-on {
+  background-color: color-mix(in oklch, var(--primary) 8%, transparent);
+}
+
+
+
+.sortable-grip {
+  cursor: grab;
+  touch-action: none;
+}
+
+.sortable-dragging {
+  opacity: 0.6;
+  cursor: grabbing;
+}
+
+.sortable-dragging .sortable-grip {
+  cursor: grabbing;
 }

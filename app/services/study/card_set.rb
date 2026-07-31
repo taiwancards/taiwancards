@@ -5,10 +5,10 @@ module Study
     SWIPE_FACETS = %w[recognition production reading listening].freeze
     OPT_IN_FACETS = %w[tone writing].freeze
     SESSION_FACETS = (SWIPE_FACETS + OPT_IN_FACETS).freeze
-    COLLECTION_CAP = 200
+    SITTING_CAP = 250
     EVERYDAY_SHARE = 0.25
 
-    def initialize(now: Time.current, settings: Setting.instance)
+    def initialize(now: Time.current, settings: Study::Preferences.for)
       @now = now
       @settings = settings
       @facets = SWIPE_FACETS
@@ -20,22 +20,31 @@ module Study
       tokens(select(mode:, size:, collection:))
     end
 
-    def select(mode:, size: nil, collection: nil)
+    def select(mode:, size: nil, collection: nil, offset: 0)
       @facets = swipe_facets_for(collection)
-      case mode
+      ids = case mode
       when "cram"
         cram_ids(size, collection)
-      when "collection"
-        collection_ids(collection)
+      when "collection", "redo"
+        window_ids(collection, offset)
       when "desk"
         desk_ids(collection)
-      when "redo"
-        redo_ids(collection)
       when "today"
         today_ids
       else
         daily_ids(size)
       end
+
+      activate_cards(ids)
+      ids
+    end
+
+    def window_ids(collection, offset = 0)
+      return [] unless collection
+
+      ids = collection.ordered_lexeme_ids(limit: SITTING_CAP, offset: offset)
+      activate(ids)
+      ids
     end
 
     def today_ids
@@ -50,7 +59,7 @@ module Study
     def desk_ids(collection)
       return [] unless collection
 
-      member_ids = collection.lexemes.limit(COLLECTION_CAP).pluck(:id).to_set
+      member_ids = collection.ordered_lexeme_ids.to_set
       due = due_lexeme_ids.select { |id| member_ids.include?(id) }
       fresh = collection
         .collection_items
@@ -63,32 +72,12 @@ module Study
       (due + fresh).uniq
     end
 
-    def redo_ids(collection)
-      return [] unless collection
-
-      ids = collection.lexemes.limit(COLLECTION_CAP).pluck(:id)
-      activate(ids)
-      ids
+    def tokens(lexeme_ids, facets: @facets)
+      Ordering.new.call(deal(lexeme_ids, facets)).map(&:token)
     end
 
-    def tokens(lexeme_ids, facets: @facets)
-      lexeme_ids = lexeme_ids.uniq
-      present = LexemeMemory
-        .active
-        .owned_by(Current.user)
-        .where(lexeme_id: lexeme_ids, facet: facets.map { |facet| LexemeMemory.facets[facet] })
-        .pluck(:lexeme_id, :facet)
-        .group_by(&:first)
-        .transform_values { |rows| rows.map(&:last) }
-
-      out = []
-      facets.each do |facet|
-        lexeme_ids.each do |id|
-          out << "#{id}:#{facet}" if present[id]&.include?(facet)
-        end
-      end
-
-      out
+    def deal(lexeme_ids, facets = @facets)
+      Deal.new(user: Current.user, facets:).call(lexeme_ids)
     end
 
     private
@@ -141,18 +130,10 @@ module Study
 
     def cram_ids(size, collection)
       size = (size.presence || @settings.session_size).to_i
-      pool = collection ? collection.lexemes.pluck(:id) : frequency_pool_ids(size * 4)
+      pool = collection ? collection.ordered_lexeme_ids : frequency_pool_ids(size * 4)
       fresh = (pool - activated_lexeme_ids).first(size)
       activate(fresh)
       fresh
-    end
-
-    def collection_ids(collection)
-      return [] unless collection
-
-      ids = collection.lexemes.limit(COLLECTION_CAP).pluck(:id)
-      activate(ids)
-      ids
     end
 
     def today_quota
@@ -252,6 +233,15 @@ module Study
       return if ids.blank?
 
       Lexemes::Activator.new(now: @now).call_many(Lexeme.where(id: ids).to_a)
+    end
+
+    def activate_cards(ids)
+      cards = deal(ids)
+      return if cards.empty?
+
+      Lexemes::Activator.new(now: @now).activate_pairs(
+        cards.map { |card| [card.lexeme_id, LexemeMemory.facets.fetch(card.facet)] }
+      )
     end
   end
 end

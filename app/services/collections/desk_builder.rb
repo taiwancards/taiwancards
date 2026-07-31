@@ -2,21 +2,17 @@
 
 module Collections
   class DeskBuilder
+    RANDOM_NAME = /\ARandom #(\d+)\z/
+    NAME_RETRIES = 3
+
     def initialize(user: Current.user)
       @user = user
     end
 
-    def call(text: nil, lexemes: nil, name: nil, facets: nil)
-      lexemes = Array(lexemes.presence || lexemes_from_text(text)).compact.uniq
-      collection = Collection.create!(
-        user: @user,
-        kind: :manual,
-        name: name.presence || next_random_name,
-        settings: settings_for(facets),
-        last_used_at: Time.current
-      )
-      lexemes.each { |lexeme| collection.add_lexeme(lexeme) }
-      lexemes.each { |lexeme| Lexemes::Activator.new.call(lexeme) }
+    def call(text: nil, lexemes: nil, lexeme_ids: nil, name: nil, facets: nil)
+      ids = resolve_ids(lexeme_ids, lexemes, text)
+      collection = create_collection(name, facets)
+      collection.add_lexemes(ids)
       collection
     end
 
@@ -28,6 +24,38 @@ module Collections
 
     private
 
+    def resolve_ids(lexeme_ids, lexemes, text)
+      return Array(lexeme_ids).map(&:to_i).reject(&:zero?).uniq if lexeme_ids.present?
+
+      Array(lexemes.presence || lexemes_from_text(text)).compact.map(&:id).uniq
+    end
+
+    def create_collection(name, facets)
+      wanted = name.presence&.strip&.first(200)
+      attempt = 0
+      begin
+        Collection.create!(
+          user: @user,
+          kind: :manual,
+          name: suffixed(wanted, attempt),
+          settings: settings_for(facets),
+          last_used_at: Time.current
+        )
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+        attempt += 1
+        raise if attempt > NAME_RETRIES
+
+        retry
+      end
+    end
+
+    def suffixed(wanted, attempt)
+      return next_random_name if wanted.blank?
+      return wanted if attempt.zero?
+
+      "#{wanted.first(190)} (#{attempt + 1})"
+    end
+
     def settings_for(facets)
       chosen = Array(facets).map(&:to_s) & LexemeMemory.facets.keys
       return {} if chosen.empty?
@@ -36,9 +64,12 @@ module Collections
     end
 
     def next_random_name
-      taken = Collection.desks_for(@user).pluck(:name)
-      next_n = taken.filter_map { |name| name[/\ARandom #(\d+)\z/, 1]&.to_i }.max.to_i + 1
-      "Random ##{next_n}"
+      taken = Collection
+        .desks_for(@user)
+        .where("name ~ '^Random #[0-9]+$'")
+        .pluck(:name)
+        .filter_map { |name| name[RANDOM_NAME, 1]&.to_i }
+      "Random ##{taken.max.to_i + 1}"
     end
   end
 end

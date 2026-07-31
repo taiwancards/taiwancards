@@ -151,6 +151,7 @@ en:
     cancel: Cancel
     edit: Edit
     confirm: Are you sure?
+    someone: Someone
   desk:
     next_step:
       zhuyin: 'Right now: get to grips with the zhuyin sounds'
@@ -162,6 +163,17 @@ en:
     unseen: New
     start: Learn
   desks:
+    panel_empty: Tap a word in the text to see it here.
+    panel_include: Put in the deck
+    panel_exclude: Take out of the deck
+    panel_tocfl: TOCFL
+    panel_tbcl: TBCL
+    panel_freq: Frequency rank
+    panel_score: Our difficulty score
+    panel_fresh: New to you
+    panel_none: "—"
+    reorder: Reorder
+    reorder_hint: Drag by the handle to reorder.
     paste_hint: >-
       One per line or separated by commas — whichever suits. You can also paste running text and the system
       will split it into words. Translations come from our dictionary; you never type them.
@@ -170,6 +182,35 @@ en:
     stat_duplicates: "%{count} duplicates removed"
     stat_known: "%{count} already familiar"
     stat_missing: "%{count} not found"
+    stat_selected_html: "%{count} selected"
+    stat_overlap: "%{percent}%% overlap with what you already have (%{count} words)"
+    stat_in_decks: "%{count} already in your decks"
+    in_deck: In a deck
+    too_fast: Too many texts in a row. Wait a minute and try again.
+    truncated: "Only the first %{limit} characters were read. Split the text and make a second deck."
+    cap_reached: "A deck holds at most %{limit} cards. Past roughly %{soft} the reviews stop paying off — split it."
+    created_capped: "Deck created with %{kept} cards; the rest did not fit the limit of %{limit}."
+    full: "This deck already holds the maximum of %{limit} cards."
+    filters_title: Pick what goes in
+    filter_level: Level
+    filter_freq: Drop the most common
+    filter_drop_top: "Drop the top %{count}"
+    filter_any: Any
+    filter_skip_known: Leave out what I already know
+    filter_skip_in_decks: Leave out what is already in my decks
+    select_all: Select all
+    select_none: Select none
+    text_title: The text
+    text_hint: Click a word to put it in the deck or take it out. Every other copy of that word follows.
+    list_title: "Word list (%{count})"
+    add_cards_title: Add more cards
+    add_cards_hint: Paste more text; its words join this deck.
+    add_cards_action: Add to this deck
+    added_cards: "%{count} cards added."
+    remove_selected: Remove selected
+    removed_cards: "%{count} cards removed."
+    share: Share
+    ungrouped: Not in a group
     missing_title: Not in the dictionary
     missing_hint: >-
       We do not have these yet — possibly a typo, a simplified spelling, or a very rare word. They will
@@ -262,10 +303,70 @@ en:
     desired_retention: Desired retention
     desired_retention_hint: Probability of recall FSRS aims for at review time. Higher = more frequent reviews. Default 0.9.
     daily_new_limit: New cards per day
+    session_size: Cards per sitting
+    session_size_hint: How many cards one sitting serves. Once you finish them the session says so and lets you carry on.
     learn_ahead_minutes: Learn-ahead window (minutes)
+    scope_hint: These settings are yours alone. Everyone else keeps the installation defaults.
+    as_default: Also save as the installation default
+    restored: Your settings were restored to the installation defaults.
+    restore: Restore defaults
     export_title: Export for LLM prompts
     export_hint: JSON with your known and learning words — paste into a generation prompt so examples only use vocabulary you know.
     export_link: Download export
+  groups:
+    reorder: Reorder
+    reorder_hint: Drag by the handle to reorder groups.
+    title: Groups
+    default_name: "Group %{count}"
+    new: New group
+    name_label: Group name
+    create: Create group
+    created: Group created.
+    updated: Group renamed.
+    deleted: Group deleted. The decks in it stayed.
+    delete_confirm: Delete this group? The decks inside it stay in My decks.
+    too_many: You already have the maximum number of groups.
+    empty: No groups yet. A deck can sit in several groups at once.
+    decks_count:
+      zero: no decks
+      one: 1 deck
+      other: "%{count} decks"
+    add_deck: Add a deck
+    add_deck_hint: A deck can belong to several groups at once.
+    remove_deck: Remove from group
+    no_available: Every one of your decks is already in this group.
+    back: "← My decks"
+  shares:
+    title: Shared links
+    share_deck: Share this deck
+    share_group: Share this group
+    created: Link ready. Anyone signed in who opens it can copy this to themselves.
+    copied: "Copied. %{count} cards are yours now."
+    nothing_copied: Nothing was copied — you already have all of it.
+    revoked: Link revoked.
+    revoke: Revoke
+    missing: That deck or group no longer exists.
+    too_many: Too many shares in a row. Try again later.
+    offer_deck: "%{name} shared a deck with you"
+    offer_group: "%{name} shared a group of decks with you"
+    accept: Copy to my decks
+    accept_only_new: Copy only what is new to me
+    cards_count:
+      zero: no cards
+      one: 1 card
+      other: "%{count} cards"
+    overlap: "%{percent}%% of it you already have — %{count} of %{total} words."
+    fresh: "New to you: %{count}."
+    independent: Your copy is your own. Later edits by the person who shared it never reach you.
+    expires: "Link works until %{date}."
+    accepted_count:
+      zero: nobody has copied it yet
+      one: copied once
+      other: "copied %{count} times"
+    my_shares: My links
+    empty: No live links.
+    link_label: Link
+    mine: This is your own link.
   memories:
     listening: Listening
     recognition: Recognition
@@ -1346,6 +1447,38 @@ en:
     next_batch: Next batch
     empty: Everything is sorted. Come back when the dictionary grows.
   study:
+    tone_quiz:
+      ask: Which tones does it carry?
+      correct: Right
+      wrong: Not these tones
+      hint: Swipe the card towards your answer, or use the arrow keys. The options differ only in tone.
+    speech:
+      ask: Say it aloud
+      record: Record
+      stop: Stop
+      listening: Listening…
+      scoring: Scoring…
+      next: Next card
+      attempts: "attempts: %{count}"
+      mic_denied: No microphone access. Allow it in the browser to take this check.
+      offline: Pronunciation scoring is unavailable right now — carry on.
+      hint: >-
+        Try as many times as you like; the average counts. The score is a rough guide, not a verdict — the
+        acoustic model is deliberately forgiving. Move on when you are satisfied.
+    writing:
+      hint: Show me
+      skip: Skip
+      correct: Written from memory
+      hinted: Written with the outline shown
+      skipped: Skipped — it comes back later
+      hint_help: >-
+        Showing the outline counts as a shaky recall; skipping counts as a miss and the card returns later in
+        this sitting. Draw it right and it counts as known.
+    quota_title: "Today's set is done — %{multiple}x over"
+    quota_body: "%{count} new cards today against a target of %{quota}."
+    quota_warning: Spacing works better in short daily sittings than in one long run. Carry on if you want to — nothing stops you.
+    continue: "Carry on with the next %{count}"
+    continue_anyway: Carry on anyway
     up_next:
       zhuyin: Work through zhuyin
       zhuyin_body: Start with the sounds — everything after that goes faster.

@@ -1,0 +1,48 @@
+- readings_label = lexeme.reading_set.map { |r| r["zhuyin"].presence || r["pinyin"] }.compact_blank.join(" · ")
+- action_button = "rounded-full border border-border px-5 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-40 disabled:hover:bg-transparent"
+
+.select-none.pinyin-locked[
+  data-controller="card-writing"
+  data-card-writing-label-correct-value=t("study.writing.correct")
+  data-card-writing-label-hinted-value=t("study.writing.hinted")
+  data-card-writing-label-skipped-value=t("study.writing.skipped") ]
+
+  = form_with url: study_review_path, method: :post, data: {card_writing_target: "form", turbo_stream: true} do |form|
+    = form.hidden_field :lexeme_id, value: lexeme.id
+    = form.hidden_field :facet, value: facet
+    = form.hidden_field :session_id, value: session_id
+    = form.hidden_field :rating, value: "good", data: {card_writing_target: "rating"}
+    = form.hidden_field :elapsed_ms, value: "", data: {card_writing_target: "elapsed"}
+
+  .mx-auto.max-w-md.space-y-4
+    .rounded-3xl.border.border-border.bg-card.px-6.py-6.text-center.shadow-sm.space-y-3
+      .flex.items-center.justify-center.gap-2.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground
+        = icon(facet_icon(facet), css: "size-4")
+        = t("study.ask.writing")
+      - if lexeme.meaning.present?
+        .text-xl.font-semibold = lexeme.meaning
+      - if readings_label.present?
+        .text-sm.text-muted-foreground = readings_label
+
+      .flex.flex-wrap.justify-center.gap-3.pt-1
+        - chars.each do |char|
+          .flex.flex-col.items-center.gap-1
+            .text-xs.font-medium.text-muted-foreground = char["zhuyin"].presence || char["pinyin"]
+            .rounded-xl.border-2.border-dashed.border-border.bg-background[
+              data-card-writing-target="square" data-char=char["char"] data-url=character_strokes_path(char["char"]) ]
+
+      .flex.flex-col.items-center.gap-1
+        .text-sm.font-medium.text-muted-foreground data-card-writing-target="status"
+        .text-base.font-semibold data-card-writing-target="result"
+
+    .flex.flex-wrap.justify-center.gap-2
+      button[ type="button" class=action_button data-card-writing-target="hint" data-action="card-writing#hint" ]
+        = t("study.writing.hint")
+      button[ type="button" class=action_button data-card-writing-target="skip" data-action="card-writing#skip" ]
+        = t("study.writing.skip")
+
+    p.text-center.text-xs.text-muted-foreground = t("study.writing.hint_help")
+
+    p.text-center
+      = link_to t("study.drill_writing"), writing_path(lexeme_id: lexeme.id),
+        class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"

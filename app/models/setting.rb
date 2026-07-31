@@ -15,8 +15,14 @@ class Setting < ApplicationRecord
   FRONT_MODES = %w[target reading translation].freeze
   READING_MODES = %w[zhuyin pinyin].freeze
 
+  CACHE = ProcessCache.new(ttl: 60, limit: 1)
+
   def self.instance
-    first || create!
+    CACHE.fetch(:singleton) { first || create! }
+  end
+
+  def self.reset_cache!
+    CACHE.clear
   end
 
   def desired_retention
@@ -58,7 +64,13 @@ class Setting < ApplicationRecord
     update!(data: data.merge("study_display" => study_display.merge(config)))
   end
 
+  after_commit :expire_cache
+
   private
+
+  def expire_cache
+    self.class.reset_cache!
+  end
 
   def fetch(key)
     data[key] || DEFAULTS.fetch(key)

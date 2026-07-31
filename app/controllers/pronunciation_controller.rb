@@ -11,6 +11,7 @@ class PronunciationController < ApplicationController
     @section = @drills.section(params[:section])
     @tonal = params[:section].blank? || !params[:section].to_s.start_with?("initials_", "vowel_")
     @lexeme = pick_lexeme
+    @audio = @lexeme && helpers.audio_for(@lexeme)
     @syllables = @lexeme ? Huayu::PronunciationTarget.new(@lexeme).syllables : []
     @speech_url = pronunciation_path
     @advance_url = pronunciation_path(
@@ -48,7 +49,7 @@ class PronunciationController < ApplicationController
     return render(json: {status: "offline"}, status: :service_unavailable) if result.nil?
 
     lexeme = Lexeme.where(kind: %i[word character]).find_by(id: params[:lexeme_id])
-    record_attempt(lexeme, result) if lexeme
+    record_attempt(lexeme, result, schedule: params[:schedule].to_s != "false") if lexeme
     refine_voice(voice, result)
     render(json: result)
   end
@@ -90,12 +91,12 @@ class PronunciationController < ApplicationController
     []
   end
 
-  def record_attempt(lexeme, result)
+  def record_attempt(lexeme, result, schedule: true)
     syllables = Array(result["syllables"])
-    ok = syllables.any? && syllables.all? { |s| s["level"] == "green" }
-
     Pronunciation::SkillRecorder.new(Current.user, lexeme).call(syllables)
+    return unless schedule
 
+    ok = syllables.any? && syllables.all? { |s| s["level"] == "green" }
     memory = Lexemes::Activator.new.activate(lexeme, :tone)
     Lexemes::ReviewProcessor.new.call(memory, rating: ok ? "good" : "again")
   end

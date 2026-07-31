@@ -5,14 +5,19 @@ const STOP_GRACE_MS = 150
 const GAP_MS = 90
 
 export default class extends Controller {
-  static values = { url: String, stopMs: Number, parts: Array }
+  static values = { url: String, stopMs: Number, parts: Array, autoMs: Number }
 
   get sequence() {
     if (this.hasPartsValue && this.partsValue.length > 0) return this.partsValue
     return [{ url: this.urlValue, stop_ms: this.stopMsValue }]
   }
 
+  connect() {
+    if (this.autoMsValue > 0) this.autoTimer = setTimeout(() => this.play(), this.autoMsValue)
+  }
+
   disconnect() {
+    if (this.autoTimer) clearTimeout(this.autoTimer)
     this.halt()
   }
 

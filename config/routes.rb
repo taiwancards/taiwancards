@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   post("profile/drive_restore", to: "profiles#drive_restore", as: :profile_drive_restore)
   delete("profile/reset", to: "profiles#reset", as: :profile_reset)
 
-  resource(:settings, only: %i[edit update])
+  resource(:settings, only: %i[edit update destroy])
   get("configurations/:platform", to: "configurations#show", as: :path_configuration, defaults: {format: :json})
 
   get("desk", to: "desks#show", as: :desk)
@@ -146,11 +146,14 @@ Rails.application.routes.draw do
   post("desks/song", to: "collections#song", as: :desk_song)
   post("desks/preview", to: "collections#preview", as: :desk_preview)
   post("desks/known", to: "collections#mark_known", as: :desk_mark_known)
+  post("desks/reorder", to: "collections#reorder", as: :reorder_desks)
   post("desks", to: "collections#create")
   get("desks/:id", to: "collections#show", as: :my_desk)
   patch("desks/:id", to: "collections#update")
   delete("desks/:id", to: "collections#destroy")
   post("desks/:id/items", to: "collections#add_item", as: :my_desk_items)
+  post("desks/:id/cards", to: "collections#add_cards", as: :my_desk_cards)
+  delete("desks/:id/items", to: "collections#remove_items", as: :my_desk_bulk_items)
   delete(
     "desks/:id/items/:lexeme_id",
     to: "collections#remove_item",
@@ -158,6 +161,27 @@ Rails.application.routes.draw do
     constraints: {lexeme_id: /\d+/}
   )
   post("quick_add", to: "quick_adds#create", as: :quick_add)
+
+  post("groups/reorder", to: "collection_groups#reorder", as: :reorder_groups)
+  post("groups", to: "collection_groups#create", as: :groups)
+  get("groups/:id", to: "collection_groups#show", as: :group)
+  patch("groups/:id", to: "collection_groups#update")
+  delete("groups/:id", to: "collection_groups#destroy")
+  post("groups/:id/decks", to: "collection_groups#add_deck", as: :group_decks)
+  post("groups/:id/reorder", to: "collection_groups#reorder_decks", as: :reorder_group_decks)
+  delete(
+    "groups/:id/decks/:deck_id",
+    to: "collection_groups#remove_deck",
+    as: :group_deck,
+    constraints: {deck_id: /\d+/}
+  )
+
+  get("shares", to: "deck_shares#index", as: :deck_shares)
+  post("desks/:deck_id/share", to: "deck_shares#create", as: :share_desk, constraints: {deck_id: /\d+/})
+  post("groups/:group_id/share", to: "deck_shares#create", as: :share_group, constraints: {group_id: /\d+/})
+  get("s/:token", to: "deck_shares#show", as: :deck_share)
+  post("s/:token", to: "deck_shares#accept", as: :accept_deck_share)
+  delete("shares/:token", to: "deck_shares#destroy", as: :revoke_deck_share)
 
   get("reader", to: "reader#index", as: :reader)
   get("reader/new", to: "reader#new", as: :new_reader_text)

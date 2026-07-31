@@ -1,0 +1,31 @@
+- sortable = local_assigns.fetch(:sortable, false)
+- group = local_assigns[:group]
+
+.rounded-xl.border.border-border.bg-card.p-4.space-y-3[
+  data-sortable-target=(sortable ? "item" : nil)
+  data-sortable-id=(sortable ? deck.id : nil) ]
+  .flex.min-w-0.items-start.gap-2
+    - if sortable
+      button.sortable-grip.shrink-0.rounded-md.p-1.text-muted-foreground[
+        type="button" aria-label=t("desks.reorder")
+        data-action="pointerdown->sortable#start pointermove->sortable#move pointerup->sortable#end pointercancel->sortable#end"
+        class="hover:bg-muted" ]
+        = icon(:grip, css: "size-4")
+    div.min-w-0.flex-1
+      = link_to my_desk_path(deck), class: "block truncate font-semibold hover:underline" do
+        = deck.name
+      .text-xs.text-muted-foreground = t("desks.items_count", count: deck.items_count)
+
+  - facets = deck.study_facets
+  - if facets.any?
+    .flex.flex-wrap.gap-1
+      - facets.each do |facet|
+        span.rounded-full.bg-muted.px-2.text-xs.text-muted-foreground class="py-0.5" = t("memories.#{facet}")
+
+  .flex.flex-wrap.items-center.gap-2.pt-1
+    = link_to t("desks.study"), study_path(mode: "desk", collection_id: deck.id), class: "rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+    = link_to t("desks.open"), my_desk_path(deck), class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+    = button_to t("desks.share"), share_desk_path(deck), method: :post, class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted"
+    - if group
+      = button_to t("groups.remove_deck"), group_deck_path(group, deck), method: :delete, class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted"
+    = button_to t("common.delete"), my_desk_path(deck), method: :delete, form: {data: {turbo_confirm: t("desks.delete_confirm")}}, class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted"

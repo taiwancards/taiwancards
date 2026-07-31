@@ -1,50 +1,112 @@
 - content_for(:title, t("desks.preview"))
+- coverage = @preview.coverage
+- levels = StudyPlan::LEVELS & @preview.candidates.filter_map { |entry| entry[:l] }.uniq
 
-.py-6.space-y-5
+.py-6.space-y-5[
+  data-controller="deck-preview"
+  data-deck-preview-limit-value=@limit
+  data-deck-preview-label-include-value=t("desks.panel_include")
+  data-deck-preview-label-exclude-value=t("desks.panel_exclude")
+  data-deck-preview-label-known-value=t("words.progress.known")
+  data-deck-preview-label-in-deck-value=t("desks.in_deck")
+  data-deck-preview-label-fresh-value=t("desks.panel_fresh")
+  data-deck-preview-label-none-value=t("desks.panel_none") ]
+  script#deck-preview-data type="application/json" data-deck-preview-target="data"
+    = raw({lines: @preview.lines, candidates: @preview.candidates}.to_json)
+
   header.space-y-1
     h1.text-2xl.font-bold.tracking-tight = t("desks.preview")
-    p.text-sm.text-muted-foreground = t("desks.preview_hint", count: @lexemes.size)
+    p.text-sm.text-muted-foreground = t("desks.preview_hint", count: @preview.candidates.size)
+
+  - if @preview.truncated
+    p.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700 dark:text-amber-400"
+      = t("desks.truncated", limit: number_with_delimiter(Collections::TextPreview::MAX_CHARS))
 
   .flex.flex-wrap.gap-2.text-sm
     span.rounded-lg.border.border-border.bg-card.px-3 class="py-1.5"
-      = t("desks.stat_cards", count: @lexemes.size)
-    - if @result.duplicates.positive?
+      = t("desks.stat_selected_html", count: content_tag(:strong, @preview.candidates.size, data: {deck_preview_target: "count"}))
+    - if coverage.overlapping?
       span.rounded-lg.border.border-border.px-3.text-muted-foreground class="py-1.5"
-        = t("desks.stat_duplicates", count: @result.duplicates)
-    - if @known_ids.any?
+        = t("desks.stat_overlap", percent: coverage.covered_percent, count: coverage.covered.size)
+    - if coverage.studied.any?
       span.rounded-lg.border.border-border.px-3.text-muted-foreground class="py-1.5"
-        = t("desks.stat_known", count: @known_ids.size)
-    - if @result.missing.any?
-      span.rounded-lg.border.px-3 class="py-1.5 border-rose-400/60 text-rose-600 dark:text-rose-400"
-        = t("desks.stat_missing", count: @result.missing.size)
+        = t("desks.stat_known", count: coverage.studied.size)
+    - if coverage.in_decks.any?
+      span.rounded-lg.border.border-border.px-3.text-muted-foreground class="py-1.5"
+        = t("desks.stat_in_decks", count: coverage.in_decks.size)
 
-  - if @result.missing.any?
-    details.rounded-xl.border.border-border.p-3
-      summary.cursor-pointer.text-sm.font-medium = t("desks.missing_title")
-      p.mt-2.text-xs.text-muted-foreground = t("desks.missing_hint")
-      .mt-2.flex.flex-wrap class="gap-1.5"
-        - @result.missing.first(120).each do |token|
-          span.rounded-md.border.border-dashed.border-border.px-2.py-1.text-sm lang="zh-TW" = token
+  p.hidden.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700 dark:text-amber-400" hidden=true data-deck-preview-target="capNotice"
+    = t("desks.cap_reached", limit: @limit, soft: Collection::SOFT_LIMIT)
+
+  section.space-y-3.rounded-xl.border.border-border.p-4
+    p.text-sm.font-medium = t("desks.filters_title")
+    .grid.gap-3 class="sm:grid-cols-3"
+      label.space-y-1
+        span.block.text-xs.font-medium.text-muted-foreground = t("desks.filter_level")
+        select.w-full.rounded-lg.border.border-border.bg-card.px-2.py-1.text-sm data-deck-preview-target="level" data-action="change->deck-preview#applyFilters"
+          option value="" = t("desks.filter_any")
+          - levels.each do |level|
+            option value=level = level
+      label.space-y-1
+        span.block.text-xs.font-medium.text-muted-foreground = t("desks.filter_freq")
+        select.w-full.rounded-lg.border.border-border.bg-card.px-2.py-1.text-sm data-deck-preview-target="maxFreq" data-action="change->deck-preview#applyFilters"
+          option value="0" = t("desks.filter_any")
+          - [200, 500, 1000, 2000].each do |rank|
+            option value=rank = t("desks.filter_drop_top", count: rank)
+      .space-y-2
+        label.flex.cursor-pointer.items-center.gap-2.text-sm
+          input.size-4.rounded.border-border type="checkbox" data-deck-preview-target="skipKnown" data-action="change->deck-preview#applyFilters"
+          = t("desks.filter_skip_known")
+        label.flex.cursor-pointer.items-center.gap-2.text-sm
+          input.size-4.rounded.border-border type="checkbox" data-deck-preview-target="skipInDecks" data-action="change->deck-preview#applyFilters"
+          = t("desks.filter_skip_in_decks")
+    .flex.flex-wrap.gap-2
+      button.rounded-full.border.border-border.px-3.py-1.text-xs.font-medium type="button" class="hover:bg-muted" data-action="deck-preview#selectAll"
+        = t("desks.select_all")
+      button.rounded-full.border.border-border.px-3.py-1.text-xs.font-medium type="button" class="hover:bg-muted" data-action="deck-preview#selectNone"
+        = t("desks.select_none")
+
+  section.space-y-2
+    h2.text-sm.font-medium = t("desks.text_title")
+    p.text-xs.text-muted-foreground = t("desks.text_hint")
+
+    .grid.items-start.gap-4 class="lg:grid-cols-[minmax(0,1fr)_20rem]"
+      .overflow-y-auto.rounded-xl.border.border-border.bg-card.p-4.leading-loose[
+        lang="zh-TW"
+        class="max-h-[60vh]"
+        data-deck-preview-target="text"
+        data-action="click->deck-preview#toggle keydown->deck-preview#toggleByKey" ]
+        div data-deck-preview-target="sentinel"
+
+      aside.rounded-xl.border.border-border.bg-card.p-4[
+        class="lg:sticky lg:top-20" data-deck-preview-target="panel" ]
+        p.text-sm.text-muted-foreground data-deck-preview-target="panelEmpty" = t("desks.panel_empty")
+        .hidden.space-y-3 data-deck-preview-target="panelBody"
+          .space-y-1
+            .flex.items-baseline.justify-between.gap-2
+              a.text-2xl.font-semibold.hover:underline lang="zh-TW" target="_blank" rel="noopener" data-deck-preview-target="panelText"
+              span.shrink-0.text-2xs.uppercase.tracking-wide.text-muted-foreground data-deck-preview-target="panelKind"
+            .text-sm.text-muted-foreground data-deck-preview-target="panelReading"
+          p.text-sm data-deck-preview-target="panelMeaning"
+          dl.grid.gap-x-3.gap-y-1.text-xs class="grid-cols-[auto_1fr]"
+            dt.text-muted-foreground = t("desks.panel_tocfl")
+            dd data-deck-preview-target="panelTocfl"
+            dt.text-muted-foreground = t("desks.panel_tbcl")
+            dd data-deck-preview-target="panelTbcl"
+            dt.text-muted-foreground = t("desks.panel_freq")
+            dd data-deck-preview-target="panelFreq"
+            dt.text-muted-foreground = t("desks.panel_score")
+            dd data-deck-preview-target="panelScore"
+          p.text-xs.text-muted-foreground data-deck-preview-target="panelState"
+          button.w-full.rounded-lg.border.border-border.px-3.py-2.text-sm.font-medium[
+            type="button" class="hover:bg-muted" data-deck-preview-target="panelToggle" data-action="deck-preview#toggleCurrent" ]
 
   = form_with url: desks_path, method: :post, class: "space-y-4" do |form|
+    = hidden_field_tag :selection, "", data: {deck_preview_target: "selection"}
+
     div.space-y-1
       = form.label :name, t("desks.name_label"), class: "text-sm font-medium"
       = form.text_field :name, value: @name, placeholder: t("desks.name_placeholder"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
-
-    p.text-xs.text-muted-foreground = t("desks.order_hint")
-
-    .divide-y.divide-border.overflow-hidden.rounded-xl.border.border-border
-      - @lexemes.each do |lexeme|
-        label.flex.cursor-pointer.items-baseline.gap-3.px-3.py-2 class="has-[:checked]:bg-primary/5"
-          = check_box_tag "lexeme_ids[]", lexeme.id, true, class: "size-4 shrink-0 self-center rounded border-border"
-          span.w-24.shrink-0.text-base.font-semibold lang="zh-TW" = lexeme.text
-          - reading = lexeme.reading_set.first&.dig("zhuyin").presence || lexeme.reading_set.first&.dig("pinyin")
-          span.w-28.shrink-0.text-xs.text-muted-foreground = reading
-          span.min-w-0.flex-1.truncate.text-sm = lexeme.meaning
-          - if @known_ids.include?(lexeme.id)
-            span.shrink-0.text-xs.text-muted-foreground = t("words.progress.known")
-          - elsif @started_ids.include?(lexeme.id)
-            span.shrink-0.text-xs.text-muted-foreground = t("words.progress.learning")
 
     = render("shared/facet_picker", scope: "new")
 
@@ -52,9 +114,16 @@
       = form.submit t("desks.create"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
       = link_to t("common.cancel"), new_desk_path, class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
-  = form_with url: desk_mark_known_path, method: :post, class: "space-y-2 rounded-xl border border-border p-3" do |form|
-    - @lexemes.each do |lexeme|
-      = hidden_field_tag "lexeme_ids[]", lexeme.id
-    p.text-sm.font-medium = t("desks.known_title")
-    p.text-xs.text-muted-foreground = t("desks.known_hint", count: @lexemes.size)
-    = form.submit t("desks.known_action"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted cursor-pointer"
+  details.rounded-xl.border.border-border.p-3
+    summary.cursor-pointer.text-sm.font-medium = t("desks.list_title", count: @preview.candidates.size)
+    .mt-2.max-h-96.overflow-y-auto.divide-y.divide-border data-deck-preview-target="list" data-action="click->deck-preview#toggleRow"
+      - @preview.candidates.each do |entry|
+        label.flex.cursor-pointer.items-baseline.gap-2.px-1.py-2 data-row=entry[:i] class="sm:gap-3"
+          input.size-4.shrink-0.self-center.rounded.border-border type="checkbox"
+          span.w-16.shrink-0.truncate.text-base.font-semibold lang="zh-TW" class="sm:w-24" = entry[:t]
+          span.w-20.shrink-0.truncate.text-xs.text-muted-foreground class="sm:w-28" = entry[:r]
+          span.min-w-0.flex-1.truncate.text-sm = entry[:m]
+          - if entry[:s]
+            span.hidden.shrink-0.text-xs.text-muted-foreground class="sm:inline" = t("words.progress.known")
+          - elsif entry[:d]
+            span.hidden.shrink-0.text-xs.text-muted-foreground class="sm:inline" = t("desks.in_deck")

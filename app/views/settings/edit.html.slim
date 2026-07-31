@@ -2,19 +2,30 @@
 
 .py-6
   h1.text-xl.font-semibold = t("settings.title")
+  p.mt-1.max-w-md.text-sm.text-muted-foreground = t("settings.scope_hint")
 
   = form_with url: settings_path, method: :patch, scope: :setting, class: "mt-5 max-w-md space-y-5" do |form|
     div class="space-y-1.5"
       = form.label :desired_retention, t("settings.desired_retention"), class: "text-sm font-medium"
-      = form.number_field :desired_retention, value: @settings.desired_retention, step: 0.01, min: 0.7, max: 0.99, class: input_classes
+      = form.number_field :desired_retention, value: @preferences.desired_retention, step: 0.01, min: 0.7, max: 0.99, class: input_classes
       p.text-xs.text-muted-foreground = t("settings.desired_retention_hint")
     div class="space-y-1.5"
       = form.label :daily_new_limit, t("settings.daily_new_limit"), class: "text-sm font-medium"
-      = form.number_field :daily_new_limit, value: @settings.daily_new_limit, min: 0, max: 500, class: input_classes
+      = form.number_field :daily_new_limit, value: @preferences.daily_new_limit, min: 0, max: 500, class: input_classes
+    div class="space-y-1.5"
+      = form.label :session_size, t("settings.session_size"), class: "text-sm font-medium"
+      = form.number_field :session_size, value: @preferences.session_size, min: 1, max: 200, class: input_classes
+      p.text-xs.text-muted-foreground = t("settings.session_size_hint")
     div class="space-y-1.5"
       = form.label :learn_ahead_minutes, t("settings.learn_ahead_minutes"), class: "text-sm font-medium"
-      = form.number_field :learn_ahead_minutes, value: @settings.learn_ahead_minutes, min: 0, max: 120, class: input_classes
-    = form.submit t("common.save"), class: "rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+      = form.number_field :learn_ahead_minutes, value: @preferences.learn_ahead_minutes, min: 0, max: 120, class: input_classes
+    - if current_user.admin?
+      label.flex.cursor-pointer.items-center.gap-2.text-sm
+        = check_box_tag :as_default, "1", false, class: "size-4 rounded border-border"
+        = t("settings.as_default")
+    .flex.flex-wrap.items-center.gap-2
+      = form.submit t("common.save"), class: "rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 cursor-pointer"
+      = button_to t("settings.restore"), settings_path, method: :delete, class: "rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
   section.mt-10.max-w-md
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("settings.export_title")

@@ -16,7 +16,39 @@ ssh_opts := "-o BatchMode=yes -o ConnectTimeout=30 -o StrictHostKeyChecking=acce
 # Start the app: Puma, Tailwind watcher, optional ngrok tunnel
 [group('dev')]
 dev:
-    bin/dev
+    #!/usr/bin/env bash
+    set -uo pipefail
+    port="${APP_PORT:-3000}"
+
+    if command -v pg_isready > /dev/null 2>&1; then
+      pg_isready -h localhost -p {{ db_port }} -q
+      ready=$?
+    else
+      nc -z localhost {{ db_port }} > /dev/null 2>&1
+      ready=$?
+    fi
+    if [ "$ready" -ne 0 ]; then
+      echo "just dev: no PostgreSQL answering on port {{ db_port }}. Start it and try again." >&2
+      exit 1
+    fi
+
+    holders=$(lsof -nP -tiTCP:"$port" -sTCP:LISTEN 2> /dev/null)
+    if [ -n "$holders" ]; then
+      for pid in $holders; do
+        cwd=$(lsof -a -p "$pid" -d cwd -Fn 2> /dev/null | sed -n 's/^n//p' | head -1)
+        echo "just dev: port $port held by pid $pid ($(/bin/ps -o command= -p "$pid" | cut -c1-60)) in ${cwd:-?} — killing it."
+      done
+      kill $holders 2> /dev/null
+      sleep 1
+      survivors=$(lsof -nP -tiTCP:"$port" -sTCP:LISTEN 2> /dev/null)
+      if [ -n "$survivors" ]; then
+        kill -9 $survivors 2> /dev/null
+        sleep 1
+      fi
+      rm -f tmp/pids/dev.pid tmp/pids/server.pid
+    fi
+
+    exec bin/dev
 
 # Rails console
 [group('dev')]

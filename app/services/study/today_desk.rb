@@ -14,7 +14,7 @@ module Study
     end
 
     def summary
-      quota = plan ? Study::PlanCalculator.new(plan).daily_new_quota : Setting.instance.session_size.to_i
+      quota = plan ? Study::PlanCalculator.new(plan).daily_new_quota : Study::Preferences.for(@user).session_size
       total = due_count + quota
       {due: due_count, new: quota, total:, overloaded: total > OVERLOAD, has_plan: plan.present?}
     end

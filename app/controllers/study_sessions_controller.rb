@@ -6,7 +6,12 @@ class StudySessionsController < ApplicationController
 
   def show
     @mode = params[:mode].presence_in(MODES) || "daily"
-    @run = Study::Run.start(mode: @mode, size: params[:size], collection: find_collection)
+    @run = Study::Run.start(
+      mode: @mode,
+      size: params[:size],
+      collection: find_collection,
+      offset: params[:offset].to_i
+    )
     session[:study] = @run.state
     load_current
   end
@@ -32,6 +37,7 @@ class StudySessionsController < ApplicationController
     @done = @run.done
     @remaining = @run.remaining
     @session_id = @run.session_id
+    @daily = Study::DailyLoad.new(current_user)
     token = @run.head
     return if token.blank?
 

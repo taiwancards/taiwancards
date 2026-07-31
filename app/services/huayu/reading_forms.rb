@@ -7,6 +7,31 @@ module Huayu
     ZHUYIN_TONES = "ˊˇˋ˙"
     BOPOMOFO = /[ㄅ-ㄯㆠ-ㆿ]/
 
+    MARKED_VOWELS = Zhuyin::TONED_VOWELS
+      .each_with_object({}) do |(marked, (base, tone)), acc|
+        acc[[base, tone]] = marked
+      end
+      .freeze
+
+    def marked_pinyin(syllable, tone)
+      body = syllable.to_s.chars.map { |char| Zhuyin::TONED_VOWELS[char]&.first || char }.join
+      return body if tone.nil? || tone.zero? || tone == 5
+
+      index = tone_vowel_index(body)
+      return body if index.nil?
+
+      marked = MARKED_VOWELS[[body[index], tone]]
+      marked ? body.dup.tap { |out| out[index] = marked } : body
+    end
+
+    def tone_vowel_index(body)
+      return body.index("a") if body.include?("a")
+      return body.index("o") if body.include?("o")
+      return body.index("e") if body.include?("e")
+
+      body.rindex(/[iuü]/)
+    end
+
     def plain_pinyin(pinyin)
       pinyin
         .to_s

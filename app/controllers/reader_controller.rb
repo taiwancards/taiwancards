@@ -40,7 +40,8 @@ class ReaderController < ApplicationController
   end
 
   def show
-    @lines = @text.lines.map { |line| [line, analyzer.analyze(line)] }
+    lines = @text.lines
+    @lines = lines.zip(analyzer.analyze_lines(lines))
     @known_ids = known_lexeme_ids(@lines)
   end
 

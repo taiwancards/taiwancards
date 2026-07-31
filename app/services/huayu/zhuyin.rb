@@ -301,7 +301,7 @@ module Huayu
 
     def apply_tone(zhuyin, tone)
       case tone
-      when nil, 0
+      when nil, 0, 5
         "˙#{zhuyin}"
       else
         "#{zhuyin}#{TONE_SUFFIX.fetch(tone)}"

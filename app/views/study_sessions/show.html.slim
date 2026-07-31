@@ -15,6 +15,6 @@
 
   #study-card
     - if @lexeme && @facet
-      = render "card", lexeme: @lexeme, facet: @facet, session_id: @session_id
+      = render "card", lexeme: @lexeme, facet: @facet, session_id: @session_id, memory: @memory
     - else
       = render "empty"

@@ -1,0 +1,44 @@
+- directions = %w[up left right down]
+- placement = {"up" => "col-start-2 row-start-1", "left" => "col-start-1 row-start-2", "right" => "col-start-3 row-start-2", "down" => "col-start-2 row-start-3"}
+- option_button = "flex min-h-16 w-full flex-col items-center justify-center gap-0.5 rounded-2xl border border-border px-2 py-3 text-center transition-colors hover:bg-muted disabled:hover:bg-transparent"
+
+.select-none[
+  data-controller="card-tone-quiz"
+  data-card-tone-quiz-label-correct-value=t("study.tone_quiz.correct")
+  data-card-tone-quiz-label-wrong-value=t("study.tone_quiz.wrong") ]
+
+  = form_with url: study_review_path, method: :post, data: {card_tone_quiz_target: "form", turbo_stream: true} do |form|
+    = form.hidden_field :lexeme_id, value: lexeme.id
+    = form.hidden_field :facet, value: facet
+    = form.hidden_field :session_id, value: session_id
+    = form.hidden_field :rating, value: "good", data: {card_tone_quiz_target: "rating"}
+    = form.hidden_field :elapsed_ms, value: "", data: {card_tone_quiz_target: "elapsed"}
+
+  .mx-auto class="max-w-3xl"
+    .grid.items-center.gap-2 class="grid-cols-[1fr_1.2fr_1fr] sm:gap-3 sm:grid-cols-[1fr_1.6fr_1fr]"
+      - options.each_with_index do |option, index|
+        - direction = directions[index]
+        div.w-full class=placement[direction]
+          button[ type="button" class=option_button
+            data-card-tone-quiz-target="option" data-direction=direction data-correct=option.correct.to_s
+            data-action="card-tone-quiz#choose" ]
+            span.flex.flex-wrap.justify-center.gap-x-2.text-lg.font-semibold lang="zh-TW"
+              - option.parts.each do |part|
+                span.whitespace-nowrap = part[:zhuyin]
+            span.pinyin.flex.flex-wrap.justify-center.gap-x-1.text-xs.text-muted-foreground
+              - option.parts.each do |part|
+                span.whitespace-nowrap = part[:pinyin]
+
+      .relative class="col-start-2 row-start-2"
+        .touch-none.cursor-grab.rounded-3xl.border.border-border.bg-card.px-6.py-8.text-center.shadow-xl[
+          data-action="pointerdown->card-tone-quiz#start pointermove->card-tone-quiz#move pointerup->card-tone-quiz#end pointercancel->card-tone-quiz#end" ]
+          .flex.flex-col.items-center.justify-center.gap-3 style="min-height: 11rem"
+            .flex.items-center.gap-2.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground
+              = icon(facet_icon(facet), css: "size-4")
+              = t("study.tone_quiz.ask")
+            .text-5xl.font-semibold lang="zh-TW" = lexeme.text
+            - if lexeme.meaning.present?
+              .text-sm.text-muted-foreground = lexeme.meaning
+            .text-base.font-semibold.min-h-6 data-card-tone-quiz-target="result"
+
+  p.mx-auto.mt-4.max-w-3xl.text-center.text-xs.text-muted-foreground = t("study.tone_quiz.hint")

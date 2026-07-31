@@ -1,10 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
+import { toWav } from "lib/speech_recorder"
 
 const AUTO_KEY = "pron_auto"
 const PRELISTEN_KEY = "pron_prelisten"
 const SPEECH_RMS = 0.02
 const MIC_SETTLE_MS = 150
 const MAX_DRILL_TRIES = 5
+const REFERENCE_GRACE_MS = 400
 
 const LEVELS = {
   green: "#10b981",
@@ -101,6 +103,7 @@ export default class extends Controller {
     lexemeId: Number,
     audioUrl: String,
     audioStop: Number,
+    audioParts: Array,
     autoDelay: Number,
     autoSilence: Number,
     autoMax: Number,
@@ -188,22 +191,43 @@ export default class extends Controller {
   }
 
   hasAudio() {
-    return this.hasAudioUrlValue && this.audioUrlValue.length > 0
+    return this.referenceClips().length > 0
   }
 
-  playAudio() {
-    if (!this.hasAudio()) return Promise.resolve()
+  referenceClips() {
+    if (this.hasAudioPartsValue && this.audioPartsValue.length > 0) return this.audioPartsValue
+    if (this.hasAudioUrlValue && this.audioUrlValue.length > 0) {
+      return [{ url: this.audioUrlValue, stop_ms: this.audioStopValue }]
+    }
+    return []
+  }
+
+  async playAudio() {
+    for (const clip of this.referenceClips()) await this.playClip(clip)
+  }
+
+  playClip(clip) {
     return new Promise((resolve) => {
-      const audio = new Audio(this.audioUrlValue)
-      if (this.hasAudioStopValue && this.audioStopValue > 0) {
-        const limit = this.audioStopValue / 1000
-        audio.addEventListener("timeupdate", () => {
-          if (audio.currentTime >= limit) audio.pause()
-        })
+      const audio = new Audio(clip.url)
+      let settled = false
+      const done = () => {
+        if (settled) return
+        settled = true
+        audio.pause()
+        resolve()
       }
-      audio.onended = resolve
-      audio.onerror = resolve
-      audio.play().catch(resolve)
+
+      const stop = Number(clip.stop_ms) || 0
+      if (stop > 0) {
+        const limit = stop / 1000
+        audio.addEventListener("timeupdate", () => {
+          if (audio.currentTime >= limit) done()
+        })
+        this.clipTimer = setTimeout(done, stop + REFERENCE_GRACE_MS)
+      }
+      audio.onended = done
+      audio.onerror = done
+      audio.play().catch(done)
     })
   }
 
@@ -324,7 +348,7 @@ export default class extends Controller {
     this.setStatus(this.labelGradingValue)
     let wav
     try {
-      wav = await this.toWav(new Blob(this.chunks, { type: this.recorder.mimeType || "audio/webm" }))
+      wav = await toWav(new Blob(this.chunks, { type: this.recorder.mimeType || "audio/webm" }))
     } catch {
       this.setStatus(this.labelErrorValue)
       return
@@ -811,35 +835,6 @@ export default class extends Controller {
     el.textContent = text ?? ""
     Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v))
     return el
-  }
-
-  async toWav(blob) {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)()
-    try {
-      const buffer = await ctx.decodeAudioData(await blob.arrayBuffer())
-      return this.encodeWav(buffer)
-    } finally {
-      ctx.close()
-    }
-  }
-
-  encodeWav(audioBuffer) {
-    const sr = audioBuffer.sampleRate
-    const samples = audioBuffer.getChannelData(0)
-    const out = new ArrayBuffer(44 + samples.length * 2)
-    const view = new DataView(out)
-    const str = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)) }
-    str(0, "RIFF"); view.setUint32(4, 36 + samples.length * 2, true); str(8, "WAVE")
-    str(12, "fmt "); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true)
-    view.setUint32(24, sr, true); view.setUint32(28, sr * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true)
-    str(36, "data"); view.setUint32(40, samples.length * 2, true)
-    let off = 44
-    for (let i = 0; i < samples.length; i++) {
-      const s = Math.max(-1, Math.min(1, samples[i]))
-      view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true)
-      off += 2
-    }
-    return new Blob([out], { type: "audio/wav" })
   }
 
   setStatus(text) {

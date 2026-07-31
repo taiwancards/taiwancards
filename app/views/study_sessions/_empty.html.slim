@@ -1,7 +1,23 @@
 .mx-auto.max-w-md.rounded-3xl.border.border-dashed.border-border.px-6.py-14.text-center.space-y-4
   div
-    p.text-lg.font-medium = t("study.done_title")
-    p.mt-1.text-sm.text-muted-foreground = t("study.done_body")
+    - if @daily&.reached?
+      p.text-lg.font-medium = t("study.quota_title", multiple: @daily.multiple)
+      p.mt-1.text-sm.text-muted-foreground
+        = t("study.quota_body", count: @daily.new_today, quota: @daily.quota)
+      - if @daily.overreaching?
+        p.mt-2.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700 dark:text-amber-400"
+          = t("study.quota_warning")
+    - else
+      p.text-lg.font-medium = t("study.done_title")
+      p.mt-1.text-sm.text-muted-foreground = t("study.done_body")
+
+  - if @run&.more?
+    = link_to t("study.continue", count: Study::CardSet::SITTING_CAP),
+      study_path(mode: @mode, collection_id: @run.collection_id, offset: @run.next_offset),
+      class: "inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+  - elsif @daily&.reached?
+    = link_to t("study.continue_anyway"), study_path(mode: @mode),
+      class: "inline-flex rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
   - if (nudge = study_next_suggestion)
     .rounded-2xl.border.border-border.bg-card.p-4.space-y-2

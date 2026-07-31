@@ -43,8 +43,9 @@
       data-pronunciation-expected-value=@syllables.to_json
       data-pronunciation-text-value=@lexeme.text
       data-pronunciation-lexeme-id-value=@lexeme.id
-      data-pronunciation-audio-url-value=audio_for(@lexeme)&.fetch(:url)
-      data-pronunciation-audio-stop-value=audio_for(@lexeme)&.fetch(:stop_ms)
+      data-pronunciation-audio-url-value=@audio&.fetch(:url)
+      data-pronunciation-audio-stop-value=@audio&.fetch(:stop_ms)
+      data-pronunciation-audio-parts-value=(@audio&.dig(:parts)&.to_json)
       data-pronunciation-auto-delay-value=@auto[:delay_ms]
       data-pronunciation-auto-silence-value=@auto[:silence_ms]
       data-pronunciation-auto-max-value=@auto[:max_ms]
@@ -83,7 +84,7 @@
           span.rounded-full.bg-muted-foreground class="h-1.5 w-1.5 opacity-30 peer-checked:bg-primary peer-checked:opacity-100"
           = t("pronunciation.auto")
 
-        - if audio_for(@lexeme)
+        - if @audio
           label.inline-flex.cursor-pointer.items-center.rounded-full.border.border-border.py-1.text-xs.transition-colors class="px-2.5 gap-1.5 hover:bg-muted" title=t("pronunciation.prelisten_hint")
             input.peer.sr-only type="checkbox" data-pronunciation-target="prelisten" data-action="pronunciation#togglePrelisten"
             span.rounded-full.bg-muted-foreground class="h-1.5 w-1.5 opacity-30 peer-checked:bg-primary peer-checked:opacity-100"

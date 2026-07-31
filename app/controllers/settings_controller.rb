@@ -2,23 +2,36 @@
 
 class SettingsController < ApplicationController
   def edit
-    @settings = Setting.instance
+    @preferences = Study::Preferences.for(current_user)
+    @settings = @preferences.settings
   end
 
   def update
-    settings = Setting.instance
-    settings.update!(data: settings.data.merge(settings_params))
+    overrides = Study::Preferences.sanitize(settings_params)
+    current_user.write_prefs(Study::Preferences::PREFS_KEY => stored_overrides.merge(overrides))
+    current_user.save!
+    apply_installation_defaults(overrides) if current_user.admin? && params[:as_default].present?
     redirect_to(edit_settings_path, notice: t("settings.updated"))
+  end
+
+  def destroy
+    current_user.write_prefs(Study::Preferences::PREFS_KEY => {})
+    current_user.save!
+    redirect_to(edit_settings_path, notice: t("settings.restored"))
   end
 
   private
 
+  def stored_overrides
+    current_user.prefs[Study::Preferences::PREFS_KEY] || {}
+  end
+
   def settings_params
-    permitted = params.expect(setting: %i[desired_retention daily_new_limit learn_ahead_minutes])
-    {
-      "desired_retention" => permitted[:desired_retention].to_f.clamp(0.7, 0.99),
-      "daily_new_limit" => permitted[:daily_new_limit].to_i.clamp(0, 500),
-      "learn_ahead_minutes" => permitted[:learn_ahead_minutes].to_i.clamp(0, 120)
-    }
+    params.expect(setting: Study::Preferences::KEYS.map(&:to_sym)).to_h
+  end
+
+  def apply_installation_defaults(overrides)
+    settings = Setting.instance
+    settings.update!(data: settings.data.merge(overrides))
   end
 end

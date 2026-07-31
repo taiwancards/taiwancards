@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2024_11_13_094358) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_31_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -27,13 +27,33 @@ ActiveRecord::Schema[8.1].define(version: 2024_11_13_094358) do
     t.index(["user_id", "created_at"], name: "index_activity_events_on_user_id_and_created_at")
   end
 
-  create_table("collection_items", force: :cascade) do |t|
+  create_table("collection_group_items", primary_key: ["collection_group_id", "collection_id"], force: :cascade) do |t|
+    t.bigint("collection_group_id", null: false)
     t.bigint("collection_id", null: false)
+    t.integer("position", default: 0, null: false)
+    t.index(
+      ["collection_group_id", "position"],
+      name: "index_collection_group_items_on_group_and_position",
+      include: ["collection_id"]
+    )
+    t.index(["collection_id", "collection_group_id"], name: "index_collection_group_items_on_collection_id")
+  end
+
+  create_table("collection_groups", force: :cascade) do |t|
+    t.integer("collections_count", default: 0, null: false)
     t.datetime("created_at", null: false)
-    t.bigint("lexeme_id", null: false)
+    t.string("name", null: false)
     t.integer("position", default: 0, null: false)
     t.datetime("updated_at", null: false)
-    t.index(["collection_id", "lexeme_id"], name: "index_collection_items_on_collection_id_and_lexeme_id", unique: true)
+    t.bigint("user_id", null: false)
+    t.index(["user_id", "name"], name: "index_collection_groups_on_user_name", unique: true)
+    t.index(["user_id", "position", "id"], name: "index_collection_groups_on_user_position")
+  end
+
+  create_table("collection_items", primary_key: ["collection_id", "lexeme_id"], force: :cascade) do |t|
+    t.bigint("collection_id", null: false)
+    t.bigint("lexeme_id", null: false)
+    t.integer("position", default: 0, null: false)
     t.index(["lexeme_id"], name: "index_collection_items_on_lexeme_id")
   end
 
@@ -51,6 +71,11 @@ ActiveRecord::Schema[8.1].define(version: 2024_11_13_094358) do
     t.bigint("user_id")
     t.index(["name"], name: "index_collections_on_name_system", unique: true, where: "(user_id IS NULL)")
     t.index(["user_id", "name"], name: "index_collections_on_user_name", unique: true, where: "(user_id IS NOT NULL)")
+    t.index(
+      ["user_id", "position", "id"],
+      name: "index_collections_on_user_position",
+      where: "((user_id IS NOT NULL) AND (kind = 0))"
+    )
   end
 
   create_table("content_sources", force: :cascade) do |t|
@@ -77,6 +102,23 @@ ActiveRecord::Schema[8.1].define(version: 2024_11_13_094358) do
     t.string("url")
     t.index(["enabled"], name: "index_content_sources_on_enabled")
     t.index(["slug"], name: "index_content_sources_on_slug", unique: true)
+  end
+
+  create_table("deck_shares", force: :cascade) do |t|
+    t.integer("accepted_count", default: 0, null: false)
+    t.integer("cards_count", default: 0, null: false)
+    t.datetime("created_at", null: false)
+    t.integer("decks_count", default: 1, null: false)
+    t.datetime("expires_at")
+    t.integer("kind", default: 0, null: false)
+    t.string("name", null: false)
+    t.jsonb("payload", default: {}, null: false)
+    t.datetime("revoked_at")
+    t.string("token", null: false)
+    t.datetime("updated_at", null: false)
+    t.bigint("user_id", null: false)
+    t.index(["token"], name: "index_deck_shares_on_token", unique: true)
+    t.index(["user_id", "created_at"], name: "index_deck_shares_on_user_id_and_created_at")
   end
 
   create_table("lexeme_content_sources", force: :cascade) do |t|
@@ -515,9 +557,13 @@ ActiveRecord::Schema[8.1].define(version: 2024_11_13_094358) do
   end
 
   add_foreign_key("activity_events", "users")
-  add_foreign_key("collection_items", "collections")
-  add_foreign_key("collection_items", "lexemes")
+  add_foreign_key("collection_group_items", "collection_groups", on_delete: :cascade)
+  add_foreign_key("collection_group_items", "collections", on_delete: :cascade)
+  add_foreign_key("collection_groups", "users", on_delete: :cascade)
+  add_foreign_key("collection_items", "collections", on_delete: :cascade)
+  add_foreign_key("collection_items", "lexemes", on_delete: :cascade)
   add_foreign_key("collections", "users")
+  add_foreign_key("deck_shares", "users", on_delete: :cascade)
   add_foreign_key("lexeme_content_sources", "content_sources")
   add_foreign_key("lexeme_content_sources", "lexemes")
   add_foreign_key("lexeme_links", "lexemes", column: "child_id")

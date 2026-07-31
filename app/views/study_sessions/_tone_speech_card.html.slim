@@ -1,0 +1,59 @@
+- auto = Study::Preferences.for(current_user).pron_auto
+- chip = "flex min-w-16 flex-col items-center gap-0.5 rounded-xl border-2 px-3 py-2"
+
+.select-none[
+  data-controller="card-speech"
+  data-card-speech-url-value=pronunciation_path
+  data-card-speech-lexeme-id-value=lexeme.id
+  data-card-speech-expected-value=syllables.to_json
+  data-card-speech-auto-ms-value=auto[:delay_ms]
+  data-card-speech-max-ms-value=auto[:max_ms]
+  data-card-speech-good-at-value=StudyHelper::SPEECH_GOOD_AT
+  data-card-speech-hard-at-value=StudyHelper::SPEECH_HARD_AT
+  data-card-speech-label-record-value=t("study.speech.record")
+  data-card-speech-label-stop-value=t("study.speech.stop")
+  data-card-speech-label-listening-value=t("study.speech.listening")
+  data-card-speech-label-scoring-value=t("study.speech.scoring")
+  data-card-speech-label-mic-denied-value=t("study.speech.mic_denied")
+  data-card-speech-label-offline-value=t("study.speech.offline")
+  data-card-speech-label-attempts-value=t("study.speech.attempts") ]
+
+  = form_with url: study_review_path, method: :post, data: {card_speech_target: "form", turbo_stream: true} do |form|
+    = form.hidden_field :lexeme_id, value: lexeme.id
+    = form.hidden_field :facet, value: facet
+    = form.hidden_field :session_id, value: session_id
+    = form.hidden_field :rating, value: "hard", data: {card_speech_target: "rating"}
+    = form.hidden_field :elapsed_ms, value: "", data: {card_speech_target: "elapsed"}
+
+  .mx-auto.max-w-md.space-y-4
+    .rounded-3xl.border.border-border.bg-card.px-6.py-6.text-center.shadow-sm.space-y-4
+      .flex.items-center.justify-center.gap-2.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground
+        = icon(facet_icon(facet), css: "size-4")
+        = t("study.speech.ask")
+
+      .text-5xl.font-semibold lang="zh-TW" = lexeme.text
+      - if lexeme.meaning.present?
+        .text-sm.text-muted-foreground = lexeme.meaning
+
+      .flex.flex-wrap.justify-center.gap-2
+        - syllables.each do |part|
+          .border-border data-card-speech-target="syllable" data-base=chip class=chip
+            span.text-base.font-semibold lang="zh-TW" = part["zhuyin"]
+            span.pinyin.text-2xs.text-muted-foreground = part["pinyin"]
+            span.text-2xs.text-muted-foreground data-heard=""
+
+      .flex.items-baseline.justify-center.gap-2
+        span.text-3xl.font-bold data-card-speech-target="score"
+        span.text-xs.text-muted-foreground data-card-speech-target="attempts"
+
+      .min-h-5.text-sm.text-muted-foreground data-card-speech-target="status"
+
+    .flex.flex-wrap.justify-center.gap-2
+      button.rounded-full.border.border-border.px-6.py-2.text-sm.font-medium[
+        type="button" class="hover:bg-muted" data-card-speech-target="record" data-action="card-speech#toggle" ]
+        = t("study.speech.record")
+      button.rounded-full.bg-primary.px-6.py-2.text-sm.font-semibold.text-primary-foreground[
+        type="button" hidden=true class="hover:opacity-90" data-card-speech-target="next" data-action="card-speech#advance" ]
+        = t("study.speech.next")
+
+    p.text-center.text-xs.text-muted-foreground = t("study.speech.hint")

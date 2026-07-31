@@ -2,8 +2,8 @@
 
 module Lexemes
   class ReviewProcessor
-    def initialize(scheduler: Fsrs::Scheduler.new(parameters: Setting.instance.fsrs_parameters))
-      @scheduler = scheduler
+    def initialize(scheduler: nil)
+      @scheduler = scheduler || Fsrs::Scheduler.new(parameters: Study::Preferences.for.fsrs_parameters)
     end
 
     def call(memory, rating:, elapsed_ms: nil, session_id: nil, now: Time.current)

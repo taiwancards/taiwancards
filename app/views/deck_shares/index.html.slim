@@ -1,0 +1,25 @@
+- content_for(:title, t("shares.title"))
+
+.py-6.space-y-5
+  header.flex.flex-wrap.items-start.justify-between.gap-3
+    h1.text-2xl.font-bold.tracking-tight = t("shares.title")
+    = link_to t("desks.back"), desks_path, class: "rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+
+  - if @shares.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("shares.empty")
+  - else
+    ul.divide-y.divide-border.overflow-hidden.rounded-xl.border.border-border
+      - @shares.each do |share|
+        li.space-y-2.px-3.py-3
+          .flex.flex-wrap.items-baseline.justify-between.gap-2
+            span.min-w-0.truncate.font-medium = share.name
+            span.shrink-0.text-xs.text-muted-foreground
+              = t("shares.cards_count", count: share.cards_count)
+              = " · "
+              = t("shares.accepted_count", count: share.accepted_count)
+          .flex.flex-wrap.items-center.gap-2
+            input.min-w-0.flex-1.rounded-lg.border.border-border.bg-muted.px-3.py-2.font-mono[
+              type="text" readonly=true onclick="this.select()"
+              class="text-xs" value=deck_share_url(share.token) aria-label=t("shares.link_label") ]
+            = button_to t("shares.revoke"), revoke_deck_share_path(share.token), method: :delete, class: "shrink-0 rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-muted"

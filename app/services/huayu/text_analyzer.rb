@@ -4,6 +4,9 @@ module Huayu
   class TextAnalyzer
     HAN = /\p{Han}/
     MAX_WORD = 8
+    MERGE_SPAN = 5
+    TOKEN_KINDS = %i[word collocation measure_word character].freeze
+    KIND_PREFERENCE = %i[word collocation measure_word character].freeze
 
     Token = Data.define(:kind, :text, :lexeme, :chars)
 
@@ -27,12 +30,18 @@ module Huayu
     end
 
     def analyze(text)
-      text = text.to_s.strip
-      return [] if text.blank?
+      analyze_lines([text]).first || []
+    end
 
-      words = known_words
-      tokens = tokenize(text, words)
-      resolve(tokens)
+    def analyze_lines(lines)
+      batches = Array(lines).map do |line|
+        line = line.to_s.strip
+        line.blank? ? [] : tokenize(line, known_words)
+      end
+
+      batches = merge_longest(batches)
+      index = index_for(batches)
+      batches.map { |tokens| build(tokens, index) }
     end
 
     def segment(text, excluding: nil)
@@ -170,18 +179,94 @@ module Huayu
       pieces
     end
 
-    def resolve(tokens)
-      han_texts = tokens.select { |kind, _| kind != :literal }.map(&:last).uniq
-      lexemes = Lexeme.where(kind: %i[word character], text: han_texts).index_by(&:text)
-      char_texts = han_texts.flat_map(&:chars).uniq
-      chars = Lexeme.where(kind: :character, text: char_texts).index_by(&:text)
+    def merge_longest(batches)
+      candidates = batches.flat_map { |tokens| joins_in(tokens).keys }.uniq
+      return batches if candidates.empty?
+
+      known = Lexeme.where(kind: TOKEN_KINDS, text: candidates).distinct.pluck(:text).to_set
+      return batches if known.empty?
+
+      batches.map { |tokens| fold(tokens, known) }
+    end
+
+    def joins_in(tokens)
+      spans = {}
+      tokens.each_index do |start|
+        next if tokens[start].first == :literal
+
+        text = +""
+        (start...[start + MERGE_SPAN, tokens.length].min).each do |stop|
+          break if tokens[stop].first == :literal
+
+          text += tokens[stop].last
+          break if text.length > MAX_WORD
+
+          spans[text] = [start, stop] if stop > start
+        end
+      end
+
+      spans
+    end
+
+    def fold(tokens, known)
+      out = []
+      index = 0
+
+      while index < tokens.length
+        span = longest_span(tokens, index, known)
+        if span
+          out << [:word, tokens[index..span].map(&:last).join]
+          index = span + 1
+        else
+          out << tokens[index]
+          index += 1
+        end
+      end
+
+      out
+    end
+
+    def longest_span(tokens, start, known)
+      return nil if tokens[start].first == :literal
+
+      text = +""
+      best = nil
+      (start...[start + MERGE_SPAN, tokens.length].min).each do |stop|
+        break if tokens[stop].first == :literal
+
+        text += tokens[stop].last
+        break if text.length > MAX_WORD
+
+        best = stop if stop > start && known.include?(text)
+      end
+
+      best
+    end
+
+    def index_for(batches)
+      han_texts = batches.flat_map { |tokens| tokens.reject { |kind, _| kind == :literal }.map(&:last) }.uniq
+      return {lexemes: {}, chars: {}} if han_texts.empty?
+
+      lexemes = Lexeme
+        .where(kind: TOKEN_KINDS, text: han_texts)
+        .sort_by { |lexeme| KIND_PREFERENCE.index(lexeme.kind.to_sym) || KIND_PREFERENCE.size }
+        .reverse
+        .index_by(&:text)
+      char_texts = han_texts.flat_map(&:chars).uniq - lexemes.keys
+      chars = lexemes.select { |text, lexeme| text.length == 1 && lexeme.character? }
+      chars = chars.merge(Lexeme.where(kind: :character, text: char_texts).index_by(&:text))
+      {lexemes:, chars:}
+    end
+
+    def build(tokens, index)
+      lexemes = index[:lexemes]
+      chars = index[:chars]
 
       tokens.map do |kind, text|
         next Token.new(kind: :literal, text:, lexeme: nil, chars: []) if kind == :literal
 
-        lexeme = lexemes[text]
-        components = text.chars.map { |char| chars[char] }.compact
-        Token.new(kind:, text:, lexeme:, chars: components)
+        components = text.chars.filter_map { |char| chars[char] }
+        Token.new(kind:, text:, lexeme: lexemes[text], chars: components)
       end
     end
   end

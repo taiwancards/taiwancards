@@ -7,7 +7,9 @@
     div.min-w-0.space-y-1
       h1.truncate.text-2xl.font-bold.tracking-tight = @desk.name
       p.text-sm.text-muted-foreground = t("desks.items_count", count: @desk.items_count)
-    = link_to t("desks.back"), desks_path, class: "shrink-0 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+    .flex.shrink-0.flex-wrap.gap-2
+      = button_to t("desks.share"), share_desk_path(@desk), method: :post, class: "rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+      = link_to t("desks.back"), desks_path, class: "rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
 
   .flex.flex-wrap.gap-2
     = link_to t("desks.study"), study_path(mode: "desk", collection_id: @desk.id), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
@@ -29,14 +31,32 @@
             = t("memories.#{facet}")
       = form.submit t("common.save"), class: "rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
 
+  - if @groups.any?
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      p.text-sm.font-medium = t("groups.title")
+      .flex.flex-wrap.gap-2
+        - @groups.each do |group|
+          = button_to t("groups.add_deck") + " · " + group.name, group_decks_path(group, deck_id: @desk.id), method: :post, class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+
+  details.rounded-xl.border.border-border.p-4
+    summary.cursor-pointer.text-sm.font-medium = t("desks.add_cards_title")
+    p.mt-2.text-xs.text-muted-foreground = t("desks.add_cards_hint")
+    = form_with url: my_desk_cards_path(@desk), method: :post, class: "mt-3 space-y-2" do |form|
+      = text_area_tag :text, nil, rows: 4, class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm", placeholder: t("desks.paste_placeholder")
+      = form.submit t("desks.add_cards_action"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted cursor-pointer"
+
   - if @lexemes.any?
-    .grid.gap-2 class="sm:grid-cols-2"
-      - @lexemes.each do |lexeme|
-        .flex.items-center.justify-between.gap-3.rounded-xl.border.border-border.bg-card.px-3.py-2
-          .min-w-0
-            .flex.items-baseline.gap-2
-              span.text-lg.font-semibold lang="zh-TW" = lexeme.text
-              span.text-xs.text-muted-foreground = lexeme.reading_set.first&.dig("zhuyin").presence || lexeme.reading_set.first&.dig("pinyin")
-            - if lexeme.meaning.present?
-              .truncate.text-sm.text-muted-foreground = lexeme.meaning
-          = button_to "×", my_desk_item_path(@desk, lexeme.id), method: :delete, class: "shrink-0 rounded-md border border-border px-2 py-1 text-sm text-muted-foreground hover:bg-muted", form: {class: "shrink-0"}
+    = form_with url: my_desk_bulk_items_path(@desk, page: @page), method: :delete, class: "space-y-3" do |form|
+      .grid.gap-2 class="sm:grid-cols-2 xl:grid-cols-3"
+        - @lexemes.each do |lexeme|
+          label.flex.cursor-pointer.items-center.gap-3.rounded-xl.border.border-border.bg-card.px-3.py-2 class="has-[:checked]:border-destructive/60"
+            = check_box_tag "lexeme_ids[]", lexeme.id, false, class: "size-4 shrink-0 rounded border-border"
+            .min-w-0.flex-1
+              .flex.min-w-0.items-baseline.gap-2
+                span.shrink-0.text-lg.font-semibold lang="zh-TW" = lexeme.text
+                span.min-w-0.truncate.text-xs.text-muted-foreground = lexeme.reading_set.first&.dig("zhuyin").presence || lexeme.reading_set.first&.dig("pinyin")
+              - if lexeme.meaning.present?
+                .truncate.text-sm.text-muted-foreground = lexeme.meaning
+      .flex.flex-wrap.items-center.gap-3
+        = form.submit t("desks.remove_selected"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted cursor-pointer"
+        = render("shared/pager", page: @page, pages: @pages, path: -> (page) { my_desk_path(@desk, page: page) })

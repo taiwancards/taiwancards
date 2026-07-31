@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module StudyHelper
+  AUTOPLAY_MS = 500
+  SPEECH_GOOD_AT = 72
+  SPEECH_HARD_AT = 45
+
   FACET_ICONS = {
     "recognition" => :characters,
     "production" => :words,
@@ -12,6 +16,26 @@ module StudyHelper
 
   def facet_icon(facet)
     FACET_ICONS.fetch(facet.to_s, :study)
+  end
+
+  def study_card_kind(lexeme:, facet:, memory: nil)
+    case facet.to_s
+    when "writing"
+      Huayu::WritingTarget.new(lexeme).writable? ? :writing : :swipe
+    when "tone"
+      tone_card_kind(lexeme, memory)
+    else
+      :swipe
+    end
+  end
+
+  def tone_card_kind(lexeme, memory)
+    speech = Huayu::PronunciationTarget.new(lexeme).syllables.any?
+    quiz = Huayu::ToneQuiz.new(lexeme).available?
+    return :swipe unless speech || quiz
+    return :tone_speech if speech && (!quiz || memory&.reps.to_i.odd?)
+
+    quiz ? :tone_quiz : :tone_speech
   end
 
   def study_next_suggestion

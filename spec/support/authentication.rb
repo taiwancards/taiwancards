@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module AuthenticationHelpers
+  def current_user
+    @authenticated_user
+  end
+
   def sign_in(user = nil)
     user ||= create(:user)
     reset!

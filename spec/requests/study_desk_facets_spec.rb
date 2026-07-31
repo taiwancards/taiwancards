@@ -24,14 +24,14 @@ RSpec.describe "Studying a desk with all facets" do
     desk
   end
 
-  it "shows a speak-aloud card that links to the mic trainer" do
+  it "gives a tone-only desk a tone check rather than a plain swipe card" do
     desk = desk_with(%w[tone])
 
     get("/study", params: {mode: "desk", collection_id: desk.id})
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include(I18n.t("study.ask.tone")))
-    expect(response.body).to(include(pronunciation_path(lexeme_id: word.id)))
+    expect(response.body).to(include("card-tone-quiz").or(include("card-speech")))
+    expect(response.body).not_to(include("data-controller=\"swipe-card\""))
   end
 
   it "shows a handwriting card prompting from meaning, linking to the stroke trainer" do

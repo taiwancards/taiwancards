@@ -15,9 +15,16 @@ module Lexemes
       lexemes = Array(lexemes)
       return 0 if lexemes.empty?
 
-      wanted = lexemes.flat_map do |lexeme|
-        Lexemes::Facets.for(lexeme).map { |facet| [lexeme.id, LexemeMemory.facets.fetch(facet)] }
-      end
+      activate_pairs(
+        lexemes.flat_map do |lexeme|
+          Lexemes::Facets.for(lexeme).map { |facet| [lexeme.id, LexemeMemory.facets.fetch(facet)] }
+        end
+      )
+    end
+
+    def activate_pairs(pairs)
+      wanted = Array(pairs).uniq
+      return 0 if wanted.empty?
 
       insert(wanted - already_active(wanted))
     end

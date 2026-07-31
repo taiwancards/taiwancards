@@ -6,6 +6,7 @@ module Huayu
 
     UNSEEN_WORD = 0.5
     UNSEEN_CHAR = 0.2
+    CACHE_LIMIT = 100_000
 
     class << self
       def instance
@@ -36,10 +37,12 @@ module Huayu
     end
 
     def word_cost(token)
-      @word_costs[token] ||= begin
-        count = @words[token]
-        count ? -Math.log(count / @total) : @unseen_word
-      end
+      cached = @word_costs[token]
+      return cached if cached
+
+      @word_costs = {} if @word_costs.size >= CACHE_LIMIT
+      count = @words[token]
+      @word_costs[token] = count ? -Math.log(count / @total) : @unseen_word
     end
 
     def char_cost(char)

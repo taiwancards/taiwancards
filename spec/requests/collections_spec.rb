@@ -45,15 +45,14 @@ RSpec.describe "Desks (collections)" do
     expect(response.body).to(include("學校"))
   end
 
-  it "ignores everything that is not a Han character in the pasted list" do
+  it "offers only Taiwanese Mandarin words as cards, whatever else the text holds" do
     create(:lexeme, kind: :word, text: "小姐", meanings: {"en" => "miss"})
 
     post("/desks/preview", params: {text: "小姐\nxiǎojiě\nN\nбарышня, госпожа\n\nㄋㄧˇ"})
-
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("小姐"))
-    expect(response.body).not_to(include("xiǎojiě"))
-    expect(response.body).not_to(include("ㄋㄧˇ"))
+    expect(preview_candidates).to(eq(["小姐"]))
+    expect(preview_payload["lines"].flatten.select { |token| token["k"] == 2 }.map { |token| token["t"] })
+      .to(eq(["小姐"]))
   end
 
   it "lists only the current user's desks" do

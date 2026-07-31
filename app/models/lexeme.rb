@@ -13,7 +13,7 @@ class Lexeme < ApplicationRecord
   )
   has_many :components, through: :child_links, source: :child
   has_many :containers, through: :parent_links, source: :parent
-  has_many :collection_items, dependent: :destroy
+  has_many :collection_items, dependent: :delete_all
   has_many :collections, through: :collection_items
 
   has_many :lexeme_content_sources, dependent: :delete_all

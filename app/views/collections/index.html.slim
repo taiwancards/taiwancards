@@ -1,28 +1,55 @@
 - content_for(:title, t("desks.title"))
 
-.py-6.space-y-5
+.py-6.space-y-6
   header.flex.flex-wrap.items-start.justify-between.gap-3
     div.space-y-1
       = render("shared/page_help", key: "desks", title: t("desks.title"))
-    = link_to t("desks.new"), new_desk_path, class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+    .flex.flex-wrap.gap-2
+      = link_to t("shares.my_shares"), deck_shares_path, class: "rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted"
+      = link_to t("desks.new"), new_desk_path, class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
 
-  - if @desks.empty?
+  - if @decks.empty? && @groups.empty?
     p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
       = t("desks.empty")
-  - else
-    .grid.gap-3 class="sm:grid-cols-2"
-      - @desks.each do |desk|
-        .rounded-xl.border.border-border.bg-card.p-4.space-y-3
-          .flex.items-start.justify-between.gap-2
-            div.min-w-0
-              .truncate.font-semibold = desk.name
-              .text-xs.text-muted-foreground = t("desks.items_count", count: desk.items_count)
-            = button_to t("common.delete"), my_desk_path(desk), method: :delete, form: {data: {turbo_confirm: t("desks.delete_confirm")}}, class: "shrink-0 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted"
-          - facets = desk.study_facets
-          - if facets.any?
-            .flex.flex-wrap.gap-1
-              - facets.each do |facet|
-                span.rounded-full.bg-muted.px-2.text-xs.text-muted-foreground class="py-0.5" = t("memories.#{facet}")
-          .flex.flex-wrap.gap-2.pt-1
-            = link_to t("desks.study"), study_path(mode: "desk", collection_id: desk.id), class: "rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
-            = link_to t("desks.open"), my_desk_path(desk), class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+
+  - if @groups.any?
+    section.space-y-2 data-controller="sortable" data-sortable-url-value=reorder_groups_path
+      p.text-xs.text-muted-foreground = t("groups.reorder_hint")
+      - @groups.each do |group|
+        .space-y-3.rounded-xl.border.border-border.p-3[
+          data-sortable-target="item" data-sortable-id=group.id ]
+          .flex.flex-wrap.items-center.justify-between.gap-2
+            .flex.min-w-0.items-center.gap-2
+              button.sortable-grip.shrink-0.rounded-md.p-1.text-muted-foreground[
+                type="button" aria-label=t("groups.reorder")
+                data-action="pointerdown->sortable#start pointermove->sortable#move pointerup->sortable#end pointercancel->sortable#end"
+                class="hover:bg-muted" ]
+                = icon(:grip, css: "size-4")
+              = link_to group_path(group), class: "min-w-0 truncate text-sm font-semibold hover:underline" do
+                = group.name
+            span.shrink-0.text-xs.text-muted-foreground = t("groups.decks_count", count: group.collections_count)
+          - decks = @decks_by_group[group.id] || []
+          - if decks.empty?
+            p.rounded-lg.border.border-dashed.border-border.px-4.py-5.text-center.text-sm.text-muted-foreground
+              = t("groups.empty")
+          - else
+            .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3"
+              - decks.each do |desk|
+                = render("collections/deck_card", deck: desk)
+
+  - if @ungrouped.any?
+    section.space-y-3
+      h2.text-sm.font-semibold = @groups.any? ? t("desks.ungrouped") : t("desks.title")
+      p.text-xs.text-muted-foreground = t("desks.reorder_hint")
+      .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3" data-controller="sortable" data-sortable-url-value=reorder_desks_path
+        - @ungrouped.each do |desk|
+          = render("collections/deck_card", deck: desk, sortable: true)
+
+  section.space-y-3.rounded-xl.border.border-border.p-4
+    h2.text-sm.font-medium = t("groups.new")
+    p.text-xs.text-muted-foreground = t("groups.add_deck_hint")
+    = form_with url: groups_path, method: :post, class: "flex flex-wrap items-end gap-2" do
+      .min-w-0.flex-1.space-y-1
+        label.block.text-xs.font-medium.text-muted-foreground for="group_name" = t("groups.name_label")
+        = text_field_tag :name, nil, id: "group_name", class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+      = submit_tag t("groups.create"), class: "shrink-0 rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted cursor-pointer"

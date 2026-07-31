@@ -1,0 +1,43 @@
+- content_for(:title, @share.name)
+- coverage = @preview.coverage
+
+.py-6.space-y-5
+  header.space-y-2
+    p.text-sm.text-muted-foreground
+      = t(@share.kind_group? ? "shares.offer_group" : "shares.offer_deck", name: @share.user.name.presence || t("common.someone"))
+    h1.text-2xl.font-bold.tracking-tight = @share.name
+    p.text-sm.text-muted-foreground
+      = t("shares.cards_count", count: @preview.cards)
+      - if @share.kind_group?
+        = " · "
+        = t("groups.decks_count", count: @preview.decks.size)
+
+  - if @mine
+    p.rounded-lg.border.border-border.px-3.py-2.text-sm.text-muted-foreground = t("shares.mine")
+
+  - if @preview.decks.size > 1
+    ul.divide-y.divide-border.overflow-hidden.rounded-xl.border.border-border
+      - @preview.decks.each do |deck|
+        li.flex.items-baseline.justify-between.gap-3.px-3.py-2
+          span.min-w-0.truncate.text-sm.font-medium = deck.name
+          span.shrink-0.text-xs.text-muted-foreground
+            = t("shares.cards_count", count: deck.cards)
+            - if deck.covered.positive?
+              = " · #{deck.covered_percent}%"
+
+  .flex.flex-wrap.gap-2.text-sm
+    - if coverage.overlapping?
+      span.rounded-lg.border.border-border.px-3.text-muted-foreground class="py-1.5"
+        = t("shares.overlap", percent: coverage.covered_percent, count: coverage.covered.size, total: coverage.total)
+    span.rounded-lg.border.border-border.bg-card.px-3 class="py-1.5"
+      = t("shares.fresh", count: coverage.fresh)
+
+  p.text-sm.text-muted-foreground = t("shares.independent")
+  - if @share.expires_at
+    p.text-xs.text-muted-foreground = t("shares.expires", date: l(@share.expires_at.to_date, format: :long))
+
+  .flex.flex-wrap.gap-2
+    = button_to t("shares.accept"), accept_deck_share_path(@share.token), method: :post, class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+    - if coverage.overlapping? && coverage.fresh.positive?
+      = button_to t("shares.accept_only_new"), accept_deck_share_path(@share.token, only_new: 1), method: :post, class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+    = link_to t("common.cancel"), desks_path, class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
