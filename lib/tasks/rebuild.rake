@@ -125,9 +125,9 @@ namespace(:huayu) do
     Huayu::SentenceMeaningFiller.new.call
   end
 
-  desc("Remove the sentences listed as unusable in sentence_rejects.jsonl. DRY_RUN=1 to only list them")
-  task(purge_rejected_sentences: :environment) do
-    pp(Huayu::SentenceRejectPurge.new.call(dry_run: ENV["DRY_RUN"].present?))
+  desc("Remove the entries listed as unusable in sentence_rejects.jsonl and collocation_rejects.jsonl. DRY_RUN=1 to only list them")
+  task(purge_rejects: :environment) do
+    pp(Huayu::RejectPurge.new.call(dry_run: ENV["DRY_RUN"].present?))
   end
 
   desc("Split single words from collocations using MOE headword status")
