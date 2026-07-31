@@ -2,10 +2,31 @@
 
 module Admin
   class UsersController < ApplicationController
+    include Paginated
+
     before_action :require_admin
 
+    PER_PAGE = 30
+    EVENTS_PER_PAGE = 50
+    SORTS = {
+      "seen" => "last_seen_at DESC NULLS LAST, id DESC",
+      "joined" => "created_at DESC",
+      "email" => "email ASC"
+    }.freeze
+
     def index
-      @users = User.order(:email)
+      @sort = params[:sort].presence_in(SORTS.keys) || SORTS.keys.first
+      page, = paginate(User.order(Arel.sql(SORTS[@sort])), per_page: PER_PAGE)
+      @users = page.to_a
+      @stats = Admin::UserStats.new(@users)
+    end
+
+    def show
+      @user = User.find(params[:id])
+      @profile = Admin::UserProfile.new(@user)
+      feed = @user.activity_events.recent
+      events, = paginate(feed, per_page: EVENTS_PER_PAGE, total: @profile.counts[:events])
+      @events = events.to_a
     end
 
     def update

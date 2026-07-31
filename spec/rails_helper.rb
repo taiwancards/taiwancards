@@ -5,6 +5,24 @@ require "spec_helper"
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 abort("The Rails environment is running in production mode!") if Rails.env.production?
+
+DEPLOYMENT_ENV = %w[
+  SITE_URL
+  APP_URL
+  APP_HOST
+  APP_HOSTS
+  ASSETS_BASE_URL
+  MEDIA_BASE_URL
+  DONATE_SCRIPT_URL
+  DONATE_SLUG
+  DONATE_ORIGINS
+  NGROK_DOMAIN
+  CSP_REPORT_ONLY
+]
+  .freeze
+
+DEPLOYMENT_ENV.each { |name| ENV.delete(name) }
+
 require "rspec/rails"
 require "tmpdir"
 
@@ -19,7 +37,6 @@ end
 RSpec.configure do |config|
   config.before(:suite) do
     ENV["DATA_ROOT"] = Dir.mktmpdir("taiwancards-test-data")
-    ENV.delete("MEDIA_BASE_URL")
     ENV["ADMIN_EMAIL"] = "new.learner@example.com"
     ENV["ADMIN_NAME"] = "New Learner"
     ENV["ADMIN_GOOGLE_EMAIL"] = "new.learner@example.com"

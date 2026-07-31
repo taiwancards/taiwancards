@@ -41,6 +41,17 @@ RSpec.describe ProcessCache do
     expect(cache.size).to(be <= 3)
   end
 
+  it "spends expired entries before it resorts to dropping live ones" do
+    cache = described_class.new(ttl: 0.05, limit: 3)
+    2.times { |index| cache.fetch("old#{index}") { index } }
+    sleep(0.06)
+    cache.fetch("live") { :live }
+    cache.fetch("fresh") { :fresh }
+
+    expect(cache.fetch("live") { :recomputed }).to(eq(:live))
+    expect(cache.size).to(eq(2))
+  end
+
   describe "#once" do
     it "answers true the first time and false afterward" do
       expect(cache.once("k")).to(be(true))

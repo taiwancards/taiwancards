@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   )
 
   namespace(:admin) do
-    resources(:users, only: %i[index update destroy])
+    resources(:users, only: %i[index show update destroy])
     resources(:content_sources, only: %i[index update])
 
     get("activity", to: "activity#index")

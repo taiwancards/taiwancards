@@ -2,13 +2,13 @@
 
 .py-6.space-y-6
   .grid.grid-cols-3.gap-3
-    = render RubyUI::Card.new(class: "p-4 text-center") do
+    .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-3xl.font-bold.text-primary = @counts[:on_desk]
       .mt-1.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("desk.on_desk")
-    = render RubyUI::Card.new(class: "p-4 text-center") do
+    .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-3xl.font-bold.text-amber-500 = @counts[:due]
       .mt-1.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("desk.due")
-    = render RubyUI::Card.new(class: "p-4 text-center") do
+    .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-3xl.font-bold.text-emerald-500 = @counts[:unseen]
       .mt-1.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("desk.unseen")
 

@@ -141,9 +141,15 @@ bin/rspec                        # tests
 bin/rubocop                      # style
 bin/brakeman                     # static analysis
 bin/bundler-audit                # dependency advisories
+bin/rails site:check             # site/ still matches the pages it is built from
 bin/ci                           # all of the above
 just --list                      # task shortcuts
 ```
+
+`site/` holds the static marketing pages, rendered from the same Slim views the
+application serves and deployed by a separate Render static service from this
+repository. Regenerate them with `just site` whenever those pages change; `bin/ci`
+fails if the committed output has drifted.
 
 ## Layout
 

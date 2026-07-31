@@ -36,5 +36,9 @@ header.sticky.top-0.z-40.border-b.border-border
 
       = render "shared/script_prefs", inside_app: authenticated?, compact: true
 
+      - if current_user&.admin?
+        = link_to admin_users_path, class: "inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground", title: t("admin.console"), aria: {label: t("admin.console")} do
+          = icon(:settings, css: "size-5")
+
 
 = render "shared/subnav"

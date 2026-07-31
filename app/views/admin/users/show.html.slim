@@ -1,0 +1,103 @@
+- content_for(:title) { @user.display_name }
+- counts = @profile.counts
+
+.py-6.space-y-6
+  header.space-y-2
+    = render "admin/nav"
+    h1.text-2xl.font-bold.tracking-tight = @user.display_name
+    p.text-sm.text-muted-foreground = @user.email
+
+  .grid.gap-4 class="sm:grid-cols-2"
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.account")
+      dl.space-y-1.text-sm
+        - rows = []
+        - rows << [t("admin.joined"), l(@user.created_at, format: :short)]
+        - rows << [t("admin.last_seen"), @user.last_seen_at ? l(@user.last_seen_at, format: :short) : t("admin.never")]
+        - rows << [t("admin.visits_label"), @user.visits_count]
+        - rows << [t("auth.interface_language"), @user.locale]
+        - rows << ["Google", @user.google_email.presence || t("admin.no_label")]
+        - rows << [t("admin.verified"), @user.verified? ? l(@user.email_verified_at, format: :short) : t("admin.no_label")]
+        - rows << [t("admin.is_admin"), @user.admin? ? t("admin.yes_label") : t("admin.no_label")]
+        - rows << [t("admin.restricted"), @user.restricted_content? ? t("admin.yes_label") : t("admin.no_label")]
+        - rows.each do |label, value|
+          .flex.items-baseline.justify-between.gap-3
+            dt.text-muted-foreground = label
+            dd.truncate.tabular-nums = value
+
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.study_profile")
+      dl.space-y-1.text-sm
+        - rows = []
+        - rows << [t("admin.level"), level_label(@user.level)]
+        - rows << [t("admin.start_level"), @user.start_level.presence || "—"]
+        - rows << [t("admin.projection"), projection_label(@user.projection)]
+        - rows << [t("admin.tolerance"), @user.visibility_tolerance]
+        - rows << [t("admin.display"), "#{@user.zhuyin_position} · #{@user.text_direction}"]
+        - rows << [t("admin.path_steps"), @user.path_steps_done.size]
+        - rows << [t("admin.practice_runs"), @user.practice_runs.values.sum]
+        - if @profile.plan
+          - rows << [t("admin.plan"), "#{@profile.plan.target_level} · #{l(@profile.plan.target_date)}"]
+        - if @profile.placement
+          - rows << [t("admin.placement"), "#{@profile.placement.status} · #{@profile.placement.result_grade}"]
+        - rows.each do |label, value|
+          .flex.items-baseline.justify-between.gap-3
+            dt.text-muted-foreground = label
+            dd.truncate = value
+
+  section.rounded-xl.border.border-border.p-4.space-y-2
+    h2.text-sm.font-semibold = t("admin.numbers")
+    .grid.gap-3 class="grid-cols-2 sm:grid-cols-4"
+      - tiles = []
+      - tiles << [t("admin.decks_label"), counts[:decks]]
+      - tiles << [t("admin.cards_label"), counts[:cards]]
+      - tiles << [t("admin.reviews_label"), counts[:reviews]]
+      - tiles << [t("admin.reviews_recent_label", days: Admin::UserProfile::WINDOW_DAYS), counts[:recent_reviews]]
+      - tiles << [t("admin.pronunciation_label"), counts[:pronunciation]]
+      - tiles << [t("admin.texts_label"), counts[:texts]]
+      - tiles << [t("admin.events_label"), counts[:events]]
+      - tiles << [t("admin.last_review"), @profile.last_review_at ? l(@profile.last_review_at, format: :short) : "—"]
+      - tiles.each do |label, value|
+        div
+          .text-xs.text-muted-foreground = label
+          .text-lg.font-semibold.tabular-nums = value
+
+  .grid.gap-4 class="sm:grid-cols-2"
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.facets", days: Admin::UserProfile::WINDOW_DAYS)
+      - if @profile.facets.empty?
+        p.text-sm.text-muted-foreground = t("admin.activity_empty")
+      - else
+        ul.space-y-1.text-sm
+          - @profile.facets.each do |facet, count|
+            li.flex.items-baseline.justify-between.gap-2
+              span.truncate = t("memories.#{facet}", default: facet.to_s.humanize)
+              span.shrink-0.tabular-nums.text-muted-foreground = count
+
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.by_section")
+      - if @profile.sections.empty?
+        p.text-sm.text-muted-foreground = t("admin.activity_empty")
+      - else
+        ul.space-y-1.text-sm
+          - @profile.sections.each do |controller, count|
+            li.flex.items-baseline.justify-between.gap-2
+              span.truncate = controller.split("/").last.humanize
+              span.shrink-0.tabular-nums.text-muted-foreground = count
+
+  section.space-y-2
+    .flex.flex-wrap.items-baseline.justify-between.gap-2
+      h2.text-sm.font-semibold = t("admin.recent")
+      = link_to t("admin.activity"), admin_activity_path(user_id: @user.id), class: "text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+    - if @events.empty?
+      p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
+        = t("admin.activity_empty")
+    - else
+      .divide-y.divide-border.rounded-xl.border.border-border
+        - @events.each do |event|
+          .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1.px-3.py-2.text-sm
+            span.shrink-0.text-xs.tabular-nums.text-muted-foreground = l(event.created_at, format: :short)
+            span.min-w-0.flex-1.truncate = event.section
+            span.shrink-0.rounded.bg-muted.px-1.text-xs.text-muted-foreground = event.verb
+            span.min-w-0.truncate.text-xs.text-muted-foreground class="basis-full sm:basis-auto" = event.path
+      = render("shared/pager", page: @page, pages: @pages, path: -> (n) { admin_user_path(@user, page: n) })

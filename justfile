@@ -105,6 +105,11 @@ m:
     RAILS_ENV=test bin/rails db:migrate
     bin/rails db:migrate
 
+# Rebuild the static marketing site in site/ from the app pages
+[group('dev')]
+site:
+    bin/rails site:build
+
 # Format Ruby, Python and shell, then autocorrect with RuboCop
 [group('dev')]
 lint:

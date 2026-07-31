@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_31_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_31_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -529,12 +529,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_31_120000) do
     t.text("google_refresh_token")
     t.datetime("google_token_expires_at")
     t.string("google_uid")
+    t.datetime("last_seen_at")
     t.string("locale", default: "en", null: false)
     t.string("name")
     t.string("password_digest", null: false)
     t.jsonb("prefs", default: {}, null: false)
     t.boolean("restricted_content", default: false, null: false)
     t.datetime("updated_at", null: false)
+    t.integer("visits_count", default: 0, null: false)
     t.index("lower((email)::text)", name: "index_users_on_lower_email", unique: true)
     t.index(["google_uid"], name: "index_users_on_google_uid", unique: true, where: "(google_uid IS NOT NULL)")
   end

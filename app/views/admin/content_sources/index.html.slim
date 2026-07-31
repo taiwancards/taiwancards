@@ -2,7 +2,8 @@
 
 .py-6.space-y-4
   div
-    h1.text-2xl.font-bold.tracking-tight = t("admin.sources.title")
+    = render "admin/nav"
+    h1.mt-2.text-2xl.font-bold.tracking-tight = t("admin.sources.title")
     p.mt-1.text-sm.text-muted-foreground = t("admin.sources.intro")
 
   - measurement = @sources.select(&:measurement_only?)

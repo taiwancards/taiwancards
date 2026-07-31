@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReaderController < ApplicationController
-  before_action :set_language
   before_action :set_text, only: %i[show destroy create_desk]
 
   def index
@@ -59,9 +58,6 @@ class ReaderController < ApplicationController
   end
 
   private
-
-  def set_language
-  end
 
   def set_text
     @text = ReadingText.visible_to(current_user).find(params[:id])

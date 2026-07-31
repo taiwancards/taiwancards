@@ -13,17 +13,14 @@ gem "nokolexbor", require: false
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 gem "pg"
-gem "phlex-rails"
 gem "propshaft"
 gem "puma"
 gem "rails-i18n"
 gem "rexml", require: false
 gem "roo", require: false
-gem "ruby_ui"
 gem "slim-rails"
 gem "solid_cache"
 gem "stimulus-rails"
-gem "tailwind_merge"
 gem "tailwindcss-rails"
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ windows jruby ]

@@ -43,7 +43,7 @@ RSpec.describe "Pages" do
     expect(response.body).to(include("Privacy Policy"))
     expect(response.body).to(include(I18n.t("privacy_google.heading")))
     expect(response.body).to(include("drive.file"))
-    expect(response.body).to(include("taiwancards@pm.me"))
+    expect(response.body).to(include("support@taiwancards.app"))
   end
 
   it "renders a public terms of service page", :no_auth do
@@ -51,7 +51,7 @@ RSpec.describe "Pages" do
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include("Terms of Service"))
     expect(response.body).to(include("Acceptable use"))
-    expect(response.body).to(include("taiwancards@pm.me"))
+    expect(response.body).to(include("support@taiwancards.app"))
   end
 
   it "credits the MOE audio in the exact wording the license requires", :no_auth do

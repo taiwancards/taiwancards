@@ -1,37 +1,50 @@
 - content_for(:title) { t("admin.title") }
 
 .py-6.space-y-4
-  div
+  header.space-y-2
     h1.text-2xl.font-bold.tracking-tight = t("admin.title")
-    p.mt-1.text-sm.text-muted-foreground = t("admin.intro")
-    p.mt-2.flex.flex-wrap.gap-x-4
-      = link_to t("admin.activity"), admin_activity_path, class: "text-sm font-medium underline underline-offset-2"
-      = link_to t("admin.sources.title"), admin_content_sources_path, class: "text-sm font-medium underline underline-offset-2"
+    = render "admin/nav"
+    p.text-sm.text-muted-foreground = t("admin.users_intro", count: number_with_delimiter(@total))
+
+  .flex.flex-wrap.items-center.gap-x-3.gap-y-1
+    span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("admin.sort_label")
+    - Admin::UsersController::SORTS.each_key do |key|
+      = link_to t("admin.sorts.#{key}"), admin_users_path(sort: key), class: "text-sm #{@sort == key ? "font-semibold" : "text-muted-foreground hover:text-foreground"}"
 
   .divide-y.divide-border.rounded-xl.border.border-border
     - @users.each do |user|
-      .flex.flex-wrap.items-center.gap-x-4.gap-y-2.p-3.text-sm
-        = form_with model: user, url: admin_user_path(user), method: :patch, class: "flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-2" do |f|
-          .min-w-0 class="flex-1 basis-48"
-            .truncate.font-medium = user.email
-            .flex.flex-wrap.items-center.gap-x-2.text-xs.text-muted-foreground
-              - if user.name.present?
-                span = user.name
-              - unless user.verified?
-                span.text-amber-600 = t("admin.unverified")
-              - if user.google_linked?
-                span Google
+      - stats = @stats.for(user)
+      .space-y-2.p-3
+        .flex.flex-wrap.items-baseline.gap-x-2.gap-y-1
+          = link_to user.display_name, admin_user_path(user), class: "min-w-0 truncate text-sm font-medium underline underline-offset-2"
+          - if user.name.present?
+            span.truncate.text-xs.text-muted-foreground = user.email
+          - if user.google_linked?
+            span.rounded.bg-muted.px-1.text-xs Google
+          - unless user.verified?
+            span.text-xs.text-amber-600 = t("admin.unverified")
 
-          label.inline-flex.shrink-0.items-center.gap-1
-            = f.check_box :admin
-            = t("admin.is_admin")
-          label.inline-flex.shrink-0.items-center.gap-1
-            = f.check_box :restricted_content
-            = t("admin.restricted")
+        .flex.flex-wrap.gap-x-4.gap-y-1.text-xs.text-muted-foreground
+          span = t("admin.joined_at", at: l(user.created_at, format: :short))
+          span = user.last_seen_at ? t("admin.seen_at", at: l(user.last_seen_at, format: :short)) : t("admin.never")
+          span = t("admin.visits", count: user.visits_count)
+          span = level_label(user.level)
+          span = t("admin.cards", count: stats[:cards])
+          span = t("admin.reviews_window", count: stats[:reviews], days: Admin::UserStats::WINDOW_DAYS)
+          span = t("admin.decks", count: stats[:decks])
 
-          = f.submit t("admin.save"), class: "shrink-0 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90 cursor-pointer"
+        .flex.flex-wrap.items-center.gap-2
+          = form_with model: user, url: admin_user_path(user), method: :patch, class: "flex flex-wrap items-center gap-3" do |f|
+            label.inline-flex.shrink-0.items-center.gap-1.text-xs
+              = f.check_box :admin
+              = t("admin.is_admin")
+            label.inline-flex.shrink-0.items-center.gap-1.text-xs
+              = f.check_box :restricted_content
+              = t("admin.restricted")
+            = f.submit t("admin.save"), class: "shrink-0 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90 cursor-pointer"
 
-        - if user != current_user
-          .flex.shrink-0.items-center.gap-1
+          - if user != current_user
             = button_to t("admin.impersonate"), admin_impersonate_path(user), form: {class: "shrink-0"}, class: "rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted"
             = button_to t("admin.delete"), admin_user_path(user), method: :delete, form: {class: "shrink-0", data: {turbo_confirm: t("admin.delete_confirm", email: user.email)}}, class: "rounded-md border border-red-500 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-500/10"
+
+  = render("shared/pager", page: @page, pages: @pages, path: -> (n) { admin_users_path(sort: @sort, page: n) })

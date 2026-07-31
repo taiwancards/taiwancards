@@ -17,7 +17,7 @@ class ProcessCache
   end
 
   def write(key, value)
-    clear if @entries.size >= @limit
+    evict if @entries.size >= @limit
     @entries[key] = Entry.new(value, now + @ttl)
     value
   end
@@ -43,6 +43,14 @@ class ProcessCache
   def size = @entries.size
 
   private
+
+  def evict
+    at = now
+    stale = []
+    @entries.each_pair { |key, held| stale << key if held.expires_at <= at }
+    stale.each { |key| @entries.delete(key) }
+    clear if @entries.size >= @limit
+  end
 
   def now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 end

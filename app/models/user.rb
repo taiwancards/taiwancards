@@ -78,6 +78,18 @@ class User < ApplicationRecord
     restricted_content?
   end
 
+  SEEN_THROTTLE = 15.minutes
+  VISIT_GAP = 30.minutes
+
+  def seen!(now = Time.current)
+    return if last_seen_at && now - last_seen_at < SEEN_THROTTLE
+
+    visit = last_seen_at.nil? || now - last_seen_at > VISIT_GAP ? 1 : 0
+    self.class.where(id: id).update_all(["last_seen_at = ?, visits_count = visits_count + ?", now, visit])
+  rescue => e
+    Rails.logger.warn("presence tracking failed: #{e.class}: #{e.message}")
+  end
+
   MAX_MOBILE_TABS = 4
   ZHUYIN_POSITIONS = %w[right over].freeze
   TEXT_DIRECTIONS = %w[horizontal vertical].freeze

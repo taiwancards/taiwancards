@@ -1537,9 +1537,53 @@ en:
     restricted_denied: This section isn't available on your account.
     admin_denied: Admins only.
   admin:
+    console: Admin
     activity: Activity
-    activity_intro: What people are doing, last %{days} days (%{total} events recorded in total).
+    activity_intro: "%{count} events over the last %{days} days. The log keeps %{retention} days."
     activity_empty: Nothing recorded yet.
+    window: Window
+    days: "%{count} d"
+    clear_filter: "Filtered by %{email} — show everyone"
+    users_intro: "%{count} accounts."
+    sort_label: Sort
+    sorts:
+      seen: Last seen
+      joined: Newest
+      email: Email
+    joined_at: "joined %{at}"
+    seen_at: "seen %{at}"
+    never: never
+    visits: "%{count} visits"
+    cards: "%{count} cards"
+    reviews_window: "%{count} reviews / %{days} d"
+    decks: "%{count} decks"
+    account: Account
+    joined: Registered
+    last_seen: Last seen
+    visits_label: Visits
+    verified: Email verified
+    yes_label: 'yes'
+    no_label: 'no'
+    study_profile: Study profile
+    level: Level
+    start_level: Started as
+    projection: Visible up to
+    tolerance: Tolerance
+    display: Ruby and direction
+    path_steps: Roadmap steps done
+    practice_runs: Practice runs
+    plan: Plan
+    placement: Placement test
+    numbers: Numbers
+    decks_label: Decks
+    cards_label: Cards in study
+    reviews_label: Reviews
+    reviews_recent_label: Reviews / %{days} d
+    pronunciation_label: Speech attempts
+    texts_label: Texts
+    events_label: Events
+    last_review: Last review
+    facets: What they train, %{days} d
     by_user: By person
     by_section: By section
     by_day: By day

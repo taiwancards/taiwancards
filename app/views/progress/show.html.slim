@@ -5,10 +5,10 @@
 
 = render layout: "progress/shell" do
   .grid.grid-cols-2.gap-3.sm:grid-cols-4
-    = render RubyUI::Card.new(class: "p-4 text-center") do
+    .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-2xl.font-bold = @report.streak
       .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.streak")
-    = render RubyUI::Card.new(class: "p-4 text-center") do
+    .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-2xl.font-bold
         - if retention
           = number_to_percentage(retention * 100, precision: 1)
@@ -16,14 +16,14 @@
           | —
       .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground
         = t("stats.retention", target: number_to_percentage(@settings.desired_retention * 100, precision: 0))
-    = render RubyUI::Card.new(class: "p-4 text-center") do
+    .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-2xl.font-bold
         - if @report.average_answer_ms
           = "#{(@report.average_answer_ms / 1000.0).round(1)}s"
         - else
           | —
       .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.answer_time")
-    = render RubyUI::Card.new(class: "p-4 text-center") do
+    .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-2xl.font-bold = breakdown[:mature]
       .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.mature")
 

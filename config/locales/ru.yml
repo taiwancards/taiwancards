@@ -1564,9 +1564,53 @@ ru:
     restricted_denied: Этот раздел недоступен на вашем аккаунте.
     admin_denied: Только для администратора.
   admin:
+    console: Админка
     activity: Активность
-    activity_intro: 'Кто чем занимается за последние %{days} дней (всего записано событий: %{total}).'
+    activity_intro: 'Событий за %{days} дн.: %{count}. Журнал хранит %{retention} дн.'
     activity_empty: Пока ничего не записано.
+    window: Период
+    days: '%{count} дн.'
+    clear_filter: 'Фильтр: %{email} — показать всех'
+    users_intro: 'Аккаунтов: %{count}.'
+    sort_label: Порядок
+    sorts:
+      seen: По последнему входу
+      joined: По регистрации
+      email: По почте
+    joined_at: 'рег. %{at}'
+    seen_at: 'заходил %{at}'
+    never: не заходил
+    visits: 'заходов: %{count}'
+    cards: 'карточек: %{count}'
+    reviews_window: 'повторений за %{days} дн.: %{count}'
+    decks: 'колод: %{count}'
+    account: Аккаунт
+    joined: Регистрация
+    last_seen: Последний вход
+    visits_label: Заходов
+    verified: Почта подтверждена
+    yes_label: да
+    no_label: нет
+    study_profile: Учебный профиль
+    level: Уровень
+    start_level: Стартовая точка
+    projection: Видит до уровня
+    tolerance: Допуск
+    display: Чжуинь и направление
+    path_steps: Шагов дорожной карты
+    practice_runs: Запусков практик
+    plan: План
+    placement: Тест на уровень
+    numbers: Цифры
+    decks_label: Колод
+    cards_label: Карточек в учёбе
+    reviews_label: Повторений
+    reviews_recent_label: Повторений за %{days} дн.
+    pronunciation_label: Попыток речи
+    texts_label: Текстов
+    events_label: Событий
+    last_review: Последнее повторение
+    facets: Что тренирует, %{days} дн.
     by_user: По людям
     by_section: По разделам
     by_day: По дням

@@ -3,9 +3,9 @@
 class ActivityEvent < ApplicationRecord
   SKIPPED_CONTROLLERS = %w[rails/health sessions admin/activity admin/impersonations].freeze
   RETENTION = 30.days
-  WINDOW = 10.minutes
-  TRACKED_USERS = 4096
-  SWEEP_INTERVAL = 1.day
+  WINDOW = 30.minutes
+  TRACKED_KEYS = 16_384
+  SWEEP_INTERVAL = 1.hour
   SWEEP_BATCH = 5_000
 
   belongs_to :user, optional: true
@@ -60,7 +60,7 @@ class ActivityEvent < ApplicationRecord
     end
 
     def seen
-      @seen ||= ProcessCache.new(ttl: WINDOW, limit: TRACKED_USERS)
+      @seen ||= ProcessCache.new(ttl: WINDOW, limit: TRACKED_KEYS)
     end
 
     def sweeps

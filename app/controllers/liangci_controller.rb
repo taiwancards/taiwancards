@@ -6,8 +6,6 @@ class LiangciController < ApplicationController
   EXAMPLE_LIMIT = 12
   GAME_OPTIONS = 4
 
-  before_action :set_language
-
   def index
     @entries = Lexeme.where(kind: :measure_word).order(:score).to_a
     @category = params[:category].presence_in(Liangci::CATEGORIES)
@@ -55,8 +53,5 @@ class LiangciController < ApplicationController
   def examples_for(entry, nouns)
     pairs = nouns.map { |noun| [entry.text, noun.text] }
     Huayu::ClassifierExamples.new.for_pairs(pairs, limit: EXAMPLE_LIMIT)
-  end
-
-  def set_language
   end
 end

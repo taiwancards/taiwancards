@@ -21,7 +21,7 @@ module Taiwancards
 
     config.autoload_lib(ignore: %w[assets tasks font_assets.rb shared_assets.rb font_url_compiler.rb corpora])
 
-    config.assets.compilers << ["text/css", FontUrlCompiler]
+    config.assets.compilers.unshift(["text/css", FontUrlCompiler])
 
     config.active_record.encryption.primary_key = ENV["ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY"]
     config.active_record.encryption.deterministic_key = ENV["ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY"]
