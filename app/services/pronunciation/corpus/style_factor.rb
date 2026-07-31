@@ -50,8 +50,8 @@ module Pronunciation
             far = group[:connected].filter_map { |row| row[field] }
             next if near.length < MIN_PER_KEY || far.length < MIN_PER_KEY
 
-            citation << Acoustic::Dtw.mad(near)
-            connected << Acoustic::Dtw.mad(far)
+            citation << DTW::Statistics.median_absolute_deviation(near)
+            connected << DTW::Statistics.median_absolute_deviation(far)
           end
 
           next if citation.length < MIN_KEYS

@@ -44,12 +44,12 @@ module Pronunciation
 
               medians << Dsp.median(vals)
               counts << vals.length
-              within << Dtw.mad(vals) if vals.length >= 3
+              within << DTW::Statistics.median_absolute_deviation(vals) if vals.length >= 3
             end
 
             next if medians.length < min_speakers
 
-            observed = Dtw.mad(medians)
+            observed = DTW::Statistics.median_absolute_deviation(medians)
             n_mean = counts.sum.to_f / counts.length
             noise = within.empty? ? 0.0 : (Dsp.median(within) / Math.sqrt(n_mean))
             corrected = Math.sqrt([(observed ** 2) - (noise ** 2), 0.0].max)
@@ -75,7 +75,7 @@ module Pronunciation
           next if per_spk.length < min_speakers
 
           n = per_spk[0].length
-          curves << Array.new(n) { |i| Dtw.mad(per_spk.map { |c| c[i] }) }
+          curves << Array.new(n) { |i| DTW::Statistics.median_absolute_deviation(per_spk.map { |c| c[i] }) }
         end
 
         unless curves.empty?
@@ -93,7 +93,7 @@ module Pronunciation
             m.first
           end
 
-          reps.combination(2).first(6).each { |(a, b)| dists << Dtw.distance(a, b) }
+          reps.combination(2).first(6).each { |(a, b)| dists << DTW.distance(a, b) }
         end
 
         out["mfcc_scale"] = dists.empty? ? nil : Dsp.median(dists)

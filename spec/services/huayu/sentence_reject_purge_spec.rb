@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe(Huayu::SentenceRejectPurge) do
+RSpec.describe Huayu::SentenceRejectPurge do
   let(:store) { Huayu::SentenceRejectStore }
   let!(:source) do
     ContentSource.create!(

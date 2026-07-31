@@ -14,7 +14,7 @@ module Pronunciation
         s = vals.sort
         {
           "median" => Dsp.median(s),
-          "mad" => Dtw.mad(s),
+          "mad" => DTW::Statistics.median_absolute_deviation(s),
           "sd" => Dsp.stddev(s),
           "p05" => percentile(s, 0.05),
           "p95" => percentile(s, 0.95),
@@ -40,7 +40,7 @@ module Pronunciation
 
         n = curves[0].length
         center = Array.new(n) { |i| Dsp.median(curves.map { |c| c[i] }) }
-        sigma = Array.new(n) { |i| Dtw.mad(curves.map { |c| c[i] }) }
+        sigma = Array.new(n) { |i| DTW::Statistics.median_absolute_deviation(curves.map { |c| c[i] }) }
         {"center" => center, "sigma" => sigma, "n" => curves.length}
       end
 
@@ -54,17 +54,22 @@ module Pronunciation
         rows = kept.empty? ? feature_rows : kept
         meta = rows.map { |r| meta_rows[feature_rows.index(r)] }.compact
 
-        tone_seqs = rows.map { |r| r["tone_curve"].map { |v| [v] } }
-        tone_bary = Dtw.barycenter(tone_seqs, length: Features::TONE_POINTS, iterations: 3)
+        tone_seqs = rows.map { |r| r["tone_curve"] }
+        tone_bary = DTW.barycenter(tone_seqs, length: Features::TONE_POINTS, iterations: 3)
         tone_curve = {
-          "center" => tone_bary["center"].map(&:first),
-          "sigma" => tone_bary["sigma"].map { |v| [v.first, 0.4].max },
-          "n" => tone_bary["n"]
+          "center" => tone_bary.center,
+          "sigma" => tone_bary.dispersion.map { |v| [v, 0.4].max },
+          "n" => tone_bary.count
         }
 
         mfcc_seqs = rows.map { |r| r["mfcc"] }
-        mfcc_bary = Dtw.barycenter(mfcc_seqs, length: Features::MFCC_POINTS, iterations: 3)
-        mfcc_bary["sigma"] = mfcc_bary["sigma"].map { |v| v.map { |x| [x, 0.25].max } }
+        mfcc_bary = DTW.barycenter(mfcc_seqs, length: Features::MFCC_POINTS, iterations: 3)
+        mfcc_curve = {
+          "center" => mfcc_bary.center,
+          "sigma" => mfcc_bary.dispersion.map { |frame| frame.map { |v| [v, 0.25].max } },
+          "n" => mfcc_bary.count,
+          "length" => mfcc_bary.length
+        }
 
         vot_rows = rows.select { |r| r["vot_reliable"] }
 
@@ -101,7 +106,7 @@ module Pronunciation
           "duration_ms" => stat(rows.map { |r| r["duration_ms"] }),
           "voiced_ms" => stat(rows.map { |r| r["voiced_ms"] }),
           "voiced_ratio" => stat(rows.map { |r| r["voiced_ratio"] }),
-          "mfcc" => mfcc_bary,
+          "mfcc" => mfcc_curve,
           "f1" => curve_stat(rows.map { |r| r["f1"] }),
           "f2" => curve_stat(rows.map { |r| r["f2"] }),
           "f3" => curve_stat(rows.map { |r| r["f3"] }),
@@ -178,7 +183,7 @@ module Pronunciation
         med = Array.new(n) { |i| Dsp.median(curves.map { |c| c[i] }) }
         dists = curves.map { |c| Math.sqrt(c.each_with_index.sum { |v, i| (v - med[i]) ** 2 } / n) }
         m = Dsp.median(dists)
-        s = Dtw.mad(dists)
+        s = DTW::Statistics.median_absolute_deviation(dists)
         return [rows, 0] if s <= 1e-9
 
         kept = rows.each_with_index.reject { |_r, i| (dists[i] - m) / s > 3.5 }.map(&:first)

@@ -116,7 +116,7 @@ module Pronunciation
         end
 
         if tpl["mfcc"]
-          d = Dtw.distance(f["mfcc"], tpl["mfcc"]["center"])
+          d = DTW.distance(f["mfcc"], tpl["mfcc"]["center"])
           z = d / mfcc_scale(tpl)
           axes << axis("timbre", z, AxisNorms.typical?("timbre", z) ? "timbre.ok" : "timbre.drift")
         end
