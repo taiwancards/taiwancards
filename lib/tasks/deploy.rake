@@ -100,6 +100,28 @@ namespace(:deploy) do
     Rake::Task["deploy:sync"].invoke
   end
 
+  desc("Ship data/huayu and run only the importers for the files that changed. Usage: rake deploy:glosses")
+  task(glosses: :environment) do
+    server = ENV["RENDER_SERVER"].presence
+    abort("RENDER_SERVER is not set in .env") if server.blank?
+
+    section = Deploy::Catalog.find("huayu")
+    abort("data/huayu is missing locally") unless section&.exist?
+
+    dry_run = ENV["DRY_RUN"].present?
+    shipper = Content::Shipper.new(server:, region: ENV["RENDER_REGION"].presence)
+
+    puts("━━ 1/2 · data/huayu onto the Render disk ━━")
+    shipper.ensure_dirs([section.to]) unless dry_run
+    shipper.sync_paths(section.sync_sources, section.to, dry_run:, checksum: ENV["CHECKSUM"].present?)
+
+    puts("\n━━ 2/2 · importers on the server ━━")
+    next puts("  skipped: dry run") if dry_run
+
+    shipper.run_remote('cd "${RENDER_PROJECT_DIR:-/opt/render/project/src}"; bundle exec rails deploy:sync')
+    puts("\n✓ Done")
+  end
+
   desc(
     "Ship absolutely everything: disk sections, dictionary rows, server tasks. Usage: CONFIRM=yes rake deploy:content"
   )
