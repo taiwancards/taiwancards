@@ -4,7 +4,11 @@ module Huayu
   class RejectStore
     REASONS = %w[fragment ambiguous garbled off_corpus].freeze
 
-    Entry = Data.define(:text, :reason, :note)
+    Entry = Data.define(:text, :reason, :note, :en, :ru) do
+      def initialize(text:, reason:, note: nil, en: nil, ru: nil)
+        super
+      end
+    end
 
     class << self
       def path
@@ -19,7 +23,7 @@ module Huayu
           next if line.empty?
 
           row = JSON.parse(line)
-          Entry.new(text: row["text"], reason: row["reason"], note: row["note"])
+          Entry.new(text: row["text"], reason: row["reason"], note: row["note"], en: row["en"], ru: row["ru"])
         end
       end
 
@@ -44,7 +48,7 @@ module Huayu
         path.dirname.mkpath
         path.open("w") do |file|
           entries.uniq(&:text).sort_by(&:text).each do |entry|
-            file.puts(JSON.generate({text: entry.text, reason: entry.reason, note: entry.note}.compact))
+            file.puts(JSON.generate({text: entry.text, reason: entry.reason, note: entry.note, en: entry.en, ru: entry.ru}.compact))
           end
         end
 
