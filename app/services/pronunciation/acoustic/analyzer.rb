@@ -389,7 +389,7 @@ module Pronunciation
         s = tpl["mfcc_scale"].to_f
         return s if s > 0.5
 
-        sig = Dsp.mean(tpl.dig("mfcc", "sigma").map { |v| Dsp.mean(v) })
+        sig = DTW::Statistics.mean(tpl.dig("mfcc", "sigma").map { |v| DTW::Statistics.mean(v) })
         [sig * 2.4, 1.0].max
       end
 

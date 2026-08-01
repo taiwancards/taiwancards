@@ -71,7 +71,10 @@ RSpec.describe Huayu::TextGate do
 
     it "leaves Taiwanese colloquial forms with 兒" do
       expect(gate.call("那兒")).to(be_ok)
-      expect(gate.call("人情味兒")).to(be_ok)
+    end
+
+    it "cuts erhua forms the corpus confirmed as mainland" do
+      expect(gate.call("人情味兒").reason).to(eq(:mainland))
     end
   end
 end

@@ -56,8 +56,9 @@ module Pronunciation
         hop = [(rate * HOP_MS / 1000.0).round, 1].max
         win = [(rate * WIN_MS / 1000.0).round, 2].max
 
-        voice = Dsp.envelope_db(Dsp.lowpass(segment, rate, VOICE_HZ), win, hop)
-        noise = Dsp.envelope_db(Dsp.highpass(segment, rate, NOISE_HZ), win, hop)
+        signal = DSP::Waveform.new(samples: segment, sample_rate: rate)
+        voice = DSP::Energy.envelope_db(DSP.lowpass(signal, cutoff: VOICE_HZ).samples, window: win, hop: hop)
+        noise = DSP::Energy.envelope_db(DSP.highpass(signal, cutoff: NOISE_HZ).samples, window: win, hop: hop)
         return nil if voice.length < 12 || noise.length < 12
 
         {
@@ -98,7 +99,7 @@ module Pronunciation
           next false if noise[i] - voice[i] > VOICE_OVER_NOISE_DB
 
           tail = voice[i..[i + sustain, last].min]
-          Dsp.median(tail) >= floor
+          DTW::Statistics.median(tail) >= floor
         end
 
         return nil if start.nil?

@@ -72,10 +72,10 @@ module Pronunciation
         wanted = @only ? tokens.select { |token| @only.include?(token["_key"]) } : tokens
         return [] if wanted.empty?
 
-        samples, rate = Acoustic::Dsp.read_wav(@manifest.resolve(relative))
-        return [] if samples.length < rate * MIN_AUDIO_S
+        signal = DSP.read(@manifest.resolve(relative))
+        return [] if signal.length < signal.sample_rate * MIN_AUDIO_S
 
-        analysis = Acoustic::Features.analyze(samples, rate)
+        analysis = Acoustic::Features.analyze(signal.samples, signal.sample_rate)
         spans = Acoustic::Features.syllable_spans(analysis, tokens.first["n_syllables"])
         return [] if spans.nil?
 

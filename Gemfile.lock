@@ -106,6 +106,7 @@ GEM
       dotenv (= 3.2.0)
       railties (>= 6.1)
     drb (2.2.3)
+    dsprb (1.0.0)
     dtwrb (1.0.0)
     erb (6.0.6)
     erubi (1.13.1)
@@ -406,6 +407,7 @@ DEPENDENCIES
   bundler-audit
   debug
   dotenv-rails
+  dsprb (>= 1.0)
   dtwrb (>= 1.0)
   factory_bot_rails
   importmap-rails
@@ -467,6 +469,7 @@ CHECKSUMS
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
   dotenv-rails (3.2.0) sha256=657e25554ba622ffc95d8c4f1670286510f47f2edda9f68293c3f661b303beab
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
+  dsprb (1.0.0) sha256=d823718d5068850baaa45640b6e83e8d2b2a7664c2245d0ea55663e7ed6b6167
   dtwrb (1.0.0) sha256=7e43535b968d61ad60fa873ce5f0bd01e693d47a4885353c246eda14d75a3ef4
   erb (6.0.6) sha256=a9b24986700f5bf127c4f297c5403c3ca41b83b0a316c0cd09a096b56e644ae5
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9

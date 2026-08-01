@@ -13,9 +13,9 @@ module Pronunciation
 
         s = vals.sort
         {
-          "median" => Dsp.median(s),
+          "median" => DTW::Statistics.median(s),
           "mad" => DTW::Statistics.median_absolute_deviation(s),
-          "sd" => Dsp.stddev(s),
+          "sd" => DTW::Statistics.standard_deviation(s),
           "p05" => percentile(s, 0.05),
           "p95" => percentile(s, 0.95),
           "min" => s.first,
@@ -39,7 +39,7 @@ module Pronunciation
         return nil if curves.empty?
 
         n = curves[0].length
-        center = Array.new(n) { |i| Dsp.median(curves.map { |c| c[i] }) }
+        center = Array.new(n) { |i| DTW::Statistics.median(curves.map { |c| c[i] }) }
         sigma = Array.new(n) { |i| DTW::Statistics.median_absolute_deviation(curves.map { |c| c[i] }) }
         {"center" => center, "sigma" => sigma, "n" => curves.length}
       end
@@ -180,9 +180,9 @@ module Pronunciation
 
         curves = rows.map { |r| r["tone_curve"] }
         n = curves[0].length
-        med = Array.new(n) { |i| Dsp.median(curves.map { |c| c[i] }) }
+        med = Array.new(n) { |i| DTW::Statistics.median(curves.map { |c| c[i] }) }
         dists = curves.map { |c| Math.sqrt(c.each_with_index.sum { |v, i| (v - med[i]) ** 2 } / n) }
-        m = Dsp.median(dists)
+        m = DTW::Statistics.median(dists)
         s = DTW::Statistics.median_absolute_deviation(dists)
         return [rows, 0] if s <= 1e-9
 

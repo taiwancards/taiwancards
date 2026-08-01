@@ -308,7 +308,7 @@ module Pronunciation
       bytes = audio.respond_to?(:read) ? audio.read : audio.to_s
       return [nil, nil] if bytes.blank?
 
-      Acoustic::Dsp.parse_wav(bytes)
+      DSP.decode(bytes).then { |signal| [signal.samples, signal.sample_rate] }
     rescue StandardError
       [nil, nil]
     end

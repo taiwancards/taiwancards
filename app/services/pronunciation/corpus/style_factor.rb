@@ -56,13 +56,13 @@ module Pronunciation
 
           next if citation.length < MIN_KEYS
 
-          middle = Acoustic::Dsp.median(citation)
+          middle = DTW::Statistics.median(citation)
           next unless middle.positive?
 
-          per_field[field] = Acoustic::Dsp.median(connected) / middle
+          per_field[field] = DTW::Statistics.median(connected) / middle
         end
 
-        @factors = {"per_field" => per_field, "median" => Acoustic::Dsp.median(per_field.values)}
+        @factors = {"per_field" => per_field, "median" => DTW::Statistics.median(per_field.values)}
       end
 
       def write!

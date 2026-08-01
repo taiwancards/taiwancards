@@ -48,7 +48,11 @@ module Huayu
         path.dirname.mkpath
         path.open("w") do |file|
           entries.uniq(&:text).sort_by(&:text).each do |entry|
-            file.puts(JSON.generate({text: entry.text, reason: entry.reason, note: entry.note, en: entry.en, ru: entry.ru}.compact))
+            file.puts(
+              JSON.generate(
+                {text: entry.text, reason: entry.reason, note: entry.note, en: entry.en, ru: entry.ru}.compact
+              )
+            )
           end
         end
 

@@ -27,16 +27,15 @@ module Pronunciation
       win = analysis[:win]
       hop = analysis[:hop]
       collected = {f1: [], f2: [], f3: []}
+      extractor = DSP::Formants.new(maximum_frequency: analysis[:max_formant] || 5500.0)
 
       (low..high).each do |i|
         start = i * hop
         break if start + win > analysis[:samples].length
         next unless analysis[:f0][i].to_f > 0
 
-        values = Acoustic::Dsp.formants(
-          analysis[:samples][start, win],
-          rate,
-          max_formant: analysis[:max_formant] || 5500.0
+        values = extractor.call(
+          DSP::Waveform.new(samples: analysis[:samples][start, win], sample_rate: rate)
         )
         collected[:f1] << values[0] if values[0].to_f > 0
         collected[:f2] << values[1] if values[1].to_f > 0
@@ -53,14 +52,14 @@ module Pronunciation
     def median(values)
       return nil if values.length < 5
 
-      Acoustic::Dsp.median(values)
+      DTW::Statistics.median(values)
     end
 
     def decode(audio)
       bytes = audio.respond_to?(:read) ? audio.read : audio.to_s
       return [nil, nil] if bytes.blank?
 
-      Acoustic::Dsp.parse_wav(bytes)
+      DSP.decode(bytes).then { |signal| [signal.samples, signal.sample_rate] }
     end
   end
 end

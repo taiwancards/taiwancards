@@ -20,7 +20,8 @@ module Pronunciation
       def analyze(samples, sr, speaker_f3: nil)
         win = (sr * FRAME_MS / 1000.0).round
         hop = (sr * HOP_MS / 1000.0).round
-        window = Dsp.hamming(win)
+        window = DSP::Window.hamming(win)
+        spectrum = DSP::Spectrum.new(NFFT)
 
         powers = []
         energy = []
@@ -30,12 +31,12 @@ module Pronunciation
         pos = 0
         while pos + win <= samples.length
           raw = samples[pos, win]
-          energy << Dsp.frame_energy_db(raw)
-          zcr << Dsp.zero_crossing_rate(raw)
+          energy << DSP::Energy.frame_db(raw)
+          zcr << DSP::Energy.zero_crossing_rate(raw)
 
-          pre = Dsp.preemphasis(raw, 0.97)
+          pre = DSP::Framing.preemphasis(raw, coefficient: 0.97)
           wf = Array.new(win) { |i| pre[i] * window[i] }
-          powers << Dsp.power_spectrum(wf, NFFT)
+          powers << spectrum.power(wf)
 
           centers << ((pos + (win / 2.0)) / sr)
           pos += hop
@@ -45,8 +46,9 @@ module Pronunciation
         warp = f3_est ? (f3_est / CANONICAL_F3).clamp(0.75, 1.35) : 1.0
         max_formant = 5500.0 * warp
 
-        bank = Dsp.mel_filterbank(sr, NFFT, N_MEL, 50.0, nil, warp)
-        mfccs = powers.map { |pw| Dsp.mfcc_from_power(pw, bank, N_MFCC) }
+        bank = DSP::MelFilterbank.new(sample_rate: sr, size: NFFT, filters: N_MEL, low: 50.0, warp: warp)
+        mfcc = DSP::Mfcc.new(filterbank: bank, coefficients: N_MFCC, spectrum: spectrum)
+        mfccs = powers.map { |pw| mfcc.call(pw) }
 
         speech_lo, speech_hi = energy_bounds(energy)
         if speech_hi > speech_lo
@@ -71,12 +73,12 @@ module Pronunciation
           end
         end
 
-        pitch = Dsp.yin(samples, sr, hop_seconds: HOP_MS / 1000.0)
+        pitch = DSP::Yin.new(hop_seconds: HOP_MS / 1000.0).call(waveform_of(samples, sr))
         yin_win_offset = 0.0
-        yin_centers = pitch[:times].map { |t| t + yin_win_offset }
+        yin_centers = pitch.times.map { |t| t + yin_win_offset }
 
-        f0 = align(pitch[:f0], yin_centers, centers)
-        conf = align(pitch[:confidence], yin_centers, centers)
+        f0 = align(pitch.f0, yin_centers, centers)
+        conf = align(pitch.confidence, yin_centers, centers)
 
         {
           sr: sr,
@@ -98,11 +100,14 @@ module Pronunciation
         }
       end
 
+      def waveform_of(samples, sr) = DSP::Waveform.new(samples: samples, sample_rate: sr)
+
       def estimate_f3(samples, sr, win, hop, energy)
         return nil if energy.empty?
 
         sorted = energy.compact.sort
         thr = sorted[(sorted.length * 0.6).to_i]
+        extractor = DSP::Formants.new
         vals = []
         energy.each_with_index do |e, i|
           next if e.nil? || e < thr
@@ -110,7 +115,7 @@ module Pronunciation
           start = i * hop
           break if start + win > samples.length
 
-          f = Dsp.formants(samples[start, win], sr)[2]
+          f = extractor.call(waveform_of(samples[start, win], sr))[2]
           vals << f if f && f > 1800 && f < 4200
         end
 
@@ -358,10 +363,10 @@ module Pronunciation
         cleaned = clean_f0_track(raw)
         filled = fill_gaps(cleaned, 6)
         voiced_seq = filled.select { |v| v > 0.0 }
-        ref = voiced_seq.empty? ? 0.0 : Dsp.median(voiced_seq)
+        ref = voiced_seq.empty? ? 0.0 : DTW::Statistics.median(voiced_seq)
 
         f0_curve = if ref > 0 && voiced_seq.length >= 4
-          Dsp.resample_curve(voiced_seq.map { |f| Dsp.semitones(f, ref) }, TONE_POINTS)
+          DSP::Curve.resample(voiced_seq.map { |f| DSP::Scales.hz_to_semitones(f, reference: ref) }, TONE_POINTS)
         else
           Array.new(TONE_POINTS, 0.0)
         end
@@ -378,11 +383,12 @@ module Pronunciation
         f1 = []
         f2 = []
         f3 = []
+        extractor = DSP::Formants.new(maximum_frequency: an[:max_formant] || 5500.0)
         (vs..ve).each do |i|
           start = i * hop
           break if start + win > an[:samples].length
 
-          fs = Dsp.formants(an[:samples][start, win], sr, max_formant: an[:max_formant] || 5500.0)
+          fs = extractor.call(waveform_of(an[:samples][start, win], sr))
           f1 << (fs[0] || 0.0)
           f2 << (fs[1] || 0.0)
           f3 << (fs[2] || 0.0)
@@ -392,16 +398,19 @@ module Pronunciation
 
         fric_frames = (parts[:burst]...vs).to_a
         fric_frames = [parts[:burst]] if fric_frames.empty?
-        moments = fric_frames.map { |i| Dsp.spectral_moments(an[:powers][i], sr, an[:nfft]) }
-        centroid = Dsp.mean(moments.map { |m| m[:centroid] })
-        spread = Dsp.mean(moments.map { |m| m[:spread] })
-        skewness = Dsp.mean(moments.map { |m| m[:skewness] })
-        kurtosis = Dsp.mean(moments.map { |m| m[:kurtosis] })
+        moments = fric_frames.map do |i|
+          DSP::SpectralMoments.of(an[:powers][i], sample_rate: sr, size: an[:nfft])
+        end
+
+        centroid = DTW::Statistics.mean(moments.map(&:centroid))
+        spread = DTW::Statistics.mean(moments.map(&:spread))
+        skewness = DTW::Statistics.mean(moments.map(&:skewness))
+        kurtosis = DTW::Statistics.mean(moments.map(&:kurtosis))
 
         tail_start = ve - ((ve - vs) / 3.0).round
         tail = (tail_start..ve).to_a
         tail = [ve] if tail.empty?
-        nasal = Dsp.mean(tail.map { |i| low_band_ratio(an[:powers][i], sr, an[:nfft], 500.0) })
+        nasal = DTW::Statistics.mean(tail.map { |i| low_band_ratio(an[:powers][i], sr, an[:nfft], 500.0) })
         mid = ((vs + ve) / 2)
         nasal_mid = low_band_ratio(an[:powers][mid] || an[:powers][vs], sr, an[:nfft], 500.0)
 
@@ -413,21 +422,21 @@ module Pronunciation
           0.0
         end
 
-        energy_curve = Dsp.resample_curve((lo..hi).map { |i| an[:energy][i] }, TONE_POINTS)
+        energy_curve = DSP::Curve.resample((lo..hi).map { |i| an[:energy][i] }, TONE_POINTS)
 
         f1 = median_filter(f1)
         f2 = median_filter(f2)
         f3 = median_filter(f3)
 
-        f1c = Dsp.resample_curve(f1, FORMANT_POINTS)
-        f2c = Dsp.resample_curve(f2.empty? ? [0.0] : f2, FORMANT_POINTS)
-        f3c = Dsp.resample_curve(f3.empty? ? [0.0] : f3, FORMANT_POINTS)
+        f1c = DSP::Curve.resample(f1, FORMANT_POINTS)
+        f2c = DSP::Curve.resample(f2.empty? ? [0.0] : f2, FORMANT_POINTS)
+        f3c = DSP::Curve.resample(f3.empty? ? [0.0] : f3, FORMANT_POINTS)
         f1m = mid_of(f1c)
         f2m = mid_of(f2c)
         f3m = mid_of(f3c)
 
         f3_valid = f3.select { |v| v > 1500.0 }
-        scale = f3_valid.length >= 3 ? Dsp.median(f3_valid) : (f3m && f3m > 1500.0 ? f3m : nil)
+        scale = f3_valid.length >= 3 ? DTW::Statistics.median(f3_valid) : (f3m && f3m > 1500.0 ? f3m : nil)
 
         f2_end = f2c[(FORMANT_POINTS * 0.85).floor]
         f1_end = f1c[(FORMANT_POINTS * 0.85).floor]
@@ -451,9 +460,9 @@ module Pronunciation
           "tone_range" => (f0_curve.max - f0_curve.min),
           "tone_slope" => f0_curve.last - f0_curve.first,
           "mfcc" => mfcc_rs,
-          "f1" => Dsp.resample_curve(f1, FORMANT_POINTS),
-          "f2" => Dsp.resample_curve(f2.empty? ? [0.0] : f2, FORMANT_POINTS),
-          "f3" => Dsp.resample_curve(f3.empty? ? [0.0] : f3, FORMANT_POINTS),
+          "f1" => DSP::Curve.resample(f1, FORMANT_POINTS),
+          "f2" => DSP::Curve.resample(f2.empty? ? [0.0] : f2, FORMANT_POINTS),
+          "f3" => DSP::Curve.resample(f3.empty? ? [0.0] : f3, FORMANT_POINTS),
           "vot_ms" => parts[:vot_ms],
           "vot_ratio" => parts[:vot_valid] && duration_positive?(hi, lo) ? parts[:vot_ms] / ((hi - lo + 1) * HOP_MS) : nil,
           "vot_reliable" => parts[:vot_clean],
@@ -533,15 +542,15 @@ module Pronunciation
 
         out = track.dup
         values = voiced.map(&:first)
-        med = Dsp.median(values)
+        med = DTW::Statistics.median(values)
         return track if med <= 0
 
         voiced.each do |(v, i)|
-          st = Dsp.semitones(v, med)
+          st = DSP::Scales.hz_to_semitones(v, reference: med)
           next if st.abs < 12.0 - OCTAVE_TOLERANCE
 
-          cand = [v, v * 2.0, v / 2.0].min_by { |c| Dsp.semitones(c, med).abs }
-          out[i] = if Dsp.semitones(cand, med).abs < 12.0 - OCTAVE_TOLERANCE
+          cand = [v, v * 2.0, v / 2.0].min_by { |c| DSP::Scales.hz_to_semitones(c, reference: med).abs }
+          out[i] = if DSP::Scales.hz_to_semitones(cand, reference: med).abs < 12.0 - OCTAVE_TOLERANCE
             cand
           else
             0.0
@@ -557,7 +566,7 @@ module Pronunciation
           seq.each do |i|
             next if out[i] <= 0
 
-            jump = Dsp.semitones(out[i], prev).abs
+            jump = DSP::Scales.hz_to_semitones(out[i], reference: prev).abs
             if jump > MAX_SEMITONE_JUMP
               out[i] = 0.0
             else
@@ -598,7 +607,7 @@ module Pronunciation
         return Array.new(n) { Array.new(N_MFCC, 0.0) } if rows.empty?
 
         dim = rows[0].length
-        cols = (0...dim).map { |d| Dsp.resample_curve(rows.map { |r| r[d] }, n) }
+        cols = (0...dim).map { |d| DSP::Curve.resample(rows.map { |r| r[d] }, n) }
         Array.new(n) { |i| Array.new(dim) { |d| cols[d][i] } }
       end
     end

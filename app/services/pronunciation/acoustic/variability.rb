@@ -42,7 +42,7 @@ module Pronunciation
               vals = list.filter_map { |r| r[field] }
               next if vals.empty?
 
-              medians << Dsp.median(vals)
+              medians << DTW::Statistics.median(vals)
               counts << vals.length
               within << DTW::Statistics.median_absolute_deviation(vals) if vals.length >= 3
             end
@@ -51,14 +51,14 @@ module Pronunciation
 
             observed = DTW::Statistics.median_absolute_deviation(medians)
             n_mean = counts.sum.to_f / counts.length
-            noise = within.empty? ? 0.0 : (Dsp.median(within) / Math.sqrt(n_mean))
+            noise = within.empty? ? 0.0 : (DTW::Statistics.median(within) / Math.sqrt(n_mean))
             corrected = Math.sqrt([(observed ** 2) - (noise ** 2), 0.0].max)
             per_key << corrected
           end
 
           next if per_key.empty?
 
-          out[field] = Dsp.median(per_key)
+          out[field] = DTW::Statistics.median(per_key)
         end
 
         curves = []
@@ -69,7 +69,7 @@ module Pronunciation
             next if cs.empty?
 
             n = cs[0].length
-            Array.new(n) { |i| Dsp.median(cs.map { |c| c[i] }) }
+            Array.new(n) { |i| DTW::Statistics.median(cs.map { |c| c[i] }) }
           end
 
           next if per_spk.length < min_speakers
@@ -80,7 +80,7 @@ module Pronunciation
 
         unless curves.empty?
           n = curves[0].length
-          out["tone_contour"] = Array.new(n) { |i| Dsp.median(curves.map { |c| c[i] }) }
+          out["tone_contour"] = Array.new(n) { |i| DTW::Statistics.median(curves.map { |c| c[i] }) }
         end
 
         dists = []
@@ -96,7 +96,7 @@ module Pronunciation
           reps.combination(2).first(6).each { |(a, b)| dists << DTW.distance(a, b) }
         end
 
-        out["mfcc_scale"] = dists.empty? ? nil : Dsp.median(dists)
+        out["mfcc_scale"] = dists.empty? ? nil : DTW::Statistics.median(dists)
 
         out
       end

@@ -8,6 +8,7 @@ gem "rails", "8.1.3.1"
 
 gem "bcrypt"
 gem "bootsnap", require: false
+gem "dsprb", ">= 1.0"
 gem "dtwrb", ">= 1.0"
 gem "importmap-rails"
 gem "nokolexbor", require: false

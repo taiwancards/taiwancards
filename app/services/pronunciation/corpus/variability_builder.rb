@@ -76,10 +76,10 @@ module Pronunciation
       def analyze(item)
         return [] unless File.exist?(item[:path])
 
-        samples, rate = Acoustic::Dsp.read_wav(item[:path])
-        return [] if samples.length < rate * MIN_AUDIO_S
+        signal = DSP.read(item[:path])
+        return [] if signal.length < signal.sample_rate * MIN_AUDIO_S
 
-        analysis = Acoustic::Features.analyze(samples, rate)
+        analysis = Acoustic::Features.analyze(signal.samples, signal.sample_rate)
         spans = Acoustic::Features.syllable_spans(analysis, item[:keys].length)
         return [] if spans.nil?
 
@@ -109,7 +109,7 @@ module Pronunciation
       def with_register(rows)
         by_speaker = Hash.new { |hash, speaker| hash[speaker] = [] }
         rows.each { |row| by_speaker[row["_speaker"]] << row["f0_ref_hz"] if row["f0_ref_hz"].to_f > MIN_HZ }
-        refs = by_speaker.transform_values { |values| Acoustic::Dsp.median(values) }
+        refs = by_speaker.transform_values { |values| DTW::Statistics.median(values) }
 
         rows.each do |row|
           base = refs[row["_speaker"]]

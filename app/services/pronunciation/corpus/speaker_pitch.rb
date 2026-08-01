@@ -25,7 +25,7 @@ module Pronunciation
           partial.each { |speaker, values| collected[speaker].concat(values) }
         end
 
-        @reference = collected.transform_values { |values| Acoustic::Dsp.median(values) }
+        @reference = collected.transform_values { |values| DTW::Statistics.median(values) }
         File.write(path, JSON.pretty_generate(@reference))
         @reference
       end
