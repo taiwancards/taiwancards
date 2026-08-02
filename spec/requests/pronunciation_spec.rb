@@ -104,6 +104,13 @@ RSpec.describe "Pronunciation" do
     expect(response).to(have_http_status(:ok))
   end
 
+  it "never lets a browser walk in here on its own" do
+    warm_up!
+    get("/pronunciation", headers:)
+
+    expect(response.body).to(include("content=\"false\" name=\"turbo-prefetch\""))
+  end
+
   it "says plainly that the grading is still alpha" do
     warm_up!
     get("/pronunciation", headers:)

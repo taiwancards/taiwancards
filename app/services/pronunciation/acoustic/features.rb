@@ -160,11 +160,7 @@ module Pronunciation
         e = an[:energy]
         return [0, an[:n] - 1] if e.length < 3
 
-        audible = e.reject { |v| v <= SILENCE_DB }
-        sorted = (audible.length >= 3 ? audible : e).sort
-        peak = sorted[(sorted.length * 0.95).floor]
-        floor = background_db(sorted) || sorted[(sorted.length * 0.10).floor]
-
+        floor, peak = background_level(an)
         thr = threshold(peak, floor)
         first, last = loudest_run(e, thr)
         return [0, an[:n] - 1] if first.nil? || last.nil?
@@ -192,12 +188,40 @@ module Pronunciation
       BACKGROUND_BIN_DB = 3.0
       BACKGROUND_GAP_DB = 15.0
 
+      def background_level(an)
+        e = an[:energy]
+        audible = e.reject { |v| v <= SILENCE_DB }
+        sorted = (audible.length >= 3 ? audible : e).sort
+        peak = sorted[(sorted.length * 0.95).floor]
+        quiet = background_db(sorted) || sorted[(sorted.length * 0.10).floor]
+
+        [[quiet, leading_background(e, peak)].compact.max, peak]
+      end
+
       def background_db(sorted)
         return nil if sorted.length < 3
 
         densest = sorted.group_by { |v| (v / BACKGROUND_BIN_DB).floor }.max_by { |_, group| group.length }.last
         level = densest[densest.length / 2]
         level <= sorted.last - BACKGROUND_GAP_DB ? level : nil
+      end
+
+      LEAD_MAX_FRAMES = 25
+      LEAD_MIN_FRAMES = 5
+      LEAD_SPREAD_DB = 12.0
+
+      def leading_background(e, peak)
+        head = []
+        e.first([LEAD_MAX_FRAMES, e.length / 4].min).each do |v|
+          break if head.any? && (v - head.first).abs > LEAD_SPREAD_DB
+
+          head << v
+        end
+
+        return nil if head.length < LEAD_MIN_FRAMES
+
+        level = DTW::Statistics.median(head)
+        level <= peak - BACKGROUND_GAP_DB ? level : nil
       end
 
       RUN_GAP_MS = 150.0
@@ -344,20 +368,13 @@ module Pronunciation
       BACK_SEARCH_MS = 300.0
       LEAD_IN_MS = 40.0
 
-      def noise_floor(an)
-        e = an[:energy]
-        audible = e.reject { |v| v <= SILENCE_DB }
-        sorted = (audible.length >= 3 ? audible : e).sort
-        sorted[(sorted.length * 0.10).floor]
-      end
-
       def lead_in?(an, span)
         e = an[:energy]
         needed = (LEAD_IN_MS / HOP_MS).round
         start = span[0]
         return false if start < needed
 
-        limit = noise_floor(an) + QUIET_START_DB
+        limit = background_level(an).first + QUIET_START_DB
         e[(start - needed)...start].all? { |v| v < limit }
       end
 

@@ -79,6 +79,14 @@ RSpec.describe "Recording artifacts" do
       expect(vot_of(alone(0.02))["fric_ms"]).to(be <= 60)
     end
 
+    it "still vouches for the aspiration it measures" do
+      quiet = vot_of(room(600) + aspirated)
+      loud = vot_of(room(600, level: 0.004) + aspirated)
+
+      expect(loud["vot_reliable"]).to(be(true))
+      expect(loud["vot_ms"]).to(be_within(15).of(quiet["vot_ms"]))
+    end
+
     it "keeps the pre-voicing of a syllable inside what a syllable can carry" do
       expect(vot_of(room(600, level: 0.02) + aspirated)["fric_ms"]).to(
         be <= Pronunciation::Acoustic::Features::MAX_ONSET_MS
