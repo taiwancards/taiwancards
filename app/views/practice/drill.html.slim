@@ -86,9 +86,15 @@
       | /
       span data-phonetics-drill-target="total"
     p.mt-3.text-sm.text-muted-foreground lang="zh-TW" data-phonetics-drill-target="weakList"
-    button.mt-5.rounded-xl.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground[
-      type="button" data-action="phonetics-drill#begin" class="hover:opacity-90" ]
-      = t("practice.drill.restart")
+    - forward = practice_forward_link
+    .mt-5.flex.flex-wrap.justify-center.gap-2
+      button.rounded-xl.px-4.py-2.text-sm[
+        type="button" data-action="phonetics-drill#begin"
+        class=(forward ? "border border-border font-medium hover:bg-muted" : "bg-primary font-semibold text-primary-foreground hover:opacity-90") ]
+        = t("practice.drill.restart")
+      = render("shared/practice_return", link: forward)
 
+  - back = practice_back_link
   p.text-center.text-sm
-    = link_to t("practice.back_to_chart"), practice_zhuyin_path, class: "font-medium underline underline-offset-4"
+    = link_to (back ? back[:label] : t("practice.back_to_chart")), (back ? back[:path] : practice_zhuyin_path),
+      class: "font-medium underline underline-offset-4"

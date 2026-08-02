@@ -97,5 +97,5 @@
     p.max-w-3xl.text-sm.text-muted-foreground = t("tones.practice_body")
     p.rounded-xl.border.border-amber-500.px-4.py-3.text-sm class="bg-amber-500/10"
       = t("tones.practice_pending")
-    = link_to t("tones.practice_cta"), tones_drill_path,
+    = link_to t("tones.practice_cta"), tones_drill_path(from: "tones"),
       class: "inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"

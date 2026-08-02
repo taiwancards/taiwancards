@@ -1,0 +1,5 @@
+- link = local_assigns.fetch(:link) { practice_forward_link }
+- return if link.blank?
+
+= link_to link[:label], link[:path],
+  class: link[:primary] ? "inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90" : "inline-flex rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"

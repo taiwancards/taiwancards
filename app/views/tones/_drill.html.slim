@@ -42,7 +42,8 @@
         button.rounded-lg.border.border-border.px-3.text-xs.font-medium[
           type="button" data-action="tone-drill#more" class="py-1.5 hover:bg-muted" ]
           = t("tones.drill.more")
-        = link_to t("tones.drill.leave"), desk_path,
+        - back = practice_back_link
+        = link_to t("tones.drill.leave"), (back ? back[:path] : desk_path),
           class: "rounded-lg px-3 py-1.5 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
 
     p.mt-2.text-center.text-xs.text-muted-foreground = t("tones.drill.keys")

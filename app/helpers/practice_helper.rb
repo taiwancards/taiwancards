@@ -1,26 +1,58 @@
 # frozen_string_literal: true
 
 module PracticeHelper
+  PART_ONWARD = {"intro" => "initials", "initials" => "finals", "finals" => "tricky"}.freeze
+
   def trainer_next_target(group)
     case group
     when "initials"
-      {label: t("zhuyin_trainer.onward.finals"), path: practice_zhuyin_path(part: "finals")}
+      {label: t("zhuyin_trainer.onward.finals"), path: practice_zhuyin_path(part: "finals"), primary: true}
     when "finals"
-      {label: t("zhuyin_trainer.onward.tricky"), path: practice_zhuyin_path(part: "tricky")}
+      {label: t("zhuyin_trainer.onward.tricky"), path: practice_zhuyin_path(part: "tricky"), primary: true}
     else
-      {label: t("zhuyin_trainer.onward.typing"), path: practice_typing_path}
+      {label: t("zhuyin_trainer.onward.typing"), path: practice_typing_path, primary: true}
     end
   end
 
   def practice_target_for(part)
     case part
-    when "initials"
-      {label: t("practice.practice_now.cta"), path: zhuyin_training_path(group: "initials")}
-    when "finals"
-      {label: t("practice.practice_now.cta"), path: zhuyin_training_path(group: "finals")}
+    when "initials", "finals"
+      {label: t("practice.practice_now.cta"), path: zhuyin_training_path(group: part, from: part)}
     when "tricky"
-      {label: t("practice.to_drill"), path: practice_drill_path}
+      {label: t("practice.to_drill"), path: practice_drill_path(from: part)}
     end
+  end
+
+  def practice_return_links
+    @practice_return_links ||= build_practice_return_links
+  end
+
+  def practice_forward_link = practice_return_links.first
+
+  def practice_back_link = practice_return_links.last
+
+  def build_practice_return_links
+    origin = params[:from].to_s
+    return [{label: t("tones.drill.back"), path: tones_path, primary: true}] if origin == "tones"
+    return [] unless PracticeController::PHONETICS_PARTS.include?(origin)
+
+    onward = PART_ONWARD[origin]
+    links = []
+    if onward
+      links <<
+        {
+          label: t("practice.part_next", title: t("practice.parts.#{onward}")),
+          path: practice_zhuyin_path(part: onward),
+          primary: true
+        }
+    end
+
+    links <<
+      {
+        label: t("practice.part_previous", title: t("practice.parts.#{origin}")),
+        path: practice_zhuyin_path(part: origin),
+        primary: links.empty?
+      }
   end
 
   def phon_palladius?

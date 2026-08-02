@@ -1218,6 +1218,9 @@ en:
       title: Practice it right away
       initials: Twenty-one initials, in blocks by manner of articulation. Read on once these come back by ear without hesitation.
       finals: Sixteen finals. The same trainer, with no Latin on screen.
+      tricky: >-
+        Six spellings where pinyin hides the real rime. The drill mixes them with look-alikes, so you
+        find out whether you are reading the zhuyin or the Latin.
       cta: To the listening trainer →
     drill_progress_title: Sound practice
     drill_progress_hint: Fills up as you work through the sound-recognition cards and the zhuyin typing drill. Every completed run counts.

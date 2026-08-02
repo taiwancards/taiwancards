@@ -72,15 +72,15 @@ RSpec.describe "Practice basics" do
   it "sends the reader straight from the initials table into drilling them" do
     get("/practice/zhuyin", params: {part: "initials"})
 
-    expect(response.body).to(include(zhuyin_training_path(group: "initials")))
+    expect(response.body).to(include(CGI.escapeHTML(zhuyin_training_path(group: "initials", from: "initials"))))
     expect(response.body).to(include(CGI.escapeHTML(I18n.t("practice.practice_now.initials"))))
   end
 
   it "sends the finals table into its own drill, not the initials one" do
     get("/practice/zhuyin", params: {part: "finals"})
 
-    expect(response.body).to(include(zhuyin_training_path(group: "finals")))
-    expect(response.body).not_to(include(zhuyin_training_path(group: "initials")))
+    expect(response.body).to(include(CGI.escapeHTML(zhuyin_training_path(group: "finals", from: "finals"))))
+    expect(response.body).not_to(include(CGI.escapeHTML(zhuyin_training_path(group: "initials", from: "initials"))))
   end
 
   it "keeps the pinyin bridge for the tricky-cases section only" do

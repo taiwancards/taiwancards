@@ -2,9 +2,3 @@ section.space-y-2
   h2.text-lg.font-semibold = t("practice.finals")
   p.text-sm.text-muted-foreground = t("practice.finals_lede")
   = render "practice/phonetics_table", rows: @finals
-
-.rounded-2xl.border.border-brand.p-4.space-y-2 class="bg-brand-soft"
-  p.text-sm.font-semibold = t("practice.practice_now.title")
-  p.text-sm.text-muted-foreground = t("practice.practice_now.finals")
-  = link_to t("practice.practice_now.cta"), zhuyin_training_path(group: "finals"),
-    class: "inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"

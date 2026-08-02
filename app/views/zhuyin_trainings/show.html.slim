@@ -28,9 +28,7 @@
       div
         p.font-semibold = t("zhuyin_trainer.done_heading")
         p.mt-1.text-sm.text-muted-foreground = t("zhuyin_trainer.done_body")
-      - if (onward = trainer_next_target(@group))
-        = link_to onward[:label], onward[:path],
-          class: "inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      = render("shared/practice_return", link: practice_forward_link || trainer_next_target(@group))
 
   .rounded-xl.border.border-border.p-4 class="bg-muted/30"
     p.text-sm.font-medium = t("zhuyin_trainer.blocks.#{@block[:key]}")
@@ -83,13 +81,20 @@
       | /
       span data-zhuyin-trainer-target="total"
     .mt-5.flex.flex-wrap.justify-center.gap-2
-      button.rounded-xl.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground[
-        type="button" data-action="zhuyin-trainer#begin" class="hover:opacity-90" ]
+      - forward = practice_forward_link
+      button.rounded-xl.px-4.py-2.text-sm[
+        type="button" data-action="zhuyin-trainer#begin"
+        class=(forward ? "border border-border font-medium hover:bg-muted" : "bg-primary font-semibold text-primary-foreground hover:opacity-90") ]
         = t("zhuyin_trainer.restart")
-      = link_to t("zhuyin_trainer.leave"), study_path(mode: "today"), class: "rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+      - if forward
+        = render("shared/practice_return", link: forward)
+      - else
+        = link_to t("zhuyin_trainer.leave"), study_path(mode: "today"), class: "rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
   .rounded-xl.border.border-dashed.border-border.p-4.text-center
+    - back = practice_back_link
     p.text-xs.text-muted-foreground = t("zhuyin_trainer.exit_hint")
-    = link_to t("zhuyin_trainer.leave"), study_path(mode: "today"), class: "mt-1 inline-block text-sm font-medium text-primary hover:underline"
+    = link_to (back ? back[:label] : t("zhuyin_trainer.leave")), (back ? back[:path] : study_path(mode: "today")),
+      class: "mt-1 inline-block text-sm font-medium text-primary hover:underline"
 
   = render("shared/roadmap_return")

@@ -14,6 +14,13 @@
 
   = render "practice/part_#{@part}"
 
+  - if (practice = practice_target_for(@part))
+    .rounded-2xl.border.border-brand.p-4.space-y-2 class="bg-brand-soft"
+      p.text-sm.font-semibold = t("practice.practice_now.title")
+      p.text-sm.text-muted-foreground = t("practice.practice_now.#{@part}")
+      = link_to practice[:label], practice[:path],
+        class: "inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+
   .flex.flex-wrap.items-center.justify-between.gap-3.border-t.border-border.pt-4
     - if (previous_part = @part_neighbors[:previous])
       = link_to t("practice.part_previous", title: t("practice.parts.#{previous_part}")), practice_zhuyin_path(part: previous_part),
@@ -21,12 +28,8 @@
     - else
       span
 
-    .flex.flex-wrap.items-center.gap-2
-      - if (practice = practice_target_for(@part))
-        = link_to practice[:label], practice[:path],
-          class: "rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
-      - if (next_part = @part_neighbors[:next])
-        = link_to t("practice.part_next", title: t("practice.parts.#{next_part}")), practice_zhuyin_path(part: next_part),
-          class: "rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+    - if (next_part = @part_neighbors[:next])
+      = link_to t("practice.part_next", title: t("practice.parts.#{next_part}")), practice_zhuyin_path(part: next_part),
+        class: "rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
   = render("shared/roadmap_return")

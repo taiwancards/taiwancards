@@ -1,4 +1,5 @@
 - return unless current_user
+- return if practice_return_links.any?
 - path = Onboarding::Path.new(current_user)
 - return if path.complete?
 
