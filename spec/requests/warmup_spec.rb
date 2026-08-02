@@ -20,6 +20,36 @@ RSpec.describe "Voice warm-up" do
     expect(response.body).to(include(I18n.t("pron.ui.warmup_why")))
   end
 
+  it "says who starts the recording and who stops it" do
+    get("/pronunciation/warmup")
+
+    expect(response.body).to(include(I18n.t("pronunciation.record_hint")))
+    expect(response.body).to(include(I18n.t("pronunciation.listening")))
+  end
+
+  it "carries the reference recording for every syllable step" do
+    create(:lexeme, kind: :character, text: "媽", readings: {"pinyin" => "mā", "zhuyin" => "ㄇㄚ"})
+    allow(Huayu::MoeAudio).to(
+      receive(:for).and_return(
+        Huayu::MoeAudio::Clip.new(scope: "chars", id: "0527", head_ms: 900, zhuyin: "ㄇㄚ", pinyin: "mā")
+      )
+    )
+
+    get("/pronunciation/warmup")
+
+    prompts = JSON.parse(response.body[/data-warmup-prompts-value="([^"]*)"/, 1].then { |raw| CGI.unescapeHTML(raw) })
+    tone = prompts.find { |prompt| prompt["id"] == "tone_1" }
+    expect(tone["audio"]).to(be_present)
+    expect(tone["audio_stop"]).to(be_present)
+  end
+
+  it "goes back to the page that asked for the warm-up once it is done" do
+    get("/pronunciation", params: {section: "initials_stops"})
+    get("/pronunciation/warmup")
+
+    expect(response.body).to(include(CGI.escapeHTML("/pronunciation?section=initials_stops")))
+  end
+
   it "creates the profile on first visit and keeps it on the next" do
     expect { get("/pronunciation/warmup") }.to(change(VoiceProfile, :count).by(1))
     expect { get("/pronunciation/warmup") }.not_to(change(VoiceProfile, :count))

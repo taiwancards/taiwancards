@@ -30,7 +30,7 @@ module StudyHelper
   end
 
   def tone_card_kind(lexeme, memory)
-    speech = Huayu::PronunciationTarget.new(lexeme).syllables.any?
+    speech = voice_calibrated? && Huayu::PronunciationTarget.new(lexeme).syllables.any?
     quiz = Huayu::ToneQuiz.new(lexeme).available?
     return :swipe unless speech || quiz
     return :tone_speech if speech && (!quiz || memory&.reps.to_i.odd?)

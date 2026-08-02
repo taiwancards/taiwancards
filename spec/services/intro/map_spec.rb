@@ -122,7 +122,7 @@ RSpec.describe Intro::Progress do
 
   it "counts a hand-over step done when the user reaches the page it points at" do
     allow(Intro::Map).to(receive(:essential).and_return([handover, Intro::Map.essential.last]))
-    user.update!(prefs: user.prefs.merge("intro_stage" => "pending", "intro_step" => "handover"))
+    user.update!(prefs: user.prefs.merge("intro_stage" => "running", "intro_step" => "handover"))
 
     user.intro.arrived_at("/dict")
 
@@ -131,7 +131,7 @@ RSpec.describe Intro::Progress do
 
   it "ignores arrivals anywhere else" do
     allow(Intro::Map).to(receive(:essential).and_return([handover, Intro::Map.essential.last]))
-    user.update!(prefs: user.prefs.merge("intro_stage" => "pending", "intro_step" => "handover"))
+    user.update!(prefs: user.prefs.merge("intro_stage" => "running", "intro_step" => "handover"))
 
     user.intro.arrived_at("/progress")
 

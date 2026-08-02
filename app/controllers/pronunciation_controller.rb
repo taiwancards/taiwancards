@@ -6,7 +6,10 @@ class PronunciationController < ApplicationController
   QUEUE_SIZE = Pronunciation::Queue::SIZE
 
   def show
-    return redirect_to(pronunciation_warmup_path, notice: t("pronunciation.warmup_first")) if warmup_needed?
+    if warmup_needed?
+      remember_return_path(request.fullpath)
+      return redirect_to(pronunciation_warmup_path, notice: t("pronunciation.warmup_first"))
+    end
 
     @collection = Collection.where(user_id: [nil, Current.user&.id]).find_by(id: params[:collection_id])
     @drills = Pronunciation::Drills.instance
@@ -60,15 +63,9 @@ class PronunciationController < ApplicationController
   private
 
   def warmup_needed?
-    return false if params[:anyway].present?
+    session[:warmup_skipped] = true if params[:anyway].present?
 
-    voice_profile.nil?
-  end
-
-  def voice_profile
-    return nil if Current.user.nil?
-
-    @voice_profile ||= VoiceProfile.find_by(user: Current.user)
+    !voice_calibrated? && !session[:warmup_skipped]
   end
 
   def refine_voice(voice, result)

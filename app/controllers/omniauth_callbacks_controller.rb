@@ -16,7 +16,7 @@ class OmniauthCallbacksController < ApplicationController
         User.exists?(google_email: auth.info.email.to_s.downcase)
       user = User.for_google(auth, locale: preferred_locale)
       start_new_session_for(user)
-      redirect_to(after_google_path(user, existing:), notice: t("auth.signed_in"))
+      redirect_to(after_google_path(existing:), notice: t("auth.signed_in"))
     end
 
   rescue => e
@@ -37,10 +37,7 @@ class OmniauthCallbacksController < ApplicationController
     wanted.find { |code| available.include?(code) } || I18n.default_locale.to_s
   end
 
-  def after_google_path(user, existing:)
-    return desk_path if existing
-    return onboarding_start_path
-
-    root_path
+  def after_google_path(existing:)
+    take_return_path || (existing ? desk_path : onboarding_start_path)
   end
 end

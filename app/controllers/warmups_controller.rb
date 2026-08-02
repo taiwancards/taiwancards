@@ -4,6 +4,7 @@ class WarmupsController < ApplicationController
   def show
     @prompts = prompts_with_audio
     @profile = profile
+    @done_url = take_return_path || pronunciation_path
   end
 
   def create
@@ -37,11 +38,12 @@ class WarmupsController < ApplicationController
       step = steps[prompt[:id]]
       next prompt if step.nil?
 
-      lexeme = lexemes[step[:char]]
+      clip = lexemes[step[:char]].then { |lexeme| lexeme && helpers.audio_for(lexeme) }
       prompt.merge(
         zhuyin: step[:zhuyin],
         pinyin: step[:pinyin],
-        audio: lexeme && helpers.audio_for(lexeme)&.fetch(:url, nil)
+        audio: clip&.fetch(:url, nil),
+        audio_stop: clip&.fetch(:stop_ms, nil)
       )
     end
   end

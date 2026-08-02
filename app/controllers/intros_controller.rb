@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class IntrosController < ApplicationController
+  def start
+    remember_return_path(referring_path)
+    redirect_to(intro_progress.start!&.path.presence || session[:return_to] || desk_path)
+  end
+
+  def pause
+    intro_progress.pause!
+    redirect_back(fallback_location: desk_path)
+  end
+
   def advance
     runner.advance!
     back_to_step
@@ -48,6 +58,6 @@ class IntrosController < ApplicationController
   end
 
   def after_intro_path
-    current_user.intro_done? ? guide_path : desk_path
+    take_return_path || (current_user.intro_done? ? guide_path : desk_path)
   end
 end

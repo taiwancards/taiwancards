@@ -572,9 +572,9 @@ en:
     login_title: Log in
     login_subtitle: Log in to continue studying.
     login_pitch: >-
-      Free, no ads, nothing to pay for — ever. The dictionary, the language guides and the Taiwan
-      sections are open without an account. Signing in simply unlocks the rest: the trainers, the
-      cards and everything that tracks your personal progress.
+      Free, no ads. The dictionary, the language guides and the Taiwan sections are open without an
+      account. Signing in simply unlocks the rest: the trainers, the cards and everything that
+      tracks your personal progress.
     login: Log in
     logout: Log out
     email: Email
@@ -1047,24 +1047,23 @@ en:
       initials: Initials
       finals: Finals
       no_tone: "— tone not graded"
-    skip: Skip
-    attempts_left: 'Attempts left: %{count}'
     not_recognized: Not recognized
     sounded_like: Sounded like %{key}
     blocked: Needs green to continue
     title: Pronunciation
     subtitle: Say the word — your tones and syllables are graded locally against the Taiwan reading.
     another: Another word
-    auto: Auto mode
-    auto_hint: Records, grades and moves on by itself.
     prelisten: Pre-listen
     prelisten_hint: Plays the word first, then records after half a second.
     drill: Say the whole word, but watch
     drill_skip: We'll come back to this one — moving on.
     empty: No word with a reading to practice yet.
     record: Record
+    alpha: 'Alpha: pronunciation grading is under active development — scores can be odd at times.'
+    record_hint: You start the recording; it stops on its own.
+    listening: Listening…
     stop: Stop
-    recording: Recording… tap to stop
+    recording: Recording — speak. It stops on its own.
     grading: Grading…
     retry: Not quite — say it again…
     silence: I didn't catch any speech — start talking right after pressing record.
@@ -2302,6 +2301,11 @@ en:
     label_whats_new: What's new
     click_target: Tap the highlighted item to continue.
     skip: Skip
+    later: Later
+    setup:
+      title: 'Still to do:'
+      tour: Take the tour
+      level: Set your level
     dismiss: Got it
     back: Back
     next: Next

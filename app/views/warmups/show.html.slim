@@ -3,10 +3,10 @@
 .mx-auto.max-w-md.space-y-5.py-6[
   data-controller="warmup"
   data-warmup-url-value=pronunciation_warmup_path
-  data-warmup-done-url-value=pronunciation_path
+  data-warmup-done-url-value=@done_url
   data-warmup-prompts-value=@prompts.to_json
   data-warmup-label-record-value=t("pronunciation.record")
-  data-warmup-label-stop-value=t("pronunciation.stop")
+  data-warmup-label-listening-value=t("pronunciation.listening")
   data-warmup-label-recording-value=t("pronunciation.recording")
   data-warmup-label-saved-value=t("pron.ui.warmup_saved")
   data-warmup-label-error-value=t("pronunciation.error")
@@ -33,10 +33,11 @@
       - @prompts.each_with_index do |_, index|
         .flex-1.rounded-full.bg-muted class="h-1.5" data-warmup-target="pip" data-index=index
 
-    button.rounded-full.border.border-border.px-8.py-3.text-base.font-semibold.transition-colors[
-      type="button" data-warmup-target="record" data-action="warmup#toggle" class="hover:bg-muted" ]
+    button.rounded-full.bg-primary.px-8.py-3.text-base.font-semibold.text-primary-foreground.transition-opacity[
+      type="button" data-warmup-target="record" data-action="warmup#toggle" class="hover:opacity-90" ]
       = t("pronunciation.record")
 
+    p.text-xs.text-muted-foreground = t("pronunciation.record_hint")
     .min-h-5.text-sm.text-muted-foreground data-warmup-target="status"
 
   - if @profile.calibrated?
@@ -55,4 +56,4 @@
     = t("pron.ui.warmup_why")
 
   .text-center
-    = link_to t("pron.ui.warmup_skip"), pronunciation_path, class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+    = link_to t("pron.ui.warmup_skip"), pronunciation_path(anyway: 1), class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"

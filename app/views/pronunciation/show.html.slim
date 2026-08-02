@@ -8,6 +8,9 @@
         span.text-2xs.font-medium.text-primary = @collection.name
       = link_to t("pronunciation.another"), @advance_url, class: "rounded-md border border-border px-2.5 py-1 text-xs font-medium hover:bg-muted"
 
+  p.rounded-lg.border.border-amber-500.px-3.py-2.text-xs.leading-snug.text-amber-700 class="bg-amber-500/10"
+    = t("pronunciation.alpha")
+
   - if @drills.available?
     .space-y-1[
       data-controller="drill-groups"
@@ -39,18 +42,16 @@
     .relative.mx-auto.max-w-md.space-y-3[
       data-controller="pronunciation"
       data-pronunciation-url-value=@speech_url
-      data-pronunciation-advance-url-value=@advance_url
       data-pronunciation-expected-value=@syllables.to_json
       data-pronunciation-text-value=@lexeme.text
       data-pronunciation-lexeme-id-value=@lexeme.id
       data-pronunciation-audio-url-value=@audio&.fetch(:url)
       data-pronunciation-audio-stop-value=@audio&.fetch(:stop_ms)
       data-pronunciation-audio-parts-value=(@audio&.dig(:parts)&.to_json)
-      data-pronunciation-auto-delay-value=@auto[:delay_ms]
-      data-pronunciation-auto-silence-value=@auto[:silence_ms]
-      data-pronunciation-auto-max-value=@auto[:max_ms]
+      data-pronunciation-silence-ms-value=@auto[:silence_ms]
+      data-pronunciation-max-ms-value=@auto[:max_ms]
       data-pronunciation-label-record-value=t("pronunciation.record")
-      data-pronunciation-label-stop-value=t("pronunciation.stop")
+      data-pronunciation-label-listening-value=t("pronunciation.listening")
       data-pronunciation-label-recording-value=t("pronunciation.recording")
       data-pronunciation-label-grading-value=t("pronunciation.grading")
       data-pronunciation-label-unavailable-value=t("pronunciation.unavailable")
@@ -80,11 +81,6 @@
         = render("pronunciation/legend", legend: @legend)
 
       .flex.flex-wrap.items-center.justify-center.gap-1
-        label.inline-flex.cursor-pointer.items-center.rounded-full.border.border-border.py-1.text-xs.transition-colors class="px-2.5 gap-1.5 hover:bg-muted" title=t("pronunciation.auto_hint")
-          input.peer.sr-only type="checkbox" data-pronunciation-target="auto" data-action="pronunciation#toggleAuto"
-          span.rounded-full.bg-muted-foreground class="h-1.5 w-1.5 opacity-30 peer-checked:bg-primary peer-checked:opacity-100"
-          = t("pronunciation.auto")
-
         - if @audio
           label.inline-flex.cursor-pointer.items-center.rounded-full.border.border-border.py-1.text-xs.transition-colors class="px-2.5 gap-1.5 hover:bg-muted" title=t("pronunciation.prelisten_hint")
             input.peer.sr-only type="checkbox" data-pronunciation-target="prelisten" data-action="pronunciation#togglePrelisten"
@@ -136,10 +132,8 @@
           class="py-2.5 hover:bg-muted"
           type="button" data-pronunciation-target="record" data-action="pronunciation#toggle" ]
           = t("pronunciation.record")
+        p.text-center.text-2xs.text-muted-foreground = t("pronunciation.record_hint")
         .min-h-5.text-center.text-xs.text-muted-foreground data-pronunciation-target="status"
-        .flex.items-center.gap-3
-          = link_to t("pronunciation.skip"), @advance_url, class: "text-2xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
-          span.text-2xs.text-muted-foreground data-pronunciation-target="attempts"
 
       .space-y-3 data-pronunciation-target="detail"
 

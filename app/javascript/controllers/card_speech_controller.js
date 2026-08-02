@@ -19,7 +19,6 @@ export default class extends Controller {
     goodAt: Number,
     hardAt: Number,
     labelRecord: String,
-    labelStop: String,
     labelListening: String,
     labelScoring: String,
     labelMicDenied: String,
@@ -50,7 +49,7 @@ export default class extends Controller {
     this.busy = false
     if (!started) return this.setStatus(this.labelMicDeniedValue)
 
-    this.recordTarget.textContent = this.labelStopValue
+    this.recordTarget.textContent = this.labelListeningValue
     this.recordTarget.classList.add("bg-red-500", "text-white")
     this.setStatus(this.labelListeningValue)
     this.stopTimer = setTimeout(() => this.finishRecording(), this.maxMsValue || 6000)

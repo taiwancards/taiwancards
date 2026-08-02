@@ -12,7 +12,10 @@ RSpec.describe "Tone cards" do
     get(study_path(mode: "collection", collection_id: deck.id))
   end
 
-  before { deck.add_lexemes([word.id]) }
+  before do
+    deck.add_lexemes([word.id])
+    warm_up!
+  end
 
   it "starts with the tone quiz, not the microphone" do
     study
@@ -62,6 +65,16 @@ RSpec.describe "Tone cards" do
     study
 
     expect(response.body).to(include("data-card-speech-auto-ms-value=\"#{Setting.instance.pron_auto[:delay_ms]}\""))
+  end
+
+  it "never asks for a recording from a voice the app has not measured yet" do
+    VoiceProfile.where(user: current_user).destroy_all
+    LexemeMemory.create!(lexeme: word, user: current_user, facet: :tone, activated_at: Time.current, reps: 1)
+
+    study
+
+    expect(response.body).not_to(include("card-speech"))
+    expect(response.body).to(include("card-tone-quiz"))
   end
 
   it "falls back to the plain swipe card when the word has no readable syllables" do

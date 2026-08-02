@@ -119,6 +119,10 @@ class User < ApplicationRecord
     prefs["intro_stage"].to_s == "done"
   end
 
+  def intro_running?
+    prefs["intro_stage"].to_s == "running"
+  end
+
   def intro_step
     prefs["intro_step"].presence
   end

@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get("privacy", to: "pages#privacy_policy")
   get("terms", to: "pages#terms_of_service")
   get("menu", to: "pages#menu")
+  post("intro/start", to: "intros#start", as: :intro_start)
+  delete("intro", to: "intros#pause", as: :intro_pause)
   post("intro/next", to: "intros#advance", as: :intro_next)
   post("intro/back", to: "intros#rewind", as: :intro_back)
   post("intro/language/:code", to: "intros#language", as: :intro_language, constraints: {code: /en|ru/})

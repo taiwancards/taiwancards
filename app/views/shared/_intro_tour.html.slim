@@ -32,6 +32,9 @@
         - %w[en ru].each do |code|
           = button_to t("intro.language.#{code}"), intro_language_path(code),
             class: "w-full rounded-xl border border-border px-3 py-3 text-sm font-semibold hover:bg-muted"
+      .mt-3.text-center
+        = button_to t("intro.later"), intro_pause_path, method: :delete,
+          form_class: "contents", class: "text-sm text-muted-foreground hover:text-foreground"
     - else
       p.mt-3.hidden.text-xs.font-medium.text-brand data-intro-target="hint" = t("intro.try_it")
 
@@ -41,7 +44,8 @@
             method: (view.mode == :chapter ? :delete : :post),
             class: "text-sm text-muted-foreground hover:text-foreground"
         - else
-          span
+          = button_to t("intro.later"), intro_pause_path, method: :delete,
+            class: "text-sm text-muted-foreground hover:text-foreground"
 
         .flex.items-center.gap-2
           - if view.position.positive?

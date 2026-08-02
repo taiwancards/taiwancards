@@ -9,7 +9,20 @@ module Intro
     attr_reader :user
 
     def required?
-      user.present? && !user.intro_done?
+      user.present? && user.intro_running?
+    end
+
+    def pending?
+      user.present? && !user.intro_done? && !user.intro_running?
+    end
+
+    def start!
+      user.update!(prefs: user.prefs.merge("intro_stage" => "running"))
+      step
+    end
+
+    def pause!
+      user.update!(prefs: user.prefs.merge("intro_stage" => nil))
     end
 
     def step
@@ -53,7 +66,7 @@ module Intro
     end
 
     def unseen
-      return [] if required?
+      return [] unless user&.intro_done?
 
       Map.newer_than(user.intro_seen_version)
     end

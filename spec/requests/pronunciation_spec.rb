@@ -10,10 +10,6 @@ RSpec.describe "Pronunciation" do
     }
   end
 
-  def warm_up!
-    VoiceProfile.create!(user: @authenticated_user, f3_ref: 2900, calibrated_at: Time.current)
-  end
-
   it "builds a practice card with per-syllable expected tones" do
     word = create(
       :lexeme,
@@ -81,6 +77,38 @@ RSpec.describe "Pronunciation" do
     get("/pronunciation", headers:)
     expect(response).to(have_http_status(:ok))
     expect(response.body).not_to(include(I18n.t("pron.ui.warmup_title")))
+  end
+
+  it "still asks for the warm-up when the profile was only started, never finished" do
+    VoiceProfile.create!(user: @authenticated_user)
+
+    get("/pronunciation", headers:)
+
+    expect(response).to(redirect_to(pronunciation_warmup_path))
+  end
+
+  it "hands the warm-up the page it interrupted" do
+    get("/pronunciation", params: {section: "initials_stops"}, headers:)
+    get("/pronunciation/warmup", headers:)
+
+    expect(response.body).to(include(CGI.escapeHTML("/pronunciation?section=initials_stops")))
+  end
+
+  it "lets a person who insists carry on without one" do
+    create(:lexeme, kind: :word, text: "高", readings: {"pinyin" => "gāo"})
+
+    get("/pronunciation", params: {anyway: 1}, headers:)
+    expect(response).to(have_http_status(:ok))
+
+    get("/pronunciation", headers:)
+    expect(response).to(have_http_status(:ok))
+  end
+
+  it "says plainly that the grading is still alpha" do
+    warm_up!
+    get("/pronunciation", headers:)
+
+    expect(response.body).to(include(CGI.escapeHTML(I18n.t("pronunciation.alpha"))))
   end
 
   describe "acoustic grading" do

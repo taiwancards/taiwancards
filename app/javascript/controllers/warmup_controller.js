@@ -1,12 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
+import { playClip } from "lib/clip"
 
 const SILENCE_RMS = 0.015
 const MIN_MS = 900
 const MAX_MS = 4000
 const MIC_SETTLE_MS = 150
-const REFERENCE_SILENCE_RMS = 0.01
-const REFERENCE_GAP_MS = 220
-const REFERENCE_MIN_MS = 250
 
 export default class extends Controller {
   static targets = ["record", "status", "prompt", "hint", "step", "pip", "reading", "replay"]
@@ -15,7 +13,7 @@ export default class extends Controller {
     doneUrl: String,
     prompts: Array,
     labelRecord: String,
-    labelStop: String,
+    labelListening: String,
     labelRecording: String,
     labelSaved: String,
     labelError: String,
@@ -43,9 +41,9 @@ export default class extends Controller {
     this.promptTarget.lang = prompt.zhuyin ? "zh-TW" : ""
     this.hintTarget.textContent = prompt.hint
     this.showReading(prompt)
-    this.reference = prompt.audio
-    this.replayTarget.classList.toggle("hidden", !prompt.audio)
-    if (prompt.audio) this.playReference(prompt.audio)
+    this.reference = prompt.audio ? { url: prompt.audio, stop: prompt.audio_stop } : null
+    this.replayTarget.classList.toggle("hidden", !this.reference)
+    if (this.reference) this.playReference()
     this.stepTarget.textContent = `${this.index + 1} / ${this.promptsValue.length}`
   }
 
@@ -56,78 +54,17 @@ export default class extends Controller {
   }
 
   replay() {
-    if (this.reference) this.playReference(this.reference)
+    if (this.reference) this.playReference()
   }
 
   silenceReference() {
-    if (!this.referenceAudio) return
-    this.referenceAudio.pause()
-    this.referenceAudio = null
+    this.referenceClip?.stop()
+    this.referenceClip = null
   }
 
-  async playReference(url) {
+  playReference() {
     this.silenceReference()
-    const audio = new Audio(url)
-    this.referenceAudio = audio
-    audio.crossOrigin = "anonymous"
-    const stop = await this.firstUtteranceEnd(url)
-    if (stop) {
-      const guard = () => {
-        if (audio.currentTime >= stop) {
-          audio.pause()
-          audio.removeEventListener("timeupdate", guard)
-        }
-      }
-      audio.addEventListener("timeupdate", guard)
-    }
-    audio.play().catch(() => {})
-  }
-
-  async firstUtteranceEnd(url) {
-    if (this.utteranceEnds?.has(url)) return this.utteranceEnds.get(url)
-
-    let seconds = null
-    try {
-      const response = await fetch(url)
-      const ctx = new (window.AudioContext || window.webkitAudioContext)()
-      try {
-        seconds = this.scanForGap(await ctx.decodeAudioData(await response.arrayBuffer()))
-      } finally {
-        ctx.close()
-      }
-    } catch {
-      seconds = null
-    }
-
-    this.utteranceEnds ||= new Map()
-    this.utteranceEnds.set(url, seconds)
-    return seconds
-  }
-
-  scanForGap(buffer) {
-    const data = buffer.getChannelData(0)
-    const rate = buffer.sampleRate
-    const step = Math.max(1, Math.round((rate * 10) / 1000))
-    const gap = Math.round(REFERENCE_GAP_MS / 10)
-    const floor = Math.round(REFERENCE_MIN_MS / 10)
-
-    let speech = false
-    let quiet = 0
-    let lastLoud = 0
-
-    for (let f = 0, i = 0; i + step <= data.length; i += step, f++) {
-      let sum = 0
-      for (let k = 0; k < step; k++) sum += data[i + k] * data[i + k]
-      if (Math.sqrt(sum / step) > REFERENCE_SILENCE_RMS) {
-        speech = true
-        quiet = 0
-        lastLoud = f
-      } else if (speech && ++quiet >= gap && lastLoud >= floor) {
-        return (lastLoud + 2) / 100
-      }
-    }
-
-    return null
+    this.referenceClip = playClip(this.reference.url, Number(this.reference.stop) || 0)
   }
 
   markPip(index, color) {
@@ -157,7 +94,7 @@ export default class extends Controller {
     this.recorder.onstop = () => this.upload()
     this.recorder.start()
     this.recording = true
-    this.recordTarget.textContent = this.labelStopValue
+    this.recordTarget.textContent = this.labelListeningValue
     this.statusTarget.textContent = this.labelRecordingValue
     this.watch()
   }
@@ -274,7 +211,9 @@ export default class extends Controller {
     if (this.summary?.anchors_sane === false && !this.retried && this.rewindToTones()) return
 
     this.statusTarget.textContent = this.labelDoneValue
-    setTimeout(() => window.location.reload(), 900)
+    setTimeout(() => {
+      window.location.href = this.doneUrlValue || window.location.href
+    }, 900)
   }
 
   async toWav(blob) {

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include Returning
   include Authentication
   include Authorization
   include Introduced
+  include Voiced
 
   allow_browser versions: :modern
 

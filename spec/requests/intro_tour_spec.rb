@@ -5,25 +5,27 @@ require "rails_helper"
 RSpec.describe "Intro tour" do
   let(:user) { @authenticated_user }
 
-  describe "the mandatory tour" do
-    it "renders for a user who has not finished it" do
+  describe "the essential tour" do
+    before { user.update!(prefs: user.prefs.merge("intro_stage" => "running", "intro_step" => "search")) }
+
+    it "renders for a user who is walking it" do
       get("/desk")
 
       expect(response.body).to(include("intro-tour"))
     end
 
     it "anchors its step to an element that exists on the page" do
-      user.update!(prefs: user.prefs.merge("intro_stage" => "pending", "intro_step" => "search"))
       get("/desk")
 
       expect(response.body).to(include("data-tour=\"search\""))
       expect(response.body).to(include("data-intro-anchor-value=\"search\""))
     end
 
-    it "offers no way out" do
+    it "offers no way to skip a step, only to put the whole tour off" do
       get("/desk")
 
       expect(response.body).not_to(include(I18n.t("intro.skip")))
+      expect(response.body).to(include(I18n.t("intro.later")))
     end
   end
 

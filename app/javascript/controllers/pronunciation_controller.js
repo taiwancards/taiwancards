@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { toWav } from "lib/speech_recorder"
 
-const AUTO_KEY = "pron_auto"
 const PRELISTEN_KEY = "pron_prelisten"
 const SPEECH_RMS = 0.02
 const MAX_DRILL_TRIES = 5
@@ -83,7 +82,7 @@ const FIELD_MARK = {
 }
 
 export default class extends Controller {
-  static targets = ["record", "status", "syllable", "auto", "prelisten", "card", "attempts", "detail"]
+  static targets = ["record", "status", "syllable", "prelisten", "card", "detail"]
   static values = {
     labelNotRecognized: String,
     labelNotMeasured: String,
@@ -93,21 +92,18 @@ export default class extends Controller {
     labelFixTitle: String,
     labelChartHint: String,
     labelWeight: String,
-    maxAttempts: { type: Number, default: 5 },
     tonal: { type: Boolean, default: true },
     url: String,
-    advanceUrl: String,
     expected: Array,
     text: String,
     lexemeId: Number,
     audioUrl: String,
     audioStop: Number,
     audioParts: Array,
-    autoDelay: Number,
-    autoSilence: Number,
-    autoMax: Number,
+    silenceMs: Number,
+    maxMs: Number,
     labelRecord: String,
-    labelStop: String,
+    labelListening: String,
     labelRecording: String,
     labelGrading: String,
     labelDetails: String,
@@ -127,17 +123,13 @@ export default class extends Controller {
   connect() {
     this.recording = false
     this.mode = "word"
-    this.auto = localStorage.getItem(AUTO_KEY) === "1"
     this.prelisten = localStorage.getItem(PRELISTEN_KEY) === "1"
-    if (this.hasAutoTarget) this.autoTarget.checked = this.auto
     if (this.hasPrelistenTarget) this.prelistenTarget.checked = this.prelisten
-    this.checkHealth().then(() => {
-      if (this.auto && this.online) this.scheduleAuto()
-    })
+    this.checkHealth()
   }
 
   disconnect() {
-    this.clearAuto()
+    this.clearTimers()
     this.teardownMeter()
   }
 
@@ -162,7 +154,7 @@ export default class extends Controller {
       this.recordTarget.disabled = true
       this.recordTarget.classList.add("cursor-not-allowed", "opacity-50")
     }
-    this.clearAuto()
+    this.clearTimers()
   }
 
   micProblem(error) {
@@ -176,13 +168,6 @@ export default class extends Controller {
       default:
         return window.isSecureContext === false ? this.labelMicInsecureValue : this.labelMicDeniedValue
     }
-  }
-
-  toggleAuto() {
-    this.auto = this.autoTarget.checked
-    localStorage.setItem(AUTO_KEY, this.auto ? "1" : "0")
-    if (this.auto && this.online && !this.recording) this.scheduleAuto()
-    else this.clearAuto()
   }
 
   togglePrelisten() {
@@ -231,29 +216,17 @@ export default class extends Controller {
     })
   }
 
-  scheduleAuto() {
-    this.clearAuto()
-    this.setStatus("…")
-    this.autoTimer = setTimeout(() => this.beginAutoTurn(), Math.max(0, this.autoDelayValue))
-  }
-
-  async beginAutoTurn() {
-    if (this.prelisten && this.hasAudio() && this.mode === "word") {
-      await this.playAudio()
-      this.retryTimer = setTimeout(() => this.start(), 500)
-    } else {
-      this.start()
-    }
-  }
-
-  clearAuto() {
-    clearTimeout(this.autoTimer)
-    clearTimeout(this.advanceTimer)
+  clearTimers() {
     clearTimeout(this.retryTimer)
   }
 
   async toggle() {
     if (this.recording) return this.requestStop()
+    if (this.prelisten && this.hasAudio() && this.mode === "word") {
+      await this.playAudio()
+      this.retryTimer = setTimeout(() => this.start(), 400)
+      return
+    }
     await this.start()
   }
 
@@ -275,7 +248,7 @@ export default class extends Controller {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true })
     } catch (error) {
       this.setStatus(this.micProblem(error))
-      this.clearAuto()
+      this.clearTimers()
       return
     }
     this.chunks = []
@@ -286,7 +259,7 @@ export default class extends Controller {
     this.recorder.onstop = () => this.grade()
     this.recorder.start()
     this.recording = true
-    this.recordTarget.textContent = this.labelStopValue
+    this.recordTarget.textContent = this.labelListeningValue
     this.recordTarget.classList.add("bg-red-500", "text-white")
     this.setStatus(this.mode === "drill" ? this.drillPrompt() : this.labelRecordingValue)
     this.startMeter()
@@ -317,7 +290,7 @@ export default class extends Controller {
       this.meterRan = true
       this.meter = setInterval(() => this.tick(), 60)
     } catch {
-      this.maxTimer = setTimeout(() => this.stop(), this.autoMaxValue)
+      this.maxTimer = setTimeout(() => this.stop(), this.maxMsValue)
     }
   }
 
@@ -335,7 +308,7 @@ export default class extends Controller {
     const silentFor = now - this.lastLoud
     const elapsed = now - this.startedAt
     if (this.pendingStop && (silentFor > 180 || now > this.stopDeadline)) return this.stop()
-    if ((this.spoke && silentFor > this.autoSilenceValue) || elapsed > this.autoMaxValue) {
+    if ((this.spoke && silentFor > this.silenceMsValue) || elapsed > this.maxMsValue) {
       this.stop()
     }
   }
@@ -357,7 +330,6 @@ export default class extends Controller {
   async grade() {
     if (this.meterRan && !this.spoke) {
       this.setStatus(this.labelSilenceValue)
-      if (this.auto) this.retryTimer = setTimeout(() => this.beginAutoTurn(), 900)
       return
     }
     this.setStatus(this.labelGradingValue)
@@ -384,7 +356,6 @@ export default class extends Controller {
         if (res.status === 503) return this.unavailable()
         if (res.status === 422) {
           this.setStatus(this.labelSilenceValue)
-          if (this.auto) this.retryTimer = setTimeout(() => this.beginAutoTurn(), 1100)
           return
         }
         this.setStatus(this.labelErrorValue)
@@ -401,12 +372,7 @@ export default class extends Controller {
     if (this.mode === "drill") return this.handleDrillResult(result)
 
     this.renderWord(result)
-    this.attempts = (this.attempts || 0) + 1
-    this.showAttempts()
-
     if (this.allGreen(result)) return this.finish()
-
-    if (this.auto && this.attempts >= this.maxAttemptsValue) return this.finish(true)
 
     const wrong = result.syllables.map((s, i) => (s && s.level === "green" ? -1 : i)).filter((i) => i >= 0)
     if (this.expectedValue.length > 1 && wrong.length > 0) return this.enterDrill(wrong)
@@ -418,16 +384,8 @@ export default class extends Controller {
     return list.length > 0 && list.every((s) => s && s.level === "green")
   }
 
-  showAttempts() {
-    if (!this.hasAttemptsTarget) return
-    const left = Math.max(0, this.maxAttemptsValue - (this.attempts || 0))
-    this.attemptsTarget.textContent = this.auto && left > 0 ? `${left}` : ""
-  }
-
   retryWord() {
-    if (!this.auto) return
     this.setStatus(this.labelRetryValue)
-    this.retryTimer = setTimeout(() => this.beginAutoTurn(), 1200)
   }
 
   enterDrill(wrongIndices) {
@@ -444,7 +402,6 @@ export default class extends Controller {
     this.drillTries = 0
     this.highlightDrill()
     this.setStatus(this.drillPrompt())
-    if (this.auto) this.retryTimer = setTimeout(() => this.start(), 700)
   }
 
   handleDrillResult(result) {
@@ -461,9 +418,7 @@ export default class extends Controller {
       this.setStatus(this.labelDrillSkipValue)
       this.drillCursor += 1
       this.retryTimer = setTimeout(() => this.startDrillStep(), 1200)
-      return
     }
-    if (this.auto) this.retryTimer = setTimeout(() => this.start(), 1000)
   }
 
   drillPrompt() {
@@ -471,15 +426,8 @@ export default class extends Controller {
     return `${this.labelDrillValue}: ${target.char} (${target.pinyin})`
   }
 
-  finish(exhausted = false) {
+  finish() {
     this.mode = "word"
-    this.attempts = 0
-    if (exhausted) this.setStatus(this.labelDrillSkipValue)
-    if (this.auto) this.advanceTimer = setTimeout(() => this.advance(), exhausted ? 2600 : 1600)
-  }
-
-  advance() {
-    if (this.advanceUrlValue) window.location.href = this.advanceUrlValue
   }
 
   highlightDrill() {

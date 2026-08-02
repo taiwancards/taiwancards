@@ -79,10 +79,17 @@ module Pronunciation
         analysis,
         span,
         initial: template.dig("structure", "initial"),
-        utterance_initial: index.zero?
+        utterance_initial: index.zero?,
+        f0_reference: speaker_reference_hz
       )
       features["f0_register"] = register(features)
       {target:, key:, norm:, template:, features:, index:}
+    end
+
+    def speaker_reference_hz
+      return nil unless @voice&.calibrated?
+
+      @voice.reference_hz
     end
 
     TEMPO_FIELDS = %w[voiced_ms duration_ms].freeze

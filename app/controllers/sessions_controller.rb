@@ -4,6 +4,7 @@ class SessionsController < ApplicationController
   allow_unauthenticated_access only: %i[new]
 
   def new
+    remember_return_path(referring_path) if session[:return_to].blank?
   end
 
   def destroy

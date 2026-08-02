@@ -102,12 +102,19 @@ module Pronunciation
 
       def waveform_of(samples, sr) = DSP::Waveform.new(samples: samples, sample_rate: sr)
 
+      # The predictor has a fixed order, so the analysis band has to stay near the ceiling it was
+      # sized for: decimate to the rate closest to twice the ceiling, not to the first rate above it.
+      def formant_extractor(sr, ceiling)
+        factor = [(sr / (2.0 * ceiling)).round, 1].max
+        DSP::Formants.new(maximum_frequency: sr / (2.0 * factor))
+      end
+
       def estimate_f3(samples, sr, win, hop, energy)
         return nil if energy.empty?
 
         sorted = energy.compact.sort
         thr = sorted[(sorted.length * 0.6).to_i]
-        extractor = DSP::Formants.new
+        extractor = formant_extractor(sr, DSP::Formants::DEFAULT_MAXIMUM_HZ)
         vals = []
         energy.each_with_index do |e, i|
           next if e.nil? || e < thr
@@ -333,6 +340,11 @@ module Pronunciation
         fine.merge(clean: clean)
       end
 
+      # No Mandarin syllable carries this much aspiration or frication around its voiced core
+      # (both sit at the 99th percentile of the corpus), so anything further out is room noise.
+      MAX_ONSET_MS = 300.0
+      MAX_TAIL_MS = 250.0
+
       def syllable_parts(an, span, initial: nil, utterance_initial: true)
         lo, hi = span
         conf = an[:conf]
@@ -356,6 +368,10 @@ module Pronunciation
 
         voice_end ||= hi
 
+        lo = [lo, voice_start - (MAX_ONSET_MS / HOP_MS).round].max
+        hi = [hi, voice_end + (MAX_TAIL_MS / HOP_MS).round].min
+        span = [lo, hi]
+
         fine = fine_onset(an, span, initial, utterance_initial)
         burst = fine ? burst_frame(lo, fine[:burst_ms], voice_start) : lo
 
@@ -375,7 +391,7 @@ module Pronunciation
         (lo + (burst_ms / HOP_MS).round).clamp(0, voice_start)
       end
 
-      def extract(an, span, initial: nil, utterance_initial: true)
+      def extract(an, span, initial: nil, utterance_initial: true, f0_reference: nil)
         parts = syllable_parts(an, span, initial: initial, utterance_initial: utterance_initial)
         lo = parts[:onset]
         hi = parts[:offset]
@@ -383,7 +399,7 @@ module Pronunciation
         ve = parts[:voice_end]
         sr = an[:sr]
 
-        raw = (vs..ve).map { |i| an[:f0][i] }
+        raw = octave_aligned(((vs..ve).map { |i| an[:f0][i] }), f0_reference)
         cleaned = clean_f0_track(raw)
         filled = fill_gaps(cleaned, 6)
         voiced_seq = filled.select { |v| v > 0.0 }
@@ -407,7 +423,7 @@ module Pronunciation
         f1 = []
         f2 = []
         f3 = []
-        extractor = DSP::Formants.new(maximum_frequency: an[:max_formant] || 5500.0)
+        extractor = formant_extractor(sr, an[:max_formant] || DSP::Formants::DEFAULT_MAXIMUM_HZ)
         (vs..ve).each do |i|
           start = i * hop
           break if start + win > an[:samples].length
@@ -555,6 +571,23 @@ module Pronunciation
         end
 
         total <= 1e-15 ? 0.0 : lo / total
+      end
+
+      # A whole syllable sitting an octave off is the pitch tracker halving or doubling, not a
+      # speaker leaping out of their own range, so the track moves as one and its shape survives.
+      OCTAVE_DRIFT_ST = 9.0
+
+      def octave_aligned(track, reference)
+        return track unless reference.to_f > 50.0
+
+        voiced = track.select { |v| v > 0.0 }
+        return track if voiced.length < 3
+
+        drift = DSP::Scales.hz_to_semitones(DTW::Statistics.median(voiced), reference: reference)
+        return track if drift.abs <= OCTAVE_DRIFT_ST
+
+        factor = drift.positive? ? 0.5 : 2.0
+        track.map { |v| v > 0.0 ? v * factor : v }
       end
 
       MAX_SEMITONE_JUMP = 2.5

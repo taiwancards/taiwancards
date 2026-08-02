@@ -63,4 +63,21 @@ RSpec.describe "Recording artifacts" do
   it "refuses to vouch for aspiration when nothing precedes the syllable" do
     expect(vot_of(aspirated)["vot_reliable"]).to(be(false))
   end
+
+  describe "a syllable recorded in a loud room" do
+    let(:quiet) { room(600) + aspirated }
+    let(:noisy) { room(600, level: 0.02) + vowel(320) + room(400, level: 0.02) }
+
+    it "is not stretched by the noise around it" do
+      expect(vot_of(noisy)["duration_ms"]).to(be_within(250).of(vot_of(quiet)["duration_ms"]))
+    end
+
+    it "does not read the noise before it as frication" do
+      expect(vot_of(noisy)["fric_ms"]).to(be <= Pronunciation::Acoustic::Features::MAX_ONSET_MS)
+    end
+
+    it "measures the same voicing as in a quiet room" do
+      expect(vot_of(noisy)["voiced_ms"]).to(be_within(60).of(vot_of(quiet)["voiced_ms"]))
+    end
+  end
 end

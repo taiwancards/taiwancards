@@ -7,6 +7,16 @@ module IntroHelper
     @intro_view ||= Intro::Runner.new(user: current_user, session: session).call
   end
 
+  def setup_tasks
+    progress = current_user&.intro
+    return [] if progress.nil? || progress.required?
+
+    tasks = []
+    tasks << {label: t("intro.setup.tour"), path: intro_start_path, post: true} if progress.pending?
+    tasks << {label: t("intro.setup.level"), path: onboarding_start_path} unless current_user.start_chosen?
+    tasks
+  end
+
   def intro_label(view)
     case view.mode
     when :essential

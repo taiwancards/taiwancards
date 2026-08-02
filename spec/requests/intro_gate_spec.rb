@@ -2,32 +2,52 @@
 
 require "rails_helper"
 
-RSpec.describe "The intro gate" do
+RSpec.describe "The intro tour" do
   let(:user) { @authenticated_user }
 
   def step_id = user.reload.intro_step
 
   def stand_on(id)
-    user.update!(prefs: user.prefs.merge("intro_stage" => "pending", "intro_step" => id))
+    user.update!(prefs: user.prefs.merge("intro_stage" => "running", "intro_step" => id))
   end
 
   describe "a brand new account" do
-    it "starts on the first step of the mandatory tour" do
-      expect(user.intro).to(be_required)
+    it "is not held anywhere" do
+      get("/progress")
+
+      expect(response).to(have_http_status(:ok))
+    end
+
+    it "is asked to take the tour instead of being pushed into it" do
+      get("/desk")
+
+      expect(response.body).to(include(I18n.t("intro.setup.tour")))
+      expect(response.body).not_to(include("intro-tour"))
+    end
+
+    it "starts on the first step once the person asks for it" do
+      post("/intro/start")
+
+      expect(user.reload.intro).to(be_required)
       expect(user.intro.step.id).to(eq(Intro::Map.essential.first.id))
     end
 
-    it "renders the tour and blocks dismissal" do
+    it "comes back to the page the tour was started from" do
+      post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
+
+      expect(response).to(redirect_to("/dict"))
+    end
+  end
+
+  describe "while the tour is running" do
+    it "renders the tour" do
       stand_on("welcome")
       get("/desk")
 
       expect(response.body).to(include("intro-tour"))
-      expect(response.body).not_to(include(I18n.t("intro.skip")))
     end
-  end
 
-  describe "reaching for a page the current step does not sit on" do
-    it "sends the user back to the step" do
+    it "sends the reader back to the step they wandered off" do
       stand_on("search")
       get("/progress")
 
@@ -47,16 +67,29 @@ RSpec.describe "The intro gate" do
 
       expect(response).to(have_http_status(:ok))
     end
-  end
 
-  describe "resuming" do
-    it "picks up on the stored step after the browser was closed" do
-      stand_on("display")
-      reset!
-      sign_in(user)
+    it "hides the setup strip it would otherwise nag with" do
+      stand_on("welcome")
       get("/desk")
 
+      expect(response.body).not_to(include(I18n.t("intro.setup.tour")))
+    end
+
+    it "can be put off, and asks again from the strip" do
+      stand_on("search")
+      delete("/intro")
+
+      expect(user.reload.intro).to(be_pending)
+      get("/progress")
       expect(response).to(have_http_status(:ok))
+      expect(response.body).to(include(I18n.t("intro.setup.tour")))
+    end
+
+    it "resumes on the step it was left on" do
+      stand_on("display")
+      delete("/intro")
+      post("/intro/start")
+
       expect(step_id).to(eq("display"))
     end
 
@@ -97,45 +130,22 @@ RSpec.describe "The intro gate" do
       get("/progress")
       expect(response).to(have_http_status(:ok))
     end
-  end
 
-  describe "the language step" do
-    it "applies the choice and moves on" do
+    it "returns to the page the tour was started from when it ends" do
+      stand_on(Intro::Map.essential.last.id)
+      get("/dict")
+      post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
+      post("/intro/next")
+
+      expect(response).to(redirect_to("/dict"))
+    end
+
+    it "applies the language choice and moves on" do
       stand_on("language")
       post("/intro/language/ru")
 
       expect(user.reload.locale).to(eq("ru"))
       expect(step_id).not_to(eq("language"))
-    end
-  end
-
-  describe "an administrator" do
-    before { user.update!(admin: true) }
-
-    it "walks the same mandatory tour as everybody else" do
-      stand_on("search")
-      get("/progress")
-
-      expect(response).to(redirect_to("/desk"))
-    end
-
-    it "cannot reach the admin pages before finishing it" do
-      stand_on("search")
-      get("/admin/users")
-
-      expect(response).to(redirect_to("/desk"))
-    end
-
-    it "is offered no way to skip" do
-      get("/desk")
-
-      expect(response.body).not_to(include(I18n.t("intro.skip")))
-    end
-  end
-
-  describe "a fresh account" do
-    it "needs the tour no matter how it was created" do
-      expect(User.new.intro).to(be_required)
     end
   end
 
@@ -153,16 +163,16 @@ RSpec.describe "The intro gate" do
   describe "once the tour is finished" do
     before { user.intro.finish! }
 
-    it "stops gating" do
-      get("/progress")
-
-      expect(response).to(have_http_status(:ok))
-    end
-
-    it "stops rendering the mandatory tour" do
+    it "stops rendering the tour" do
       get("/desk")
 
       expect(response.body).not_to(include("intro-tour"))
+    end
+
+    it "stops asking for it" do
+      get("/desk")
+
+      expect(response.body).not_to(include(I18n.t("intro.setup.tour")))
     end
   end
 end

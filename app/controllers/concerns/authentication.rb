@@ -42,6 +42,7 @@ module Authentication
   def require_authentication
     return if authenticated?
 
+    remember_return_path(request.fullpath) if request.get? && request.format.html?
     redirect_to(login_path)
   end
 
