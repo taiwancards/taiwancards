@@ -5,8 +5,6 @@
 @import "../stylesheets/fonts.css";
 
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -48,49 +46,6 @@
   --success-foreground: hsl(0 0% 100%);
   --brand: oklch(0.52 0.16 258);
   --brand-soft: oklch(0.95 0.03 258);
-
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
-
-  --warning: hsl(38 92% 50%);
-  --warning-foreground: hsl(0 0% 100%);
-  --success: hsl(84 81% 44%);
-  --success-foreground: hsl(0 0% 100%);
-  --brand: oklch(0.72 0.14 258);
-  --brand-soft: oklch(0.28 0.05 258);
 
 }
 
@@ -190,13 +145,6 @@
       radial-gradient(58% 46% at 4% -4%, rgba(0, 0, 149, 0.2) 0%, rgba(0, 0, 149, 0.07) 45%, transparent 72%),
       radial-gradient(52% 42% at 99% 0%, rgba(254, 0, 0, 0.17) 0%, rgba(254, 0, 0, 0.05) 45%, transparent 72%),
       radial-gradient(80% 40% at 50% 104%, rgba(0, 0, 149, 0.13) 0%, transparent 72%);
-  }
-
-  .dark .flag-wash {
-    background-image:
-      radial-gradient(58% 46% at 4% -4%, rgba(64, 84, 255, 0.26) 0%, rgba(64, 84, 255, 0.09) 45%, transparent 72%),
-      radial-gradient(52% 42% at 99% 0%, rgba(255, 60, 60, 0.2) 0%, rgba(255, 60, 60, 0.06) 45%, transparent 72%),
-      radial-gradient(80% 40% at 50% 104%, rgba(64, 84, 255, 0.16) 0%, transparent 72%);
   }
 
   .font-kai {

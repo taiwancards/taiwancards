@@ -3,59 +3,31 @@
 require "rails_helper"
 
 RSpec.describe "The level tab" do
-  it "puts the level and what it hides on one page" do
+  it "offers the level itself and points to the placement test" do
     get(profile_level_path)
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include(I18n.t("auth.level_field")))
-    expect(response.body).to(include(I18n.t("auth.projection_field")))
+    expect(response.body).to(include(placement_path))
   end
 
-  it "offers no slider, because the steps are not the same on every scale" do
+  it "no longer offers a visibility projection" do
     get(profile_level_path)
 
-    expect(response.body).not_to(include("type=\"range\""))
+    expect(response.body).not_to(include("user[projection]"))
+    expect(response.body).not_to(include("user[visibility_tolerance]"))
   end
 
-  it "names every option in the terms of its own scale" do
-    get(profile_level_path)
+  it "keeps the full dictionary visible whatever the level" do
+    rare = create(:lexeme, kind: :word, text: "淼淼")
+    @authenticated_user.update!(level: "zero")
 
-    expect(response.body).to(include(CGI.escapeHTML(I18n.t("auth.projection_open"))))
-    expect(response.body).to(include("常用"))
-    expect(response.body).to(include("Novice1"))
-    expect(response.body).to(include("TBCL: 1"))
+    expect(Lexeme.visible_to(@authenticated_user)).to(include(rare))
   end
 
-  it "moves the projection with one choice" do
-    patch("/profile", params: {tab: "level", user: {projection: "tocfl:3"}})
+  it "saves the level from the tab" do
+    patch("/profile", params: {tab: "level", user: {level: "3"}})
 
-    user = @authenticated_user.reload
-    expect(user.visibility_scale).to(eq("tocfl"))
-    expect(user.visibility_level).to(eq(3))
-  end
-
-  it "reads back as open once nothing is held above the level" do
-    @authenticated_user.projection = User::PROJECTION_OPEN
-    @authenticated_user.save!
-
-    expect(@authenticated_user.reload.projection).to(eq(User::PROJECTION_OPEN))
-    expect(@authenticated_user).to(be_full_visibility)
-  end
-
-  it "really shows everything on the open setting, including unlevelled words" do
-    unlevelled = create(:lexeme, kind: :word, text: "淼淼")
-    @authenticated_user.projection = User::PROJECTION_OPEN
-    @authenticated_user.save!
-
-    expect(Lexeme.visible_to(@authenticated_user)).to(include(unlevelled))
-  end
-
-  it "says how much the current choice hides" do
-    create(:lexeme, kind: :word, text: "水果")
-    create(:lexeme, kind: :word, text: "淼淼")
-
-    get(profile_level_path)
-
-    expect(response.body).to(match(/#{Regexp.escape(I18n.t("auth.projection_hides", hidden: 1, total: 2, share: 50))}/))
+    expect(@authenticated_user.reload.level).to(eq("3"))
   end
 end

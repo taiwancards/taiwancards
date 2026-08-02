@@ -14,7 +14,8 @@
 
       textarea.w-full.rounded-xl.border.border-border.bg-card.px-4.py-3.text-2xl.leading-relaxed[
         lang="zh-TW" rows="3" placeholder=t("cangjie.output_placeholder")
-        data-cangjie-target="output" data-action="keydown->cangjie#keydown" ]
+        autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"
+        data-cangjie-target="output" data-action="keydown->cangjie#keydown beforeinput->cangjie#beforeinput" ]
 
       .flex.items-center.gap-3.text-sm
         span.text-muted-foreground = t("cangjie.code") + ":"
@@ -24,11 +25,22 @@
 
       .space-y-1.select-none
         - @rows.each do |row|
-          .flex.justify-center.gap-1
+          .flex.justify-center class="gap-0.5 sm:gap-1"
             - row.each do |letter|
-              .flex.h-14.w-14.flex-col.items-center.justify-center.rounded-lg.border.border-border.bg-card[
-                data-cangjie-target="key" data-key=letter ]
+              button.flex.flex-col.items-center.justify-center.rounded-lg.border.border-border.bg-card.transition-colors[
+                type="button" class="h-12 w-8 hover:bg-muted active:bg-primary/20 sm:h-14 sm:w-14"
+                data-cangjie-target="key" data-key=letter data-action="cangjie#press" ]
                 span.text-lg.font-medium lang="zh-TW" = @keys[letter]
                 span.text-muted-foreground class="text-[10px] uppercase" = letter
+        .flex.justify-center.pt-1 class="gap-0.5 sm:gap-1"
+          button.flex.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
+            type="button" class="h-12 w-14 hover:bg-muted active:bg-primary/20 sm:h-12 sm:w-20"
+            aria-label="Backspace" data-action="cangjie#backspace" ] ⌫
+          button.flex.h-12.flex-1.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
+            type="button" class="max-w-72 hover:bg-muted active:bg-primary/20"
+            aria-label="Space" data-action="cangjie#space" ] ␣
+          button.flex.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
+            type="button" class="h-12 w-14 hover:bg-muted active:bg-primary/20 sm:h-12 sm:w-20"
+            aria-label="Clear" data-action="cangjie#clear" ] ✕
 
       p.text-center.text-xs.text-muted-foreground = t("cangjie.hint")

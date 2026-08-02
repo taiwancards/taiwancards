@@ -6,6 +6,8 @@ class PronunciationController < ApplicationController
   QUEUE_SIZE = Pronunciation::Queue::SIZE
 
   def show
+    return redirect_to(pronunciation_warmup_path, notice: t("pronunciation.warmup_first")) if warmup_needed?
+
     @collection = Collection.where(user_id: [nil, Current.user&.id]).find_by(id: params[:collection_id])
     @drills = Pronunciation::Drills.instance
     @section = @drills.section(params[:section])
@@ -47,6 +49,7 @@ class PronunciationController < ApplicationController
       .new(tonal:, voice:)
       .grade(audio: params[:audio], text: params[:text], syllables: parse_expected)
     return render(json: {status: "offline"}, status: :service_unavailable) if result.nil?
+    return render(json: result, status: :unprocessable_entity) if result["status"] == "retry"
 
     lexeme = Lexeme.where(kind: %i[word character]).find_by(id: params[:lexeme_id])
     record_attempt(lexeme, result, schedule: params[:schedule].to_s != "false") if lexeme
@@ -56,10 +59,16 @@ class PronunciationController < ApplicationController
 
   private
 
+  def warmup_needed?
+    return false if params[:anyway].present?
+
+    voice_profile.nil?
+  end
+
   def voice_profile
     return nil if Current.user.nil?
 
-    VoiceProfile.find_by(user: Current.user)
+    @voice_profile ||= VoiceProfile.find_by(user: Current.user)
   end
 
   def refine_voice(voice, result)

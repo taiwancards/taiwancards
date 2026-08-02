@@ -1,39 +1,31 @@
 - content_for(:title, t("nav.more"))
+- item_classes = "flex min-h-11 items-center gap-2.5 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
+- settings_entries, group_entries = language_nav.partition { |entry| entry[:key] == :settings }
 
-.py-6.space-y-6
+.py-6.space-y-5
   h1.text-2xl.font-bold.tracking-tight = t("nav.more")
 
-  - language_nav.each do |entry|
-    - if entry[:type] == :menu
-      section.space-y-2
-        h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
-        .grid.gap-2 class="grid-cols-2"
-          - entry[:items].each do |key, label, path|
-            = link_to path, class: "flex min-h-14 items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-muted" do
-              = icon(key, css: "size-5 shrink-0 text-muted-foreground")
-              span.truncate = label
+  .flex.min-h-12.items-center.justify-center.rounded-xl.border.border-border.bg-card.px-3.py-2
+    = render "shared/script_prefs", inside_app: authenticated?
 
-  section.space-y-2
-    h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("nav.settings")
-    .grid.gap-2 class="grid-cols-2"
-      - language_nav.select { |entry| entry[:type] == :link }.each do |entry|
-        = link_to entry[:path], class: "flex min-h-14 items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-muted" do
-          = icon(entry[:key], css: "size-5 shrink-0 text-muted-foreground")
-          span.truncate = entry[:label]
-      = link_to profile_path, class: "flex min-h-14 items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-muted" do
-        = icon(:user, css: "size-5 shrink-0 text-muted-foreground")
-        span.truncate = t("auth.profile")
-      = link_to help_path, class: "flex min-h-14 items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-muted" do
-        = icon(:help, css: "size-5 shrink-0 text-muted-foreground")
-        span.truncate = t("nav.help")
-      - if current_user&.admin?
-        = link_to admin_users_path, class: "flex min-h-14 items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-medium transition-colors hover:bg-muted" do
-          = icon(:settings, css: "size-5 shrink-0 text-muted-foreground")
-          span.truncate = t("admin.title")
-      button.flex.min-h-14.items-center.gap-3.rounded-xl.border.border-border.bg-card.px-4.py-3.text-sm.font-medium.transition-colors[
-        type="button" data-controller="theme" data-action="theme#toggle" class="hover:bg-muted" ]
-        span.dark:hidden = icon(:moon, css: "size-5 shrink-0 text-muted-foreground")
-        span.hidden.dark:inline = icon(:sun, css: "size-5 shrink-0 text-muted-foreground")
-        span.truncate = t("nav.theme")
-      .flex.min-h-14.items-center.justify-center.rounded-xl.border.border-border.bg-card.px-4.py-3 class="col-span-2"
-        = render "shared/script_prefs", inside_app: true
+  - settings_entries.each do |entry|
+    section.space-y-2
+      h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
+      .grid class="grid-cols-2 gap-1.5 sm:grid-cols-3"
+        - entry[:items].each do |key, label, path|
+          = link_to path, class: item_classes do
+            = icon(key, css: "size-4 shrink-0 text-muted-foreground")
+            span.truncate = label
+        - if current_user&.admin?
+          = link_to admin_users_path, class: item_classes do
+            = icon(:settings, css: "size-4 shrink-0 text-muted-foreground")
+            span.truncate = t("admin.title")
+
+  - group_entries.each do |entry|
+    section.space-y-2
+      h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
+      .grid class="grid-cols-2 gap-1.5 sm:grid-cols-3"
+        - entry[:items].each do |key, label, path|
+          = link_to path, class: item_classes do
+            = icon(key, css: "size-4 shrink-0 text-muted-foreground")
+            span.truncate = label

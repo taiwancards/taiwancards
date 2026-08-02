@@ -37,7 +37,7 @@
                     td.px-2.py-1
                       - if eras.include?(era)
                         = image_tag evolution_image(char, era), alt: "#{char} #{t("hanzi.era.#{era}")}",
-                          class: "size-10 object-contain dark:invert", loading: "lazy"
+                          class: "size-10 object-contain", loading: "lazy"
                       - else
                         span.text-xs.text-muted-foreground —
         p.text-xs.leading-relaxed.text-muted-foreground = t("hanzi.evolution_gap")
@@ -159,8 +159,8 @@
             .space-y-2[
               data-controller="hanzi-writer" data-hanzi-writer-char-value=char
               data-hanzi-writer-url-value=character_strokes_path(char) ]
-              .flex.size-40.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
-                data-hanzi-writer-target="canvas" ]
+              .flex.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
+                class="size-56 sm:size-40" data-hanzi-writer-target="canvas" ]
               .flex.items-center.justify-between.gap-2
                 = link_to char, character_path(char), class: "text-lg font-semibold hover:text-brand", lang: "zh-TW"
                 button.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium[

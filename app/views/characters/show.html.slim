@@ -56,8 +56,8 @@
       data-controller="hanzi-writer" data-hanzi-writer-char-value=lexeme.text
       data-hanzi-writer-url-value=character_strokes_path(lexeme.text) ]
       .flex.flex-wrap.items-center.gap-4
-        .flex.size-56.shrink-0.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
-          data-hanzi-writer-target="canvas" ]
+        .flex.shrink-0.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
+          class="size-72 sm:size-56" data-hanzi-writer-target="canvas" ]
         .min-w-0.flex-1.space-y-3
           h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("characters.stroke_order")
           .flex.flex-wrap.gap-2
@@ -177,14 +177,15 @@
               - if phrase.meaning.present?
                 .text-xs.text-muted-foreground = phrase.meaning
 
-    - if @profile.memories.any?
-      section.grid.gap-2.sm:grid-cols-2
-        - @profile.memories.each do |facet, memory|
-          .rounded-xl.border.border-border.bg-card.px-4.py-3
-            .text-xs.uppercase.tracking-wide.text-muted-foreground = t("memories.#{facet}")
-            .mt-1.text-sm.font-medium = t("characters.states.#{memory.state}")
-            - if memory.due_at.present?
-              .text-xs.text-muted-foreground = t("characters.due", when: l(memory.due_at, format: :short))
-    - else
-      p.rounded-lg.border.border-dashed.border-border.px-4.py-3.text-sm.text-muted-foreground
-        = t("characters.not_studied")
+    - if current_user
+      - if @profile.memories.any?
+        section.grid.gap-2.sm:grid-cols-2
+          - @profile.memories.each do |facet, memory|
+            .rounded-xl.border.border-border.bg-card.px-4.py-3
+              .text-xs.uppercase.tracking-wide.text-muted-foreground = t("memories.#{facet}")
+              .mt-1.text-sm.font-medium = t("characters.states.#{memory.state}")
+              - if memory.due_at.present?
+                .text-xs.text-muted-foreground = t("characters.due", when: l(memory.due_at, format: :short))
+      - else
+        p.rounded-lg.border.border-dashed.border-border.px-4.py-3.text-sm.text-muted-foreground
+          = t("characters.not_studied")

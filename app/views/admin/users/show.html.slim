@@ -31,8 +31,6 @@
         - rows = []
         - rows << [t("admin.level"), level_label(@user.level)]
         - rows << [t("admin.start_level"), @user.start_level.presence || "—"]
-        - rows << [t("admin.projection"), projection_label(@user.projection)]
-        - rows << [t("admin.tolerance"), @user.visibility_tolerance]
         - rows << [t("admin.display"), "#{@user.zhuyin_position} · #{@user.text_direction}"]
         - rows << [t("admin.path_steps"), @user.path_steps_done.size]
         - rows << [t("admin.practice_runs"), @user.practice_runs.values.sum]

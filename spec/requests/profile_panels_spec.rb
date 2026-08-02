@@ -52,7 +52,7 @@ RSpec.describe "Profile panels" do
 
     expect(response.body).to(include(I18n.t("auth.account")))
     expect(response.body).to(include(I18n.t("auth.security")))
-    expect(response.body).not_to(include(I18n.t("auth.projection_field")))
+    expect(response.body).not_to(include("user[projection]"))
   end
 
   it "wipes learning state as well as reviews when progress is reset" do

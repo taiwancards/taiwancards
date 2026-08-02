@@ -46,7 +46,7 @@ module Huayu
     end
 
     def counts_for(ids)
-      return {} if ids.empty?
+      return {} if ids.empty? || Current.user.nil?
 
       sql = ActiveRecord::Base.sanitize_sql_array(
         [

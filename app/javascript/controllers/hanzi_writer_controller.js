@@ -6,16 +6,17 @@ export default class extends Controller {
   static values = { char: String, url: String, size: { type: Number, default: 220 } }
 
   connect() {
+    const side = this.canvasTarget.clientWidth || this.sizeValue
     this.writer = HanziWriter.create(this.canvasTarget, this.charValue, {
-      width: this.sizeValue,
-      height: this.sizeValue,
+      width: side,
+      height: side,
       padding: 8,
       showCharacter: true,
       showOutline: true,
       strokeAnimationSpeed: 1,
       delayBetweenStrokes: 180,
-      strokeColor: this.strokeColor(),
-      outlineColor: this.outlineColor(),
+      strokeColor: "#18181b",
+      outlineColor: "#d4d4d8",
       drawingColor: "#10b981",
       charDataLoader: (char, onComplete) => {
         fetch(this.urlValue)
@@ -52,17 +53,5 @@ export default class extends Controller {
 
   setStatus(text) {
     if (this.hasStatusTarget) this.statusTarget.textContent = text
-  }
-
-  dark() {
-    return document.documentElement.classList.contains("dark")
-  }
-
-  strokeColor() {
-    return this.dark() ? "#f4f4f5" : "#18181b"
-  }
-
-  outlineColor() {
-    return this.dark() ? "#3f3f46" : "#d4d4d8"
   }
 }

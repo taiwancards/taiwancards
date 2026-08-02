@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CharactersController < ApplicationController
+  allow_unauthenticated_access
   include Paginated
 
   PER_PAGE = 96

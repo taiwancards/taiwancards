@@ -6,14 +6,19 @@ module NavHelper
   end
 
   def taiwan_nav
-    [
-      {type: :menu, key: :study, label: t("nav.group_learn"), items: learn_items},
-      {type: :menu, key: :characters, label: t("nav.group_dictionary"), items: dictionary_items, tour: "nav-dictionary"},
-      {type: :menu, key: :book, label: t("nav.group_language"), items: language_items},
-      {type: :menu, key: :pencil, label: t("nav.group_practice"), items: practice_items},
-      {type: :menu, key: :desk, label: t("nav.group_taiwan"), items: taiwan_items, tour: "nav-taiwan"},
-      {type: :menu, key: :settings, label: t("nav.group_settings"), items: settings_items, tour: "nav-profile"}
-    ]
+    entries = []
+    entries << {type: :menu, key: :study, label: t("nav.group_learn"), items: learn_items} if current_user
+    entries <<
+      {type: :menu, key: :characters, label: t("nav.group_dictionary"), items: dictionary_items, tour: "nav-dictionary"}
+    entries << {type: :menu, key: :book, label: t("nav.group_language"), items: language_items}
+    entries << {type: :menu, key: :pencil, label: t("nav.group_practice"), items: practice_items}
+    entries << {type: :menu, key: :desk, label: t("nav.group_taiwan"), items: taiwan_items, tour: "nav-taiwan"}
+    if current_user
+      entries <<
+        {type: :menu, key: :settings, label: t("nav.group_settings"), items: settings_items, tour: "nav-profile"}
+    end
+
+    entries
   end
 
   def learn_items
@@ -96,6 +101,8 @@ module NavHelper
   end
 
   def default_mobile_tabs
+    return [characters_path, dict_path, sentences_path, everyday_path] if current_user.nil?
+
     [desk_path, desks_path, reader_path, pronunciation_path]
   end
 
@@ -104,8 +111,7 @@ module NavHelper
     chosen = current_user&.mobile_tabs.to_a.select { |path| catalog.key?(path) }
     chosen = default_mobile_tabs.select { |path| catalog.key?(path) } if chosen.empty?
 
-    chosen.first(MOBILE_TAB_SLOTS).map { |path| [*catalog.fetch(path), path] } +
-      [[:settings, t("nav.more"), menu_path]]
+    chosen.first(MOBILE_TAB_SLOTS).map { |path| [*catalog.fetch(path), path] }
   end
 
   def nav_entry_active?(entry)

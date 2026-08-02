@@ -207,6 +207,8 @@ module Pronunciation
         cursor
       end
 
+      VALLEY_PLATEAU_DB = 2.0
+
       def syllable_spans(an, n_syllables)
         lo, hi = speech_bounds(an)
         return nil if hi - lo < 4
@@ -224,10 +226,32 @@ module Pronunciation
           a = peaks[i]
           b = peaks[i + 1]
           valley = (a..b).min_by { |k| son[k] }
+          limit = son[valley] + VALLEY_PLATEAU_DB
+          valley += 1 while valley + 1 < b && son[valley + 1] <= limit
           bounds << valley
         end
 
         bounds << son.length - 1
+
+        (0...n_syllables).map { |i| [lo + bounds[i], lo + bounds[i + 1]] }
+      end
+
+      def forced_spans(an, n_syllables)
+        lo, hi = speech_bounds(an)
+        length = hi - lo + 1
+        return nil if length < n_syllables * 3
+
+        son = smooth(an[:energy][lo..hi])
+        reach = [(length / (n_syllables * 2.0)).floor, 3].max
+        bounds = [0]
+        (1...n_syllables).each do |k|
+          target = (length * k / n_syllables.to_f).round
+          a = [target - reach, bounds.last + 2].max
+          b = [target + reach, length - 2].min
+          bounds << (a > b ? target.clamp(1, length - 2) : (a..b).min_by { |i| son[i] })
+        end
+
+        bounds << length - 1
 
         (0...n_syllables).map { |i| [lo + bounds[i], lo + bounds[i + 1]] }
       end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TonesController < ApplicationController
+  allow_unauthenticated_access only: %i[show]
   def show
   end
 

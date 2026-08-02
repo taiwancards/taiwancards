@@ -15,5 +15,3 @@
     span.pinyin.text-2xs.text-muted-foreground = pinyin
   - if note.present?
     span.text-2xs.text-primary = note
-  - if entry.outside_projection?(current_user)
-    span.text-2xs.text-muted-foreground title=t("auth.outside_projection") ↑

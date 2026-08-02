@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ChengyuController < ApplicationController
+  allow_unauthenticated_access
   include Paginated
   include ProgressMarks
 

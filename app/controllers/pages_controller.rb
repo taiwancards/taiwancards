@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
-  allow_unauthenticated_access only: %i[licenses privacy_policy terms_of_service]
+  allow_unauthenticated_access only: %i[licenses privacy_policy terms_of_service menu]
   before_action :send_to_the_site, only: %i[licenses privacy_policy terms_of_service]
 
   def help

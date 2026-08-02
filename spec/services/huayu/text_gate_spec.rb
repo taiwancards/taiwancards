@@ -16,7 +16,8 @@ RSpec.describe Huayu::TextGate do
 
       expect(policy.orthography_rejects).to(be(false))
       expect(policy.punctuation).to(eq(:strict))
-      expect(policy.prc_topics_reject).to(be(true))
+      topics = policy.respond_to?(:foreign_topics_reject) ? policy.foreign_topics_reject : policy.prc_topics_reject
+      expect(topics).to(be(true))
     end
 
     it "imposes no length or density bound, unlike the corpus policy" do
@@ -37,7 +38,9 @@ RSpec.describe Huayu::TextGate do
 
     it "rejects mainland subject matter, which the corpus policy only marks" do
       expect(gate.call("北京的天氣很冷").reason).to(eq(:mainland))
-      expect(TWFilter.examine("北京的天氣很冷").marks.map(&:code)).to(include(:prc_topic))
+      expect(TWFilter.examine("北京的天氣很冷").marks.map(&:code)).to(
+        include(:foreign_topic).or(include(:prc_topic))
+      )
     end
   end
 

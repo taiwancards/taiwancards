@@ -77,10 +77,11 @@
           class: class_names("rounded-full border px-2.5 py-1 text-xs transition-colors",
             @sort == sort ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted")
 
-    .relative.flex.justify-end data-controller="menu"
-      button.inline-flex.items-center.gap-1.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
-        type="button" data-action="menu#toggle" class="hover:bg-muted"
-        title=t("everyday.make_deck", count: @lexemes.size) aria-label=t("everyday.make_deck_button") ]
+    - if current_user
+      .relative.flex.justify-end data-controller="menu"
+        button.inline-flex.items-center.gap-1.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
+          type="button" data-action="menu#toggle" class="hover:bg-muted"
+          title=t("everyday.make_deck", count: @lexemes.size) aria-label=t("everyday.make_deck_button") ]
         span.text-sm.leading-none aria-hidden="true" +
         span = t("everyday.make_deck_button")
 

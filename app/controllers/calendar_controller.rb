@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CalendarController < ApplicationController
+  allow_unauthenticated_access
   def show
     @first_year = Huayu::LunarCalendar.first_year
     @last_year = Huayu::LunarCalendar.last_year

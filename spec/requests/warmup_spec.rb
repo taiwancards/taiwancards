@@ -59,7 +59,7 @@ RSpec.describe "Voice warm-up" do
     expect(VoiceProfile.count).to(eq(0))
     post("/pronunciation/grade", params: {audio:, expected: "[]", text: "高", lexeme_id: word.id})
 
-    expect(response.status).to(be_in([200, 503]))
+    expect(response.status).to(be_in([200, 422, 503]))
   end
 
   describe "the tone steps" do

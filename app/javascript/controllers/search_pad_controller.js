@@ -15,13 +15,15 @@ export default class extends Controller {
   toggle(event) {
     event.preventDefault()
     this.panelTarget.classList.toggle("hidden")
-    if (!this.open) return
+    if (!this.open) return this.restoreKeyboard()
 
+    this.muteKeyboard()
     this.fieldTarget.focus({ preventScroll: true })
   }
 
   close() {
     this.panelTarget.classList.add("hidden")
+    this.restoreKeyboard()
     this.fieldTarget.focus({ preventScroll: true })
   }
 
@@ -30,6 +32,15 @@ export default class extends Controller {
     if (this.element.contains(event.target)) return
 
     this.panelTarget.classList.add("hidden")
+    this.restoreKeyboard()
+  }
+
+  muteKeyboard() {
+    if (window.matchMedia("(pointer: coarse)").matches) this.fieldTarget.inputMode = "none"
+  }
+
+  restoreKeyboard() {
+    this.fieldTarget.inputMode = ""
   }
 
   get open() {

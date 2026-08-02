@@ -61,7 +61,7 @@ main.pb-16
                     span.mr-1.5.shrink-0.rounded-full.border.border-border.px-2.text-2xs.font-medium.uppercase.tracking-wide.text-muted-foreground class="py-0.5" = t("landing.bring.soon")
                   = with_glossary(t("landing.is.items.#{key}"))
 
-        .rounded-2xl.border.border-border.p-6 class="bg-muted/40 dark:bg-muted/20"
+        .rounded-2xl.border.border-border.p-6 class="bg-muted/40"
           h2.text-xl.font-bold.tracking-tight = t("landing.isnt.heading")
           ul.mt-5.space-y-3
             - isnt_items.each do |key|
@@ -70,7 +70,7 @@ main.pb-16
                 span.text-sm.leading-relaxed.text-muted-foreground = mark_script(t("landing.isnt.items.#{key}"))
 
   - if @counts.present?
-    section.border-b.border-border class="bg-muted/55 dark:bg-muted/25"
+    section.border-b.border-border class="bg-muted/55"
       .mx-auto.w-full.max-w-5xl.px-4.py-10
         p.text-xs.font-medium.uppercase.tracking-widest.text-muted-foreground = t("landing.counts.heading")
         .mt-5.grid.gap-6 class="grid-cols-2 md:grid-cols-5"
@@ -88,8 +88,11 @@ main.pb-16
           .rounded-2xl.border.border-border.bg-card.p-5
             .text-base.font-semibold = t("landing.quality.items.#{key}.title")
             p.mt-2.text-sm.leading-relaxed.text-muted-foreground = t("landing.quality.items.#{key}.body")
+      .mt-6.rounded-2xl.border.border-border.p-5 class="bg-brand/5"
+        .text-base.font-semibold = t("landing.science.heading")
+        p.mt-2.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("landing.science.body")
 
-  section#tools.border-b.border-border class="scroll-mt-16 bg-muted/40 dark:bg-muted/20"
+  section#tools.border-b.border-border class="scroll-mt-16 bg-muted/40"
     .mx-auto.w-full.max-w-5xl.px-4.py-16 class="md:py-20"
       h2.text-3xl.font-bold.tracking-tight = t("landing.tools.heading")
       p.mt-3.max-w-2xl.text-base.leading-relaxed.text-muted-foreground = t("landing.tools.lede")
@@ -127,7 +130,7 @@ main.pb-16
             span.mt-1.shrink-0.rounded-md.border.border-border.px-2.py-1.text-xs.font-semibold = t("memories.#{facet}")
             span.text-sm.text-muted-foreground = t("landing.core.facets.#{facet}")
 
-  section.border-y.border-border class="bg-muted/55 dark:bg-muted/25"
+  section.border-y.border-border class="bg-muted/55"
     .mx-auto.w-full.max-w-5xl.px-4.py-16
       h2.text-3xl.font-bold.tracking-tight = t("landing.progress.heading")
       p.mt-3.max-w-2xl.text-muted-foreground = t("landing.progress.lede")
@@ -152,7 +155,7 @@ main.pb-16
                 span.shrink-0.rounded-full.border.border-border.px-2.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground class="py-0.5" = t("landing.bring.soon")
             p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("landing.bring.items.#{key}.body")
 
-  section.border-y.border-border class="bg-muted/40 dark:bg-muted/20"
+  section.border-y.border-border class="bg-muted/40"
     .mx-auto.w-full.max-w-5xl.px-4.py-16
       h2.text-3xl.font-bold.tracking-tight = t("landing.instead.heading")
       p.mt-3.max-w-3xl.text-muted-foreground = t("landing.instead.lede")

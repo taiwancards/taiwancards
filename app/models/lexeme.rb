@@ -67,47 +67,14 @@ class Lexeme < ApplicationRecord
   )
   scope :permitted, -> { permitted_to(Current.user) }
 
-  scope(:visible_to, -> (user) { permitted_to(user).projected_for(user) })
+  scope(:visible_to, -> (user) { permitted_to(user) })
   scope :visible, -> { visible_to(Current.user) }
 
   def self.visibility_key(user = Current.user)
-    scale = user&.visibility_scale || "chars"
-    projection = if scale == "chars"
-      ["chars", user&.character_tier || Huayu::CharacterTiers::COMMON]
-    else
-      [scale, user.visibility_level, user.visibility_tolerance]
-    end
-
     [
-      *projection,
       user&.restricted_access? ? "all" : "open",
       Current.source_ids_for(user).sort.join("-")
     ].join(":")
-  end
-
-  scope(:within_tier, -> (level) { where(tier: ..level.to_i) })
-
-  scope(
-    :projected_for,
-    -> (user) {
-      scale = user&.visibility_scale || "chars"
-      next within_tier(user&.character_tier || Huayu::CharacterTiers::COMMON) if scale == "chars"
-      next all if user.full_visibility?
-
-      column = Huayu::LevelThresholds::COLUMNS.fetch(scale).fetch(user.visibility_tolerance)
-      where(column => ..user.visibility_level)
-    }
-  )
-
-  def outside_projection?(user)
-    return false if user.nil? || user.full_visibility?
-
-    if user.visibility_scale == "chars"
-      tier > user.character_tier
-    else
-      column = Huayu::LevelThresholds::COLUMNS.fetch(user.visibility_scale).fetch(user.visibility_tolerance)
-      public_send(column) > user.visibility_level
-    end
   end
 
   ATTRIBUTABLE_KINDS = %w[sentence].freeze

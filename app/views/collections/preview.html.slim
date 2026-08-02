@@ -19,7 +19,7 @@
     p.text-sm.text-muted-foreground = t("desks.preview_hint", count: @preview.candidates.size)
 
   - if @preview.truncated
-    p.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700 dark:text-amber-400"
+    p.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700"
       = t("desks.truncated", limit: number_with_delimiter(Collections::TextPreview::MAX_CHARS))
 
   .flex.flex-wrap.gap-2.text-sm
@@ -35,7 +35,7 @@
       span.rounded-lg.border.border-border.px-3.text-muted-foreground class="py-1.5"
         = t("desks.stat_in_decks", count: coverage.in_decks.size)
 
-  p.hidden.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700 dark:text-amber-400" hidden=true data-deck-preview-target="capNotice"
+  p.hidden.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700" hidden=true data-deck-preview-target="capNotice"
     = t("desks.cap_reached", limit: @limit, soft: Collection::SOFT_LIMIT)
 
   section.space-y-3.rounded-xl.border.border-border.p-4

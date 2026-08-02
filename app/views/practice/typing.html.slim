@@ -57,17 +57,24 @@
         => t("typing.done")
         span.font-semibold.text-foreground data-zhuyin-typing-target="streak"
 
-  .overflow-x-auto.rounded-2xl.border.border-border.p-3 class="bg-muted/30"
-    .mx-auto.w-max.space-y-1
+  .overflow-x-auto.rounded-2xl.border.border-border.p-2 class="bg-muted/30 sm:p-3"
+    .mx-auto.w-max class="space-y-0.5 sm:space-y-1"
       - @layout.each_with_index do |row, index|
-        .flex.gap-1 style="margin-left: #{index * 14}px"
+        .flex class="gap-0.5 sm:gap-1" style="margin-left: min(#{index * 14}px, #{index * 2}vw)"
           - row.each do |cell|
             button.flex.flex-col.items-center.justify-center.rounded-lg.border.border-border.bg-card.transition-colors[
               type="button" data-key=cell[:key] data-hit="false"
               data-action="zhuyin-typing#tap" data-zhuyin-typing-target="key"
-              class="size-12 hover:bg-muted data-[hit=true]:bg-brand data-[hit=true]:text-white" ]
-              span.text-lg.font-semibold lang="zh-TW" = cell[:symbol] || cell[:tone]
-              span class="text-[10px] text-muted-foreground" = cell[:key] == " " ? "␣" : cell[:key]
+              class="h-10 w-8 sm:size-12 hover:bg-muted data-[hit=true]:bg-brand data-[hit=true]:text-white" ]
+              span.font-semibold.text-base lang="zh-TW" class="sm:text-lg" = cell[:symbol] || cell[:tone]
+              span.text-muted-foreground class="text-[10px]" = cell[:key] == " " ? "␣" : cell[:key]
+      .flex.justify-center.pt-1 class="gap-0.5 sm:gap-1"
+        button.flex.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
+          type="button" data-key="Backspace" aria-label="Backspace"
+          data-action="zhuyin-typing#tap" class="h-10 w-16 hover:bg-muted sm:h-12 sm:w-20" ] ⌫
+        button.flex.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
+          type="button" data-key="Enter" aria-label="Enter"
+          data-action="zhuyin-typing#tap" class="h-10 w-16 hover:bg-muted sm:h-12 sm:w-20" ] ⏎
 
   section.space-y-2
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("typing.how_title")

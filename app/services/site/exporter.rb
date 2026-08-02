@@ -179,7 +179,6 @@ module Site
           var root = document.documentElement;
           var stored = localStorage.getItem("hanzi_font");
           if (stored !== null) root.classList.toggle("font-kai", stored === "kai");
-          if (localStorage.getItem("theme") === "light") root.classList.remove("dark");
 
           var warming = false;
           function warmKai() {
@@ -201,12 +200,6 @@ module Site
           }
 
           document.addEventListener("click", function (event) {
-            var button = event.target.closest("[data-controller~='theme']");
-            if (button) {
-              var dark = root.classList.toggle("dark");
-              localStorage.setItem("theme", dark ? "dark" : "light");
-              return;
-            }
             var pref = event.target.closest("[data-controller~='display-pref']");
             if (!pref) return;
             var name = pref.dataset.displayPrefNameValue;

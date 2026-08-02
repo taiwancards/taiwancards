@@ -12,8 +12,9 @@ RSpec.describe "Customisable bottom tabs" do
 
     get("/desk")
 
-    expect(bottom_nav).to(include(desk_path, desks_path, pronunciation_path, menu_path))
-    expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS + 1))
+    expect(bottom_nav).to(include(desk_path, desks_path, pronunciation_path))
+    expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS))
+    expect(response.body).to(include("href=\"#{menu_path}\""))
   end
 
   it "honors the tabs the user picked" do
@@ -40,17 +41,17 @@ RSpec.describe "Customisable bottom tabs" do
 
     get("/desk")
 
-    expect(bottom_nav).to(include(desk_path, menu_path))
-    expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS + 1))
+    expect(bottom_nav).to(include(desk_path))
+    expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS))
   end
 
-  it "never shows more than the available slots plus More" do
+  it "never shows more than the available slots" do
     tabs = [desk_path, roadmap_path, dict_path, characters_path, reader_path, writing_path]
     sign_in(create(:user, prefs: {"mobile_tabs" => tabs}))
 
     get("/desk")
 
-    expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS + 1))
+    expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS))
   end
 
   it "saves the choice from the profile, capped at the slot count" do

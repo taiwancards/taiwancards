@@ -29,23 +29,4 @@ module ProfilesHelper
       [t("progress.tabs.data"), progress_data_path]
     ]
   end
-
-  def projection_label(value)
-    return t("auth.projection_open") if value == User::PROJECTION_OPEN
-
-    scale, level = value.split(":")
-    return t("auth.projection_chars", name: Huayu::CharacterTiers::NAMES.fetch(level.to_i)) if scale == "chars"
-
-    t("auth.projection_option", scale: t("auth.projection_scales.#{scale}"), level: scale_level_label(scale, level))
-  end
-
-  def projection_options
-    User.projection_options.map { |value| [projection_label(value), value] }
-  end
-
-  def scale_level_label(scale, level)
-    return level.to_s if scale == "tbcl"
-
-    SentenceProfile::TOCFL_LEVELS[level.to_i - 1].to_s
-  end
 end

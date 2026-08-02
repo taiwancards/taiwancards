@@ -10,7 +10,6 @@ class ProfilesController < ApplicationController
   end
 
   def level
-    @hidden = Lexemes::ProjectionPreview.new(current_user)
   end
 
   def guide
@@ -31,7 +30,6 @@ class ProfilesController < ApplicationController
     else
       return head(:unprocessable_entity) if params[:inline].present?
 
-      @hidden = Lexemes::ProjectionPreview.new(current_user) if tab == "level"
       render(tab, status: :unprocessable_entity)
     end
   end
@@ -100,8 +98,6 @@ class ProfilesController < ApplicationController
         :zhuyin_position,
         :text_direction,
         :level,
-        :projection,
-        :visibility_tolerance,
         :password,
         :password_confirmation,
         {mobile_tabs: []}

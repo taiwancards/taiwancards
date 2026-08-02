@@ -47,8 +47,47 @@ RSpec.describe "Phonetics drill" do
     Huayu::PhoneticsDrill::STAGES.each do |stage|
       expect(items[stage]).to(be_present, "expected items for #{stage}")
       expect(items[stage]).to(all(include("zhuyin", "pinyin", "id", "distractors")))
-      expect(items[stage].map { |row| row["distractors"].size }.uniq).to(eq([Huayu::PhoneticsDrill::CHOICES - 1]))
+      items[stage].each do |row|
+        expect(row["distractors"].size)
+          .to(be_between(Huayu::PhoneticsDrill::CHOICES - 1, Huayu::PhoneticsDrill::CANDIDATES))
+      end
     end
+  end
+
+  it "keeps every option of a syllable item on the same tone" do
+    seed_syllables!
+    drill = Huayu::PhoneticsDrill.new(locale: :en)
+
+    drill.items("syllables").each do |item|
+      tone = Huayu::Zhuyin.tone(item[:pinyin])
+      item[:distractors].each do |distractor|
+        expect(Huayu::Zhuyin.tone(distractor[:pinyin])).to(eq(tone), "#{item[:pinyin]} vs #{distractor[:pinyin]}")
+      end
+    end
+  end
+
+  it "prefers confusable syllables as distractors" do
+    seed_syllables!
+    drill = Huayu::PhoneticsDrill.new(locale: :en)
+
+    ta = drill.items("syllables").find { |row| row[:pinyin] == "tā" }
+    expect(ta[:distractors].map { |d| d[:zhuyin] }).to(include("ㄉㄚ", "ㄇㄚ"))
+  end
+
+  it "collapses tone variants of one syllable into a single item" do
+    seed_syllables!
+    create(
+      :lexeme,
+      kind: :character,
+      text: "罵",
+      readings: {"pinyin" => "mà", "zhuyin" => "ㄇㄚˋ"},
+      meanings: {"en" => "scold"},
+      data: {"freq_rank" => 99}
+    )
+    drill = Huayu::PhoneticsDrill.new(locale: :en)
+
+    bares = drill.items("syllables").map { |row| row[:zhuyin].delete(Huayu::ReadingForms::ZHUYIN_TONES) }
+    expect(bares.count("ㄇㄚ")).to(eq(1))
   end
 
   it "never offers a distractor equal to the answer" do

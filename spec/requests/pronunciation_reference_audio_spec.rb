@@ -15,6 +15,8 @@ RSpec.describe "Reference audio in the pronunciation trainer" do
     JSON.parse(response.body[/data-pronunciation-audio-parts-value="([^"]*)"/, 1].to_s.gsub("&quot;", "\""))
   end
 
+  before { VoiceProfile.create!(user: @authenticated_user, f3_ref: 2900, calibrated_at: Time.current) }
+
   it "hands over every syllable when the word is only voiced character by character" do
     allow(Huayu::MoeAudio).to(receive(:for).and_return(nil))
     allow(Huayu::MoeAudio).to(receive(:per_character).and_return([clip("5838", 525), clip("0958", 796)]))

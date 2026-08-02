@@ -25,10 +25,12 @@ export default class extends Controller {
     this.pointerDown = (e) => this.start(e)
     this.pointerMove = (e) => this.move(e)
     this.pointerUp = (e) => this.end(e)
+    this.pointerCancel = () => this.cancel()
     this.canvasTarget.addEventListener("pointerdown", this.pointerDown)
     this.canvasTarget.addEventListener("pointermove", this.pointerMove)
     this.canvasTarget.addEventListener("pointerup", this.pointerUp)
     this.canvasTarget.addEventListener("pointerleave", this.pointerUp)
+    this.canvasTarget.addEventListener("pointercancel", this.pointerCancel)
     this.observer = new ResizeObserver(() => this.refit())
     this.observer.observe(this.canvasTarget)
     this.setStatus(this.statusTarget?.dataset.loading || "…")
@@ -40,6 +42,7 @@ export default class extends Controller {
     this.canvasTarget.removeEventListener("pointermove", this.pointerMove)
     this.canvasTarget.removeEventListener("pointerup", this.pointerUp)
     this.canvasTarget.removeEventListener("pointerleave", this.pointerUp)
+    this.canvasTarget.removeEventListener("pointercancel", this.pointerCancel)
     this.observer.disconnect()
   }
 
@@ -79,29 +82,45 @@ export default class extends Controller {
 
   move(event) {
     if (!this.current) return
-    const [x, y] = this.point(event)
-    this.current.push([x, y])
-    this.ctx.lineTo(x, y)
+    event.preventDefault()
+    const events = event.getCoalescedEvents ? event.getCoalescedEvents() : [event]
     this.ctx.strokeStyle = "#10b981"
     this.ctx.lineWidth = 6
     this.ctx.lineCap = "round"
     this.ctx.lineJoin = "round"
+    events.forEach((sample) => {
+      const [x, y] = this.point(sample)
+      this.current.push([x, y])
+      this.ctx.lineTo(x, y)
+    })
     this.ctx.stroke()
   }
 
   end() {
     if (!this.current) return
-    if (this.current.length > 1) {
-      this.strokes.push(this.current)
-      this.recognize()
+    if (this.current.length === 1) {
+      const [x, y] = this.current[0]
+      this.current.push([x + 1, y + 1])
     }
+    this.strokes.push(this.current)
     this.current = null
+    this.recognize()
+  }
+
+  cancel() {
+    if (!this.current) return
+    this.current = null
+    this.repaint()
   }
 
   recognize() {
     if (this.strokes.length === 0) return
     const analyzed = new HanziLookup.AnalyzedCharacter(this.strokes)
-    new HanziLookup.Matcher("mmah").match(analyzed, this.limitValue, (matches) => this.render(matches))
+    new HanziLookup.Matcher("mmah", this.looseness()).match(analyzed, this.limitValue, (matches) => this.render(matches))
+  }
+
+  looseness() {
+    return window.matchMedia("(pointer: coarse)").matches ? 0.25 : 0.15
   }
 
   render(matches) {

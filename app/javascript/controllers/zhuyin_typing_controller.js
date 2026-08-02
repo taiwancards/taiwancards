@@ -31,8 +31,7 @@ export default class extends Controller {
     const key = event.key
     if (key === "Backspace") {
       event.preventDefault()
-      this.buffer = this.buffer.slice(0, -1)
-      return this.render()
+      return this.erase()
     }
     if (key === "Enter" || key === " ") {
       event.preventDefault()
@@ -51,12 +50,20 @@ export default class extends Controller {
 
   tap(event) {
     const key = event.currentTarget.dataset.key
+    if (key === " " || key === "Enter") return this.submit()
+    if (key === "Backspace") return this.erase()
+
     const symbol = this.keysValue[key] || TONES[key]
     if (symbol === undefined) return
 
     this.buffer += symbol
     this.flash(key)
     this.afterInput()
+  }
+
+  erase() {
+    this.buffer = this.buffer.slice(0, -1)
+    this.render()
   }
 
   afterInput() {

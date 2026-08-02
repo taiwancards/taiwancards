@@ -2,15 +2,15 @@
 
 module AnalyzeHelper
   POS_COLORS = {
-    "n" => "text-sky-600 dark:text-sky-400",
-    "v" => "text-rose-600 dark:text-rose-400",
-    "vs" => "text-amber-600 dark:text-amber-400",
-    "a" => "text-amber-600 dark:text-amber-400",
-    "adv" => "text-violet-600 dark:text-violet-400",
-    "m" => "text-teal-600 dark:text-teal-400",
-    "prep" => "text-cyan-600 dark:text-cyan-400",
-    "conj" => "text-indigo-600 dark:text-indigo-400",
-    "ph" => "text-emerald-600 dark:text-emerald-400"
+    "n" => "text-sky-600",
+    "v" => "text-rose-600",
+    "vs" => "text-amber-600",
+    "a" => "text-amber-600",
+    "adv" => "text-violet-600",
+    "m" => "text-teal-600",
+    "prep" => "text-cyan-600",
+    "conj" => "text-indigo-600",
+    "ph" => "text-emerald-600"
   }.freeze
 
   def pos_color(pos)

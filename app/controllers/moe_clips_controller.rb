@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class MoeClipsController < ApplicationController
+  allow_unauthenticated_access
   def notice
     path = Huayu::MoeAudio.notice_path
     return head(:not_found) if path.nil?

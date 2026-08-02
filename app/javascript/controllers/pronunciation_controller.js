@@ -4,7 +4,6 @@ import { toWav } from "lib/speech_recorder"
 const AUTO_KEY = "pron_auto"
 const PRELISTEN_KEY = "pron_prelisten"
 const SPEECH_RMS = 0.02
-const MIC_SETTLE_MS = 150
 const MAX_DRILL_TRIES = 5
 const REFERENCE_GRACE_MS = 400
 
@@ -122,6 +121,7 @@ export default class extends Controller {
     labelRetry: String,
     labelDrill: String,
     labelDrillSkip: String,
+    labelSilence: String,
   }
 
   connect() {
@@ -253,12 +253,20 @@ export default class extends Controller {
   }
 
   async toggle() {
-    if (this.recording) return this.stop()
+    if (this.recording) return this.requestStop()
     await this.start()
   }
 
-  settle() {
-    return new Promise((resolve) => setTimeout(resolve, MIC_SETTLE_MS))
+  requestStop() {
+    if (!this.analyser || !this.spoke) return this.stop()
+
+    const now = performance.now()
+    if (now - this.lastLoud < 150) {
+      this.pendingStop = true
+      this.stopDeadline = now + 600
+      return
+    }
+    this.stop()
   }
 
   async start() {
@@ -271,8 +279,7 @@ export default class extends Controller {
       return
     }
     this.chunks = []
-    await this.settle()
-    if (!this.stream) return
+    this.pendingStop = false
 
     this.recorder = new MediaRecorder(this.stream)
     this.recorder.ondataavailable = (e) => e.data.size && this.chunks.push(e.data)
@@ -296,6 +303,7 @@ export default class extends Controller {
   }
 
   startMeter() {
+    this.meterRan = false
     try {
       this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
       const source = this.audioCtx.createMediaStreamSource(this.stream)
@@ -306,6 +314,7 @@ export default class extends Controller {
       this.startedAt = performance.now()
       this.lastLoud = this.startedAt
       this.spoke = false
+      this.meterRan = true
       this.meter = setInterval(() => this.tick(), 60)
     } catch {
       this.maxTimer = setTimeout(() => this.stop(), this.autoMaxValue)
@@ -325,6 +334,7 @@ export default class extends Controller {
     }
     const silentFor = now - this.lastLoud
     const elapsed = now - this.startedAt
+    if (this.pendingStop && (silentFor > 180 || now > this.stopDeadline)) return this.stop()
     if ((this.spoke && silentFor > this.autoSilenceValue) || elapsed > this.autoMaxValue) {
       this.stop()
     }
@@ -345,6 +355,11 @@ export default class extends Controller {
   }
 
   async grade() {
+    if (this.meterRan && !this.spoke) {
+      this.setStatus(this.labelSilenceValue)
+      if (this.auto) this.retryTimer = setTimeout(() => this.beginAutoTurn(), 900)
+      return
+    }
     this.setStatus(this.labelGradingValue)
     let wav
     try {
@@ -367,6 +382,11 @@ export default class extends Controller {
       const res = await fetch(`${this.urlValue}/grade`, { method: "POST", body: form, headers })
       if (!res.ok) {
         if (res.status === 503) return this.unavailable()
+        if (res.status === 422) {
+          this.setStatus(this.labelSilenceValue)
+          if (this.auto) this.retryTimer = setTimeout(() => this.beginAutoTurn(), 1100)
+          return
+        }
         this.setStatus(this.labelErrorValue)
         return
       }

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class EverydayController < ApplicationController
+  allow_unauthenticated_access
   SORTS = %w[category freq difficulty].freeze
 
   def index

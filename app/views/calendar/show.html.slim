@@ -16,7 +16,7 @@
         - if @last_year && @year < @last_year
           = link_to "→", calendar_path(year: @year + 1), class: "rounded-md border border-border px-2.5 py-1 text-sm hover:bg-muted"
       - if @lunar_year&.leap_month&.positive?
-        span.rounded-full.py-1.text-xs class="px-2.5 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+        span.rounded-full.py-1.text-xs class="px-2.5 bg-amber-500/10 text-amber-600"
           = Huayu::LunarCalendar.month_label(@lunar_year.leap_month, leap: true)
 
     .space-y-2

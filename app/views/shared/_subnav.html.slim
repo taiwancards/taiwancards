@@ -18,8 +18,3 @@ nav.sticky.z-30.hidden.border-b.border-border.md:block data-tour="nav" style="to
               = link_to path, class: nav_menu_item_classes(item_active) do
                 = icon(key, css: "size-4", stroke: item_active ? 2 : 1.6)
                 span = label
-            - if entry[:key] == :settings
-              button.w-full type="button" data-controller="theme" data-action="theme#toggle" class=nav_menu_item_classes(false)
-                span.dark:hidden = icon(:moon, css: "size-4")
-                span.hidden.dark:inline = icon(:sun, css: "size-4")
-                span = t("nav.theme")

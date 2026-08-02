@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import HanziWriter from "hanzi-writer"
+import { writerSize } from "lib/writer_size"
 
 export default class extends Controller {
   static targets = ["square", "status", "result", "reveal"]
@@ -33,14 +34,15 @@ export default class extends Controller {
     const url = el.dataset.url
     this.done[i] = false
     this.mistakes[i] = 0
+    const side = writerSize(el.parentElement, this.squareTargets.length, { min: 150, max: 240 })
     const writer = HanziWriter.create(el, char, {
-      width: 130,
-      height: 130,
+      width: side,
+      height: side,
       padding: 6,
       showCharacter: false,
       showOutline: false,
       showHintAfterMisses: 3,
-      strokeColor: this.dark() ? "#f4f4f5" : "#18181b",
+      strokeColor: "#18181b",
       drawingColor: "#10b981",
       charDataLoader: (c, onComplete) => fetch(url).then((r) => r.json()).then(onComplete),
     })
@@ -112,9 +114,5 @@ export default class extends Controller {
 
   csrf() {
     return document.querySelector('meta[name="csrf-token"]')?.content
-  }
-
-  dark() {
-    return document.documentElement.classList.contains("dark")
   }
 }

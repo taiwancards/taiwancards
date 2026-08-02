@@ -28,9 +28,7 @@ export default class extends Controller {
 
     if (/^[a-zA-Z]$/.test(key)) {
       event.preventDefault()
-      if (this.buffer.length < 5) this.buffer += key.toLowerCase()
-      this.flash(key.toLowerCase())
-      this.refresh()
+      this.type(key.toLowerCase())
     } else if (key === " " && this.buffer) {
       event.preventDefault()
       this.pick(0)
@@ -39,12 +37,61 @@ export default class extends Controller {
       this.pick(Number(key) - 1)
     } else if (key === "Backspace" && this.buffer) {
       event.preventDefault()
-      this.buffer = this.buffer.slice(0, -1)
-      this.refresh()
+      this.erase()
     } else if (key === "Escape") {
-      this.buffer = ""
-      this.refresh()
+      this.reset()
     }
+  }
+
+  beforeinput(event) {
+    if (!event.cancelable) return
+    const data = event.data || ""
+
+    if (event.inputType === "deleteContentBackward" && this.buffer) {
+      event.preventDefault()
+      this.erase()
+    } else if (/^[a-zA-Z]$/.test(data)) {
+      event.preventDefault()
+      this.type(data.toLowerCase())
+    } else if (data === " " && this.buffer) {
+      event.preventDefault()
+      this.pick(0)
+    } else if (/^[1-9]$/.test(data) && this.candidates().length) {
+      event.preventDefault()
+      this.pick(Number(data) - 1)
+    }
+  }
+
+  press(event) {
+    this.type(event.currentTarget.dataset.key)
+  }
+
+  space() {
+    if (this.buffer) this.pick(0)
+  }
+
+  backspace() {
+    this.erase()
+  }
+
+  clear() {
+    this.reset()
+  }
+
+  type(letter) {
+    if (this.buffer.length < 5) this.buffer += letter
+    this.flash(letter)
+    this.refresh()
+  }
+
+  erase() {
+    this.buffer = this.buffer.slice(0, -1)
+    this.refresh()
+  }
+
+  reset() {
+    this.buffer = ""
+    this.refresh()
   }
 
   candidates() {
@@ -75,7 +122,7 @@ export default class extends Controller {
 
   choose(event) {
     this.pick(Number(event.currentTarget.dataset.index))
-    this.outputTarget.focus()
+    if (!window.matchMedia("(pointer: coarse)").matches) this.outputTarget.focus()
   }
 
   insert(text) {

@@ -2,13 +2,13 @@
 
 module ReaderHelper
   LEVEL_COLORS = {
-    1 => "text-emerald-600 dark:text-emerald-400",
-    2 => "text-teal-600 dark:text-teal-400",
-    3 => "text-sky-600 dark:text-sky-400",
-    4 => "text-indigo-600 dark:text-indigo-400",
-    5 => "text-violet-600 dark:text-violet-400",
-    6 => "text-amber-600 dark:text-amber-400",
-    7 => "text-rose-600 dark:text-rose-400"
+    1 => "text-emerald-600",
+    2 => "text-teal-600",
+    3 => "text-sky-600",
+    4 => "text-indigo-600",
+    5 => "text-violet-600",
+    6 => "text-amber-600",
+    7 => "text-rose-600"
   }.freeze
 
   def reader_token_classes(token, known_ids)

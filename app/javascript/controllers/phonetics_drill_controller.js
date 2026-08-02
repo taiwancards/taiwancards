@@ -78,9 +78,10 @@ export default class extends Controller {
     this.promptKindTarget.textContent = this.promptKindTarget.dataset[this.direction]
     this.setExample(null)
 
+    const wrong = this.shuffle([...this.current.distractors]).slice(0, this.optionTargets.length - 1)
     const options = this.shuffle([
       { value: this.answerOf(this.current), correct: true },
-      ...this.current.distractors.map((d) => ({ value: asking ? d.pinyin : d.zhuyin, correct: false }))
+      ...wrong.map((d) => ({ value: asking ? d.pinyin : d.zhuyin, correct: false }))
     ])
 
     this.optionTargets.forEach((node, index) => {
@@ -202,7 +203,7 @@ export default class extends Controller {
   }
 
   playAnswer() {
-    const symbols = String(this.current.zhuyin || "").split("")
+    const symbols = String(this.current.zhuyin || "").split("").filter((symbol) => !"ˊˇˋ˙ˉ".includes(symbol))
     if (!symbols.length) return
 
     symbols.forEach((symbol, index) => {

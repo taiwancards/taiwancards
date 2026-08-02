@@ -5,7 +5,7 @@
       p.mt-1.text-sm.text-muted-foreground
         = t("study.quota_body", count: @daily.new_today, quota: @daily.quota)
       - if @daily.overreaching?
-        p.mt-2.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700 dark:text-amber-400"
+        p.mt-2.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700"
           = t("study.quota_warning")
     - else
       p.text-lg.font-medium = t("study.done_title")

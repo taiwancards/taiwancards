@@ -68,7 +68,7 @@ RSpec.describe "Query budget" do
     end
 
     it "loads every sentence, its profile and its sources without a per-row query" do
-      cookies[DetailLevelHelper::DETAIL_COOKIE] = Lexemes::DetailDefault::FULL
+      cookies[DetailLevelHelper::DETAIL_COOKIE] = DetailLevelHelper::FULL
       report = count_queries { get(dict_entry_path(entry.text)) }
 
       expect(response).to(have_http_status(:ok))

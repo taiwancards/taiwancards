@@ -26,15 +26,19 @@ module Pronunciation
       return nil unless @store.available?
 
       samples, rate = decode(audio)
-      return nil if samples.nil? || samples.empty?
+      return failure("unreadable") if samples.nil? || samples.empty?
 
       analysis = Acoustic::Features.analyze(samples, rate)
       spans = segment(analysis, syllables.length)
-      return nil if spans.nil?
+      return failure(spans) if spans.is_a?(String)
 
-      graded = syllables.each_with_index.map do |target, index|
-        grade_one(analysis, spans[index], target, index, syllables.length)
+      measured = syllables.each_with_index.map do |target, index|
+        measure_one(analysis, spans[index], target, index, syllables.length)
       end
+
+      normalize_tempo(measured)
+
+      graded = measured.map { |row| row[:absent] ? absent(row[:target], row[:key]) : score_one(row) }
 
       {
         "syllables" => graded,
@@ -47,23 +51,29 @@ module Pronunciation
 
     private
 
-    def segment(analysis, count)
-      return nil if count.zero?
-
-      low, high = Acoustic::Features.speech_bounds(analysis)
-      return nil unless low && high && high > low
-      return nil if (high - low + 1) * Acoustic::Features::HOP_MS > MAX_UTTERANCE_MS
-
-      Acoustic::Features.syllable_spans(analysis, count)
+    def failure(reason)
+      {"status" => "retry", "reason" => reason}
     end
 
-    def grade_one(analysis, span, target, index, total)
+    def segment(analysis, count)
+      return "no_syllables" if count.zero?
+
+      low, high = Acoustic::Features.speech_bounds(analysis)
+      return "no_speech" unless low && high && high > low
+      return "too_long" if (high - low + 1) * Acoustic::Features::HOP_MS > MAX_UTTERANCE_MS
+
+      Acoustic::Features.syllable_spans(analysis, count) ||
+        Acoustic::Features.forced_spans(analysis, count) ||
+        "no_speech"
+    end
+
+    def measure_one(analysis, span, target, index, total)
       key = SyllableKey.for(target, store: @store)
       norm = @store.norm_for(position: index, total: total)
       template = @store.template(key, norm) || @store.template(key, TemplateStore::CITATION)
 
-      return absent(target, key) if template.nil? || span.nil?
-      return absent(target, key) if (span[1] - span[0]) * Acoustic::Features::HOP_MS < MIN_SYLLABLE_MS
+      return {absent: true, target:, key:} if template.nil? || span.nil?
+      return {absent: true, target:, key:} if (span[1] - span[0]) * Acoustic::Features::HOP_MS < MIN_SYLLABLE_MS
 
       features = Acoustic::Features.extract(
         analysis,
@@ -72,6 +82,39 @@ module Pronunciation
         utterance_initial: index.zero?
       )
       features["f0_register"] = register(features)
+      {target:, key:, norm:, template:, features:, index:}
+    end
+
+    TEMPO_FIELDS = %w[voiced_ms duration_ms].freeze
+    TEMPO_RANGE = (0.6..1.6)
+    TEMPO_DEADBAND = 0.1
+
+    def normalize_tempo(measured)
+      rows = measured.reject { |row| row[:absent] }
+      return if rows.length < 2
+
+      spoken = rows.sum { |row| row[:features]["voiced_ms"].to_f }
+      expected = rows.sum { |row| row[:template].dig("voiced_ms", "median").to_f }
+      return unless spoken.positive? && expected.positive?
+
+      tempo = (spoken / expected).clamp(TEMPO_RANGE.min, TEMPO_RANGE.max)
+      return if (tempo - 1.0).abs < TEMPO_DEADBAND
+
+      rows.each do |row|
+        TEMPO_FIELDS.each do |field|
+          value = row[:features][field]
+          row[:features][field] = value / tempo if value
+        end
+      end
+    end
+
+    def score_one(row)
+      target = row[:target]
+      key = row[:key]
+      norm = row[:norm]
+      template = row[:template]
+      features = row[:features]
+      index = row[:index]
 
       axes = analyzer.score_axes(features, template, template["norm"] || TemplateStore::CITATION)
       axes = axes.reject { |a| a["id"] == "tone" } unless @tonal

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  allow_unauthenticated_access
   def index
     @query = params[:q].to_s.strip
 

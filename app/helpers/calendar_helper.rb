@@ -10,7 +10,7 @@ module CalendarHelper
 
   def holiday_badge_class(public_holiday)
     if public_holiday
-      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+      "bg-emerald-500/10 text-emerald-600"
     else
       "bg-muted text-muted-foreground"
     end

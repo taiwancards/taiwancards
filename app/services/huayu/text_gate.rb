@@ -21,7 +21,8 @@ module Huayu
       mainland: :mainland,
       mainland_soft: :mainland,
       cantonese: :mainland,
-      prc_topic: :mainland,
+      regional: :mainland,
+      foreign_topic: :mainland,
       erhua: :mainland,
       literary_density: :wenyan
     }.freeze
@@ -31,7 +32,7 @@ module Huayu
       min_han_ratio: 0.0,
       max_tier: :rare,
       orthography_rejects: false,
-      prc_topics_reject: true,
+      foreign_topics_reject: true,
       punctuation: :strict
     )
 

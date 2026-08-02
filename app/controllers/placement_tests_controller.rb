@@ -89,7 +89,6 @@ class PlacementTestsController < ApplicationController
     return if grade.zero?
 
     current_user.level = grade.to_s
-    current_user.visibility_tolerance = @test.tolerance if @test.tolerance
     current_user.save!
   end
 end

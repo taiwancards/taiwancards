@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class MetroController < ApplicationController
+  allow_unauthenticated_access
   LINES = [
     ["文湖線", "#c48c31"],
     ["淡水信義線", "#d8232a"],

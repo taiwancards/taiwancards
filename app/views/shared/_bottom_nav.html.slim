@@ -4,10 +4,9 @@ nav.fixed.inset-x-0.bottom-0.z-40.border-t.border-border.md:hidden[
   data-tour="nav"
   class="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 pb-[env(safe-area-inset-bottom)]" ]
   .mx-auto.flex.max-w-3xl.items-stretch
-    - tabs.each_with_index do |(key, label, path), index|
+    - tabs.each do |key, label, path|
       - active = current_page?(path)
-      - last = index == tabs.size - 1
-      = link_to path, aria: {current: (active ? "page" : nil)}, data: {tour: (last ? "help" : nil)},
+      = link_to path, aria: {current: (active ? "page" : nil)},
         class: class_names("flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[11px] font-medium leading-tight transition-colors",
           active ? "text-primary" : "text-muted-foreground") do
         = icon(key, css: "size-6", stroke: active ? 2 : 1.6)

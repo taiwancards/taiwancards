@@ -63,10 +63,11 @@
         - if detailed?
           - @profile.sources.each do |source|
             span.rounded-full.border.border-border.text-muted-foreground class="px-2.5 py-1" = source
-        .flex.shrink-0.items-center.gap-2
-          = button_to t("words.add_study"), dict_activate_path(lexeme.text), data: {tour: "dict-add"},
-            class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
-          = render("shared/quick_add", lexeme:)
+        - if current_user
+          .flex.shrink-0.items-center.gap-2
+            = button_to t("words.add_study"), dict_activate_path(lexeme.text), data: {tour: "dict-add"},
+              class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+            = render("shared/quick_add", lexeme:)
 
   - everyday_note = lexeme.data.dig("note", I18n.locale.to_s).presence
   - if everyday_note
@@ -199,7 +200,7 @@
               - if char.meaning.present?
                 .truncate.text-xs.text-muted-foreground style="max-width: 9rem" = char.meaning
 
-  - if detailed?
+  - if current_user && detailed?
     - if @profile.memories.any?
       section.grid.gap-2 class="sm:grid-cols-2"
         - @profile.memories.each do |facet, memory|

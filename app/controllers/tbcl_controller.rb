@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TbclController < ApplicationController
+  allow_unauthenticated_access
   include Paginated
   include ProgressMarks
 

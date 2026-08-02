@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PhrasesController < ApplicationController
+  allow_unauthenticated_access
   ROLES = Huayu::TaiwanPhrases::ROLES
 
   def index
@@ -11,7 +12,7 @@ class PhrasesController < ApplicationController
     @slots = slots_for(@patterns)
     @lexicon = Phrases::Lexicon.new(@patterns).call
     @counts = Huayu::TaiwanPhrases.counts
-    current_user.record_practice_run!(:phrases)
+    current_user&.record_practice_run!(:phrases)
   end
 
   private

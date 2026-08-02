@@ -75,7 +75,6 @@ en:
     pinyin_hint: >-
       Pinyin next to zhuyin. Zhuyin is always shown and cannot be turned off. On: the romanisation appears
       beside it. Off: zhuyin alone. Off by default — Taiwan reads by zhuyin.
-    theme: Theme
     locale_switch: EN
     textbook: Textbook
     my_desks: My decks
@@ -572,6 +571,10 @@ en:
     interface_language: Interface language
     login_title: Log in
     login_subtitle: Log in to continue studying.
+    login_pitch: >-
+      Free, no ads, nothing to pay for — ever. The dictionary, the language guides and the Taiwan
+      sections are open without an account. Signing in simply unlocks the rest: the trainers, the
+      cards and everything that tracks your personal progress.
     login: Log in
     logout: Log out
     email: Email
@@ -592,25 +595,6 @@ en:
     signed_out: Logged out.
     profile_saved: Profile saved.
     reading_title: Reading Chinese text
-    projection_field: What you get to see
-    projection_open: Everything, no limit
-    projection_chars: 'MOE characters: %{name} and below'
-    projection_option: '%{scale}: %{level} and below'
-    projection_note: 'Applies across every section and both searches. Cards and decks you already have stay put.'
-    projection_hides: 'Hiding %{hidden} of %{total} words and characters — %{share}%.'
-    projection_shows_all: 'Nothing hidden: all %{total} words and characters.'
-    projection_advanced: Fine tuning
-    projection_tolerance: Tolerance for the unfamiliar
-    projection_tolerance_note: 'How large a share of above-level words you accept inside a sentence.'
-    projection_steps:
-      at0: strictly at level
-      third: a third of the way to the next
-      half: halfway to the next
-      twothirds: two thirds of the way to the next
-    outside_projection: Beyond the level you picked
-    projection_scales:
-      tbcl: TBCL
-      tocfl: TOCFL
     zhuyin_position: Zhuyin placement
     zhuyin_positions:
       right: To the right of each character
@@ -1083,6 +1067,8 @@ en:
     recording: Recording… tap to stop
     grading: Grading…
     retry: Not quite — say it again…
+    silence: I didn't catch any speech — start talking right after pressing record.
+    warmup_first: One minute of voice warm-up first — it makes every grade after it noticeably more accurate.
     unavailable: The reference recordings are not installed — there is nothing to grade against.
     mic_denied: No access to the microphone. Allow recording in your browser's site settings.
     mic_missing: No microphone found. Connect one and reload the page.
@@ -1567,8 +1553,6 @@ en:
     study_profile: Study profile
     level: Level
     start_level: Started as
-    projection: Visible up to
-    tolerance: Tolerance
     display: Ruby and direction
     path_steps: Roadmap steps done
     practice_runs: Practice runs
@@ -2622,8 +2606,9 @@ en:
           Not a game — no streaks, no XP, no badges, no leaderboards and no cartoon animal guilt-tripping
           you into coming back tomorrow
         machine: >-
-          Not machine-translated — no generated meanings, no invented example sentences, nothing at all
-          written by a model rather than a person
+          No AI content — and there never will be. Every meaning, example and label has passed through
+          a person, and every phrase traces back to a verifiable source. Most apps show you what a
+          model generated; this one never does
         decks: >-
           Not a pile of shared decks where nobody can tell you who made them, from which textbook, or
           whether the readings are even right for Taiwan
@@ -2658,6 +2643,14 @@ en:
       words: Dictionary entries
       collocations: Idioms and collocations
       sentences: Sentences and examples
+    science:
+      heading: Quantitative linguistics under the hood
+      body: >-
+        Everything rests on measurement: corpus frequencies and dispersion, collocation strength,
+        calibrated difficulty scales, acoustic references for every syllable. What you see is the tip
+        of an iceberg — beneath it are years of collecting, measuring and verifying data, with our own
+        libraries and datasets released for the research community. All of it is open — knowledge
+        belongs to everyone.
     quality:
       heading: Where the quality comes from
       items:
@@ -2672,7 +2665,8 @@ en:
         human:
           title: A person behind every entry
           body: >-
-            Meanings, examples and links are read through by hand. Nothing is generated and nothing is machine-translated.
+            Meanings, examples and links are read through by hand. Everything is human-verified —
+            nothing generated, nothing machine-translated.
         written:
           title: Written for an English speaker
           body: Explanations start from what English has put in your ear and the traps its spelling sets
@@ -2887,11 +2881,11 @@ en:
       cta: Create an account
     gold_card: Taiwan Gold Card
     disclaimer_html: >-
-      I build and maintain TaiwanCards alone. I am a linguist, I have loved Taiwan for half my life, and I
-      hold a %{gold_card}. Ministries, examinations and publications are named only to credit the source of
-      the data — the project is not affiliated with or endorsed by any of them. Everything here was
-      assembled by hand, so mistakes are possible: no guarantees of accuracy, availability or fitness for
-      any purpose. Use it as a study aid, and keep your own export of your progress.
+      TaiwanCards is built and maintained by one person — a linguist whose life has been tied to Taiwan
+      for half of it, down to the %{gold_card} in his wallet. Ministries, examinations and publications
+      are named only to credit the source of the data — the project is not affiliated with or endorsed
+      by any of them. Mistakes are possible: no guarantees of accuracy, availability or fitness for any
+      purpose. Use it as a study aid, and keep your own export of your progress.
   onboarding:
     title: Where to start
     lede: One question, and the app shapes your first few weeks around the answer. You can change it whenever you like.

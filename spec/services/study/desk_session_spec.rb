@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Study::CardSet do
-  let(:user) { Current.user }
+  let(:user) { create(:user) }
   let(:collection) { Collection.create!(user:, kind: :manual, name: "Song") }
 
   def add(text)
@@ -12,7 +12,12 @@ RSpec.describe Study::CardSet do
     lexeme
   end
 
-  before { 3.times { |i| add("詞#{i}") } }
+  before do
+    Current.user = user
+    3.times { |i| add("詞#{i}") }
+  end
+
+  after { Current.reset }
 
   it "still serves deck items that were activated but never actually studied" do
     collection.lexemes.each { |lexeme| Lexemes::Activator.new.call(lexeme) }

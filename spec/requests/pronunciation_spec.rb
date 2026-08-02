@@ -10,6 +10,10 @@ RSpec.describe "Pronunciation" do
     }
   end
 
+  def warm_up!
+    VoiceProfile.create!(user: @authenticated_user, f3_ref: 2900, calibrated_at: Time.current)
+  end
+
   it "builds a practice card with per-syllable expected tones" do
     word = create(
       :lexeme,
@@ -18,6 +22,7 @@ RSpec.describe "Pronunciation" do
       meanings: {"en" => "church"}
     )
 
+    warm_up!
     get("/pronunciation", params: {lexeme_id: word.id}, headers:)
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include("data-controller=\"pronunciation\""))
@@ -33,6 +38,7 @@ RSpec.describe "Pronunciation" do
       readings: {"pinyin" => "jiàotáng", "zhuyin" => "ㄐㄧㄠˋ ㄊㄤˊ"}
     )
 
+    warm_up!
     get("/pronunciation", params: {lexeme_id: word.id}, headers:)
 
     expect(response.body.scan(/data-pronunciation-target="syllable"/).length).to(eq(2))
@@ -48,6 +54,7 @@ RSpec.describe "Pronunciation" do
       readings: {"pinyin" => "jiàotáng", "zhuyin" => "ㄐㄧㄠˋ ㄊㄤˊ"}
     )
 
+    warm_up!
     get("/pronunciation", params: {lexeme_id: word.id}, headers:)
 
     expect(response.body).to(include("jiào"))
@@ -55,6 +62,7 @@ RSpec.describe "Pronunciation" do
   end
 
   it "keeps the drill sections down to two rows" do
+    warm_up!
     get("/pronunciation", headers:)
 
     tabs = response.body.scan(/data-drill-groups-target="tab"/).length
@@ -62,15 +70,16 @@ RSpec.describe "Pronunciation" do
     expect(response.body.scan(/data-drill-groups-target="group"/).length).to(eq(tabs))
   end
 
-  it "drops the warm-up prompt once the voice is calibrated" do
+  it "sends a voice without a profile to the warm-up first" do
     create(:lexeme, kind: :word, text: "高", readings: {"pinyin" => "gāo"})
 
     get("/pronunciation", headers:)
-    expect(response.body).to(include(I18n.t("pron.ui.warmup_title")))
+    expect(response).to(redirect_to(pronunciation_warmup_path))
 
-    VoiceProfile.create!(user: Current.user, f3_ref: 2900, calibrated_at: Time.current)
+    warm_up!
 
     get("/pronunciation", headers:)
+    expect(response).to(have_http_status(:ok))
     expect(response.body).not_to(include(I18n.t("pron.ui.warmup_title")))
   end
 

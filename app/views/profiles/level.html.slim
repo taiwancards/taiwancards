@@ -19,27 +19,3 @@
           = t("auth.level_note")
           = " "
           = link_to t("auth.level_test"), placement_path, class: "font-medium text-primary hover:underline"
-
-      .space-y-1.border-t.border-border.pt-4
-        label.block.space-y-1
-          span.text-xs.font-medium.text-muted-foreground = t("auth.projection_field")
-          = form.select :projection,
-            projection_options,
-            {selected: @user.projection},
-            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-        p.text-xs.text-muted-foreground = t("auth.projection_note")
-        p.text-xs.font-medium
-          - if @hidden.hidden.zero?
-            = t("auth.projection_shows_all", total: number_with_delimiter(@hidden.total))
-          - else
-            = t("auth.projection_hides", hidden: number_with_delimiter(@hidden.hidden), total: number_with_delimiter(@hidden.total), share: @hidden.share)
-
-      details.border-t.border-border.pt-4
-        summary.cursor-pointer.text-xs.font-medium.text-muted-foreground = t("auth.projection_advanced")
-        label.mt-3.block.space-y-1
-          span.text-xs.font-medium.text-muted-foreground = t("auth.projection_tolerance")
-          = form.select :visibility_tolerance,
-            @user.tolerance_steps.map { |value| [t("auth.projection_steps.#{value}"), value] },
-            {selected: @user.visibility_tolerance},
-            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-          p.text-xs.text-muted-foreground = t("auth.projection_tolerance_note")

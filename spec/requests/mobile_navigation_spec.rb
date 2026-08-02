@@ -3,14 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "Mobile navigation" do
-  it "renders a bottom tab bar with at most five destinations" do
+  it "renders a bottom tab bar with at most four destinations and a header menu link" do
     get("/desk")
 
     expect(response.body).to(include("data-tour=\"nav\"").or(include("nav")))
     tabs = response.body.scan(%r{<nav[^>]*fixed[^>]*>.*?</nav>}m).first
     expect(tabs).to(be_present)
-    expect(tabs.scan(/<a /).size).to(be <= 5)
-    expect(tabs).to(include(menu_path))
+    expect(tabs.scan(/<a /).size).to(be <= NavHelper::MOBILE_TAB_SLOTS)
+    expect(response.body).to(include("href=\"#{menu_path}\""))
   end
 
   it "keeps the desktop subnav out of the mobile flow" do

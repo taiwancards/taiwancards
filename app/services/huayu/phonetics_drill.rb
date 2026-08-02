@@ -4,6 +4,7 @@ module Huayu
   class PhoneticsDrill
     STAGES = %w[consonants vowels finals syllables].freeze
     CHOICES = 4
+    CANDIDATES = 5
     SYLLABLE_POOL = 600
     SYLLABLE_KEEP = 150
 
@@ -89,16 +90,32 @@ module Huayu
     end
 
     def distractors(pool, correct, rows)
-      others = (pool - [correct]).sample(CHOICES - 1)
-      others.map { |zhuyin| {zhuyin:, pinyin: rows.find { |row| row["zhuyin"] == zhuyin }["pinyin"].to_s} }
+      ranked = (pool - [correct]).sort_by { |zhuyin| [-affinity(correct, zhuyin), rand] }
+      ranked.first(CANDIDATES).map { |zhuyin|
+        {zhuyin:, pinyin: rows.find { |row| row["zhuyin"] == zhuyin }["pinyin"].to_s}
+      }
+    end
+
+    def affinity(a, b)
+      score = (a.chars & b.chars).size * 2
+      score += 3 if a[0] == b[0]
+      score += 2 if a[-1] == b[-1]
+      score += 4 if confusable?(a[0], b[0])
+      score += 3 if confusable?(a[-1], b[-1])
+      score += 1 if a.length == b.length
+      score
+    end
+
+    def confusable?(a, b)
+      a != b && Array(ZhuyinTrainer::CONFUSABLE[a]).include?(b)
     end
 
     def syllables
       rows = syllable_rows
-      pool = rows.map { |row| [row[:zhuyin], row[:pinyin]] }.uniq
+      pool = rows.map { |row| row.slice(:bare, :base) }.uniq
 
       rows.map do |row|
-        row.merge(distractors: syllable_distractors(pool, row))
+        row.except(:bare, :base, :tone).merge(distractors: syllable_distractors(pool, row))
       end
     end
 
@@ -120,7 +137,9 @@ module Huayu
       pinyin = lexeme.readings["pinyin"].to_s.strip
       zhuyin = lexeme.readings["zhuyin"].to_s.strip
       return if pinyin.blank? || zhuyin.blank? || pinyin.include?(" ")
-      return unless seen.add?(zhuyin)
+
+      bare = zhuyin.delete(ReadingForms::ZHUYIN_TONES)
+      return unless seen.add?(bare)
 
       plain = ReadingForms.plain_pinyin(pinyin).to_s
       {
@@ -134,7 +153,10 @@ module Huayu
         hanziPinyin: pinyin,
         hanziGloss: lexeme.meanings[@locale].presence || lexeme.meanings["en"].to_s,
         note: "",
-        hard: hard_case(plain)
+        hard: hard_case(plain),
+        bare:,
+        base: ReadingForms.marked_pinyin(pinyin, nil),
+        tone: Zhuyin.tone(pinyin)
       }
     end
 
@@ -146,12 +168,22 @@ module Huayu
     end
 
     def syllable_distractors(pool, row)
-      same_shape = pool.reject { |zhuyin, _| zhuyin == row[:zhuyin] }
-      near = same_shape.select { |zhuyin, _| zhuyin.chars.first == row[:zhuyin].chars.first }
-      picked = (near.sample(2) + same_shape.sample(CHOICES)).uniq { |zhuyin, _| zhuyin }
-      picked.reject { |zhuyin, _| zhuyin == row[:zhuyin] }.first(CHOICES - 1).map { |zhuyin, pinyin|
-        {zhuyin:, pinyin:}
-      }
+      ranked = pool
+        .reject { |cand| cand[:bare] == row[:bare] }
+        .sort_by { |cand| [-syllable_affinity(row, cand), rand] }
+
+      ranked.first(CANDIDATES).map do |cand|
+        {
+          zhuyin: Zhuyin.apply_tone(cand[:bare], row[:tone]),
+          pinyin: ReadingForms.marked_pinyin(cand[:base], row[:tone])
+        }
+      end
+    end
+
+    def syllable_affinity(row, cand)
+      score = affinity(row[:bare], cand[:bare])
+      score += 3 if cand[:base].chars.sort == row[:base].chars.sort
+      score
     end
 
     def localized(row)

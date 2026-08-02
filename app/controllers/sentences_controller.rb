@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SentencesController < ApplicationController
+  allow_unauthenticated_access
   PER_PAGE = Sentences::Browse::PER_PAGE
 
   def index

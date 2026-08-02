@@ -11,7 +11,7 @@ class LexemeMemory < ApplicationRecord
   scope :due, -> (at = Time.current) { where(due_at: ..at) }
   scope :active, -> { where.not(activated_at: nil) }
   scope :mature, -> { state_review.where(stability: 21..) }
-  scope :owned_by, -> (user) { where(user:) }
+  scope :owned_by, -> (user) { user ? where(user:) : none }
 
   def due?(at = Time.current)
     due_at.present? && due_at <= at

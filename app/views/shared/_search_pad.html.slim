@@ -2,7 +2,7 @@
 
 .hidden.rounded-xl.border.border-border.bg-background.shadow-xl[
   data-search-pad-target="panel"
-  class="p-1.5 xl:w-72 max-xl:fixed max-xl:bottom-2 max-md:bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] max-xl:left-1/2 max-xl:z-50 max-xl:-translate-x-1/2 max-xl:w-[min(22rem,calc(100vw-1rem))]" ]
+  class="p-1.5 xl:w-72 max-xl:order-first max-xl:w-[min(22rem,calc(100vw-1rem))]" ]
 
   .flex.items-center.border-b.border-border class="gap-0.5 pb-1.5"
     - modes = [["zhuyin", "ㄅ"], ["pinyin", "á"]]
@@ -44,7 +44,7 @@
       data-handwriting-emit-value="true"
       data-action="handwriting:pick->search-pad#accept" ]
       canvas.mx-auto.aspect-square.w-full.touch-none.rounded-lg.border.border-border.bg-card[
-        class="max-w-[10rem]" data-handwriting-target="canvas" ]
+        class="max-w-[15rem]" data-handwriting-target="canvas" ]
       .mt-1.5.flex.min-h-9.flex-wrap.items-center.justify-center class="gap-1" data-handwriting-target="results"
       .mt-1.flex.items-center.justify-between.gap-2
         span.text-2xs.text-muted-foreground[
