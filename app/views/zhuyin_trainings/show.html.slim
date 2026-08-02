@@ -43,12 +43,12 @@
       .grid.items-center.gap-3 class="grid-cols-[1fr_1.4fr_1fr]"
         - option = "flex min-h-20 w-full items-center justify-center rounded-2xl border border-border bg-background px-3 py-3 text-center text-4xl font-semibold transition-colors"
 
-        div.w-full class="col-start-2 row-start-1"
+        .w-full class="col-start-2 row-start-1"
           button[ type="button" data-zhuyin-trainer-target="option" data-direction="up"
             data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
             span data-label=""
 
-        div.w-full class="col-start-1 row-start-2"
+        .w-full class="col-start-1 row-start-2"
           button[ type="button" data-zhuyin-trainer-target="option" data-direction="left"
             data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
             span data-label=""
@@ -61,12 +61,12 @@
             = icon(:speaker, css: "size-8")
           p.text-xs.text-muted-foreground = t("zhuyin_trainer.replay_hint")
 
-        div.w-full class="col-start-3 row-start-2"
+        .w-full class="col-start-3 row-start-2"
           button[ type="button" data-zhuyin-trainer-target="option" data-direction="right"
             data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
             span data-label=""
 
-        div.w-full class="col-start-2 row-start-3"
+        .w-full class="col-start-2 row-start-3"
           button[ type="button" data-zhuyin-trainer-target="option" data-direction="down"
             data-action="zhuyin-trainer#choose" class=option lang="zh-TW" ]
             span data-label=""

@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
-
 @import "../../../vendor/javascript/tw-animate-css.css";
 @import "../stylesheets/fonts.css";
-
 
 :root {
   --background: oklch(1 0 0);
@@ -46,7 +44,6 @@
   --success-foreground: hsl(0 0% 100%);
   --brand: oklch(0.52 0.16 258);
   --brand-soft: oklch(0.95 0.03 258);
-
 }
 
 @theme inline {
@@ -54,8 +51,11 @@
   --text-2xs--line-height: 1rem;
   --text-3xs: 0.625rem;
   --text-3xs--line-height: 0.875rem;
-  --font-sans: "Roboto", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-hanzi: "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", "Noto Sans TC", sans-serif;
+  --font-sans:
+    "Roboto", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hanzi:
+    "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", "Noto Sans TC",
+    sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -142,13 +142,28 @@
 
   .flag-wash {
     background-image:
-      radial-gradient(58% 46% at 4% -4%, rgba(0, 0, 149, 0.2) 0%, rgba(0, 0, 149, 0.07) 45%, transparent 72%),
-      radial-gradient(52% 42% at 99% 0%, rgba(254, 0, 0, 0.17) 0%, rgba(254, 0, 0, 0.05) 45%, transparent 72%),
-      radial-gradient(80% 40% at 50% 104%, rgba(0, 0, 149, 0.13) 0%, transparent 72%);
+      radial-gradient(
+        58% 46% at 4% -4%,
+        rgba(0, 0, 149, 0.2) 0%,
+        rgba(0, 0, 149, 0.07) 45%,
+        transparent 72%
+      ),
+      radial-gradient(
+        52% 42% at 99% 0%,
+        rgba(254, 0, 0, 0.17) 0%,
+        rgba(254, 0, 0, 0.05) 45%,
+        transparent 72%
+      ),
+      radial-gradient(
+        80% 40% at 50% 104%,
+        rgba(0, 0, 149, 0.13) 0%,
+        transparent 72%
+      );
   }
 
   .font-kai {
-    --font-hanzi: "TW Kai", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", serif;
+    --font-hanzi:
+      "TW Kai", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", serif;
   }
 
   .font-kai [lang="zh-TW"],
@@ -361,7 +376,6 @@
     font-family: var(--font-sans);
   }
 
-
   [lang="zh-TW"],
   :lang(zh-TW) {
     font-family: var(--font-hanzi);
@@ -372,7 +386,7 @@
     font-family: var(--font-sans);
   }
 
-@media (max-width: 767px) {
+  @media (max-width: 767px) {
     input:not([type="checkbox"]):not([type="radio"]),
     select,
     textarea {
@@ -422,7 +436,9 @@ abbr.glossary {
 .tok-word {
   cursor: pointer;
   border-bottom: 2px solid transparent;
-  transition: background-color 0.1s ease, border-color 0.1s ease;
+  transition:
+    background-color 0.1s ease,
+    border-color 0.1s ease;
 }
 
 .tok-word:hover {
@@ -435,7 +451,11 @@ abbr.glossary {
 }
 
 .tok-known {
-  background-color: color-mix(in oklch, var(--muted-foreground) 14%, transparent);
+  background-color: color-mix(
+    in oklch,
+    var(--muted-foreground) 14%,
+    transparent
+  );
   color: var(--muted-foreground);
 }
 
@@ -456,8 +476,6 @@ abbr.glossary {
 .row-on {
   background-color: color-mix(in oklch, var(--primary) 8%, transparent);
 }
-
-
 
 .sortable-grip {
   cursor: grab;

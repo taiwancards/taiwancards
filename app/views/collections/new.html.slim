@@ -12,16 +12,16 @@
   - case @tab
   - when "text"
     = form_with url: desk_preview_path, method: :post, multipart: true, data: {turbo: false}, class: "space-y-4" do |form|
-      div.space-y-1
+      .space-y-1
         = form.label :name, t("desks.name_label"), class: "text-sm font-medium"
         = form.text_field :name, placeholder: t("desks.name_placeholder"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
 
-      div.space-y-1
+      .space-y-1
         = form.label :text, t("desks.paste_label"), class: "text-sm font-medium"
         = form.text_area :text, rows: 8, dir: "auto", lang: "zh-TW", placeholder: t("desks.paste_placeholder"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-base"
         p.text-xs.text-muted-foreground = t("desks.paste_hint")
 
-      div.space-y-1
+      .space-y-1
         = form.label :file, t("desks.file_label"), class: "text-sm font-medium"
         = form.file_field :file, accept: ".txt,.csv,.md,text/plain", class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
 

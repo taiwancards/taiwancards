@@ -6,7 +6,7 @@
     span = t("tocfl.back")
 
   header.flex.flex-wrap.items-start.justify-between.gap-3
-    div.space-y-1
+    .space-y-1
       h1.text-2xl.font-bold.tracking-tight = @collection.name
       p.text-sm.text-muted-foreground
         = t("tocfl.known_of", known: @stat.known, total: @stat.total)

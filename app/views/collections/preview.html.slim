@@ -104,7 +104,7 @@
   = form_with url: desks_path, method: :post, class: "space-y-4" do |form|
     = hidden_field_tag :selection, "", data: {deck_preview_target: "selection"}
 
-    div.space-y-1
+    .space-y-1
       = form.label :name, t("desks.name_label"), class: "text-sm font-medium"
       = form.text_field :name, value: @name, placeholder: t("desks.name_placeholder"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
 

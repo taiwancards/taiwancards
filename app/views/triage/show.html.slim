@@ -28,7 +28,7 @@
         .grid.items-center.gap-3 class="grid-cols-[1fr_1.6fr_1fr]"
           - side = "flex min-h-24 w-full flex-col items-center justify-center gap-1 rounded-2xl border border-border px-3 py-4 text-center text-sm font-semibold transition-colors"
 
-          div.w-full class="col-start-1 row-start-1"
+          .w-full class="col-start-1 row-start-1"
             button[ type="button" data-action="triage#markNormal"
               class="#{side} text-amber-500 hover:border-amber-400 hover:bg-amber-500/10" ]
               span = t("triage.normal")
@@ -41,7 +41,7 @@
             .text-7xl.font-semibold.leading-none lang="zh-TW" data-triage-target="glyph"
             .mt-4.text-xl.text-muted-foreground lang="zh-TW" data-triage-target="reading"
 
-          div.w-full class="col-start-3 row-start-1"
+          .w-full class="col-start-3 row-start-1"
             button[ type="button" data-action="triage#markKnown"
               class="#{side} text-emerald-600 hover:border-emerald-400 hover:bg-emerald-500/10" ]
               span = t("triage.known")

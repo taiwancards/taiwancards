@@ -2,7 +2,7 @@
 
 .py-6.space-y-6.pinyin-locked
   header.flex.flex-wrap.items-center.justify-between.gap-3
-    div.space-y-1
+    .space-y-1
       = render("shared/page_help", key: "writing", title: t("writing.title"))
       - if @collection
         p.text-xs.font-medium.text-primary = @collection.name

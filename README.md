@@ -153,26 +153,26 @@ fails if the committed output has drifted.
 
 ## Layout
 
-| Path | Contents |
-| --- | --- |
-| `app/services/fsrs/` | FSRS-6 scheduler |
-| `app/services/huayu/` | zhuyin, tone sandhi, segmentation, level projection, importers |
-| `app/services/pronunciation/` | acoustic analysis, templates, thresholds, drills |
-| `app/services/lexemes/`, `study/` | facets, activation, reviews, search, session building |
-| `app/services/learn/`, `onboarding/`, `placement/` | what to show next, roadmap, placement test |
-| `app/services/phrases/` | phrasebook resolution against the dictionary |
-| `app/services/intro/` | the guided tour, driven by `config/intro_map.yml` |
-| `app/services/deploy/`, `install/` | content transfer and local rebuild |
-| `app/models/` | `Lexeme`, `LexemeMemory`, `LexemeReview`, `Collection`, `User` |
-| `lib/tasks/` | rake orchestration for imports and deployment |
+| Path                                               | Contents                                                       |
+| -------------------------------------------------- | -------------------------------------------------------------- |
+| `app/services/fsrs/`                               | FSRS-6 scheduler                                               |
+| `app/services/huayu/`                              | zhuyin, tone sandhi, segmentation, level projection, importers |
+| `app/services/pronunciation/`                      | acoustic analysis, templates, thresholds, drills               |
+| `app/services/lexemes/`, `study/`                  | facets, activation, reviews, search, session building          |
+| `app/services/learn/`, `onboarding/`, `placement/` | what to show next, roadmap, placement test                     |
+| `app/services/phrases/`                            | phrasebook resolution against the dictionary                   |
+| `app/services/intro/`                              | the guided tour, driven by `config/intro_map.yml`              |
+| `app/services/deploy/`, `install/`                 | content transfer and local rebuild                             |
+| `app/models/`                                      | `Lexeme`, `LexemeMemory`, `LexemeReview`, `Collection`, `User` |
+| `lib/tasks/`                                       | rake orchestration for imports and deployment                  |
 
 ## Related repositories
 
-| Repository | Visibility | Contents |
-| --- | --- | --- |
-| [taiwancards/corpora](https://github.com/taiwancards/corpora) | public | offline pipeline: collection, segmentation, frequency and dispersion, statistical evaluation |
-| [taiwancards/data](https://github.com/taiwancards/data) | private | derived dictionaries, graded word lists, glosses, acoustic templates |
-| [taiwancards/docs](https://github.com/taiwancards/docs) | private | design notes, methodology, measurements |
+| Repository                                                    | Visibility | Contents                                                                                     |
+| ------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| [taiwancards/corpora](https://github.com/taiwancards/corpora) | public     | offline pipeline: collection, segmentation, frequency and dispersion, statistical evaluation |
+| [taiwancards/data](https://github.com/taiwancards/data)       | private    | derived dictionaries, graded word lists, glosses, acoustic templates                         |
+| [taiwancards/docs](https://github.com/taiwancards/docs)       | private    | design notes, methodology, measurements                                                      |
 
 Data is private because it is the product: glosses, graded lists, register
 profiles and acoustic templates are output, not input. Sources are credited under

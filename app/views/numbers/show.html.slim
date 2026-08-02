@@ -24,12 +24,12 @@
       .grid.items-center.gap-3 class="grid-cols-[1fr_1.6fr_1fr]"
         - option = "flex min-h-16 w-full items-center justify-center rounded-2xl border border-border bg-background px-3 py-3 text-center text-lg font-semibold transition-colors"
 
-        div.w-full class="col-start-2 row-start-1"
+        .w-full class="col-start-2 row-start-1"
           button[ type="button" data-direction="up" data-number-drill-target="option"
             data-action="number-drill#choose" class=option ]
             span data-label=""
 
-        div.w-full class="col-start-1 row-start-2"
+        .w-full class="col-start-1 row-start-2"
           button[ type="button" data-direction="left" data-number-drill-target="option"
             data-action="number-drill#choose" class=option ]
             span data-label=""
@@ -38,12 +38,12 @@
           .text-4xl.font-semibold.leading-tight.tracking-wide data-number-drill-target="prompt"
           .mt-3.text-sm.text-muted-foreground data-number-drill-target="note"
 
-        div.w-full class="col-start-3 row-start-2"
+        .w-full class="col-start-3 row-start-2"
           button[ type="button" data-direction="right" data-number-drill-target="option"
             data-action="number-drill#choose" class=option ]
             span data-label=""
 
-        div.w-full class="col-start-2 row-start-3"
+        .w-full class="col-start-2 row-start-3"
           button[ type="button" data-direction="down" data-number-drill-target="option"
             data-action="number-drill#choose" class=option ]
             span data-label=""

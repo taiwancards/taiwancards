@@ -12,12 +12,6 @@ ASSET_HOST = "ASSETS_BASE_URL=\"$(sed -n 's/^ASSETS_BASE_URL=//p' .env | tr -d '
 CI.run do
   step("Setup", "bin/setup --skip-server")
 
-  step(
-    "Format: Ruby, Python, shell",
-    "rubyfmt -i . && ruff format . > /dev/null && shfmt -f . | xargs shfmt -w -i 2 -s -sr"
-  )
-  # step("Style: Ruby", "bin/rubocop") # disabled because it is too slow and not very useful here
-
   step("Dependencies: lockfile satisfies the Gemfile", "bundle check")
   step("Security: gem advisories", "bin/bundler-audit")
   step("Security: pinned JavaScript", "bin/importmap audit")
@@ -48,6 +42,11 @@ CI.run do
   step("Tests: corpus scripts", "cd corpora && rake test") if File.directory?(File.join(ROOT, "corpora"))
 
   step("Static site: rebuild when stale", "bin/rails site:refresh")
+
+  step(
+    "Format: Ruby, Python, shell",
+    "rubyfmt -i . && ruff format . > /dev/null && shfmt -f . | xargs shfmt -w -i 2 -s -sr && slim-lint -a app/views && ./node_modules/.bin/prettier --write ."
+  )
 
   if success?
     heading("Ready to deploy", "Push to main and Render takes it from here")

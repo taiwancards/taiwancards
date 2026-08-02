@@ -39,7 +39,8 @@ group :development, :test do
 end
 
 group :development do
-  gem "web-console"
+  gem "slim_lint", require: false
+  gem "web-console", require: false
 end
 
 group :test do

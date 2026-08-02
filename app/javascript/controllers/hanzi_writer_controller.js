@@ -1,12 +1,16 @@
-import { Controller } from "@hotwired/stimulus"
-import HanziWriter from "hanzi-writer"
+import { Controller } from "@hotwired/stimulus";
+import HanziWriter from "hanzi-writer";
 
 export default class extends Controller {
-  static targets = ["canvas", "status"]
-  static values = { char: String, url: String, size: { type: Number, default: 220 } }
+  static targets = ["canvas", "status"];
+  static values = {
+    char: String,
+    url: String,
+    size: { type: Number, default: 220 },
+  };
 
   connect() {
-    const side = this.canvasTarget.clientWidth || this.sizeValue
+    const side = this.canvasTarget.clientWidth || this.sizeValue;
     this.writer = HanziWriter.create(this.canvasTarget, this.charValue, {
       width: side,
       height: side,
@@ -21,37 +25,43 @@ export default class extends Controller {
       charDataLoader: (char, onComplete) => {
         fetch(this.urlValue)
           .then((response) => response.json())
-          .then(onComplete)
+          .then(onComplete);
       },
-    })
+    });
   }
 
   disconnect() {
-    this.writer?.cancelQuiz()
-    this.canvasTarget.replaceChildren()
+    this.writer?.cancelQuiz();
+    this.canvasTarget.replaceChildren();
   }
 
   animate() {
-    this.setStatus("")
-    this.writer.animateCharacter()
+    this.setStatus("");
+    this.writer.animateCharacter();
   }
 
   quiz() {
-    this.setStatus(this.statusTarget?.dataset.practicing || "")
+    this.setStatus(this.statusTarget?.dataset.practicing || "");
     this.writer.quiz({
       leniency: 1.0,
       showHintAfterMisses: 3,
-      onMistake: (data) => this.setStatus(`✗ ${data.strokeNum + 1}/${this.totalStrokes(data, false)}`),
-      onCorrectStroke: (data) => this.setStatus(`${data.strokeNum + 1}/${this.totalStrokes(data, true)}`),
+      onMistake: (data) =>
+        this.setStatus(
+          `✗ ${data.strokeNum + 1}/${this.totalStrokes(data, false)}`,
+        ),
+      onCorrectStroke: (data) =>
+        this.setStatus(
+          `${data.strokeNum + 1}/${this.totalStrokes(data, true)}`,
+        ),
       onComplete: () => this.setStatus(this.statusTarget?.dataset.done || "✓"),
-    })
+    });
   }
 
   totalStrokes(data, correct) {
-    return data.strokeNum + data.strokesRemaining + (correct ? 1 : 0)
+    return data.strokeNum + data.strokesRemaining + (correct ? 1 : 0);
   }
 
   setStatus(text) {
-    if (this.hasStatusTarget) this.statusTarget.textContent = text
+    if (this.hasStatusTarget) this.statusTarget.textContent = text;
   }
 }

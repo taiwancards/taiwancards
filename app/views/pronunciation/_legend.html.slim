@@ -10,7 +10,7 @@ section.space-y-2.p-4 class=(heading ? "rounded-2xl border border-border bg-card
     - legend.each do |row|
       li.flex.items-start class="gap-2.5"
         span.mt-1.shrink-0.rounded-full class="h-2.5 w-2.5" style="background-color: #{colors[row["level"]]}"
-        div.min-w-0
+        .min-w-0
           .flex.items-baseline class="gap-1.5"
             span.text-xs.font-medium = row["name"]
             span.text-3xs.tabular-nums.text-muted-foreground = "#{row["from"]}+"

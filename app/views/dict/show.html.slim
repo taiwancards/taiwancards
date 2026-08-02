@@ -195,7 +195,7 @@
         - @profile.component_characters.each do |char|
           = link_to character_path(char.text), class: "flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
             span.text-2xl lang="zh-TW" = char.text
-            div.min-w-0
+            .min-w-0
               .text-xs.font-medium = char.reading_set.first&.dig("zhuyin").presence || char.reading_set.first&.dig("pinyin")
               - if char.meaning.present?
                 .truncate.text-xs.text-muted-foreground style="max-width: 9rem" = char.meaning

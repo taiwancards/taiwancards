@@ -11,7 +11,7 @@
         data-action="pointerdown->sortable#start pointermove->sortable#move pointerup->sortable#end pointercancel->sortable#end"
         class="hover:bg-muted" ]
         = icon(:grip, css: "size-4")
-    div.min-w-0.flex-1
+    .min-w-0.flex-1
       = link_to my_desk_path(deck), class: "block truncate font-semibold hover:underline" do
         = deck.name
       .text-xs.text-muted-foreground = t("desks.items_count", count: deck.items_count)

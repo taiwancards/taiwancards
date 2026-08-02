@@ -7,7 +7,7 @@
 
     dl.grid.grid-cols-2.gap-3 class="sm:grid-cols-4"
       - @summary.rows.each do |row|
-        div.rounded-xl.border.border-border.bg-card.p-3
+        .rounded-xl.border.border-border.bg-card.p-3
           dd.text-xl.font-bold.tabular-nums = number_with_delimiter(row[:count])
           dt.text-2xs.leading-tight.text-muted-foreground class="mt-0.5" = t("auth.data_rows.#{row[:key]}")
 

@@ -39,12 +39,12 @@
       .grid.items-center.gap-3 class="grid-cols-[1fr_1.6fr_1fr]"
         - option = "flex min-h-16 w-full items-center justify-center rounded-2xl border border-border bg-background px-3 py-3 text-center text-lg font-semibold transition-colors"
 
-        div.w-full class="col-start-2 row-start-1"
+        .w-full class="col-start-2 row-start-1"
           button[ type="button" data-direction="up" data-phonetics-drill-target="option"
             data-action="phonetics-drill#choose" class=option ]
             span data-label=""
 
-        div.w-full class="col-start-1 row-start-2"
+        .w-full class="col-start-1 row-start-2"
           button[ type="button" data-direction="left" data-phonetics-drill-target="option"
             data-action="phonetics-drill#choose" class=option ]
             span data-label=""
@@ -58,12 +58,12 @@
             data-zhuyin=t("practice.drill.prompt_zhuyin") data-pinyin=t("practice.drill.prompt_pinyin") ]
           .mt-4.text-7xl.font-semibold.leading-none data-phonetics-drill-target="prompt"
 
-        div.w-full class="col-start-3 row-start-2"
+        .w-full class="col-start-3 row-start-2"
           button[ type="button" data-direction="right" data-phonetics-drill-target="option"
             data-action="phonetics-drill#choose" class=option ]
             span data-label=""
 
-        div.w-full class="col-start-2 row-start-3"
+        .w-full class="col-start-2 row-start-3"
           button[ type="button" data-direction="down" data-phonetics-drill-target="option"
             data-action="phonetics-drill#choose" class=option ]
             span data-label=""

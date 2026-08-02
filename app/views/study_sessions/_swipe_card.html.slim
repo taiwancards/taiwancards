@@ -16,12 +16,12 @@
 
   .mx-auto class="max-w-3xl"
     .grid.items-center.gap-3 class="grid-cols-[1fr_1.7fr_1fr]"
-      div.w-full class="col-start-2 row-start-1"
+      .w-full class="col-start-2 row-start-1"
         button[ type="button" data-action="swipe-card#rateEasy"
           class="#{grade_button} text-violet-500 hover:border-violet-400 hover:bg-violet-500/10" ]
           = t("study.grade.easy")
 
-      div.w-full class="col-start-1 row-start-2"
+      .w-full class="col-start-1 row-start-2"
         button[ type="button" data-action="swipe-card#rateAgain"
           class="#{grade_button} text-red-500 hover:border-red-400 hover:bg-red-500/10" ]
           = t("study.grade.again")
@@ -106,12 +106,12 @@
                   = link_to t("study.open_entry"), character_path(lexeme.text), data: { no_swipe: "" },
                     class: "text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
 
-      div.w-full class="col-start-3 row-start-2"
+      .w-full class="col-start-3 row-start-2"
         button[ type="button" data-action="swipe-card#rateGood"
           class="#{grade_button} text-emerald-600 hover:border-emerald-400 hover:bg-emerald-500/10" ]
           = t("study.grade.good")
 
-      div.w-full class="col-start-2 row-start-3"
+      .w-full class="col-start-2 row-start-3"
         button[ type="button" data-action="swipe-card#rateHard"
           class="#{grade_button} text-amber-500 hover:border-amber-400 hover:bg-amber-500/10" ]
           = t("study.grade.hard")
