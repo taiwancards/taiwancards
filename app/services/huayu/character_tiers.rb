@@ -2,67 +2,36 @@
 
 module Huayu
   class CharacterTiers
-    COMMON = 0
-    SECONDARY = 1
-    RARE = 2
+    COMMON = TWFilter::TIERS.fetch(:common)
+    SECONDARY = TWFilter::TIERS.fetch(:secondary)
+    RARE = TWFilter::TIERS.fetch(:rare)
 
     NAMES = {COMMON => "常用", SECONDARY => "次常用", RARE => "罕用"}.freeze
-
-    FILES = {
-      COMMON => "huayu/moe4808.json",
-      SECONDARY => "huayu/moe_next6343.json",
-      RARE => "huayu/moe_rare.json"
-    }.freeze
-
-    EXCEPTION_FILE = "huayu/moe_exception.json"
 
     class << self
       def instance = @instance ||= new
 
       def reset! = @instance = nil
 
-      delegate :tier, :text_tier, :listed?, :name, :size, :chars_in, to: :instance
+      delegate :tier, :text_tier, :listed?, :name, :size, :chars_in, :exceptions, to: :instance
     end
 
-    def initialize
-      @tiers = {}
+    def tier(char) = table[char]
 
-      FILES.each do |tier, file|
-        JSON.parse(AppData.path(file).read).each { |char| @tiers[char] ||= tier }
-      end
+    def text_tier(text) = TWFilter::Checks::Script.tier_of(text)
 
-      path = AppData.path(EXCEPTION_FILE)
-      @exceptions = path.exist? ? JSON.parse(path.read) : []
-      @exceptions.each { |char| @tiers[char] ||= COMMON }
-
-      @tiers.freeze
-    end
-
-    def tier(char) = @tiers[char]
-
-    def text_tier(text)
-      level = COMMON
-
-      text.to_s.each_char do |char|
-        next unless char.match?(TextGate::HAN)
-
-        char_tier = @tiers[char]
-        return nil if char_tier.nil?
-
-        level = char_tier if char_tier > level
-      end
-
-      level
-    end
-
-    def listed?(char) = @tiers.key?(char)
+    def listed?(char) = table.key?(char)
 
     def name(tier) = NAMES[tier]
 
-    def size(tier) = @tiers.count { |_, value| value == tier }
+    def size(tier) = table.count { |_, value| value == tier }
 
-    def chars_in(tier) = @tiers.filter_map { |char, value| char if value == tier }
+    def chars_in(tier) = table.filter_map { |char, value| char if value == tier }
 
-    def exceptions = @exceptions
+    def exceptions = TWFilter::Tables.rows("moe_exception.txt")
+
+    private
+
+    def table = TWFilter::Checks::Script.tiers
   end
 end

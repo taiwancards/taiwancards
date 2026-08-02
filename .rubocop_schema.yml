@@ -1,0 +1,25 @@
+inherit_from: .rubocop.yml
+
+AllCops:
+  NewCops: disable
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: true
+  EnforcedStyle: require_parentheses
+  IgnoreMacros: false
+  AllowedMethods:
+    - require
+    - require_relative
+    - puts
+    - raise
+    - yield
+
+Layout/LineLength:
+  Max: 120
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+Layout/SpaceInLambdaLiteral:
+  Enabled: false

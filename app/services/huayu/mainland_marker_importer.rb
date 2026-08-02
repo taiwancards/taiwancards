@@ -2,31 +2,36 @@
 
 module Huayu
   class MainlandMarkerImporter
-    def initialize(path: nil, io: $stdout)
-      @path = Pathname(path || AppData.path("huayu/mainland_markers.json"))
+    TABLES = {hard: "mainland_hard.tsv", soft: "mainland_soft.tsv"}.freeze
+
+    def initialize(io: $stdout)
       @io = io
     end
 
     def call
-      unless @path.exist?
-        @io.puts("no marker file: #{@path} — run verify_mainland_markers.py first")
-        return 0
-      end
-
-      entries = JSON.parse(@path.read)
-      entries.each do |word, info|
-        marker = MainlandMarker.find_or_initialize_by(word: word)
-        marker.taiwan_form = info["taiwan"]
-        marker.mainland_hits = info["mainland_hits"].to_i
-        marker.taiwan_hits = info["taiwan_hits"].to_i
-        marker.active = true
-        marker.note = "checked against the corpora: #{info["mainland_hits"]} vs #{info["taiwan_hits"]}"
-        marker.save!
-      end
-
+      seen = TABLES.flat_map { |band, table| import(band, table) }
+      MainlandMarker.where.not(word: seen).update_all(active: false)
       MainlandMarker.reset_cache!
-      @io.puts("mainland markers: #{MainlandMarker.count}")
-      MainlandMarker.count
+      @io.puts("mainland markers: #{MainlandMarker.hard.count} hard, #{MainlandMarker.soft.count} soft")
+      seen.length
+    end
+
+    private
+
+    def import(band, table)
+      TWFilter::Tables.columns(table).map do |word, taiwan_form, mainland_hits, taiwan_hits|
+        MainlandMarker
+          .find_or_initialize_by(word: word)
+          .update!(
+            band: band,
+            taiwan_form: taiwan_form,
+            mainland_hits: mainland_hits.to_i,
+            taiwan_hits: taiwan_hits.to_i,
+            active: true,
+            note: "twfilter #{TWFilter::VERSION}: #{mainland_hits} against #{taiwan_hits} in the reference corpus"
+          )
+        word
+      end
     end
   end
 end

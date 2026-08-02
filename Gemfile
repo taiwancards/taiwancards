@@ -25,6 +25,7 @@ gem "solid_cache"
 gem "stimulus-rails"
 gem "tailwindcss-rails"
 gem "turbo-rails"
+gem "twfilter", "~> 1.0"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 group :development, :test do

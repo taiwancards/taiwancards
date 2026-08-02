@@ -10,6 +10,17 @@ class ContentSource < ApplicationRecord
     prefix: true
   )
 
+  enum(:medium, {written: 0, spoken: 1, scripted: 2, electronic: 3}, prefix: true)
+  enum(:production, {native: 0, converted: 1, translated: 2, synthetic: 3}, prefix: true)
+  enum(:formality, {intimate: 0, casual: 1, consultative: 2, formal: 3, frozen: 4}, prefix: true)
+  enum(
+    :purpose,
+    {narrative: 0, expository: 1, argumentative: 2, instructional: 3, interactional: 4, reference: 5, regulatory: 6},
+    prefix: true
+  )
+
+  AXES = %i[medium production formality purpose].freeze
+
   validates :slug, presence: true, uniqueness: true
   validates :name, presence: true
 

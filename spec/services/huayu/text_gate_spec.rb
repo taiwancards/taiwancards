@@ -2,79 +2,100 @@
 
 require "rails_helper"
 
+# The linguistic decisions belong to the twfilter gem and are tested there. What belongs
+# here is the wiring: how this application configures the gem, how it renames the gem's
+# finding codes, and where the database overrides the gem's tables.
 RSpec.describe Huayu::TextGate do
   subject(:gate) { described_class.instance }
 
   before { described_class.reset! }
 
-  describe "tiers" do
-    it "assigns everyday text to 常用" do
-      expect(gate.call("我喜歡吃飯").tier).to(eq(Huayu::CharacterTiers::COMMON))
+  describe "the policy this application applies" do
+    it "diverges from the corpus policy in three declared ways" do
+      policy = described_class::POLICY
+
+      expect(policy.orthography_rejects).to(be(false))
+      expect(policy.punctuation).to(eq(:strict))
+      expect(policy.prc_topics_reject).to(be(true))
     end
 
-    it "raises text to 次常用 on a single character" do
-      secondary = Huayu::CharacterTiers.instance.chars_in(Huayu::CharacterTiers::SECONDARY).first
-      expect(gate.call("我#{secondary}").tier).to(eq(Huayu::CharacterTiers::SECONDARY))
+    it "imposes no length or density bound, unlike the corpus policy" do
+      expect(described_class::POLICY.han_range).to(cover(1))
+      expect(described_class::POLICY.min_han_ratio).to(eq(0.0))
+      expect(gate.call("好")).to(be_ok)
     end
 
-    it "raises text to 罕用 on a single character" do
-      rare = Huayu::CharacterTiers.instance.chars_in(Huayu::CharacterTiers::RARE).first
-      expect(gate.call("我#{rare}").tier).to(eq(Huayu::CharacterTiers::RARE))
-    end
-  end
-
-  describe "異體字 from the official lists" do
-    %w[推薦 橋樑 白癡 那裏 床舖 勳章].each do |word|
-      it "admits #{word} as 常用" do
-        verdict = gate.call(word)
-        expect(verdict).to(be_ok)
-        expect(verdict.tier).to(eq(Huayu::CharacterTiers::COMMON))
-      end
-    end
-  end
-
-  describe "rejection" do
-    it "cuts a character outside every chart" do
-      verdict = gate.call("値得思考")
-      expect(verdict.reason).to(eq(:unlisted))
-      expect(verdict.offender).to(eq("値"))
+    it "admits 裏着衞 because they are listed in the MOE exception chart" do
+      expect(gate.call("那裏")).to(be_ok)
+      expect(TWFilter.keep?("那裏", policy: TWFilter::Policy.corpus)).to(be(false))
     end
 
-    it "cuts emoji and foreign symbols" do
+    it "applies the strict punctuation inventory" do
       expect(gate.call("今天很好～").reason).to(eq(:junk))
-      expect(gate.call("好棒😀").reason).to(eq(:junk))
-      expect(gate.call("圍觀ｉｎｇ").reason).to(eq(:junk))
+      expect(TWFilter.keep?("今天很好～很好", policy: TWFilter::Policy.corpus)).to(be(true))
     end
 
-    it "keeps Taiwanese punctuation" do
-      expect(gate.call("他說：「你好嗎？」")).to(be_ok)
-      expect(gate.call("等一下⋯⋯好")).to(be_ok)
-      expect(gate.call("瑪莉‧史密斯是美國人")).to(be_ok)
-    end
-
-    it "requires at least one character" do
-      expect(gate.call("LINE Pay").reason).to(eq(:no_han))
+    it "rejects mainland subject matter, which the corpus policy only marks" do
+      expect(gate.call("北京的天氣很冷").reason).to(eq(:mainland))
+      expect(TWFilter.examine("北京的天氣很冷").marks.map(&:code)).to(include(:prc_topic))
     end
   end
 
-  describe "mainland markers" do
-    it "cuts word-final erhua" do
+  describe "the verdict it exposes" do
+    it "renames every gem finding code onto its own reason vocabulary" do
+      expect(described_class::REASONS.values.uniq).to(match_array(%i[empty no_han junk unlisted mainland wenyan]))
+      expect(gate.call("値得思考").reason).to(eq(:unlisted))
+      expect(gate.call("LINE Pay").reason).to(eq(:no_han))
       expect(gate.call("一點兒").reason).to(eq(:mainland))
-      expect(gate.call("這件事有點兒難").reason).to(eq(:mainland))
+      expect(gate.call("").reason).to(eq(:empty))
     end
 
-    it "leaves words where 兒 belongs to the root" do
-      expect(gate.call("兒童遊戲場")).to(be_ok)
-      expect(gate.call("我女兒很可愛")).to(be_ok)
-      expect(gate.call("這是兒歌")).to(be_ok)
+    it "reports the offending detail alongside the reason" do
+      verdict = gate.call("値得思考")
+
+      expect(verdict).to(be_rejected)
+      expect(verdict.offender).to(eq("値"))
+      expect(verdict.tier).to(be_nil)
     end
 
-    it "leaves Taiwanese colloquial forms with 兒" do
-      expect(gate.call("那兒")).to(be_ok)
+    it "carries the character tier when the text passes" do
+      verdict = gate.call("我喜歡吃飯")
+
+      expect(verdict).to(be_ok)
+      expect(verdict.tier).to(eq(Huayu::CharacterTiers::COMMON))
+      expect(verdict.offender).to(be_nil)
+    end
+  end
+
+  describe "database markers" do
+    after do
+      MainlandMarker.delete_all
+      Huayu::MainlandGuard.reset!
     end
 
-    it "cuts erhua forms the corpus confirmed as mainland" do
-      expect(gate.call("人情味兒").reason).to(eq(:mainland))
+    it "adds to the gem tables rather than replacing them" do
+      MainlandMarker.create!(word: "測試詞", taiwan_form: "測試", band: :hard, active: true)
+      Huayu::MainlandGuard.reset!
+
+      expect(gate.call("這是測試詞的例子").reason).to(eq(:mainland), "the stored marker is applied")
+      expect(gate.call("請把這個信息轉發").reason).to(eq(:mainland), "the gem table still applies")
+    end
+
+    it "detects the gem terms through the gem, not through the stored markers" do
+      MainlandMarker.create!(word: "測試詞", taiwan_form: "測試", band: :hard, active: true)
+      Huayu::MainlandGuard.reset!
+
+      expect(Huayu::MainlandGuard.marker?("信息")).to(be(false))
+      expect(Huayu::MainlandGuard.marker?("測試詞")).to(be(true))
+    end
+
+    it "ignores markers banded soft or deactivated" do
+      MainlandMarker.create!(word: "軟標記", taiwan_form: "標記", band: :soft, active: true)
+      MainlandMarker.create!(word: "停用詞", taiwan_form: "停用", band: :hard, active: false)
+      Huayu::MainlandGuard.reset!
+
+      expect(gate.call("這是軟標記的例子")).to(be_ok)
+      expect(gate.call("這是停用詞的例子")).to(be_ok)
     end
   end
 end

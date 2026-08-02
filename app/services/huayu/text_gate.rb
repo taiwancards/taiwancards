@@ -8,11 +8,32 @@ module Huayu
       def rejected? = !ok
     end
 
-    HAN = /\p{Han}/
-    LATIN = /[A-Za-z0-9]/
+    HAN = TWFilter::Han::CHAR
 
-    PUNCTUATION = "。，、；：？！「」『』（）〈〉《》—…⋯‧．·　 " \
-      ".,;:?!()\"'’‘-/%"
+    REASONS = {
+      empty: :empty,
+      no_han: :no_han,
+      junk_characters: :junk,
+      unlisted: :unlisted,
+      above_tier: :unlisted,
+      simplified: :unlisted,
+      converted_orthography: :unlisted,
+      mainland: :mainland,
+      mainland_soft: :mainland,
+      cantonese: :mainland,
+      prc_topic: :mainland,
+      erhua: :mainland,
+      literary_density: :wenyan
+    }.freeze
+
+    POLICY = TWFilter::Policy.new(
+      han_range: (1..Float::INFINITY),
+      min_han_ratio: 0.0,
+      max_tier: :rare,
+      orthography_rejects: false,
+      prc_topics_reject: true,
+      punctuation: :strict
+    )
 
     class << self
       def instance = @instance ||= new
@@ -23,38 +44,18 @@ module Huayu
     end
 
     def initialize
-      @punctuation = PUNCTUATION.chars.to_set
-      @tiers = CharacterTiers.instance
       @mainland = MainlandGuard.instance
     end
 
     def call(text)
-      value = text.to_s
-      return reject(:empty, nil) if value.strip.empty?
+      report = TWFilter.examine(text.to_s, policy: POLICY)
+      finding = report.rejects.first
+      return reject(finding) if finding
 
-      tier = CharacterTiers::COMMON
-      han_seen = false
+      stored = @mainland.offender(report.text)
+      return Verdict.new(ok: false, tier: nil, reason: :mainland, offender: stored) if stored
 
-      value.each_char do |char|
-        if char.match?(HAN)
-          han_seen = true
-          level = @tiers.tier(char)
-          return reject(:unlisted, char) if level.nil?
-
-          tier = level if level > tier
-        elsif char.match?(LATIN) || @punctuation.include?(char)
-          next
-        else
-          return reject(:junk, char)
-        end
-      end
-
-      return reject(:no_han, nil) unless han_seen
-
-      marker = @mainland.offender(value)
-      return reject(:mainland, marker) if marker
-
-      Verdict.new(ok: true, tier: tier, reason: nil, offender: nil)
+      Verdict.new(ok: true, tier: report.tier || CharacterTiers::COMMON, reason: nil, offender: nil)
     end
 
     def ok?(text) = call(text).ok
@@ -63,8 +64,8 @@ module Huayu
 
     private
 
-    def reject(reason, offender)
-      Verdict.new(ok: false, tier: nil, reason: reason, offender: offender)
+    def reject(finding)
+      Verdict.new(ok: false, tier: nil, reason: REASONS.fetch(finding.code, finding.code), offender: finding.detail)
     end
   end
 end
