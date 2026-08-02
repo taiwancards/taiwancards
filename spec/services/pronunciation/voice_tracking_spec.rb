@@ -41,8 +41,6 @@ RSpec.describe "Tracking a voice" do
   end
 
   describe "a close vowel from a low voice" do
-    # F3 this high warps the formant ceiling past a quarter of the sample rate, which is where
-    # the analysis band used to widen and the peak list shifted one formant up.
     let(:close) { room(200) + vowel(400, f0: 130, formants: [[300, 60], [2200, 110], [3700, 170]]) + room(200) }
 
     it "keeps the first formant where it was spoken" do

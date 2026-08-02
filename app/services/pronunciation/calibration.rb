@@ -105,7 +105,8 @@ module Pronunciation
       return {ok: false, error: "too_short"} if analysis.blank? || analysis[:f0_voiced].blank?
 
       if kind.to_s == "sustained"
-        profile.f3_ref = analysis[:f3_median] if analysis[:f3_median]
+        f3 = analysis[:f3_median]
+        profile.f3_ref = f3 if f3 && VoiceProfile::PLAUSIBLE_F3.cover?(f3)
         profile.f1_ref = analysis[:f1_median] if analysis[:f1_median]
         profile.f2_ref = analysis[:f2_median] if analysis[:f2_median]
       end

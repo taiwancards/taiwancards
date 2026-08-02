@@ -27,7 +27,10 @@ module Pronunciation
       win = analysis[:win]
       hop = analysis[:hop]
       collected = {f1: [], f2: [], f3: []}
-      extractor = DSP::Formants.new(maximum_frequency: analysis[:max_formant] || 5500.0)
+      extractor = Acoustic::Features.formant_extractor(
+        rate,
+        analysis[:max_formant] || DSP::Formants::DEFAULT_MAXIMUM_HZ
+      )
 
       (low..high).each do |i|
         start = i * hop

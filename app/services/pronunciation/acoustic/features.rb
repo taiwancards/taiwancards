@@ -102,8 +102,6 @@ module Pronunciation
 
       def waveform_of(samples, sr) = DSP::Waveform.new(samples: samples, sample_rate: sr)
 
-      # The predictor has a fixed order, so the analysis band has to stay near the ceiling it was
-      # sized for: decimate to the rate closest to twice the ceiling, not to the first rate above it.
       def formant_extractor(sr, ceiling)
         factor = [(sr / (2.0 * ceiling)).round, 1].max
         DSP::Formants.new(maximum_frequency: sr / (2.0 * factor))
@@ -164,13 +162,11 @@ module Pronunciation
 
         audible = e.reject { |v| v <= SILENCE_DB }
         sorted = (audible.length >= 3 ? audible : e).sort
-        floor = sorted[(sorted.length * 0.10).floor]
         peak = sorted[(sorted.length * 0.95).floor]
-        thr = [floor + NOISE_MARGIN_DB, peak - PEAK_WINDOW_DB].max
-        thr = [thr, peak - MIN_HEADROOM_DB].min
+        floor = background_db(sorted) || sorted[(sorted.length * 0.10).floor]
 
-        first = e.index { |v| v > thr }
-        last = e.rindex { |v| v > thr }
+        thr = threshold(peak, floor)
+        first, last = loudest_run(e, thr)
         return [0, an[:n] - 1] if first.nil? || last.nil?
 
         first = past_transient(e, first, last, thr)
@@ -186,6 +182,50 @@ module Pronunciation
         end
 
         [burst, last]
+      end
+
+      def threshold(peak, floor)
+        thr = [floor + NOISE_MARGIN_DB, peak - PEAK_WINDOW_DB].max
+        [thr, peak - MIN_HEADROOM_DB].min
+      end
+
+      BACKGROUND_BIN_DB = 3.0
+      BACKGROUND_GAP_DB = 15.0
+
+      def background_db(sorted)
+        return nil if sorted.length < 3
+
+        densest = sorted.group_by { |v| (v / BACKGROUND_BIN_DB).floor }.max_by { |_, group| group.length }.last
+        level = densest[densest.length / 2]
+        level <= sorted.last - BACKGROUND_GAP_DB ? level : nil
+      end
+
+      RUN_GAP_MS = 150.0
+
+      def loudest_run(e, thr)
+        crest = e.each_with_index.max_by(&:first)&.last
+        return [nil, nil] if crest.nil? || e[crest] <= thr
+
+        [walk(e, crest, thr, -1), walk(e, crest, thr, 1)]
+      end
+
+      def walk(e, from, thr, step)
+        allowed = (RUN_GAP_MS / HOP_MS).round
+        edge = from
+        quiet = 0
+        i = from
+
+        while (i += step) >= 0 && i < e.length
+          if e[i] > thr
+            quiet = 0
+            edge = i
+          else
+            quiet += 1
+            break if quiet > allowed
+          end
+        end
+
+        edge
       end
 
       TRANSIENT_MS = 70.0
@@ -340,8 +380,6 @@ module Pronunciation
         fine.merge(clean: clean)
       end
 
-      # No Mandarin syllable carries this much aspiration or frication around its voiced core
-      # (both sit at the 99th percentile of the corpus), so anything further out is room noise.
       MAX_ONSET_MS = 300.0
       MAX_TAIL_MS = 250.0
 
@@ -573,8 +611,6 @@ module Pronunciation
         total <= 1e-15 ? 0.0 : lo / total
       end
 
-      # A whole syllable sitting an octave off is the pitch tracker halving or doubling, not a
-      # speaker leaping out of their own range, so the track moves as one and its shape survives.
       OCTAVE_DRIFT_ST = 9.0
 
       def octave_aligned(track, reference)

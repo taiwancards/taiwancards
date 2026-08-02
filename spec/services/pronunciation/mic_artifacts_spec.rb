@@ -65,19 +65,24 @@ RSpec.describe "Recording artifacts" do
   end
 
   describe "a syllable recorded in a loud room" do
-    let(:quiet) { room(600) + aspirated }
-    let(:noisy) { room(600, level: 0.02) + vowel(320) + room(400, level: 0.02) }
+    def alone(level) = room(600, level: level) + vowel(320) + room(400, level: level)
 
-    it "is not stretched by the noise around it" do
-      expect(vot_of(noisy)["duration_ms"]).to(be_within(250).of(vot_of(quiet)["duration_ms"]))
+    it "is measured as it would be in a quiet one" do
+      quiet = vot_of(alone(0.0005))
+      loud = vot_of(alone(0.02))
+
+      expect(loud["duration_ms"]).to(be_within(20).of(quiet["duration_ms"]))
+      expect(loud["voiced_ms"]).to(be_within(20).of(quiet["voiced_ms"]))
     end
 
-    it "does not read the noise before it as frication" do
-      expect(vot_of(noisy)["fric_ms"]).to(be <= Pronunciation::Acoustic::Features::MAX_ONSET_MS)
+    it "does not read the room before the syllable as frication" do
+      expect(vot_of(alone(0.02))["fric_ms"]).to(be <= 60)
     end
 
-    it "measures the same voicing as in a quiet room" do
-      expect(vot_of(noisy)["voiced_ms"]).to(be_within(60).of(vot_of(quiet)["voiced_ms"]))
+    it "keeps the pre-voicing of a syllable inside what a syllable can carry" do
+      expect(vot_of(room(600, level: 0.02) + aspirated)["fric_ms"]).to(
+        be <= Pronunciation::Acoustic::Features::MAX_ONSET_MS
+      )
     end
   end
 end
