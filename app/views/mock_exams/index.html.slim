@@ -9,10 +9,30 @@
     = t("mock.disclaimer")
 
   section.space-y-3
-    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.pick_band")
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.reading_section")
     .grid.gap-3 class="sm:grid-cols-2"
       - MockExam::Reading::BANDS.each do |band, config|
         = link_to mock_reading_path(band: band), class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+          .text-sm.font-semibold = t("mock.bands.#{band}")
+          p.mt-1.text-xs.text-muted-foreground
+            = t("mock.band_hint", count: config[:count], minutes: config[:minutes])
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.pictures_section")
+    p.text-xs.text-muted-foreground = t("mock.pictures_lede")
+    .grid.gap-3 class="sm:grid-cols-2"
+      - MockExam::Pictures::BANDS.each do |band, config|
+        = link_to mock_pictures_path(band: band), class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+          .text-sm.font-semibold = t("mock.bands.#{band}")
+          p.mt-1.text-xs.text-muted-foreground
+            = t("mock.band_hint", count: config[:count], minutes: config[:minutes])
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.listening_section")
+    p.text-xs.text-muted-foreground = t("mock.listening_lede")
+    .grid.gap-3 class="sm:grid-cols-2"
+      - MockExam::Listening::BANDS.each do |band, config|
+        = link_to mock_listening_path(band: band), class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do
           .text-sm.font-semibold = t("mock.bands.#{band}")
           p.mt-1.text-xs.text-muted-foreground
             = t("mock.band_hint", count: config[:count], minutes: config[:minutes])

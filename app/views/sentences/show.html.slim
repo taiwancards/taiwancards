@@ -2,10 +2,27 @@
 
 .py-6.space-y-6
   div
-    p.text-2xl.leading-relaxed.tracking-wide = @sentence.text
+    .flex.items-center.gap-3
+      p.text-2xl.leading-relaxed.tracking-wide = @sentence.text
+      - if (clip = Huayu::ListeningClips.for_text(@sentence.text))
+        button.inline-flex.shrink-0.items-center.justify-center.rounded-full.border.border-border.p-2.text-muted-foreground[
+          type="button" data-controller="audio"
+          data-audio-url-value=Huayu::ListeningClips.clip_url(clip.clip)
+          data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
+          aria-label=t("study.play") ]
+          = icon(:speaker, css: "size-5")
 
     - if @sentence.meaning.present?
       p.mt-2.text-base.leading-relaxed.text-muted-foreground = @sentence.meaning
+
+    - grammar = Huayu::GrammarMatcher.lessons_for(@sentence.text)
+    - if grammar.any?
+      .mt-3.flex.flex-wrap.items-center.gap-2
+        span.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("sentences.grammar_title")
+        - grammar.each do |lesson|
+          = link_to grammar_lesson_path(lesson.slug), class: "inline-flex items-baseline gap-1.5 rounded-lg border border-border bg-card px-2 py-1 hover:bg-muted" do
+            span.text-sm.font-semibold lang="zh-TW" = lesson.head
+            span.text-xs.text-muted-foreground = lesson.title(I18n.locale)
 
     - if detailed?
       .mt-3.flex.flex-wrap.items-center.gap-2.text-xs

@@ -1,0 +1,43 @@
+- content_for(:title, t("mock.listening_title", band: t("mock.bands.#{@paper.band}")))
+
+.py-6.space-y-6 data-controller="countdown" data-countdown-seconds-value=(@paper.minutes * 60)
+  header.flex.flex-wrap.items-center.justify-between.gap-3
+    div
+      h1.text-2xl.font-bold.tracking-tight = t("mock.listening_title", band: t("mock.bands.#{@paper.band}"))
+      p.text-sm.text-muted-foreground = t("mock.listening_paper_lede", count: @paper.count, minutes: @paper.minutes)
+    .rounded-xl.border.border-border.px-4.py-2.text-xl.font-bold.tabular-nums data-countdown-target="display"
+
+  = form_with url: grade_mock_listening_path, method: :post, data: {countdown_target: "form"} do |form|
+    = form.hidden_field :band, value: @paper.band
+    = form.hidden_field :seed, value: @paper.seed
+    .space-y-5
+      - @paper.questions.each do |question|
+        fieldset.rounded-xl.border.border-border.bg-card.p-4
+          legend.sr-only = t("mock.question_n", n: question.number)
+          .flex.items-center.gap-3
+            span.shrink-0.text-sm.font-semibold.text-muted-foreground.tabular-nums = "#{question.number}."
+            button.inline-flex.items-center.justify-center.rounded-full.border.border-border.p-3.text-muted-foreground[
+              type="button" data-controller="audio"
+              data-audio-url-value=Huayu::ListeningClips.clip_url(question.clip)
+              data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
+              aria-label=t("study.play") ]
+              = icon(:speaker, css: "size-6")
+            span.text-xs.text-muted-foreground = t("mock.listening_hint")
+          - if question.emoji?
+            .mt-3.grid.grid-cols-3.gap-2
+              - question.options.each_with_index do |option, index|
+                label.flex.cursor-pointer.flex-col.items-center.gap-1.rounded-lg.border.border-border.px-3.py-3 class="hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-primary/10"
+                  = radio_button_tag "answers[#{question.number}]", index, false, id: "lq#{question.number}o#{index}", class: "sr-only"
+                  span.text-4xl = option
+                  span.text-xs.font-medium.text-muted-foreground = "(#{("A".ord + index).chr})"
+          - else
+            .mt-3.grid.gap-2
+              - question.options.each_with_index do |option, index|
+                label.flex.cursor-pointer.items-center.gap-2.rounded-lg.border.border-border.px-3.py-2 class="hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-primary/10"
+                  = radio_button_tag "answers[#{question.number}]", index, false, id: "lq#{question.number}o#{index}", class: "accent-current"
+                  span.text-sm.font-medium = "(#{("A".ord + index).chr})"
+                  span.text-base lang="zh-TW" = option
+
+      .flex.items-center.justify-between.gap-3
+        = link_to t("mock.abort"), mock_exams_path, class: "text-sm text-muted-foreground hover:text-foreground"
+        = form.submit t("mock.submit"), class: "rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"

@@ -61,7 +61,11 @@ module Huayu
 
       def available? = payload.any?
 
-      def reset! = @payload = nil
+      def reset!
+        @payload = nil
+        @mtime = nil
+        GrammarMatcher.reset!
+      end
 
       private
 
@@ -74,6 +78,13 @@ module Huayu
       end
 
       def payload
+        current = PATH.exist? ? PATH.mtime : nil
+        if @payload && @mtime != current
+          @payload = nil
+          GrammarMatcher.reset!
+        end
+
+        @mtime = current
         @payload ||= load
           .map do |row|
             Lesson.new(

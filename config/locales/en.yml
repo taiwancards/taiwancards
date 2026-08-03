@@ -811,6 +811,7 @@ en:
     difficulty: difficulty %{value}
     source_link: source
     open: Open the sentence
+    grammar_title: Grammar
     by_word: By word
     by_character: By character
     by_character_hint: "Easiest first: by level, then by frequency."
@@ -1377,6 +1378,16 @@ en:
     lede: Timed practice in the format of the real exam, built entirely from our own corpus.
     disclaimer: This is an unofficial practice mode. It follows the publicly documented TOCFL format (sections, question style, timing) but is not affiliated with or endorsed by SC-TOP, and no real exam questions are used. For the official mock papers, use the SC-TOP downloads below.
     pick_band: Choose a band
+    reading_section: Reading — fill the blank
+    pictures_section: Reading — pictures
+    pictures_lede: Official part-one format — read a sentence, pick the matching picture. Emoji stand in for the exam's drawings.
+    listening_section: Listening
+    listening_lede: Real Taiwanese voices from Common Voice — play the clip, pick the picture or the sentence you heard.
+    pictures_title: Pictures · %{band}
+    pictures_paper_lede: "%{count} questions · %{minutes} minutes. Read each sentence and pick the matching picture."
+    listening_title: Listening · %{band}
+    listening_paper_lede: "%{count} questions · %{minutes} minutes. Play each clip as many times as you like."
+    listening_hint: Play the clip, then answer.
     bands:
       novice: Novice 準備級
       a: Band A 入門基礎
