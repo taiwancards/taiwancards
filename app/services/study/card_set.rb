@@ -7,6 +7,9 @@ module Study
     SESSION_FACETS = (SWIPE_FACETS + OPT_IN_FACETS).freeze
     SITTING_CAP = 250
     EVERYDAY_SHARE = 0.25
+    GRAMMAR_SHARE = 0.15
+    SENTENCE_SHARE = 0.15
+    RECOMMENDED_MODES = %w[daily today].freeze
 
     def initialize(now: Time.current, settings: Study::Preferences.for)
       @now = now
@@ -22,6 +25,7 @@ module Study
 
     def select(mode:, size: nil, collection: nil, offset: 0)
       @facets = swipe_facets_for(collection)
+      @recommended = RECOMMENDED_MODES.include?(mode)
       ids = case mode
       when "cram"
         cram_ids(size, collection)
@@ -160,15 +164,52 @@ module Study
         .uniq
     end
 
+    # The recommended sitting is a ration, not a word list: everyday Taiwanese, a grammar
+    # point once the level calls for one, and a whole sentence once its words are known.
     def fresh_lexeme_ids(count)
       return [] if count <= 0
 
-      everyday = everyday_fresh_ids((count * EVERYDAY_SHARE).round)
-      remaining = count - everyday.size
-      return everyday if remaining <= 0
+      picked = everyday_fresh_ids((count * EVERYDAY_SHARE).round)
+      if @recommended
+        picked += grammar_fresh_ids((count * GRAMMAR_SHARE).round, exclude: picked)
+        picked += sentence_fresh_ids((count * SENTENCE_SHARE).round, exclude: picked)
+      end
 
-      rest = (frequency_pool_ids(remaining * 4) - activated_lexeme_ids - everyday).first(remaining)
-      everyday + rest
+      remaining = count - picked.size
+      return picked.first(count) if remaining <= 0
+
+      picked + (frequency_pool_ids(remaining * 4) - activated_lexeme_ids - picked).first(remaining)
+    end
+
+    def grammar_fresh_ids(count, exclude: [])
+      return [] if count <= 0
+
+      scope = Lexeme.where(kind: :grammar).where.not(id: activated_lexeme_ids + exclude)
+      ceiling = level_ceiling
+      scope = scope.up_to_level(ceiling) if ceiling
+      scope.curriculum_order.limit(count).pluck(:id)
+    end
+
+    # Only sentences the learner can already read: every word in them is in review, and
+    # there is a recording to listen to.
+    def sentence_fresh_ids(count, exclude: [])
+      return [] if count <= 0
+
+      known = LexemeMemory.owned_by(Current.user).state_review.select(:lexeme_id)
+      scope = Lexeme
+        .where(kind: :sentence, restricted: false)
+        .where("lexemes.data ? 'audio'")
+        .where("lexemes.meanings ? :locale", locale: I18n.locale.to_s)
+        .where
+        .not(id: activated_lexeme_ids + exclude)
+        .where(
+          "NOT EXISTS (SELECT 1 FROM sentence_words sw WHERE sw.sentence_id = lexemes.id " \
+            "AND sw.lexeme_id NOT IN (#{known.to_sql}))"
+        )
+        .where("EXISTS (SELECT 1 FROM sentence_words sw WHERE sw.sentence_id = lexemes.id)")
+      ceiling = level_ceiling
+      scope = scope.up_to_level(ceiling) if ceiling
+      scope.order(Arel.sql("#{Lexeme::LEVEL_INDEX_SQL} NULLS LAST"), :id).limit(count).pluck(:id)
     end
 
     def everyday_fresh_ids(count)

@@ -3,7 +3,6 @@ en:
   audio:
     play: Play
     source_whole: MOE — whole-word recording
-    source_per_char: MOE — character by character (no whole-word recording)
   privacy_google:
     heading: Signing in with Google, and your data
     body: Signing in with Google is an optional way to create an account. You can register with an ordinary email address and password instead, in which case no Google data is requested at all.
@@ -1410,6 +1409,14 @@ en:
     title: Grammar
     lede: Taiwan-standard grammar, point by point — the official TBCL syllabus explained in plain language, with examples from our own corpus.
     level_label: Level %{level}
+    all_levels: All levels
+    not_taught: "Not part of the course. "
+    level_bands:
+      1: Novice 1
+      2: Novice 2
+      3: A1
+      4: A2
+      5: B1
     tip: "Tip: "
     examples: Examples
     zhuyin_toggle: 注音
@@ -1574,9 +1581,11 @@ en:
     title: Study
     subtitle: Swipe the whole batch once — only the ones you miss come back.
     open_entry: Open dictionary entry
+    open_lesson: Open the grammar lesson
     drill_tone: Check with the mic →
     drill_writing: Practice the strokes →
     ask:
+      grammar: Do you know this pattern?
       listening: What did you hear?
       recognition: What does it mean?
       production: Which word is it?

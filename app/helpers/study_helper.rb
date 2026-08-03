@@ -19,6 +19,8 @@ module StudyHelper
   end
 
   def study_card_kind(lexeme:, facet:, memory: nil)
+    return :grammar if lexeme.grammar?
+
     case facet.to_s
     when "writing"
       Huayu::WritingTarget.new(lexeme).writable? ? :writing : :swipe

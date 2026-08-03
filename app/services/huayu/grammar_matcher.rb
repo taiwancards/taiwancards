@@ -24,7 +24,7 @@ module Huayu
 
       def compiled
         @compiled ||= begin
-          lessons = GrammarLessons.all.index_by(&:id)
+          lessons = GrammarLessons.taught.index_by(&:id)
           points = PATH.exist? ? JSON.parse(PATH.read)["points"] : []
           points.filter_map do |point|
             lesson = lessons[point["id"]]

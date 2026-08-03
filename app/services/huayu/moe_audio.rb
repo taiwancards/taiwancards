@@ -11,7 +11,7 @@ module Huayu
     CLIP_ID = /\A[0-9A-Z]{4,}\z/
 
     class << self
-      def for(text, zhuyin: nil, strict: false)
+      def for(text, zhuyin: nil)
         text = text.to_s.strip
         return nil if text.blank?
 
@@ -19,7 +19,7 @@ module Huayu
           readings = index(scope)[text]
           next if readings.blank?
 
-          pick = choose(readings, zhuyin, strict)
+          pick = choose(readings, zhuyin)
           next if pick.nil?
 
           return Clip.new(
@@ -44,14 +44,6 @@ module Huayu
         end
 
         []
-      end
-
-      def per_character(text)
-        chars = text.to_s.scan(/\p{Han}/)
-        return [] if chars.empty? || chars.length == 1
-
-        clips = chars.map { |char| self.for(char) }
-        clips.all? ? clips : []
       end
 
       def clip_path(scope, id)
@@ -125,14 +117,14 @@ module Huayu
         manifest(scope)["entries"] || {}
       end
 
-      def choose(readings, zhuyin, strict)
-        return strict ? nil : readings.first if zhuyin.blank?
+      # A clip is only played when we know it is the reading being shown. With no zhuyin to
+      # match against, a single recorded reading is unambiguous; several are not, and a
+      # polyphone would otherwise be voiced with the wrong sound.
+      def choose(readings, zhuyin)
+        return readings.one? ? readings.first : nil if zhuyin.blank?
 
         wanted = normalize(zhuyin)
-        found = readings.find { |reading| normalize(reading["zhuyin"]) == wanted }
-        return found if found || strict
-
-        readings.first
+        readings.find { |reading| normalize(reading["zhuyin"]) == wanted }
       end
 
       def normalize(value)

@@ -47,7 +47,6 @@
               button.inline-flex.items-center.justify-center.rounded-full.border.border-border.p-5.text-muted-foreground[
                 type="button" data-no-swipe="" data-controller="audio"
                 data-audio-url-value=clip&.fetch(:url) data-audio-stop-ms-value=clip&.fetch(:stop_ms)
-                data-audio-parts-value=(clip&.dig(:parts)&.to_json)
                 data-audio-auto-ms-value=(clip ? autoplay_ms : 0)
                 data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
                 aria-label=t("study.play") ]
@@ -58,7 +57,6 @@
                 button.inline-flex.items-center.justify-center.rounded-full.border.border-border.p-3.text-muted-foreground[
                   type="button" data-no-swipe="" data-controller="audio"
                   data-audio-url-value=tone_clip[:url] data-audio-stop-ms-value=tone_clip[:stop_ms]
-                  data-audio-parts-value=(tone_clip[:parts]&.to_json)
                   data-audio-auto-ms-value=autoplay_ms
                   data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
                   aria-label=t("study.play") ]
@@ -94,7 +92,7 @@
               - if (audio = audio_for(lexeme))
                 button.mx-auto.inline-flex.items-center.justify-center.rounded-full.p-2.text-muted-foreground[
                   type="button" data-no-swipe="" data-controller="audio" data-audio-url-value=audio[:url]
-                  data-audio-stop-ms-value=audio[:stop_ms] data-audio-parts-value=(audio[:parts]&.to_json)
+                  data-audio-stop-ms-value=audio[:stop_ms]
                   data-action="click->audio#play" class="hover:bg-muted hover:text-foreground" aria-label="audio" ]
                   = icon(:speaker, css: "size-6")
               - if facet == "tone"

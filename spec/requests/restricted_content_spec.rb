@@ -87,16 +87,24 @@ RSpec.describe "Restricted content gating" do
     expect { helper_audio(audible, textbook: true) }.to(raise_error(ArgumentError))
   end
 
-  it "builds per-character audio only from MOE clips" do
-    clip = Huayu::MoeAudio::Clip.new(scope: "chars", id: "0004", head_ms: 800, zhuyin: "ㄅㄚ", pinyin: "bā")
-    allow(Huayu::MoeAudio).to(receive(:for).with("學校", anything).and_return(nil))
-    allow(Huayu::MoeAudio).to(receive(:for).with("學").and_return(clip))
-    allow(Huayu::MoeAudio).to(receive(:for).with("校").and_return(clip))
+  it "plays the MOE recording of the whole word and never the textbook file" do
+    clip = Huayu::MoeAudio::Clip.new(scope: "words", id: "0004", head_ms: 800, zhuyin: "ㄅㄚ", pinyin: "bā")
+    allow(Huayu::MoeAudio).to(receive(:for).and_return(clip))
 
     audible = create(:lexeme, kind: :word, text: "學校", audio_url: "/textbook/audio/x.mp3")
 
     Current.set(user: create(:user, restricted_content: true)) do
       expect(helper_audio(audible)).to(include("/audio/moe/"))
+    end
+  end
+
+  it "stays silent when only the single characters are voiced" do
+    allow(Huayu::MoeAudio).to(receive(:for).and_return(nil))
+
+    audible = create(:lexeme, kind: :word, text: "學校", audio_url: "/textbook/audio/x.mp3")
+
+    Current.set(user: create(:user, restricted_content: true)) do
+      expect(helper_audio(audible)).to(be_nil)
     end
   end
 

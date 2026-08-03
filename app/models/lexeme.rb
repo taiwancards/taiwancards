@@ -24,7 +24,7 @@ class Lexeme < ApplicationRecord
 
   enum(
     :kind,
-    {character: 0, word: 1, phrase: 2, radical: 3, sentence: 4, collocation: 5, measure_word: 6}
+    {character: 0, word: 1, phrase: 2, radical: 3, sentence: 4, collocation: 5, measure_word: 6, grammar: 7}
   )
 
   DICTIONARY_KINDS = %i[word collocation].freeze

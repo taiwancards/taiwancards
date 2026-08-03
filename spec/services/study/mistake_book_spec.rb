@@ -64,7 +64,7 @@ RSpec.describe Study::MistakeBook do
   end
 
   it "forecasts due cards for today, tomorrow and the week" do
-    now = Time.current
+    now = Time.current.change(hour: 9)
     today = create(:lexeme)
     tomorrow = create(:lexeme)
     later = create(:lexeme)

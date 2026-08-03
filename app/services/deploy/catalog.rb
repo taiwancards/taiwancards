@@ -113,6 +113,15 @@ module Deploy
         only: %w[index.json notice.pdf ATTRIBUTION.txt]
       ),
       Section.new(
+        id: "listening",
+        from: "media/listening",
+        to: "listening",
+        what: "sentence listening manifest, clips are served from the media bucket",
+        required: false,
+        mode: :rsync,
+        only: %w[manifest.json]
+      ),
+      Section.new(
         id: "textbook_audio",
         from: "media/audio/textbook",
         to: "audio/textbook",

@@ -51,10 +51,10 @@ module NavHelper
   def language_items
     [
       [:book, t("nav.phonetics"), practice_zhuyin_path],
-      [:book, t("nav.grammar"), grammar_path],
       [:study, t("nav.tones"), tones_path],
       [:characters, t("nav.hanzi"), hanzi_path],
       [:stats, t("nav.numbers"), practice_numbers_path],
+      [:book, t("nav.grammar"), grammar_path],
       [:characters, t("nav.variants"), variants_path]
     ]
   end

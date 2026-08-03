@@ -1,6 +1,8 @@
 - kind = study_card_kind(lexeme:, facet:, memory: local_assigns[:memory])
 
 - case kind
+- when :grammar
+  = render("study_sessions/grammar_card", lexeme:, facet:, session_id:)
 - when :writing
   = render("study_sessions/writing_card", lexeme:, facet:, session_id:, chars: Huayu::WritingTarget.new(lexeme).chars)
 - when :tone_speech

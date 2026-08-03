@@ -113,7 +113,6 @@ export default class extends Controller {
     lexemeId: Number,
     audioUrl: String,
     audioStop: Number,
-    audioParts: Array,
     silenceMs: Number,
     maxMs: Number,
     labelRecord: String,
@@ -200,8 +199,6 @@ export default class extends Controller {
   }
 
   referenceClips() {
-    if (this.hasAudioPartsValue && this.audioPartsValue.length > 0)
-      return this.audioPartsValue;
     if (this.hasAudioUrlValue && this.audioUrlValue.length > 0) {
       return [{ url: this.audioUrlValue, stop_ms: this.audioStopValue }];
     }

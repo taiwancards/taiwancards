@@ -5,13 +5,23 @@ module Huayu
     PATH = AppData.path("huayu/grammar_lessons.json")
     ZHUYIN_DEFAULT_THROUGH = 2
 
-    Example = Data.define(:zh, :en, :ru, :zhuyin, :pinyin, :sentence) do
+    Example = Data.define(:zh, :en, :ru, :zhuyin, :pinyin, :sentence, :segments) do
       def translation(locale) = locale.to_s == "ru" ? ru : en
 
       def annotated? = zhuyin.present?
+
+      def syllables = zhuyin.to_s.split(/[[:space:]]+/).reject(&:empty?)
     end
 
-    Lesson = Data.define(:id, :slug, :pattern, :level, :head, :formula, :en, :ru, :examples) do
+    Lesson = Data.define(:id, :slug, :pattern, :level, :head, :formula, :en, :ru, :examples, :excluded) do
+      def excluded? = excluded.present?
+
+      def exclusion_reason(locale)
+        return nil if excluded.blank?
+
+        excluded[locale.to_s == "ru" ? "reason_ru" : "reason_en"]
+      end
+
       def title(locale) = text_for(locale, "title")
 
       def body(locale) = text_for(locale, "body")
@@ -41,8 +51,12 @@ module Huayu
         payload
       end
 
+      def taught
+        payload.reject(&:excluded?)
+      end
+
       def levels
-        payload.group_by(&:level)
+        taught.group_by(&:level)
       end
 
       def find(param)
@@ -103,9 +117,11 @@ module Huayu
                   ru: example["ru"],
                   zhuyin: example["zhuyin"],
                   pinyin: example["pinyin"],
-                  sentence: example["sentence"]
+                  sentence: example["sentence"],
+                  segments: Array(example["segments"])
                 )
-              end
+              end,
+              excluded: row["excluded"]
             )
           end
           .freeze

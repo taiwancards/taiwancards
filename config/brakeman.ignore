@@ -127,6 +127,10 @@
     {
       "fingerprint": "e2f86b7ac54261f8e1cce6137abce0eb634294d3e5a6220ac512a625f955cba9",
       "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
+    },
+    {
+      "fingerprint": "a02d7236cc4044fe0224b0dd0800f9ea40e4896e95b91a102fdbb8bb0a334b03",
+      "note": "The clip id is matched against an anchored allowlist regex with no dot or slash, and the resolved path is checked to sit under the audio directory before it reaches the filesystem."
     }
   ],
   "brakeman_version": "8.0.5"

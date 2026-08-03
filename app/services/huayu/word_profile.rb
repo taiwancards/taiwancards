@@ -41,6 +41,7 @@ module Huayu
     end
 
     SENTENCE_LIMIT = 12
+    SENTENCE_WINDOW = 48
 
     EXAMPLE_ORDER = "(coalesce(btrim(lexemes.meanings ->> ?), '') = '') ASC, " \
       "sentence_profiles.difficulty ASC NULLS LAST, " \
@@ -48,7 +49,11 @@ module Huayu
       "lexemes.id ASC"
 
     def sentences
-      @sentences ||= Lexeme
+      @sentences ||= audio_first(candidate_sentences).first(SENTENCE_LIMIT)
+    end
+
+    def candidate_sentences
+      Lexeme
         .where(kind: :sentence)
         .visible
         .joins("JOIN sentence_words ON sentence_words.sentence_id = lexemes.id")
@@ -56,8 +61,19 @@ module Huayu
         .left_joins(:sentence_profile)
         .preload(:content_sources, :sentence_profile)
         .order(Arel.sql(Lexeme.sanitize_sql_array([EXAMPLE_ORDER, I18n.locale.to_s])))
-        .limit(SENTENCE_LIMIT)
+        .limit(SENTENCE_WINDOW)
         .to_a
+    end
+
+    def audio_first(rows)
+      clips = ListeningClips.index
+      locale = I18n.locale.to_s
+      rows
+        .each_with_index
+        .sort_by do |row, index|
+          [row.meanings[locale].presence ? 0 : 1, clips.key?(row.text) ? 0 : 1, index]
+        end
+        .map(&:first)
     end
 
     COLLOCATION_LIMIT = 12

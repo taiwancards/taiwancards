@@ -4,6 +4,7 @@ namespace(:deploy) do
   SYNC_STEPS = [
     {name: "content_sources", task: "huayu:import_sources", paths: %w[content_sources.json]},
     {name: "taiwan_everyday", task: "huayu:import_everyday", paths: %w[huayu/taiwan_everyday.json]},
+    {name: "grammar", task: "huayu:import_grammar", paths: %w[huayu/grammar_lessons.json]},
     {name: "common_words", task: "huayu:import_common_words", paths: %w[huayu/common_words.json]},
     {
       name: "difficulty",

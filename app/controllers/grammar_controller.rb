@@ -5,15 +5,18 @@ class GrammarController < ApplicationController
 
   def index
     @levels = Huayu::GrammarLessons.levels
+    level = params[:level].to_i
+    @levels = @levels.slice(level) if @levels.key?(level)
   end
 
   def show
     @lesson = Huayu::GrammarLessons.find(params[:id])
     raise ActiveRecord::RecordNotFound if @lesson.nil?
 
-    lessons = Huayu::GrammarLessons.all
+    @entries = helpers.grammar_entries_for([@lesson])
+    lessons = Huayu::GrammarLessons.taught
     position = lessons.index(@lesson)
-    @previous = position.positive? ? lessons[position - 1] : nil
-    @next = lessons[position + 1]
+    @previous = position && position.positive? ? lessons[position - 1] : nil
+    @next = position ? lessons[position + 1] : nil
   end
 end

@@ -47,11 +47,23 @@ RSpec.describe Huayu::MoeAudio do
     FileUtils.remove_entry(dir)
   end
 
+  it "stays silent on a polyphone when no reading is given, rather than guessing one" do
+    expect(described_class.for("把")).to(be_nil)
+  end
+
   it "finds a character and reports where the headword ends" do
-    clip = described_class.for("把")
+    clip = described_class.for("把", zhuyin: "ㄅㄚˇ")
 
     expect(clip.scope).to(eq("chars"))
     expect(clip.head_ms).to(eq(671))
+  end
+
+  it "stays silent when the reading we show has no recording of its own" do
+    expect(described_class.for("把", zhuyin: "ㄆㄚ")).to(be_nil)
+  end
+
+  it "uses the only recording when a headword has just one reading" do
+    expect(described_class.for("謝謝").id).to(eq("123456789"))
   end
 
   it "picks the reading that matches the zhuyin for a multi-reading character" do

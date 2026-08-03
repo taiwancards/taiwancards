@@ -47,7 +47,6 @@
       data-pronunciation-lexeme-id-value=@lexeme.id
       data-pronunciation-audio-url-value=@audio&.fetch(:url)
       data-pronunciation-audio-stop-value=@audio&.fetch(:stop_ms)
-      data-pronunciation-audio-parts-value=(@audio&.dig(:parts)&.to_json)
       data-pronunciation-silence-ms-value=@auto[:silence_ms]
       data-pronunciation-max-ms-value=@auto[:max_ms]
       data-pronunciation-label-record-value=t("pronunciation.record")

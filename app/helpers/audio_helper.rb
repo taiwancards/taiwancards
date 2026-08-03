@@ -3,23 +3,16 @@
 module AudioHelper
   def audio_for(lexeme)
     return nil if lexeme.nil?
+    return sentence_audio(lexeme) if lexeme.sentence?
 
     clip = Huayu::MoeAudio.for(lexeme.text, zhuyin: primary_zhuyin(lexeme))
-    return {url: clip_url(clip), stop_ms: clip.head_ms, source: "moe"} if clip
+    return nil if clip.nil?
 
-    parts = Huayu::MoeAudio.per_character(lexeme.text)
-    return nil if parts.empty?
-
-    {
-      url: clip_url(parts.first),
-      stop_ms: parts.first.head_ms,
-      source: "moe_per_char",
-      parts: parts.map { |part| {url: clip_url(part), stop_ms: part.head_ms} }
-    }
+    {url: clip_url(clip), stop_ms: clip.head_ms, source: "moe"}
   end
 
   def moe_clip_for(lexeme, zhuyin)
-    clip = Huayu::MoeAudio.for(lexeme.text, zhuyin:, strict: true)
+    clip = Huayu::MoeAudio.for(lexeme.text, zhuyin:)
     return nil if clip.nil?
 
     {url: clip_url(clip), stop_ms: clip.head_ms}
@@ -30,12 +23,17 @@ module AudioHelper
   end
 
   def audio_source_title(audio)
-    return nil if audio.nil?
-
-    audio[:source] == "moe_per_char" ? t("audio.source_per_char") : t("audio.source_whole")
+    audio && t("audio.source_whole")
   end
 
   private
+
+  def sentence_audio(lexeme)
+    clip = Huayu::ListeningClips.for_text(lexeme.text)
+    return nil if clip.nil?
+
+    {url: Huayu::ListeningClips.clip_url(clip.clip), stop_ms: 0, source: "common_voice"}
+  end
 
   def clip_url(clip)
     Huayu::MoeAudio.clip_url(clip.scope, clip.id)

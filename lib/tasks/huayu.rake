@@ -28,6 +28,11 @@ namespace(:huayu) do
     pp(Huayu::TocflImporter.new.call)
   end
 
+  desc("Import the TBCL grammar points as study cards and mark which sentences are voiced (idempotent, offline)")
+  task(import_grammar: :environment) do
+    pp(Huayu::GrammarImporter.new.call)
+  end
+
   desc("Tag every character with its Cangjie 5 code and build the input lookup (idempotent, offline)")
   task(import_cangjie: :environment) do
     pp(Huayu::CangjieImporter.new.call)

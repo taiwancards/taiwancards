@@ -17,7 +17,23 @@ RSpec.describe "Grammar" do
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include("linking verb"))
-    expect(response.body).to(include("我是學生。"))
+    expect(response.body).to(include("學生"))
+  end
+
+  it "links example words that exist in the dictionary" do
+    create(:lexeme, kind: :word, text: "學生", meanings: {"en" => "student"})
+
+    get("/grammar/1")
+
+    expect(response.body).to(include("/dict/#{CGI.escape("學生")}"))
+  end
+
+  it "filters the index by level" do
+    get("/grammar", params: {level: 1})
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("/grammar/shi"))
+    expect(response.body).not_to(include("/grammar/le-completed"))
   end
 
   it "resolves lessons by slug and by head character" do
@@ -52,6 +68,15 @@ RSpec.describe "Grammar" do
 
     expect(response.body).to(include("глагол-связка"))
     expect(response.body).to(include("я студент"))
+  end
+
+  it "keeps an excluded point reachable but out of the listing" do
+    get("/grammar")
+    expect(response.body).not_to(include("/grammar/yihuir-alternating"))
+
+    get("/grammar/yihuir-alternating")
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("Not part of the course"))
   end
 
   it "returns 404 for an unknown lesson" do

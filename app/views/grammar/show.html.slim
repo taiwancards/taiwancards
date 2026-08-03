@@ -12,6 +12,11 @@
     span.ml-2.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground
       = t("grammar.level_label", level: @lesson.level)
 
+  - if @lesson.excluded?
+    .rounded-xl.border.border-red-500.px-4.py-3.text-sm.leading-relaxed class="bg-red-500/10"
+      strong = t("grammar.not_taught")
+      span<> = @lesson.exclusion_reason(I18n.locale)
+
   section.space-y-3
     p.text-base.leading-relaxed = @lesson.body(I18n.locale)
     - if @lesson.tip(I18n.locale).present?
@@ -32,8 +37,9 @@
           .text-lg.leading-loose
             - if example.annotated?
               span data-zhuyin-toggle-target="ruby"
-                = grammar_example_ruby(example)
-              span.hidden lang="zh-TW" data-zhuyin-toggle-target="plain" = example.zh
+                = grammar_example_ruby(example, entries: @entries)
+              span.hidden data-zhuyin-toggle-target="plain"
+                = grammar_example_plain(example, entries: @entries)
             - else
               span lang="zh-TW" = example.zh
             - if example.sentence

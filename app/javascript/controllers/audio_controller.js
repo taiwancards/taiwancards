@@ -2,16 +2,9 @@ import { Controller } from "@hotwired/stimulus";
 
 const LEAD_IN_MS = 140;
 const STOP_GRACE_MS = 150;
-const GAP_MS = 90;
 
 export default class extends Controller {
-  static values = { url: String, stopMs: Number, parts: Array, autoMs: Number };
-
-  get sequence() {
-    if (this.hasPartsValue && this.partsValue.length > 0)
-      return this.partsValue;
-    return [{ url: this.urlValue, stop_ms: this.stopMsValue }];
-  }
+  static values = { url: String, stopMs: Number, autoMs: Number };
 
   connect() {
     if (this.autoMsValue > 0)
@@ -28,16 +21,9 @@ export default class extends Controller {
     event?.stopPropagation();
 
     this.halt();
-    this.queue = [...this.sequence];
-    this.playNext();
-  }
+    if (!this.urlValue) return;
 
-  playNext() {
-    const next = this.queue?.shift();
-    if (!next) return;
-
-    this.current = next;
-    this.sound = new Audio(next.url);
+    this.sound = new Audio(this.urlValue);
     this.sound.preload = "auto";
     this.sound.currentTime = 0;
 
@@ -55,32 +41,25 @@ export default class extends Controller {
   start() {
     if (!this.sound) return;
 
-    this.sound.addEventListener("ended", () => this.advance(), { once: true });
+    this.sound.addEventListener("ended", () => this.halt(), { once: true });
     this.sound.play().catch(() => {});
 
-    const stop = this.current?.stop_ms || 0;
-    if (stop > 0) this.armStop(stop);
+    if (this.stopMsValue > 0) this.armStop(this.stopMsValue);
   }
 
   armStop(stopMs) {
     const limit = stopMs / 1000;
 
     this.watcher = () => {
-      if (this.sound.currentTime >= limit) this.advance();
+      if (this.sound.currentTime >= limit) this.halt();
     };
     this.sound.addEventListener("timeupdate", this.watcher);
 
-    this.timer = setTimeout(() => this.advance(), stopMs + STOP_GRACE_MS);
-  }
-
-  advance() {
-    const more = this.queue?.length > 0;
-    this.halt();
-    if (more) this.gapTimer = setTimeout(() => this.playNext(), GAP_MS);
+    this.timer = setTimeout(() => this.halt(), stopMs + STOP_GRACE_MS);
   }
 
   halt() {
-    for (const key of ["timer", "leadTimer", "gapTimer"]) {
+    for (const key of ["timer", "leadTimer"]) {
       if (this[key]) {
         clearTimeout(this[key]);
         this[key] = null;
