@@ -19,7 +19,7 @@ module Pronunciation
 
       def exist? = manifests.any?
 
-      def sources = manifests.values.flat_map { |data| data.fetch("sources", {}).keys }.uniq
+      def sources = manifests.values.map { |data| data.fetch("sources", {}) }.reduce({}, :merge)
 
       def keys = manifests.values.flat_map { |data| data.fetch("tokens", {}).keys }.uniq
 

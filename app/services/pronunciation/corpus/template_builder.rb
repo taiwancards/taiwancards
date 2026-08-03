@@ -137,7 +137,7 @@ module Pronunciation
 
       def manifest_sources
         manifest = Manifest.new
-        manifest.exist? ? manifest.data["sources"].to_h : {}
+        manifest.exist? ? manifest.sources : {}
       end
 
       def variability

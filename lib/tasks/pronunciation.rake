@@ -46,6 +46,18 @@ namespace(:pronunciation) do
     Pronunciation::Corpus::SpeakerPitch.reset!
   end
 
+  desc("Rebuild corpus_cv from Common Voice zh-TW. ARCHIVE=path to an official release, else the public mirror")
+  task(common_voice: :environment) do
+    Pronunciation::Corpus::CommonVoiceBuilder
+      .new(
+        archive: ENV["ARCHIVE"].presence,
+        repo: ENV["REPO"].presence || Pronunciation::Corpus::CommonVoiceBuilder::REPO,
+        release: ENV["RELEASE"].presence || Pronunciation::Corpus::CommonVoiceBuilder::RELEASE,
+        io: $stdout
+      )
+      .build!
+  end
+
   desc("Median pitch of each corpus speaker, the reference the tone register is measured against")
   task(speaker_pitch: :environment) do
     Pronunciation::Corpus::SpeakerPitch.build!.each { |name, hz| puts(format("  %-14s %.1f Hz", name, hz)) }

@@ -112,6 +112,9 @@ module Pronunciation
         start
       end
 
+      SPEECH_REF_MS = 40.0
+      BURST_BELOW_SPEECH_DB = 30.0
+
       def noise_onset(noise, first, voice_at)
         latest = voice_at - ms_to_steps(MIN_VOT_MS)
         window = noise[first...latest]
@@ -123,6 +126,8 @@ module Pronunciation
         return nil if span < MIN_BURST_RANGE_DB
 
         enter = floor + [MIN_BURST_RISE_DB, span * BURST_LEVEL_SHARE].max
+        speech = noise[voice_at, ms_to_steps(SPEECH_REF_MS)]&.max
+        enter = [enter, speech - BURST_BELOW_SPEECH_DB].max if speech
         hold = floor + (span * BURST_HOLD_SHARE)
         gap = ms_to_steps(MAX_GAP_MS)
 

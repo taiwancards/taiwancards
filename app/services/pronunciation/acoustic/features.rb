@@ -279,12 +279,63 @@ module Pronunciation
       end
 
       VALLEY_PLATEAU_DB = 2.0
+      KEEP_RUN_DB = 25.0
+      MIN_RUN_MS = 60.0
+
+      def speech_runs(an)
+        e = an[:energy]
+        return [] if e.length < 3
+
+        floor, peak = background_level(an)
+        thr = threshold(peak, floor)
+        allowed = (RUN_GAP_MS / HOP_MS).round
+
+        runs = []
+        i = 0
+        while i < e.length
+          if e[i] > thr
+            start = i
+            last_loud = i
+            quiet = 0
+            j = i + 1
+            while j < e.length && quiet <= allowed
+              if e[j] > thr
+                quiet = 0
+                last_loud = j
+              else
+                quiet += 1
+              end
+
+              j += 1
+            end
+
+            runs << [start, last_loud]
+            i = j
+          else
+            i += 1
+          end
+        end
+
+        min_len = (MIN_RUN_MS / HOP_MS).round
+        tall = runs.select { |a, b| b - a >= min_len && e[a..b].max > peak - KEEP_RUN_DB }
+        tall.empty? ? runs.first(1) : tall
+      end
 
       def syllable_spans(an, n_syllables)
-        lo, hi = speech_bounds(an)
-        return nil if hi - lo < 4
+        if n_syllables == 1
+          lo, hi = speech_bounds(an)
+          return nil if hi - lo < 4
 
-        return [[lo, hi]] if n_syllables == 1
+          return [[lo, hi]]
+        end
+
+        runs = speech_runs(an)
+        return nil if runs.empty?
+        return runs if runs.length == n_syllables
+
+        lo = runs.first[0]
+        hi = runs.last[1]
+        return nil if hi - lo < 4
 
         son = smooth(an[:energy][lo..hi])
         min_dist = [(110.0 / HOP_MS).round, 2].max
@@ -378,23 +429,39 @@ module Pronunciation
         e[(start - needed)...start].all? { |v| v < limit }
       end
 
+      def unvoiced_lead_ms(an, span)
+        conf = an[:conf]
+        floor = background_level(an).first
+        limit = (BACK_SEARCH_MS / HOP_MS).round
+        run = 0
+        i = span[0] - 1
+        while i >= 0 && run < limit
+          break if conf[i] >= 0.5 && an[:energy][i] > floor + QUIET_START_DB
+
+          run += 1
+          i -= 1
+        end
+
+        run * HOP_MS
+      end
+
       def fine_onset(an, span, initial, utterance_initial)
-        return nil unless utterance_initial
         return nil unless Phonology.obstruent?(initial)
 
-        clean = lead_in?(an, span)
+        quiet = lead_in?(an, span)
+        edge = !quiet && utterance_initial
         hop = an[:hop]
         fine = Onset.measure(
           an[:samples],
           an[:sr],
           span[0] * hop,
           (span[1] + 1) * hop,
-          back_ms: clean ? BACK_SEARCH_MS : 0.0,
-          from_edge: !clean
+          back_ms: quiet ? unvoiced_lead_ms(an, span) : 0.0,
+          from_edge: edge
         )
-        return nil unless fine && Onset.plausible?(fine[:vot_ms], from_edge: !clean)
+        return nil unless fine && Onset.plausible?(fine[:vot_ms], from_edge: edge)
 
-        fine.merge(clean: clean)
+        fine.merge(clean: !edge)
       end
 
       MAX_ONSET_MS = 300.0
