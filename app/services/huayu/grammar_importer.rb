@@ -23,13 +23,10 @@ module Huayu
 
     private
 
-    # TBCL reuses a notation for two different points (V下 is both "sit down" and "fits in"),
-    # so a shared pattern carries its head to stay one row per point.
     def key_for(lesson)
       @shared.include?(lesson.pattern) ? "#{lesson.pattern}（#{lesson.head}）" : lesson.pattern
     end
 
-    # A point that leaves the syllabus, or whose key changed, must stop being dealt as a card.
     def prune(keys)
       stale = Lexeme.where(kind: :grammar).where.not(text: keys)
       return 0 if stale.empty?

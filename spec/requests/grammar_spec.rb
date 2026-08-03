@@ -16,8 +16,8 @@ RSpec.describe "Grammar" do
     get("/grammar/1")
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("linking verb"))
-    expect(response.body).to(include("學生"))
+    expect(response.body).to(include("the verb &quot;to be&quot;"))
+    expect(response.body).to(include("A + "))
   end
 
   it "links example words that exist in the dictionary" do
@@ -39,19 +39,21 @@ RSpec.describe "Grammar" do
   it "resolves lessons by slug and by head character" do
     get("/grammar/shi")
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("linking verb"))
+    expect(response.body).to(include("the verb &quot;to be&quot;"))
 
     get("/grammar/#{CGI.escape("是")}")
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("linking verb"))
+    expect(response.body).to(include("the verb &quot;to be&quot;"))
   end
 
-  it "annotates examples with zhuyin and pinyin" do
+  it "annotates the explanation and its examples with zhuyin, never with pinyin" do
     get("/grammar/shi")
 
     expect(response.body).to(include("ㄒㄩㄝ"))
-    expect(response.body).to(include("xué"))
     expect(response.body).to(include("zy-run"))
+    expect(response.body).to(include("zh-term"))
+    expect(response.body).not_to(include("xué"))
+    expect(response.body).not_to(include("shì"))
   end
 
   it "surfaces grammar in the main search" do
@@ -66,7 +68,7 @@ RSpec.describe "Grammar" do
 
     get("/grammar/1")
 
-    expect(response.body).to(include("глагол-связка"))
+    expect(response.body).to(include("связка «быть»"))
     expect(response.body).to(include("я студент"))
   end
 

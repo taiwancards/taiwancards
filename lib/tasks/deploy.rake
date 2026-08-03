@@ -2,36 +2,95 @@
 
 namespace(:deploy) do
   SYNC_STEPS = [
-    {name: "content_sources", task: "huayu:import_sources", paths: %w[content_sources.json]},
-    {name: "taiwan_everyday", task: "huayu:import_everyday", paths: %w[huayu/taiwan_everyday.json]},
-    {name: "grammar", task: "huayu:import_grammar", paths: %w[huayu/grammar_lessons.json]},
-    {name: "voiced_sentences", task: "huayu:mark_voiced", media_paths: %w[listening/manifest.json]},
-    {name: "common_words", task: "huayu:import_common_words", paths: %w[huayu/common_words.json]},
+    {
+      name: "content_sources",
+      task: "huayu:import_sources",
+      paths: %w[content_sources.json],
+      code: %w[app/models/content_source.rb]
+    },
+    {
+      name: "taiwan_everyday",
+      task: "huayu:import_everyday",
+      paths: %w[huayu/taiwan_everyday.json],
+      code: %w[app/services/huayu/taiwan_everyday_importer.rb]
+    },
+    {
+      name: "grammar",
+      task: "huayu:import_grammar",
+      paths: %w[huayu/grammar_lessons.json],
+      code: %w[app/services/huayu/grammar_importer.rb app/services/huayu/grammar_lessons.rb]
+    },
+    {
+      name: "voiced_sentences",
+      task: "huayu:mark_voiced",
+      media_paths: %w[listening/manifest.json],
+      code: %w[app/services/huayu/voiced_sentences.rb app/services/huayu/listening_clips.rb]
+    },
+    {
+      name: "common_words",
+      task: "huayu:import_common_words",
+      paths: %w[huayu/common_words.json],
+      code: %w[app/services/huayu/common_words_importer.rb]
+    },
     {
       name: "difficulty",
       task: "huayu:compute_difficulty",
-      paths: %w[huayu/taiwan_everyday.json huayu/moe_idioms.json]
+      paths: %w[huayu/taiwan_everyday.json huayu/moe_idioms.json],
+      code: %w[app/services/lexemes/difficulty.rb]
     },
-    {name: "ru_glosses", task: "huayu:enrich_ru", paths: %w[huayu/ru_glosses.json]},
-    {name: "gloss_overrides", task: "huayu:enrich_gloss_overrides", paths: %w[huayu/gloss_overrides.json]},
-    {name: "sense_meanings", task: "huayu:fill_sense_meanings", paths: %w[huayu/sense_glosses.jsonl]},
+    {
+      name: "ru_glosses",
+      task: "huayu:enrich_ru",
+      paths: %w[huayu/ru_glosses.json],
+      code: %w[app/services/huayu/ru_enricher.rb]
+    },
+    {
+      name: "gloss_overrides",
+      task: "huayu:enrich_gloss_overrides",
+      paths: %w[huayu/gloss_overrides.json],
+      code: %w[app/services/huayu/gloss_override_enricher.rb]
+    },
+    {
+      name: "sense_meanings",
+      task: "huayu:fill_sense_meanings",
+      paths: %w[huayu/sense_glosses.jsonl],
+      code: %w[app/services/huayu/sense_meaning_filler.rb]
+    },
     {
       name: "collocation_meanings",
       task: "huayu:fill_collocation_meanings",
-      paths: %w[huayu/collocation_glosses.jsonl]
+      paths: %w[huayu/collocation_glosses.jsonl],
+      code: %w[app/services/huayu/collocation_meaning_filler.rb]
     },
     {
       name: "sentence_meanings",
       task: "huayu:fill_sentence_meanings",
-      paths: %w[huayu/sentence_glosses.jsonl]
+      paths: %w[huayu/sentence_glosses.jsonl],
+      code: %w[app/services/huayu/sentence_meaning_filler.rb]
     },
-    {name: "chengyu", task: "huayu:import_chengyu", paths: %w[huayu/moe_idioms.json huayu/chengyu.json]},
-    {name: "parts_of_speech", task: "huayu:import_pos", paths: %w[huayu/parts_of_speech.json]},
-    {name: "thesaurus", task: "huayu:import_thesaurus", paths: %w[huayu/thesaurus.json]},
+    {
+      name: "chengyu",
+      task: "huayu:import_chengyu",
+      paths: %w[huayu/moe_idioms.json huayu/chengyu.json],
+      code: %w[app/services/huayu/chengyu_importer.rb]
+    },
+    {
+      name: "parts_of_speech",
+      task: "huayu:import_pos",
+      paths: %w[huayu/parts_of_speech.json],
+      code: %w[app/services/huayu/pos_importer.rb]
+    },
+    {
+      name: "thesaurus",
+      task: "huayu:import_thesaurus",
+      paths: %w[huayu/thesaurus.json],
+      code: %w[app/services/huayu/thesaurus_importer.rb]
+    },
     {
       name: "liangci",
       task: "huayu:import_liangci",
-      paths: %w[huayu/measure_words.json huayu/classifier_pairs.json]
+      paths: %w[huayu/measure_words.json huayu/classifier_pairs.json],
+      code: %w[app/services/huayu/liangci_importer.rb]
     }
   ].freeze
 
@@ -57,6 +116,11 @@ namespace(:deploy) do
     }
   }.freeze
 
+  LIFT_TIMEOUTS = lambda do
+    ActiveRecord::Base.connection.execute("SET statement_timeout = '15min'")
+    ActiveRecord::Base.connection.execute("SET lock_timeout = '1min'")
+  end
+
   desc("Import committed data sources that changed since the last boot (idempotent, no-op when unchanged)")
   task(sync: :environment) do
     started = Time.current
@@ -64,16 +128,15 @@ namespace(:deploy) do
     skipped = []
     failed = []
 
-    # Importers rescore whole tables; the web request budget does not apply to them.
-    ActiveRecord::Base.connection.execute("SET statement_timeout = '15min'")
-    ActiveRecord::Base.connection.execute("SET lock_timeout = '1min'")
+    LIFT_TIMEOUTS.call
 
     SYNC_STEPS.each do |step|
       sources = step[:paths].to_a.map { |relative| AppData.path(relative) } +
         step[:media_paths].to_a.map { |relative| AppData.media_path(relative) }
       next skipped << "#{step[:name]} (absent)" if sources.none?(&:exist?)
 
-      guard = Deploy::SyncGuard.new(step[:name], sources)
+      code = step[:code].to_a.map { |relative| Rails.root.join(relative) }
+      guard = Deploy::SyncGuard.new(step[:name], sources + code)
       next skipped << step[:name] unless guard.stale?
 
       begin
@@ -97,6 +160,26 @@ namespace(:deploy) do
     report = "deploy:sync ran [#{ran.join(", ")}] · unchanged [#{skipped.join(", ")}] (#{elapsed}s)"
     report += " · FAILED [#{failed.join(", ")}]" if failed.any?
     puts(report)
+  end
+
+  desc("Fill glosses, parts of speech and register mix from the dictionary already in the database")
+  task(fillers: :environment) do
+    LIFT_TIMEOUTS.call
+
+    failed = Deploy::Rollout::FILLERS.filter_map do |name|
+      service = name.safe_constantize
+      next puts("#{name}: not in this build") if service.nil?
+
+      begin
+        puts("#{name}: #{service.new.call.inspect}")
+        nil
+      rescue => e
+        warn("#{name} failed: #{e.class}: #{e.message}")
+        "#{name} (#{e.class})"
+      end
+    end
+
+    abort("deploy:fillers FAILED [#{failed.join(", ")}]") if failed.any?
   end
 
   desc("Mirror DATA_ROOT and import whatever changed on it. Run on the server after bin/rebuild-data-render.sh")

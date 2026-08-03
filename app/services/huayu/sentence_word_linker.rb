@@ -53,13 +53,14 @@ module Huayu
       segments = Array(data["segments"])
       difficulty = data["difficulty"].to_i
       taiwan = data["taiwan"].to_i
+      audio = data.key?("audio")
       units = segments.flat_map { |unit| word_ids.key?(unit) ? [unit] : unit.chars }.uniq
 
       units.each do |unit|
         lexeme_id = word_ids[unit]
         next if lexeme_id.nil?
 
-        gdex = @quality.call(text:, segments:, target: unit, difficulty:, taiwan:)
+        gdex = @quality.call(text:, segments:, target: unit, difficulty:, taiwan:, audio:)
         next if gdex.zero?
 
         bucket = best[lexeme_id]

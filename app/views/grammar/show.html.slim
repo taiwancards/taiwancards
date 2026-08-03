@@ -5,12 +5,23 @@
     = link_to "← #{t("grammar.title")}", grammar_path, class: "text-muted-foreground hover:text-foreground"
 
   header.space-y-3
-    .flex.items-baseline.gap-3
-      .text-5xl.font-semibold lang="zh-TW" = @lesson.head
-      h1.text-2xl.font-bold.tracking-tight = @lesson.title(I18n.locale)
-    .inline-flex.rounded-lg.bg-muted.px-3.py-1.text-sm.font-medium lang="zh-TW" = @lesson.formula_for(I18n.locale)
-    span.ml-2.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground
-      = t("grammar.level_label", level: @lesson.level)
+    h1.text-2xl.font-bold.tracking-tight = grammar_prose(@lesson.title(I18n.locale), @lesson)
+    div
+      span.inline-flex.rounded-lg.bg-muted.px-3.py-1.text-sm.font-medium = grammar_prose(@lesson.formula_for(I18n.locale), @lesson)
+      span.ml-2.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground
+        = t("grammar.level_label", level: @lesson.level)
+
+  - heads = grammar_heads(@lesson, entries: @entries)
+  - if heads.any?
+    .-mx-4.flex.gap-2.overflow-x-auto.px-4.pb-1
+      - heads.each do |head|
+        - card = "flex min-w-28 shrink-0 flex-col items-center gap-1 rounded-xl border border-border bg-card px-4 py-3"
+        - if head.entry
+          = link_to lexeme_page_path(head.entry), class: "#{card} hover:bg-muted" do
+            = render("grammar/head", head: head)
+        - else
+          div class=card
+            = render("grammar/head", head: head)
 
   - if @lesson.excluded?
     .rounded-xl.border.border-red-500.px-4.py-3.text-sm.leading-relaxed class="bg-red-500/10"
@@ -18,11 +29,11 @@
       span<> = @lesson.exclusion_reason(I18n.locale)
 
   section.space-y-3
-    p.text-base.leading-relaxed = @lesson.body(I18n.locale)
+    p.grammar-prose.text-base = grammar_prose(@lesson.body(I18n.locale), @lesson, entries: @entries)
     - if @lesson.tip(I18n.locale).present?
-      .rounded-xl.border.border-amber-400.px-4.py-3.text-sm.leading-relaxed class="bg-amber-500/10"
+      .grammar-prose.rounded-xl.border.border-amber-400.px-4.py-3.text-sm class="bg-amber-500/10"
         strong = t("grammar.tip")
-        span<> = @lesson.tip(I18n.locale)
+        span<> = grammar_prose(@lesson.tip(I18n.locale), @lesson, entries: @entries)
 
   section.space-y-3 data-controller="zhuyin-toggle" data-zhuyin-toggle-on-value=@lesson.zhuyin_default?.to_s
     .flex.items-center.justify-between.gap-3
@@ -42,12 +53,23 @@
                 = grammar_example_plain(example, entries: @entries)
             - else
               span lang="zh-TW" = example.zh
+            - if (clip = Huayu::ListeningClips.for_text(example.zh))
+              button.ml-2.inline-flex.shrink-0.items-center.justify-center.rounded-full.border.border-border.p-1.align-middle.text-muted-foreground[
+                type="button" data-controller="audio"
+                data-audio-url-value=Huayu::ListeningClips.clip_url(clip.clip)
+                data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
+                aria-label=t("study.play") ]
+                = icon(:speaker, css: "size-4")
             - if example.sentence
               = link_to "→", sentence_path(example.sentence), class: "ml-2 text-xs text-muted-foreground hover:text-foreground", title: t("sentences.open")
-          - if example.pinyin.present?
-            .pinyin.text-xs.text-muted-foreground = example.pinyin
           - if example.translation(I18n.locale).present?
             .mt-1.text-sm.text-muted-foreground = example.translation(I18n.locale)
+
+  - practice = grammar_practice_path(@lesson)
+  - if practice
+    = link_to practice, class: "flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm hover:bg-muted" do
+      span = t("grammar.practice_more")
+      span.text-muted-foreground →
 
   nav.flex.justify-between.gap-3.text-sm
     - if @previous
@@ -56,5 +78,3 @@
       span
     - if @next
       = link_to "#{@next.title(I18n.locale)} →", grammar_lesson_path(@next.slug), class: "text-muted-foreground hover:text-foreground"
-
-  p.text-xs.text-muted-foreground = t("grammar.source_note")

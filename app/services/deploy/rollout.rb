@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "open3"
-require "shellwords"
 
 module Deploy
   class Rollout
@@ -14,6 +13,7 @@ module Deploy
       {task: "db:seed", what: "settings and admin"},
       {task: "textbook:load", what: "Textbook lessons from the exports on disk"},
       {task: "deploy:sync", what: "importers for the files that changed"},
+      {task: "deploy:fillers", what: "glosses, parts of speech and register mix"},
       {task: "fonts:install", what: "web fonts into FONT_DIR"}
     ].freeze
 
@@ -70,8 +70,7 @@ module Deploy
 
       lines << ""
       lines << format("  total to transfer: %s", human(@sections.select(&:exist?).sum(&:bytes)))
-      lines <<
-        "  on the server: #{REMOTE_TASKS.map { |entry| entry[:task] }.join(", ")}, gloss fillers"
+      lines << "  on the server: #{REMOTE_TASKS.map { |entry| entry[:task] }.join(", ")}"
       lines <<
         (@database ? "  dictionary: direct write to the production database" : "  dictionary: SKIPPED — PROD_DATABASE_URL is not set")
       lines
@@ -195,17 +194,10 @@ module Deploy
         fail=0
         run() { echo "-- $1"; bundle exec rails "$1" || { echo "!! failed: $1"; fail=1; }; }
         #{runs.join("\n")}
-        echo "-- gloss fillers"
-        bundle exec rails runner #{filler_script.shellescape} || fail=1
         exit $fail
       SH
         .strip
         .gsub("\n", "; ")
-    end
-
-    def filler_script
-      "%w[#{FILLERS.join(" ")}].each { |n| c = n.safe_constantize; " \
-        "puts(\"\#{n}: \#{c ? c.new.call.inspect : \"not in this build\"}\") }"
     end
 
     def verify

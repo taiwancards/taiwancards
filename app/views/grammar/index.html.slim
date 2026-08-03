@@ -5,9 +5,9 @@
     h1.text-2xl.font-bold.tracking-tight = t("grammar.title")
     p.text-sm.leading-relaxed.text-muted-foreground = t("grammar.lede")
 
-  = render("shared/tabs", tabs: [[t("grammar.all_levels"), grammar_path]] + @levels.keys.sort.map { |level| [t("grammar.level_label", level: level), grammar_path(level: level)] })
+  = render("shared/tabs", tabs: grammar_level_tabs(@levels.keys, @level))
 
-  - @levels.sort.each do |level, lessons|
+  - @shown.sort.each do |level, lessons|
     section.space-y-3
       h2.flex.items-baseline.gap-2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
         = t("grammar.level_label", level: level)
@@ -20,5 +20,3 @@
             .min-w-0
               .truncate.text-sm.font-semibold = lesson.title(I18n.locale)
               .truncate.text-xs.text-muted-foreground lang="zh-TW" = lesson.formula_for(I18n.locale)
-
-  p.text-xs.text-muted-foreground = t("grammar.source_note")

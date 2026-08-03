@@ -167,9 +167,6 @@ module Study
         .uniq
     end
 
-    # A recommended sitting is a ration, not a word list. Grammar and whole sentences are
-    # taken before the backlog of unseen words, or a learner who is behind would never see
-    # anything but vocabulary.
     def ration_ids(room, exclude: [])
       return [] if room <= 0
 
@@ -202,8 +199,6 @@ module Study
       scope.curriculum_order.limit(count).pluck(:id)
     end
 
-    # Only sentences the learner can already read: every word in them is in review, and
-    # there is a recording to listen to.
     def sentence_fresh_ids(count, exclude: [])
       return [] if count <= 0
 

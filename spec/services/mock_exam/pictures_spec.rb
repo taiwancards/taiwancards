@@ -20,6 +20,7 @@ RSpec.describe MockExam::Pictures do
     [
       row("我去學校。", "學校", "🏫", "place"),
       row("他在銀行。", "銀行", "🏦", "place"),
+      row("我在車站等你。", "車站", "🚉", "place"),
       row("我要喝咖啡。", "咖啡", "☕", "drink"),
       row("她買了蘋果。", "蘋果", "🍎", "food")
     ]
@@ -36,6 +37,21 @@ RSpec.describe MockExam::Pictures do
       expect(question.options[question.answer]).to(eq(source.emoji))
       expect(question.options.uniq.size).to(eq(3))
     end
+  end
+
+  it "offers only pictures from the same category, so the choice tests the sentence" do
+    by_emoji = rows.to_h { |r| [r.emoji, r.emoji_category] }
+
+    described_class.build(band: "novice", seed: 4).questions.each do |question|
+      expect(question.options.map { |emoji| by_emoji.fetch(emoji) }.uniq.size).to(eq(1))
+    end
+  end
+
+  it "skips a word whose category cannot supply two other pictures" do
+    texts = described_class.build(band: "novice", seed: 4).questions.map(&:text)
+
+    expect(texts).not_to(include("我要喝咖啡。"))
+    expect(texts).not_to(include("她買了蘋果。"))
   end
 
   it "is deterministic per seed" do

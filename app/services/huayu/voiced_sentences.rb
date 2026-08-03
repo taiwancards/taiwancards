@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module Huayu
-  # Mirrors the listening manifest onto the sentence rows, so the card picker can ask for
-  # "a sentence the learner can hear" in SQL instead of loading the manifest per query.
   class VoicedSentences
     MARK = "common_voice"
     SLICE = 2_000
@@ -27,7 +25,6 @@ module Huayu
       end
     end
 
-    # A sentence whose clip went away must stop being offered as a listening card.
     def clear(texts)
       Lexeme
         .where(kind: :sentence)

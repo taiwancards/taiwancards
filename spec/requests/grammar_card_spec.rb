@@ -8,7 +8,7 @@ RSpec.describe "Grammar cards in a sitting" do
       :lexeme,
       kind: :grammar,
       text: "繫動詞",
-      meanings: {"en" => "是 — the linking verb \"to be\""},
+      meanings: {"en" => "是 — the verb \"to be\" between two nouns"},
       data: {"tbcl_grade" => 1, "grammar_slug" => "shi", "head" => "是", "facets" => ["recognition"]}
     )
     deck = Collection.create!(
@@ -22,7 +22,7 @@ RSpec.describe "Grammar cards in a sitting" do
     get(study_path(mode: "collection", collection_id: deck.id))
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("linking verb"))
+    expect(response.body).to(include("the verb &quot;to be&quot;"))
     expect(response.body).to(include("/grammar/shi"))
     expect(response.body).to(include("A + 是 + B"))
   end

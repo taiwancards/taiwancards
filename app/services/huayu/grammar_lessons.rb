@@ -13,8 +13,22 @@ module Huayu
       def syllables = zhuyin.to_s.split(/[[:space:]]+/).reject(&:empty?)
     end
 
-    Lesson = Data.define(:id, :slug, :pattern, :level, :head, :formula, :en, :ru, :examples, :excluded) do
+    Lesson = Data.define(
+      :id,
+      :slug,
+      :pattern,
+      :level,
+      :head,
+      :formula,
+      :en,
+      :ru,
+      :examples,
+      :excluded,
+      :glossary
+    ) do
       def excluded? = excluded.present?
+
+      def reading(run) = glossary[run]
 
       def exclusion_reason(locale)
         return nil if excluded.blank?
@@ -121,7 +135,8 @@ module Huayu
                   segments: Array(example["segments"])
                 )
               end,
-              excluded: row["excluded"]
+              excluded: row["excluded"],
+              glossary: row["glossary"] || {}
             )
           end
           .freeze

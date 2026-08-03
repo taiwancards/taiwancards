@@ -1,8 +1,8 @@
 - tabs = local_assigns.fetch(:tabs)
 
 nav.-mx-4.flex.gap-1.overflow-x-auto.px-4 class="pb-0.5"
-  - tabs.each do |label, path|
-    - active = current_page?(path)
+  - tabs.each do |label, path, selected|
+    - active = selected.nil? ? current_page?(path) : selected
     = link_to label, path, aria: {current: (active ? "page" : nil)},
       class: class_names("shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
         active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")

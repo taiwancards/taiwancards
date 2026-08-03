@@ -14,7 +14,8 @@ RSpec.describe Huayu::GrammarImporter do
       en: {"title" => "#{slug} in English", "body" => "body", "tip" => "tip"},
       ru: {"title" => "#{slug} по-русски", "body" => "тело", "tip" => "подсказка"},
       examples: [],
-      excluded:
+      excluded:,
+      glossary: {}
     )
   end
 

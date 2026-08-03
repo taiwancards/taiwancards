@@ -302,6 +302,24 @@
     text-align: center;
   }
 
+  .zh-term {
+    display: inline-block;
+    margin-inline: 0.1em;
+    font-size: 1.15em;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-primary);
+    vertical-align: baseline;
+  }
+
+  .zh-term > a {
+    color: inherit;
+  }
+
+  .grammar-prose {
+    line-height: 2.6;
+  }
+
   .zy-over {
     line-height: 2.1;
   }
@@ -314,6 +332,27 @@
   .zy-over ruby.zy > rt {
     display: block;
     margin-block-end: 0.15em;
+  }
+
+  .zy-top {
+    --zy-size: 0.42;
+    line-height: 1;
+  }
+
+  .zy-top ruby.zy {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    vertical-align: baseline;
+  }
+
+  .zy-top ruby.zy > rt {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 100%;
+    display: block;
+    margin-block-end: 0.05em;
+    line-height: 1;
   }
 
   .zh-vertical {

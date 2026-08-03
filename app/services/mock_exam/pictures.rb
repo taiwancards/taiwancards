@@ -22,7 +22,6 @@ module MockExam
         config = BANDS.fetch(band)
         rng = Random.new(seed)
         rows = Huayu::ListeningClips.with_emoji(max_level: config[:max_level]).shuffle(random: rng)
-        pool = rows.map(&:emoji).uniq
 
         used_words = Set.new
         questions = []
@@ -30,7 +29,7 @@ module MockExam
           break if questions.size >= config[:count]
           next if used_words.include?(row.emoji_word)
 
-          wrong = distractors(pool, row, rows, rng)
+          wrong = distractors(row, rows, rng)
           next if wrong.size < 2
 
           options = ([row.emoji] + wrong).shuffle(random: rng)
@@ -51,14 +50,13 @@ module MockExam
 
       private
 
-      def distractors(pool, row, rows, rng)
-        same_category = rows
+      def distractors(row, rows, rng)
+        rows
           .select { |candidate| candidate.emoji_category == row.emoji_category && candidate.emoji != row.emoji }
           .map(&:emoji)
           .uniq
-        picks = same_category.shuffle(random: rng).first(2)
-        picks += (pool - [row.emoji] - picks).shuffle(random: rng).first(2 - picks.size) if picks.size < 2
-        picks.first(2)
+          .shuffle(random: rng)
+          .first(2)
       end
     end
   end

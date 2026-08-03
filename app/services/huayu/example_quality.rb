@@ -11,13 +11,14 @@ module Huayu
     TAIWAN_CAP = 4.0
 
     WEIGHTS = {
-      common: 0.28,
-      length: 0.20,
-      easy: 0.12,
-      whole: 0.12,
-      opening: 0.10,
-      solo: 0.10,
-      taiwan: 0.08
+      common: 0.25,
+      length: 0.18,
+      audio: 0.12,
+      easy: 0.10,
+      whole: 0.10,
+      opening: 0.09,
+      solo: 0.09,
+      taiwan: 0.07
     }.freeze
 
     HAN = /\p{Han}/
@@ -70,7 +71,7 @@ module Huayu
       @frequency = frequency
     end
 
-    def call(text:, segments:, target:, difficulty: 0, taiwan: 0)
+    def call(text:, segments:, target:, difficulty: 0, taiwan: 0, audio: false)
       han = text.scan(HAN).length
       return 0 if han < MIN_HAN || han > MAX_HAN
 
@@ -78,17 +79,18 @@ module Huayu
       hits = occurrences(text, units, target)
       return 0 if hits.zero?
 
-      scored = features(units:, han:, hits:, text:, difficulty:, taiwan:)
+      scored = features(units:, han:, hits:, text:, difficulty:, taiwan:, audio:)
       total = WEIGHTS.sum { |name, weight| weight * scored.fetch(name) }
       (total * SCALE).round.clamp(0, SCALE)
     end
 
     private
 
-    def features(units:, han:, hits:, text:, difficulty:, taiwan:)
+    def features(units:, han:, hits:, text:, difficulty:, taiwan:, audio:)
       {
         common: common_share(units),
         length: length_fit(han),
+        audio: audio ? 1.0 : 0.0,
         easy: 1.0 - (difficulty.to_i.clamp(0, SCALE) / SCALE.to_f),
         whole: text.match?(TERMINAL) ? 1.0 : 0.0,
         opening: OPENERS.include?(units.first) ? 0.0 : 1.0,

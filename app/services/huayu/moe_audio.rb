@@ -117,9 +117,6 @@ module Huayu
         manifest(scope)["entries"] || {}
       end
 
-      # A clip is only played when we know it is the reading being shown. With no zhuyin to
-      # match against, a single recorded reading is unambiguous; several are not, and a
-      # polyphone would otherwise be voiced with the wrong sound.
       def choose(readings, zhuyin)
         return readings.one? ? readings.first : nil if zhuyin.blank?
 

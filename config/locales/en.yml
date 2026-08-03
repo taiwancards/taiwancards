@@ -39,6 +39,7 @@ en:
     ja: Japanese
     ro: Romanian
   nav:
+    mock: TOCFL simulator
     more: More
     radicals: Radicals
     today: Today
@@ -1406,6 +1407,7 @@ en:
     try_again: New set
     back: All bands
   grammar:
+    practice_more: Practise numbers on their own
     title: Grammar
     lede: Taiwan-standard grammar, point by point — the official TBCL syllabus explained in plain language, with examples from our own corpus.
     level_label: Level %{level}
@@ -1420,7 +1422,6 @@ en:
     tip: "Tip: "
     examples: Examples
     zhuyin_toggle: 注音
-    source_note: Point list and levels follow the Taiwan Benchmarks for the Chinese Language (TBCL), National Academy for Educational Research. Explanations and examples are our own.
   mistakes:
     title: Mistake notebook
     lede: "Every word you miss lands here on its own — nothing to manage. Getting things wrong is a normal part of how memory works: each miss tells the app to bring that word back sooner."

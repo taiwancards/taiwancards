@@ -50,14 +50,14 @@ RSpec.describe "Mock exams" do
         emoji_category: "place"
       ),
       Huayu::ListeningClips::Row.new(
-        text: "我要喝咖啡。",
-        level: 2,
+        text: "我在車站等你。",
+        level: 1,
         clip: "c.mp3",
-        en: "I want coffee.",
+        en: "I am waiting for you at the station.",
         ru: nil,
-        emoji: "☕",
-        emoji_word: "咖啡",
-        emoji_category: "drink"
+        emoji: "🚉",
+        emoji_word: "車站",
+        emoji_category: "place"
       )
     ]
     allow(Huayu::ListeningClips).to(receive(:with_emoji).and_return(rows))
