@@ -5,6 +5,7 @@ namespace(:deploy) do
     {name: "content_sources", task: "huayu:import_sources", paths: %w[content_sources.json]},
     {name: "taiwan_everyday", task: "huayu:import_everyday", paths: %w[huayu/taiwan_everyday.json]},
     {name: "grammar", task: "huayu:import_grammar", paths: %w[huayu/grammar_lessons.json]},
+    {name: "voiced_sentences", task: "huayu:mark_voiced", media_paths: %w[listening/manifest.json]},
     {name: "common_words", task: "huayu:import_common_words", paths: %w[huayu/common_words.json]},
     {
       name: "difficulty",
@@ -63,8 +64,13 @@ namespace(:deploy) do
     skipped = []
     failed = []
 
+    # Importers rescore whole tables; the web request budget does not apply to them.
+    ActiveRecord::Base.connection.execute("SET statement_timeout = '15min'")
+    ActiveRecord::Base.connection.execute("SET lock_timeout = '1min'")
+
     SYNC_STEPS.each do |step|
-      sources = step[:paths].map { |relative| AppData.path(relative) }
+      sources = step[:paths].to_a.map { |relative| AppData.path(relative) } +
+        step[:media_paths].to_a.map { |relative| AppData.media_path(relative) }
       next skipped << "#{step[:name]} (absent)" if sources.none?(&:exist?)
 
       guard = Deploy::SyncGuard.new(step[:name], sources)

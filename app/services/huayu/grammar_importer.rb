@@ -5,25 +5,41 @@ module Huayu
     SOURCE = "TBCL grammar"
     FACETS = %w[recognition].freeze
 
-    Result = Data.define(:imported, :skipped, :voiced)
+    Result = Data.define(:imported, :skipped, :dropped)
 
     def call
       lessons = GrammarLessons.taught
-      return Result.new(imported: 0, skipped: 0, voiced: 0) if lessons.empty?
+      return Result.new(imported: 0, skipped: 0, dropped: 0) if lessons.empty?
 
-      imported = 0
-      lessons.each do |lesson|
-        import(lesson)
-        imported += 1
-      end
+      @shared = lessons.group_by(&:pattern).select { |_, group| group.size > 1 }.keys.to_set
+      lessons.each { |lesson| import(lesson) }
 
-      Result.new(imported:, skipped: GrammarLessons.all.size - imported, voiced: mark_voiced_sentences)
+      Result.new(
+        imported: lessons.size,
+        skipped: GrammarLessons.all.size - lessons.size,
+        dropped: prune(lessons.map { |lesson| key_for(lesson) })
+      )
     end
 
     private
 
+    # TBCL reuses a notation for two different points (V下 is both "sit down" and "fits in"),
+    # so a shared pattern carries its head to stay one row per point.
+    def key_for(lesson)
+      @shared.include?(lesson.pattern) ? "#{lesson.pattern}（#{lesson.head}）" : lesson.pattern
+    end
+
+    # A point that leaves the syllabus, or whose key changed, must stop being dealt as a card.
+    def prune(keys)
+      stale = Lexeme.where(kind: :grammar).where.not(text: keys)
+      return 0 if stale.empty?
+
+      LexemeMemory.where(lexeme_id: stale.select(:id)).delete_all
+      stale.destroy_all.size
+    end
+
     def import(lesson)
-      lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[:grammar], text: lesson.pattern)
+      lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[:grammar], text: key_for(lesson))
       lexeme.meanings = lexeme.meanings.merge(
         "en" => lesson.title(:en),
         "ru" => lesson.title(:ru)
@@ -37,25 +53,6 @@ module Huayu
       lexeme.add_source(SOURCE)
       lexeme.save! if lexeme.changed?
       lexeme
-    end
-
-    # A sentence card is only offered when the learner can hear it, so the manifest is
-    # mirrored onto the rows themselves and the picker can stay in SQL.
-    def mark_voiced_sentences
-      texts = ListeningClips.all.map(&:text)
-      return 0 if texts.empty?
-
-      marked = 0
-      texts.each_slice(2_000) do |slice|
-        Lexeme.where(kind: :sentence, text: slice).find_each do |sentence|
-          next if sentence.data["audio"] == "common_voice"
-
-          sentence.update!(data: sentence.data.merge("audio" => "common_voice"))
-          marked += 1
-        end
-      end
-
-      marked
     end
   end
 end

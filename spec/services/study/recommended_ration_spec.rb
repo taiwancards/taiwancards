@@ -61,6 +61,18 @@ RSpec.describe Study::CardSet do
     expect(Lexeme.where(id: ids).where(kind: :grammar)).to(be_any)
   end
 
+  it "still finds room for grammar when a backlog of unseen words is waiting" do
+    grammar_point("V了1", 1)
+    30.times do |n|
+      word = create(:lexeme, kind: :word, text: "詞彙#{n}", data: {"tbcl_grade" => 1})
+      LexemeMemory.create!(lexeme: word, facet: :recognition, user:, state: :unseen, activated_at: 1.day.ago)
+    end
+
+    ids = described_class.new.select(mode: "daily", size: 20)
+
+    expect(Lexeme.where(id: ids).where(kind: :grammar)).to(be_any)
+  end
+
   it "leaves grammar out of a personal deck sitting" do
     grammar_point("V了1", 1)
     deck = Collection.create!(kind: :manual, name: "Mine", user:)

@@ -57,9 +57,11 @@ module Study
       plan = StudyPlan.find_by(user: Current.user)
       due = due_lexeme_ids
       quota = today_quota
-      fresh = plan ? plan_scoped_fresh_ids(plan, quota) : fresh_lexeme_ids(quota)
+      ration = @recommended ? ration_ids(quota, exclude: due) : []
+      room = quota - ration.size
+      fresh = plan ? plan_scoped_fresh_ids(plan, room) : fresh_lexeme_ids(room)
       activate(fresh)
-      (due + fresh).uniq
+      (due + ration + fresh).uniq
     end
 
     def desk_ids(collection)
@@ -106,6 +108,7 @@ module Study
     def daily_ids(size)
       size = (size.presence || @settings.session_size).to_i
       ids = due_lexeme_ids.first(size)
+      ids += ration_ids(size - ids.size, exclude: ids) if @recommended && ids.size < size
       ids += unseen_lexeme_ids(exclude: ids).first(size - ids.size) if ids.size < size
       if ids.size < size
         fresh = fresh_lexeme_ids(size - ids.size)
@@ -164,21 +167,30 @@ module Study
         .uniq
     end
 
-    # The recommended sitting is a ration, not a word list: everyday Taiwanese, a grammar
-    # point once the level calls for one, and a whole sentence once its words are known.
+    # A recommended sitting is a ration, not a word list. Grammar and whole sentences are
+    # taken before the backlog of unseen words, or a learner who is behind would never see
+    # anything but vocabulary.
+    def ration_ids(room, exclude: [])
+      return [] if room <= 0
+
+      grammar = grammar_fresh_ids((room * GRAMMAR_SHARE).round.clamp(0, room), exclude:)
+      sentences = sentence_fresh_ids(
+        (room * SENTENCE_SHARE).round.clamp(0, room - grammar.size),
+        exclude: exclude + grammar
+      )
+      picked = grammar + sentences
+      activate(picked)
+      picked
+    end
+
     def fresh_lexeme_ids(count)
       return [] if count <= 0
 
-      picked = everyday_fresh_ids((count * EVERYDAY_SHARE).round)
-      if @recommended
-        picked += grammar_fresh_ids((count * GRAMMAR_SHARE).round, exclude: picked)
-        picked += sentence_fresh_ids((count * SENTENCE_SHARE).round, exclude: picked)
-      end
+      everyday = everyday_fresh_ids((count * EVERYDAY_SHARE).round)
+      remaining = count - everyday.size
+      return everyday if remaining <= 0
 
-      remaining = count - picked.size
-      return picked.first(count) if remaining <= 0
-
-      picked + (frequency_pool_ids(remaining * 4) - activated_lexeme_ids - picked).first(remaining)
+      everyday + (frequency_pool_ids(remaining * 4) - activated_lexeme_ids - everyday).first(remaining)
     end
 
     def grammar_fresh_ids(count, exclude: [])
