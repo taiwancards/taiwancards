@@ -33,7 +33,7 @@ module Pronunciation
 
     def level_note(level) = t("levels.#{level}.note")
 
-    def advisory(code) = t("codes.#{code}", default: nil)
+    def advisory(code, vars = nil) = t("codes.#{code}", default: nil, **symbolize(vars))
 
     def level_name(level) = t("levels.#{level}.name")
 

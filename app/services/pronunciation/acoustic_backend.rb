@@ -133,6 +133,7 @@ module Pronunciation
 
       best = @tonal ? best_match(features, key, template) : nil
       evaluation = {"overall" => overall, "parts" => scored, "best_match" => best, "expected" => key}
+      lead = analyzer.lead_in(features, template)
 
       @verdict.for_syllable(evaluation, expected: key).merge(
         "char" => target["char"],
@@ -143,12 +144,12 @@ module Pronunciation
         "tone" => template["tone"],
         "parts" => present_parts(scored, shares, zhuyin_of(target, template), template["tone"]),
         "contour" => contour(scored),
-        "advisories" => advisories(axes),
+        "advisories" => advisories(axes, lead),
         "sounded_like" => confusion(key, best, scored),
         "deviations" => analyzer.deviations(features, template),
         "codes" => axes.map { |a| a["code"] }.reject { |code| code.end_with?(".ok") },
         "features" => digest(features, scored),
-        "diagnostics" => diagnostics(features, axes, template)
+        "diagnostics" => diagnostics(features, axes, template, lead)
       )
     end
 
@@ -177,7 +178,7 @@ module Pronunciation
       }
     end
 
-    def diagnostics(features, axes, template)
+    def diagnostics(features, axes, template, lead)
       {
         "voice" => voice_digest,
         "signal" => {
@@ -187,6 +188,7 @@ module Pronunciation
           "f0_folded" => octave_folded?(features),
           "vot_ms" => features["vot_ms"]&.round(1),
           "vot_reliable" => features["vot_reliable"],
+          "lead_ms" => lead&.dig("vars", "ms"),
           "register" => features["f0_register"]&.round(2)
         },
         "template" => {
@@ -273,14 +275,14 @@ module Pronunciation
       measured.slice("curve", "reference", "sigma", "range", "slope", "register")
     end
 
-    def advisories(axes)
-      analyzer
-        .advisories(axes)
-        .reject { |a| a["code"].to_s.end_with?(".ok") }
-        .filter_map { |a|
-          note = @coach.advisory(a["code"])
-          {"id" => a["id"], "score" => a["score"], "note" => note} if note
-        }
+    def advisories(axes, lead)
+      notes = analyzer.advisories(axes).reject { |a| a["code"].to_s.end_with?(".ok") }
+      notes += [lead].compact
+
+      notes.filter_map do |a|
+        note = @coach.advisory(a["code"], a["vars"])
+        {"id" => a["id"], "score" => a["score"], "note" => note} if note
+      end
     end
 
     def weights_for(key, template, norm, present)

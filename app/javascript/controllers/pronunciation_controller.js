@@ -637,6 +637,7 @@ export default class extends Controller {
       `  Σ ${n(signal.duration_ms, 0)}/${n(signal.voiced_ms, 0)}/${n(signal.f0_ref_hz, 0)}${signal.f0_folded ? "^" : ""}` +
       `${signal.register == null ? "" : `/${sgn(signal.register)}`}` +
       `  q7${signal.vot_ms == null ? "—" : n(signal.vot_ms, 0)}${signal.vot_reliable ? "+" : "-"}` +
+      `${signal.lead_ms == null ? "" : `  q2 ${n(signal.lead_ms, 0)}`}` +
       `  τ${STYLE_MARK[template.style] || "s?"}·${template.tokens}/${template.speakers}·${CONF_MARK[template.confidence] || "?"}`;
 
     const axisLine =

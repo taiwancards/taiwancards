@@ -260,10 +260,32 @@ module Pronunciation
         fields
       end
 
+      def blind_fields(f, tpl)
+        return [] if f["vot_reliable"]
+
+        lead_in(f, tpl) ? INITIAL_REPORT : %w[vot_ms]
+      end
+
+      LEAD_IN_MIN_MS = 120.0
+      LEAD_IN_Z = 3.0
+
+      def lead_in(f, tpl)
+        return nil if f["vot_reliable"]
+
+        ms = f["fric_ms"].to_f
+        stat = tpl["fric_ms"]
+        return nil if ms < LEAD_IN_MIN_MS || stat.nil? || stat["median"].nil?
+        return nil if zscore(ms, stat, "fric_ms") < LEAD_IN_Z
+
+        {"id" => "lead_in", "code" => "lead_in.noisy", "vars" => {"ms" => ms.round}}
+      end
+
       def report(f, tpl)
+        blind = blind_fields(f, tpl)
+
         relevant_fields(tpl["structure"] || {}).filter_map do |field|
           stat = tpl[field]
-          next if stat.nil? || stat["median"].nil?
+          next if blind.include?(field) || stat.nil? || stat["median"].nil?
 
           value = f[field]
           {
@@ -506,7 +528,7 @@ module Pronunciation
       def advisories(axes)
         axes
           .select { |a| a["part"].nil? }
-          .map { |a| {"id" => a["id"], "score" => a["score"], "code" => a["code"], "measured" => a["measured"]} }
+          .map { |a| a.slice("id", "score", "code", "vars", "measured") }
       end
 
       def weighted_overall(parts, weights)
