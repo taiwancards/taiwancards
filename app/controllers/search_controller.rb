@@ -11,6 +11,7 @@ class SearchController < ApplicationController
       return render(partial: "results", layout: false)
     end
 
+    @grammar_hits = Huayu::GrammarLessons.search(@query)
     @corpus = Search::Corpus.new(user: Current.user, params: params)
     if @corpus.sentences?
       @concordance = @corpus.concordance

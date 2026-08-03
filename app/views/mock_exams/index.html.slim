@@ -1,0 +1,25 @@
+- content_for(:title, t("mock.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("mock.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("mock.lede")
+
+  .rounded-xl.border.border-border.px-4.py-3.text-xs.leading-relaxed.text-muted-foreground class="bg-muted/30"
+    = t("mock.disclaimer")
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.pick_band")
+    .grid.gap-3 class="sm:grid-cols-2"
+      - MockExam::Reading::BANDS.each do |band, config|
+        = link_to mock_reading_path(band: band), class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+          .text-sm.font-semibold = t("mock.bands.#{band}")
+          p.mt-1.text-xs.text-muted-foreground
+            = t("mock.band_hint", count: config[:count], minutes: config[:minutes])
+
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.official_title")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("mock.official_lede")
+    = link_to "tocfl.edu.tw", "https://tocfl.edu.tw/tocfl/index.php/teach/test/page/1",
+      target: "_blank", rel: "noopener",
+      class: "text-sm text-primary underline underline-offset-2 hover:opacity-80"

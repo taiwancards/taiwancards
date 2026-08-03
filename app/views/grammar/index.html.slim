@@ -1,0 +1,20 @@
+- content_for(:title, t("grammar.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("grammar.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("grammar.lede")
+
+  - @levels.sort.each do |level, lessons|
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+        = t("grammar.level_label", level: level)
+      .grid.gap-3 class="sm:grid-cols-2"
+        - lessons.each do |lesson|
+          = link_to grammar_lesson_path(lesson.slug), class: "flex items-center gap-3 rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+            .shrink-0.text-3xl.font-semibold lang="zh-TW" = lesson.head
+            .min-w-0
+              .truncate.text-sm.font-semibold = lesson.title(I18n.locale)
+              .truncate.text-xs.text-muted-foreground lang="zh-TW" = lesson.formula_for(I18n.locale)
+
+  p.text-xs.text-muted-foreground = t("grammar.source_note")

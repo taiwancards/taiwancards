@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StudySessionsController < ApplicationController
-  MODES = %w[cram daily collection desk today redo].freeze
+  MODES = %w[cram daily collection desk today redo mistakes].freeze
   RATINGS = %w[again hard good easy].freeze
 
   def show

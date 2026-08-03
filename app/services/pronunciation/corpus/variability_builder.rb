@@ -28,7 +28,7 @@ module Pronunciation
           .correct(Acoustic::Variability.estimate(by_key, min_speakers: MIN_SPEAKERS))
 
         {
-          "source" => "Common Voice 19.0 zh-TW, speakers born in Taiwan",
+          "source" => "#{corpus_release}, speakers born in Taiwan",
           "note" => "the template center stays Taiwan citation form; only the tolerance width comes from here",
           "n_speakers" => registered.map { |row| row["_speaker"] }.uniq.length,
           "n_tokens" => registered.length,
@@ -44,6 +44,13 @@ module Pronunciation
       end
 
       private
+
+      def corpus_release
+        manifest = File.join(@root, "manifest.json")
+        return DIR unless File.exist?(manifest)
+
+        JSON.parse(File.read(manifest))["source"] || DIR
+      end
 
       def features
         items = clips

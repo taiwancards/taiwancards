@@ -6,5 +6,6 @@ RSpec.configure do |config|
     ContentCache.process.clear
     Setting.reset_cache!
     Huayu::TextAnalyzer.reset_vocabulary!
+    MockExam::Reading::CACHE.clear
   end
 end

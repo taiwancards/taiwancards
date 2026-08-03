@@ -1,0 +1,30 @@
+- content_for(:title, t("mock.results_title"))
+- percent = @paper.count.positive? ? (@score * 100.0 / @paper.count).round : 0
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("mock.results_title")
+    .flex.items-baseline.gap-3
+      .text-4xl.font-bold class=(percent >= 60 ? "text-emerald-500" : "text-amber-500")
+        = "#{@score} / #{@paper.count}"
+      span.text-sm.text-muted-foreground = t("mock.results_percent", percent: percent)
+    p.text-xs.text-muted-foreground = t("mock.results_note")
+
+  section.space-y-3
+    - @results.each do |row|
+      - question = row[:question]
+      .rounded-xl.border.p-4 class=(row[:correct] ? "border-emerald-500/40 bg-emerald-500/5" : "border-red-500/40 bg-red-500/5")
+        .flex.items-baseline.gap-2
+          span.shrink-0.text-sm.font-semibold.text-muted-foreground.tabular-nums = "#{question.number}."
+          p.text-lg.leading-relaxed lang="zh-TW" = question.text
+        - if question.translation(I18n.locale).present?
+          p.mt-1.text-sm.text-muted-foreground = question.translation(I18n.locale)
+        .mt-2.flex.flex-wrap.gap-2.text-sm
+          - question.options.each_with_index do |option, index|
+            - state = index == question.answer ? "border-emerald-500 text-emerald-600" : (index == row[:given] ? "border-red-500 text-red-500" : "border-border text-muted-foreground")
+            span.rounded-lg.border.px-2.py-1 class=state lang="zh-TW"
+              = "(#{("A".ord + index).chr}) #{option}"
+
+  .flex.flex-wrap.gap-3
+    = link_to t("mock.try_again"), mock_reading_path(band: @paper.band), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+    = link_to t("mock.back"), mock_exams_path, class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"

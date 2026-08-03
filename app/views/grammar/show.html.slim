@@ -1,0 +1,54 @@
+- content_for(:title, @lesson.title(I18n.locale))
+
+.py-6.space-y-6
+  nav.text-sm
+    = link_to "← #{t("grammar.title")}", grammar_path, class: "text-muted-foreground hover:text-foreground"
+
+  header.space-y-3
+    .flex.items-baseline.gap-3
+      .text-5xl.font-semibold lang="zh-TW" = @lesson.head
+      h1.text-2xl.font-bold.tracking-tight = @lesson.title(I18n.locale)
+    .inline-flex.rounded-lg.bg-muted.px-3.py-1.text-sm.font-medium lang="zh-TW" = @lesson.formula_for(I18n.locale)
+    span.ml-2.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground
+      = t("grammar.level_label", level: @lesson.level)
+
+  section.space-y-3
+    p.text-base.leading-relaxed = @lesson.body(I18n.locale)
+    - if @lesson.tip(I18n.locale).present?
+      .rounded-xl.border.border-amber-400.px-4.py-3.text-sm.leading-relaxed class="bg-amber-500/10"
+        strong = t("grammar.tip")
+        span<> = @lesson.tip(I18n.locale)
+
+  section.space-y-3 data-controller="zhuyin-toggle" data-zhuyin-toggle-on-value=@lesson.zhuyin_default?.to_s
+    .flex.items-center.justify-between.gap-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("grammar.examples")
+      button.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
+        type="button" data-zhuyin-toggle-target="button" data-action="zhuyin-toggle#toggle"
+        class="hover:bg-muted" ]
+        = t("grammar.zhuyin_toggle")
+    ul.space-y-2
+      - @lesson.examples.each do |example|
+        li.rounded-xl.border.border-border.bg-card.px-4.py-3
+          .text-lg.leading-loose
+            - if example.annotated?
+              span data-zhuyin-toggle-target="ruby"
+                = grammar_example_ruby(example)
+              span.hidden lang="zh-TW" data-zhuyin-toggle-target="plain" = example.zh
+            - else
+              span lang="zh-TW" = example.zh
+            - if example.sentence
+              = link_to "→", sentence_path(example.sentence), class: "ml-2 text-xs text-muted-foreground hover:text-foreground", title: t("sentences.open")
+          - if example.pinyin.present?
+            .pinyin.text-xs.text-muted-foreground = example.pinyin
+          - if example.translation(I18n.locale).present?
+            .mt-1.text-sm.text-muted-foreground = example.translation(I18n.locale)
+
+  nav.flex.justify-between.gap-3.text-sm
+    - if @previous
+      = link_to "← #{@previous.title(I18n.locale)}", grammar_lesson_path(@previous.slug), class: "text-muted-foreground hover:text-foreground"
+    - else
+      span
+    - if @next
+      = link_to "#{@next.title(I18n.locale)} →", grammar_lesson_path(@next.slug), class: "text-muted-foreground hover:text-foreground"
+
+  p.text-xs.text-muted-foreground = t("grammar.source_note")

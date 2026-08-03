@@ -38,6 +38,19 @@ module StudyHelper
     quiz ? :tone_quiz : :tone_speech
   end
 
+  def card_example(lexeme)
+    return nil unless lexeme.word?
+
+    @card_examples ||= {}
+    return @card_examples[lexeme.id] if @card_examples.key?(lexeme.id)
+
+    @card_examples[lexeme.id] = SentenceWord.for_word(lexeme).includes(:sentence).first&.sentence
+  end
+
+  def cloze_text(sentence, word)
+    sentence.text.gsub(word, "＿" * word.length)
+  end
+
   def study_next_suggestion
     return nil unless current_user
     case Learn::NextStep.new(current_user).call.kind

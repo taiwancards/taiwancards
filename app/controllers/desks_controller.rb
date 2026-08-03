@@ -5,6 +5,9 @@ class DesksController < ApplicationController
     @counts = lexeme_counts
     @next_step = Learn::NextStep.new(current_user).call
     @start_path = recommended_path
+    @road = Learn::Road.new(current_user)
+    @today = Study::TodayDesk.new(current_user).summary
+    @mistake_count = Study::MistakeBook.new(current_user).count
   end
 
   private

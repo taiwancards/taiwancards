@@ -31,6 +31,8 @@ module Study
         desk_ids(collection)
       when "today"
         today_ids
+      when "mistakes"
+        mistake_ids
       else
         daily_ids(size)
       end
@@ -126,6 +128,10 @@ module Study
         )
       scope = scope.where.not(lexeme_id: exclude) if exclude.any?
       scope.pluck(:lexeme_id).uniq
+    end
+
+    def mistake_ids
+      MistakeBook.new(Current.user, now: @now).lexeme_ids
     end
 
     def cram_ids(size, collection)

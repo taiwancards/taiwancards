@@ -1,6 +1,39 @@
 - content_for(:title, t("languages.zh-TW"))
 
 .py-6.space-y-6
+  section.rounded-2xl.border.border-border.bg-card.p-4.space-y-3 data-tour="road"
+    .flex.flex-wrap.items-baseline.justify-between.gap-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("desk.road.title")
+      - if @road.plan
+        span.text-xs.text-muted-foreground
+          = t("desk.road.exam_in", level: t("plan.levels.#{@road.plan.target_level}"), count: @road.days_left)
+      - else
+        = link_to t("desk.road.set_goal"), new_study_plan_path, class: "text-xs text-primary underline underline-offset-2 hover:opacity-80"
+
+    .flex.items-center.gap-1.overflow-x-auto.pb-1
+      - @road.milestones.each_with_index do |milestone, index|
+        - if index.positive?
+          .h-px.w-4.shrink-0.bg-border
+        = link_to tocfl_level_path(milestone.collection_id), class: "shrink-0" do
+          .flex.flex-col.items-center.gap-1
+            - if milestone.done?
+              .flex.size-9.items-center.justify-center.rounded-full.bg-primary.text-primary-foreground
+                = icon(:check, css: "size-4")
+            - elsif milestone.current?
+              .flex.size-9.items-center.justify-center.rounded-full.border-2.border-primary.text-xs.font-bold.text-primary
+                = "#{milestone.readiness}%"
+            - else
+              .flex.size-9.items-center.justify-center.rounded-full.border.border-border.text-xs.text-muted-foreground
+                = milestone.readiness.positive? ? "#{milestone.readiness}%" : ""
+            span.text-2xs.font-medium class=(milestone.current? ? "text-primary" : "text-muted-foreground")
+              = t("plan.levels.#{milestone.level_tag}")
+      .h-px.w-4.shrink-0.bg-border
+      span.shrink-0.text-sm.text-muted-foreground …
+
+    - if (current = @road.current)
+      p.text-xs.text-muted-foreground
+        = t("desk.road.to_next", count: current.remaining, level: t("plan.levels.#{current.level_tag}"))
+
   .grid.grid-cols-3.gap-3
     .rounded-xl.border.bg-background.p-4.text-center.shadow
       .text-3xl.font-bold.text-primary = @counts[:on_desk]
@@ -14,6 +47,25 @@
 
   = link_to @start_path, data: {tour: "learn"},
     class: "block w-full rounded-2xl bg-primary py-6 text-center text-primary-foreground shadow-lg transition hover:opacity-90 active:scale-[0.99]" do
-    .text-2xl.font-bold.uppercase.tracking-wide = t("desk.start")
+    .text-2xl.font-bold.uppercase.tracking-wide
+      - if @next_step&.kind == "study" && @today[:total].positive?
+        = t("desk.start_count", count: @today[:total])
+      - else
+        = t("desk.start")
     - if @next_step.present?
       .mt-1.text-sm class="text-primary-foreground/80" = t("desk.next_step.#{@next_step.kind}")
+
+  .grid.grid-cols-2.gap-3
+    = link_to mistakes_path, class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+      .flex.items-center.justify-between.gap-2
+        .text-sm.font-semibold = t("desk.mistakes_title")
+        - if @mistake_count.positive?
+          span.rounded-full.bg-red-500.px-2.py-0.5.text-xs.font-bold.text-white = @mistake_count
+      p.mt-1.text-xs.text-muted-foreground = t("desk.mistakes_hint")
+    = link_to study_plan_path, class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+      .text-sm.font-semibold = t("desk.plan_title")
+      p.mt-1.text-xs.text-muted-foreground
+        - if @road.plan
+          = t("desk.plan_hint_set", date: l(@road.plan.target_date))
+        - else
+          = t("desk.plan_hint_unset")

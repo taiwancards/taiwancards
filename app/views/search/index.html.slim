@@ -5,6 +5,15 @@
 
   = render("fields", corpus: @corpus)
 
+  - if @grammar_hits.present?
+    section.space-y-2
+      h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("search.grammar_title")
+      .flex.flex-wrap.gap-2
+        - @grammar_hits.each do |lesson|
+          = link_to grammar_lesson_path(lesson.slug), class: "inline-flex items-baseline gap-2 rounded-lg border border-border bg-card px-3 py-1.5 hover:bg-muted" do
+            span.text-base.font-semibold lang="zh-TW" = lesson.head
+            span.text-sm = lesson.title(I18n.locale)
+
   - if !@corpus.any_query?
     p.rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
       = t("search.prompt")

@@ -93,6 +93,7 @@ en:
     pronunciation: Pronunciation check
     tocfl: TOCFL word lists
     tbcl: TBCL word lists
+    grammar: Grammar
     chengyu: Idioms 成語
     dict: Words & phrases
     cangjie: Cangjie trainer
@@ -161,6 +162,23 @@ en:
     due: Due
     unseen: New
     start: Learn
+    start_count:
+      one: Learn (1 card)
+      other: Learn (%{count} cards)
+    road:
+      title: Road to TOCFL
+      set_goal: Set your exam date
+      exam_in:
+        one: "%{level} exam — 1 day left"
+        other: "%{level} exam — %{count} days left"
+      to_next:
+        one: 1 word to finish %{level}
+        other: "%{count} words to finish %{level}"
+    mistakes_title: Mistake notebook
+    mistakes_hint: Words you missed lately, collected automatically.
+    plan_title: Exam plan
+    plan_hint_set: Target date %{date}.
+    plan_hint_unset: Pick a level and a date — we'll pace you.
   desks:
     panel_empty: Tap a word in the text to see it here.
     panel_include: Put in the deck
@@ -719,6 +737,7 @@ en:
       construction: "in a construction"
   search:
     title: Search
+    grammar_title: Grammar
     placeholder: Search anything — hanzi, pinyin, zhuyin, meaning…
     prompt: Type hanzi, pinyin with or without tones, zhuyin, or a meaning.
     empty: Nothing found for “%{query}”.
@@ -791,6 +810,7 @@ en:
     approximate_hint: "units not covered: %{count}"
     difficulty: difficulty %{value}
     source_link: source
+    open: Open the sentence
     by_word: By word
     by_character: By character
     by_character_hint: "Easiest first: by level, then by frequency."
@@ -1352,6 +1372,61 @@ en:
       "3": 3rd · dipping ˇ
       "4": 4th · falling ˋ
       "5": neutral ·
+  mock:
+    title: TOCFL emulation
+    lede: Timed practice in the format of the real exam, built entirely from our own corpus.
+    disclaimer: This is an unofficial practice mode. It follows the publicly documented TOCFL format (sections, question style, timing) but is not affiliated with or endorsed by SC-TOP, and no real exam questions are used. For the official mock papers, use the SC-TOP downloads below.
+    pick_band: Choose a band
+    bands:
+      novice: Novice 準備級
+      a: Band A 入門基礎
+      b: Band B 進階高階
+      c: Band C 流利精通
+    band_hint: "%{count} questions · %{minutes} min"
+    official_title: The real thing
+    official_lede: Before exam day, sit at least one official mock paper — free from SC-TOP, with answer keys and audio.
+    reading_title: Reading · %{band}
+    reading_lede: "%{count} gap-fill questions · %{minutes} minutes. Pick the word that fits each blank. The timer submits automatically."
+    question_n: Question %{n}
+    submit: Finish and check
+    abort: Quit
+    results_title: Your result
+    results_percent: "%{percent}% correct"
+    results_note: Green marks the correct answer, red marks yours where it differed. As a rough guide, aim for 60–70% before booking this band.
+    try_again: New set
+    back: All bands
+  grammar:
+    title: Grammar
+    lede: Taiwan-standard grammar, point by point — the official TBCL syllabus explained in plain language, with examples from our own corpus.
+    level_label: Level %{level}
+    tip: "Tip: "
+    examples: Examples
+    zhuyin_toggle: 注音
+    source_note: Point list and levels follow the Taiwan Benchmarks for the Chinese Language (TBCL), National Academy for Educational Research. Explanations and examples are our own.
+  mistakes:
+    title: Mistake notebook
+    lede: "Every word you miss lands here on its own — nothing to manage. Getting things wrong is a normal part of how memory works: each miss tells the app to bring that word back sooner."
+    list_title: Missed this week
+    list_lede: Tap a word to open its page, or run them all as one session.
+    empty: No mistakes in the last 7 days. Keep going — this page fills itself.
+    study_button:
+      one: Redrill 1 word
+      other: Redrill %{count} words
+    forecast_title: Review forecast
+    forecast:
+      today: today
+      tomorrow: tomorrow
+      week: this week
+    forecast_lede: Each card is scheduled to come back just before you would forget it. That is why some days are heavier — the app is catching words at the right moment, not testing you at random.
+    heatmap_title: Your last 12 weeks
+    heatmap_lede: Each square is a day; darker means more reviews. Short daily sessions beat rare long ones — memory grows on the days you show up.
+    streak_label: days in a row
+    retention_label: answered correctly (30 days)
+    leeches_title: Stubborn words
+    leeches_lede: These words keep slipping away after many tries. Give them extra attention — open the word, read its example sentences, practice the tone or writing — instead of just flipping the card again.
+    how_title: How this works
+    how_body_1: The app uses spaced repetition — each word comes back at growing intervals (a day, a few days, a week…). Answering just before you would forget it is exactly what makes memory stick.
+    how_body_2: When you miss a word, its interval shrinks and it returns sooner. Nothing is ever lost or failed for good — mistakes are the system doing its job.
   plan:
     title: TOCFL plan
     new_title: Plan your TOCFL

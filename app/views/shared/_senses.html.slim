@@ -1,4 +1,6 @@
 - senses = profile.translated_senses
+- runs_map = Huayu::SentenceSegments.runs_for(senses.flat_map { |s| s.examples.select(&:sentence?).first(3) }.filter_map(&:lexeme))
+- headword = profile.respond_to?(:lexeme) ? profile.lexeme&.text : nil
 - if senses.any?
   section.space-y-3
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("words.senses")
@@ -19,7 +21,10 @@
                 ul.space-y-1
                   - sentences.first(3).each do |example|
                     li.text-sm.text-muted-foreground lang="zh-TW"
-                      - if example.lexeme
+                      - if example.lexeme && runs_map[example.lexeme]
+                        = render("shared/sentence_runs", runs: runs_map[example.lexeme], highlight: headword)
+                        = link_to "→", sentence_path(example.lexeme), class: "ml-1 text-xs text-muted-foreground hover:text-foreground", title: t("sentences.open")
+                      - elsif example.lexeme
                         = link_to example.text, sentence_path(example.lexeme), class: "hover:text-foreground hover:underline"
                       - else
                         = example.text

@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get("study", to: "study_sessions#show", as: :study)
   post("study/review", to: "study_sessions#review", as: :study_review)
   get("search", to: "search#index", as: :search)
+  get("mistakes", to: "mistakes#show", as: :mistakes)
   get("progress", to: "progress#show", as: :progress)
   get("progress/history", to: "progress#history", as: :progress_history)
   get("progress/data", to: "progress#data", as: :progress_data)
@@ -139,6 +140,11 @@ Rails.application.routes.draw do
     defaults: {format: :json},
     constraints: {key: /[a-z]+[1-5]/}
   )
+  get("mock", to: "mock_exams#index", as: :mock_exams)
+  get("mock/reading", to: "mock_exams#reading", as: :mock_reading)
+  post("mock/reading", to: "mock_exams#grade", as: :grade_mock_reading)
+  get("grammar", to: "grammar#index", as: :grammar)
+  get("grammar/:id", to: "grammar#show", as: :grammar_lesson)
   get("tocfl", to: "tocfl#index", as: :tocfl_levels)
   get("tocfl/:id", to: "tocfl#show", as: :tocfl_level)
   get("tbcl", to: "tbcl#index", as: :tbcl_levels)

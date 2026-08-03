@@ -1,0 +1,11 @@
+- highlight = local_assigns[:highlight].presence
+span lang="zh-TW"
+  - runs.each do |run|
+    - accent = highlight && run.text == highlight
+    - if run.lexeme
+      = link_to run.text, lexeme_page_path(run.lexeme), data: {no_swipe: ""},
+        class: class_names("underline-offset-4 hover:underline", accent ? "font-semibold text-primary" : "hover:text-foreground")
+    - elsif accent
+      span.font-semibold.text-primary = run.text
+    - else
+      span = run.text

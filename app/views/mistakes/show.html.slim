@@ -1,0 +1,63 @@
+- content_for(:title, t("mistakes.title"))
+- max_count = [@by_day.map(&:last).max, 1].max
+
+.py-6.space-y-8
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("mistakes.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("mistakes.lede")
+
+  section.space-y-3
+    .flex.flex-wrap.items-center.justify-between.gap-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mistakes.list_title")
+      - if @book.any?
+        = link_to t("mistakes.study_button", count: @book.count), study_path(mode: "mistakes"),
+          class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+    - if @book.any?
+      p.text-xs.text-muted-foreground = t("mistakes.list_lede")
+      .flex.flex-wrap.gap-2
+        - @book.lexemes.each do |lexeme|
+          = render("shared/word_chip", entry: lexeme)
+    - else
+      p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
+        = t("mistakes.empty")
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mistakes.forecast_title")
+    .grid.grid-cols-3.gap-3
+      - {today: @book.forecast[:today], tomorrow: @book.forecast[:tomorrow], week: @book.forecast[:week]}.each do |key, value|
+        .rounded-xl.border.bg-background.p-4.text-center.shadow
+          .text-2xl.font-bold class=(key == :today && value.positive? ? "text-amber-500" : "")
+            = value
+          .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("mistakes.forecast.#{key}")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("mistakes.forecast_lede")
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mistakes.heatmap_title")
+    .flex.gap-1.overflow-x-auto.pb-1
+      - @by_day.each_slice(7) do |week|
+        .flex.flex-col.gap-1
+          - week.each do |date, count|
+            - shade = count.zero? ? "bg-muted" : (count < 5 ? "bg-primary/30" : (count < 15 ? "bg-primary/60" : "bg-primary"))
+            .size-3.rounded-sm class=shade title="#{l(date, format: :short)}: #{count}"
+    .flex.flex-wrap.gap-4.text-sm
+      div
+        span.font-bold = @streak
+        span.ml-1.text-muted-foreground = t("mistakes.streak_label")
+      - if @retention
+        div
+          span.font-bold = number_to_percentage(@retention * 100, precision: 0)
+          span.ml-1.text-muted-foreground = t("mistakes.retention_label")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("mistakes.heatmap_lede")
+
+  - if @leeches.any?
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-destructive = t("mistakes.leeches_title")
+      p.text-xs.leading-relaxed.text-muted-foreground = t("mistakes.leeches_lede")
+      .flex.flex-wrap.gap-2
+        - @leeches.each do |lexeme|
+          = render("shared/word_chip", entry: lexeme)
+
+  section.rounded-xl.border.border-border.p-4.space-y-2 class="bg-muted/30"
+    h2.text-sm.font-semibold = t("mistakes.how_title")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("mistakes.how_body_1")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("mistakes.how_body_2")

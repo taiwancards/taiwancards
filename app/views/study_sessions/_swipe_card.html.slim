@@ -69,6 +69,8 @@
                 .text-xl.text-muted-foreground = readings_label
             - else
               .text-3xl.font-medium = lexeme.meaning
+              - if facet == "production" && lexeme.word? && (cloze = card_example(lexeme))
+                .text-base.leading-relaxed.text-muted-foreground lang="zh-TW" = cloze_text(cloze, lexeme.text)
 
             .hidden.w-full.space-y-2 data-swipe-card-target="back"
               hr.border-border
@@ -87,6 +89,8 @@
                 .text-5xl.font-semibold lang="zh-TW" = lexeme.text
                 - if readings_label.present?
                   .text-xl.font-medium = readings_label
+              - if lexeme.word? && (example = card_example(lexeme))
+                = render("study_sessions/example", sentence: example, highlight: lexeme.text)
               - if (audio = audio_for(lexeme))
                 button.mx-auto.inline-flex.items-center.justify-center.rounded-full.p-2.text-muted-foreground[
                   type="button" data-no-swipe="" data-controller="audio" data-audio-url-value=audio[:url]

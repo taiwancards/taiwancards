@@ -24,4 +24,17 @@ RSpec.describe "Desks" do
     get("/desk")
     expect(response.body).to(include("В колоде"))
   end
+
+  it "renders the road with milestones and links each level" do
+    collection = Collection.create!(kind: :tocfl, name: "TOCFL Novice 1", level_tag: "Novice1", position: 0)
+    collection.add_lexeme(create(:lexeme, kind: :word, text: "你"))
+    Collection.reset_counters(collection.id, :collection_items)
+
+    get("/desk")
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("Road to TOCFL"))
+    expect(response.body).to(include("/tocfl/#{collection.id}"))
+    expect(response.body).to(include("/mistakes"))
+  end
 end

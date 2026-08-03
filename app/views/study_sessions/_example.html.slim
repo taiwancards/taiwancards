@@ -1,0 +1,6 @@
+- runs = Huayu::SentenceSegments.runs_for([sentence])[sentence]
+.mx-auto.max-w-xl.space-y-1.rounded-lg.border.border-border.px-3.py-2.text-left class="bg-muted/30"
+  .text-base.leading-relaxed
+    = render("shared/sentence_runs", runs: runs, highlight: highlight)
+  - if sentence.meaning.present?
+    .text-xs.text-muted-foreground = sentence.meaning
