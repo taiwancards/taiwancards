@@ -8,10 +8,15 @@ class TextbookAudioController < ApplicationController
     kind, source = TextbookLesson.audio_source(params[:name])
     return head(:not_found) if kind.nil?
 
-    kind == :file ? serve(source) : redirect_to(source, allow_other_host: true, status: :found)
+    kind == :file ? serve(source) : hand_off(source)
   end
 
   private
+
+  def hand_off(url)
+    response.set_header("Cache-Control", "private, no-store")
+    redirect_to(url, allow_other_host: true, status: :found)
+  end
 
   def serve(path)
     expires_in(7.days, public: false, must_revalidate: true)
