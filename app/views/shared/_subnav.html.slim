@@ -15,6 +15,6 @@ nav.sticky.z-30.hidden.border-b.border-border.md:block data-tour="nav" style="to
           .absolute.left-0.top-full.z-50.hidden.mt-1.w-48.rounded-xl.border.border-border.bg-background.p-1.shadow-xl data-menu-target="panel"
             - entry[:items].each do |key, label, path|
               - item_active = current_page?(path)
-              = link_to path, class: nav_menu_item_classes(item_active) do
+              = link_to path, data: {tour: nav_item_tour(path)}, class: nav_menu_item_classes(item_active) do
                 = icon(key, css: "size-4", stroke: item_active ? 2 : 1.6)
                 span = label

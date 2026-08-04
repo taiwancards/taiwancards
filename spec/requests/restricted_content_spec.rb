@@ -16,7 +16,7 @@ RSpec.describe "Restricted content gating" do
   end
 
   it "honors an admin who has switched restricted content off for themselves" do
-    Current.set(user: create(:user, admin: true, restricted_content: false)) do
+    Current.set(user: create(:user, :admin, restricted_content: false)) do
       expect(Lexeme.visible).not_to(include(phrase))
       expect(Lexemes::Search.new.call("測試句子").map(&:lexeme)).not_to(include(phrase))
     end

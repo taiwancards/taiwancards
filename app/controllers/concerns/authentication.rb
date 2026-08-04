@@ -25,6 +25,14 @@ module Authentication
 
     id = cookies.signed[:user_id]
     @true_user = id.present? ? User.find_by(id: id) : nil
+    forget_deleted_account if id.present? && @true_user.nil?
+    @true_user
+  end
+
+  def forget_deleted_account
+    terminate_session
+    PubliclyCacheable::PERSONAL.each { |name| cookies.delete(name) }
+    cookies.delete(:locale)
   end
 
   def impersonated_user

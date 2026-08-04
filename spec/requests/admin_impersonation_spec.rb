@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Admin impersonation" do
-  let(:admin) { create(:user, admin: true, locale: "en") }
+  let(:admin) { create(:user, :admin, locale: "en") }
   let(:member) {
     create(:user, locale: "ru", prefs: {"mobile_tabs" => %w[deck words]})
   }
@@ -15,7 +15,7 @@ RSpec.describe "Admin impersonation" do
     expect(response).to(redirect_to("/ru"))
 
     in_locale(:ru) { get("/desk") }
-    expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
+    expect(response.body).to(include(I18n.t("nav.guide", locale: :ru)))
     expect(response.body).to(include("/ru/dict"))
     expect(response.body).to(include(I18n.t("admin.impersonation_stop", locale: :ru)))
   end

@@ -103,3 +103,12 @@
           p.mt-1.text-sm.text-muted-foreground = t("licenses.items.#{key}")
 
   p.text-sm.text-muted-foreground = t("licenses.outro")
+
+  - if Donate.offered?
+    section.rounded-2xl.border.border-border.p-5.text-center.space-y-3 class="bg-muted/30"
+      h2.text-lg.font-semibold = t("licenses.donate_title")
+      p.mx-auto.max-w-xl.text-sm.leading-relaxed.text-muted-foreground = t("licenses.donate_body")
+      = link_to Donate.url, rel: "noopener", target: "_blank",
+        class: "inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90" do
+        span ☕
+        = t("licenses.donate_button")

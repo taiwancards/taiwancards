@@ -12,7 +12,10 @@ class IntrosController < ApplicationController
   end
 
   def advance
-    runner.advance!
+    landed = params[:step].to_s.presence
+    landed ? runner.jump_to!(landed) : runner.advance!
+    return head(:no_content) if request.xhr?
+
     back_to_step
   end
 

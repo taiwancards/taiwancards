@@ -1,0 +1,7 @@
+.grid.gap-2 class="sm:grid-cols-3"
+  - sets.each do |key, symbols|
+    = link_to zhuyin_training_path(set: key, from: "tricky"),
+      class: "flex flex-col gap-1 rounded-xl border border-border bg-background px-3 py-2 hover:bg-muted" do
+      span.text-lg.tracking-wide lang="zh-TW" = symbols.join(" ")
+      span.font-mono.text-xs.text-muted-foreground = t("practice.series.sets.#{key}")
+      span.text-2xs.uppercase.tracking-wide.text-muted-foreground = t("practice.series.#{tone}_hint")

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Admin insights" do
-  let(:admin) { create(:user, admin: true, email: "boss@example.com") }
+  let(:admin) { create(:user, :admin) }
 
   describe "presence" do
     it "records when a person was last here and counts the visit" do

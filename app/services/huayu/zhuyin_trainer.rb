@@ -69,24 +69,42 @@ module Huayu
 
     KEYS = BLOCKS.map { |block| block[:key] }.freeze
 
+    ROWS = {
+      "zhi_chi_shi" => %w[ㄓ ㄔ ㄕ],
+      "zi_ci_si" => %w[ㄗ ㄘ ㄙ],
+      "ji_qi_xi" => %w[ㄐ ㄑ ㄒ]
+    }.freeze
+
+    COLUMNS = {
+      "zhi_zi_ji" => %w[ㄓ ㄗ ㄐ],
+      "chi_ci_qi" => %w[ㄔ ㄘ ㄑ],
+      "shi_si_xi" => %w[ㄕ ㄙ ㄒ]
+    }.freeze
+
+    SETS = ROWS.merge(COLUMNS).merge("all_nine" => (ROWS.values + COLUMNS.values).flatten.uniq).freeze
+
     def self.block_for(symbol) = BLOCKS.find { |block| block[:symbols].include?(symbol) }
 
     def self.blocks_in(group) = BLOCKS.select { |block| GROUPS.fetch(group.to_s, []).include?(block[:key]) }
 
-    def initialize(mastery = {}, seed: nil, group: nil, block: nil)
+    def initialize(mastery = {}, seed: nil, group: nil, block: nil, set: nil)
       @mastery = mastery.to_h { |key, value| [key.to_s, value.to_h.transform_keys(&:to_s)] }
       @rng = Random.new(seed || Random.new_seed)
       @group = GROUPS.key?(group.to_s) ? group.to_s : nil
       @block = KEYS.include?(block.to_s) ? block.to_s : nil
+      @set = SETS.key?(set.to_s) ? set.to_s : nil
     end
 
     def group = @group
 
     def block = @block
 
-    def scoped? = @block.present? || @group.present?
+    def set = @set
+
+    def scoped? = [@set, @block, @group].any?(&:present?)
 
     def group_blocks
+      return [{key: @set, symbols: SETS.fetch(@set)}] if @set
       return BLOCKS.select { |entry| entry[:key] == @block } if @block
       return BLOCKS if @group.nil?
 
@@ -117,7 +135,7 @@ module Huayu
 
     def items(count: 10)
       pool = weighted_pool
-      count.times.map { |index| item_for(pool[index % pool.size]) }
+      Array.new(count) { item_for(pool.sample(random: rng)) }
     end
 
     def item_for(symbol)
@@ -181,9 +199,9 @@ module Huayu
     end
 
     def distractors_for(symbol)
-      near = (CONFUSABLE[symbol] || []).select { |other| ALL.include?(other) }
-      pool = near.presence || (ALL - [symbol])
-      picked = pool.first(CHOICES - 1)
+      inside = scoped? ? (scope_symbols - [symbol]).shuffle(random: rng) : []
+      near = (CONFUSABLE[symbol] || []).select { |other| ALL.include?(other) }.shuffle(random: rng)
+      picked = (inside + near).uniq.first(CHOICES - 1)
       picked += (ALL - [symbol] - picked).shuffle(random: rng).first(CHOICES - 1 - picked.size)
       picked.first(CHOICES - 1)
     end

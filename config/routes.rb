@@ -54,7 +54,7 @@ Rails.application.routes.draw do
     get("login", to: "sessions#new")
     delete("logout", to: "sessions#destroy")
 
-    get("help", to: "pages#help")
+    get("help", to: "pages#help", as: :guide)
     get("licenses", to: "pages#licenses")
     get("privacy", to: "pages#privacy_policy")
     get("terms", to: "pages#terms_of_service")
@@ -81,13 +81,13 @@ Rails.application.routes.draw do
     patch("profile", to: "profiles#update")
     get("profile/display", to: "profiles#display", as: :profile_display)
     get("profile/level", to: "profiles#level", as: :profile_level)
-    get("profile/guide", to: "profiles#guide", as: :guide)
     get("profile/backup", to: "profiles#backup", as: :profile_backup)
     get("profile/export", to: "profiles#export", as: :profile_export)
     post("profile/import", to: "profiles#import", as: :profile_import)
     post("profile/drive_backup", to: "profiles#drive_backup", as: :profile_drive_backup)
     post("profile/drive_restore", to: "profiles#drive_restore", as: :profile_drive_restore)
     delete("profile/reset", to: "profiles#reset", as: :profile_reset)
+    delete("profile/account", to: "profiles#destroy", as: :profile_account)
 
     resource(:settings, only: %i[edit update destroy])
 

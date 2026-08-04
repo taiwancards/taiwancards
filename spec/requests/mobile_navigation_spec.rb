@@ -24,6 +24,6 @@ RSpec.describe "Mobile navigation" do
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include(dict_path, characters_path, reader_path, placement_path))
-    expect(response.body).to(include(profile_path, help_path))
+    expect(response.body).to(include(profile_path, guide_path))
   end
 end

@@ -24,3 +24,20 @@ section.space-y-3.rounded-2xl.border.border-border.p-5
   .space-y-2.rounded-xl.border.border-border.p-4 class="bg-muted/30"
     h3.text-sm.font-semibold = t("practice.drill.mismatch_more_title")
     p.text-sm.leading-relaxed.text-muted-foreground = t("practice.drill.mismatch_more_body")
+
+section.space-y-4.rounded-2xl.border.border-border.p-5
+  div
+    h2.text-lg.font-semibold = t("practice.series.title")
+    p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("practice.series.body")
+
+  = render "practice/series", sets: Huayu::ZhuyinTrainer::ROWS, tone: :rows
+
+  .space-y-3.rounded-xl.border.border-amber-400.p-4 class="bg-amber-500/5"
+    h3.text-sm.font-semibold.text-amber-700 = t("practice.series.hard_title")
+    p.text-sm.leading-relaxed.text-amber-700 = t("practice.series.hard_body")
+    = render "practice/series", sets: Huayu::ZhuyinTrainer::COLUMNS, tone: :columns
+
+  = link_to zhuyin_training_path(set: "all_nine", from: "tricky"),
+    class: "flex items-center justify-between gap-3 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90" do
+    span = t("practice.series.all_nine")
+    span.text-lg.tracking-wide lang="zh-TW" = Huayu::ZhuyinTrainer::SETS["all_nine"].join(" ")

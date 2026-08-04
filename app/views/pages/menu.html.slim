@@ -13,7 +13,7 @@
       h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
       .grid class="grid-cols-2 gap-1.5 sm:grid-cols-3"
         - entry[:items].each do |key, label, path|
-          = link_to path, class: item_classes do
+          = link_to path, data: {tour: nav_item_tour(path)}, class: item_classes do
             = icon(key, css: "size-4 shrink-0 text-muted-foreground")
             span.truncate = label
         - if current_user&.admin?
@@ -26,6 +26,6 @@
       h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
       .grid class="grid-cols-2 gap-1.5 sm:grid-cols-3"
         - entry[:items].each do |key, label, path|
-          = link_to path, class: item_classes do
+          = link_to path, data: {tour: nav_item_tour(path)}, class: item_classes do
             = icon(key, css: "size-4 shrink-0 text-muted-foreground")
             span.truncate = label

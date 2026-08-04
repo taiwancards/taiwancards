@@ -25,3 +25,10 @@
     = button_to t("auth.reset"), profile_reset_path, method: :delete,
       data: {turbo_confirm: t("auth.reset_confirm")},
       class: "rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-500/10"
+
+  section.rounded-2xl.border.border-red-500.p-5.space-y-2 class="bg-red-500/10"
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-red-600 = t("auth.delete_account")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("auth.delete_account_hint")
+    = button_to t("auth.delete_account"), profile_account_path, method: :delete,
+      data: {turbo_confirm: t("auth.delete_account_confirm")},
+      class: "rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:opacity-90"

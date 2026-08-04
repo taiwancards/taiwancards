@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 const GAP = 14;
 const PAD = 6;
 const EDGE = 12;
+const DESKTOP = "(min-width: 768px)";
 
 export default class extends Controller {
   static targets = [
@@ -12,26 +13,118 @@ export default class extends Controller {
     "block",
     "hint",
     "forward",
+    "next",
+    "back",
+    "title",
+    "body",
+    "counter",
+    "backForm",
+    "nextForm",
   ];
   static values = {
-    anchor: String,
+    steps: String,
+    start: String,
+    walkable: String,
     blocking: String,
-    awaitClick: String,
-    interactive: String,
+    nextUrl: String,
+    hintClick: String,
+    hintScroll: String,
+    counter: String,
   };
 
   connect() {
     this.place = this.place.bind(this);
     this.guard = this.guard.bind(this);
+    this.intercept = this.intercept.bind(this);
+
+    this.steps = this.readSteps();
+    this.index = Math.max(
+      0,
+      this.steps.findIndex((step) => step.id === this.startValue),
+    );
 
     window.addEventListener("resize", this.place);
     window.addEventListener("scroll", this.place, true);
     document.addEventListener("keydown", this.guard, true);
-    document.addEventListener("click", this.place, true);
+    document.addEventListener("click", this.intercept, true);
 
+    this.render();
+    document.fonts?.ready.then(this.place);
+  }
+
+  disconnect() {
+    clearTimeout(this.settle);
+    window.removeEventListener("resize", this.place);
+    window.removeEventListener("scroll", this.place, true);
+    document.removeEventListener("keydown", this.guard, true);
+    document.removeEventListener("click", this.intercept, true);
+    this.watcher?.disconnect();
+  }
+
+  readSteps() {
+    let parsed = [];
+    try {
+      parsed = JSON.parse(this.stepsValue || "[]");
+    } catch {
+      parsed = [];
+    }
+    const viewport = window.matchMedia(DESKTOP).matches ? "desktop" : "mobile";
+    const fitting = parsed.filter(
+      (step) => !step.only || step.only === viewport,
+    );
+    return fitting.length ? fitting : parsed;
+  }
+
+  get walkable() {
+    return this.walkableValue === "true";
+  }
+
+  get blocking() {
+    return this.blockingValue === "true";
+  }
+
+  get current() {
+    return this.steps[this.index] || null;
+  }
+
+  get awaitsClick() {
+    return this.current?.action === "click";
+  }
+
+  get interactive() {
+    return this.awaitsClick || this.current?.interactive === true;
+  }
+
+  get anchor() {
+    const name = this.current?.target;
+    if (!name) return null;
+
+    return (
+      [...document.querySelectorAll(`[data-tour="${name}"]`)].find((el) => {
+        const box = el.getBoundingClientRect();
+        return box.width > 0 && box.height > 0;
+      }) || null
+    );
+  }
+
+  render() {
+    const step = this.current;
+    if (!step) return;
+
+    this.titleTarget.textContent = step.title || "";
+    this.bodyTarget.textContent = step.body || "";
+    this.counterTarget.textContent = this.walkable
+      ? `${this.index + 1} / ${this.steps.length}`
+      : this.counterValue;
+    this.backTarget.classList.toggle(
+      "hidden",
+      !this.walkable && this.counterValue.startsWith("1 /"),
+    );
+
+    this.watcher?.disconnect();
     const el = this.anchor;
     if (el) {
-      el.scrollIntoView({ behavior: "instant", block: "center" });
+      this.bring(el);
       this.watcher = new MutationObserver(this.place);
       this.watcher.observe(el, {
         attributes: true,
@@ -42,42 +135,82 @@ export default class extends Controller {
 
     this.place();
     requestAnimationFrame(this.place);
-    this.settle = setTimeout(this.place, 300);
-    document.fonts?.ready.then(this.place);
-  }
-
-  disconnect() {
     clearTimeout(this.settle);
-    window.removeEventListener("resize", this.place);
-    window.removeEventListener("scroll", this.place, true);
-    document.removeEventListener("keydown", this.guard, true);
-    document.removeEventListener("click", this.place, true);
-    this.watcher?.disconnect();
+    this.settle = setTimeout(this.place, 320);
   }
 
-  get blocking() {
-    return this.blockingValue === "true";
+  bring(el) {
+    const box = el.getBoundingClientRect();
+    const room = window.innerHeight;
+    const hidden =
+      box.top < 80 || box.bottom > room - 80 || box.height > room * 0.7;
+    if (!hidden) return;
+
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
   }
 
-  get awaitsClick() {
-    return this.awaitClickValue === "true";
+  next() {
+    if (this.index >= this.steps.length - 1)
+      return this.nextFormTarget.requestSubmit();
+
+    this.index += 1;
+    this.sync();
+    this.render();
   }
 
-  get interactive() {
-    return this.interactiveValue === "true";
+  back() {
+    if (this.index === 0) return this.backFormTarget.requestSubmit();
+
+    this.index -= 1;
+    this.sync();
+    this.render();
   }
 
-  get anchor() {
-    if (!this.anchorValue) return null;
+  sync() {
+    if (!this.walkable) return;
 
-    return (
-      [...document.querySelectorAll(`[data-tour="${this.anchorValue}"]`)].find(
-        (el) => {
-          const box = el.getBoundingClientRect();
-          return box.width > 0 && box.height > 0;
-        },
-      ) || null
-    );
+    const token = document.querySelector('meta[name="csrf-token"]')?.content;
+    fetch(this.nextUrlValue, {
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": token || "",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      body: new URLSearchParams({ step: this.current?.id || "" }),
+      credentials: "same-origin",
+      keepalive: true,
+    }).catch(() => {});
+  }
+
+  intercept(event) {
+    this.place();
+    if (!this.awaitsClick) return;
+
+    const el = this.anchor;
+    if (!el || !el.contains(event.target)) return;
+
+    const step = this.current;
+    if (step.landsOn) {
+      const link = event.target.closest("a[href]");
+      event.preventDefault();
+      this.sync();
+      setTimeout(() => {
+        window.location = link?.getAttribute("href") || step.landsOn;
+      }, 60);
+      return;
+    }
+
+    setTimeout(() => {
+      if (this.index < this.steps.length - 1) {
+        this.index += 1;
+        this.sync();
+        this.render();
+      }
+    }, 120);
   }
 
   guard(event) {
@@ -113,16 +246,27 @@ export default class extends Controller {
   }
 
   place() {
+    const step = this.current;
+    if (!step) return;
+
     const el = this.anchor;
     const hole = el ? this.reach(el) : null;
 
     this.guided = Boolean(hole) && this.interactive;
-    const handover = Boolean(hole) && this.awaitsClick;
 
-    if (this.hasHintTarget)
-      this.hintTarget.classList.toggle("hidden", !this.guided);
-    if (this.hasForwardTarget)
-      this.forwardTarget.classList.toggle("hidden", handover);
+    if (this.hasHintTarget) {
+      const hint = this.awaitsClick
+        ? this.hintClickValue
+        : step.action === "scroll"
+          ? this.hintScrollValue
+          : "";
+      this.hintTarget.textContent = hint;
+      this.hintTarget.classList.toggle("hidden", !hint || !hole);
+    }
+    this.forwardTarget.classList.toggle(
+      "hidden",
+      Boolean(hole) && this.awaitsClick,
+    );
     this.spotlightTarget.classList.toggle("intro-beacon", this.guided);
 
     this.frame(hole);
@@ -135,23 +279,33 @@ export default class extends Controller {
     spot.width = `${hole.width + PAD * 2}px`;
     spot.height = `${hole.height + PAD * 2}px`;
 
+    this.perch(hole);
+  }
+
+  perch(hole) {
     const pop = this.popoverTarget;
     const width = pop.offsetWidth;
     const height = pop.offsetHeight;
+    const room = window.innerHeight;
 
-    let top = hole.bottom + GAP;
-    if (top + height > window.innerHeight - EDGE) {
-      const above = hole.top - height - GAP;
-      top =
-        above >= EDGE
-          ? above
-          : Math.max(EDGE, window.innerHeight - height - EDGE);
+    const below = hole.bottom + GAP;
+    const above = hole.top - height - GAP;
+    let top;
+
+    if (below + height <= room - EDGE) {
+      top = below;
+    } else if (above >= EDGE) {
+      top = above;
+    } else {
+      const overBottom = room - height - EDGE;
+      const clear = hole.top - EDGE >= height ? EDGE : overBottom;
+      top = Math.max(EDGE, Math.min(clear, overBottom));
     }
 
     let left = hole.left + hole.width / 2 - width / 2;
     left = Math.min(Math.max(EDGE, left), window.innerWidth - width - EDGE);
 
-    pop.style.top = `${top}px`;
+    pop.style.top = `${Math.max(EDGE, top)}px`;
     pop.style.left = `${left}px`;
     pop.style.transform = "";
   }

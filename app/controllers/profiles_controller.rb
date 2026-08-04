@@ -12,9 +12,6 @@ class ProfilesController < ApplicationController
   def level
   end
 
-  def guide
-  end
-
   def backup
     @memory_count = current_user.lexeme_memories.count
     @review_count = current_user.lexeme_reviews.count
@@ -64,6 +61,14 @@ class ProfilesController < ApplicationController
     current_user.update!(prefs: current_user.prefs.slice(*User::KEPT_ON_RESET))
 
     redirect_to(profile_path, notice: t("auth.reset_done"))
+  end
+
+  def destroy
+    user = current_user
+    terminate_session
+    user.destroy!
+
+    redirect_to(root_path, notice: t("auth.account_deleted"))
   end
 
   def drive_backup

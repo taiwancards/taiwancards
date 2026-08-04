@@ -3,10 +3,14 @@
 
 #intro-tour.pointer-events-none.fixed.inset-0.z-50[
   data-controller="intro"
-  data-intro-anchor-value=view.step.target.to_s
+  data-intro-steps-value=intro_payload(view)
+  data-intro-start-value=view.step.id
+  data-intro-walkable-value=(view.mode == :chapter).to_s
+  data-intro-counter-value=view.counter
   data-intro-blocking-value=view.blocking?.to_s
-  data-intro-await-click-value=view.step.waits_for_click?.to_s
-  data-intro-interactive-value=view.step.interactive?.to_s ]
+  data-intro-next-url-value=intro_next_path
+  data-intro-hint-click-value=t("intro.click_target")
+  data-intro-hint-scroll-value=t("intro.scroll_target") ]
 
   - 4.times do
     .pointer-events-auto.fixed[ style="background:rgba(0,0,0,.72)" data-intro-target="panel" ]
@@ -22,12 +26,12 @@
     .flex.items-baseline.justify-between.gap-2
       p.text-xs.font-medium.uppercase.tracking-wide class=(view.blocking? ? "text-brand" : "text-muted-foreground")
         = intro_label(view)
-      span.shrink-0.text-xs.tabular-nums.text-muted-foreground = view.counter
+      span.shrink-0.text-xs.tabular-nums.text-muted-foreground data-intro-target="counter"
 
-    h2.mt-1.text-base.font-bold.leading-snug = intro_title(view)
-    p.mt-1.text-sm.leading-relaxed.text-muted-foreground = intro_body(view)
+    h2.mt-1.text-base.font-bold.leading-snug data-intro-target="title"
+    p.mt-1.text-sm.leading-relaxed.text-muted-foreground data-intro-target="body"
 
-    p.mt-3.hidden.text-xs.font-medium.text-brand data-intro-target="hint" = t("intro.try_it")
+    p.mt-3.hidden.text-xs.font-medium.text-brand data-intro-target="hint"
 
     .mt-4.flex.items-center.justify-between.gap-3
       - if view.skippable?
@@ -39,9 +43,13 @@
           class: "text-sm text-muted-foreground hover:text-foreground"
 
       .flex.items-center.gap-2
-        - if view.position.positive?
-          = button_to t("intro.back"), intro_back_path,
-            class: "rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted"
+        button.rounded-lg.border.border-border.px-3.py-2.text-sm.font-medium.hidden[
+          type="button" data-intro-target="back" data-action="intro#back" class="hover:bg-muted" ]
+          = t("intro.back")
         span data-intro-target="forward"
-          = button_to (view.last? ? t("intro.done") : t("intro.next")), intro_next_path,
-            class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+          button.rounded-lg.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground[
+            type="button" data-intro-target="next" data-action="intro#next" class="hover:opacity-90" ]
+            = t("intro.next")
+
+  = form_with url: intro_back_path, method: :post, class: "hidden", data: {intro_target: "backForm"} do
+  = form_with url: intro_next_path, method: :post, class: "hidden", data: {intro_target: "nextForm"} do

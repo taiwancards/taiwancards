@@ -1,0 +1,9 @@
+- return unless authenticated?
+
+.hidden.fixed.inset-x-3.bottom-20.z-40.rounded-2xl.border.border-border.bg-background.p-4.shadow-2xl[
+  data-controller="desktop-hint" class="md:hidden" role="status" ]
+  p.text-sm.font-semibold = t("mobile_hint.title")
+  p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("mobile_hint.body")
+  button.mt-3.w-full.rounded-xl.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground[
+    type="button" data-action="desktop-hint#dismiss" class="hover:opacity-90" ]
+    = t("mobile_hint.dismiss")

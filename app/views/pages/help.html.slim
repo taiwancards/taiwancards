@@ -1,32 +1,38 @@
-- content_for(:title) { t("help.title") }
-- if Donate.offered?
-  - content_for(:head) do
-    meta name="turbo-visit-control" content="reload"
-- sections = [ \
-    [:search, search_path], \
-    [:study, study_path], \
-    [:dictionary, characters_path], \
-    [:tocfl, tocfl_levels_path], \
-    [:pronunciation, pronunciation_path], \
-    [:writing, writing_path], \
-    [:history, progress_history_path], \
-    [:profile, profile_path] \
-  ]
+- content_for(:title) { t("intro.guide.title") }
 
-.py-6.space-y-6
+.py-6.space-y-5
   div
-    h1.text-2xl.font-bold.tracking-tight = t("help.title")
-    p.mt-2.text-muted-foreground = t("help.intro")
-  .space-y-3
-    - sections.each do |key, path|
-      section.rounded-xl.border.border-border.p-4
-        = link_to t("help.sections.#{key}.title"), path, class: "font-semibold text-foreground hover:underline"
-        p.mt-1.text-sm.text-muted-foreground = t("help.sections.#{key}.body")
+    h1.text-2xl.font-bold.tracking-tight = t("intro.guide.title")
+    p.mt-2.max-w-2xl.leading-relaxed.text-muted-foreground = t("intro.guide.body")
 
-  - if Donate.offered?
-    section.border-t.border-border.pt-6.text-center
-      p.mx-auto.max-w-md.text-xs.leading-relaxed.text-muted-foreground = t("help.donate")
-      .mt-3.flex.justify-center.opacity-70.transition-opacity class="scale-90 hover:opacity-100"
-        script[ type="text/javascript" src=Donate.script_url data-name="bmc-button" data-slug=Donate.slug
-          data-color="#6b7280" data-emoji="" data-font="Inter" data-text=t("help.donate_button")
-          data-outline-color="#6b7280" data-font-color="#ffffff" data-coffee-color="#e5e7eb" ]
+  section.space-y-5 data-tour="profile-guide"
+    - language_nav.each do |group|
+      section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
+        header.flex.flex-wrap.items-start.justify-between.gap-3
+          .min-w-0
+            .flex.items-center.gap-2
+              = icon(group[:key], css: "size-4 shrink-0 text-muted-foreground")
+              h2.font-semibold = group[:label]
+            p.mt-1.text-xs.leading-relaxed.text-muted-foreground
+              = t("nav.group_lede.#{group[:id]}")
+
+          .flex.shrink-0.flex-wrap.items-center.gap-2
+            - guide_chapters_for(group).each do |chapter|
+              - done = current_user&.intro&.chapter_done?(chapter.id)
+              = button_to guide_chapter_label(chapter, done), intro_chapter_path(chapter.id),
+                class: class_names("rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-muted",
+                  done ? "border-border text-muted-foreground" : "border-brand text-brand")
+
+        ul.grid.gap-2 class="sm:grid-cols-2"
+          - group[:items].each do |key, label, path|
+            li
+              = link_to path, class: "flex items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm hover:bg-muted" do
+                = icon(key, css: "size-4 shrink-0 text-muted-foreground")
+                span.min-w-0.flex-1.truncate = label
+                span.shrink-0.text-muted-foreground →
+
+  section.rounded-2xl.border.border-border.p-5.space-y-2 class="bg-muted/40"
+    h2.font-semibold = t("intro.guide.replay_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("intro.guide.replay_body")
+    = button_to t("intro.guide.replay_cta"), intro_start_path,
+      class: "inline-flex rounded-xl border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-muted"

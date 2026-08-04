@@ -9,7 +9,7 @@ RSpec.describe "Admin users" do
   end
 
   it "lets an admin list users and toggle a target's languages and restricted access" do
-    sign_in(create(:user, admin: true))
+    sign_in(create(:user, :admin))
     target = create(:user)
 
     get(admin_users_path)
@@ -23,35 +23,45 @@ RSpec.describe "Admin users" do
   end
 
   describe "admin rights" do
-    let(:admin) { create(:user, admin: true) }
+    let(:admin) { create(:user, :admin) }
 
     before { sign_in(admin) }
 
-    it "refuses to let the last admin lock themselves out" do
-      patch(admin_user_path(admin), params: {user: {admin: "0"}})
+    it "is no longer something a form can hand out" do
+      other = create(:user)
 
-      expect(admin.reload.admin?).to(be(true))
-      expect(flash[:alert]).to(eq(I18n.t("admin.demote_self")))
+      patch(admin_user_path(other), params: {user: {restricted_content: "1"}})
+
+      expect(other.reload).not_to(be_admin)
+      expect(other.restricted_content?).to(be(true))
     end
 
-    it "still lets an admin demote somebody else" do
-      other = create(:user, admin: true)
+    it "cannot be granted in code either, only by signing in with that Google account" do
+      other = create(:user)
 
-      patch(admin_user_path(other), params: {user: {admin: "0"}})
+      other.update!(admin: true)
 
-      expect(other.reload.admin?).to(be(false))
+      expect(other.reload.admin).to(be(false))
+      expect(other).not_to(be_admin)
+    end
+
+    it "cannot be taken away from that account" do
+      admin.update!(admin: false)
+
+      expect(admin.reload.admin).to(be(true))
+      expect(admin).to(be_admin)
     end
 
     it "lets an admin change their own unrelated settings" do
       patch(admin_user_path(admin), params: {user: {restricted_content: "1"}})
 
       expect(admin.reload.restricted_content?).to(be(true))
-      expect(admin.admin?).to(be(true))
+      expect(admin).to(be_admin)
     end
   end
 
   describe "deleting a user" do
-    let(:admin) { create(:user, admin: true) }
+    let(:admin) { create(:user, :admin) }
 
     before { sign_in(admin) }
 

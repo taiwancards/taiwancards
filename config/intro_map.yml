@@ -1,4 +1,4 @@
-version: 2
+version: 1
 
 essential:
   - id: welcome
@@ -11,162 +11,205 @@ essential:
   - id: dictionary
     path: /menu
     target: nav-dictionary
-    version: 2
+    version: 1
   - id: language_section
     path: /menu
     target: nav-language
-    version: 2
+    version: 1
   - id: practice
     path: /menu
     target: nav-practice
-    version: 2
+    version: 1
   - id: taiwan
     path: /menu
     target: nav-taiwan
-    version: 2
+    version: 1
   - id: profile
     path: /menu
     target: nav-settings
-    version: 2
+    version: 1
   - id: new_deck
     path: /desk
     target: new-desk
-    version: 2
+    version: 1
   - id: display
     path: /desk
     target: pref-pinyin
     interactive: true
     version: 1
   - id: guide
-    path: /profile/guide
+    path: /help
     target: profile-guide
-    version: 2
+    version: 1
 
 chapters:
   - id: dictionary
     icon: book
     steps:
-      - id: search_deep
-        path: /desk
-        target: search
+      - id: open_group
+        target: nav-dictionary
+        advance: click
+        only: desktop
+        version: 1
+      - id: open_more
+        target: nav-more
+        advance: click
+        lands_on: /menu
+        only: mobile
+        version: 1
+      - id: pick_dict
+        target: nav-item-dict
+        advance: click
+        lands_on: /dict
         version: 1
       - id: entry
-        path: /dict
         target: dict-entry
+        advance: scroll
         version: 1
       - id: detail_level
-        path: /dict
         target: pref-detail
-        version: 1
-      - id: mainland
-        path: /dict
-        target: pref-mainland
-        version: 1
-      - id: sentences
-        path: /sentences
-        target: sentence-filters
+        advance: scroll
+        only: desktop
         version: 1
 
   - id: cards
     icon: decks
     steps:
-      - id: what_is_card
-        path: /desk
-        target: learn
-        version: 1
-      - id: decks
-        path: /desks
+      - id: new_deck
         target: new-desk
+        advance: scroll
+        version: 1
+      - id: open_group
+        target: nav-learn
+        advance: click
+        only: desktop
+        version: 1
+      - id: open_more
+        target: nav-more
+        advance: click
+        lands_on: /menu
+        only: mobile
+        version: 1
+      - id: pick_desks
+        target: nav-item-desks
+        advance: click
+        lands_on: /desks
         version: 1
       - id: facets
-        path: /desk
-        version: 1
-      - id: add_from_dictionary
-        path: /dict
-        target: dict-add
         version: 1
 
   - id: taiwan
     icon: desk
     steps:
-      - id: everyday_lists
-        path: /everyday
+      - id: open_group
+        target: nav-taiwan
+        advance: click
+        only: desktop
+        version: 1
+      - id: open_more
+        target: nav-more
+        advance: click
+        lands_on: /menu
+        only: mobile
+        version: 1
+      - id: pick_everyday
+        target: nav-item-everyday
+        advance: click
+        lands_on: /everyday
+        version: 1
+      - id: domains
         target: everyday-domains
-        version: 1
-      - id: calendar
-        path: /calendar
-        version: 1
-      - id: metro
-        path: /metro
+        advance: scroll
         version: 1
 
   - id: phonetics
     icon: speaker
     steps:
-      - id: zhuyin_first
-        path: /practice/zhuyin
+      - id: open_group
+        target: nav-language
+        advance: click
+        only: desktop
         version: 1
-      - id: tones
-        path: /tones
+      - id: open_more
+        target: nav-more
+        advance: click
+        lands_on: /menu
+        only: mobile
         version: 1
-      - id: pronunciation
-        path: /pronunciation
+      - id: pick_zhuyin
+        target: nav-item-practice-zhuyin
+        advance: click
+        lands_on: /practice/zhuyin
         version: 1
-      - id: warmup
-        path: /pronunciation/warmup
+      - id: parts
+        target: practice-parts
+        advance: scroll
+        version: 1
+      - id: drill_block
+        target: practice-block-drill
+        advance: scroll
         version: 1
 
   - id: trainers
     icon: pencil
     steps:
-      - id: writing
-        path: /writing
+      - id: open_group
+        target: nav-practice
+        advance: click
+        only: desktop
         version: 1
-      - id: handwriting
-        path: /handwriting
+      - id: open_more
+        target: nav-more
+        advance: click
+        lands_on: /menu
+        only: mobile
         version: 1
-      - id: reader
-        path: /reader
+      - id: pick_pronunciation
+        target: nav-item-pronunciation
+        advance: click
+        lands_on: /pronunciation
+        version: 1
+      - id: what_else
         version: 1
 
   - id: display
     icon: settings
     steps:
-      - id: font_kai
-        path: /dict
-        target: pref-kai
+      - id: prefs
+        target: script-setup
+        advance: scroll
         version: 1
       - id: pinyin_toggle
-        path: /dict
         target: pref-pinyin
+        interactive: true
+        version: 1
+      - id: font_kai
+        target: pref-kai
+        interactive: true
         version: 1
       - id: mainland_toggle
-        path: /dict
         target: pref-mainland
-        version: 1
-      - id: detail_toggle
-        path: /dict
-        target: pref-detail
+        interactive: true
         version: 1
 
   - id: profile
     icon: user
     steps:
-      - id: visible_level
-        path: /profile/level
-        target: profile-level
+      - id: open_group
+        target: nav-settings
+        advance: click
+        only: desktop
         version: 1
-      - id: mobile_tabs
-        path: /profile/display
-        target: profile-tabs
+      - id: open_more
+        target: nav-more
+        advance: click
+        lands_on: /menu
+        only: mobile
         version: 1
-      - id: stats
-        path: /progress
-        version: 1
-      - id: history
-        path: /progress/history
+      - id: pick_progress
+        target: nav-item-progress
+        advance: click
+        lands_on: /progress
         version: 1
       - id: backup
-        path: /profile/backup
-        target: profile-backup
         version: 1

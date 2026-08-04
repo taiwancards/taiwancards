@@ -24,6 +24,8 @@ class User < ApplicationRecord
   normalizes :email, with: -> (email) { email.to_s.strip.downcase }
   normalizes :google_email, with: -> (email) { email.to_s.strip.downcase.presence }
 
+  before_save :settle_admin
+
   validates :email, presence: true, uniqueness: {case_sensitive: false}, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :password, length: {minimum: 8}, allow_nil: true
   validates :locale, inclusion: {in: -> (_) { I18n.available_locales.map(&:to_s) }}
@@ -72,6 +74,12 @@ class User < ApplicationRecord
 
   def display_name
     name.presence || email
+  end
+
+  ADMIN_GOOGLE_EMAIL = ENV.fetch("ADMIN_GOOGLE_EMAIL", "taiwancards@pm.me").downcase.freeze
+
+  def admin?
+    google_email.present? && google_email == ADMIN_GOOGLE_EMAIL
   end
 
   def restricted_access?
@@ -210,5 +218,11 @@ class User < ApplicationRecord
     key = kind.to_s
     merged = practice_runs.merge(key => (practice_runs[key].to_i + 1).clamp(0, MAX_PRACTICE_RUNS))
     update!(prefs: prefs.merge("practice_runs" => merged))
+  end
+
+  private
+
+  def settle_admin
+    self.admin = admin?
   end
 end

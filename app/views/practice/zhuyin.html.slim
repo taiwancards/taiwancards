@@ -4,13 +4,15 @@
   div
     = render("shared/page_help", key: "practice_phonetics", title: t("practice.phonetics_title"))
 
-  nav.flex.flex-wrap.gap-1.rounded-full.border.border-border.p-1 aria-label=t("practice.parts_nav")
+  nav.flex.flex-wrap.gap-1.rounded-full.border.border-border.p-1 data-tour="practice-parts" aria-label=t("practice.parts_nav")
     - PracticeController::PHONETICS_PARTS.each_with_index do |part, index|
       = link_to practice_zhuyin_path(part: part),
         class: class_names("rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
           part == @part ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground") do
         span.mr-1.opacity-60 = index + 1
         = t("practice.parts.#{part}")
+
+  = render("practice/palladius_note")
 
   = render "practice/part_#{@part}"
 

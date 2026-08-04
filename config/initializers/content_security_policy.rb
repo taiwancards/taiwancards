@@ -11,8 +11,6 @@ Rails.application.configure do
 
   assets = origins.call("ASSETS_BASE_URL")
   media = origins.call("MEDIA_BASE_URL", "ASSETS_BASE_URL")
-  donate = hosts.call("DONATE_SCRIPT_URL")
-  donate_assets = hosts.call("DONATE_ORIGINS")
   sign_in = [
     OmniAuth::Strategies::GoogleOauth2
       .default_options
@@ -26,10 +24,10 @@ Rails.application.configure do
     policy.object_src(:none)
     policy.frame_ancestors(:none)
     policy.form_action(:self, *sign_in)
-    policy.script_src(:self, *donate)
-    policy.style_src(:self, :unsafe_inline, *donate_assets)
-    policy.img_src(:self, :data, :blob, *donate_assets)
-    policy.font_src(:self, :data, *assets, *donate_assets)
+    policy.script_src(:self)
+    policy.style_src(:self, :unsafe_inline)
+    policy.img_src(:self, :data, :blob)
+    policy.font_src(:self, :data, *assets)
     policy.media_src(:self, :data, :blob, *media)
     policy.connect_src(:self, *assets)
   end

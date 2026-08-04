@@ -16,7 +16,8 @@ class OmniauthCallbacksController < ApplicationController
         User.exists?(google_email: auth.info.email.to_s.downcase)
       user = User.for_google(auth, locale: preferred_locale)
       start_new_session_for(user)
-      redirect_to(after_google_path(existing:), notice: t("auth.signed_in"))
+      session[:fresh_account] = true unless existing
+      redirect_to(after_google_path(existing:), notice: t(existing ? "auth.signed_in" : "auth.signed_up"))
     end
 
   rescue => e

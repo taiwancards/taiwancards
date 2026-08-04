@@ -10,7 +10,7 @@
     = render "practice/phonetics_table", rows: bundle.rows
 
     - if bundle.practisable?
-      = link_to zhuyin_training_path(block: bundle.key, from: part),
+      = link_to zhuyin_training_path(block: bundle.key, from: part), data: {tour: ("practice-block-drill" if bundle == bundles.find(&:practisable?))},
         class: "inline-flex items-center gap-2 rounded-xl border border-brand px-4 py-2 text-sm font-semibold text-brand hover:bg-muted" do
         = icon(:speaker, css: "size-4")
         = t("practice.drill_these", symbols: bundle.symbols.join(" "))

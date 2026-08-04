@@ -18,7 +18,7 @@ RSpec.describe "Intro tour" do
       get("/desk")
 
       expect(response.body).to(include("data-tour=\"search\""))
-      expect(response.body).to(include("data-intro-anchor-value=\"search\""))
+      expect(response.body).to(include("data-intro-start-value=\"search\""))
     end
 
     it "offers no way to skip a step, only to put the whole tour off" do
@@ -26,6 +26,21 @@ RSpec.describe "Intro tour" do
 
       expect(response.body).not_to(include(I18n.t("intro.skip")))
       expect(response.body).to(include(I18n.t("intro.later")))
+    end
+  end
+
+  describe "a fresh account" do
+    it "is never handed the release notes it could not have missed" do
+      expect(user.intro.unseen).to(be_empty)
+
+      get("/desk")
+
+      expect(response.body).not_to(include(CGI.escapeHTML(I18n.t("intro.label_whats_new"))))
+    end
+
+    it "is offered the tour rather than pushed through it" do
+      expect(user.intro).to(be_pending)
+      expect(user.intro).not_to(be_required)
     end
   end
 
@@ -65,24 +80,43 @@ RSpec.describe "Intro tour" do
   describe "the full guide" do
     before { user.intro.finish! }
 
-    it "lists every chapter on the guide tab" do
-      get("/profile/guide")
+    it "lists every chapter on the guide" do
+      get(guide_path)
 
       Intro::Map.chapters.each do |chapter|
         expect(response.body).to(include(I18n.t("#{chapter.i18n_key}.title")))
       end
     end
 
-    it "starts a chapter on the page its first step lives on" do
-      chapter = Intro::Map.chapter("taiwan")
+    it "keeps the reader where they are and walks them from there" do
       post("/intro/chapter/taiwan")
 
-      expect(response).to(redirect_to("/en#{chapter.steps.first.path}"))
+      expect(response).to(redirect_to(guide_path))
+    end
+
+    it "hands the whole chapter to the page, so a dropdown can stay open between steps" do
+      post("/intro/chapter/taiwan")
+      get(guide_path)
+
+      chapter = Intro::Map.chapter("taiwan")
+      payload = response.body[/data-intro-steps-value="([^"]*)"/, 1]
+      steps = JSON.parse(CGI.unescapeHTML(payload.to_s))
+
+      expect(steps.map { |step| step["id"] }).to(eq(chapter.steps.map(&:id)))
+      expect(steps.map { |step| step["action"] }).to(include("click"))
+      expect(response.body).to(include("data-intro-walkable-value=\"true\""))
+    end
+
+    it "asks the reader to tap rather than opening the page for them" do
+      post("/intro/chapter/taiwan")
+      get(guide_path)
+
+      expect(response.body).to(include(CGI.escapeHTML(I18n.t("intro.click_target"))))
     end
 
     it "runs the chapter and lets the user leave at any point" do
       post("/intro/chapter/taiwan")
-      get("/everyday")
+      get(guide_path)
 
       expect(response.body).to(include("intro-tour"))
       expect(response.body).to(include(I18n.t("intro.skip")))
@@ -95,27 +129,25 @@ RSpec.describe "Intro tour" do
       expect(user.reload.intro).to(be_chapter_done("taiwan"))
     end
 
-    it "moves forward one step at a time and lands on each step's own page" do
+    it "follows the reader when the page reports which step they reached" do
       chapter = Intro::Map.chapter("taiwan")
       post("/intro/chapter/taiwan")
 
-      chapter.steps.each_cons(2) do |current, following|
-        get(current.path)
-        expect(response.body).to(include(I18n.t("#{current.i18n_key}.title")))
+      post("/intro/next", params: {step: chapter.steps.last.id}, headers: {"X-Requested-With" => "XMLHttpRequest"})
 
-        post("/intro/next")
-        expect(response).to(redirect_to("/en#{following.path}"))
-      end
+      expect(response).to(have_http_status(:no_content))
+      get(guide_path)
+      expect(response.body).to(include("data-intro-start-value=\"#{chapter.steps.last.id}\""))
     end
 
     it "steps back inside the chapter instead of touching the mandatory tour" do
-      chapter = Intro::Map.chapter("taiwan")
       post("/intro/chapter/taiwan")
       post("/intro/next")
       post("/intro/back")
 
-      get(chapter.steps.first.path)
-      expect(response.body).to(include(I18n.t("#{chapter.steps.first.i18n_key}.title")))
+      first = Intro::Map.chapter("taiwan").steps.first
+      get(guide_path)
+      expect(response.body).to(include("data-intro-start-value=\"#{first.id}\""))
       expect(user.reload.intro_step).to(be_nil)
     end
 
@@ -127,7 +159,7 @@ RSpec.describe "Intro tour" do
       expect(user.reload.intro).to(be_chapter_done("taiwan"))
       expect(response).to(redirect_to(guide_path))
 
-      get(chapter.steps.first.path)
+      get(guide_path)
       expect(response.body).not_to(include("intro-tour"))
     end
 
@@ -137,9 +169,9 @@ RSpec.describe "Intro tour" do
       post("/intro/chapter/cards")
 
       first = Intro::Map.chapter("cards").steps.first
-      get(first.path)
+      get(guide_path)
 
-      expect(response.body).to(include(I18n.t("#{first.i18n_key}.title")))
+      expect(response.body).to(include("data-intro-start-value=\"#{first.id}\""))
     end
 
     it "ignores a chapter that does not exist" do

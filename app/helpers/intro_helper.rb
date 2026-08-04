@@ -36,6 +36,23 @@ module IntroHelper
     t("#{view.step.i18n_key}.body", default: "")
   end
 
+  def intro_steps(view)
+    return [view.step] unless view.mode == :chapter
+
+    Intro::Map.chapter(view.chapter)&.steps || [view.step]
+  end
+
+  def intro_payload(view)
+    intro_steps(view)
+      .map do |step|
+        step.to_payload.merge(
+          title: t("#{step.i18n_key}.title", default: step.id.humanize),
+          body: t("#{step.i18n_key}.body", default: "")
+        )
+      end
+      .to_json
+  end
+
   def intro_chapter_state(chapter)
     return :done if current_user&.intro&.chapter_done?(chapter.id)
 

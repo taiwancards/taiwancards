@@ -4,8 +4,12 @@ module Intro
   class Map
     PATH = Rails.root.join("config/intro_map.yml")
 
-    Step = Data.define(:id, :chapter, :path, :target, :advance, :lands_on, :interactive, :version) do
+    VIEWPORTS = %w[desktop mobile].freeze
+
+    Step = Data.define(:id, :chapter, :path, :target, :advance, :lands_on, :interactive, :only, :version) do
       def waits_for_click? = advance == "click"
+
+      def scrolls? = advance == "scroll"
 
       def interactive? = waits_for_click? || interactive == true
 
@@ -14,6 +18,19 @@ module Intro
       def scope = chapter || "essential"
 
       def i18n_key = chapter ? "intro.chapters.#{chapter}.steps.#{id}" : "intro.steps.#{id}"
+
+      def shown_on?(viewport) = only.blank? || only == viewport.to_s
+
+      def to_payload
+        {
+          id:,
+          target:,
+          action: advance,
+          landsOn: lands_on,
+          only:,
+          interactive: interactive?
+        }.compact
+      end
     end
 
     Chapter = Data.define(:id, :icon, :steps) do
@@ -34,7 +51,7 @@ module Intro
       def all_steps = essential + chapters.flat_map(&:steps)
 
       def newer_than(version)
-        all_steps.select { |step| step.version > version.to_i }
+        essential.select { |step| step.version > version.to_i }
       end
 
       def reset!
@@ -70,6 +87,7 @@ module Intro
           advance: row["advance"],
           lands_on: row["lands_on"],
           interactive: row["interactive"],
+          only: row["only"],
           version: row.fetch("version", 1).to_i
         )
       end

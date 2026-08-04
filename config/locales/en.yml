@@ -133,6 +133,15 @@ en:
     zh-TW: Taiwanese Mandarin
     ja: Japanese
     ro: Romanian
+  mobile_hint:
+    title: A phone works, but not for everything
+    body: >-
+      Honestly: I built this mainly for myself, and I study about ninety percent of the time on a laptop,
+      using the phone only to flip cards. So not much time went into fitting every section to every screen
+      size, and something may well look wrong on a phone — at your own risk. Cards, the dictionary and
+      reading the explanations are fine; the trainers, handwriting, pronunciation and text analysis expect
+      a computer. Real study belongs there.
+    dismiss: Understood
   nav:
     mock: TOCFL simulator
     more: More
@@ -143,7 +152,7 @@ en:
     group_sounds: Sounds
     progress: Progress
     settings: Settings
-    help: Help
+    guide: Guide
     language: Language
     interface_language: >-
       The language of the interface and of everything in it. It switches more than buttons and menus: word
@@ -712,6 +721,11 @@ en:
     import_no_file: Choose a file to import.
     import_bad: That file isn't a valid progress export.
     signed_in: Welcome back.
+    signed_up: "Account created. Starting from scratch."
+    account_deleted: "Account deleted. Nothing of it is left."
+    delete_account: "Delete account"
+    delete_account_hint: "This removes everything: progress, decks, texts, pronunciation attempts, statistics and the account itself. It cannot be undone, and signing in again creates a fresh profile from nothing. If you want a copy, export it above first."
+    delete_account_confirm: "Delete the account and all its data, with no way back?"
     signed_out: Logged out.
     profile_saved: Profile saved.
     reading_title: Reading Chinese text
@@ -1365,6 +1379,27 @@ en:
     to_drill: Read it — on to the practice →
     back_to_chart: "← Back to the zhuyin and pinyin chart"
     initials_lede: "Twenty-one symbols — everything a syllable can begin with. The button plays Taiwan's Ministry of Education recording: listen before you read the breakdown."
+    series:
+      title: The three rows everyone confuses
+      body: >-
+        Nine initials that look alike in pinyin but are made in three different places in the mouth. Drill
+        them row by row first — within a row the place is the same and only the breath changes.
+      rows_hint: one row
+      columns_hint: three rows at once
+      hard_title: This one is genuinely hard
+      hard_body: >-
+        Take a column instead of a row and the sounds become almost indistinguishable: in pinyin they are
+        written almost the same, with zhi, zi and ji a single letter apart. The only difference is where
+        the tongue sits — curled to the roof, at the lower teeth, or pressed to the hard palate. This is
+        the one to listen to carefully, and getting it wrong at first is normal.
+      all_nine: All nine mixed together
+      sets:
+        zhi_chi_shi: zhi chi shi
+        zi_ci_si: zi ci si
+        ji_qi_xi: ji qi xi
+        zhi_zi_ji: zhi zi ji
+        chi_ci_qi: chi ci qi
+        shi_si_xi: shi si xi
     drill_these: "Drill %{symbols}"
     blocks:
       labial:
@@ -1893,6 +1928,11 @@ en:
     data_title: Reference data
     data_note: "Bodies whose published reference material the app builds on: level lists, stroke inventories, character standards, calendar tables and classification scales. These are factual lists rather than creative works, and are credited here rather than licensed. Where a body released its material under a named license, that license is stated."
     outro: All Chinese content is Taiwan traditional characters, cross-checked against the Ministry of Education dictionaries. Names, brands and lesson texts remain the property of their respective owners.
+    donate_title: Support the project
+    donate_body: >-
+      The app is free and ad-free, and it will stay that way. If it has been useful, you can buy the
+      author a coffee. It changes nothing about access — everything is open to everyone alike.
+    donate_button: Buy a coffee
     items:
       moe_audio: Audio for characters and words. Recordings by Taiwan's Ministry of Education, data version 20260626. Files are served unmodified; the app only limits playback to the headword.
       cc_cedict: Community Chinese–English dictionary — readings, meanings and traditional/simplified pairs.
@@ -2560,6 +2600,7 @@ en:
     label: Getting started
     label_whats_new: What's new
     click_target: Tap the highlighted item to continue.
+    scroll_target: Look at the highlighted part, then tap Next.
     skip: Skip
     later: Later
     setup:
@@ -2638,153 +2679,146 @@ en:
     chapters:
       dictionary:
         title: Dictionary and search
-        summary: How entries are built and how to find anything
+        summary: How to find anything and how to read an entry
         steps:
-          search_deep:
-            title: Four ways to search
-            body: >-
-              Chinese characters, pinyin with or without tones, zhuyin, or an English or Russian meaning.
-              Mixing them narrows the result.
+          open_group:
+            title: Open the dictionary
+            body: Click Dictionary in the top bar and the list of what is inside will drop down.
+          open_more:
+            title: Tap the menu
+            body: On a phone every section lives behind this button in the corner. Tap it.
+          pick_dict:
+            title: Pick Words
+            body: This is the main dictionary page. Tap it and we will be inside.
           entry:
-            title: Reading an entry
+            title: This is what an entry looks like
             body: >-
-              Readings first, then meanings numbered as the source dictionary numbers them, then examples
-              drawn from the corpus.
+              Readings first, then the senses numbered as the source dictionary numbers them, then
+              examples from the corpus. Anything here goes into study with one tap.
           detail_level:
             title: Brief or full
             body: >-
-              Brief keeps an entry to its core meaning. Full adds collocations, the thesaurus, etymology
-              and every sense.
-          mainland:
-            title: Chinese equivalents
-            body: >-
-              Turn this on to see where the standard in China differs — different word, different character,
-              or a different tone.
-          sentences:
-            title: The sentence corpus
-            body: >-
-              Filter by register and by level. Guaranteed means every word in the sentence is at or below
-              the level you picked.
+              This switch in the header decides how much is shown: the main sense only, or collocations,
+              thesaurus, etymology and every sense at once.
       cards:
         title: Cards and decks
-        summary: What a card is and how repetition works
+        summary: Where cards come from and how reviews work
         steps:
-          what_is_card:
-            title: What a card is
+          new_deck:
+            title: Every deck starts here
             body: >-
-              A card is one lexeme seen through one facet. The same word can be tested by recognition, production,
-              reading, listening, tone or writing.
-          decks:
-            title: Decks
-            body: >-
-              A deck is a set of lexemes you chose. Build one from a list, from search results, or from
-              a text you pasted into the reader.
+              This button is on every page. A song, a text from class, a word list, an article — all of it
+              turns into a deck.
+          open_group:
+            title: Open My study
+            body: "Tap it — this is everything that belongs to you: today's queue, your decks, the reader."
+          open_more:
+            title: Tap the menu
+            body: On a phone every section lives behind this button. Tap it.
+          pick_desks:
+            title: Pick My decks
+            body: Tap it and let us look at what a deck list is like.
           facets:
-            title: Six independent memories
+            title: Six memories per word
             body: >-
-              Each facet is scheduled on its own. Recognizing a word and being able to write it are different
-              states with different intervals.
-          add_from_dictionary:
-            title: Adding as you read
-            body: Anything in the dictionary can go straight into study from the entry itself.
+              Each word is asked separately for recognition, production, reading, listening, tone and
+              writing. Knowing a word and being able to write it are different states with different
+              intervals.
       taiwan:
-        title: Taiwanese life
-        summary: Vocabulary tied to living here
+        title: Life in Taiwan
+        summary: The vocabulary tied to living here
         steps:
-          everyday_lists:
-            title: By domain
-            body:
-              Food, transport, paperwork, weather, festivals. Each item is tagged by where you actually
-              meet it.
-          calendar:
-            title: The calendar
-            body: Lunar dates, solar terms, public holidays, and the Minguo year conversion.
-          metro:
-            title: The metro
-            body: Every Taipei station with its reading, so announcements and signs stop being a guess.
+          open_group:
+            title: Open Taiwan
+            body: Tap it — this is the part a textbook leaves out.
+          open_more:
+            title: Tap the menu
+            body: On a phone every section lives behind this button. Tap it.
+          pick_everyday:
+            title: Pick Everyday life
+            body: Tap it and the vocabulary opens, sorted by situation.
+          domains:
+            title: Everything by situation
+            body: >-
+              Food, drinks, transport, paperwork, weather, slang. Each word is marked with where it is
+              actually used and how it differs from the mainland.
       phonetics:
         title: Sounds and zhuyin
-        summary: Zhuyin, tones and pronunciation scoring
+        summary: How the sounds work and where to drill them
         steps:
-          zhuyin_first:
-            title: Zhuyin first
+          open_group:
+            title: Open About the language
+            body: Tap it — come here when you want to understand rather than just memorise.
+          open_more:
+            title: Tap the menu
+            body: On a phone every section lives behind this button. Tap it.
+          pick_zhuyin:
+            title: Pick Zhuyin and pinyin
+            body: Tap it — this is the main page about the sounds.
+          parts:
+            title: Four parts
             body: >-
-              Taiwan teaches reading through zhuyin, not pinyin. The trainer builds the keyboard layout
-              into your fingers.
-          tones:
-            title: Tones
-            body: Drills for hearing tones apart, including the pairs that stay hard long after the basics.
-          pronunciation:
-            title: Pronunciation scoring
+              An introduction, the initials, the finals, and everything that gets confused. Switch between
+              them here — the order is meant to be read straight through.
+          drill_block:
+            title: And drill it straight away
             body: >-
-              Record a syllable and it is compared against a template on tone contour, voice onset, formants
-              and nasality. Nothing leaves the server.
-          warmup:
-            title: Calibration
-            body: >-
-              A short warm-up teaches the scorer your voice, so its judgment is about your accent and not
-              your pitch.
+              The symbols come in groups and each group has its own button. It drills exactly that group
+              rather than all thirty-seven, so you take on four symbols at a time.
       trainers:
-        title: Trainers
-        summary: Writing, handwriting and reading tools
+        title: The trainers
+        summary: What you can drill with your hands and your voice
         steps:
-          writing:
-            title: Writing from meaning
-            body:
-              You are given the meaning and reading, and write the characters from memory, stroke by
-              stroke.
-          handwriting:
-            title: Handwriting search
-            body: Draw a character you met somewhere and the app tells you what it is.
-          reader:
-            title: The reader
-            body:
-              Paste any text. It is segmented, annotated with readings, and colored by what you already
-              know.
+          open_group:
+            title: Open Practice
+            body: Tap it — every trainer lives here.
+          open_more:
+            title: Tap the menu
+            body: On a phone every section lives behind this button. Tap it.
+          pick_pronunciation:
+            title: Pick Pronunciation
+            body: Tap it and we will show you how the app listens to you.
+          what_else:
+            title: And there is more
+            body: >-
+              Alongside it sit handwriting, typing on a Taiwanese keyboard, Cangjie, the sound and tone
+              drills and a mock TOCFL. All of it is open from the start, not unlocked as you go.
       display:
-        title: What you see
-        summary: The four switches in the header
+        title: What to show
+        summary: Four switches that change everything at once
         steps:
-          font_kai:
-            title: Calligraphic font
+          prefs:
+            title: These four buttons
             body: >-
-              Switches to TW-Kai, the standard Taiwanese teaching form. Some characters are genuinely shaped
-              differently from the fonts used in China.
+              They control how text looks across the whole app. A tap applies everywhere immediately —
+              go ahead and try them now.
           pinyin_toggle:
-            title: Pinyin
-            body: Hide pinyin once zhuyin is comfortable, so you stop leaning on the alphabet.
+            title: Pinyin above the characters
+            body: Try tapping it. It helps some people and gets in the way of learning zhuyin for others.
+          font_kai:
+            title: The calligraphic font
+            body: The shapes Taiwan teaches handwriting from. Tap it and look at the characters.
           mainland_toggle:
-            title: Notes on Chinese usage
-            body: Show or hide the Chinese equivalent next to Taiwanese usage.
-          detail_toggle:
-            title: Brief or full entries
-            body: >-
-              How much an entry unfolds. Start brief; switch to full when the extra detail helps rather
-              than crowds.
+            title: Mainland equivalents
+            body: Turn it on if you want to see where the mainland standard parts ways with Taiwan.
       profile:
         title: Profile and progress
-        summary: Level, layout, statistics and backup
+        summary: Your level, your statistics and your export
         steps:
-          visible_level:
-            title: The level you see
-            body: >-
-              Project the whole corpus onto the MOE character charts, TBCL or TOCFL. Below your level you
-              see everything; above it, nothing — but search stays unrestricted.
-          mobile_tabs:
-            title: Your phone tabs
-            body: Pick the four sections that sit in the bottom bar on a phone.
-          stats:
-            title: Statistics
-            body: What you have learned, what is due, and how strong each memory is.
-          history:
-            title: History
-            body: Every review, by day and by facet, so you can see where the effort actually went.
+          open_group:
+            title: Open Settings
+            body: Tap it — this part is about you rather than about the language.
+          open_more:
+            title: Tap the menu
+            body: On a phone every section lives behind this button. Tap it.
+          pick_progress:
+            title: Pick Progress
+            body: Tap it and let us see what the app knows about you.
           backup:
-            title: Backup and export
+            title: And you can take it all with you
             body: >-
-              Your progress to your own Google Drive, or a file you keep. The dictionary is shared; your
-              progress is yours.
-    try_it: Try it — tap the highlighted control.
+              The Backups tab holds an export of your whole progress in one file. The data is yours and
+              it is not locked in here.
   reader:
     title: Reader
     new_text: Paste a text

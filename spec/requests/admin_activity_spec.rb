@@ -16,7 +16,7 @@ RSpec.describe "Admin activity" do
   end
 
   it "does not record activity performed while impersonating" do
-    admin = sign_in(create(:user, admin: true))
+    admin = sign_in(create(:user, :admin))
     member = create(:user)
     post(admin_impersonate_path(member))
 
@@ -26,13 +26,13 @@ RSpec.describe "Admin activity" do
   end
 
   it "shows the dashboard to an admin with per-person and per-section totals" do
-    sign_in(create(:user, admin: true, email: "boss@example.com"))
+    sign_in(create(:user, :admin))
     get("/dict")
 
     get(admin_activity_path)
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("boss@example.com"))
+    expect(response.body).to(include(User::ADMIN_GOOGLE_EMAIL))
     expect(response.body).to(include(I18n.t("admin.by_section")))
   end
 

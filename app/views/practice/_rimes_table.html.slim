@@ -23,5 +23,3 @@
               td.px-3.py-2 class="text-[10px] text-muted-foreground/70" = row["palladius"].presence || "—"
             td.px-3.py-2.text-muted-foreground class="text-[11px]" = row["written"]
             td.px-3.py-2.leading-relaxed class="min-w-[20rem]" = phon_markup(phon_localized(row))
-
-  = render("practice/palladius_note")

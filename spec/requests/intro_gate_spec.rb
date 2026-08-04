@@ -130,7 +130,7 @@ RSpec.describe "The intro tour" do
       post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
       post("/intro/next")
 
-      expect(response).to(redirect_to("/en/profile/guide"))
+      expect(response).to(redirect_to("/en/help"))
     end
 
     it "no longer asks which language to read in" do
@@ -139,7 +139,7 @@ RSpec.describe "The intro tour" do
     end
 
     it "leaves the reader on the guide when the tour ends" do
-      expect(Intro::Map.essential.last.path).to(eq("/profile/guide"))
+      expect(Intro::Map.essential.last.path).to(eq("/help"))
     end
   end
 

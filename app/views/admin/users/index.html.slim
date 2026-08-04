@@ -34,10 +34,10 @@
           span = t("admin.decks", count: stats[:decks])
 
         .flex.flex-wrap.items-center.gap-2
-          = form_with model: user, url: admin_user_path(user), method: :patch, class: "flex flex-wrap items-center gap-3" do |f|
-            label.inline-flex.shrink-0.items-center.gap-1.text-xs
-              = f.check_box :admin
+          - if user.admin?
+            span.shrink-0.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5"
               = t("admin.is_admin")
+          = form_with model: user, url: admin_user_path(user), method: :patch, class: "flex flex-wrap items-center gap-3" do |f|
             label.inline-flex.shrink-0.items-center.gap-1.text-xs
               = f.check_box :restricted_content
               = t("admin.restricted")

@@ -3,8 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Admin content sources" do
-  let(:admin) { User.create!(email: "admin@example.com", password: "password123", admin: true) }
-  let(:reader) { User.create!(email: "reader@example.com", password: "password123", admin: false) }
+  let(:admin) {
+    User.create!(email: User::ADMIN_GOOGLE_EMAIL, password: "password123", google_email: User::ADMIN_GOOGLE_EMAIL)
+  }
+  let(:reader) { User.create!(email: "reader@example.com", password: "password123") }
 
   before do
     ContentSources::Importer.new.call

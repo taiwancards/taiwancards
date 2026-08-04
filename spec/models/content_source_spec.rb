@@ -3,8 +3,10 @@
 require "rails_helper"
 
 RSpec.describe ContentSource do
-  let(:admin) { User.create!(email: "a@example.com", password: "password123", admin: true) }
-  let(:reader) { User.create!(email: "r@example.com", password: "password123", admin: false) }
+  let(:admin) {
+    User.create!(email: User::ADMIN_GOOGLE_EMAIL, password: "password123", google_email: User::ADMIN_GOOGLE_EMAIL)
+  }
+  let(:reader) { User.create!(email: "r@example.com", password: "password123") }
 
   let(:source) do
     described_class.create!(
@@ -123,7 +125,11 @@ RSpec.describe ContentSource do
 
     it "shows none of them to an admin either" do
       described_class.measurement_only.update_all(enabled: true, enabled_for_admins: true)
-      admin = User.create!(email: "boss@example.com", password: "password123", admin: true)
+      admin = User.create!(
+        email: User::ADMIN_GOOGLE_EMAIL,
+        password: "password123",
+        google_email: User::ADMIN_GOOGLE_EMAIL
+      )
 
       visible = described_class.visible_to(admin).pluck(:slug)
 

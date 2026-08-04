@@ -121,6 +121,14 @@ namespace(:deploy) do
       order.call
       :ran
     },
+    "admin_rights" => -> {
+      stale = User.where(admin: true).reject(&:admin?)
+      next :skipped if stale.empty?
+
+      User.where(id: stale.map(&:id)).update_all(admin: false)
+      $stdout.puts("admin taken from #{stale.size} account(s) that are not #{User::ADMIN_GOOGLE_EMAIL}")
+      :ran
+    },
     "flag_restricted" => -> {
       flagger = Huayu::RestrictedFlagger.new
       next :skipped unless flagger.drift?

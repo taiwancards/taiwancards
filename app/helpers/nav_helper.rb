@@ -102,7 +102,7 @@ module NavHelper
       [:user, t("nav.profile"), profile_path],
       [:stats, t("nav.progress"), progress_path],
       [:settings, t("nav.settings"), edit_settings_path],
-      [:help, t("nav.help"), help_path]
+      [:help, t("nav.guide"), guide_path]
     ]
   end
 
@@ -130,6 +130,11 @@ module NavHelper
     chosen = default_mobile_tabs.select { |path| catalog.key?(path) } if chosen.empty?
 
     chosen.first(MOBILE_TAB_SLOTS).map { |path| [*catalog.fetch(path), path] }
+  end
+
+  def nav_item_tour(path)
+    slug = Locales.strip(path.to_s).split("?").first.to_s.gsub(%r{\A/+|/+\z}, "").tr("/", "-")
+    "nav-item-#{slug.presence || "home"}"
   end
 
   def nav_entry_active?(entry)

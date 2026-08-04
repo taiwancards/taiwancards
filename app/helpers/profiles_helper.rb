@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ProfilesHelper
-  TABS = %w[show display level guide backup].freeze
+  TABS = %w[show display level backup].freeze
 
   def profile_tab_path(tab)
     case tab
@@ -9,8 +9,6 @@ module ProfilesHelper
       profile_display_path
     when "level"
       profile_level_path
-    when "guide"
-      guide_path
     when "backup"
       profile_backup_path
     else

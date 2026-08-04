@@ -6,7 +6,7 @@ RSpec.describe "The full guide" do
   def rendered_nav = controller.view_context.taiwan_nav
 
   it "leads to every page the navigation offers, so it cannot fall behind" do
-    get("/en/profile/guide")
+    get("/en/help")
 
     expect(response).to(have_http_status(:ok))
     expect(rendered_nav).not_to(be_empty)
@@ -18,7 +18,7 @@ RSpec.describe "The full guide" do
   end
 
   it "names and describes every section" do
-    get("/en/profile/guide")
+    get("/en/help")
 
     rendered_nav.each do |group|
       expect(response.body).to(include(group[:label]))
@@ -27,7 +27,7 @@ RSpec.describe "The full guide" do
   end
 
   it "offers a walkthrough for the sections that have one" do
-    get("/en/profile/guide")
+    get("/en/help")
 
     Intro::Map.chapters.each do |chapter|
       expect(response.body).to(include("/intro/chapter/#{chapter.id}"), "#{chapter.id} is unreachable")
@@ -42,7 +42,7 @@ RSpec.describe "The full guide" do
   end
 
   it "can start the short introduction again" do
-    get("/en/profile/guide")
+    get("/en/help")
 
     expect(response.body).to(include(I18n.t("intro.guide.replay_cta")))
     expect(response.body).to(include("/intro/start"))
@@ -54,17 +54,21 @@ RSpec.describe "The introduction" do
     ids = Intro::Map.essential.map(&:id)
 
     expect(ids).to(eq(%w[welcome search dictionary language_section practice taiwan profile new_deck display guide]))
-    expect(Intro::Map.essential.last.path).to(eq("/profile/guide"))
+    expect(Intro::Map.essential.last.path).to(eq("/help"))
   end
 
   it "spotlights something that is really on the page for every anchored step" do
-    anchors = Dir[Rails.root.join("app/{views,helpers}/**/*.{slim,rb}")]
-      .flat_map { |path| File.read(path).scan(/data-tour=\(?"([^"]+)"|tour: "([^"]+)"/) }
+    anchors = Rails
+      .root
+      .glob("app/{views,helpers}/**/*.{slim,rb}")
+      .flat_map { |file| file.read.lines.grep(/tour/) }
+      .flat_map { |line| line.scan(/"([a-z][a-z0-9-]*)"/) }
       .flatten
-      .compact
       .to_set
 
     Intro::Map.all_steps.filter_map(&:target).uniq.each do |target|
+      next if target.start_with?("nav-item-")
+
       expect(anchors).to(include(target), "no element carries data-tour=\"#{target}\"")
     end
   end

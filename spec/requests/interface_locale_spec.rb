@@ -22,7 +22,7 @@ RSpec.describe "Interface locale" do
     raw_get("/desk")
     expect(response).to(redirect_to("/ru/desk"))
     follow_redirect!
-    expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
+    expect(response.body).to(include(I18n.t("nav.guide", locale: :ru)))
   end
 
   it "falls back to English when the browser asks for a language we do not have", :no_auth do
@@ -47,8 +47,8 @@ RSpec.describe "Interface locale" do
     get("/en/desk")
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include(I18n.t("nav.help", locale: :en)))
-    expect(response.body).not_to(include(I18n.t("nav.help", locale: :ru)))
+    expect(response.body).to(include(I18n.t("nav.guide", locale: :en)))
+    expect(response.body).not_to(include(I18n.t("nav.guide", locale: :ru)))
   end
 
   it "keeps the query string while adding the prefix" do
@@ -73,7 +73,7 @@ RSpec.describe "Interface locale" do
     expect(user.reload.locale).to(eq("ru"))
     raw_get("/desk")
     follow_redirect!
-    expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
+    expect(response.body).to(include(I18n.t("nav.guide", locale: :ru)))
   end
 
   it "sends a guest to the login in the language they were reading", :no_auth do

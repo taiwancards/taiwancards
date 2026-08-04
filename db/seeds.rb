@@ -17,11 +17,10 @@ else
     admin.password = SecureRandom.base58(24)
   end
 
-  admin.admin = true
   admin.restricted_content = true
-  admin.google_email ||= ENV["ADMIN_GOOGLE_EMAIL"].presence || admin_email
+  admin.google_email ||= User::ADMIN_GOOGLE_EMAIL
   admin.email_verified_at ||= Time.current
   admin.save!
 
-  seed_log("Seeds: admin #{admin.email}")
+  seed_log("Seeds: #{admin.email} (admin: #{admin.admin?})")
 end

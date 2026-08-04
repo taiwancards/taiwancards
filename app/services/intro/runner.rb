@@ -48,6 +48,13 @@ module Intro
       move(1)
     end
 
+    def jump_to!(id)
+      index = chapter_steps.index { |step| step.id == id }
+      return advance! if index.nil?
+
+      @session[:intro_chapter_step] = index
+    end
+
     def rewind!
       move(-1)
     end

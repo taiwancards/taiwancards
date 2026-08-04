@@ -37,4 +37,6 @@ html lang=I18n.locale class=html_preference_classes
         = render "shared/footer"
       = render "shared/bottom_nav"
       - if authenticated? && !content_for?(:full_bleed)
+        = render "shared/local_reset"
+        = render "shared/desktop_hint"
         = render "shared/intro_tour"
