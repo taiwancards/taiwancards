@@ -97,6 +97,12 @@ namespace(:deploy) do
       task: "huayu:import_liangci",
       paths: %w[huayu/measure_words.json huayu/classifier_pairs.json],
       code: %w[app/services/huayu/liangci_importer.rb]
+    },
+    {
+      name: "register_mix",
+      task: "huayu:register_mix",
+      paths: %w[content_sources.json],
+      code: %w[app/services/lexemes/register_mix.rb]
     }
   ].freeze
 
@@ -181,18 +187,6 @@ namespace(:deploy) do
         failed << "#{step[:name]} (#{e.class})"
         warn("deploy:sync step #{step[:name]} failed: #{e.class}: #{e.message}")
       end
-    end
-
-    if ran.any?
-      begin
-        STEP_TIMER.call("fillers") { Rake::Task["deploy:fillers"].invoke }
-        ran << "fillers"
-      rescue => e
-        failed << "fillers (#{e.class})"
-        warn("deploy:sync fillers failed: #{e.class}: #{e.message}")
-      end
-    else
-      skipped << "fillers"
     end
 
     ALWAYS_STEPS.each do |name, action|

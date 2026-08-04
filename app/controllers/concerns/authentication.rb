@@ -28,8 +28,8 @@ module Authentication
   end
 
   def impersonated_user
-    return nil if session[:impersonated_user_id].blank?
     return nil unless true_user&.admin?
+    return nil if session[:impersonated_user_id].blank?
 
     return @impersonated_user if defined?(@impersonated_user)
 

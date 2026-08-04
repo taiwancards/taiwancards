@@ -5,7 +5,6 @@ module PubliclyCacheable
 
   SHARED_TTL = 10.minutes
   STALE_TTL = 1.day
-  HEADER = "public, max-age=0, s-maxage=#{SHARED_TTL.to_i}, stale-while-revalidate=#{STALE_TTL.to_i}"
 
   PERSONAL = [
     ZhuyinHelper::HANZI_FONT_COOKIE,
@@ -17,7 +16,7 @@ module PubliclyCacheable
   included do
     class_attribute(:public_cache_actions, default: nil)
 
-    before_action :answer_without_a_session
+    prepend_before_action :answer_without_a_session
     after_action :allow_shared_caching
 
     helper_method :sessionless?
@@ -51,6 +50,6 @@ module PubliclyCacheable
     return unless sessionless?
     return unless response.status == 200
 
-    response.set_header("Cache-Control", HEADER)
+    expires_in(0, public: true, "s-maxage": SHARED_TTL.to_i, "stale-while-revalidate": STALE_TTL.to_i)
   end
 end
