@@ -69,7 +69,7 @@ RSpec.describe "Query budget" do
 
     it "loads every sentence, its profile and its sources without a per-row query" do
       cookies[DetailLevelHelper::DETAIL_COOKIE] = DetailLevelHelper::FULL
-      report = count_queries { get(dict_entry_path(entry.text)) }
+      report = count_queries { get(dict_entry_path(text: entry.text)) }
 
       expect(response).to(have_http_status(:ok))
       expect(response.body).to(include("我在學習中文0。"))

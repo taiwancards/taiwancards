@@ -58,7 +58,7 @@ RSpec.describe "Dictionary detail level" do
       expect(response.body).to(include("簡"))
 
       post("/prefs/detail", params: {mode: "full"}, headers: {"HTTP_REFERER" => "/dict"})
-      expect(response).to(redirect_to("/dict"))
+      expect(response).to(redirect_to("/en/dict"))
       expect(cookies["dict_detail"]).to(eq("full"))
 
       get("/dict")
@@ -70,7 +70,7 @@ RSpec.describe "Dictionary detail level" do
 
       post("/prefs/detail", params: {mode: "everything"}, headers: {"HTTP_REFERER" => "/dict"})
 
-      expect(response).to(redirect_to("/dict"))
+      expect(response).to(redirect_to("/en/dict"))
       expect(cookies["dict_detail"]).to(eq("brief"))
     end
   end

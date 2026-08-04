@@ -46,13 +46,13 @@ RSpec.describe "Festivals and the lunar calendar" do
     get(calendar_path)
 
     expect(response.body).to(include(quick_add_path))
-    expect(response.body).to(include(dict_entry_path(word.text)))
+    expect(response.body).to(include(dict_entry_path(text: word.text)))
   end
 
   it "renders the page and its festival texts in Russian" do
     sign_in(create(:user, locale: "ru"))
 
-    get(calendar_path)
+    in_locale(:ru) { get(calendar_path) }
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include(I18n.t("calendar.title", locale: :ru)))

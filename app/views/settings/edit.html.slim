@@ -30,4 +30,4 @@
   section.mt-10.max-w-md
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("settings.export_title")
     p.mt-2.text-sm.text-muted-foreground = t("settings.export_hint")
-    = link_to t("settings.export_link"), llm_export_path, class: "mt-2 inline-block text-sm font-medium text-primary hover:underline"
+    = link_to t("settings.export_link"), llm_export_path(locale: nil), class: "mt-2 inline-block text-sm font-medium text-primary hover:underline"

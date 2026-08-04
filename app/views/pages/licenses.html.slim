@@ -63,7 +63,7 @@
           p.mt-1.text-sm.text-muted-foreground = t("licenses.items.#{key}")
           - if key == :moe_audio && Huayu::MoeAudio.notice?
             p.mt-2.text-sm
-              = link_to t("licenses.moe_notice"), moe_notice_path, link_opts
+              = link_to t("licenses.moe_notice"), moe_notice_path(locale: nil), link_opts
 
   section.space-y-3
     h2.text-lg.font-semibold = t("licenses.fonts_title")

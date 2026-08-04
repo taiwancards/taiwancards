@@ -31,7 +31,7 @@ RSpec.describe "Coming back to where the sign-in started", :no_auth do
 
     google!(existing: true)
 
-    expect(response).to(redirect_to("/menu"))
+    expect(response).to(redirect_to("/en/menu"))
   end
 
   it "asks a brand new account for its level when it came straight to the sign-in page" do

@@ -158,7 +158,7 @@
           - %w[永 好 河].each do |char|
             .space-y-2[
               data-controller="hanzi-writer" data-hanzi-writer-char-value=char
-              data-hanzi-writer-url-value=character_strokes_path(char) ]
+              data-hanzi-writer-url-value=character_strokes_path(char, locale: nil) ]
               .flex.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
                 class="size-56 sm:size-40" data-hanzi-writer-target="canvas" ]
               .flex.items-center.justify-between.gap-2

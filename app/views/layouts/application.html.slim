@@ -14,7 +14,7 @@ html lang=I18n.locale class=html_preference_classes
     link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32"
     link rel="icon" href="/icon.svg?v=6" type="image/svg+xml"
     link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6"
-    link rel="manifest" href=pwa_manifest_path
+    link rel="manifest" href=pwa_manifest_path(locale: nil)
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_importmap_tags
 

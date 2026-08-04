@@ -31,16 +31,17 @@ module Introduced
     return if ALWAYS_ALLOWED.include?(controller_path)
     return unless request.get? || request.head?
 
-    intro_progress.arrived_at(request.path)
-    return if intro_progress.allows?(request.path)
+    here = Locales.strip(request.path)
+    intro_progress.arrived_at(here)
+    return if intro_progress.allows?(here)
 
     destination = intro_progress.step&.path
-    return if destination.blank? || same_path?(destination)
+    return if destination.blank? || same_path?(destination, here)
 
-    redirect_to(destination)
+    redirect_to(Locales.swap(destination, I18n.locale))
   end
 
-  def same_path?(destination)
-    destination.split("?").first.chomp("/") == request.path.chomp("/")
+  def same_path?(destination, here)
+    destination.split("?").first.chomp("/") == here.chomp("/")
   end
 end

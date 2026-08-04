@@ -66,18 +66,18 @@ RSpec.describe "Dictionary" do
       post("/dict/#{CGI.escape("學校")}/activate")
     end
       .to(change(LexemeMemory.active, :count).by_at_least(1))
-    expect(response).to(redirect_to(dict_entry_path("學校")))
+    expect(response).to(redirect_to("/en/dict/#{CGI.escape("學校")}"))
   end
 
   it "redirects the old word and collocation urls" do
     get("/words/#{CGI.escape("學校")}")
-    expect(response).to(redirect_to(dict_entry_path("學校")))
+    expect(response).to(redirect_to("/en/dict/#{CGI.escape("學校")}"))
 
     get("/collocations/#{CGI.escape("超商")}")
-    expect(response).to(redirect_to(dict_entry_path("超商")))
+    expect(response).to(redirect_to("/en/dict/#{CGI.escape("超商")}"))
 
     get("/words")
-    expect(response).to(redirect_to("/dict"))
+    expect(response).to(redirect_to("/en/dict"))
   end
 
   it "returns not found for an unknown entry" do

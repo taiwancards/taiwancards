@@ -9,7 +9,7 @@ RSpec.describe "Desks" do
     user = create(:user, google_uid: "desk-uid")
     sign_in(user)
 
-    expect(response).to(redirect_to("/desk"))
+    expect(response).to(redirect_to("/en/desk"))
   end
 
   it "renders the Taiwanese home screen" do
@@ -18,10 +18,12 @@ RSpec.describe "Desks" do
     expect(response).to(have_http_status(:ok))
   end
 
-  it "renders in the language stored on the user" do
+  it "renders in the language the address asks for" do
     sign_in(create(:user, locale: "ru"))
 
-    get("/desk")
+    raw_get("/desk")
+    expect(response).to(redirect_to("/ru/desk"))
+    follow_redirect!
     expect(response.body).to(include("В колоде"))
   end
 

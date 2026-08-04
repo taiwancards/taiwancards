@@ -72,7 +72,7 @@ RSpec.describe "Taiwan everyday vocabulary" do
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include(I18n.t("everyday.scenarios.food"), I18n.t("everyday.scenarios.slang")))
     expect(response.body).to(include(everyday_path(area: "slang")))
-    expect(response.body).not_to(include(dict_entry_path("三小")))
+    expect(response.body).not_to(include(dict_entry_path(text: "三小")))
   end
 
   it "lists the words once a situation is picked" do

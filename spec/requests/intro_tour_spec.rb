@@ -77,7 +77,7 @@ RSpec.describe "Intro tour" do
       chapter = Intro::Map.chapter("taiwan")
       post("/intro/chapter/taiwan")
 
-      expect(response).to(redirect_to(chapter.steps.first.path))
+      expect(response).to(redirect_to("/en#{chapter.steps.first.path}"))
     end
 
     it "runs the chapter and lets the user leave at any point" do
@@ -104,7 +104,7 @@ RSpec.describe "Intro tour" do
         expect(response.body).to(include(I18n.t("#{current.i18n_key}.title")))
 
         post("/intro/next")
-        expect(response).to(redirect_to(following.path))
+        expect(response).to(redirect_to("/en#{following.path}"))
       end
     end
 

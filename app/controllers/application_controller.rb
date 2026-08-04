@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   around_action :switch_locale
+  before_action :redirect_to_localised_url
   after_action :track_activity
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
@@ -57,13 +58,40 @@ class ApplicationController < ActionController::Base
       controller: controller_path,
       action: action_name,
       verb: request.request_method,
-      path: request.path
+      path: Locales.strip(request.path)
     )
   end
 
   def switch_locale(&action)
-    locale = cookies[:locale].presence || current_user&.locale.presence || I18n.default_locale
-    locale = I18n.default_locale unless I18n.available_locales.map(&:to_s).include?(locale.to_s)
-    I18n.with_locale(locale, &action)
+    I18n.with_locale(Locales.resolve(url: params[:locale], stored: stored_locale, header: browser_locale), &action)
+  end
+
+  def redirect_to(target, **)
+    super(localised_target(target), **)
+  end
+
+  def localised_target(target)
+    return target unless target.is_a?(String)
+
+    path = target.delete_prefix(request.base_url)
+    return target unless Locales.prefixable?(path)
+
+    Locales.swap(target, I18n.locale)
+  end
+
+  def stored_locale = current_user&.locale.presence || cookies[:locale].presence
+
+  def browser_locale = request.headers["Accept-Language"]
+
+  def default_url_options = {locale: I18n.locale}
+
+  def redirect_to_localised_url
+    return if params[:locale].present?
+    return unless Locales.addressable?(request)
+
+    target = url_for(params.to_unsafe_h.merge(locale: I18n.locale, only_path: true))
+    return unless target.start_with?("/#{I18n.locale}")
+
+    redirect_to(target, status: :moved_permanently)
   end
 end

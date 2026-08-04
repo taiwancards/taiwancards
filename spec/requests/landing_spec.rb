@@ -48,7 +48,7 @@ RSpec.describe "Landing page" do
   it "offers the visitor the other language from the landing itself", :no_auth do
     get(root_path)
 
-    expect(response.body).to(include(locale_path(:ru)))
+    expect(response.body).to(include(locale_path(:ru, locale: nil)))
   end
 
   it "links its privacy policy and terms from the home page", :no_auth do
@@ -57,19 +57,24 @@ RSpec.describe "Landing page" do
     expect(response.body).to(include(privacy_path, terms_path))
   end
 
-  it "switches language only when the visitor asks, and then remembers it", :no_auth do
-    post("/locale/ru")
-    get(root_path)
-    expect(response.body).to(include(I18n.t("landing.hero.heading", locale: :ru)))
+  it "switches language only when the visitor asks, and moves the address with it", :no_auth do
+    post("/locale/ru", headers: {"HTTP_REFERER" => "http://www.example.com/en"})
 
-    get(root_path)
+    expect(response).to(redirect_to("http://www.example.com/ru"))
+    follow_redirect!
     expect(response.body).to(include(I18n.t("landing.hero.heading", locale: :ru)))
   end
 
-  it "ignores a locale smuggled in through the query string", :no_auth do
-    post("/locale/ru")
+  it "remembers the choice for a visitor who arrives with no prefix at all", :no_auth do
+    post("/locale/ru", headers: {"HTTP_REFERER" => "http://www.example.com/en"})
 
-    get(root_path(locale: :en))
+    raw_get("/")
+
+    expect(response).to(redirect_to("/ru"))
+  end
+
+  it "lets the path segment beat a locale smuggled in through the query string", :no_auth do
+    get("/ru?locale=en")
 
     expect(response.body).to(include(I18n.t("landing.hero.heading", locale: :ru)))
   end
@@ -156,8 +161,7 @@ RSpec.describe "Landing page" do
 
   it "promises no advertising freely, and promises no price only once", :no_auth do
     {en: [/\bfree\b/i, /\bno ads\b/i], ru: [/бесплатн/i, /реклам/i]}.each do |locale, (price, ads)|
-      post("/locale/#{locale}")
-      get(root_path)
+      get("/#{locale}")
       text = response.body.gsub(/<[^>]+>/, " ")
 
       expect(text.scan(price).length).to(eq(1))

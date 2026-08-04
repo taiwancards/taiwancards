@@ -39,7 +39,7 @@ RSpec.describe "Textbook" do
     expect(response.body).to(include("Key Grammar").and(include("謝")))
 
     sign_in(create(:user, locale: "ru", restricted_content: true))
-    get("/textbook/1/1")
+    in_locale(:ru) { get("/textbook/1/1") }
     expect(response.body).to(include("Ключевая грамматика").and(include("спасибо")))
   end
 end

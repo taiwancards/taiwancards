@@ -14,20 +14,20 @@ RSpec.describe "Onboarding" do
   it "sends a complete beginner to the roadmap" do
     post("/start", params: {start_level: "zero"})
 
-    expect(response).to(redirect_to("/path"))
+    expect(response).to(redirect_to("/en/path"))
     expect(@authenticated_user.reload.start_level).to(eq("zero"))
   end
 
   it "sends someone with characters to the placement test" do
     post("/start", params: {start_level: "characters"})
 
-    expect(response).to(redirect_to("/placement"))
+    expect(response).to(redirect_to("/en/placement"))
   end
 
   it "rejects an unknown level" do
     post("/start", params: {start_level: "wizard"})
 
-    expect(response).to(redirect_to("/start"))
+    expect(response).to(redirect_to("/en/start"))
     expect(@authenticated_user.reload.start_level).to(be_nil)
   end
 
@@ -36,7 +36,7 @@ RSpec.describe "Onboarding" do
 
     get("/start")
 
-    expect(response).to(redirect_to("/path"))
+    expect(response).to(redirect_to("/en/path"))
   end
 
   it "still shows the question when asked again explicitly" do
@@ -81,7 +81,7 @@ RSpec.describe "Onboarding" do
   it "ignores an unknown step" do
     post("/path/step", params: {step: "nonsense"})
 
-    expect(response).to(redirect_to("/path"))
+    expect(response).to(redirect_to("/en/path"))
     expect(@authenticated_user.reload.path_steps_done).to(be_empty)
   end
 

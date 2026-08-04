@@ -23,7 +23,7 @@ RSpec.describe "Pronunciation" do
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include("data-controller=\"pronunciation\""))
     expect(response.body).to(include("教堂"))
-    expect(response.body).to(include("data-pronunciation-url-value=\"/pronunciation\""))
+    expect(response.body).to(include("data-pronunciation-url-value=\"/en/pronunciation\""))
   end
 
   it "renders one tile per syllable and no unparsed template" do

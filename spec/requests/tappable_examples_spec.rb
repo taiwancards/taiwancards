@@ -42,7 +42,9 @@ RSpec.describe "Tappable examples" do
     get("/dict/#{CGI.escape("學校")}")
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("href=\"/dict/#{CGI.escape("喜歡")}\"").or(include("href=\"/dict/喜歡\"")))
+    expect(response.body).to(
+      include("href=\"/en/dict/#{CGI.escape("喜歡")}\"").or(include("href=\"/en/dict/喜歡\""))
+    )
     expect(response.body).to(include("喜歡"))
   end
 

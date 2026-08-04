@@ -75,7 +75,7 @@ RSpec.describe "Metro map" do
     expect(cards.keys).to(contain_exactly("台北車站", "西門"))
     expect(cards["台北車站"]).to(include("zhuyin" => "ㄊㄞˊ ㄅㄟˇ ㄔㄜ ㄓㄢˋ"))
     expect(cards["台北車站"]["lines"]).to(eq(["淡水信義線", "板南線"]))
-    expect(cards["西門"]["href"]).to(eq(dict_entry_path("西門")))
+    expect(cards["西門"]["href"]).to(eq(dict_entry_path(text: "西門")))
   end
 
   it "puts an interchange on both of its lines" do

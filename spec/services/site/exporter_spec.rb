@@ -32,21 +32,22 @@ RSpec.describe Site::Exporter do
     expect(root.glob("**/index.html").map { |file| file.relative_path_from(root).to_s }).to(
       contain_exactly(
         "index.html",
+        "en/index.html",
+        "ru/index.html",
         "licenses/index.html",
         "privacy/index.html",
-        "terms/index.html",
-        "ru/index.html"
+        "terms/index.html"
       )
     )
   end
 
   it "renders each locale in its own language" do
-    expect(page("index.html")).to(match(/<html[^>]*lang="en"/))
+    expect(page("en", "index.html")).to(match(/<html[^>]*lang="en"/))
     expect(page("ru", "index.html")).to(match(/<html[^>]*lang="ru"/))
   end
 
   it "keeps nothing that only a Rails request can satisfy" do
-    html = page("index.html")
+    html = page("en", "index.html")
 
     expect(html).not_to(include("csrf-token"))
     expect(html).not_to(include("csp-nonce"))
@@ -55,11 +56,11 @@ RSpec.describe Site::Exporter do
   end
 
   it "sends app links to the app and keeps its own pages local" do
-    html = page("index.html")
+    html = page("en", "index.html")
 
-    expect(html).to(include("href=\"#{app_url}/login\""))
+    expect(html).to(include("href=\"#{app_url}/en/login\""))
     expect(html).to(include("href=\"/licenses\""))
-    expect(html).not_to(include("href=\"#{app_url}/licenses\""))
+    expect(html).not_to(include("href=\"#{app_url}/en/licenses\""))
   end
 
   it "points the russian pages at their own canonical url" do
@@ -68,15 +69,40 @@ RSpec.describe Site::Exporter do
     )
   end
 
-  it "offers each page in both languages to search engines" do
-    expect(page("index.html").scan("rel=\"alternate\"").length).to(eq(I18n.available_locales.length))
+  it "offers each page in both languages to search engines, and names a default" do
+    html = page("en", "index.html")
+
+    expect(html.scan("rel=\"alternate\"").length).to(eq(I18n.available_locales.length + 1))
+    I18n.available_locales.each do |locale|
+      expect(html).to(include("hreflang=\"#{locale}\" href=\"#{site_url}/#{locale}/\""))
+    end
+
+    expect(html).to(include("hreflang=\"x-default\" href=\"#{site_url}/en/\""))
   end
 
   it "copies every stylesheet the pages ask for" do
-    asked = page("index.html").scan(%r{href="(/assets/[^"]+)"}).flatten
+    asked = page("en", "index.html").scan(%r{href="(/assets/[^"]+)"}).flatten
 
     expect(asked).not_to(be_empty)
     asked.each { |path| expect(root.join(path.delete_prefix("/"))).to(exist) }
+  end
+
+  it "lists both languages of the landing in the sitemap and points robots at it" do
+    xml = root.join("sitemap.xml").read
+
+    expect(xml).to(include("<loc>#{site_url}/en/</loc>"))
+    expect(xml).to(include("<loc>#{site_url}/ru/</loc>"))
+    expect(xml).to(include("hreflang=\"ru\" href=\"#{site_url}/ru/\""))
+    expect(xml.scan("<loc>").length).to(eq(5))
+    expect(root.join("robots.txt").read).to(include("Sitemap: #{site_url}/sitemap.xml"))
+  end
+
+  it "keeps the bare root alive and sends it on to a language" do
+    html = page("index.html")
+
+    expect(html).to(include("url=/en/"))
+    expect(html).to(include("rel=\"canonical\" href=\"#{site_url}/en/\""))
+    expect(html).to(include("navigator.language"))
   end
 
   it "leaves no form that needs a server to answer it" do
@@ -84,8 +110,8 @@ RSpec.describe Site::Exporter do
   end
 
   it "switches language on the landing only" do
-    expect(page("index.html")).to(include("href=\"/ru/\""))
-    expect(page("ru", "index.html")).to(include("href=\"/\""))
+    expect(page("en", "index.html")).to(include("href=\"/ru/\""))
+    expect(page("ru", "index.html")).to(include("href=\"/en/\""))
   end
 
   it "keeps the legal pages in english with no way to translate them" do
@@ -100,11 +126,11 @@ RSpec.describe Site::Exporter do
   end
 
   it "loads the heavy brush face from the address the app uses too" do
-    expect(page("index.html")).to(include("data-kai-font-url-value=\"#{FontAssets.kai_full_url}\""))
+    expect(page("en", "index.html")).to(include("data-kai-font-url-value=\"#{FontAssets.kai_full_url}\""))
   end
 
   it "opens the connections and preloads the face the page paints with" do
-    html = page("index.html")
+    html = page("en", "index.html")
 
     expect(html).to(include("rel=\"preconnect\" href=\"#{app_url}\""))
     expect(html).to(include("rel=\"preload\" as=\"font\""))
@@ -125,7 +151,7 @@ RSpec.describe Site::Exporter do
   end
 
   it "bakes the counts in rather than leaving them to a server" do
-    expect(page("index.html")).to(
+    expect(page("en", "index.html")).to(
       include(ActiveSupport::NumberHelper.number_to_delimited(Lexeme.unrestricted.where(kind: :character).count))
     )
   end

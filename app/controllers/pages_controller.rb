@@ -24,6 +24,6 @@ class PagesController < ApplicationController
   def send_to_the_site
     return unless Site.published?
 
-    redirect_to(Site.page_url(request.path), allow_other_host: true, status: :moved_permanently)
+    redirect_to(Site.page_url(Locales.strip(request.path)), allow_other_host: true, status: :moved_permanently)
   end
 end

@@ -9,7 +9,8 @@ module Admin
       return redirect_to(admin_users_path, alert: t("admin.impersonate_self")) if target == true_user
 
       session[:impersonated_user_id] = target.id
-      redirect_to(root_path, notice: t("admin.impersonating", email: target.email))
+      code = Locales.resolve(url: nil, stored: target.locale)
+      redirect_to(root_path(locale: code), notice: t("admin.impersonating", email: target.email, locale: code))
     end
 
     def destroy

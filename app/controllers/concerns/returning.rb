@@ -24,6 +24,8 @@ module Returning
   end
 
   def own_path?(path)
-    path.present? && path.start_with?("/") && !path.start_with?("//") && !path.start_with?(login_path)
+    return false if path.blank? || !path.start_with?("/") || path.start_with?("//")
+
+    !Locales.strip(path).start_with?(Locales.strip(login_path))
   end
 end

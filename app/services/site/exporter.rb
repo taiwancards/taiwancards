@@ -30,6 +30,8 @@ module Site
         ENGLISH_ONLY.each_key { |path| write(path, I18n.default_locale) }
         copy_assets
         copy_public
+        write_sitemap
+        write_root_fallback
         report
       end
     end
@@ -50,14 +52,16 @@ module Site
 
     def destination(path, locale)
       folder = PAGES.fetch(path)
-      prefix = locale == I18n.default_locale ? @root : @root.join(locale.to_s)
+      return @root.join(folder, "index.html") if ENGLISH_ONLY.key?(path)
+
+      prefix = @root.join(locale.to_s)
       folder == "." ? prefix.join("index.html") : prefix.join(folder, "index.html")
     end
 
     def fetch(path, locale)
       session = ActionDispatch::Integration::Session.new(Rails.application)
       session.host = "localhost"
-      session.get(path, headers: {"HTTP_COOKIE" => "locale=#{locale}"})
+      session.get("/#{locale}#{path}".chomp("/"), headers: {"HTTP_COOKIE" => "locale=#{locale}"})
 
       unless session.response.successful?
         raise "#{path} for #{locale} answered #{session.response.status}"
@@ -122,10 +126,14 @@ module Site
     def alternates(path)
       return "" if ENGLISH_ONLY.key?(path)
 
-      I18n
-        .available_locales
-        .map { |other| "<link rel=\"alternate\" hreflang=\"#{other}\" href=\"#{site_url}#{local(path, other)}\">" }
-        .join("\n")
+      tags = I18n.available_locales.map do |other|
+        "<link rel=\"alternate\" hreflang=\"#{other}\" href=\"#{site_url}#{local(path, other)}\">"
+      end
+
+      tags <<
+        "<link rel=\"alternate\" hreflang=\"x-default\" " \
+          "href=\"#{site_url}#{local(path, I18n.default_locale)}\">"
+      tags.join("\n")
     end
 
     def app_url = @app_url ||= ENV.fetch("APP_URL").chomp("/")
@@ -140,6 +148,7 @@ module Site
         .gsub(%r{<link rel="modulepreload"[^>]*>\n?}, "")
         .gsub(%r{<script type="module">.*?</script>\n?}m, "")
         .gsub(%r{<link[^>]*rel="manifest"[^>]*>\n?}, "")
+        .gsub(%r{<link[^>]*rel="alternate"[^>]*>\n?}, "")
         .gsub(/ nonce="[^"]*"/, "")
     end
 
@@ -153,8 +162,9 @@ module Site
     def absolutise_links(html, locale)
       html.gsub(/href="(\/[^"#][^"]*|\/)"/) do
         path = Regexp.last_match(1)
-        href = if STAYS_HERE.include?(path)
-          local(path, locale)
+        bare = Locales.strip(path)
+        href = if STAYS_HERE.include?(bare)
+          local(bare, locale)
         elsif path.start_with?("/assets/", "/icon", "/favicon", "/apple-touch-icon", "/manifest")
           path
         else
@@ -168,8 +178,7 @@ module Site
     def local(path, locale)
       return path if ENGLISH_ONLY.key?(path)
 
-      base = locale == I18n.default_locale ? "" : "/#{locale}"
-      path == "/" ? "#{base}/" : "#{base}#{path}"
+      path == "/" ? "/#{locale}/" : "/#{locale}#{path}"
     end
 
     def behavior
@@ -252,6 +261,61 @@ module Site
         raise "#{name} is referenced by the stylesheets but missing from #{FontAssets.directory}" unless source.exist?
 
         FileUtils.cp(source, target.join(name))
+      end
+    end
+
+    def write_root_fallback
+      @root.join("index.html").write(
+        <<~HTML
+          <!doctype html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8">
+          <title>#{I18n.t("app.name")}</title>
+          <link rel="canonical" href="#{site_url}/#{I18n.default_locale}/">
+          #{alternates("/")}
+          <meta http-equiv="refresh" content="0; url=/#{I18n.default_locale}/">
+          <script>
+          (function () {
+            var wanted = (navigator.language || "en").slice(0, 2);
+            var known = #{I18n.available_locales.map(&:to_s).inspect.tr("\"", "'")};
+            location.replace("/" + (known.indexOf(wanted) === -1 ? "#{I18n.default_locale}" : wanted) + "/");
+          })();
+          </script>
+          </head>
+          <body><a href="/#{I18n.default_locale}/">#{I18n.t("app.name")}</a></body>
+          </html>
+        HTML
+      )
+    end
+
+    def write_sitemap
+      entries = TRANSLATED.keys.flat_map { |path| I18n.available_locales.map { |locale| [path, locale] } }
+      entries += ENGLISH_ONLY.keys.map { |path| [path, I18n.default_locale] }
+
+      @root.join("sitemap.xml").write(
+        <<~XML
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+          #{entries.map { |path, locale| url_entry(path, locale) }.join("\n")}
+          </urlset>
+        XML
+      )
+
+      robots = @root.join("robots.txt")
+      robots.write("#{robots.exist? ? robots.read.chomp : ""}\nSitemap: #{site_url}/sitemap.xml\n")
+    end
+
+    def url_entry(path, locale)
+      links = alternate_links(path).map { |line| "    #{line}" }
+      ["  <url>", "    <loc>#{site_url}#{local(path, locale)}</loc>", *links, "  </url>"].join("\n")
+    end
+
+    def alternate_links(path)
+      return [] if ENGLISH_ONLY.key?(path)
+
+      I18n.available_locales.map do |other|
+        "<xhtml:link rel=\"alternate\" hreflang=\"#{other}\" href=\"#{site_url}#{local(path, other)}\"/>"
       end
     end
 

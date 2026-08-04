@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://taiwancards.app/en/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/ru/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/licenses</loc>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/privacy</loc>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/terms</loc>
+  </url>
+</urlset>

@@ -75,7 +75,7 @@ RSpec.describe "Guest access", :no_auth do
   it "shows no deck or study controls to a guest" do
     entry = create(:lexeme, kind: :word, text: "水果")
 
-    get(dict_entry_path(entry.text))
+    get(dict_entry_path(text: entry.text))
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).not_to(include("quick_add"))

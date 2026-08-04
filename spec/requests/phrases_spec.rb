@@ -43,13 +43,13 @@ RSpec.describe "Phrases" do
 
     get(phrases_path(scene: "restroom"))
 
-    expect(response.body).to(include(dict_entry_path("廁所")))
+    expect(response.body).to(include(dict_entry_path(text: "廁所")))
   end
 
   it "leaves a word out of the chips when no entry exists for it" do
     get(phrases_path(scene: "restroom"))
 
-    expect(response.body).not_to(include(dict_entry_path("廁所")))
+    expect(response.body).not_to(include(dict_entry_path(text: "廁所")))
   end
 
   it "counts the patterns of every scene in the navigation" do

@@ -162,7 +162,7 @@ module GrammarHelper
 
   def grammar_example_line(chinese, gloss, lesson, seen)
     seen << chinese
-    reading = lesson.reading(chinese).to_h
+    reading = (lesson.reading(chinese) || lesson.reading(chinese.gsub(/\P{Han}/, ""))).to_h
 
     tag.div(class: "grammar-example") do
       safe_join(

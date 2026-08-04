@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Authentication and progress portability" do
   it "redirects an unauthenticated visitor to the login page", :no_auth do
     get("/progress/history")
-    expect(response).to(redirect_to("/login"))
+    expect(response).to(redirect_to("/en/login"))
   end
 
   it "signs in through Google and lands in the app", :no_auth do

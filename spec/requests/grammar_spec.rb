@@ -61,10 +61,10 @@ RSpec.describe "Grammar" do
     expect(response.body).to(include("/grammar/shi"))
   end
 
-  it "shows the Russian explanation for Russian users" do
+  it "shows the Russian explanation on the Russian url" do
     sign_in(create(:user, locale: "ru"))
 
-    get("/grammar/1")
+    get("/ru/grammar/1")
 
     expect(response.body).to(include("связка «быть»"))
     expect(response.body).to(include("я студент"))

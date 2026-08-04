@@ -60,7 +60,7 @@
   - if @profile.strokes_available?
     section.rounded-2xl.border.border-border.bg-card.p-4[
       data-controller="hanzi-writer" data-hanzi-writer-char-value=lexeme.text
-      data-hanzi-writer-url-value=character_strokes_path(lexeme.text) ]
+      data-hanzi-writer-url-value=character_strokes_path(lexeme.text, locale: nil) ]
       .flex.flex-wrap.items-center.gap-4
         .flex.shrink-0.items-center.justify-center.rounded-xl.border.border-dashed.border-border[
           class="size-72 sm:size-56" data-hanzi-writer-target="canvas" ]

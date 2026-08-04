@@ -26,7 +26,7 @@ module ProfilesHelper
     [
       [t("progress.tabs.summary"), progress_path],
       [t("progress.tabs.history"), progress_history_path],
-      [t("progress.tabs.data"), progress_data_path]
+      [t("progress.tabs.data"), progress_data_path(locale: nil)]
     ]
   end
 end

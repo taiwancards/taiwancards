@@ -35,7 +35,7 @@ RSpec.describe "The intro tour" do
     it "comes back to the page the tour was started from" do
       post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
 
-      expect(response).to(redirect_to("/dict"))
+      expect(response).to(redirect_to("/en/dict"))
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe "The intro tour" do
       stand_on("search")
       get("/progress")
 
-      expect(response).to(redirect_to("/desk"))
+      expect(response).to(redirect_to("/en/desk"))
     end
 
     it "allows the page the step sits on" do
@@ -137,7 +137,7 @@ RSpec.describe "The intro tour" do
       post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
       post("/intro/next")
 
-      expect(response).to(redirect_to("/dict"))
+      expect(response).to(redirect_to("/en/dict"))
     end
 
     it "applies the language choice and moves on" do

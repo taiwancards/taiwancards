@@ -19,7 +19,9 @@ RSpec.describe "Interface locale" do
     sign_in_with_google(email: "ru@example.com", uid: "ru-uid", accept_language: "ru-RU,ru;q=0.9,en;q=0.8")
 
     expect(User.find_by(email: "ru@example.com").locale).to(eq("ru"))
-    get("/desk")
+    raw_get("/desk")
+    expect(response).to(redirect_to("/ru/desk"))
+    follow_redirect!
     expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
   end
 
@@ -30,12 +32,37 @@ RSpec.describe "Interface locale" do
     expect(I18n.default_locale).to(eq(:en))
   end
 
-  it "keeps the user's language even when a different one is passed in the URL" do
+  it "sends a person with no prefix in the address to the one their language asks for" do
     sign_in(create(:user, locale: "ru"))
 
-    get("/desk", params: {locale: "en"})
+    raw_get("/desk")
 
-    expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
+    expect(response).to(have_http_status(:moved_permanently))
+    expect(response).to(redirect_to("/ru/desk"))
+  end
+
+  it "lets the address win over the stored language, so a shared link reads as it was sent" do
+    sign_in(create(:user, locale: "ru"))
+
+    get("/en/desk")
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include(I18n.t("nav.help", locale: :en)))
+    expect(response.body).not_to(include(I18n.t("nav.help", locale: :ru)))
+  end
+
+  it "keeps the query string while adding the prefix" do
+    sign_in(create(:user, locale: "en"))
+
+    raw_get("/search?q=%E6%98%AF")
+
+    expect(response).to(redirect_to("/en/search?q=%E6%98%AF"))
+  end
+
+  it "leaves the machine endpoints alone, so the health check answers rather than redirects" do
+    raw_get("/up")
+
+    expect(response).to(have_http_status(:ok))
   end
 
   it "changes the language only from the profile" do
@@ -44,7 +71,8 @@ RSpec.describe "Interface locale" do
     patch("/profile", params: {user: {locale: "ru"}})
 
     expect(user.reload.locale).to(eq("ru"))
-    get("/desk")
+    raw_get("/desk")
+    follow_redirect!
     expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
   end
 

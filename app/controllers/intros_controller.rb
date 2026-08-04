@@ -3,7 +3,7 @@
 class IntrosController < ApplicationController
   def start
     remember_return_path(referring_path)
-    redirect_to(intro_progress.start!&.path.presence || session[:return_to] || desk_path)
+    redirect_to(here(intro_progress.start!&.path.presence || session[:return_to] || desk_path))
   end
 
   def pause
@@ -39,7 +39,7 @@ class IntrosController < ApplicationController
     return redirect_back(fallback_location: guide_path) if chapter.nil?
 
     runner.open_chapter!(chapter)
-    redirect_to(chapter.steps.first&.path || guide_path)
+    redirect_to(here(chapter.steps.first&.path || guide_path))
   end
 
   def close_chapter
@@ -54,10 +54,12 @@ class IntrosController < ApplicationController
   end
 
   def back_to_step
-    redirect_to(runner.call&.step&.path.presence || after_intro_path)
+    redirect_to(here(runner.call&.step&.path.presence || after_intro_path))
   end
 
   def after_intro_path
     take_return_path || (current_user.intro_done? ? guide_path : desk_path)
   end
+
+  def here(path) = Locales.swap(path, I18n.locale)
 end

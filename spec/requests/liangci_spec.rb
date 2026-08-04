@@ -60,8 +60,8 @@ RSpec.describe "Measure words" do
   it "filters by category" do
     get("/liangci", params: {category: "measurement"})
 
-    expect(response.body).to(include(liangci_entry_path("公斤")))
-    expect(response.body).not_to(include(liangci_entry_path("隻")))
+    expect(response.body).to(include(liangci_entry_path(text: "公斤")))
+    expect(response.body).not_to(include(liangci_entry_path(text: "隻")))
   end
 
   it "shows the nouns a measure word counts" do
@@ -109,10 +109,10 @@ RSpec.describe "Measure words" do
 
   it "keeps the old measure-words addresses working" do
     get("/measure-words")
-    expect(response).to(redirect_to("/liangci"))
+    expect(response).to(redirect_to("/en/liangci"))
 
     get("/measure-words/#{CGI.escape("隻")}")
-    expect(response).to(redirect_to("/liangci/#{ERB::Util.url_encode("隻")}"))
+    expect(response).to(redirect_to("/en/liangci/#{ERB::Util.url_encode("隻")}"))
   end
 
   it "shows the same pair on the noun page as on the measure word page" do

@@ -39,7 +39,7 @@
         lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
         = detailed? ? "詳" : "簡"
 
-  = button_to locale_path(I18n.locale.to_s == "ru" ? :en : :ru), method: :post,
+  = button_to locale_path(I18n.locale.to_s == "ru" ? :en : :ru, locale: nil), method: :post,
     form: {class: "contents"}, class: wide_classes,
     title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
     span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[

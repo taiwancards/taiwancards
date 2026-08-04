@@ -27,7 +27,7 @@ RSpec.describe "TBCL word lists" do
 
   it "links entries to the unified dictionary" do
     get("/tbcl/3")
-    expect(response.body).to(include(dict_entry_path("學校")))
+    expect(response.body).to(include(dict_entry_path(text: "學校")))
   end
 
   it "rejects a grade outside the scale" do

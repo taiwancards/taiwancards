@@ -12,11 +12,11 @@ RSpec.describe "Admin impersonation" do
     sign_in(admin)
 
     post(admin_impersonate_path(member))
-    expect(response).to(redirect_to(root_path))
+    expect(response).to(redirect_to("/ru"))
 
-    get("/desk")
+    in_locale(:ru) { get("/desk") }
     expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
-    expect(response.body).to(include(dict_path))
+    expect(response.body).to(include("/ru/dict"))
     expect(response.body).to(include(I18n.t("admin.impersonation_stop", locale: :ru)))
   end
 
