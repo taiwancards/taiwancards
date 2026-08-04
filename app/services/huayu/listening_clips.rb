@@ -2,7 +2,7 @@
 
 module Huayu
   class ListeningClips
-    PATH = AppData.media_path("listening/manifest.json")
+    DATA = JsonData.new("listening/manifest.json", root: :media, watch: true)
 
     Row = Data.define(:text, :level, :clip, :en, :ru, :emoji, :emoji_word, :emoji_category) do
       def translation(locale) = locale.to_s == "ru" ? (ru.presence || en) : en
@@ -41,28 +41,25 @@ module Huayu
       end
 
       def reset!
-        @payload = nil
+        DATA.reset!
+        remove_instance_variable(:@payload) if defined?(@payload)
+        @manifest = nil
         @index = nil
-        @mtime = nil
       end
 
       private
 
       def payload
-        current = PATH.exist? ? PATH.mtime : nil
-        if @payload.nil? || @mtime != current
-          @mtime = current
-          @index = nil
-          @payload = load.freeze
-        end
+        manifest = DATA.value
+        return @payload if defined?(@payload) && @manifest.equal?(manifest)
 
-        @payload
+        @manifest = manifest
+        @index = nil
+        @payload = build(manifest).freeze
       end
 
-      def load
-        return [] unless PATH.exist?
-
-        Array(JSON.parse(PATH.read)["clips"]).map do |row|
+      def build(manifest)
+        Array(manifest["clips"]).map do |row|
           Row.new(
             text: row["text"],
             level: row["level"].to_i,
@@ -74,9 +71,6 @@ module Huayu
             emoji_category: row["emoji_category"]
           )
         end
-
-      rescue JSON::ParserError
-        []
       end
     end
   end

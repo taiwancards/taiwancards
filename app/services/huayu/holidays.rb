@@ -2,7 +2,7 @@
 
 module Huayu
   class Holidays
-    DATA_PATH = AppData.path("huayu/holidays.json")
+    DATA = JsonData.new("huayu/holidays.json", default: {"holidays" => [], "sources" => []})
 
     Word = Data.define(:traditional, :pinyin, :zhuyin, :gloss_en, :gloss_ru) do
       def gloss(locale = I18n.locale)
@@ -115,19 +115,12 @@ module Huayu
 
       def reset!
         @all = nil
-        @raw = nil
+        DATA.reset!
       end
 
       private
 
-      def raw
-        @raw ||= begin
-          JSON.parse(File.read(DATA_PATH))
-        rescue Errno::ENOENT, JSON::ParserError => e
-          Rails.logger.error("holidays data unavailable at #{DATA_PATH}: #{e.class}: #{e.message}")
-          {"holidays" => [], "sources" => []}
-        end
-      end
+      def raw = DATA.value
     end
   end
 end

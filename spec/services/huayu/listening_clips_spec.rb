@@ -32,7 +32,8 @@ RSpec.describe Huayu::ListeningClips do
 
   before do
     path.write(JSON.generate(manifest))
-    stub_const("Huayu::ListeningClips::PATH", path)
+    allow(AppData).to(receive(:media_path).and_call_original)
+    allow(AppData).to(receive(:media_path).with("listening/manifest.json").and_return(path))
     described_class.reset!
   end
 

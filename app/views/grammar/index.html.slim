@@ -21,8 +21,8 @@
         span.text-xs.font-normal.tabular-nums = "· #{lessons.size}"
       .grid.gap-3 class="sm:grid-cols-2"
         - lessons.each do |lesson|
-          = link_to grammar_lesson_path(lesson.slug), class: "flex items-center gap-3 rounded-xl border border-border bg-card p-4 hover:bg-muted" do
-            .shrink-0.text-3xl.font-semibold lang="zh-TW" = lesson.head
+          = link_to grammar_lesson_path(lesson.slug), class: "flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+            .min-w-0.text-2xl.font-semibold class="sm:text-3xl" lang="zh-TW" = lesson.head
             .min-w-0
               .truncate.text-sm.font-semibold = lesson.title(I18n.locale)
               .truncate.text-xs.text-muted-foreground lang="zh-TW" = lesson.formula_for(I18n.locale)

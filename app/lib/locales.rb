@@ -49,6 +49,10 @@ module Locales
     !path.match?(BARE) && !path.match?(%r{\A/(?:#{ALL.join("|")})(?:/|\z|\?)})
   end
 
+  def prefix(path)
+    path.to_s[%r{\A/(#{ALL.join("|")})(?=/|\z|\?)}, 1]
+  end
+
   def strip(path)
     stripped = path.to_s.sub(%r{\A/(?:#{ALL.join("|")})(?=/|\z)}, "")
     stripped.presence || "/"

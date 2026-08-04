@@ -4,13 +4,11 @@ require "action_dispatch/testing/integration"
 
 module Site
   class Exporter
-    TRANSLATED = {"/" => "."}.freeze
-
-    ENGLISH_ONLY = {"/licenses" => "licenses", "/privacy" => "privacy", "/terms" => "terms"}.freeze
-
-    PAGES = TRANSLATED.merge(ENGLISH_ONLY).freeze
+    PAGES = {"/" => ".", "/licenses" => "licenses", "/privacy" => "privacy", "/terms" => "terms"}.freeze
 
     STAYS_HERE = PAGES.keys.to_set
+
+    LEGACY = PAGES.except("/").values.freeze
 
     REQUIRED = %w[SITE_URL APP_URL ASSETS_BASE_URL].freeze
 
@@ -26,12 +24,12 @@ module Site
 
       Site.while_exporting do
         prepare
-        I18n.available_locales.each { |locale| TRANSLATED.each_key { |path| write(path, locale) } }
-        ENGLISH_ONLY.each_key { |path| write(path, I18n.default_locale) }
+        I18n.available_locales.each { |locale| PAGES.each_key { |path| write(path, locale) } }
         copy_assets
         copy_public
         write_sitemap
         write_root_fallback
+        write_legacy_copies
         report
       end
     end
@@ -52,8 +50,6 @@ module Site
 
     def destination(path, locale)
       folder = PAGES.fetch(path)
-      return @root.join(folder, "index.html") if ENGLISH_ONLY.key?(path)
-
       prefix = @root.join(locale.to_s)
       folder == "." ? prefix.join("index.html") : prefix.join(folder, "index.html")
     end
@@ -73,28 +69,20 @@ module Site
     def rewrite(html, locale, path)
       html = strip_dynamic(html)
       html = collect_and_keep_assets(html)
+      html = refuse_server_forms(html, path)
       html = absolutise_links(html, locale)
-      html = unpost_locale_switch(html, path)
+      html = html.gsub(%r{data-search-url-value="(/[^"]*)"}) do
+        "data-search-url-value=\"#{app_url}#{Regexp.last_match(1)}\""
+      end
+
       html = canonicalise(html, locale, path)
       html.sub("</head>", "#{behavior}\n</head>")
     end
 
-    def unpost_locale_switch(html, path)
-      return html.gsub(%r{<form[^>]*action="/locale/\w+"[^>]*>.*?</form>}m, "") if ENGLISH_ONLY.key?(path)
+    def refuse_server_forms(html, path)
+      return html unless html.include?("method=\"post\"")
 
-      html.gsub(%r{<form[^>]*action="/locale/(\w+)"[^>]*>(.*?)</form>}m) do
-        target = Regexp.last_match(1).to_sym
-        inside = Regexp.last_match(2)
-        button = inside[/<button([^>]*)>/, 1].to_s
-        label = inside[%r{<button[^>]*>(.*?)</button>}m, 1].to_s
-
-        attributes = %w[class title aria-label].filter_map do |name|
-          value = button[/#{name}="([^"]*)"/, 1]
-          "#{name}=\"#{value}\"" if value.present?
-        end
-
-        "<a href=\"#{local(path, target)}\" #{attributes.join(" ")}>#{label}</a>"
-      end
+      raise "#{path} still renders a form that only a server can answer"
     end
 
     def canonicalise(html, locale, path)
@@ -124,8 +112,6 @@ module Site
     end
 
     def alternates(path)
-      return "" if ENGLISH_ONLY.key?(path)
-
       tags = I18n.available_locales.map do |other|
         "<link rel=\"alternate\" hreflang=\"#{other}\" href=\"#{site_url}#{local(path, other)}\">"
       end
@@ -164,7 +150,7 @@ module Site
         path = Regexp.last_match(1)
         bare = Locales.strip(path)
         href = if STAYS_HERE.include?(bare)
-          local(bare, locale)
+          local(bare, Locales.prefix(path) || locale)
         elsif path.start_with?("/assets/", "/icon", "/favicon", "/apple-touch-icon", "/manifest")
           path
         else
@@ -176,8 +162,6 @@ module Site
     end
 
     def local(path, locale)
-      return path if ENGLISH_ONLY.key?(path)
-
       path == "/" ? "/#{locale}/" : "/#{locale}#{path}"
     end
 
@@ -188,6 +172,22 @@ module Site
           var root = document.documentElement;
           var stored = localStorage.getItem("hanzi_font");
           if (stored !== null) root.classList.toggle("font-kai", stored === "kai");
+
+          document.addEventListener("keydown", function (event) {
+            if (event.key !== "Escape") return;
+            document.querySelectorAll("[data-menu-target=panel]").forEach(function (panel) {
+              panel.classList.add("hidden");
+            });
+          });
+
+          document.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter") return;
+            var field = event.target.closest("[data-search-target=input]");
+            if (!field || !field.value.trim()) return;
+            var box = field.closest("[data-search-url-value]");
+            if (!box) return;
+            location.href = box.dataset.searchUrlValue + "?q=" + encodeURIComponent(field.value.trim());
+          });
 
           var warming = false;
           function warmKai() {
@@ -209,6 +209,13 @@ module Site
           }
 
           document.addEventListener("click", function (event) {
+            var opener = event.target.closest("[data-action~='menu#toggle']");
+            var panels = document.querySelectorAll("[data-menu-target=panel]");
+            var wanted = opener && opener.parentElement.querySelector("[data-menu-target=panel]");
+            var opening = wanted && wanted.classList.contains("hidden");
+            panels.forEach(function (panel) { panel.classList.add("hidden"); });
+            if (opening) wanted.classList.remove("hidden");
+
             var pref = event.target.closest("[data-controller~='display-pref']");
             if (!pref) return;
             var name = pref.dataset.displayPrefNameValue;
@@ -289,9 +296,16 @@ module Site
       )
     end
 
+    def write_legacy_copies
+      LEGACY.each do |folder|
+        target = @root.join(folder, "index.html")
+        target.dirname.mkpath
+        target.write(@root.join(I18n.default_locale.to_s, folder, "index.html").read)
+      end
+    end
+
     def write_sitemap
-      entries = TRANSLATED.keys.flat_map { |path| I18n.available_locales.map { |locale| [path, locale] } }
-      entries += ENGLISH_ONLY.keys.map { |path| [path, I18n.default_locale] }
+      entries = PAGES.keys.flat_map { |path| I18n.available_locales.map { |locale| [path, locale] } }
 
       @root.join("sitemap.xml").write(
         <<~XML
@@ -312,8 +326,6 @@ module Site
     end
 
     def alternate_links(path)
-      return [] if ENGLISH_ONLY.key?(path)
-
       I18n.available_locales.map do |other|
         "<xhtml:link rel=\"alternate\" hreflang=\"#{other}\" href=\"#{site_url}#{local(path, other)}\"/>"
       end

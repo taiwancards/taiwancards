@@ -2,6 +2,7 @@
 
 class PracticeController < ApplicationController
   allow_unauthenticated_access only: %i[zhuyin]
+  publicly_cacheable only: %i[zhuyin]
   PHONETICS_PARTS = %w[intro initials finals tricky].freeze
 
   DRILL_SIZE = 20

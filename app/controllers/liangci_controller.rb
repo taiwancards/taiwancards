@@ -2,6 +2,7 @@
 
 class LiangciController < ApplicationController
   allow_unauthenticated_access only: %i[index show]
+  publicly_cacheable only: %i[index show]
   NOUN_LIMIT = 60
   KINDS_PER_TEXT = 3
   EXAMPLE_LIMIT = 12

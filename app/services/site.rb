@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Site
-  PAGES = %w[/ /licenses /privacy /terms].freeze
+  SUPPORT_EMAIL = "support@taiwancards.app"
 
   module_function
 
@@ -9,7 +9,7 @@ module Site
 
   def published? = url.present? && !exporting?
 
-  def page_url(path) = "#{url}#{path}"
+  def page_url(path, locale = I18n.locale) = "#{url}/#{locale}#{path.chomp("/")}"
 
   def exporting? = Thread.current[:site_exporting].present?
 

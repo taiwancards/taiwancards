@@ -90,10 +90,6 @@ services:
     buildFilter:
       paths:
         - "site/**"
-    routes:
-      - type: redirect
-        source: /
-        destination: /en/
     headers:
       - path: /*
         name: X-Content-Type-Options

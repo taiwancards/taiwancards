@@ -1,49 +1,17 @@
-- content_for(:title, "Privacy Policy")
-- link_opts = {rel: "noopener", target: "_blank", class: "text-foreground hover:underline"}
+- content_for(:title) { t("privacy.title") }
+- link_class = "text-foreground hover:underline"
+- link_opts = {rel: "noopener", target: "_blank", class: link_class}
 
 .py-6.space-y-6
   div
-    h1.text-2xl.font-bold.tracking-tight Privacy Policy
-    p.text-muted-foreground
-      | Effective date: 2025-03-01
+    h1.text-2xl.font-bold.tracking-tight = t("privacy.title")
+    p.text-muted-foreground = t("privacy.effective")
 
-  section.space-y-2
-    h2.text-lg.font-semibold What this app does
-    p.text-sm.leading-6.text-muted-foreground
-      | TaiwanCards is a free, ad-free web app for learning Taiwanese Mandarin. It provides flashcards with
-      | spaced repetition, dictionary lookups, pronunciation practice and vocabulary lists. It is run by one
-      | independent developer, not by a company.
-
-  section.space-y-2
-    h2.text-lg.font-semibold What we store
-    ul.list-disc.space-y-1.pl-5.text-sm.leading-6.text-muted-foreground
-      li Your email address, display name and interface language.
-      li A password hash, if you registered with a password rather than with Google.
-      li Your study data: decks, cards, review history, progress and practice settings.
-      li Pronunciation attempts and the measurements derived from them.
-      li Server logs of requests, kept for reliability and abuse prevention.
-
-  section.space-y-2
-    h2.text-lg.font-semibold What we do not do
-    ul.list-disc.space-y-1.pl-5.text-sm.leading-6.text-muted-foreground
-      li We do not sell or rent personal data.
-      li We do not show advertising and we do not run advertising trackers.
-      li We do not use third-party analytics.
-      li We do not profile you for anything other than showing you your own progress.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Cookies
-    p.text-sm.leading-6.text-muted-foreground
-      | Two cookies are used, both strictly necessary: a signed session cookie that keeps you logged in,
-      | and a cookie remembering your interface language. There are no advertising or tracking cookies.
+  - %w[purpose stored never cookies].each do |key|
+    = legal_section("privacy.#{key}")
 
   - if Donate.offered?
-    section.space-y-2
-      h2.text-lg.font-semibold Donation button
-      p.text-sm.leading-6.text-muted-foreground
-        | The help page carries an optional donation button supplied by Buy Me a Coffee. Opening that one page
-        | loads their script, so your browser contacts them and they see your IP address and user agent. No
-        | account data is sent, the button appears on no other page, and donating is never required.
+    = legal_section("privacy.donation")
 
   section#google-data.space-y-3 class="scroll-mt-16"
     h2.text-lg.font-semibold = t("privacy_google.heading")
@@ -54,51 +22,22 @@
           span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
           span = t("privacy_google.#{key}")
     p.text-sm.leading-6.text-muted-foreground
-      | Our use of information received from Google APIs follows the
-      =< link_to "Google API Services User Data Policy", "https://developers.google.com/terms/api-services-user-data-policy", link_opts
-      |  and its Limited Use requirements. Google account data is never used for advertising, never sold,
-      | and never shared beyond what is described here.
+      = t("privacy_google.policy_before")
+      =< link_to t("privacy_google.policy_name"), "https://developers.google.com/terms/api-services-user-data-policy", link_opts
+      = t("privacy_google.policy_after")
+
+  - %w[where retention choices children changes].each do |key|
+    = legal_section("privacy.#{key}")
 
   section.space-y-2
-    h2.text-lg.font-semibold Where data is held
+    h2.text-lg.font-semibold = t("privacy.contact.heading")
     p.text-sm.leading-6.text-muted-foreground
-      | The application and its database run on Render in Singapore. Traffic passes through Cloudflare, and
-      | audio files are served from Cloudflare R2. These providers process data only in order to host the
-      | service. If you use the Google Drive backup, that copy sits in your own Google account.
+      = t("privacy.contact.body")
+      =< mail_to Site::SUPPORT_EMAIL, Site::SUPPORT_EMAIL, class: link_class
 
   section.space-y-2
-    h2.text-lg.font-semibold Retention and deletion
-    p.text-sm.leading-6.text-muted-foreground
-      | Your data is kept while your account exists. Write to the address below to have the account and
-      | everything in it deleted; server logs age out on their own. Deleting your account here does not
-      | touch a backup file you created on your own Google Drive — that file is yours to delete.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Your choices
-    ul.list-disc.space-y-1.pl-5.text-sm.leading-6.text-muted-foreground
-      li Register with an email address and password, in which case no Google data is requested at all.
-      li Revoke the app's Google access at any time from your Google account permissions page.
-      li Ask for a copy of your data, a correction, or full deletion.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Children
-    p.text-sm.leading-6.text-muted-foreground
-      | The app is not directed at children under 13, and accounts are not knowingly created for them.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Changes
-    p.text-sm.leading-6.text-muted-foreground
-      | If this policy changes, the effective date above changes with it.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Contact
-    p.text-sm.leading-6.text-muted-foreground
-      | Questions, data requests and deletion requests:
-      =< mail_to "support@taiwancards.app", "support@taiwancards.app", class: "text-foreground hover:underline"
-
-  section.space-y-2
-    h2.text-lg.font-semibold Related links
+    h2.text-lg.font-semibold = t("privacy.related.heading")
     p.text-sm.leading-6
-      = link_to "Terms of Service", terms_path, class: "text-foreground hover:underline"
+      = link_to t("footer.terms"), terms_path, class: link_class
       |  ·
-      =< link_to "Licenses", licenses_path, class: "text-foreground hover:underline"
+      =< link_to t("footer.licenses"), licenses_path, class: link_class

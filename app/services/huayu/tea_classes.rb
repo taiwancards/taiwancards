@@ -2,7 +2,7 @@
 
 module Huayu
   class TeaClasses
-    DATA_PATH = AppData.path("huayu/tea_classes.json")
+    DATA = JsonData.new("huayu/tea_classes.json", default: {"classes" => [], "scale" => [], "notes" => []})
 
     Row = Data.define(:text, :pinyin, :oxidation, :roast, :ru_name, :en_name, :ru, :en) do
       def name(locale = I18n.locale)
@@ -43,7 +43,7 @@ module Huayu
         @classes = nil
         @scale = nil
         @notes = nil
-        @raw = nil
+        DATA.reset!
       end
 
       private
@@ -63,14 +63,7 @@ module Huayu
         end
       end
 
-      def raw
-        @raw ||= begin
-          JSON.parse(File.read(DATA_PATH))
-        rescue Errno::ENOENT, JSON::ParserError => e
-          Rails.logger.error("tea classes data unavailable at #{DATA_PATH}: #{e.class}: #{e.message}")
-          {"classes" => [], "scale" => [], "notes" => []}
-        end
-      end
+      def raw = DATA.value
     end
   end
 end

@@ -45,10 +45,11 @@ RSpec.describe "Landing page" do
     end
   end
 
-  it "offers the visitor the other language from the landing itself", :no_auth do
-    get(root_path)
+  it "offers the visitor the other language as a plain link, needing no session", :no_auth do
+    get("/en")
 
-    expect(response.body).to(include(locale_path(:ru, locale: nil)))
+    expect(response.body).to(include("href=\"/ru\""))
+    expect(response.body).not_to(include("/locale/"))
   end
 
   it "links its privacy policy and terms from the home page", :no_auth do

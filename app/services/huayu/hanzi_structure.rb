@@ -2,7 +2,7 @@
 
 module Huayu
   class HanziStructure
-    DATA_PATH = AppData.path("huayu/hanzi_structure.json")
+    DATA = JsonData.new("huayu/hanzi_structure.json")
 
     class << self
       def categories = raw["categories"] || []
@@ -48,20 +48,11 @@ module Huayu
         (locale.to_s == "ru" ? row["ru_note"] : row["en_note"]).presence
       end
 
-      def reset!
-        @raw = nil
-      end
+      def reset! = DATA.reset!
 
       private
 
-      def raw
-        @raw ||= begin
-          JSON.parse(File.read(DATA_PATH))
-        rescue Errno::ENOENT, JSON::ParserError => e
-          Rails.logger.error("hanzi structure data unavailable at #{DATA_PATH}: #{e.class}: #{e.message}")
-          {}
-        end
-      end
+      def raw = DATA.value
     end
   end
 end

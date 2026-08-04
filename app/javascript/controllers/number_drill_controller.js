@@ -144,13 +144,13 @@ export default class extends Controller {
 
   report() {
     if (this.reported || !this.resultUrlValue) return;
+    const token = document.querySelector("meta[name='csrf-token']")?.content;
+    if (!token) return;
+
     this.reported = true;
     fetch(this.resultUrlValue, {
       method: "POST",
-      headers: {
-        "X-CSRF-Token":
-          document.querySelector("meta[name='csrf-token']")?.content || "",
-      },
+      headers: { "X-CSRF-Token": token },
     }).catch(() => {});
   }
 }

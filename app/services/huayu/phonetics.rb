@@ -2,7 +2,7 @@
 
 module Huayu
   class Phonetics
-    PATH = AppData.path("huayu/phonetics.json")
+    DATA = JsonData.new("huayu/phonetics.json")
 
     class << self
       def initials
@@ -17,13 +17,9 @@ module Huayu
         data["rimes"] || []
       end
 
-      def data
-        @data ||= JSON.parse(PATH.read)
-      end
+      def data = DATA.value
 
-      def reset!
-        @data = nil
-      end
+      def reset! = DATA.reset!
     end
   end
 end

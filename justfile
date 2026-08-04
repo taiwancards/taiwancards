@@ -181,6 +181,11 @@ dist-plan:
 dist-runtime:
     bin/distribute runtime
 
+# Ship data to R2, then ask Render to roll it out
+[group('content')]
+ship: dist-runtime
+    bin/rails deploy:release
+
 # Cold archive to the private R2 bucket
 [group('content')]
 dist-archive:

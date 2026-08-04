@@ -6,12 +6,13 @@ class ApplicationController < ActionController::Base
   include Authorization
   include Introduced
   include Voiced
+  include PubliclyCacheable
 
   allow_browser versions: :modern
 
   stale_when_importmap_changes
 
-  around_action :switch_locale
+  prepend_around_action :switch_locale
   before_action :redirect_to_localised_url
   after_action :track_activity
 

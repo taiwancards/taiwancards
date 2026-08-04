@@ -24,7 +24,13 @@ RSpec.describe "the pages that live on the static site" do
         get(path)
 
         expect(response).to(have_http_status(:moved_permanently))
-        expect(response).to(redirect_to("#{site}#{path}"))
+        expect(response).to(redirect_to("#{site}/en#{path}"))
+      end
+
+      it "hands #{path} over in the language the reader was already in" do
+        in_locale(:ru) { get(path) }
+
+        expect(response).to(redirect_to("#{site}/ru#{path}"))
       end
     end
 

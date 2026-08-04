@@ -2,7 +2,7 @@
 
 module Huayu
   class CnsStrokes
-    PATH = AppData.path("huayu/cns_strokes.json")
+    DATA = JsonData.new("huayu/cns_strokes.json")
     ATTRIBUTION = "數位發展部，CNS11643中文標準交換碼全字庫網站"
     TYPES = {"1" => :heng, "2" => :shu, "3" => :pie, "4" => :dian, "5" => :zhe}.freeze
 
@@ -24,17 +24,13 @@ module Huayu
 
       def size = table.size
 
-      def reset! = @table = nil
+      def reset! = DATA.reset!
 
       private
 
       def entry(char) = table[char.to_s]
 
-      def table
-        @table ||= PATH.exist? ? JSON.parse(PATH.read) : {}
-      rescue JSON::ParserError
-        {}
-      end
+      def table = DATA.value
     end
   end
 end

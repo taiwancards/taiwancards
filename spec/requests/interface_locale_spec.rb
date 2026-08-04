@@ -76,6 +76,28 @@ RSpec.describe "Interface locale" do
     expect(response.body).to(include(I18n.t("nav.help", locale: :ru)))
   end
 
+  it "sends a guest to the login in the language they were reading", :no_auth do
+    raw_get("/ru/writing")
+
+    expect(response).to(redirect_to("/ru/login"))
+  end
+
+  it "keeps the language on every page that asks for an account", :no_auth do
+    %w[/desk /study /desks /triage /placement /practice /pronunciation /writing /reader /progress /profile]
+      .each do |path|
+        raw_get("/ru#{path}")
+
+        expect(response.location).to(start_with("http://www.example.com/ru/"), "#{path} left the Russian pages")
+      end
+  end
+
+  it "brings a guest back to the Russian page they wanted after signing in", :no_auth do
+    raw_get("/ru/writing")
+    sign_in_with_google(email: "back@example.com", uid: "back-uid")
+
+    expect(response).to(redirect_to("/ru/writing"))
+  end
+
   it "no longer exposes a language toggle in the header" do
     sign_in(create(:user, locale: "en"))
 

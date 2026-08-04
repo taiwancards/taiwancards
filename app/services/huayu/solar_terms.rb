@@ -2,7 +2,7 @@
 
 module Huayu
   class SolarTerms
-    DATA_PATH = AppData.path("huayu/solar_terms.json")
+    DATA = JsonData.new("huayu/solar_terms.json", default: {"terms" => {}})
 
     class << self
       def date_for(term, year)
@@ -14,9 +14,7 @@ module Huayu
         raw["source"]
       end
 
-      def reset!
-        @raw = nil
-      end
+      def reset! = DATA.reset!
 
       private
 
@@ -24,14 +22,7 @@ module Huayu
         raw["terms"]
       end
 
-      def raw
-        @raw ||= begin
-          JSON.parse(File.read(DATA_PATH))
-        rescue Errno::ENOENT, JSON::ParserError => e
-          Rails.logger.error("solar terms data unavailable at #{DATA_PATH}: #{e.class}: #{e.message}")
-          {"terms" => {}}
-        end
-      end
+      def raw = DATA.value
     end
   end
 end

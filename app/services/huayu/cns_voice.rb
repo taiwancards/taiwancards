@@ -2,7 +2,7 @@
 
 module Huayu
   class CnsVoice
-    PATH = AppData.path("huayu/cns_voice.json")
+    DATA = JsonData.new("huayu/cns_voice.json")
     DIRECTORY = "cns_voice"
     ATTRIBUTION = "數位發展部，CNS11643中文標準交換碼全字庫網站"
     VOICES = %w[female male].freeze
@@ -45,11 +45,7 @@ module Huayu
 
       def size = table.size
 
-      def table
-        @table ||= PATH.exist? ? JSON.parse(PATH.read) : {}
-      rescue JSON::ParserError
-        {}
-      end
+      def table = DATA.value
 
       def base_url
         return @base_url if defined?(@base_url)
@@ -58,7 +54,7 @@ module Huayu
       end
 
       def reset!
-        @table = nil
+        DATA.reset!
         remove_instance_variable(:@base_url) if defined?(@base_url)
       end
 

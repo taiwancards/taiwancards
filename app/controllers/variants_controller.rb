@@ -2,6 +2,7 @@
 
 class VariantsController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   def show
     @sections = VariantsHelper::SECTIONS
     @section = params[:section].presence_in(@sections) || @sections.first

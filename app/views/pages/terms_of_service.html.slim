@@ -1,78 +1,23 @@
-- content_for(:title, "Terms of Service")
+- content_for(:title) { t("terms.title") }
+- link_class = "text-foreground hover:underline"
 
 .py-6.space-y-6
   div
-    h1.text-2xl.font-bold.tracking-tight Terms of Service
-    p.text-muted-foreground
-      | Effective date: 2025-03-01
+    h1.text-2xl.font-bold.tracking-tight = t("terms.title")
+    p.text-muted-foreground = t("terms.effective")
+
+  - %w[service account use yours ours availability suspension liability changes].each do |key|
+    = legal_section("terms.#{key}")
 
   section.space-y-2
-    h2.text-lg.font-semibold The service
+    h2.text-lg.font-semibold = t("terms.contact.heading")
     p.text-sm.leading-6.text-muted-foreground
-      | TaiwanCards is a web application for learning Taiwanese Mandarin, run by one independent developer.
-      | It is free to use, carries no advertising, and is offered as-is. Features may change or be removed.
+      = t("terms.contact.body")
+      =< mail_to Site::SUPPORT_EMAIL, Site::SUPPORT_EMAIL, class: link_class
 
   section.space-y-2
-    h2.text-lg.font-semibold Your account
-    ul.list-disc.space-y-1.pl-5.text-sm.leading-6.text-muted-foreground
-      li Give accurate account details and keep your credentials to yourself.
-      li One person per account. You are responsible for what happens under yours.
-      li You can delete your account at any time by asking at the address below.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Acceptable use
-    ul.list-disc.space-y-1.pl-5.text-sm.leading-6.text-muted-foreground
-      li Do not attempt to reach data, systems or other people's accounts you have no right to.
-      li Do not scrape the site in bulk, or place automated load on it beyond ordinary study.
-      li Do not upload unlawful or malicious content.
-      li Respect the licenses of the dictionaries, corpora and fonts listed on the licenses page.
-
-  section.space-y-2
-    h2.text-lg.font-semibold What you make
-    p.text-sm.leading-6.text-muted-foreground
-      | Decks, notes and progress you create stay yours. You grant only the permission needed to store and
-      | display them back to you. You can export your progress at any time, including to your own Google Drive.
-
-  section.space-y-2
-    h2.text-lg.font-semibold What we use
-    p.text-sm.leading-6.text-muted-foreground
-      | The application code and original text belong to their author. Dictionaries, corpora, audio and fonts
-      | come from third parties and are used under their own licenses, each named on the licenses page.
-      | Nothing in these terms grants you rights to that third-party material beyond those licenses.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Availability
-    p.text-sm.leading-6.text-muted-foreground
-      | The service is provided on an "as is" and "as available" basis, without any warranty of uninterrupted
-      | operation, and without a guarantee that the linguistic data is free of error. It is a study aid,
-      | not an authority on the language.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Suspension
-    p.text-sm.leading-6.text-muted-foreground
-      | Accounts that break these terms, or that put the service at risk, may be suspended or removed.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Liability
-    p.text-sm.leading-6.text-muted-foreground
-      | To the maximum extent permitted by law, the developer is not liable for indirect, incidental or
-      | consequential damages arising from use of the service.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Changes
-    p.text-sm.leading-6.text-muted-foreground
-      | These terms may be updated. The effective date above changes when they do, and continued use after
-      | that date means you accept the revised terms.
-
-  section.space-y-2
-    h2.text-lg.font-semibold Contact
-    p.text-sm.leading-6.text-muted-foreground
-      | Questions about these terms:
-      =< mail_to "support@taiwancards.app", "support@taiwancards.app", class: "text-foreground hover:underline"
-
-  section.space-y-2
-    h2.text-lg.font-semibold Related links
+    h2.text-lg.font-semibold = t("terms.related.heading")
     p.text-sm.leading-6
-      = link_to "Privacy Policy", privacy_path, class: "text-foreground hover:underline"
+      = link_to t("footer.privacy"), privacy_path, class: link_class
       |  ·
-      =< link_to "Licenses", licenses_path, class: "text-foreground hover:underline"
+      =< link_to t("footer.licenses"), licenses_path, class: link_class

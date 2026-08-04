@@ -2,7 +2,7 @@
 
 module Huayu
   class ConfusableCharacters
-    PATH = AppData.path("huayu/confusable_characters.json")
+    DATA = JsonData.new("huayu/confusable_characters.json")
     LIMIT = 6
 
     class << self
@@ -22,15 +22,11 @@ module Huayu
 
       def size = table.size
 
-      def reset! = @table = nil
+      def reset! = DATA.reset!
 
       private
 
-      def table
-        @table ||= PATH.exist? ? JSON.parse(PATH.read) : {}
-      rescue JSON::ParserError
-        {}
-      end
+      def table = DATA.value
     end
   end
 end

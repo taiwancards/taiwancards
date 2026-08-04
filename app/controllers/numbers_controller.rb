@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class NumbersController < ApplicationController
+  allow_unauthenticated_access
+  publicly_cacheable
   SIZE = 12
 
   def show
@@ -11,7 +13,7 @@ class NumbersController < ApplicationController
   end
 
   def result
-    current_user.record_practice_run!(:numbers)
+    current_user&.record_practice_run!(:numbers)
     head(:no_content)
   end
 end

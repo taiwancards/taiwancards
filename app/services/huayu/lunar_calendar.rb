@@ -2,7 +2,7 @@
 
 module Huayu
   class LunarCalendar
-    DATA_PATH = AppData.path("huayu/lunar_years.json")
+    DATA = JsonData.new("huayu/lunar_years.json", default: {"years" => [], "range" => []})
 
     DAY_PREFIXES = %w[初 十 廿 卅].freeze
     DAY_DIGITS = %w[一 二 三 四 五 六 七 八 九 十].freeze
@@ -139,19 +139,12 @@ module Huayu
 
       def reset!
         @years = nil
-        @raw = nil
+        DATA.reset!
       end
 
       private
 
-      def raw
-        @raw ||= begin
-          JSON.parse(File.read(DATA_PATH))
-        rescue Errno::ENOENT, JSON::ParserError => e
-          Rails.logger.error("lunar calendar data unavailable at #{DATA_PATH}: #{e.class}: #{e.message}")
-          {"years" => [], "range" => []}
-        end
-      end
+      def raw = DATA.value
     end
   end
 end

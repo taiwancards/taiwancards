@@ -2,6 +2,7 @@
 
 class PhrasesController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   ROLES = Huayu::TaiwanPhrases::ROLES
 
   def index

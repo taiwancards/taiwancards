@@ -18,7 +18,12 @@ module Site
       Group.new(
         key: :app,
         entries: [
-          Entry.new(key: :taiwancards, name: "taiwancards/taiwancards", url: "#{GITHUB}/taiwancards/taiwancards"),
+          Entry.new(
+            key: :taiwancards,
+            name: "taiwancards/taiwancards",
+            url: "#{GITHUB}/taiwancards/taiwancards",
+            license: "Apache-2.0"
+          ),
           Entry.new(key: :corpora, name: "taiwancards/corpora", url: "#{GITHUB}/taiwancards/corpora")
         ]
       ),

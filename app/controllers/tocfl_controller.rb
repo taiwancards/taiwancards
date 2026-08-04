@@ -2,6 +2,7 @@
 
 class TocflController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   include Paginated
   include ProgressMarks
 

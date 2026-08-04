@@ -28,12 +28,18 @@ RSpec.describe Site::Exporter do
 
   def page(*parts) = root.join(*parts).read
 
-  it "writes the landing in both locales and the legal pages once" do
+  it "writes every page in both languages, and keeps the old addresses alive" do
     expect(root.glob("**/index.html").map { |file| file.relative_path_from(root).to_s }).to(
       contain_exactly(
         "index.html",
         "en/index.html",
+        "en/licenses/index.html",
+        "en/privacy/index.html",
+        "en/terms/index.html",
         "ru/index.html",
+        "ru/licenses/index.html",
+        "ru/privacy/index.html",
+        "ru/terms/index.html",
         "licenses/index.html",
         "privacy/index.html",
         "terms/index.html"
@@ -59,7 +65,7 @@ RSpec.describe Site::Exporter do
     html = page("en", "index.html")
 
     expect(html).to(include("href=\"#{app_url}/en/login\""))
-    expect(html).to(include("href=\"/licenses\""))
+    expect(html).to(include("href=\"/en/licenses\""))
     expect(html).not_to(include("href=\"#{app_url}/en/licenses\""))
   end
 
@@ -93,7 +99,7 @@ RSpec.describe Site::Exporter do
     expect(xml).to(include("<loc>#{site_url}/en/</loc>"))
     expect(xml).to(include("<loc>#{site_url}/ru/</loc>"))
     expect(xml).to(include("hreflang=\"ru\" href=\"#{site_url}/ru/\""))
-    expect(xml.scan("<loc>").length).to(eq(5))
+    expect(xml.scan("<loc>").length).to(eq(Site::Exporter::PAGES.size * I18n.available_locales.size))
     expect(root.join("robots.txt").read).to(include("Sitemap: #{site_url}/sitemap.xml"))
   end
 
@@ -105,6 +111,14 @@ RSpec.describe Site::Exporter do
     expect(html).to(include("navigator.language"))
   end
 
+  it "still opens the menus and runs the search once Stimulus is gone" do
+    html = page("en", "licenses", "index.html")
+
+    expect(html).to(include("data-menu-target=panel"))
+    expect(html).to(include("data-search-url-value=\"#{app_url}/en/search\""))
+    expect(html).not_to(include("data-search-url-value=\"/en/search\""))
+  end
+
   it "leaves no form that needs a server to answer it" do
     root.glob("**/*.html").each { |page| expect(page.read).not_to(include("method=\"post\"")) }
   end
@@ -114,14 +128,25 @@ RSpec.describe Site::Exporter do
     expect(page("ru", "index.html")).to(include("href=\"/en/\""))
   end
 
-  it "keeps the legal pages in english with no way to translate them" do
+  it "reads the legal pages in the language the visitor arrived in" do
+    %w[licenses privacy terms].each do |name|
+      expect(page("en", name, "index.html")).to(match(/<html[^>]*lang="en"/))
+      expect(page("ru", name, "index.html")).to(match(/<html[^>]*lang="ru"/))
+    end
+
+    expect(page("ru", "terms", "index.html")).to(include(I18n.t("terms.title", locale: :ru)))
+    expect(page("ru", "privacy", "index.html")).to(include(I18n.t("privacy.contact.heading", locale: :ru)))
+  end
+
+  it "points an old bare legal address at the english page as the canonical one" do
     %w[licenses privacy terms].each do |name|
       html = page(name, "index.html")
 
-      expect(html).to(match(/<html[^>]*lang="en"/))
-      expect(html).not_to(include("/locale/"))
-      expect(html).not_to(include("hreflang"))
-      expect(root.join("ru", name)).not_to(exist)
+      expect(html).to(eq(page("en", name, "index.html")))
+      expect(html).to(
+        match(%r{rel="canonical"[^>]*href="#{site_url}/en/#{name}"|href="#{site_url}/en/#{name}"[^>]*rel="canonical"})
+      )
+      expect(html).to(include("hreflang=\"ru\" href=\"#{site_url}/ru/#{name}\""))
     end
   end
 

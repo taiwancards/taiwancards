@@ -2,6 +2,7 @@
 
 class EverydayController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   SORTS = %w[category freq difficulty].freeze
 
   def index

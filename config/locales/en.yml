@@ -11,6 +11,101 @@ en:
     limits: "Access is limited to the drive.file scope: the app can only reach files it created itself. TaiwanCards cannot see or open any other file on your Drive. No backup is made automatically — only when you press the button."
     privacy: Privacy policy
     terms: Terms of service
+    policy_before: Our use of information received from Google APIs follows the
+    policy_name: Google API Services User Data Policy
+    policy_after: and its Limited Use requirements. Google account data is never used for advertising, never sold, and never shared beyond what is described here.
+  privacy:
+    title: Privacy Policy
+    effective: "Effective date: 2025-03-01"
+    purpose:
+      heading: What this app does
+      body: TaiwanCards is a free, ad-free web app for learning Taiwanese Mandarin. It provides flashcards with spaced repetition, dictionary lookups, pronunciation practice and vocabulary lists. It is run by one independent developer, not by a company.
+    stored:
+      heading: What we store
+      items:
+        - Your email address, display name and interface language.
+        - "No password of yours: the account is created through Google, and the app never asks you for one."
+        - "Your study data: decks, cards, review history, progress and practice settings."
+        - Pronunciation attempts and the measurements derived from them.
+        - Server logs of requests, kept for reliability and abuse prevention.
+    never:
+      heading: What we do not do
+      items:
+        - We do not sell or rent personal data.
+        - We do not show advertising and we do not run advertising trackers.
+        - We do not use third-party analytics.
+        - We do not profile you for anything other than showing you your own progress.
+    cookies:
+      heading: Cookies
+      body: "Two cookies are used, both strictly necessary: a signed session cookie that keeps you logged in, and a cookie remembering your interface language. There are no advertising or tracking cookies."
+    donation:
+      heading: Donation button
+      body: The help page carries an optional donation button supplied by Buy Me a Coffee. Opening that one page loads their script, so your browser contacts them and they see your IP address and user agent. No account data is sent, the button appears on no other page, and donating is never required.
+    where:
+      heading: Where data is held
+      body: The application and its database run on Render in Singapore. Traffic passes through Cloudflare, and audio files are served from Cloudflare R2. These providers process data only in order to host the service. If you use the Google Drive backup, that copy sits in your own Google account.
+    retention:
+      heading: Retention and deletion
+      body: Your data is kept while your account exists. Write to the address below to have the account and everything in it deleted; server logs age out on their own. Deleting your account here does not touch a backup file you created on your own Google Drive — that file is yours to delete.
+    choices:
+      heading: Your choices
+      items:
+        - Read the dictionary, the grammar, the reference sections and everything about Taiwan without an account at all.
+        - Revoke the app's Google access at any time from your Google account permissions page.
+        - Ask for a copy of your data, a correction, or full deletion.
+    children:
+      heading: Children
+      body: The app is not directed at children under 13, and accounts are not knowingly created for them.
+    changes:
+      heading: Changes
+      body: If this policy changes, the effective date above changes with it.
+    contact:
+      heading: Contact
+      body: "Questions, data requests and deletion requests:"
+    related:
+      heading: Related links
+  terms:
+    title: Terms of Service
+    effective: "Effective date: 2025-03-01"
+    service:
+      heading: The service
+      body: TaiwanCards is a web application for learning Taiwanese Mandarin, run by one independent developer. It is free to use, carries no advertising, and is offered as-is. Features may change or be removed.
+    account:
+      heading: Your account
+      items:
+        - Give accurate account details and keep your credentials to yourself.
+        - One person per account. You are responsible for what happens under yours.
+        - You can delete your account at any time by asking at the address below.
+    use:
+      heading: Acceptable use
+      items:
+        - Do not attempt to reach data, systems or other people's accounts you have no right to.
+        - Do not scrape the site in bulk, or place automated load on it beyond ordinary study.
+        - Do not upload unlawful or malicious content.
+        - Respect the licenses of the dictionaries, corpora and fonts listed on the licenses page.
+    yours:
+      heading: What you make
+      body: Decks, notes and progress you create stay yours. You grant only the permission needed to store and display them back to you. You can export your progress at any time, including to your own Google Drive.
+    ours:
+      heading: What we use
+      body: The application code and original text belong to their author. Dictionaries, corpora, audio and fonts come from third parties and are used under their own licenses, each named on the licenses page. Nothing in these terms grants you rights to that third-party material beyond those licenses.
+    availability:
+      heading: Availability
+      body: The service is provided on an "as is" and "as available" basis, without any warranty of uninterrupted operation, and without a guarantee that the linguistic data is free of error. It is a study aid, not an authority on the language.
+    suspension:
+      heading: Suspension
+      body: Accounts that break these terms, or that put the service at risk, may be suspended or removed.
+    liability:
+      heading: Liability
+      body: To the maximum extent permitted by law, the developer is not liable for indirect, incidental or consequential damages arising from use of the service.
+    changes:
+      heading: Changes
+      body: These terms may be updated. The effective date above changes when they do, and continued use after that date means you accept the revised terms.
+    contact:
+      heading: Contact
+      body: "Questions about these terms:"
+    related:
+      heading: Related links
   glossary_labels:
     fsrs: FSRS-6
     tocfl: TOCFL
@@ -1720,6 +1815,8 @@ en:
     made: Made in Taipei
     by: by
     licenses: Licenses & credits
+    privacy: Privacy
+    terms: Terms
   licenses:
     moe_notice: 使用說明 — the official usage notice, retained in full as the license requires
     title: Licenses & credits

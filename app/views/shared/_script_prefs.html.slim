@@ -39,9 +39,18 @@
         lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
         = detailed? ? "詳" : "簡"
 
-  = button_to locale_path(I18n.locale.to_s == "ru" ? :en : :ru, locale: nil), method: :post,
-    form: {class: "contents"}, class: wide_classes,
-    title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+  - other = I18n.locale.to_s == "ru" ? :en : :ru
+  - mark = capture do
     span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
       class="size-6 text-[10px] leading-none" ]
       = I18n.locale.to_s.upcase
+
+  - if authenticated?
+    = button_to locale_path(other, locale: nil), method: :post,
+      form: {class: "contents"}, class: wide_classes,
+      title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+      = mark
+  - else
+    = link_to Locales.swap(request.fullpath, other), class: wide_classes,
+      title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+      = mark

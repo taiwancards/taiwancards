@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CangjieController < ApplicationController
+  allow_unauthenticated_access
+  publicly_cacheable
   DATA = "cangjie5.json"
 
   def show

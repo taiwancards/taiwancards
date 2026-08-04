@@ -2,6 +2,7 @@
 
 class RadicalsController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   def index
     @radicals = Lexeme.where(kind: :radical).order(Arel.sql("(data ->> 'number')::int"))
     @counts = ContentCache.fetch("radicals/counts") { character_counts }

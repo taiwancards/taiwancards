@@ -2,6 +2,7 @@
 
 class GrammarController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
 
   def index
     @levels = Huayu::GrammarLessons.levels

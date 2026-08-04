@@ -2,6 +2,7 @@
 
 class SentencesController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   PER_PAGE = Sentences::Browse::PER_PAGE
 
   def index

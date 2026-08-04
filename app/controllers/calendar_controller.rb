@@ -2,6 +2,7 @@
 
 class CalendarController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   def show
     @first_year = Huayu::LunarCalendar.first_year
     @last_year = Huayu::LunarCalendar.last_year

@@ -2,6 +2,7 @@
 
 class CharactersController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   include Paginated
 
   PER_PAGE = 96

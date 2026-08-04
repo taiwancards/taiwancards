@@ -21,14 +21,19 @@ module Authentication
   end
 
   def true_user
-    @true_user ||= User.find_by(id: cookies.signed[:user_id])
+    return @true_user if defined?(@true_user)
+
+    id = cookies.signed[:user_id]
+    @true_user = id.present? ? User.find_by(id: id) : nil
   end
 
   def impersonated_user
     return nil if session[:impersonated_user_id].blank?
     return nil unless true_user&.admin?
 
-    @impersonated_user ||= User.find_by(id: session[:impersonated_user_id])
+    return @impersonated_user if defined?(@impersonated_user)
+
+    @impersonated_user = User.find_by(id: session[:impersonated_user_id])
   end
 
   def impersonating?
@@ -36,7 +41,9 @@ module Authentication
   end
 
   def current_user
-    Current.user ||= impersonated_user || true_user
+    return Current.user if Current.user_resolved?
+
+    Current.user = impersonated_user || true_user
   end
 
   def require_authentication

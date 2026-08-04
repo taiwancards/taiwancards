@@ -232,4 +232,10 @@ namespace(:deploy) do
 
     abort("deploy:fillers FAILED [#{failed.join(", ")}]") if failed.any?
   end
+
+  desc("Ask Render to build and roll out the current commit. Usage: rake deploy:release")
+  task(release: :environment) do
+    deploy = Render::Api.new.deploy!
+    puts("release: #{deploy.fetch("id")} #{deploy.fetch("status")} — watch it in the Render dashboard")
+  end
 end

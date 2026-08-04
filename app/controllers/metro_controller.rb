@@ -2,6 +2,7 @@
 
 class MetroController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
   LINES = [
     ["文湖線", "#c48c31"],
     ["淡水信義線", "#d8232a"],

@@ -2,7 +2,7 @@
 
 module Huayu
   class GrammarLessons
-    PATH = AppData.path("huayu/grammar_lessons.json")
+    DATA = JsonData.new("huayu/grammar_lessons.json", default: [], watch: true)
     ZHUYIN_DEFAULT_THROUGH = 2
 
     Example = Data.define(:zh, :en, :ru, :zhuyin, :pinyin, :sentence, :segments) do
@@ -97,8 +97,9 @@ module Huayu
       end
 
       def reset!
-        @payload = nil
-        @mtime = nil
+        DATA.reset!
+        remove_instance_variable(:@payload) if defined?(@payload)
+        @rows = nil
         @by_form = nil
       end
 
@@ -120,14 +121,12 @@ module Huayu
       end
 
       def payload
-        current = PATH.exist? ? PATH.mtime : nil
-        if @payload && @mtime != current
-          @payload = nil
-          @by_form = nil
-        end
+        rows = DATA.value
+        return @payload if defined?(@payload) && @rows.equal?(rows)
 
-        @mtime = current
-        @payload ||= load
+        @rows = rows
+        @by_form = nil
+        @payload = rows
           .map do |row|
             Lesson.new(
               id: row["id"],
@@ -154,12 +153,6 @@ module Huayu
             )
           end
           .freeze
-      end
-
-      def load
-        PATH.exist? ? JSON.parse(PATH.read) : []
-      rescue JSON::ParserError
-        []
       end
     end
   end
