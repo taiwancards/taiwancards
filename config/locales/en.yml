@@ -1191,6 +1191,7 @@ en:
     mic_insecure: Browsers only grant microphone access over HTTPS or on localhost.
     network: Could not reach the server — check your connection.
     error: Couldn't grade that take — try again, a bit louder and closer to the mic.
+    busy: Every check is busy right now — wait a moment and try again.
     hint: Each syllable turns green if its tone is right, red with the correction if not.
   numbers:
     rules_title: Rules worth knowing before you drill

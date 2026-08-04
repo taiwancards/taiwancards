@@ -15,26 +15,43 @@ module Lexemes
     end
 
     def call
-      cleared = clear
+      track_touched
       updated = update
+      cleared = clear(KINDS)
       sentences = styles.positive? ? update_sentences : 0
+      cleared += clear([:sentence])
       @io.puts(
         "register mix: words and collocations #{updated}, sentences #{sentences}, old rows dropped #{cleared}"
       )
       {updated:, sentences:, cleared:}
+    ensure
+      connection.execute("DROP TABLE IF EXISTS register_touched")
     end
 
     private
 
-    def clear
+    KEYS = %w[register_mix register_n register_eff].freeze
+
+    def stripped(column) = KEYS.inject(column) { |sql, key| "#{sql} - '#{key}'" }
+
+    def track_touched
+      connection.execute("DROP TABLE IF EXISTS register_touched")
+      connection.execute("CREATE UNLOGGED TABLE register_touched (id bigint PRIMARY KEY)")
+    end
+
+    def clear(kinds)
       execute(
         <<~SQL
           UPDATE lexemes
-          SET data = data - 'register_mix' - 'register_n' - 'register_eff'
-          WHERE data ?| array['register_mix', 'register_n', 'register_eff']
+          SET data = #{stripped("data")}
+          WHERE kind IN (#{numbers_for(kinds)})
+            AND data ?| array[#{KEYS.map { |key| "'#{key}'" }.join(", ")}]
+            AND NOT EXISTS (SELECT 1 FROM register_touched WHERE register_touched.id = lexemes.id)
         SQL
       )
     end
+
+    def numbers_for(kinds) = kinds.map { |kind| Lexeme.kinds.fetch(kind.to_s) }.join(", ")
 
     SCRATCH = %w[register_counts register_informative register_patch].freeze
 
@@ -48,9 +65,13 @@ module Lexemes
       build("register_patch", select)
       connection.execute("CREATE UNIQUE INDEX ON register_patch (id)")
       connection.execute("ANALYZE register_patch")
+      connection.execute(
+        "INSERT INTO register_touched (id) SELECT id FROM register_patch ON CONFLICT DO NOTHING"
+      )
+      merged = "(#{stripped("lexemes.data")}) || register_patch.patch"
       execute(
-        "UPDATE lexemes SET data = data || register_patch.patch " \
-          "FROM register_patch WHERE lexemes.id = register_patch.id"
+        "UPDATE lexemes SET data = #{merged} FROM register_patch " \
+          "WHERE lexemes.id = register_patch.id AND lexemes.data IS DISTINCT FROM #{merged}"
       )
     end
 
@@ -253,9 +274,7 @@ module Lexemes
         .join(", ")
     end
 
-    def kind_list
-      KINDS.map { |kind| Lexeme.kinds.fetch(kind.to_s) }.join(", ")
-    end
+    def kind_list = numbers_for(KINDS)
 
     def execute(sql)
       Lexeme.connection.exec_update(sql, "register_mix")

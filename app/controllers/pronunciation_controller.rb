@@ -48,9 +48,13 @@ class PronunciationController < ApplicationController
   def grade
     tonal = params[:tonal].to_s != "false"
     voice = voice_profile
-    result = Pronunciation::AcousticBackend
-      .new(tonal:, voice:)
-      .grade(audio: params[:audio], text: params[:text], syllables: parse_expected)
+    result = Pronunciation::Admission.take do
+      Pronunciation::AcousticBackend
+        .new(tonal:, voice:)
+        .grade(audio: params[:audio], text: params[:text], syllables: parse_expected)
+    end
+
+    return render(json: {status: "busy"}, status: :too_many_requests) if result == :busy
     return render(json: {status: "offline"}, status: :service_unavailable) if result.nil?
     return render(json: result, status: :unprocessable_entity) if result["status"] == "retry"
 

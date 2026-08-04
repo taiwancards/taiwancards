@@ -55,6 +55,35 @@ RSpec.describe Lexemes::RegisterMix do
     10.times { |i| sentence(dictionary, %w[甲], i) }
   end
 
+  it "leaves the dictionary alone the second time, when the corpus has not moved" do
+    first = described_class.new(io: StringIO.new, min_tokens: 3, prior: 0.0).call
+    second = described_class.new(io: StringIO.new, min_tokens: 3, prior: 0.0).call
+
+    expect(first[:updated]).to(be_positive)
+    expect(second[:updated]).to(eq(0), "a repeat run rewrote words whose distribution had not changed")
+    expect(second[:sentences]).to(eq(0), "a repeat run rewrote sentence profiles that had not changed")
+    expect(second[:cleared]).to(eq(0))
+  end
+
+  it "wipes a profile only from rows this run did not write" do
+    described_class.new(io: StringIO.new, min_tokens: 3, prior: 0.0).call
+    kept = both.reload.data["register_mix"]
+
+    described_class.new(io: StringIO.new, min_tokens: 3, prior: 0.0).call
+
+    expect(both.reload.data["register_mix"]).to(eq(kept))
+  end
+
+  it "still drops a profile once its word stops qualifying, even on a repeat run" do
+    described_class.new(io: StringIO.new, min_tokens: 3, prior: 0.0).call
+    expect(only_talk.reload.data).to(have_key("register_mix"))
+
+    LexemeContentSource.where(lexeme_id: Lexeme.where(kind: :sentence).select(:id)).delete_all
+    described_class.new(io: StringIO.new, min_tokens: 3, prior: 0.0).call
+
+    expect(only_talk.reload.data).not_to(have_key("register_mix"))
+  end
+
   it "reads a word as neutral when its rate per corpus is the same everywhere" do
     described_class.new(io: StringIO.new, min_tokens: 3, prior: 0.0).call
 

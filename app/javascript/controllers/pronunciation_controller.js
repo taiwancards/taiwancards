@@ -98,6 +98,7 @@ export default class extends Controller {
     "detail",
   ];
   static values = {
+    labelBusy: String,
     labelNotRecognized: String,
     labelNotMeasured: String,
     labelNoPart: String,
@@ -385,6 +386,10 @@ export default class extends Controller {
       });
       if (!res.ok) {
         if (res.status === 503) return this.unavailable();
+        if (res.status === 429) {
+          this.setStatus(this.labelBusyValue);
+          return;
+        }
         if (res.status === 422) {
           this.setStatus(this.labelSilenceValue);
           return;
