@@ -122,11 +122,12 @@ namespace(:deploy) do
       :ran
     },
     "admin_rights" => -> {
-      stale = User.where(admin: true).reject(&:admin?)
-      next :skipped if stale.empty?
+      owner = User.where(google_email: User::ADMIN_GOOGLE_EMAIL)
+      granted = owner.where(admin: false).update_all(admin: true, restricted_content: true)
+      taken = User.where(admin: true).where.not(id: owner.select(:id)).update_all(admin: false)
+      next :skipped if granted.zero? && taken.zero?
 
-      User.where(id: stale.map(&:id)).update_all(admin: false)
-      $stdout.puts("admin taken from #{stale.size} account(s) that are not #{User::ADMIN_GOOGLE_EMAIL}")
+      $stdout.puts("admin granted to #{granted}, taken from #{taken} (only #{User::ADMIN_GOOGLE_EMAIL} keeps it)")
       :ran
     },
     "flag_restricted" => -> {

@@ -76,7 +76,7 @@ class User < ApplicationRecord
     name.presence || email
   end
 
-  ADMIN_GOOGLE_EMAIL = ENV.fetch("ADMIN_GOOGLE_EMAIL", "taiwancards@pm.me").downcase.freeze
+  ADMIN_GOOGLE_EMAIL = "taiwancards@pm.me"
 
   def admin?
     google_email.present? && google_email == ADMIN_GOOGLE_EMAIL
