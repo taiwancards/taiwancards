@@ -129,6 +129,17 @@ namespace(:deploy) do
     }
   }.freeze
 
+  FILLERS = %w[
+    Huayu::GlossOverrideEnricher
+    Huayu::SenseMeaningFiller
+    Huayu::CollocationMeaningFiller
+    Huayu::ChengyuImporter
+    Huayu::PosImporter
+    Huayu::LiangciImporter
+    Huayu::ThesaurusImporter
+    Lexemes::RegisterMix
+  ].freeze
+
   STEP_TIMER = lambda do |name, &block|
     $stdout.puts("deploy:sync → #{name}")
     $stdout.flush
@@ -206,7 +217,7 @@ namespace(:deploy) do
   task(fillers: :environment) do
     LIFT_TIMEOUTS.call
 
-    failed = Deploy::Rollout::FILLERS.filter_map do |name|
+    failed = FILLERS.filter_map do |name|
       service = name.safe_constantize
       next puts("#{name}: not in this build") if service.nil?
 
@@ -220,109 +231,5 @@ namespace(:deploy) do
     end
 
     abort("deploy:fillers FAILED [#{failed.join(", ")}]") if failed.any?
-  end
-
-  desc("Mirror DATA_ROOT and import whatever changed on it. Run on the server after bin/rebuild-data-render.sh")
-  task(refresh: :environment) do
-    ActiveRecord::Base.connection.execute("SET statement_timeout = 0")
-    ActiveRecord::Base.connection.execute("SET lock_timeout = 0")
-    Rake::Task["data:install"].invoke
-    Rake::Task["deploy:sync"].invoke
-  end
-
-  desc("Ship data/huayu and run only the importers for the files that changed. Usage: rake deploy:glosses")
-  task(glosses: :environment) do
-    server = ENV["RENDER_SERVER"].presence
-    abort("RENDER_SERVER is not set in .env") if server.blank?
-
-    section = Deploy::Catalog.find("huayu")
-    abort("data/huayu is missing locally") unless section&.exist?
-
-    dry_run = ENV["DRY_RUN"].present?
-    shipper = Content::Shipper.new(server:, region: ENV["RENDER_REGION"].presence)
-
-    puts("━━ 1/2 · data/huayu onto the Render disk ━━")
-    shipper.ensure_dirs([section.to]) unless dry_run
-    shipper.sync_paths(section.sync_sources, section.to, dry_run:, checksum: ENV["CHECKSUM"].present?)
-
-    puts("\n━━ 2/2 · importers on the server ━━")
-    next puts("  skipped: dry run") if dry_run
-
-    shipper.run_remote('cd "${RENDER_PROJECT_DIR:-/opt/render/project/src}"; bundle exec rails deploy:sync')
-    puts("\n✓ Done")
-  end
-
-  desc(
-    "Ship absolutely everything: disk sections, dictionary rows, server tasks. Usage: CONFIRM=yes rake deploy:content"
-  )
-  task(:content, %i[server region] => :environment) do |_t, args|
-    server = args[:server].presence || ENV["RENDER_SERVER"].presence
-    if server.blank?
-      abort(
-        <<~USAGE
-          No target Render service. Set it once in .env:
-            RENDER_SERVER=srv-xxxxxxxxxxxx
-            PROD_DATABASE_URL=postgres://…
-          after that:
-            CONFIRM=yes rake deploy:content
-        USAGE
-      )
-    end
-
-    rollout = begin
-      Deploy::Rollout.new(
-        server:,
-        region: args[:region],
-        database: ENV["PROD_DATABASE_URL"],
-        only: ENV["ONLY"],
-        skip: ENV["SKIP"],
-        dry_run: ENV["DRY_RUN"].present?,
-        checksum: ENV["CHECKSUM"].present?
-      )
-    rescue ArgumentError => e
-      abort(e.message)
-    end
-
-    unless ENV["CONFIRM"] == "yes" || ENV["DRY_RUN"].present?
-      abort(
-        <<~CONFIRM
-          Target #{rollout.host}:
-
-          #{rollout.plan.join("\n")}
-
-          Nothing is deleted: the server disk also holds files it downloaded
-          itself, and their absence from this checkout does not remove them.
-          Identical files are not transferred: rsync compares size and mtime,
-          pronunciation templates are compared by SHA-256. Re-running with no
-          local changes is a no-op.
-
-          Confirm:
-            CONFIRM=yes rake deploy:content
-
-          Show the plan without transferring:
-            DRY_RUN=1 rake deploy:content
-
-          Narrow the set:
-            ONLY=pronunciation CONFIRM=yes rake deploy:content
-            SKIP=moe_audio,moe_audio_words CONFIRM=yes rake deploy:content
-
-          Compare contents instead of timestamps (slower, survives mtime drift
-          between identical files):
-            CHECKSUM=1 CONFIRM=yes rake deploy:content
-        CONFIRM
-      )
-    end
-
-    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    begin
-      steps = rollout.call
-    rescue => e
-      abort("\nERROR: #{e.message}")
-    end
-
-    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
-    broken = steps.count { |step| step.status == :failed }
-    puts(format("\n%s Done in %.0fs", broken.zero? ? "✓" : "✗", elapsed))
-    abort("failed steps: #{broken}") if broken.positive?
   end
 end

@@ -1724,6 +1724,23 @@ en:
     moe_notice: 使用說明 — the official usage notice, retained in full as the license requires
     title: Licenses & credits
     intro: TaiwanCards is built with gratitude on freely licensed open resources and official Taiwan language data. Each is linked to its source and license.
+    projects_title: Our own open work
+    projects_note: "TaiwanCards rests on a body of open linguistic research into Taiwan Mandarin: the corpus pipeline that builds the data, the provenance analysis that keeps it Taiwanese, the signal-processing libraries behind pronunciation scoring, and the published datasets. Every part of it, including this application, is open."
+    groups:
+      app: The application and its data preparation
+      pipeline: Corpus construction and provenance analysis
+      gems: Signal processing libraries
+      datasets: Published datasets
+    works:
+      taiwancards: The study application in full — Rails, importers, spaced repetition, pronunciation scoring, mock exams. Nothing is held back.
+      corpora: Download, processing, polishing, calibration, cleaning and analysis of every source the dictionary is built from.
+      twpipeline: Corpus construction for Taiwan Mandarin — nine JSONL stages from a raw crawl to a segmented, frequency-annotated corpus.
+      twfilter: "Provenance analysis: script inventory, orthography, lexical and grammatical markers that separate Taiwan Mandarin from mainland, Hong Kong and Southeast Asian usage."
+      dsprb: Speech signal processing in pure Ruby — WAV decoding, FFT power spectra, MFCC, YIN pitch tracking. It scores your pronunciation.
+      dtwrb: Dynamic time warping with a Sakoe-Chiba band and DBA barycenter averaging. It compares your recording against the reference contour.
+      twngrams: Word and character n-gram frequencies from the Taiwan Mandarin corpus, released into the public domain.
+      twsyllables: Syllable inventory with zhuyin, pinyin and tone distribution across the corpus.
+      twfilter_tables: "The reference tables twfilter uses to judge provenance — orthographic pairs, lexical markers, script inventories."
     open_source_title: Open source
     fonts_title: Fonts
     fonts_note: All three are self-hosted. Two of them we ship modified, and that is stated below.

@@ -33,6 +33,25 @@
     p.mt-2.text-muted-foreground = t("licenses.intro")
 
   section.space-y-3
+    h2.text-lg.font-semibold = t("licenses.projects_title")
+    p.text-sm.text-muted-foreground = t("licenses.projects_note")
+    .space-y-3
+      - Site::OpenWork::GROUPS.each do |group|
+        .rounded-xl.border.border-border.p-4
+          h3.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("licenses.groups.#{group.key}")
+          ul.mt-2.space-y-2
+            - group.entries.each do |entry|
+              li
+                p
+                  = link_to entry.name, entry.url, link_opts
+                  - if entry.license
+                    span.text-muted-foreground = " — #{entry.license}"
+                  - if entry.mirror
+                    span.text-muted-foreground = " · "
+                    = link_to entry.mirror_label, entry.mirror, link_opts
+                p.text-sm.text-muted-foreground = t("licenses.works.#{entry.key}")
+
+  section.space-y-3
     h2.text-lg.font-semibold = t("licenses.open_source_title")
     .space-y-3
       - credits.each do |name, url, lic, lic_url, key|

@@ -65,19 +65,25 @@ RSpec.describe Huayu::MoeAudio do
     end
   end
 
-  describe "the disk catalog" do
-    it "no longer ships the clips themselves, only the manifests" do
-      sections = Deploy::Catalog::SECTIONS.select { |s| s.id.start_with?("moe_audio") }
+  describe "what reaches the runtime bucket" do
+    let(:script) { Rails.root.join("bin/distribute").read }
 
-      expect(sections).not_to(be_empty)
-      sections.each { |section| expect(section.only).to(eq(%w[index.json notice.pdf ATTRIBUTION.txt])) }
+    it "carries the manifests but not the clips, which the media bucket serves" do
+      %w[moe_audio moe_audio_words].each do |scope|
+        expect(script).to(include("media/#{scope}/index.json|media/#{scope}/index.json"))
+        expect(script).not_to(include("media/#{scope}/audio"))
+      end
     end
 
-    it "still ships the restricted textbook audio to the disk" do
-      section = Deploy::Catalog.find("textbook_audio")
+    it "carries the usage notice the MOE licence requires to stay reachable" do
+      %w[moe_audio moe_audio_words].each do |scope|
+        expect(script).to(include("media/#{scope}/notice.pdf|media/#{scope}/notice.pdf"))
+        expect(script).to(include("media/#{scope}/ATTRIBUTION.txt|media/#{scope}/ATTRIBUTION.txt"))
+      end
+    end
 
-      expect(section.only).to(be_blank)
-      expect(section.to).to(eq("audio/textbook"))
+    it "carries the restricted textbook audio, which the app hands out only behind its own gate" do
+      expect(script).to(include("media/audio/textbook|media/audio/textbook"))
     end
   end
 end

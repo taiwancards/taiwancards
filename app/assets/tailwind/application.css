@@ -327,10 +327,41 @@
   }
 
   .zh-line {
+    display: block;
+    min-width: 0;
     font-family: var(--font-hanzi);
     font-size: 1.35em;
     font-weight: 500;
     line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .zy-line {
+    font-family: var(--font-hanzi);
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: color-mix(in oklch, currentColor 65%, transparent);
+    overflow-wrap: anywhere;
+  }
+
+  .py-line {
+    font-size: 0.8em;
+    line-height: 1.45;
+    color: color-mix(in oklch, currentColor 45%, transparent);
+    overflow-wrap: anywhere;
+  }
+
+  .gloss-line {
+    margin-top: 0.15em;
+  }
+
+  .gloss-line .grammar-gloss {
+    margin-left: 0;
+  }
+
+  .no-zhuyin .zy-line,
+  .no-pinyin .py-line:not(.pinyin-locked) {
+    display: none;
   }
 
   .reading {

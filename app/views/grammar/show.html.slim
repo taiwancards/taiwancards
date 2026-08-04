@@ -45,20 +45,21 @@
     ul.grammar-prose.space-y-2
       - @lesson.examples.each do |example|
         li.rounded-xl.border.border-border.bg-card.px-4.py-3
-          .flex.items-baseline.gap-2
+          .flex.items-start.gap-2
             = grammar_example_text(example, @entries)
-            = grammar_example_reading(example)
-            - if (clip = Huayu::ListeningClips.for_text(example.zh))
-              button.inline-flex.shrink-0.items-center.justify-center.rounded-full.border.border-border.p-1.text-muted-foreground[
-                type="button" data-controller="audio"
-                data-audio-url-value=Huayu::ListeningClips.clip_url(clip.clip)
-                data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
-                aria-label=t("study.play") ]
-                = icon(:speaker, css: "size-4")
-            - if example.sentence
-              = link_to "→", sentence_path(example.sentence), class: "text-xs text-muted-foreground hover:text-foreground", title: t("sentences.open")
+            .flex.shrink-0.items-center.gap-2
+              - if (clip = Huayu::ListeningClips.for_text(example.zh))
+                button.inline-flex.items-center.justify-center.rounded-full.border.border-border.p-1.text-muted-foreground[
+                  type="button" data-controller="audio"
+                  data-audio-url-value=Huayu::ListeningClips.clip_url(clip.clip)
+                  data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
+                  aria-label=t("study.play") ]
+                  = icon(:speaker, css: "size-4")
+              - if example.sentence
+                = link_to "→", sentence_path(example.sentence), class: "text-xs text-muted-foreground hover:text-foreground", title: t("sentences.open")
+          = grammar_example_reading(example)
           - if example.translation(I18n.locale).present?
-            .mt-1 = grammar_quote(example.translation(I18n.locale))
+            .gloss-line = grammar_quote(example.translation(I18n.locale))
 
   - practice = grammar_practice_path(@lesson)
   - if practice

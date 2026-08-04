@@ -78,35 +78,6 @@ namespace(:content) do
     puts("\nNOT in the dump (server keeps its own): #{Deploy::ContentTables::USER_TABLES.join(", ")}")
   end
 
-  desc("Send the dump to the Render disk. Usage: rake content:ship[srv-abc123]")
-  task(:ship, %i[server region] => :environment) do |_t, args|
-    if args[:server].blank?
-      abort(<<~USAGE)
-        Specify the Render service: the part before @ in the SSH host:
-          ssh srv-abc123@ssh.singapore.render.com
-              ^^^^^^^^^^
-
-          rake content:ship[abc123]
-          rake content:ship[abc123,frankfurt]
-      USAGE
-    end
-
-    path = DUMP_PATH.call
-    abort("#{path} is missing; run rake content:dump first") unless File.exist?(path)
-
-    shipper = Content::Shipper.new(server: args[:server], region: args[:region])
-    begin
-      remote = shipper.call(path, remote_name: "content.dump")
-      puts(<<~NEXT)
-
-        Now on the server (Render Shell):
-          DUMP=#{remote} CONFIRM=yes bundle exec rake content:restore
-      NEXT
-    rescue StandardError => e
-      abort("\nERROR: #{e.message}")
-    end
-  end
-
   desc("Restore a dump into the current database. Usage: CONFIRM=yes rake content:restore")
   task(restore: :environment) do
     path = DUMP_PATH.call

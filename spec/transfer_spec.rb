@@ -3,8 +3,8 @@
 require "rails_helper"
 require "open3"
 
-RSpec.describe "bin/rebuild-data-render.sh" do
-  let(:script) { Rails.root.join("bin/rebuild-data-render.sh").read }
+RSpec.describe "bin/distribute" do
+  let(:script) { Rails.root.join("bin/distribute").read }
 
   def members(stream)
     names = []
@@ -62,27 +62,21 @@ RSpec.describe "bin/rebuild-data-render.sh" do
     end
   end
 
-  it "never lets macOS metadata onto the disk in the first place" do
-    expect(script).to(include("--exclude '._*'"))
+  it "builds the templates archive without macOS metadata" do
+    expect(script).to(include("COPYFILE_DISABLE=1 tar --no-xattrs --no-mac-metadata"))
   end
 
-  it "refuses to finish if metadata files reach the disk anyway" do
-    expect(script).to(match(/name '\._\*'.*\n.*die/))
+  it "compares a digest before sending anything, so an unchanged run moves nothing" do
+    expect(script).to(match(/digest="\$\(sha_file "\$src"\)"/))
+    expect(script).to(match(/digest="\$\(sha_tree "\$src"\)"/))
+    expect(script.scan(/remote_sha "\$dest"/).length).to(eq(2))
   end
 
-  it "sends only what changed and drops what is gone" do
-    expect(script).to(match(/^\s*STATS=\$\(rsync /))
-    expect(script).to(include("PRUNE=(--delete)"))
+  it "stamps what it sends so the next run can recognise it" do
+    expect(script.scan(/--metadata "sha256=\$digest"/).length).to(eq(2))
   end
 
-  it "leaves the disk alone unless wiping is asked for by name" do
-    expect(script).to(match(/if \[ -n "\$\{WIPE:-\}" \]; then/))
-    expect(script.scan(/rm -rf/).length).to(eq(1))
-  end
-
-  it "keeps ssh away from the loop it is iterating" do
-    expect(script).to(match(/^remote\(\) \{ ssh -n /))
-    expect(script).to(include("<&3"))
-    expect(script).to(include("done 3<<<"))
+  it "digests an archive from its source tree, never from the tarball it just built" do
+    expect(script).to(match(/sha_tree\(\) \{\n\s*find /))
   end
 end

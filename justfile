@@ -146,21 +146,6 @@ prake task: _require-server
 pdb: _require-db
     psql "$PROD_DATABASE_URL"
 
-# List what the Render disk holds
-[group('render')]
-pdisk: _require-server
-    ssh {{ ssh_opts }} "{{ host }}" "df -h /var/data; echo; du -sh /var/data/* 2>/dev/null | sort -h"
-
-# Send changed files to Render, skipping what matches
-[group('content')]
-content:
-    CONFIRM=yes bin/rails deploy:content
-
-# Same, but only print the plan
-[group('content')]
-content-plan:
-    DRY_RUN=1 bin/rails deploy:content
-
 # Count what the dictionary holds
 [group('content')]
 census:
@@ -176,17 +161,12 @@ doctor:
 rebuild-db:
     CONFIRM=yes bin/install-local
 
-# Refill the Render disk from scratch
-[group('content')]
-rebuild-data-render:
-    CONFIRM=yes bin/rebuild-data-render.sh
-
 # Copy the whole local database to Render as one dump
 [group('content')]
 rebuild-db-render:
     CONFIRM=yes bin/rebuild-db-render.sh
 
-# Send everything: R2 archive, R2 media, Render disk
+# Push every bucket: archive, media, assets, runtime
 [group('content')]
 dist:
     bin/distribute all
@@ -195,6 +175,11 @@ dist:
 [group('content')]
 dist-plan:
     bin/distribute all --dry-run
+
+# Everything the running app reads, to the runtime bucket
+[group('content')]
+dist-runtime:
+    bin/distribute runtime
 
 # Cold archive to the private R2 bucket
 [group('content')]
@@ -210,11 +195,6 @@ dist-assets:
 [group('content')]
 dist-media:
     bin/distribute media
-
-# Runtime payload to the Render disk
-[group('content')]
-dist-disk:
-    bin/distribute disk
 
 # Restore the cold archive from R2 to this machine
 [group('content')]
