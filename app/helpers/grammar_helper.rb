@@ -2,6 +2,15 @@
 
 module GrammarHelper
   HAN_RUN = /(\p{Han}+)/
+  ZHUYIN_DEFAULT_THROUGH = 2
+  QUOTES = {"ru" => ["«", "»"], "en" => ["“", "”"]}.freeze
+  ZH_RUN = /[\p{Han}][\p{Han}\p{Latin}0-9，、：；？！。…（）]*/
+  GLOSS = /«[^»]+»|“[^”]+”|"[^"]+"/
+  EXAMPLE_LINE = /
+    (?:(?<zh>#{ZH_RUN})\s*[—–]\s*(?<gloss>#{GLOSS}))
+    |
+    (?:(?<gloss>#{GLOSS})\s*[—–]\s*(?<zh>#{ZH_RUN}))
+  /x
 
   PRACTICE = {"numbers" => :practice_numbers_path}.freeze
 
@@ -25,41 +34,65 @@ module GrammarHelper
     lesson.head.to_s.scan(HAN_RUN).flatten.uniq
   end
 
-  def grammar_prose(text, lesson, entries: {})
+  def grammar_zhuyin_default?(lesson) = lesson.level <= ZHUYIN_DEFAULT_THROUGH
+
+  def grammar_prose(text, lesson, seen:, entries: {})
     return "" if text.blank?
 
     safe_join(
-      text.split(HAN_RUN).map do |chunk|
-        chunk.match?(/\p{Han}/) ? grammar_term(chunk, lesson, entries) : chunk
+      grammar_blocks(text).map do |kind, first, second|
+        if kind == :example
+          grammar_example_line(first, second, lesson, seen)
+        else
+          tag.p(grammar_run(first, lesson, seen, entries), class: "grammar-line")
+        end
       end
     )
   end
 
-  def grammar_term(run, lesson, entries = {})
+  public def grammar_reading(run, lesson)
     reading = lesson.reading(run)
-    body = grammar_term_body(run, reading)
-    body = grammar_word_link(entries[run]) { body } if entries[run]
+    zhuyin = reading.to_h["zhuyin"].presence
+    pinyin = reading.to_h["pinyin"].presence
+    return nil if zhuyin.nil? && pinyin.nil?
 
-    tag.span(body, class: "zh-term zy-run zy-top", lang: "zh-TW")
-  end
-
-  def grammar_example_ruby(example, entries: {}, css: nil)
-    queue = example.syllables.dup
-
-    tag.span(lang: "zh-TW", class: class_names("zy-run", grammar_zhuyin_run_class, css)) do
-      safe_join(grammar_example_chunks(example).map { |chunk| grammar_chunk(chunk, queue, entries) })
-    end
-  end
-
-  def grammar_example_plain(example, entries: {})
-    tag.span(lang: "zh-TW") do
+    tag.span(class: "reading") do
       safe_join(
-        grammar_example_chunks(example).map do |chunk|
-          entry = entries[chunk]
-          entry ? grammar_word_link(entry) { chunk } : tag.span(chunk)
-        end
+        [
+          (tag.span(zhuyin, class: "zy-reading", lang: "zh-TW") if zhuyin),
+          (tag.span(pinyin, class: "pinyin py-reading", lang: "zh-Latn") if pinyin)
+        ].compact
       )
     end
+  end
+
+  def grammar_example_text(example, entries)
+    chunks = example.segments.presence || example.zh.chars
+
+    tag.span(class: "zh-line", lang: "zh-TW") do
+      safe_join(chunks.map { |chunk| entries[chunk] ? grammar_word_link(entries[chunk]) { chunk } : chunk })
+    end
+  end
+
+  def grammar_example_reading(example)
+    zhuyin = example.zhuyin.presence
+    pinyin = example.pinyin.presence
+    return nil if zhuyin.nil? && pinyin.nil?
+
+    tag.span(class: "reading") do
+      safe_join(
+        [
+          (tag.span(zhuyin, class: "zy-reading", lang: "zh-TW") if zhuyin),
+          (tag.span(pinyin, class: "pinyin py-reading", lang: "zh-Latn") if pinyin)
+        ].compact
+      )
+    end
+  end
+
+  def grammar_quote(text, locale = I18n.locale)
+    open, close = QUOTES.fetch(locale.to_s, QUOTES["en"])
+    body = text.to_s.strip.sub(/\A[«"“]/, "").sub(/[»"”]\z/, "")
+    tag.em("#{open}#{body}#{close}", class: "grammar-gloss")
   end
 
   def grammar_entries_for(lessons)
@@ -82,11 +115,55 @@ module GrammarHelper
       end
   end
 
-  def grammar_zhuyin_run_class
-    zhuyin_position_for(:body) == "over" ? "zy-over" : "zy-right"
+  private
+
+  def grammar_blocks(text)
+    blocks = []
+    cursor = 0
+
+    text.to_enum(:scan, EXAMPLE_LINE).each do
+      match = Regexp.last_match
+      prose = text[cursor...match.begin(0)]
+      blocks << [:prose, grammar_tidy(prose, blocks.empty?)] if prose.present?
+      blocks << [:example, match[:zh], match[:gloss]]
+      cursor = match.end(0)
+    end
+
+    rest = text[cursor..]
+    blocks << [:prose, grammar_tidy(rest, blocks.empty?)] if rest.present?
+    blocks.reject { |kind, first, _| kind == :prose && first.blank? }
   end
 
-  private
+  def grammar_tidy(prose, first)
+    prose = prose.sub(/\A[\s.,;:！。，、]+/, "") unless first
+    prose.strip
+  end
+
+  def grammar_example_line(chinese, gloss, lesson, seen)
+    reading = grammar_reading(chinese, lesson)
+    seen << chinese
+
+    tag.p(class: "grammar-example") do
+      safe_join([tag.span(chinese, class: "zh-line", lang: "zh-TW"), reading, grammar_quote(gloss)].compact)
+    end
+  end
+
+  def grammar_run(text, lesson, seen, entries)
+    safe_join(
+      text.split(HAN_RUN).map do |chunk|
+        next chunk unless chunk.match?(/\p{Han}/)
+
+        grammar_term(chunk, lesson, seen, entries)
+      end
+    )
+  end
+
+  def grammar_term(run, lesson, seen, entries)
+    body = entries[run] ? grammar_word_link(entries[run]) { run } : run
+    reading = seen.add?(run) ? grammar_reading(run, lesson) : nil
+
+    safe_join([tag.span(body, class: "zh-term", lang: "zh-TW"), reading].compact)
+  end
 
   def grammar_substrings(run)
     (1..run.length).flat_map { |length| (0..run.length - length).map { |start| run[start, length] } }
@@ -104,29 +181,6 @@ module GrammarHelper
     end
 
     parts
-  end
-
-  def grammar_term_body(run, reading)
-    syllables = reading.to_h["zhuyin"].to_s.split(/[[:space:]]+/).reject(&:empty?)
-    return run unless syllables.size == run.length
-
-    safe_join(run.chars.zip(syllables).map { |char, syllable| zhuyin_ruby_pair(char, syllable) })
-  end
-
-  def grammar_example_chunks(example)
-    return example.segments if example.segments.present?
-
-    example.zh.chars
-  end
-
-  def grammar_chunk(chunk, queue, entries)
-    body = safe_join(
-      chunk.chars.map do |char|
-        char.match?(/\p{Han}/) && queue.any? ? zhuyin_ruby_pair(char, queue.shift) : tag.span(char)
-      end
-    )
-    entry = entries[chunk]
-    entry ? grammar_word_link(entry) { body } : body
   end
 
   def grammar_word_link(entry, &)

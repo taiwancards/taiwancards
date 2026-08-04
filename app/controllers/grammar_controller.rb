@@ -5,8 +5,13 @@ class GrammarController < ApplicationController
 
   def index
     @levels = Huayu::GrammarLessons.levels
+    @form = params[:form].presence
     @level = params[:level].to_i if @levels.key?(params[:level].to_i)
-    @shown = @level ? @levels.slice(@level) : @levels
+    @shown = if @form
+      Huayu::GrammarLessons.for_form(@form).group_by(&:level)
+    else
+      @level ? @levels.slice(@level) : @levels
+    end
   end
 
   def show

@@ -1,9 +1,4 @@
-- reading = head.zhuyin.to_s.split(/\s+/).reject(&:empty?)
-.text-3xl.font-semibold lang="zh-TW"
-  - if reading.size == head.text.length
-    span class="zy-run zy-top"
-      = safe_join(head.text.chars.zip(reading).map { |char, syllable| zhuyin_ruby_pair(char, syllable) })
-  - else
-    = head.text
+.text-3xl.font-semibold lang="zh-TW" = head.text
+= grammar_reading(head.text, lesson)
 - if head.meaning(I18n.locale)
   .line-clamp-2.text-center.text-xs.text-muted-foreground = head.meaning(I18n.locale)

@@ -5,7 +5,13 @@
     h1.text-2xl.font-bold.tracking-tight = t("grammar.title")
     p.text-sm.leading-relaxed.text-muted-foreground = t("grammar.lede")
 
-  = render("shared/tabs", tabs: grammar_level_tabs(@levels.keys, @level))
+  - if @form
+    p.text-sm.text-muted-foreground
+      = t("grammar.for_form")
+      span.ml-1.text-base.font-semibold lang="zh-TW" = @form
+      = link_to t("grammar.all_levels"), grammar_path, class: "ml-3 underline underline-offset-2 hover:text-foreground"
+  - else
+    = render("shared/tabs", tabs: grammar_level_tabs(@levels.keys, @level))
 
   - @shown.sort.each do |level, lessons|
     section.space-y-3

@@ -60,6 +60,31 @@ RSpec.describe "Grammar pages" do
     expect(text).to(include("一百八"))
   end
 
+  it "shows a reading once, where the word is introduced" do
+    get("/grammar/shi")
+
+    page = Nokogiri::HTML(response.body)
+    prose = page.css("section.grammar-prose").first
+    expect(prose.css(".reading").size).to(be >= 3)
+    expect(prose.css(".zy-reading").first.text).to(include("ㄕ"))
+    expect(prose.css(".py-reading").first.text).to(include("sh"))
+  end
+
+  it "puts each example on its own line with a quoted translation" do
+    get("/grammar/shi")
+
+    examples = Nokogiri::HTML(response.body).css("section.grammar-prose .grammar-example")
+    expect(examples.size).to(be >= 2)
+    expect(examples.first.css(".zh-line").text).to(be_present)
+    expect(examples.first.css(".grammar-gloss").text).to(start_with("“"))
+  end
+
+  it "gives a signed-out visitor both readings", :no_auth do
+    get("/grammar/shi")
+
+    expect(Nokogiri::HTML(response.body).at("html")["class"]).not_to(include("no-pinyin"))
+  end
+
   it "anchors explanations in the language, never in a country" do
     Huayu::GrammarLessons.taught.each do |lesson|
       %i[en ru].each do |locale|

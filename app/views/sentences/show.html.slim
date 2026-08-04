@@ -15,15 +15,6 @@
     - if @sentence.meaning.present?
       p.mt-2.text-base.leading-relaxed.text-muted-foreground = @sentence.meaning
 
-    - grammar = Huayu::GrammarMatcher.lessons_for(@sentence.text)
-    - if grammar.any?
-      .mt-3.flex.flex-wrap.items-center.gap-2
-        span.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("sentences.grammar_title")
-        - grammar.each do |lesson|
-          = link_to grammar_lesson_path(lesson.slug), class: "inline-flex items-baseline gap-1.5 rounded-lg border border-border bg-card px-2 py-1 hover:bg-muted" do
-            span.text-sm.font-semibold lang="zh-TW" = lesson.head
-            span.text-xs.text-muted-foreground = lesson.title(I18n.locale)
-
     - if detailed?
       .mt-3.flex.flex-wrap.items-center.gap-2.text-xs
         = score_badge(@sentence)

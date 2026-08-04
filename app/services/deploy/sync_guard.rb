@@ -24,7 +24,11 @@ module Deploy
     end
 
     def fingerprint
-      @fingerprint ||= Digest::SHA256.hexdigest(@paths.map { |path| Digest::SHA256.file(path).hexdigest }.join)
+      @fingerprint ||= Digest::SHA256.hexdigest(files.map { |path| Digest::SHA256.file(path).hexdigest }.join)
+    end
+
+    def files
+      @paths.flat_map { |path| path.directory? ? path.glob("**/*").select(&:file?).sort : [path] }
     end
 
     private

@@ -37,6 +37,12 @@
           = link_to liangci_entry_path(lexeme.text), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
             span lang="zh-TW" 量詞
             span = t("liangci.as_measure_word")
+        - points = Huayu::GrammarLessons.for_form(lexeme.text)
+        - if points.any?
+          - target = points.one? ? grammar_lesson_path(points.first.slug) : grammar_path(form: lexeme.text)
+          = link_to target, class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
+            span lang="zh-TW" 語法
+            span = t("grammar.as_grammar_point")
         - if lexeme.data["chengyu"]
           = link_to chengyu_path, class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
             span lang="zh-TW" 成語

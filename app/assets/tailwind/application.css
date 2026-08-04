@@ -303,13 +303,9 @@
   }
 
   .zh-term {
-    display: inline-block;
-    margin-inline: 0.1em;
     font-size: 1.15em;
     font-weight: 500;
-    line-height: 1;
     color: var(--color-primary);
-    vertical-align: baseline;
   }
 
   .zh-term > a {
@@ -317,7 +313,65 @@
   }
 
   .grammar-prose {
-    line-height: 2.6;
+    line-height: 1.85;
+  }
+
+  .grammar-line + .grammar-line {
+    margin-top: 0.75em;
+  }
+
+  .grammar-example {
+    margin: 0.85em 0;
+    padding-left: 0.9em;
+    border-left: 2px solid var(--color-border);
+  }
+
+  .zh-line {
+    font-family: var(--font-hanzi);
+    font-size: 1.35em;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+
+  .reading {
+    margin-left: 0.4em;
+    white-space: nowrap;
+  }
+
+  .reading::before {
+    content: "(";
+  }
+
+  .reading::after {
+    content: ")";
+  }
+
+  .zy-reading {
+    font-size: 0.82em;
+    color: color-mix(in oklch, currentColor 70%, transparent);
+  }
+
+  .py-reading {
+    margin-left: 0.35em;
+    font-size: 0.72em;
+    color: color-mix(in oklch, currentColor 50%, transparent);
+  }
+
+  .no-zhuyin .zy-reading {
+    display: none;
+  }
+
+  .no-zhuyin .zy-reading + .py-reading {
+    margin-left: 0;
+  }
+
+  .no-pinyin .no-zhuyin .reading {
+    display: none;
+  }
+
+  .grammar-gloss {
+    margin-left: 0.5em;
+    color: var(--color-muted-foreground);
   }
 
   .zy-over {
@@ -332,27 +386,6 @@
   .zy-over ruby.zy > rt {
     display: block;
     margin-block-end: 0.15em;
-  }
-
-  .zy-top {
-    --zy-size: 0.42;
-    line-height: 1;
-  }
-
-  .zy-top ruby.zy {
-    position: relative;
-    display: inline-block;
-    text-align: center;
-    vertical-align: baseline;
-  }
-
-  .zy-top ruby.zy > rt {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 100%;
-    display: block;
-    margin-block-end: 0.05em;
-    line-height: 1;
   }
 
   .zh-vertical {

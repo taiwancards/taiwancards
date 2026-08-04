@@ -46,10 +46,6 @@ services:
     buildCommand: "./bin/render-build.sh"
     preDeployCommand: "./bin/render-release.sh"
     startCommand: "./bin/render-start.sh"
-    disk:
-      name: taiwancards-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: RAILS_ENV
         value: production
@@ -63,12 +59,6 @@ services:
         value: "2"
       - key: RUBY_YJIT_ENABLE
         value: "1"
-      - key: DATA_ROOT
-        value: /var/data
-      - key: MEDIA_ROOT
-        value: /var/data
-      - key: FONT_DIR
-        value: /var/data/fonts
       - key: MEDIA_BASE_URL
         value: https://audio.taiwancards.app
       - key: ASSETS_BASE_URL

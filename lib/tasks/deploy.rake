@@ -3,6 +3,18 @@
 namespace(:deploy) do
   SYNC_STEPS = [
     {
+      name: "textbook",
+      task: "textbook:load",
+      paths: %w[textbook],
+      code: %w[app/services/textbook/lexeme_importer.rb]
+    },
+    {
+      name: "fonts",
+      task: "fonts:install",
+      paths: %w[fonts.json],
+      code: %w[lib/font_assets.rb]
+    },
+    {
       name: "content_sources",
       task: "huayu:import_sources",
       paths: %w[content_sources.json],
@@ -102,6 +114,13 @@ namespace(:deploy) do
       flagger.call
       :ran
     },
+    "sentence_case" => -> {
+      caser = Lexemes::SentenceCase.new
+      next :skipped unless caser.drift?
+
+      caser.call
+      :ran
+    },
     "landing_counts" => -> {
       Site::Counts.warm!
       :ran
@@ -149,6 +168,18 @@ namespace(:deploy) do
       end
     end
 
+    if ran.any?
+      begin
+        Rake::Task["deploy:fillers"].invoke
+        ran << "fillers"
+      rescue => e
+        failed << "fillers (#{e.class})"
+        warn("deploy:sync fillers failed: #{e.class}: #{e.message}")
+      end
+    else
+      skipped << "fillers"
+    end
+
     ALWAYS_STEPS.each do |name, action|
       action.call == :skipped ? skipped << name : ran << name
     rescue => e
@@ -160,6 +191,11 @@ namespace(:deploy) do
     report = "deploy:sync ran [#{ran.join(", ")}] · unchanged [#{skipped.join(", ")}] (#{elapsed}s)"
     report += " · FAILED [#{failed.join(", ")}]" if failed.any?
     puts(report)
+  end
+
+  desc("Download everything the running app reads from the runtime bucket. Usage: rake deploy:hydrate")
+  task(hydrate: :environment) do
+    Deploy::Hydrator.new.call
   end
 
   desc("Fill glosses, parts of speech and register mix from the dictionary already in the database")

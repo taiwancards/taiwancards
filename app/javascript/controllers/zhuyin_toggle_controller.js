@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["ruby", "plain", "button"];
+  static targets = ["button"];
   static values = { on: Boolean };
 
   connect() {
@@ -14,12 +14,7 @@ export default class extends Controller {
   }
 
   render() {
-    this.rubyTargets.forEach((el) =>
-      el.classList.toggle("hidden", !this.onValue),
-    );
-    this.plainTargets.forEach((el) =>
-      el.classList.toggle("hidden", this.onValue),
-    );
+    this.element.classList.toggle("no-zhuyin", !this.onValue);
     if (this.hasButtonTarget) {
       this.buttonTarget.setAttribute("aria-pressed", String(this.onValue));
       this.buttonTarget.classList.toggle("bg-primary/10", this.onValue);

@@ -66,7 +66,10 @@ module ZhuyinHelper
   end
 
   def show_pinyin?
-    cookies[PINYIN_COOKIE].to_s == "1"
+    chosen = cookies[PINYIN_COOKIE].to_s
+    return chosen == "1" if chosen.present?
+
+    current_user.nil?
   end
 
   def show_mainland?

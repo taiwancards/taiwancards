@@ -3,9 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "History" do
-  # The suite buckets reviews by the Taiwan day. Run it a few minutes after
-  # midnight in Taipei and "ten minutes ago" lands on the previous day, so the
-  # clock is pinned to the middle of the day for every example here.
   around { |example| travel_to(Time.zone.now.beginning_of_day + 12.hours) { example.run } }
 
   let!(:word) do

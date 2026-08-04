@@ -5,9 +5,15 @@ class TextbookAudioController < ApplicationController
   before_action :require_restricted_access_silently
 
   def show
-    path = TextbookLesson.audio_path(params[:name])
-    return head(:not_found) if path.nil?
+    kind, source = TextbookLesson.audio_source(params[:name])
+    return head(:not_found) if kind.nil?
 
+    kind == :file ? serve(source) : redirect_to(source, allow_other_host: true, status: :found)
+  end
+
+  private
+
+  def serve(path)
     expires_in(7.days, public: false, must_revalidate: true)
     response.etag = [path.basename.to_s, path.size, path.mtime.to_i]
     response.last_modified = path.mtime
@@ -15,8 +21,6 @@ class TextbookAudioController < ApplicationController
 
     send_file(path, type: "audio/mpeg", disposition: "inline")
   end
-
-  private
 
   def require_restricted_access_silently
     head(:not_found) unless current_user&.restricted_access?

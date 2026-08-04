@@ -4,12 +4,33 @@ class TextbookLesson < ApplicationRecord
   AUDIO_DIR = "audio/textbook"
   AUDIO_NAME = /\A[A-Z0-9-]+\.mp3\z/
 
+  AUDIO_KEY = "media/audio/textbook"
+
   def self.audio_path(name)
     return nil unless AUDIO_NAME.match?(name.to_s)
 
     path = AppData.media_path(File.join(AUDIO_DIR, name))
     path.file? ? path : nil
   end
+
+  def self.audio_source(name)
+    return nil unless AUDIO_NAME.match?(name.to_s)
+
+    path = audio_path(name)
+    return [:file, path] if path
+    return nil unless Storage::Bucket.configured? && audio_names.include?(name)
+
+    [:link, Storage::Bucket.runtime.link(File.join(AUDIO_KEY, name))]
+  end
+
+  def self.audio_names
+    @audio_names ||= pluck(:vocabulary)
+      .flatten
+      .filter_map { |entry| entry["audio"].presence if entry.is_a?(Hash) }
+      .to_set
+  end
+
+  def self.forget_audio_names! = @audio_names = nil
 
   validates :book, :lesson, :title_en, presence: true
   validates :lesson, uniqueness: {scope: :book}

@@ -25,8 +25,9 @@ usage: bin/distribute [archive|media|assets|disk|all|pull|status] [--dry-run]
   archive  source corpora and the speech corpus      -> private R2 bucket
   media    MOE and CNS11643 audio clips              -> public R2 bucket behind the CDN
   assets   web fonts and browser data files          -> public assets bucket behind the CDN
+  runtime  everything the running app reads         -> private runtime bucket
   disk     dictionaries, templates, restricted audio -> /var/data on Render
-  all      all four, in that order
+  all      archive, media, assets, runtime
 
   pull     restore the archive from R2 onto this machine
   status   how much each bucket holds
@@ -131,6 +132,75 @@ do_disk() {
   fi
 }
 
+RUNTIME_PAIRS=(
+  "data/huayu|huayu"
+  "data/textbook|textbook"
+  "dict_and_corpora/dictionaries/makemeahanzi|dictionaries/makemeahanzi"
+  "media/audio/textbook|media/audio/textbook"
+)
+
+RUNTIME_ARCHIVES=(
+  "data/pronunciation/templates|pronunciation/templates.tar.gz"
+)
+
+RUNTIME_FILES=(
+  "data/content_sources.json|content_sources.json"
+  "data/fonts.json|fonts.json"
+  "dict_and_corpora/dictionaries/simp_to_trad.txt|dictionaries/simp_to_trad.txt"
+  "data/pronunciation/thresholds.json|pronunciation/thresholds.json"
+  "data/pronunciation/inventory.json|pronunciation/inventory.json"
+  "data/pronunciation/drills.json|pronunciation/drills.json"
+  "data/pronunciation/axis_norms.json|pronunciation/axis_norms.json"
+  "media/moe_audio/index.json|media/moe_audio/index.json"
+  "media/moe_audio_words/index.json|media/moe_audio_words/index.json"
+  "media/listening/manifest.json|media/listening/manifest.json"
+)
+
+do_runtime() {
+  need R2_RUNTIME_BUCKET
+  echo "== runtime -> s3://$R2_RUNTIME_BUCKET"
+
+  local pair src dest
+  for pair in "${RUNTIME_PAIRS[@]}"; do
+    src="${pair%%|*}"
+    dest="${pair##*|}"
+    [ -d "$src" ] || {
+      echo "   skip $src (absent)"
+      continue
+    }
+    echo "   $src"
+    r2 sync "$src" "s3://$R2_RUNTIME_BUCKET/$dest" --no-progress \
+      --exclude '.*' --exclude '*/.*' ${DRY[@]+"${DRY[@]}"}
+  done
+
+  for pair in "${RUNTIME_FILES[@]}"; do
+    src="${pair%%|*}"
+    dest="${pair##*|}"
+    [ -f "$src" ] || {
+      echo "   skip $src (absent)"
+      continue
+    }
+    echo "   $src"
+    r2 cp "$src" "s3://$R2_RUNTIME_BUCKET/$dest" --no-progress ${DRY[@]+"${DRY[@]}"}
+  done
+
+  local archive
+  for pair in "${RUNTIME_ARCHIVES[@]}"; do
+    src="${pair%%|*}"
+    dest="${pair##*|}"
+    [ -d "$src" ] || {
+      echo "   skip $src (absent)"
+      continue
+    }
+    echo "   $src -> $dest"
+    [ ${#DRY[@]} -eq 0 ] || continue
+    archive="$(mktemp -t taiwancards-runtime).tar.gz"
+    tar -czf "$archive" -C "$(dirname "$src")" "$(basename "$src")"
+    r2 cp "$archive" "s3://$R2_RUNTIME_BUCKET/$dest" --no-progress
+    rm -f "$archive"
+  done
+}
+
 [ $# -ge 1 ] || usage
 target="$1"
 shift
@@ -176,6 +246,7 @@ case "$target" in
 archive) do_archive ;;
 media) do_media ;;
 assets) do_assets ;;
+runtime) do_runtime ;;
 disk) do_disk ;;
 pull) do_pull ;;
 status) do_status ;;
@@ -183,7 +254,7 @@ all)
   do_archive
   do_media
   do_assets
-  do_disk
+  do_runtime
   ;;
 *) usage ;;
 esac

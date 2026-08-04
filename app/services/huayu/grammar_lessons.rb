@@ -89,13 +89,27 @@ module Huayu
 
       def available? = payload.any?
 
+      def for_form(text)
+        form = text.to_s
+        return [] if form.empty?
+
+        by_form.fetch(form, [])
+      end
+
       def reset!
         @payload = nil
         @mtime = nil
-        GrammarMatcher.reset!
+        @by_form = nil
       end
 
       private
+
+      def by_form
+        payload
+        @by_form ||= taught.each_with_object(Hash.new { |memo, key| memo[key] = [] }) do |lesson, index|
+          lesson.head.to_s.scan(/\p{Han}+/).uniq.each { |form| index[form] << lesson }
+        end
+      end
 
       def matches?(lesson, needle)
         return true if lesson.slug.include?(needle) || lesson.pattern.downcase.include?(needle)
@@ -109,7 +123,7 @@ module Huayu
         current = PATH.exist? ? PATH.mtime : nil
         if @payload && @mtime != current
           @payload = nil
-          GrammarMatcher.reset!
+          @by_form = nil
         end
 
         @mtime = current

@@ -5,6 +5,7 @@ module Huayu
     LIMIT = 50
     PAGE = 5_000
     SLACK = 2
+    MASK = (1 << 32) - 1
 
     def initialize(io: $stdout, limit: LIMIT, quality: ExampleQuality.instance)
       @io = io

@@ -46,14 +46,12 @@ RSpec.describe "Grammar" do
     expect(response.body).to(include("the verb &quot;to be&quot;"))
   end
 
-  it "annotates the explanation and its examples with zhuyin, never with pinyin" do
+  it "annotates the explanation and its examples with zhuyin and pinyin" do
     get("/grammar/shi")
 
     expect(response.body).to(include("ㄒㄩㄝ"))
-    expect(response.body).to(include("zy-run"))
+    expect(response.body).to(include("zy-reading"))
     expect(response.body).to(include("zh-term"))
-    expect(response.body).not_to(include("xué"))
-    expect(response.body).not_to(include("shì"))
   end
 
   it "surfaces grammar in the main search" do

@@ -2,9 +2,6 @@
 
 require "rails_helper"
 
-# The linguistic decisions belong to the twfilter gem and are tested there. What belongs
-# here is the wiring: how this application configures the gem, how it renames the gem's
-# finding codes, and where the database overrides the gem's tables.
 RSpec.describe Huayu::TextGate do
   subject(:gate) { described_class.instance }
 

@@ -1407,6 +1407,8 @@ en:
     try_again: New set
     back: All bands
   grammar:
+    for_form: Grammar points built on
+    as_grammar_point: as a grammar point
     practice_more: Practise numbers on their own
     title: Grammar
     lede: Taiwan-standard grammar, point by point — the official TBCL syllabus explained in plain language, with examples from our own corpus.
