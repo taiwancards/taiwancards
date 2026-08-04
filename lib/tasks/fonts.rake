@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "open-uri"
+
 namespace(:fonts) do
   desc("Download the self-hosted webfonts listed in fonts.json into the font directory")
   task(install: :environment) do
@@ -16,9 +18,10 @@ namespace(:fonts) do
 
     failed = fetch_all(missing, directory)
     puts(
-      "fonts: #{manifest.size} declared, #{missing.size - failed} downloaded, " \
-        "#{failed} failed, in #{directory} (#{elapsed(started)})"
+      "fonts: #{manifest.size} declared, #{missing.size - failed.size} downloaded, " \
+        "#{failed.size} failed, in #{directory} (#{elapsed(started)})"
     )
+    warn("fonts: first failure — #{failed.first}") if failed.any?
   end
 
   desc("Build the TW-Kai brush face as unicode-range slices, subset to the characters this dictionary uses")
@@ -53,18 +56,19 @@ end
 def fetch_all(entries, directory)
   queue = Queue.new
   entries.each { |pair| queue << pair }
-  failed = Concurrent::AtomicFixnum.new(0)
+  failed = Queue.new
 
   workers = Array.new([8, entries.size].min) do
     Thread.new do
       while (name, url = queue.pop(true) rescue nil)
-        fetch_one(name, url, directory) || failed.increment
+        reason = fetch_one(name, url, directory)
+        failed << "#{name}: #{reason}" if reason
       end
     end
   end
 
   workers.each(&:join)
-  failed.value
+  Array.new(failed.size) { failed.pop }
 end
 
 def fetch_one(name, url, directory)
@@ -74,9 +78,8 @@ def fetch_one(name, url, directory)
     URI.parse(url).open("User-Agent" => FontAssets::USER_AGENT, :open_timeout => 10, :read_timeout => 30, &:read)
   )
   FileUtils.mv(partial, target)
-  true
+  nil
 rescue => e
   FileUtils.rm_f(partial)
-  warn("fonts: #{name} failed (#{e.class})")
-  false
+  "#{e.class}: #{e.message}"
 end

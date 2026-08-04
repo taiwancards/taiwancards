@@ -9,12 +9,6 @@ namespace(:deploy) do
       code: %w[app/services/textbook/lexeme_importer.rb]
     },
     {
-      name: "fonts",
-      task: "fonts:install",
-      paths: %w[fonts.json],
-      code: %w[lib/font_assets.rb]
-    },
-    {
       name: "content_sources",
       task: "huayu:import_sources",
       paths: %w[content_sources.json],
@@ -135,6 +129,16 @@ namespace(:deploy) do
     }
   }.freeze
 
+  STEP_TIMER = lambda do |name, &block|
+    $stdout.puts("deploy:sync → #{name}")
+    $stdout.flush
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    result = block.call
+    $stdout.puts("deploy:sync ← #{name} (#{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).round(2)}s)")
+    $stdout.flush
+    result
+  end
+
   LIFT_TIMEOUTS = lambda do
     ActiveRecord::Base.connection.execute("SET statement_timeout = '15min'")
     ActiveRecord::Base.connection.execute("SET lock_timeout = '1min'")
@@ -159,7 +163,7 @@ namespace(:deploy) do
       next skipped << step[:name] unless guard.stale?
 
       begin
-        Rake::Task[step[:task]].invoke
+        STEP_TIMER.call(step[:name]) { Rake::Task[step[:task]].invoke }
         guard.remember!
         ran << step[:name]
       rescue => e
@@ -170,7 +174,7 @@ namespace(:deploy) do
 
     if ran.any?
       begin
-        Rake::Task["deploy:fillers"].invoke
+        STEP_TIMER.call("fillers") { Rake::Task["deploy:fillers"].invoke }
         ran << "fillers"
       rescue => e
         failed << "fillers (#{e.class})"
@@ -181,7 +185,7 @@ namespace(:deploy) do
     end
 
     ALWAYS_STEPS.each do |name, action|
-      action.call == :skipped ? skipped << name : ran << name
+      STEP_TIMER.call(name) { action.call } == :skipped ? skipped << name : ran << name
     rescue => e
       failed << "#{name} (#{e.class})"
       warn("deploy:sync step #{name} failed: #{e.class}: #{e.message}")
