@@ -28,6 +28,8 @@ module Huayu
     def candidates
       Lexeme
         .where(kind: KINDS)
+        .where
+        .not("sources @> ?", [TaiwanEverydayImporter::SOURCE].to_json)
         .pluck(:id, :text, :data)
         .filter_map { |id, text, data|
           [id, text, LEVEL_KEYS.any? { |key| data[key].present? }] if MainlandGuard.marker?(text)

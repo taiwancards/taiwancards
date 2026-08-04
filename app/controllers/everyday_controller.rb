@@ -4,6 +4,9 @@ class EverydayController < ApplicationController
   allow_unauthenticated_access
   publicly_cacheable
   SORTS = %w[category freq difficulty].freeze
+  ORDER = %i[rank tier difficulty freq]
+    .index_with { |key| "(lexemes.data->>'#{key == :freq ? "freq_rank" : key}')::int NULLS LAST" }
+    .freeze
 
   def index
     @collection = Collection.find_by(kind: :everyday)
@@ -70,18 +73,16 @@ class EverydayController < ApplicationController
   end
 
   def order_clause
-    case @sort
+    keys = case @sort
     when "freq"
-      Arel.sql(
-        "(lexemes.data->>'freq_rank')::int NULLS LAST, (lexemes.data->>'difficulty')::int NULLS LAST, collection_items.position"
-      )
+      [ORDER[:freq], ORDER[:difficulty]]
     when "difficulty"
-      Arel.sql("(lexemes.data->>'difficulty')::int NULLS LAST, collection_items.position")
+      [ORDER[:difficulty]]
     else
-      Arel.sql(
-        "(lexemes.data->>'tier')::int NULLS LAST, (lexemes.data->>'difficulty')::int NULLS LAST, collection_items.position"
-      )
+      [ORDER[:rank], ORDER[:tier], ORDER[:difficulty]]
     end
+
+    Arel.sql((keys + ["collection_items.position"]).join(", "))
   end
 
   def available_tags

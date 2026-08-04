@@ -1,13 +1,10 @@
 - content_for(:title, @lesson.title(I18n.locale))
 - seen = Set.new
 
-.py-6.space-y-6 data-controller="zhuyin-toggle" data-zhuyin-toggle-on-value=grammar_zhuyin_default?(@lesson).to_s
+.py-6.space-y-6.reading-hints.hints-zhuyin data-controller="reading-hints"
   nav.flex.items-center.justify-between.gap-3.text-sm
     = link_to "← #{t("grammar.title")}", grammar_path, class: "text-muted-foreground hover:text-foreground"
-    button.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
-      type="button" data-zhuyin-toggle-target="button" data-action="zhuyin-toggle#toggle"
-      class="hover:bg-muted" ]
-      = t("grammar.zhuyin_toggle")
+    = render("grammar/hints")
 
   header.space-y-3
     h1.text-2xl.font-bold.tracking-tight = @lesson.title(I18n.locale)

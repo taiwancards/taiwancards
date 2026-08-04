@@ -294,6 +294,7 @@ namespace(:huayu) do
       ["huayu:fill_collocation_meanings", "collocation glosses"],
       ["huayu:fill_sentence_meanings", "sentence glosses"],
       ["huayu:reorder_readings", "破音字 reading order by frequency"],
+      ["huayu:reorder_senses", "senses follow the reading order"],
       ["huayu:normalize_readings", "reading separators"],
       ["huayu:rebuild_search", "search index"]
     ]
@@ -389,6 +390,7 @@ namespace(:huayu) do
       ["huayu:fill_collocation_meanings", "collocation glosses"],
       ["huayu:fill_sentence_meanings", "sentence glosses"],
       ["huayu:reorder_readings", "破音字 reading order by frequency"],
+      ["huayu:reorder_senses", "senses follow the reading order"],
       ["huayu:normalize_readings", "reading separators"],
       ["huayu:rebuild_search", "search index"],
       ["huayu:enforce_licences", "drop what no commercial licence covers"],

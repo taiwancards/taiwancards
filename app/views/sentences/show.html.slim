@@ -35,7 +35,7 @@
               = render("shared/speak", lexeme: word.lexeme, size: :sm)
             - if word.lexeme.reading("zhuyin").present?
               .text-xs.text-muted-foreground = word.lexeme.reading("zhuyin")
-            - gloss = word.senses.filter_map { |sense| sense.meaning(I18n.locale) }.first.presence || word.lexeme.meaning(I18n.locale)
+            - gloss = word.lexeme.meaning(I18n.locale).presence || word.senses.filter_map { |sense| sense.meaning(I18n.locale) }.first
             - if gloss.present?
               .mt-1.max-w-56.text-xs.text-muted-foreground = gloss
         - else

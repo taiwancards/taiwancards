@@ -145,6 +145,7 @@ module Huayu
         "taiwan_only" => entry.fetch("marked", true),
         "facets" => FACETS,
         "tier" => entry["tier"].presence&.to_i || DEFAULT_TIER,
+        "rank" => entry["rank"].presence&.to_i,
         "origin" => entry["origin"],
         "register" => entry["register"],
         "domain" => entry["domain"].presence || "life",

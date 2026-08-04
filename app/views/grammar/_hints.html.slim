@@ -1,0 +1,9 @@
+- pill = "rounded-lg border border-border px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted"
+
+.flex.shrink-0.items-center.gap-2
+  button[ type="button" class=pill aria-pressed="true"
+    data-reading-hints-target="zhuyin" data-action="reading-hints#toggleZhuyin" ]
+    = t("grammar.zhuyin")
+  button[ type="button" class=pill aria-pressed="false"
+    data-reading-hints-target="pinyin" data-action="reading-hints#togglePinyin" ]
+    = t("grammar.pinyin")

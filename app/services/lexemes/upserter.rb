@@ -26,7 +26,7 @@ module Lexemes
     private
 
     def upsert(kind, text, readings: {}, meanings: {}, audio_url: nil, data: {}, source: nil)
-      lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[kind], text:)
+      lexeme = existing(kind, text) || Lexeme.new(kind: Lexeme.kinds[kind], text:)
       lexeme.readings = lexeme.readings.merge(readings.compact_blank) if readings.present?
       lexeme.meanings = lexeme.meanings.merge(meanings.compact_blank) if meanings.present?
       lexeme.data = lexeme.data.merge(data) if data.present?
@@ -34,6 +34,11 @@ module Lexemes
       lexeme.add_source(source) if source.present?
       lexeme.save! if lexeme.changed?
       lexeme
+    end
+
+    def existing(kind, text)
+      kinds = kind == :word ? Lexeme::DICTIONARY_KINDS : [kind]
+      Lexeme.where(kind: kinds, text:).order(:kind).first
     end
   end
 end

@@ -1519,7 +1519,8 @@ en:
       5: B1
     tip: "Tip: "
     examples: Examples
-    zhuyin_toggle: 注音
+    zhuyin: Zhuyin
+    pinyin: Pinyin
   mistakes:
     title: Mistake notebook
     lede: "Every word you miss lands here on its own — nothing to manage. Getting things wrong is a normal part of how memory works: each miss tells the app to bring that word back sooner."

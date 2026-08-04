@@ -338,9 +338,10 @@
 
   .zy-line {
     font-family: var(--font-hanzi);
-    font-size: 0.95em;
+    font-size: 0.85em;
+    font-weight: 500;
     line-height: 1.5;
-    color: color-mix(in oklch, currentColor 65%, transparent);
+    color: color-mix(in oklch, currentColor 78%, transparent);
     overflow-wrap: anywhere;
   }
 
@@ -355,13 +356,43 @@
     margin-top: 0.15em;
   }
 
+  .note-line {
+    margin-top: 0.2em;
+    font-size: 0.9em;
+    color: var(--color-muted-foreground);
+  }
+
   .gloss-line .grammar-gloss {
     margin-left: 0;
   }
 
-  .no-zhuyin .zy-line,
   .no-pinyin .py-line:not(.pinyin-locked) {
     display: none;
+  }
+
+  .reading-hints .zy-line,
+  .reading-hints .zy-reading,
+  .reading-hints .py-line,
+  .reading-hints .py-reading {
+    display: none;
+  }
+
+  .reading-hints.hints-zhuyin .zy-line,
+  .reading-hints.hints-pinyin .py-line {
+    display: block;
+  }
+
+  .reading-hints.hints-zhuyin .zy-reading,
+  .reading-hints.hints-pinyin .py-reading {
+    display: inline;
+  }
+
+  .reading-hints:not(.hints-zhuyin) .reading {
+    display: none;
+  }
+
+  .reading-hints:not(.hints-zhuyin) .py-reading {
+    margin-left: 0;
   }
 
   .reading {
@@ -378,26 +409,16 @@
   }
 
   .zy-reading {
-    font-size: 0.82em;
-    color: color-mix(in oklch, currentColor 70%, transparent);
+    font-family: var(--font-hanzi);
+    font-size: 0.74em;
+    font-weight: 500;
+    color: color-mix(in oklch, currentColor 80%, transparent);
   }
 
   .py-reading {
     margin-left: 0.35em;
-    font-size: 0.72em;
+    font-size: 0.68em;
     color: color-mix(in oklch, currentColor 50%, transparent);
-  }
-
-  .no-zhuyin .zy-reading {
-    display: none;
-  }
-
-  .no-zhuyin .zy-reading + .py-reading {
-    margin-left: 0;
-  }
-
-  .no-pinyin .no-zhuyin .reading {
-    display: none;
   }
 
   .grammar-gloss {

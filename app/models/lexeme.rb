@@ -145,6 +145,13 @@ class Lexeme < ApplicationRecord
     data["readings"].presence || [readings.presence].compact
   end
 
+  def senses_for_main_reading
+    main = readings["pinyin"].presence
+    return senses.to_a if main.nil?
+
+    senses.select { |sense| sense.reading.blank? || sense.reading == main }.presence || senses.to_a
+  end
+
   def words_for_reading(pinyin)
     Lexeme.where(kind: :word).where(id: parent_links.where(reading: pinyin).select(:parent_id))
   end

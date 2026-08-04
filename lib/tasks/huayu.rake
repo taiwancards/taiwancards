@@ -88,6 +88,16 @@ namespace(:huayu) do
     pp(Huayu::PosImporter.new.call)
   end
 
+  desc("Put the senses of every 破音字 in the order of its readings, Taiwanese first (idempotent)")
+  task(reorder_senses: :environment) do
+    pp(Lexemes::SenseOrder.new.call)
+  end
+
+  desc("Merge any lexeme kept twice, once as a word and once as a collocation (idempotent)")
+  task(merge_kinds: :environment) do
+    pp(Lexemes::KindMerge.new.call)
+  end
+
   desc("Import the thesaurus: dictionary synonyms and antonyms, corpus neighbours (idempotent)")
   task(import_thesaurus: :environment) do
     pp(Huayu::ThesaurusImporter.new.call)

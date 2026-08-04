@@ -97,6 +97,34 @@ RSpec.describe "Taiwan everyday vocabulary" do
     expect(response.body).not_to(include("三小"))
   end
 
+  it "shows a word once even after a classifier moved it to collocation" do
+    import
+    Lexeme.find_by!(text: "珍奶").update_columns(kind: Lexeme.kinds[:collocation])
+    import
+
+    get(everyday_path(area: "food"))
+
+    expect(Lexeme.where(text: "珍奶").count).to(eq(1))
+    expect(response.body.scan(/>珍奶</).size).to(eq(1))
+  end
+
+  it "lets a curated rank put an entry ahead of its tier" do
+    path.write(
+      [
+        entries.first.merge("tier" => 1, "tag" => "超商"),
+        entries
+          .first
+          .merge("text" => "萊爾富", "pinyin" => "Lái'ěrfù", "tier" => 3, "tag" => "超商", "rank" => 1)
+      ].to_json
+    )
+    import
+    sign_in(create(:user))
+
+    get(everyday_path(area: "food"))
+
+    expect(response.body.index("萊爾富")).to(be < response.body.index("珍奶"))
+  end
+
   it "draws the sugar and ice scales only in the drinks section" do
     path.write((entries.first(2).map { |e| e.merge("domain" => "drinks") }).to_json)
     import

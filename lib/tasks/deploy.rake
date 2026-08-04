@@ -107,6 +107,20 @@ namespace(:deploy) do
   ].freeze
 
   ALWAYS_STEPS = {
+    "kind_merge" => -> {
+      merge = Lexemes::KindMerge.new
+      next :skipped unless merge.drift?
+
+      merge.call
+      :ran
+    },
+    "sense_order" => -> {
+      order = Lexemes::SenseOrder.new
+      next :skipped unless order.drift?
+
+      order.call
+      :ran
+    },
     "flag_restricted" => -> {
       flagger = Huayu::RestrictedFlagger.new
       next :skipped unless flagger.drift?

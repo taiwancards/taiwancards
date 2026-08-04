@@ -41,7 +41,7 @@ module Sentences
         Word.new(
           text: unit,
           lexeme: lexeme,
-          senses: lexeme ? lexeme.senses.to_a : [],
+          senses: lexeme ? lexeme.senses_for_main_reading : [],
           known: lexeme.present?
         )
       end

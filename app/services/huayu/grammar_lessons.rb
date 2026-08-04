@@ -3,7 +3,6 @@
 module Huayu
   class GrammarLessons
     DATA = JsonData.new("huayu/grammar_lessons.json", default: [], watch: true)
-    ZHUYIN_DEFAULT_THROUGH = 2
 
     Example = Data.define(:zh, :en, :ru, :zhuyin, :pinyin, :sentence, :segments) do
       def translation(locale) = locale.to_s == "ru" ? ru : en
@@ -45,8 +44,6 @@ module Huayu
       def formula_for(locale)
         formula[locale.to_s] || formula["en"]
       end
-
-      def zhuyin_default? = level <= ZHUYIN_DEFAULT_THROUGH
 
       def to_param = slug
 

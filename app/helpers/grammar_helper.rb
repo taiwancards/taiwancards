@@ -2,14 +2,16 @@
 
 module GrammarHelper
   HAN_RUN = /(\p{Han}+)/
-  ZHUYIN_DEFAULT_THROUGH = 2
   QUOTES = {"ru" => ["«", "»"], "en" => ["“", "”"]}.freeze
   ZH_RUN = /[\p{Han}][\p{Han}\p{Latin}0-9，、：；？！。…（）]*/
   GLOSS = /«[^»]+»|“[^”]+”|"[^"]+"/
   SEPARATOR = /\s*(?:[—–-]\s*)?/
-  STANDALONE_RUN = /\p{Han}{5,}[，、：；？！。…]*/
+  INLINE_MAX = 3
+  CONTINUATION = /\A[[:lower:]]/
+  SENTENCE_END = /(?<=[.!?？！。])\s+/
+  STANDALONE_RUN = /\p{Han}(?:[\p{Han}，、：；]*\p{Han})?[？！。…]*/
   HAN = /\p{Han}/
-  EXAMPLE_MIN = 4
+  EXAMPLE_MIN = INLINE_MAX + 1
   EXAMPLE_LINE = /
     (?:(?<zh>#{ZH_RUN})#{SEPARATOR}(?<gloss>#{GLOSS}))
     |
@@ -38,15 +40,13 @@ module GrammarHelper
     lesson.head.to_s.scan(HAN_RUN).flatten.uniq
   end
 
-  def grammar_zhuyin_default?(lesson) = lesson.level <= ZHUYIN_DEFAULT_THROUGH
-
   def grammar_prose(text, lesson, seen:, entries: {})
     return "" if text.blank?
 
     safe_join(
-      grammar_blocks(text).map do |kind, first, second|
+      grammar_blocks(text).map do |kind, first, second, note|
         if kind == :example
-          grammar_example_line(first, second, lesson, seen)
+          grammar_example_line(first, second, note, lesson, seen, entries)
         else
           tag.p(grammar_run(first, lesson, seen, entries), class: "grammar-line")
         end
@@ -64,7 +64,7 @@ module GrammarHelper
       safe_join(
         [
           (tag.span(zhuyin, class: "zy-reading", lang: "zh-TW") if zhuyin),
-          (tag.span(pinyin, class: "pinyin py-reading", lang: "zh-Latn") if pinyin)
+          (tag.span(pinyin, class: "py-reading", lang: "zh-Latn") if pinyin)
         ].compact
       )
     end
@@ -86,7 +86,7 @@ module GrammarHelper
     safe_join(
       [
         (tag.div(zhuyin, class: "zy-line", lang: "zh-TW") if zhuyin.present?),
-        (tag.div(pinyin, class: "pinyin py-line", lang: "zh-Latn") if pinyin.present?)
+        (tag.div(pinyin, class: "py-line", lang: "zh-Latn") if pinyin.present?)
       ].compact
     )
   end
@@ -120,6 +120,23 @@ module GrammarHelper
   private
 
   def grammar_blocks(text)
+    grammar_fold(grammar_split(text))
+  end
+
+  def grammar_fold(blocks)
+    blocks.each_with_object([]) do |block, folded|
+      previous = folded.last
+      unless block.first == :prose && previous&.first == :example && block[1].match?(CONTINUATION)
+        next folded << block
+      end
+
+      note, rest = block[1].split(SENTENCE_END, 2)
+      previous[3] = [previous[3], note].compact_blank.join(" ")
+      folded << [:prose, grammar_tidy(rest, false)] if rest.present?
+    end
+  end
+
+  def grammar_split(text)
     blocks = []
     cursor = 0
 
@@ -144,6 +161,8 @@ module GrammarHelper
 
     prose.to_enum(:scan, STANDALONE_RUN).each do
       match = Regexp.last_match
+      next if match[0].scan(HAN).size < EXAMPLE_MIN
+
       before = prose[cursor...match.begin(0)]
       blocks << [:prose, grammar_tidy(before, first && blocks.empty?)] if before.present?
       blocks << [:example, match[0], nil]
@@ -160,7 +179,7 @@ module GrammarHelper
     prose.strip
   end
 
-  def grammar_example_line(chinese, gloss, lesson, seen)
+  def grammar_example_line(chinese, gloss, note, lesson, seen, entries)
     seen << chinese
     reading = (lesson.reading(chinese) || lesson.reading(chinese.gsub(/\P{Han}/, ""))).to_h
 
@@ -169,7 +188,8 @@ module GrammarHelper
         [
           tag.div(chinese, class: "zh-line", lang: "zh-TW"),
           grammar_reading_lines(reading["zhuyin"], reading["pinyin"]),
-          (tag.div(grammar_quote(gloss), class: "gloss-line") if gloss.present?)
+          (tag.div(grammar_quote(gloss), class: "gloss-line") if gloss.present?),
+          (tag.div(grammar_run(note, lesson, seen, entries), class: "note-line") if note.present?)
         ].compact
       )
     end
