@@ -188,7 +188,7 @@ module Pronunciation
           "id" => "coda_#{nucleus}",
           "title" => {"ru" => "-#{nucleus}n против -#{nucleus}ng", "en" => "-#{nucleus}n vs -#{nucleus}ng"},
           "hint" => {
-            "ru" => nucleus == "e" ? "На Тайване feng звучит ближе к «фонг»" : "Передний /a/ против заднего",
+            "ru" => nucleus == "e" ? "В Тайване feng звучит ближе к «фонг»" : "Передний /a/ против заднего",
             "en" => nucleus == "e" ? "In Taiwan feng leans toward [fong]" : "Front /a/ versus back"
           },
           "kind" => "pair",

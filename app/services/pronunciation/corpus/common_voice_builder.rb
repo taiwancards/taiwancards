@@ -20,7 +20,7 @@ module Pronunciation
       HAN = /\p{Han}/
       LENGTHS = (VariabilityBuilder::MIN_CHARS..VariabilityBuilder::MAX_CHARS)
       LICENSE = "CC0-1.0"
-      FILTER = "дикторы с указанным местом рождения на Тайване (поле accents), " \
+      FILTER = "дикторы с указанным местом рождения в Тайване (поле accents), " \
         "фразы в #{LENGTHS.min}–#{LENGTHS.max} иероглифа — длиннее не режется на слоги надёжно"
       ROLE = "допуск и нормализация по диктору; в центр эталона НЕ идёт (предложения, не цитатные формы)"
 

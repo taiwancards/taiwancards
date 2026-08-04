@@ -80,9 +80,10 @@ module Lexemes
     end
 
     def adopt(keeper, loser)
-      keeper.readings = loser.readings.merge(keeper.readings.compact_blank)
-      keeper.meanings = loser.meanings.merge(keeper.meanings.compact_blank)
-      keeper.data = loser.data.merge(keeper.data.compact_blank)
+      stale, fresh = [keeper, loser].sort_by(&:updated_at)
+      keeper.readings = stale.readings.merge(fresh.readings.compact_blank)
+      keeper.meanings = stale.meanings.merge(fresh.meanings.compact_blank)
+      keeper.data = stale.data.merge(fresh.data.compact_blank)
       loser.sources.each { |source| keeper.add_source(source) }
       keeper.audio_url = loser.audio_url if keeper.audio_url.blank?
     end

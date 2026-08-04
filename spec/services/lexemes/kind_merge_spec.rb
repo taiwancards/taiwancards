@@ -15,7 +15,7 @@ RSpec.describe Lexemes::KindMerge do
 
   it "folds the later copy into the one the rest of the database already points at" do
     keeper = create(:lexeme, kind: :collocation, text: "超商", meanings: {"en" => "convenience store"})
-    loser = create(:lexeme, kind: :word, text: "超商", readings: {"pinyin" => "chāoshāng"})
+    loser = create(:lexeme, kind: :word, text: "超商", readings: {"pinyin" => "chāoshāng"}, meanings: {})
 
     expect(merge.merged).to(eq(1))
 
@@ -23,6 +23,42 @@ RSpec.describe Lexemes::KindMerge do
     expect(Lexeme.exists?(loser.id)).to(be(false))
     expect(keeper.reload.readings["pinyin"]).to(eq("chāoshāng"))
     expect(keeper.meanings["en"]).to(eq("convenience store"))
+  end
+
+  it "lets whichever copy an importer wrote most recently win the fields they share" do
+    keeper = create(
+      :lexeme,
+      kind: :collocation,
+      text: "萊爾富",
+      data: {"tier" => 2, "tbcl_grade" => 4},
+      updated_at: 2.days.ago
+    )
+    create(:lexeme, kind: :word, text: "萊爾富", data: {"tier" => 1, "rank" => 1}, updated_at: 1.minute.ago)
+
+    merge
+
+    expect(keeper.reload.data).to(include("tier" => 1, "rank" => 1, "tbcl_grade" => 4))
+  end
+
+  it "does not let a copy nobody has touched in years undo a recent enrichment" do
+    keeper = create(
+      :lexeme,
+      kind: :collocation,
+      text: "手搖飲",
+      meanings: {"ru" => "чайная лавка"},
+      updated_at: 1.minute.ago
+    )
+    create(
+      :lexeme,
+      kind: :word,
+      text: "手搖飲",
+      meanings: {"ru" => "старый перевод"},
+      updated_at: 2.years.ago
+    )
+
+    merge
+
+    expect(keeper.reload.meanings["ru"]).to(eq("чайная лавка"))
   end
 
   it "carries the collection membership of the copy it removes" do

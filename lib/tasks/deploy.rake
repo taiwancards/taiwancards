@@ -18,7 +18,7 @@ namespace(:deploy) do
       name: "taiwan_everyday",
       task: "huayu:import_everyday",
       paths: %w[huayu/taiwan_everyday.json],
-      code: %w[app/services/huayu/taiwan_everyday_importer.rb]
+      code: %w[app/services/huayu/taiwan_everyday_importer.rb app/services/lexemes/upserter.rb]
     },
     {
       name: "grammar",
@@ -149,6 +149,8 @@ namespace(:deploy) do
     }
   }.freeze
 
+  WARMING_STEPS = %w[landing_counts syllable_index prune_activity].freeze
+
   FILLERS = %w[
     Huayu::GlossOverrideEnricher
     Huayu::SenseMeaningFiller
@@ -208,6 +210,17 @@ namespace(:deploy) do
     rescue => e
       failed << "#{name} (#{e.class})"
       warn("deploy:sync step #{name} failed: #{e.class}: #{e.message}")
+    end
+
+    if (ran - WARMING_STEPS).any?
+      STEP_TIMER.call("derived_caches") do
+        ContentCache.clear
+        Site::Counts.warm!
+        Pronunciation::SyllableIndex.for
+      end
+      ran << "derived_caches"
+    else
+      skipped << "derived_caches"
     end
 
     elapsed = (Time.current - started).round(2)
