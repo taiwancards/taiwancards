@@ -1,4 +1,6 @@
-section.space-y-2
-  h2.text-lg.font-semibold = t("practice.initials")
-  p.text-sm.text-muted-foreground = t("practice.initials_lede")
-  = render "practice/phonetics_table", rows: @initials
+section.space-y-5
+  div
+    h2.text-lg.font-semibold = t("practice.initials")
+    p.text-sm.text-muted-foreground = t("practice.initials_lede")
+
+  = render "practice/bundles", bundles: phonetics_bundles(@initials, "initials"), part: "initials"

@@ -5,7 +5,8 @@ class ZhuyinTrainingsController < ApplicationController
 
   def show
     @group = params[:group].to_s.presence_in(Huayu::ZhuyinTrainer::GROUPS.keys)
-    trainer = build_trainer(@group)
+    @scope = params[:block].to_s.presence_in(Huayu::ZhuyinTrainer::KEYS)
+    trainer = build_trainer(group: @group, block: @scope)
     @blocks = trainer.blocks
     @block = trainer.current_block
     @progress = trainer.progress
@@ -36,7 +37,7 @@ class ZhuyinTrainingsController < ApplicationController
 
   private
 
-  def build_trainer(group = nil)
-    Huayu::ZhuyinTrainer.new(current_user.zhuyin_mastery, group:)
+  def build_trainer(group: nil, block: nil)
+    Huayu::ZhuyinTrainer.new(current_user.zhuyin_mastery, group:, block:)
   end
 end

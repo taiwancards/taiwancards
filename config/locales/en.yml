@@ -213,6 +213,13 @@ en:
     practice_progress: My progress in sounds
     group_language: About the language
     group_settings: Settings
+    group_lede:
+      learn: Your daily queue, your decks, the reader, the placement test and the exam plan.
+      dictionary: Characters, words, corpus sentences, idioms, measure words and the level lists.
+      language: Zhuyin and its sounds, tones, how characters are built, numbers, grammar, Taiwan readings.
+      practice: Sound and tone drills, pronunciation, handwriting, typing, Cangjie and mock exams.
+      taiwan: Everyday vocabulary, the phrases people say, the Taipei metro and the calendar.
+      settings: Your profile, statistics, display preferences and the help pages.
     tones_drill: Tones by ear
     profile: Profile
   textbook:
@@ -1358,6 +1365,44 @@ en:
     to_drill: Read it — on to the practice →
     back_to_chart: "← Back to the zhuyin and pinyin chart"
     initials_lede: "Twenty-one symbols — everything a syllable can begin with. The button plays Taiwan's Ministry of Education recording: listen before you read the breakdown."
+    drill_these: "Drill %{symbols}"
+    blocks:
+      labial:
+        title: Lips
+        body: Both lips meet. The first thing Taiwanese children learn, and the opening of the ㄅㄆㄇㄈ song.
+      alveolar:
+        title: Tip of the tongue
+        body: The tongue presses behind the upper teeth. 不 and almost every negation live here.
+      velar:
+        title: Back of the tongue
+        body: Made further back than the English equivalents. ㄏ is softer than an English h — closer to a breath.
+      palatal:
+        title: Only before ㄧ and ㄩ
+        body: They appear only with ㄧ and ㄩ, so they can never be confused with ㄓㄔㄕ if you watch what follows.
+      retroflex:
+        title: Curled tongue
+        body: The tip curls up towards the roof of the mouth. Taiwan says these softer than mainland textbooks do — nearly ㄗㄘㄙ.
+      sibilant:
+        title: Whistling
+        body: Tongue at the lower teeth, air in a narrow stream. The pair to the three above.
+      medial:
+        title: Medials
+        body: They sit between initial and final, becoming i, u and ü in pinyin — or y and w at the start of a syllable.
+      open:
+        title: Plain vowels
+        body: Four clean sounds everything else is built from. ㄝ never stands alone — only after ㄧ and ㄩ.
+      diphthong:
+        title: Diphthongs
+        body: "Two sounds in one syllable: the tongue glides from one position to the next without breaking the syllable."
+      nasal:
+        title: Nasals
+        body: ㄢ/ㄤ and ㄣ/ㄥ differ in where the tongue ends. Taiwan often blurs it, but the dictionary keeps it.
+      rhotic:
+        title: One of a kind
+        body: A syllable in its own right, found in 二, 兒 and 耳. Not the mainland r-ending on other words.
+      compound:
+        title: Compound finals
+        body: A medial plus a final. They need no drill of their own — they are built from symbols you have already practised.
     finals_lede: "Everything left in the syllable after the initial consonant: a vowel, a diphthong, or a vowel with a nasal. For compound finals the individual symbols are voiced — run together they do not sound like the two parts in sequence."
     why_title: Why this is not a detail
     why_body: "You can read pinyin without any preparation, and that is exactly what makes it dangerous: the letters drag your English reading along with them, and the error sets in silently. There is nothing behind a zhuyin symbol but the sound you teach it. That is precisely why Taiwan annotates readings with it."
@@ -2525,48 +2570,71 @@ en:
     back: Back
     next: Next
     done: Start
-    language:
-      en: English
-      ru: Русский
     guide:
       title: Full guide
-      body: Short chapters on everything the app can do. Take them in any order, as many times as you like.
-      launch: Start chapter
-      again: Read again
-      done: Done
-      steps: "%{count} steps"
+      body: >-
+        Every corner of the system: all the sections and all the pages. Tap any of them to open it from
+        here, or run a chapter to be walked through that section with the interface highlighted.
+      launch_named: "Walk through: %{title}"
+      again_named: "Again: %{title}"
+      replay_title: Replay the introduction
+      replay_body: The same short walk through the essentials that you saw on your first day.
+      replay_cta: Start the introduction
     steps:
-      language:
-        title: Which language do you read most easily?
-        body: >-
-          This sets the interface language. Everything you study stays Taiwan Mandarin either way. You can
-          change it later from the header.
       welcome:
         title: Welcome to TaiwanCards
         body: >-
-          Five short steps, under a minute. They cover the parts you will use every day. You cannot skip
-          this one; the full guide later is optional.
+          A quick look at the parts you will use every day — a minute is plenty. It ends at the full
+          guide, which covers every corner of the system. Everything a learner of Taiwan Mandarin could
+          ever need is gathered here and wired together.
       search:
         title: Search is the fastest way in
         body: >-
-          Type Chinese, pinyin, zhuyin or an English meaning. It finds characters, words, idioms and whole
-          sentences from the corpus.
-      guide:
-        title: That is everything you need
+          Type it however suits you: characters, pinyin, zhuyin, or just the English meaning. It finds
+          characters, words, idioms and real sentences from the corpus.
+      dictionary:
+        title: The dictionary
         body: >-
-          The full guide is in Settings → Profile whenever you want it: short chapters on the dictionary,
-          the trainers, phonetics and the rest. Take them in any order, as often as you like.
-      sections:
-        title: Everything lives in six sections
+          Characters, words, sentences, idioms, measure words — and the TBCL and TOCFL level lists if you
+          are working towards an exam. Anything here goes into study with one tap.
+      language_section:
+        title: Everything about the language
         body: >-
-          My study is your daily queue and decks. Dictionary holds characters, words, sentences and idioms.
-          About the language explains zhuyin, tones and how characters are built. Practice is the trainers.
-          Taiwan is everyday life here. Settings is your profile, statistics and preferences.
+          Come here when you want to understand rather than just memorise: how the sounds and zhuyin fit
+          together, what really happens to tones, how a character is built, how counting works, how the
+          grammar behaves.
+      practice:
+        title: Everything to practise with
+        body: >-
+          Everything you can drill with your hands and your voice: zhuyin, sounds, tones, pronunciation,
+          handwriting, typing on a Taiwanese keyboard and mock exams.
+      taiwan:
+        title: The Taiwan part
+        body: >-
+          The things a textbook leaves out: how tea gets ordered here, what the cashier asks you, how the
+          metro stations are read, and why the calendar carries two sets of dates.
+      profile:
+        title: Your profile and its settings
+        body: >-
+          Your level, what the dictionary shows, which tabs sit at the bottom on a phone, statistics,
+          review history and a full export of your progress. There really is a lot in here — drop by once
+          and set it up your way.
+      new_deck:
+        title: A deck out of anything
+        body: >-
+          Like a song and want to pull it apart? Got a text or a word list in class? Found an article
+          worth reading? Tap here and any of it turns into a deck of cards, which then joins the same
+          daily queue as everything else.
       display:
-        title: Show what you want to see
+        title: Show pinyin, or don't
         body: >-
-          These switches control the calligraphic font, pinyin above characters, Chinese equivalents, and
-          how much detail an entry shows. Change them any time — they apply everywhere at once.
+          Pinyin helps some people and gets in the way of reading zhuyin for others. These buttons turn
+          it on and off, and switch the calligraphic font while they are at it. Tap and see.
+      guide:
+        title: Here is the full guide
+        body: >-
+          Every corner of the system opens from here: each section, page by page. Tap anything to open
+          it, or run a chapter to be walked through it. The guide stays put — come back when you need it.
     chapters:
       dictionary:
         title: Dictionary and search
@@ -3158,12 +3226,27 @@ en:
       mark_done: Mark as done
       undo: Unmark
       progress: "%{done} of %{target} reviews"
+      kinds:
+        theory: theory
+        practice: practice
       done_heading: Path complete
       done_body: The groundwork is in place. Your first cards are waiting — the app decides what to show and in what order from here.
       after_heading: What comes next
       after_body: "Once the groundwork is there, the app decides what to show you: level first, frequency within the level. Take the rest as you need it — the reader, pronunciation, handwriting, and your own decks built from any text."
       change: Change your starting level
       steps:
+        zhuyin_theory:
+          title: How the sounds work
+          body: >-
+            Start by seeing what a syllable is made of: what it can begin with, what it can end with and
+            what the tone does. The symbols come in groups, and each group has its own button that drills
+            exactly that group and nothing else.
+        tones_theory:
+          title: How the tones work
+          body: >-
+            Four tones plus the neutral one — and the Taiwanese details that mainland textbooks leave out:
+            the third tone stays low instead of dipping back up, and 一 and 不 shift tone depending on what
+            follows. Read it, then go straight to the drill from that same page.
         tones:
           title: "Hear the four tones"
           body: "Taiwanese tones are not the textbook ones from China: the third stays low and never rises. Train on studio recordings of every syllable, alternating a male and a female voice."

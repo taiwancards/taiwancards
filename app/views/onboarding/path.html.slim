@@ -23,6 +23,8 @@
             span.inline-flex.size-6.shrink-0.items-center.justify-center.rounded-full.border.border-border.text-xs.font-semibold
               = step[:state] == :done ? "✓" : index + 1
             span.font-semibold = t("onboarding.path.steps.#{step[:key]}.title")
+            span.rounded-full.px-2.text-2xs.font-medium.uppercase.tracking-wide class="py-0.5 #{step[:theory] ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}"
+              = t("onboarding.path.kinds.#{step[:theory] ? "theory" : "practice"}")
             - if step[:optional]
               span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" = t("onboarding.path.optional")
             - if step[:state] == :current

@@ -3,6 +3,25 @@
 module PracticeHelper
   PART_ONWARD = {"intro" => "initials", "initials" => "finals", "finals" => "tricky"}.freeze
 
+  Bundle = Data.define(:key, :symbols, :rows) do
+    def practisable? = key != "compound"
+  end
+
+  def phonetics_bundles(rows, group)
+    taken = []
+    bundles = Huayu::ZhuyinTrainer.blocks_in(group).filter_map do |block|
+      picked = rows.select { |row| block[:symbols].include?(row["zhuyin"]) }
+      next if picked.empty?
+
+      taken.concat(picked)
+      Bundle.new(key: block[:key], symbols: block[:symbols], rows: picked)
+    end
+
+    rest = rows - taken
+    bundles << Bundle.new(key: "compound", symbols: [], rows: rest) if rest.any?
+    bundles
+  end
+
   def trainer_next_target(group)
     case group
     when "initials"

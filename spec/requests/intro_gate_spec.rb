@@ -32,10 +32,10 @@ RSpec.describe "The intro tour" do
       expect(user.intro.step.id).to(eq(Intro::Map.essential.first.id))
     end
 
-    it "comes back to the page the tour was started from" do
+    it "opens on the desk, where the search and the sections it talks about live" do
       post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
 
-      expect(response).to(redirect_to("/en/dict"))
+      expect(response).to(redirect_to("/en/desk"))
     end
   end
 
@@ -57,13 +57,6 @@ RSpec.describe "The intro tour" do
     it "allows the page the step sits on" do
       stand_on("search")
       get("/desk")
-
-      expect(response).to(have_http_status(:ok))
-    end
-
-    it "never redirects a step whose page has no path" do
-      stand_on("language")
-      get("/progress")
 
       expect(response).to(have_http_status(:ok))
     end
@@ -105,11 +98,11 @@ RSpec.describe "The intro tour" do
       stand_on("search")
       post("/intro/next")
 
-      expect(step_id).to(eq("sections"))
+      expect(step_id).to(eq("dictionary"))
     end
 
     it "goes back" do
-      stand_on("sections")
+      stand_on("dictionary")
       post("/intro/back")
 
       expect(step_id).to(eq("search"))
@@ -131,21 +124,22 @@ RSpec.describe "The intro tour" do
       expect(response).to(have_http_status(:ok))
     end
 
-    it "returns to the page the tour was started from when it ends" do
+    it "hands the reader over to the guide when it ends, wherever it was started from" do
       stand_on(Intro::Map.essential.last.id)
       get("/dict")
       post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
       post("/intro/next")
 
-      expect(response).to(redirect_to("/en/dict"))
+      expect(response).to(redirect_to("/en/profile/guide"))
     end
 
-    it "applies the language choice and moves on" do
-      stand_on("language")
-      post("/intro/language/ru")
+    it "no longer asks which language to read in" do
+      expect(Intro::Map.essential.map(&:id)).not_to(include("language"))
+      expect(Rails.application.routes.url_helpers).not_to(respond_to(:intro_language_path))
+    end
 
-      expect(user.reload.locale).to(eq("ru"))
-      expect(step_id).not_to(eq("language"))
+    it "leaves the reader on the guide when the tour ends" do
+      expect(Intro::Map.essential.last.path).to(eq("/profile/guide"))
     end
   end
 

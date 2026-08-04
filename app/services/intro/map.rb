@@ -4,9 +4,7 @@ module Intro
   class Map
     PATH = Rails.root.join("config/intro_map.yml")
 
-    Step = Data.define(:id, :chapter, :path, :target, :advance, :lands_on, :kind, :interactive, :version) do
-      def choice? = kind == "choice"
-
+    Step = Data.define(:id, :chapter, :path, :target, :advance, :lands_on, :interactive, :version) do
       def waits_for_click? = advance == "click"
 
       def interactive? = waits_for_click? || interactive == true
@@ -36,7 +34,7 @@ module Intro
       def all_steps = essential + chapters.flat_map(&:steps)
 
       def newer_than(version)
-        all_steps.select { |step| step.version > version.to_i && !step.choice? }
+        all_steps.select { |step| step.version > version.to_i }
       end
 
       def reset!
@@ -71,7 +69,6 @@ module Intro
           target: row["target"],
           advance: row["advance"],
           lands_on: row["lands_on"],
-          kind: row["kind"],
           interactive: row["interactive"],
           version: row.fetch("version", 1).to_i
         )

@@ -41,4 +41,13 @@ module IntroHelper
 
     :new
   end
+
+  def guide_chapters_for(group)
+    Array(group[:chapters]).filter_map { |id| Intro::Map.chapter(id) }
+  end
+
+  def guide_chapter_label(chapter, done)
+    title = t("#{chapter.i18n_key}.title")
+    done ? t("intro.guide.again_named", title:) : t("intro.guide.launch_named", title:)
+  end
 end

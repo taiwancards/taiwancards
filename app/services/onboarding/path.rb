@@ -4,31 +4,35 @@ module Onboarding
   class Path
     FIRST_CARDS_TARGET = 20
 
-    Step = Data.define(:key, :auto, :optional, :link) do
+    Step = Data.define(:key, :auto, :optional, :link, :kind) do
       def optional? = optional
+
+      def theory? = kind == :theory
 
       def route = :"#{link}_path"
     end
 
     STEPS = [
-      Step.new(key: "zhuyin", auto: :zhuyin_trainer, optional: false, link: :zhuyin_training),
-      Step.new(key: "drill", auto: :drill, optional: false, link: :practice_drill),
-      Step.new(key: "tones", auto: :tones, optional: false, link: :tones_drill),
-      Step.new(key: "phrases", auto: :phrases, optional: false, link: :phrases),
-      Step.new(key: "bridge", auto: :zhuyin_trainer, optional: false, link: :zhuyin_training),
-      Step.new(key: "readings", auto: nil, optional: true, link: :variants),
-      Step.new(key: "typing", auto: :typing, optional: false, link: :practice_typing),
-      Step.new(key: "pinyin", auto: nil, optional: true, link: :practice_zhuyin),
-      Step.new(key: "placement", auto: :placement, optional: false, link: :placement),
-      Step.new(key: "first_cards", auto: :reviews, optional: false, link: :study),
-      Step.new(key: "plan", auto: nil, optional: true, link: :study_plan)
+      Step.new(key: "zhuyin_theory", auto: :zhuyin_theory, optional: false, link: :practice_zhuyin, kind: :theory),
+      Step.new(key: "zhuyin", auto: :zhuyin_trainer, optional: false, link: :zhuyin_training, kind: :practice),
+      Step.new(key: "drill", auto: :drill, optional: false, link: :practice_drill, kind: :practice),
+      Step.new(key: "tones_theory", auto: :tones_theory, optional: false, link: :tones, kind: :theory),
+      Step.new(key: "tones", auto: :tones, optional: false, link: :tones_drill, kind: :practice),
+      Step.new(key: "phrases", auto: :phrases, optional: false, link: :phrases, kind: :practice),
+      Step.new(key: "bridge", auto: :zhuyin_trainer, optional: false, link: :zhuyin_training, kind: :practice),
+      Step.new(key: "readings", auto: nil, optional: true, link: :variants, kind: :theory),
+      Step.new(key: "typing", auto: :typing, optional: false, link: :practice_typing, kind: :practice),
+      Step.new(key: "pinyin", auto: nil, optional: true, link: :practice_zhuyin, kind: :theory),
+      Step.new(key: "placement", auto: :placement, optional: false, link: :placement, kind: :practice),
+      Step.new(key: "first_cards", auto: :reviews, optional: false, link: :study, kind: :practice),
+      Step.new(key: "plan", auto: nil, optional: true, link: :study_plan, kind: :practice)
     ]
       .index_by(&:key)
       .freeze
 
     TRACKS = {
-      "zero" => %w[zhuyin drill tones phrases first_cards plan],
-      "phonetics" => %w[drill typing phrases first_cards plan],
+      "zero" => %w[zhuyin_theory zhuyin drill tones_theory tones phrases first_cards plan],
+      "phonetics" => %w[zhuyin_theory zhuyin drill typing phrases first_cards plan],
       "characters" => %w[bridge readings phrases first_cards plan],
       "experienced" => %w[placement phrases first_cards plan]
     }.freeze
@@ -54,7 +58,14 @@ module Onboarding
           :todo
         end
 
-        {key: step.key, state:, optional: step.optional?, route: step.route, progress: progress_for(step)}
+        {
+          key: step.key,
+          state:,
+          optional: step.optional?,
+          theory: step.theory?,
+          route: step.route,
+          progress: progress_for(step)
+        }
       end
     end
 

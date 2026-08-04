@@ -1,9 +1,6 @@
-version: 1
+version: 2
 
 essential:
-  - id: language
-    kind: choice
-    version: 1
   - id: welcome
     path: /desk
     version: 1
@@ -11,18 +8,39 @@ essential:
     path: /desk
     target: search
     version: 1
-  - id: sections
+  - id: dictionary
+    path: /menu
+    target: nav-dictionary
+    version: 2
+  - id: language_section
+    path: /menu
+    target: nav-language
+    version: 2
+  - id: practice
+    path: /menu
+    target: nav-practice
+    version: 2
+  - id: taiwan
+    path: /menu
+    target: nav-taiwan
+    version: 2
+  - id: profile
+    path: /menu
+    target: nav-settings
+    version: 2
+  - id: new_deck
     path: /desk
-    target: nav
-    version: 1
+    target: new-desk
+    version: 2
   - id: display
     path: /desk
     target: pref-pinyin
     interactive: true
     version: 1
   - id: guide
-    path: /desk
-    version: 1
+    path: /profile/guide
+    target: profile-guide
+    version: 2
 
 chapters:
   - id: dictionary

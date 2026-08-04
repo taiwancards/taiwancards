@@ -4,6 +4,7 @@ class TonesController < ApplicationController
   allow_unauthenticated_access only: %i[show]
   publicly_cacheable only: %i[show]
   def show
+    current_user&.record_practice_run!(:tones_theory)
   end
 
   DRILL_SIZE = 24

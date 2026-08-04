@@ -5,20 +5,36 @@ module NavHelper
     taiwan_nav
   end
 
-  def taiwan_nav
-    entries = []
-    entries << {type: :menu, key: :study, label: t("nav.group_learn"), items: learn_items} if current_user
-    entries <<
-      {type: :menu, key: :characters, label: t("nav.group_dictionary"), items: dictionary_items, tour: "nav-dictionary"}
-    entries << {type: :menu, key: :book, label: t("nav.group_language"), items: language_items}
-    entries << {type: :menu, key: :pencil, label: t("nav.group_practice"), items: practice_items}
-    entries << {type: :menu, key: :desk, label: t("nav.group_taiwan"), items: taiwan_items, tour: "nav-taiwan"}
-    if current_user
-      entries <<
-        {type: :menu, key: :settings, label: t("nav.group_settings"), items: settings_items, tour: "nav-profile"}
-    end
+  GROUPS = [
+    {id: "learn", key: :study, tour: "nav-learn", items: :learn_items, chapters: %w[cards], signed_in: true},
+    {id: "dictionary", key: :characters, tour: "nav-dictionary", items: :dictionary_items, chapters: %w[dictionary]},
+    {id: "language", key: :book, tour: "nav-language", items: :language_items, chapters: %w[phonetics]},
+    {id: "practice", key: :pencil, tour: "nav-practice", items: :practice_items, chapters: %w[trainers]},
+    {id: "taiwan", key: :desk, tour: "nav-taiwan", items: :taiwan_items, chapters: %w[taiwan]},
+    {
+      id: "settings",
+      key: :settings,
+      tour: "nav-settings",
+      items: :settings_items,
+      chapters: %w[profile display],
+      signed_in: true
+    }
+  ].freeze
 
-    entries
+  def taiwan_nav
+    GROUPS.filter_map do |group|
+      next if group[:signed_in] && current_user.nil?
+
+      {
+        type: :menu,
+        id: group[:id],
+        key: group[:key],
+        label: t("nav.group_#{group[:id]}"),
+        items: send(group[:items]),
+        chapters: group[:chapters],
+        tour: group[:tour]
+      }
+    end
   end
 
   def learn_items

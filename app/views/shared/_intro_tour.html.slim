@@ -27,30 +27,21 @@
     h2.mt-1.text-base.font-bold.leading-snug = intro_title(view)
     p.mt-1.text-sm.leading-relaxed.text-muted-foreground = intro_body(view)
 
-    - if view.step.choice?
-      .mt-4.grid.gap-2 class="grid-cols-2"
-        - %w[en ru].each do |code|
-          = button_to t("intro.language.#{code}"), intro_language_path(code),
-            class: "w-full rounded-xl border border-border px-3 py-3 text-sm font-semibold hover:bg-muted"
-      .mt-3.text-center
+    p.mt-3.hidden.text-xs.font-medium.text-brand data-intro-target="hint" = t("intro.try_it")
+
+    .mt-4.flex.items-center.justify-between.gap-3
+      - if view.skippable?
+        = button_to t("intro.skip"), (view.mode == :chapter ? intro_close_chapter_path : intro_seen_path),
+          method: (view.mode == :chapter ? :delete : :post),
+          class: "text-sm text-muted-foreground hover:text-foreground"
+      - else
         = button_to t("intro.later"), intro_pause_path, method: :delete,
-          form_class: "contents", class: "text-sm text-muted-foreground hover:text-foreground"
-    - else
-      p.mt-3.hidden.text-xs.font-medium.text-brand data-intro-target="hint" = t("intro.try_it")
+          class: "text-sm text-muted-foreground hover:text-foreground"
 
-      .mt-4.flex.items-center.justify-between.gap-3
-        - if view.skippable?
-          = button_to t("intro.skip"), (view.mode == :chapter ? intro_close_chapter_path : intro_seen_path),
-            method: (view.mode == :chapter ? :delete : :post),
-            class: "text-sm text-muted-foreground hover:text-foreground"
-        - else
-          = button_to t("intro.later"), intro_pause_path, method: :delete,
-            class: "text-sm text-muted-foreground hover:text-foreground"
-
-        .flex.items-center.gap-2
-          - if view.position.positive?
-            = button_to t("intro.back"), intro_back_path,
-              class: "rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted"
-          span data-intro-target="forward"
-            = button_to (view.last? ? t("intro.done") : t("intro.next")), intro_next_path,
-              class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      .flex.items-center.gap-2
+        - if view.position.positive?
+          = button_to t("intro.back"), intro_back_path,
+            class: "rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted"
+        span data-intro-target="forward"
+          = button_to (view.last? ? t("intro.done") : t("intro.next")), intro_next_path,
+            class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"

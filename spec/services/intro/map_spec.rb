@@ -114,7 +114,6 @@ RSpec.describe Intro::Progress do
       target: "search",
       advance: "click",
       lands_on: "/dict",
-      kind: nil,
       interactive: nil,
       version: 1
     )

@@ -1,0 +1,16 @@
+- bundles.each do |bundle|
+  section.space-y-2
+    .flex.flex-wrap.items-baseline.justify-between.gap-2
+      div
+        h3.font-semibold = t("practice.blocks.#{bundle.key}.title")
+        p.text-sm.text-muted-foreground = t("practice.blocks.#{bundle.key}.body")
+      - if bundle.practisable?
+        span.shrink-0.text-lg.tracking-wide.text-muted-foreground lang="zh-TW" = bundle.symbols.join(" ")
+
+    = render "practice/phonetics_table", rows: bundle.rows
+
+    - if bundle.practisable?
+      = link_to zhuyin_training_path(block: bundle.key, from: part),
+        class: "inline-flex items-center gap-2 rounded-xl border border-brand px-4 py-2 text-sm font-semibold text-brand hover:bg-muted" do
+        = icon(:speaker, css: "size-4")
+        = t("practice.drill_these", symbols: bundle.symbols.join(" "))

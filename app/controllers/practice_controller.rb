@@ -23,6 +23,7 @@ class PracticeController < ApplicationController
       next: PHONETICS_PARTS[index + 1]
     }
     load_phonetics
+    current_user&.record_practice_run!(:zhuyin_theory)
   end
 
   def drill

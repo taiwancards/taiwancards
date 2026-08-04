@@ -67,18 +67,30 @@ module Huayu
       "finals" => %w[medial open diphthong nasal rhotic]
     }.freeze
 
-    def initialize(mastery = {}, seed: nil, group: nil)
+    KEYS = BLOCKS.map { |block| block[:key] }.freeze
+
+    def self.block_for(symbol) = BLOCKS.find { |block| block[:symbols].include?(symbol) }
+
+    def self.blocks_in(group) = BLOCKS.select { |block| GROUPS.fetch(group.to_s, []).include?(block[:key]) }
+
+    def initialize(mastery = {}, seed: nil, group: nil, block: nil)
       @mastery = mastery.to_h { |key, value| [key.to_s, value.to_h.transform_keys(&:to_s)] }
       @rng = Random.new(seed || Random.new_seed)
       @group = GROUPS.key?(group.to_s) ? group.to_s : nil
+      @block = KEYS.include?(block.to_s) ? block.to_s : nil
     end
 
     def group = @group
 
+    def block = @block
+
+    def scoped? = @block.present? || @group.present?
+
     def group_blocks
+      return BLOCKS.select { |entry| entry[:key] == @block } if @block
       return BLOCKS if @group.nil?
 
-      BLOCKS.select { |block| GROUPS.fetch(@group).include?(block[:key]) }
+      BLOCKS.select { |entry| GROUPS.fetch(@group).include?(entry[:key]) }
     end
 
     def blocks

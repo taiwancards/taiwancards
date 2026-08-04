@@ -63,7 +63,6 @@ Rails.application.routes.draw do
     delete("intro", to: "intros#pause", as: :intro_pause)
     post("intro/next", to: "intros#advance", as: :intro_next)
     post("intro/back", to: "intros#rewind", as: :intro_back)
-    post("intro/language/:code", to: "intros#language", as: :intro_language, constraints: {code: /en|ru/})
     post("intro/seen", to: "intros#seen", as: :intro_seen)
     post("intro/chapter/:id", to: "intros#chapter", as: :intro_chapter)
     delete("intro/chapter", to: "intros#close_chapter", as: :intro_close_chapter)

@@ -21,13 +21,6 @@ class IntrosController < ApplicationController
     back_to_step
   end
 
-  def language
-    current_user.update!(locale: params[:code])
-    cookies.permanent[:locale] = params[:code]
-    runner.advance!
-    back_to_step
-  end
-
   def seen
     session.delete(:intro_news_step)
     intro_progress.acknowledge_new!
@@ -58,7 +51,8 @@ class IntrosController < ApplicationController
   end
 
   def after_intro_path
-    take_return_path || (current_user.intro_done? ? guide_path : desk_path)
+    stored = take_return_path
+    current_user.intro_done? ? guide_path : (stored || desk_path)
   end
 
   def here(path) = Locales.swap(path, I18n.locale)
