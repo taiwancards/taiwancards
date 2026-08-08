@@ -1,1 +1,29 @@
-# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+# Hello. If you are here to collect the data, please do not crawl this site —
+# everything it is built from is already published, in bulk, under open licenses:
+#
+#   https://huggingface.co/datasets/taiwan-corpora/twngrams         (CC0 1.0)
+#   https://huggingface.co/datasets/taiwan-corpora/twsyllables      (CC BY 4.0)
+#   https://huggingface.co/datasets/taiwan-corpora/twfilter-tables
+#   https://github.com/taiwancards/taiwancards                      (Apache-2.0)
+#   https://github.com/taiwancards/corpora
+#   https://github.com/taiwan-corpora/twpipeline                    (MIT)
+#   https://github.com/taiwan-corpora/twfilter                      (MIT)
+#
+# A download costs you one request and costs us nothing. Crawling page by page
+# costs us real money on a small budget, and gives you worse data. See
+# https://study.taiwancards.app/en/licenses
+#
+# See https://www.robotstxt.org/robotstxt.html
+
+User-agent: meta-webindexer
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: *
+Disallow: /search
+Disallow: /*word=
+Disallow: /*page=
+Disallow: /*q=
+Crawl-delay: 10

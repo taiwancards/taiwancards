@@ -5,6 +5,8 @@ class DictController < ApplicationController
   publicly_cacheable
   include Paginated
   include ProgressMarks
+  include Filtered
+  filtered_by :q
 
   PER_PAGE = 60
   KINDS = Lexeme::DICTIONARY_KINDS

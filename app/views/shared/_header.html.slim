@@ -8,27 +8,30 @@ header.sticky.top-0.z-40.border-b.border-border
         span.font-bold Taiwan
         span.font-normal.text-muted-foreground Cards
 
-    .relative.min-w-0.flex-1[ data-tour="search" data-controller="search search-pad" data-search-url-value=search_path ]
-      .relative
-        span.pointer-events-none.absolute.inset-y-0.left-0.flex.items-center.text-muted-foreground class="pl-2.5"
-          = icon(:search, css: "size-4")
-        input.w-full.rounded-full.border.border-border.bg-muted.pl-8.text-sm[
-          type="search" placeholder=t("search.placeholder") aria-label=t("search.title")
-          class="py-1.5 pr-10"
-          data-search-target="input" data-search-pad-target="field" autocomplete="off"
-          data-action="input->search#input focus->search#focus keydown->search#keydown" ]
-        button.absolute.inset-y-0.right-0.flex.items-center.px-3.text-muted-foreground[
-          type="button" data-action="search-pad#toggle" data-search-pad-target="opener"
-          title=t("search.pad.open") aria-label=t("search.pad.open") class="hover:text-foreground" ]
-          = icon(:keyboard, css: "size-4")
-      .absolute.left-0.top-full.z-50.mt-2.flex.items-start.gap-2[
-        class="max-xl:flex-col max-md:fixed max-md:inset-x-2 max-md:top-14 max-md:mt-1" ]
-        .hidden.overflow-hidden.rounded-xl.border.border-border.bg-background.shadow-xl[
-          class="w-[min(30rem,86vw)] max-md:w-auto max-h-[45vh] xl:max-h-[70vh] overflow-y-auto"
-          data-search-target="panel" ]
-          div data-search-target="results"
+    - if authenticated?
+      .relative.min-w-0.flex-1[ data-tour="search" data-controller="search search-pad" data-search-url-value=search_path ]
+        .relative
+          span.pointer-events-none.absolute.inset-y-0.left-0.flex.items-center.text-muted-foreground class="pl-2.5"
+            = icon(:search, css: "size-4")
+          input.w-full.rounded-full.border.border-border.bg-muted.pl-8.text-sm[
+            type="search" placeholder=t("search.placeholder") aria-label=t("search.title")
+            class="py-1.5 pr-10"
+            data-search-target="input" data-search-pad-target="field" autocomplete="off"
+            data-action="input->search#input focus->search#focus keydown->search#keydown" ]
+          button.absolute.inset-y-0.right-0.flex.items-center.px-3.text-muted-foreground[
+            type="button" data-action="search-pad#toggle" data-search-pad-target="opener"
+            title=t("search.pad.open") aria-label=t("search.pad.open") class="hover:text-foreground" ]
+            = icon(:keyboard, css: "size-4")
+        .absolute.left-0.top-full.z-50.mt-2.flex.items-start.gap-2[
+          class="max-xl:flex-col max-md:fixed max-md:inset-x-2 max-md:top-14 max-md:mt-1" ]
+          .hidden.overflow-hidden.rounded-xl.border.border-border.bg-background.shadow-xl[
+            class="w-[min(30rem,86vw)] max-md:w-auto max-h-[45vh] xl:max-h-[70vh] overflow-y-auto"
+            data-search-target="panel" ]
+            div data-search-target="results"
 
-        = render "shared/search_pad"
+          = render "shared/search_pad"
+    - else
+      .min-w-0.flex-1
 
     .flex.shrink-0.items-center.gap-2
       - if authenticated?

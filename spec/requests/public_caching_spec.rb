@@ -64,6 +64,13 @@ RSpec.describe "Public caching" do
       expect(response.headers["Cache-Control"]).to(include("public"))
     end
 
+    it "shares it with a client that asks for anything at all, so the edge absorbs the crawlers" do
+      get("/grammar", headers: {"HTTP_ACCEPT" => "*/*"})
+
+      expect(response.headers["Cache-Control"]).to(include("s-maxage="))
+      expect(session_cookie).not_to(include("_taiwancards_session"))
+    end
+
     it "switches language by address rather than by a form" do
       get("/ru/grammar")
 

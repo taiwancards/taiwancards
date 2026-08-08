@@ -3,6 +3,9 @@
 class SentencesController < ApplicationController
   allow_unauthenticated_access
   publicly_cacheable
+  include Filtered
+  filtered_by :word
+
   PER_PAGE = Sentences::Browse::PER_PAGE
 
   def index

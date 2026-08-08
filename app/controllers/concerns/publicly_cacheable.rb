@@ -35,8 +35,10 @@ module PubliclyCacheable
     return false if actions.nil?
     return false unless actions == :all || actions.include?(action_name)
 
-    request.get? && !request.xhr? && request.format.html? && current_user.nil? && plain_reader?
+    request.get? && !request.xhr? && html_answer? && current_user.nil? && plain_reader?
   end
+
+  def html_answer? = request.format.html? || request.format.to_s == Mime::ALL.to_s
 
   def plain_reader? = PERSONAL.none? { |name| cookies[name].present? }
 

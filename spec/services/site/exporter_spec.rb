@@ -111,12 +111,14 @@ RSpec.describe Site::Exporter do
     expect(html).to(include("navigator.language"))
   end
 
-  it "still opens the menus and runs the search once Stimulus is gone" do
+  it "still opens the menus once Stimulus is gone" do
     html = page("en", "licenses", "index.html")
 
     expect(html).to(include("data-menu-target=panel"))
-    expect(html).to(include("data-search-url-value=\"#{app_url}/en/search\""))
-    expect(html).not_to(include("data-search-url-value=\"/en/search\""))
+  end
+
+  it "offers no search box, since searching now needs an account" do
+    expect(page("en", "licenses", "index.html")).not_to(include("data-search-target=input"))
   end
 
   it "leaves no form that needs a server to answer it" do

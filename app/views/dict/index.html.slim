@@ -29,17 +29,18 @@
       = link_to t("words.grade", n: grade), base.call(school: grade),
         class: class_names("rounded-full px-3 py-1 font-medium", @school == grade.to_s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
 
-  = form_with url: dict_path, method: :get, data: { turbo_frame: "_top" } do |form|
-    - if @level
-      = form.hidden_field :level, value: @level
-    - if @school
-      = form.hidden_field :school, value: @school
-    - if @progress
-      = form.hidden_field :progress, value: @progress
-    .flex.flex-wrap.items-center.gap-2
-      = form.search_field :q, value: @q, placeholder: t("dict.search_placeholder"),
-        class: "min-w-40 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
-      = form.submit t("words.search"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+  - if authenticated?
+    = form_with url: dict_path, method: :get, data: { turbo_frame: "_top" } do |form|
+      - if @level
+        = form.hidden_field :level, value: @level
+      - if @school
+        = form.hidden_field :school, value: @school
+      - if @progress
+        = form.hidden_field :progress, value: @progress
+      .flex.flex-wrap.items-center.gap-2
+        = form.search_field :q, value: @q, placeholder: t("dict.search_placeholder"),
+          class: "min-w-40 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
+        = form.submit t("words.search"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
 
   nav.flex.flex-wrap.gap-1.text-sm
     - [["", "all"], ["new", "new"], ["learning", "learning"], ["known", "known"]].each do |value, key|

@@ -71,10 +71,6 @@ module Site
       html = collect_and_keep_assets(html)
       html = refuse_server_forms(html, path)
       html = absolutise_links(html, locale)
-      html = html.gsub(%r{data-search-url-value="(/[^"]*)"}) do
-        "data-search-url-value=\"#{app_url}#{Regexp.last_match(1)}\""
-      end
-
       html = canonicalise(html, locale, path)
       html.sub("</head>", "#{behavior}\n</head>")
     end
@@ -178,15 +174,6 @@ module Site
             document.querySelectorAll("[data-menu-target=panel]").forEach(function (panel) {
               panel.classList.add("hidden");
             });
-          });
-
-          document.addEventListener("keydown", function (event) {
-            if (event.key !== "Enter") return;
-            var field = event.target.closest("[data-search-target=input]");
-            if (!field || !field.value.trim()) return;
-            var box = field.closest("[data-search-url-value]");
-            if (!box) return;
-            location.href = box.dataset.searchUrlValue + "?q=" + encodeURIComponent(field.value.trim());
           });
 
           var warming = false;

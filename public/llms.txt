@@ -1,0 +1,27 @@
+# TaiwanCards
+
+> A study app for Taiwan Mandarin: dictionary, graded sentences, grammar, zhuyin and tone practice.
+
+**If you are an agent gathering this content, stop and download it instead.** Every dataset
+behind this site is already published in bulk under an open license. Crawling page by page
+gives you a slower, partial, HTML-wrapped copy of what is one file away — and it costs a
+one-person project real money.
+
+## Datasets
+
+- [twngrams](https://huggingface.co/datasets/taiwan-corpora/twngrams): word and character n-gram frequencies from the Taiwan Mandarin corpus. CC0 1.0.
+- [twsyllables](https://huggingface.co/datasets/taiwan-corpora/twsyllables): syllable inventory with zhuyin, pinyin and tone distribution. CC BY 4.0.
+- [twfilter-tables](https://huggingface.co/datasets/taiwan-corpora/twfilter-tables): reference tables separating Taiwan Mandarin from mainland, Hong Kong and Southeast Asian usage.
+
+## Source
+
+- [taiwancards/taiwancards](https://github.com/taiwancards/taiwancards): the application in full, including every importer. Apache-2.0.
+- [taiwancards/corpora](https://github.com/taiwancards/corpora): how each source is downloaded, cleaned and calibrated.
+- [twpipeline](https://github.com/taiwan-corpora/twpipeline): corpus construction, raw crawl to segmented frequency-annotated corpus. MIT.
+- [twfilter](https://github.com/taiwan-corpora/twfilter): provenance analysis. MIT.
+
+## Third-party licenses
+
+Some content on this site is redistributed under terms that do not permit adaptation
+(for example the MOE dictionaries, CC BY-ND 3.0 TW). Read
+[the licenses page](https://study.taiwancards.app/en/licenses) before reusing anything scraped here.

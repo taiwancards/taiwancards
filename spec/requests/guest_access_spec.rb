@@ -53,18 +53,36 @@ RSpec.describe "Guest access", :no_auth do
     end
   end
 
-  it "opens the search" do
-    create(
-      :lexeme,
-      kind: :word,
-      text: "水果",
-      readings: {"pinyin" => "shuǐguǒ", "zhuyin" => "ㄕㄨㄟˇ ㄍㄨㄛˇ"}
-    )
-
+  it "keeps the search itself behind the login" do
     get("/search", params: {q: "水果"})
 
+    expect(response).to(redirect_to(login_path))
+  end
+
+  it "offers no search box to somebody who cannot use it" do
+    get("/dict")
+
+    expect(response.body).not_to(include(I18n.t("search.placeholder")))
+    expect(response.body).not_to(include(I18n.t("dict.search_placeholder")))
+  end
+
+  it "reads a section without an account, but does not walk it word by word" do
+    {"/sentences" => {word: "水果"}, "/dict" => {q: "水果"}}.each do |path, query|
+      get(path, params: query)
+      expect(response).to(redirect_to(login_path), "expected #{path} to gate its query")
+
+      get(path, params: {page: 2})
+      expect(response).to(redirect_to(login_path), "expected #{path} to gate its paging")
+
+      get(path)
+      expect(response).to(have_http_status(:ok), "expected #{path} itself to stay open")
+    end
+  end
+
+  it "still browses by level, which is a shelf rather than a query" do
+    get("/dict", params: {school: "3"})
+
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("水果"))
   end
 
   it "keeps study, practice and settings behind the login" do

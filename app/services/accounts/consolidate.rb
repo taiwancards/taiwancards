@@ -33,11 +33,13 @@ module Accounts
 
     def rows_for(keeper)
       owned_tables.sum do |table|
-        connection.select_value(
-          ActiveRecord::Base.sanitize_sql_array(
-            ["SELECT count(*) FROM #{connection.quote_table_name(table)} WHERE user_id = ?", keeper.id]
+        connection
+          .select_value(
+            ActiveRecord::Base.sanitize_sql_array(
+              ["SELECT count(*) FROM #{connection.quote_table_name(table)} WHERE user_id = ?", keeper.id]
+            )
           )
-        ).to_i
+          .to_i
       end
     end
 
