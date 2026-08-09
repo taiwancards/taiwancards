@@ -60,7 +60,7 @@ namespace(:deploy) do
       name: "phrase_drills",
       task: "huayu:import_phrase_drills",
       paths: %w[huayu/phrase_drills.txt],
-      code: %w[app/services/huayu/phrase_drills_importer.rb]
+      code: %w[app/services/huayu/phrase_drills_importer.rb app/services/huayu/phrase_levels.rb]
     },
     {
       name: "sense_meanings",
@@ -128,12 +128,10 @@ namespace(:deploy) do
       :ran
     },
     "admin_rights" => -> {
-      owner = User.where(google_email: User::ADMIN_GOOGLE_EMAIL)
-      granted = owner.where(admin: false).update_all(admin: true, restricted_content: true)
-      taken = User.where(admin: true).where.not(id: owner.select(:id)).update_all(admin: false)
-      next :skipped if granted.zero? && taken.zero?
+      result = Accounts::Owner.new.call
+      next :skipped unless result.changed?
 
-      $stdout.puts("admin granted to #{granted}, taken from #{taken} (only #{User::ADMIN_GOOGLE_EMAIL} keeps it)")
+      $stdout.puts(result.to_s)
       :ran
     },
     "flag_restricted" => -> {

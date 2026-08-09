@@ -15,7 +15,7 @@ RSpec.describe Accounts::Consolidate do
     result = described_class.new.call
 
     expect(result.deleted).to(eq(2))
-    expect(User.pluck(:google_email)).to(eq([User::ADMIN_GOOGLE_EMAIL]))
+    expect(User.pluck(:google_email)).to(eq([User.owner_google_email]))
     expect(User.sole.email).to(eq(owner.email))
   end
 

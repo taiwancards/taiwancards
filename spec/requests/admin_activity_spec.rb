@@ -32,7 +32,7 @@ RSpec.describe "Admin activity" do
     get(admin_activity_path)
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include(User::ADMIN_GOOGLE_EMAIL))
+    expect(response.body).to(include(User.owner_google_email))
     expect(response.body).to(include(I18n.t("admin.by_section")))
   end
 

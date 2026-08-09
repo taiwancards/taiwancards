@@ -391,6 +391,14 @@
     display: none;
   }
 
+  .reading-hints:not(.hints-zhuyin) ruby.zy > rt {
+    display: none;
+  }
+
+  .reading-hints:not(.hints-zhuyin) .zy-right ruby.zy {
+    margin-right: 0;
+  }
+
   .reading-hints:not(.hints-zhuyin) .py-reading {
     margin-left: 0;
   }

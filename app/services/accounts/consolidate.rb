@@ -6,7 +6,7 @@ module Accounts
 
     Result = Data.define(:deleted, :kept, :renumbered, :attached, :next_id)
 
-    def initialize(email = User::ADMIN_GOOGLE_EMAIL)
+    def initialize(email = User.owner_google_email)
       @email = email
     end
 

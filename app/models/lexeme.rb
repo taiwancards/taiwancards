@@ -41,6 +41,13 @@ class Lexeme < ApplicationRecord
   end
 
   scope :ordered, -> { order(:kind, :text) }
+  scope(
+    :practice_phrases,
+    -> {
+      where(kind: :phrase)
+        .where("jsonb_exists(lexemes.data, 'drill') OR lexemes.data ->> 'sentence' = 'true'")
+    }
+  )
   scope :with_source, -> (tag) { where("sources @> ?", [tag].to_json) }
   scope :unrestricted, -> { where(restricted: false) }
 

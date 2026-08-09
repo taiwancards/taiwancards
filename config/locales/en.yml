@@ -235,8 +235,8 @@ en:
   phrase_drills:
     title: Phrases
     subtitle:
-      one: One sentence to speak through, in alphabetical order. Visible only to you.
-      other: "%{count} sentences to speak through, in alphabetical order. Visible only to you."
+      one: One sentence to speak through, easiest first. Visible only to you.
+      other: "%{count} sentences to speak through, easiest first. Visible only to you."
     empty: Nothing here yet — run the import and the sentences will appear.
     level: Level
     level_n: "Level %{n}"
@@ -246,7 +246,9 @@ en:
     curriculum: Curriculum
     any_grade: Any
     grade_hint: "%{scheme} level %{level}"
-    approximate: "* the level covers at least 95% of the words"
+    approximate: "* the level covers about 90% of the words, not all of them"
+    any_book: Both
+    book_hint: Where the sentence comes from
   textbook:
     marked_known: "Marked as known: %{count}"
     mark_known_hint: The words move to distant reviews without disappearing altogether

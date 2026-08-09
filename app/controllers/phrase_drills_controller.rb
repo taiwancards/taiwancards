@@ -5,12 +5,15 @@ class PhraseDrillsController < ApplicationController
 
   LEVELS = %w[1 2 3 4 5].freeze
   LEVEL_SPAN = Lexemes::Difficulty::SCALE / 5
+  SCHEMES = %w[tocfl tbcl].freeze
+  BOOKS = %w[GL DA].freeze
   PER_PAGE = 25
 
   def index
     @level = params[:level].presence_in(LEVELS)
-    @scheme = params[:scheme].presence_in(SentenceProfile::SCHEMES.keys - ["freq"])
+    @scheme = params[:scheme].presence_in(SCHEMES)
     @grade = params[:grade].presence_in(grades_for(@scheme))
+    @book = params[:book].presence_in(BOOKS)
     @q = params[:q].to_s.strip
 
     scope = filtered
@@ -25,9 +28,11 @@ class PhraseDrillsController < ApplicationController
   private
 
   def filtered
-    scope = Huayu::PhraseDrillsImporter.drills
+    scope = Lexeme.practice_phrases.order(Arel.sql("lexemes.score ASC NULLS LAST, lexemes.id ASC"))
     scope = scope.where("(lexemes.data ->> 'difficulty')::int BETWEEN ? AND ?", *band(@level)) if @level
     scope = scope.where("(lexemes.data ->> ?)::int = ?", @scheme, @grade.to_i) if @scheme && @grade
+    scope = scope.where("jsonb_exists(lexemes.data, 'drill')") if @book == "GL"
+    scope = scope.where("NOT jsonb_exists(lexemes.data, 'drill')") if @book == "DA"
     return scope if @q.blank?
 
     scope.where(

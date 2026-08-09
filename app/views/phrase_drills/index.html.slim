@@ -1,35 +1,44 @@
 - content_for(:title, t("phrase_drills.title"))
+- chip = "relative inline-flex shrink-0 cursor-pointer items-center whitespace-nowrap rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-muted has-checked:border-primary has-checked:bg-primary/10 has-checked:font-medium has-checked:text-foreground"
+- picker = "rounded-lg border border-border bg-card px-2 py-1 text-xs disabled:opacity-40"
 
-.py-6.space-y-5
-  header.space-y-1
-    h1.text-2xl.font-bold.tracking-tight = t("phrase_drills.title")
-    p.text-sm.text-muted-foreground = t("phrase_drills.subtitle", count: @total)
+.py-6.space-y-5.reading-hints.hints-zhuyin data-controller="reading-hints"
+  header.flex.flex-wrap.items-start.justify-between.gap-3
+    .space-y-1
+      h1.text-2xl.font-bold.tracking-tight = t("phrase_drills.title")
+      p.text-sm.text-muted-foreground = t("phrase_drills.subtitle", count: @total)
+    = render("grammar/hints")
 
-  = form_with url: textbook_phrases_path, method: :get, class: "space-y-2 rounded-xl border border-border p-3" do
+  = form_with url: textbook_phrases_path, method: :get, class: "space-y-2 rounded-xl border border-border p-3",
+    data: {controller: "phrase-filters", action: "change->phrase-filters#submit"} do
     .flex.items-center.gap-2
       .w-24.shrink-0.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("phrase_drills.level")
       .flex.flex-1.gap-1.overflow-x-auto class="py-0.5"
         - PhraseDrillsController::LEVELS.each do |level|
-          - selected = @level == level
-          label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border class=("px-2 py-0.5 text-xs #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
-            = radio_button_tag(:level, level, selected, class: "sr-only")
+          label class=chip
+            = radio_button_tag(:level, level, @level == level, class: "sr-only")
             = t("phrase_drills.level_n", n: level)
-        - if @level
-          label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border.border-border class="px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
-            = radio_button_tag(:level, "", false, class: "sr-only")
-            = t("phrase_drills.any_level")
-    .flex.items-center.gap-2
+        label class=chip
+          = radio_button_tag(:level, "", @level.nil?, class: "sr-only")
+          = t("phrase_drills.any_level")
+    .flex.flex-wrap.items-center.gap-2
       .w-24.shrink-0.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("phrase_drills.curriculum")
-      .flex.flex-1.flex-wrap.gap-2
-        = select_tag :scheme, options_for_select([[t("phrase_drills.any_grade"), ""], %w[TOCFL tocfl], %w[TBCL tbcl]], @scheme),
-          class: "rounded-lg border border-border bg-card px-2 py-1 text-xs"
-        = select_tag :grade, options_for_select([[t("phrase_drills.any_grade"), ""]] + grade_options(@scheme), @grade),
-          class: "rounded-lg border border-border bg-card px-2 py-1 text-xs"
+      = select_tag :scheme, options_for_select([[t("phrase_drills.any_grade"), ""], %w[TOCFL tocfl], %w[TBCL tbcl]], @scheme),
+        class: picker, data: {phrase_filters_target: "scheme", action: "change->phrase-filters#changeScheme"}
+      = select_tag :grade, options_for_select([[t("phrase_drills.any_grade"), ""]] + grade_options, @grade),
+        class: picker, data: {phrase_filters_target: "grade"}
+      - PhraseDrillsController::BOOKS.each do |book|
+        label class=chip
+          = radio_button_tag(:book, book, @book == book, class: "sr-only")
+          = book
+      label class=chip
+        = radio_button_tag(:book, "", @book.nil?, class: "sr-only")
+        = t("phrase_drills.any_book")
     .flex.flex-wrap.items-center.gap-2
       = search_field_tag :q, @q, placeholder: t("phrase_drills.search_placeholder"),
         class: "min-w-40 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
       = submit_tag t("sentences.apply"), class: "cursor-pointer rounded-lg bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
-      - if @q.present? || @level || @scheme
+      - if @q.present? || @level || @scheme || @book
         = link_to t("sentences.reset"), textbook_phrases_path, class: "text-xs text-muted-foreground underline underline-offset-2"
 
   - if @phrases.empty?
@@ -55,17 +64,19 @@
                     - else
                       = token.text
             .flex.shrink-0.flex-wrap.items-center.gap-1
-              - %w[tocfl tbcl].each do |scheme|
+              span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.book_hint")
+                = drill_book(phrase)
+              - PhraseDrillsController::SCHEMES.each do |scheme|
                 - next unless (grade = drill_grade(phrase, scheme))
                 span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.grade_hint", scheme: scheme.upcase, level: grade.delete("*"))
                   = "#{scheme.upcase} #{grade}"
-              span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.level_hint", score: phrase.data["difficulty"])
-                = t("phrase_drills.level_n", n: drill_level(phrase))
-          p.pinyin.pinyin-locked.text-sm.text-muted-foreground = drill_pinyin(tokens)
+              span title=t("phrase_drills.level_hint", score: phrase.data["difficulty"])
+                = score_badge(phrase)
+          p.py-line.pinyin-locked.text-sm.text-muted-foreground = drill_pinyin(tokens)
           p.text-sm = phrase.meaning
 
       .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
         data-analyzer-target="popover" class="max-w-[85vw]" ]
 
     p.text-xs.text-muted-foreground = t("phrase_drills.approximate")
-    = render("shared/pager", page: @page, pages: @pages, path: ->(n) { textbook_phrases_path(level: @level, scheme: @scheme, grade: @grade, q: @q.presence, page: n) })
+    = render("shared/pager", page: @page, pages: @pages, path: ->(n) { textbook_phrases_path(level: @level, scheme: @scheme, grade: @grade, book: @book, q: @q.presence, page: n) })

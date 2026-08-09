@@ -9,8 +9,9 @@ FactoryBot.define do
     email_verified_at { Time.current }
 
     trait(:admin) do
-      email { User::ADMIN_GOOGLE_EMAIL }
-      google_email { User::ADMIN_GOOGLE_EMAIL }
+      email { User.owner_email || User.owner_google_email }
+      restricted_content { true }
+      google_email { User.owner_google_email }
       google_uid { "google-admin" }
     end
 

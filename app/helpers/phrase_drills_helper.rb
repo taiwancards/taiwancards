@@ -23,10 +23,18 @@ module PhraseDrillsHelper
     (difficulty / PhraseDrillsController::LEVEL_SPAN).clamp(0, 4) + 1
   end
 
-  def grade_options(scheme)
-    return [] if scheme.nil?
+  def drill_book(lexeme)
+    lexeme.data.key?("drill") ? "GL" : "DA"
+  end
 
-    SentenceProfile::SCHEMES.fetch(scheme)[:levels].each_with_index.map { |label, index| [label, (index + 1).to_s] }
+  def grade_options(scheme = nil)
+    PhraseDrillsController::SCHEMES.flat_map do |name|
+      next [] if scheme && scheme != name
+
+      SentenceProfile::SCHEMES.fetch(name)[:levels].each_with_index.map do |label, index|
+        [label, (index + 1).to_s, {data: {scheme: name}}]
+      end
+    end
   end
 
   def drill_grade(lexeme, scheme)

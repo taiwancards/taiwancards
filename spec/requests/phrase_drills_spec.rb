@@ -3,29 +3,51 @@
 require "rails_helper"
 
 RSpec.describe "Phrase drills" do
-  def drill(text, position, en: "meaning", ru: "перевод", difficulty: 100, **extra)
+  def drill(text, position, en: "meaning", ru: "перевод", difficulty: 100, score: nil, **extra)
     create(
       :lexeme,
       kind: :phrase,
       text:,
       restricted: true,
+      score: score || position,
       meanings: {"en" => en, "ru" => ru},
       data: {"drill" => position, "difficulty" => difficulty}.merge(extra.transform_keys(&:to_s)),
       sources: [Huayu::PhraseDrillsImporter::SOURCE]
     )
   end
 
+  def book_sentence(text, en: "meaning", score: 1)
+    create(
+      :lexeme,
+      kind: :phrase,
+      text:,
+      restricted: true,
+      score:,
+      meanings: {"en" => en},
+      data: {"sentence" => true, "difficulty" => 100},
+      sources: ["Textbook B1L01"]
+    )
+  end
+
   context("for the owner") do
     before { sign_in(create(:user, :admin, restricted_content: true)) }
 
-    it "lists every sentence in drill order" do
-      drill("你好嗎？", 2, en: "How are you?")
-      drill("我好餓。", 1, en: "I'm so hungry.")
+    it "lists the easiest sentences first" do
+      drill("你好嗎？", 1, en: "How are you?", score: 800)
+      drill("我好餓。", 2, en: "I'm so hungry.", score: 20)
 
       get("/textbook/phrases")
 
       expect(response).to(have_http_status(:ok))
       expect(response.body.index("I&#39;m so hungry.")).to(be < response.body.index("How are you?"))
+    end
+
+    it "shows the internal score next to every sentence" do
+      drill("我好餓。", 1, score: 42.4)
+
+      get("/textbook/phrases")
+
+      expect(response.body).to(include(">42<"))
     end
 
     it "shows the translation in the interface language" do
@@ -40,6 +62,28 @@ RSpec.describe "Phrase drills" do
       get("/textbook/phrases")
 
       expect(response.body).to(include(I18n.t("nav.phrase_drills")))
+    end
+
+    it "lists the textbook sentences alongside the drills and labels where each came from" do
+      drill("我好餓。", 1, en: "I'm so hungry.")
+      book_sentence("你好嗎？", en: "How are you?")
+
+      get("/textbook/phrases")
+
+      expect(response.body).to(include("I&#39;m so hungry."))
+      expect(response.body).to(include("How are you?"))
+      expect(response.body).to(include(">GL<"))
+      expect(response.body).to(include(">DA<"))
+    end
+
+    it "filters by where the sentence came from" do
+      drill("我好餓。", 1, en: "I'm so hungry.")
+      book_sentence("你好嗎？", en: "How are you?")
+
+      get("/textbook/phrases", params: {book: "DA"})
+
+      expect(response.body).to(include("How are you?"))
+      expect(response.body).not_to(include("I&#39;m so hungry."))
     end
 
     it "filters by difficulty level" do
@@ -78,8 +122,29 @@ RSpec.describe "Phrase drills" do
       expect(response.body).not_to(include("How are you?"))
     end
 
+    it "offers both curriculum grade lists without waiting for a round trip" do
+      drill("我好餓。", 1)
+
+      get("/textbook/phrases")
+
+      expect(response.body).to(include("data-scheme=\"tocfl\""))
+      expect(response.body).to(include("data-scheme=\"tbcl\""))
+    end
+
+    it "lets the readings be switched off" do
+      drill("我好餓。", 1)
+
+      get("/textbook/phrases")
+
+      expect(response.body).to(include("data-controller=\"reading-hints\""))
+      expect(response.body).to(include("data-reading-hints-target=\"pinyin\""))
+      expect(response.body).to(include("py-line"))
+    end
+
     it "pages through a long list" do
-      (PhraseDrillsController::PER_PAGE + 1).times { |index| drill("第#{index}句。", index, en: "line #{index}") }
+      (PhraseDrillsController::PER_PAGE + 1).times { |index|
+        drill("第#{index}句。", index + 1, en: "line #{index}")
+      }
 
       get("/textbook/phrases")
       expect(response.body).not_to(include("line #{PhraseDrillsController::PER_PAGE}"))

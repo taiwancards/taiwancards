@@ -39,8 +39,7 @@ module Lexemes
 
       drills = []
       Lexeme
-        .where(kind: :phrase)
-        .where("lexemes.data ->> 'drill' IS NOT NULL")
+        .practice_phrases
         .order(:id)
         .pluck(:id, :text, :data)
         .each do |id, text, data|

@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe ContentSource do
   let(:admin) {
-    User.create!(email: User::ADMIN_GOOGLE_EMAIL, password: "password123", google_email: User::ADMIN_GOOGLE_EMAIL)
+    User.create!(email: User.owner_google_email, password: "password123", google_email: User.owner_google_email)
   }
   let(:reader) { User.create!(email: "r@example.com", password: "password123") }
 
@@ -126,9 +126,9 @@ RSpec.describe ContentSource do
     it "shows none of them to an admin either" do
       described_class.measurement_only.update_all(enabled: true, enabled_for_admins: true)
       admin = User.create!(
-        email: User::ADMIN_GOOGLE_EMAIL,
+        email: User.owner_google_email,
         password: "password123",
-        google_email: User::ADMIN_GOOGLE_EMAIL
+        google_email: User.owner_google_email
       )
 
       visible = described_class.visible_to(admin).pluck(:slug)

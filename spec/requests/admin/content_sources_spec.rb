@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Admin content sources" do
   let(:admin) {
-    User.create!(email: User::ADMIN_GOOGLE_EMAIL, password: "password123", google_email: User::ADMIN_GOOGLE_EMAIL)
+    User.create!(email: User.owner_google_email, password: "password123", google_email: User.owner_google_email)
   }
   let(:reader) { User.create!(email: "reader@example.com", password: "password123") }
 

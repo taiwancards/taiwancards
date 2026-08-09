@@ -76,10 +76,16 @@ class User < ApplicationRecord
     name.presence || email
   end
 
-  ADMIN_GOOGLE_EMAIL = "taiwancards@pm.me"
+  DEFAULT_GOOGLE_EMAIL = "taiwancards@pm.me"
+
+  def self.owner_google_email = ENV.fetch("ADMIN_GOOGLE_EMAIL", DEFAULT_GOOGLE_EMAIL).strip.downcase
+
+  def self.owner_email = ENV["ADMIN_EMAIL"].to_s.strip.downcase.presence
 
   def admin?
-    google_email.present? && google_email == ADMIN_GOOGLE_EMAIL
+    return false if google_email.blank? || google_email != self.class.owner_google_email
+
+    self.class.owner_email.nil? || email == self.class.owner_email
   end
 
   def restricted_access?
