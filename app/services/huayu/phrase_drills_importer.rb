@@ -122,7 +122,7 @@ module Huayu
     def retire(kept)
       retired = 0
 
-      self.class.drills.where.not(id: kept).find_each do |lexeme|
+      self.class.drills.where.not(id: kept).reorder(nil).find_each do |lexeme|
         if lexeme.sources == [SOURCE]
           lexeme.destroy!
         else
