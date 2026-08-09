@@ -47,7 +47,11 @@ module NavHelper
       [:stats, t("nav.plan"), study_plan_path],
       [:study, t("nav.triage"), triage_path]
     ]
-    items << [:book, t("nav.textbook"), textbook_path] if current_user&.restricted_access?
+    if current_user&.restricted_access?
+      items << [:book, t("nav.textbook"), textbook_path]
+      items << [:sentences, t("nav.phrase_drills"), textbook_phrases_path]
+    end
+
     items
   end
 

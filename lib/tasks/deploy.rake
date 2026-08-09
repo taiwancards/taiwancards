@@ -57,6 +57,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/gloss_override_enricher.rb]
     },
     {
+      name: "phrase_drills",
+      task: "huayu:import_phrase_drills",
+      paths: %w[huayu/phrase_drills.txt],
+      code: %w[app/services/huayu/phrase_drills_importer.rb]
+    },
+    {
       name: "sense_meanings",
       task: "huayu:fill_sense_meanings",
       paths: %w[huayu/sense_glosses.jsonl],

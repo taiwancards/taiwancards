@@ -239,6 +239,7 @@ Rails.application.routes.draw do
 
     scope("textbook", constraints: {book: /\d+/, lesson: /\d+/}) do
       get("", to: "textbook#index", as: :textbook)
+      get("phrases", to: "phrase_drills#index", as: :textbook_phrases)
       post(":book/:lesson/known", to: "textbook#mark_known", as: :textbook_lesson_known)
       get(":book/:lesson", to: "textbook#show", as: :textbook_lesson)
     end

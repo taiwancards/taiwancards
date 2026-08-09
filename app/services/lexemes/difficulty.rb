@@ -37,6 +37,23 @@ module Lexemes
           patches << [id, {"difficulty" => rounded, "corpus_attested" => attested}]
         end
 
+      drills = []
+      Lexeme
+        .where(kind: :phrase)
+        .where("lexemes.data ->> 'drill' IS NOT NULL")
+        .order(:id)
+        .pluck(:id, :text, :data)
+        .each do |id, text, data|
+          raw = raw_for(text, data, char_scores)
+          next if raw.nil?
+
+          drills << [id, raw, nil, nil, text]
+          rounded = (raw.clamp(0.0, 1.0) * SCALE).round
+          next if data["difficulty"] == rounded
+
+          patches << [id, {"difficulty" => rounded}]
+        end
+
       updated = Bulk.patch(
         target: "lexemes",
         columns: {"patch" => "jsonb"},
@@ -46,6 +63,7 @@ module Lexemes
 
       assign_scores(rank_dictionary(rows))
       assign_scores(rank_sentences)
+      assign_scores(drills.sort_by { |id, raw, _rank, _moe, text| [raw, text, id] })
       updated
     end
 

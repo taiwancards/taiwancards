@@ -52,8 +52,8 @@ module Huayu
     def grouped_words
       lexeme
         .parent_links
+        .where(parent_id: Lexeme.where(kind: :word).select(:id))
         .includes(:parent)
-        .select { |link| link.parent.word? }
         .group_by(&:reading)
         .transform_values { |links| by_frequency(links.map(&:parent).uniq) }
     end

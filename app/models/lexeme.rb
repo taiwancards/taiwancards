@@ -12,7 +12,7 @@ class Lexeme < ApplicationRecord
     inverse_of: :parent
   )
   has_many :components, through: :child_links, source: :child
-  has_many :containers, through: :parent_links, source: :parent
+  has_many :containers, -> { where.not(kind: kinds.fetch("phrase")) }, through: :parent_links, source: :parent
   has_many :collection_items, dependent: :delete_all
   has_many :collections, through: :collection_items
 

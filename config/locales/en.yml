@@ -181,6 +181,7 @@ en:
       beside it. Off: zhuyin alone. Off by default — Taiwan reads by zhuyin.
     locale_switch: EN
     textbook: Textbook
+    phrase_drills: Phrases
     my_desks: My decks
     reader: Read texts
     songs: Songs
@@ -231,6 +232,21 @@ en:
       settings: Your profile, statistics, display preferences and the help pages.
     tones_drill: Tones by ear
     profile: Profile
+  phrase_drills:
+    title: Phrases
+    subtitle:
+      one: One sentence to speak through, in alphabetical order. Visible only to you.
+      other: "%{count} sentences to speak through, in alphabetical order. Visible only to you."
+    empty: Nothing here yet — run the import and the sentences will appear.
+    level: Level
+    level_n: "Level %{n}"
+    level_hint: "Difficulty score: %{score} of 1000"
+    any_level: Any level
+    search_placeholder: Find a sentence by hanzi or translation
+    curriculum: Curriculum
+    any_grade: Any
+    grade_hint: "%{scheme} level %{level}"
+    approximate: "* the level covers at least 95% of the words"
   textbook:
     marked_known: "Marked as known: %{count}"
     mark_known_hint: The words move to distant reviews without disappearing altogether

@@ -249,3 +249,11 @@ namespace :huayu do
     RakeProgress.report(**Site::Counts.fetch)
   end
 end
+
+namespace :huayu do
+  desc "Import the drill phrases from data/huayu/phrase_drills.txt and rescore difficulty (idempotent, offline)"
+  task import_phrase_drills: :environment do
+    pp(Huayu::PhraseDrillsImporter.new.call)
+    pp(rescored: Lexemes::Difficulty.new.call)
+  end
+end
