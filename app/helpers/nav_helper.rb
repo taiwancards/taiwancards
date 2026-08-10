@@ -96,6 +96,7 @@ module NavHelper
     [
       [:sentences, t("nav.everyday"), everyday_path],
       [:book, t("nav.phrases"), phrases_path],
+      [:book, t("nav.notices"), notices_path],
       [:desk, t("nav.metro"), metro_path],
       [:book, t("nav.calendar"), calendar_path]
     ]

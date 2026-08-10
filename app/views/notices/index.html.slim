@@ -1,0 +1,63 @@
+- content_for(:title, t("notices.title"))
+- chip = "relative inline-flex shrink-0 cursor-pointer items-center whitespace-nowrap rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-muted"
+
+.py-6.space-y-5.reading-hints.hints-zhuyin data-controller="reading-hints"
+  header.flex.flex-wrap.items-start.justify-between.gap-3
+    .space-y-1
+      h1.text-2xl.font-bold.tracking-tight = t("notices.title")
+      p.max-w-2xl.text-sm.text-muted-foreground = t("notices.subtitle")
+    = render("grammar/hints")
+
+  .flex.flex-wrap.items-center.gap-1
+    = link_to t("notices.all"), notices_path, class: "#{chip} #{@category.nil? ? "border-primary bg-primary/10 font-medium text-foreground" : ""}"
+    - @categories.each do |category|
+      = link_to t("notices.categories.#{category}"), notices_path(category: category),
+        class: "#{chip} #{@category == category ? "border-primary bg-primary/10 font-medium text-foreground" : ""}"
+
+  .space-y-6[
+    data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
+    data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
+    - @notices.each do |notice|
+      article.notice-sheet
+        header.space-y-1
+          .flex.flex-wrap.items-baseline.justify-between.gap-2
+            span.notice-kind lang="zh-TW" = notice.kind
+            .text-right.text-xs.text-muted-foreground
+              - if notice.date
+                div lang="zh-TW" = notice.date
+              - if notice.doc
+                div lang="zh-TW" = notice.doc
+          h2.notice-title
+            span.notice-label lang="zh-TW" = t("notices.subject")
+            span lang="zh-TW" = render("notices/line", text: notice.zh, tokens: @tokens[notice.zh])
+          p.text-sm.text-muted-foreground = notice.name(I18n.locale)
+
+        - unless notice.steps?
+          .notice-label.pt-1 lang="zh-TW" = t("notices.explanation")
+
+        ol.notice-items class=(notice.steps? ? "notice-steps" : nil)
+          - notice.items.each do |item|
+            li.notice-item class=(item.indent? ? "notice-sub" : nil)
+              - if item.head
+                span.notice-step lang="zh-TW"
+                  span.notice-step-number = item.mark
+                  span.notice-step-head = item.head
+              - elsif item.mark.present?
+                span.notice-mark lang="zh-TW" = item.mark
+              .min-w-0.flex-1.space-y-1
+                .notice-zh lang="zh-TW" = render("notices/line", text: item.zh, tokens: @tokens[item.zh])
+                p.text-sm.text-muted-foreground = item.name(I18n.locale)
+
+        footer.space-y-1.pt-2
+          - if notice.closing
+            p.notice-closing lang="zh-TW" = notice.closing["zh"]
+          .flex.flex-wrap.items-end.justify-between.gap-2
+            p.text-xs.text-muted-foreground = notice.closing_name(I18n.locale)
+            .notice-issuer
+              span lang="zh-TW" = notice.issuer["zh"]
+              span.notice-seal lang="zh-TW" title=t("notices.seal") 公告章
+
+    .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
+      data-analyzer-target="popover" class="max-w-[85vw]" ]
+
+  p.text-xs.text-muted-foreground = t("notices.disclaimer")

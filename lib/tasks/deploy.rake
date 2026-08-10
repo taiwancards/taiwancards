@@ -157,6 +157,13 @@ namespace(:deploy) do
       order.call
       :ran
     },
+    "notices" => -> {
+      importer = Huayu::NoticeImporter.new
+      next :skipped unless importer.drift?
+
+      $stdout.puts(importer.call.to_s)
+      :ran
+    },
     "sentence_brackets" => -> {
       repair = Huayu::SentenceBracketRepair.new
       next :skipped unless repair.drift?

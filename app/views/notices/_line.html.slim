@@ -1,0 +1,17 @@
+- tokens = local_assigns[:tokens]
+- text = local_assigns.fetch(:text)
+
+- if tokens.blank?
+  = text
+- else
+  - tokens.each do |token|
+    - if token.kind == :literal
+      span style="white-space: pre-wrap" = token.text
+    - else
+      span.cursor-pointer.rounded.transition-colors[class="hover:bg-primary/10"
+        data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
+        data-action="mouseenter->analyzer#open click->analyzer#open" ]
+        - if (zhuyin = drill_token_zhuyin(token))
+          = zhuyin_ruby(token.text, zhuyin, context: :text)
+        - else
+          = token.text

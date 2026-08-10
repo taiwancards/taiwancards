@@ -10,7 +10,7 @@
     = render("grammar/hints")
 
   = form_with url: textbook_phrases_path, method: :get, class: "space-y-2 rounded-xl border border-border p-3",
-    data: {controller: "phrase-filters", action: "change->phrase-filters#submit"} do
+    data: {controller: "filters", action: "change->filters#submit"} do
     .flex.items-center.gap-2
       .w-24.shrink-0.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("phrase_drills.level")
       .flex.flex-1.gap-1.overflow-x-auto class="py-0.5"
@@ -24,9 +24,9 @@
     .flex.flex-wrap.items-center.gap-2
       .w-24.shrink-0.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("phrase_drills.curriculum")
       = select_tag :scheme, options_for_select([[t("phrase_drills.any_grade"), ""], %w[TOCFL tocfl], %w[TBCL tbcl]], @scheme),
-        class: picker, data: {phrase_filters_target: "scheme", action: "change->phrase-filters#changeScheme"}
+        class: picker, data: {filters_target: "scheme", action: "change->filters#changeScheme"}
       = select_tag :grade, options_for_select([[t("phrase_drills.any_grade"), ""]] + grade_options, @grade),
-        class: picker, data: {phrase_filters_target: "grade"}
+        class: picker, data: {filters_target: "grade"}
       - PhraseDrillsController::BOOKS.each do |book|
         label class=chip
           = radio_button_tag(:book, book, @book == book, class: "sr-only")
@@ -50,15 +50,6 @@
       data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
       - @phrases.zip(@tokens).each do |phrase, tokens|
         .space-y-1.px-4.py-3 class="hover:bg-muted/50"
-          .flex.flex-wrap.items-center.justify-end.gap-1
-            span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.book_hint")
-              = drill_book(phrase)
-            - PhraseDrillsController::SCHEMES.each do |scheme|
-              - next unless (grade = drill_grade(phrase, scheme))
-              span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.grade_hint", scheme: scheme.upcase, level: grade.delete("*"))
-                = "#{scheme.upcase} #{grade}"
-            span title=t("phrase_drills.level_hint", score: phrase.data["difficulty"])
-              = score_badge(phrase)
           .text-xl.leading-loose lang="zh-TW"
             - tokens.each do |token|
               - if token.kind == :literal
@@ -72,7 +63,16 @@
                   - else
                     = token.text
           p.py-line.pinyin-locked.text-sm.text-muted-foreground = drill_pinyin(tokens)
-          p.text-sm = phrase.meaning
+          .sentence-body
+            .sentence-tags
+              span.sentence-tag title=t("phrase_drills.book_hint") = drill_book(phrase)
+              - PhraseDrillsController::SCHEMES.each do |scheme|
+                - next unless (grade = drill_grade(phrase, scheme))
+                span.sentence-tag title=t("phrase_drills.grade_hint", scheme: scheme.upcase, level: grade.delete("*"))
+                  = "#{scheme.upcase} #{grade}"
+              span title=t("phrase_drills.level_hint", score: phrase.data["difficulty"])
+                = score_badge(phrase)
+            p.text-sm = phrase.meaning
 
       .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
         data-analyzer-target="popover" class="max-w-[85vw]" ]

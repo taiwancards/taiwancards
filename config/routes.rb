@@ -129,6 +129,7 @@ Rails.application.routes.draw do
     )
     get("everyday", to: "everyday#index", as: :everyday)
     get("phrases", to: "phrases#index", as: :phrases)
+    get("notices", to: "notices#index", as: :notices)
     get("calendar", to: "calendar#show", as: :calendar)
     get("variants", to: "variants#show", as: :variants)
     get("metro", to: "metro#show", as: :metro)

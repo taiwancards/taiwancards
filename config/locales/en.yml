@@ -205,6 +205,7 @@ en:
     sentences: Sentences
     liangci: Measure words 量詞
     phrases: "Phrasebook"
+    notices: Notice board
     everyday: Everyday life
     variants: Vocabulary differences
     metro: Taipei metro
@@ -3332,3 +3333,19 @@ en:
         plan:
           title: A plan up to your exam
           body: If you need TOCFL, name the level and the date and the app works out a daily quota. If you do not, skip it.
+  notices:
+    title: Notice board
+    subject: "Subject:"
+    explanation: "Details:"
+    seal: "seal"
+    all: All
+    subtitle: The paper notices that hang in the lobby of every Taiwanese building — the wording, the layout and the vocabulary you actually meet on the wall. Tap any word to look it up.
+    disclaimer: These are templates written after the conventions of Taiwanese residential notices. No real community, address, telephone number or person appears in them.
+    categories:
+      safety: Safety
+      building: The building
+      festival: Festivals
+      utilities: Water and power
+      daily: Everyday life
+      committee: Committee
+      health: Health
