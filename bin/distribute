@@ -162,6 +162,7 @@ RUNTIME_ARCHIVES=(
 RUNTIME_FILES=(
   "data/content_sources.json|content_sources.json"
   "data/fonts.json|fonts.json"
+  "dict_and_corpora/dictionaries/cedict.json|dictionaries/cedict.json"
   "dict_and_corpora/dictionaries/simp_to_trad.txt|dictionaries/simp_to_trad.txt"
   "data/pronunciation/thresholds.json|pronunciation/thresholds.json"
   "data/pronunciation/inventory.json|pronunciation/inventory.json"
