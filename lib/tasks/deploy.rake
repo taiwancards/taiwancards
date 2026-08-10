@@ -215,6 +215,13 @@ namespace(:deploy) do
     result
   end
 
+  RECOVER = lambda do
+    ActiveRecord::Base.connection.verify!
+    MaintenanceWindow.open!
+  rescue => e
+    warn("deploy:sync could not restore the database connection: #{e.class}: #{e.message}")
+  end
+
   desc("Import committed data sources that changed since the last boot (idempotent, no-op when unchanged)")
   task(sync: :environment) do
     started = Time.current
@@ -240,6 +247,7 @@ namespace(:deploy) do
       rescue => e
         failed << "#{step[:name]} (#{e.class})"
         warn("deploy:sync step #{step[:name]} failed: #{e.class}: #{e.message}")
+        RECOVER.call
       end
     end
 
@@ -248,15 +256,21 @@ namespace(:deploy) do
     rescue => e
       failed << "#{name} (#{e.class})"
       warn("deploy:sync step #{name} failed: #{e.class}: #{e.message}")
+      RECOVER.call
     end
 
     if (ran - WARMING_STEPS).any?
-      STEP_TIMER.call("derived_caches") do
-        ContentCache.clear
-        Site::Counts.warm!
-        Pronunciation::SyllableIndex.for
+      begin
+        STEP_TIMER.call("derived_caches") do
+          ContentCache.clear
+          Site::Counts.warm!
+          Pronunciation::SyllableIndex.for
+        end
+        ran << "derived_caches"
+      rescue => e
+        failed << "derived_caches (#{e.class})"
+        warn("deploy:sync step derived_caches failed: #{e.class}: #{e.message}")
       end
-      ran << "derived_caches"
     else
       skipped << "derived_caches"
     end

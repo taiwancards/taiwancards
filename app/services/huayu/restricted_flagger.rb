@@ -6,19 +6,9 @@ module Huayu
     OPEN_PREFIXES = ["TOCFL ", "TBCL ", "Kangxi", "MOE "].freeze
 
     def call
-      restricted = like_any(RESTRICTED_PREFIXES)
-      open = like_any(OPEN_PREFIXES)
-
-      sql = <<~SQL
-        UPDATE lexemes SET restricted = (
-          kind = #{Lexeme.kinds.fetch("phrase")}
-          AND EXISTS (SELECT 1 FROM jsonb_array_elements_text(sources) s WHERE #{restricted})
-          AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements_text(sources) s WHERE #{open})
-        )
-      SQL
-        .squish
-
-      Lexeme.connection.exec_update(sql)
+      Lexeme.connection.exec_update(
+        "UPDATE lexemes SET restricted = #{verdict} WHERE #{candidates} AND restricted IS DISTINCT FROM #{verdict}"
+      )
     end
 
     def drift?
@@ -33,6 +23,16 @@ module Huayu
     end
 
     private
+
+    def candidates = "(restricted OR kind = #{Lexeme.kinds.fetch("phrase")})"
+
+    def verdict
+      @verdict ||= <<~SQL.squish
+        (kind = #{Lexeme.kinds.fetch("phrase")}
+          AND EXISTS (SELECT 1 FROM jsonb_array_elements_text(sources) s WHERE #{like_any(RESTRICTED_PREFIXES)})
+          AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements_text(sources) s WHERE #{like_any(OPEN_PREFIXES)}))
+      SQL
+    end
 
     def like_any(prefixes)
       prefixes.map { |p| "s LIKE #{Lexeme.connection.quote("#{p}%")}" }.join(" OR ")
