@@ -50,28 +50,27 @@
       data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
       - @phrases.zip(@tokens).each do |phrase, tokens|
         .space-y-1.px-4.py-3 class="hover:bg-muted/50"
-          .flex.flex-wrap.items-start.gap-x-3.gap-y-1
-            .min-w-0.flex-1.text-xl.leading-loose lang="zh-TW"
-              - tokens.each do |token|
-                - if token.kind == :literal
-                  span style="white-space: pre-wrap" = token.text
-                - else
-                  span.cursor-pointer.rounded.transition-colors[class="hover:bg-primary/10"
-                    data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
-                    data-action="mouseenter->analyzer#open click->analyzer#open" ]
-                    - if (zhuyin = drill_token_zhuyin(token))
-                      = zhuyin_ruby(token.text, zhuyin, context: :text)
-                    - else
-                      = token.text
-            .flex.shrink-0.flex-wrap.items-center.gap-1
-              span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.book_hint")
-                = drill_book(phrase)
-              - PhraseDrillsController::SCHEMES.each do |scheme|
-                - next unless (grade = drill_grade(phrase, scheme))
-                span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.grade_hint", scheme: scheme.upcase, level: grade.delete("*"))
-                  = "#{scheme.upcase} #{grade}"
-              span title=t("phrase_drills.level_hint", score: phrase.data["difficulty"])
-                = score_badge(phrase)
+          .flex.flex-wrap.items-center.justify-end.gap-1
+            span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.book_hint")
+              = drill_book(phrase)
+            - PhraseDrillsController::SCHEMES.each do |scheme|
+              - next unless (grade = drill_grade(phrase, scheme))
+              span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" title=t("phrase_drills.grade_hint", scheme: scheme.upcase, level: grade.delete("*"))
+                = "#{scheme.upcase} #{grade}"
+            span title=t("phrase_drills.level_hint", score: phrase.data["difficulty"])
+              = score_badge(phrase)
+          .text-xl.leading-loose lang="zh-TW"
+            - tokens.each do |token|
+              - if token.kind == :literal
+                span style="white-space: pre-wrap" = token.text
+              - else
+                span.cursor-pointer.rounded.transition-colors[class="hover:bg-primary/10"
+                  data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
+                  data-action="mouseenter->analyzer#open click->analyzer#open" ]
+                  - if (zhuyin = drill_token_zhuyin(token))
+                    = zhuyin_ruby(token.text, zhuyin, context: :text)
+                  - else
+                    = token.text
           p.py-line.pinyin-locked.text-sm.text-muted-foreground = drill_pinyin(tokens)
           p.text-sm = phrase.meaning
 
