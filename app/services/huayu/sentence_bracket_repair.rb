@@ -45,9 +45,9 @@ module Huayu
     def damaged
       @damaged ||= Lexeme
         .where(kind: :sentence)
-        .where("text ~ ?", SentenceBrackets::SQL_EMPTY)
+        .where("text ~ ?", SentenceBrackets::SQL_ANY)
         .pluck(:id, :text)
-        .select { |_, text| SentenceBrackets.hollow?(text) }
+        .select { |_, text| SentenceBrackets.residue?(text) }
     end
 
     def partition(rows)

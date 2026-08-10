@@ -92,6 +92,24 @@ module Huayu
       text.to_s.match?(BOPOMOFO)
     end
 
+    HAN_ONLY = /\A\p{Han}+\z/
+    ERHUA = "兒"
+
+    def syllables(zhuyin)
+      zhuyin.to_s.split(/[[:space:]　]+/).count(&:present?)
+    end
+
+    def malformed?(text, zhuyin)
+      return false unless text.to_s.match?(HAN_ONLY)
+
+      counted = syllables(zhuyin)
+      return false if counted.zero?
+
+      accepted = [text.length]
+      accepted << text.length - 1 if text.end_with?(ERHUA)
+      accepted.exclude?(counted)
+    end
+
     def reading_terms(pinyin, zhuyin)
       [
         pinyin.to_s.downcase.gsub(/[[:space:]]+/, ""),

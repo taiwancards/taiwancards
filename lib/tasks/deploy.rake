@@ -136,6 +136,20 @@ namespace(:deploy) do
       merge.call
       :ran
     },
+    "reading_links" => -> {
+      linker = Huayu::ReadingLinker.new
+      next :skipped unless linker.drift?
+
+      linker.call
+      :ran
+    },
+    "reading_order" => -> {
+      order = Lexemes::ReadingOrder.new
+      next :skipped unless order.drift?
+
+      $stdout.puts(order.call.to_s)
+      :ran
+    },
     "sense_order" => -> {
       order = Lexemes::SenseOrder.new
       next :skipped unless order.drift?
@@ -148,6 +162,13 @@ namespace(:deploy) do
       next :skipped unless repair.drift?
 
       $stdout.puts(repair.call.to_s)
+      :ran
+    },
+    "sentence_profiles" => -> {
+      stale = Huayu::SentenceProfiler.stale
+      next :skipped unless stale.exists?
+
+      Huayu::SentenceProfiler.new(scope: stale).call
       :ran
     },
     "character_glosses" => -> {

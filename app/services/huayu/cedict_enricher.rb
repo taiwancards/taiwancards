@@ -17,10 +17,12 @@ module Huayu
         next if entry.nil?
 
         changed = false
+        broken = truncated?(lexeme)
 
-        if lexeme.readings["pinyin"].blank? && entry["pinyin"].present?
+        if (lexeme.readings["pinyin"].blank? || broken) && usable?(lexeme.text, entry["pinyin"])
           lexeme.readings = lexeme.readings.merge("pinyin" => entry["pinyin"])
-          filled[:pinyin] += 1
+          lexeme.readings = lexeme.readings.except("zhuyin") if broken
+          filled[broken ? :repaired : :pinyin] += 1
           changed = true
         end
 
@@ -44,6 +46,18 @@ module Huayu
       end
 
       filled
+    end
+
+    private
+
+    def truncated?(lexeme)
+      ReadingForms.malformed?(lexeme.text, lexeme.readings["zhuyin"])
+    end
+
+    def usable?(text, pinyin)
+      return false if pinyin.blank?
+
+      !ReadingForms.malformed?(text, Huayu::Zhuyin.from_pinyin(pinyin))
     end
   end
 end

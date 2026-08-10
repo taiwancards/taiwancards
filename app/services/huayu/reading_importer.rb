@@ -19,10 +19,13 @@ module Huayu
 
       Lexeme.where(kind: KINDS).find_each do |lexeme|
         readings = readings_for(lexeme, stats)
-        next if readings.blank? || readings == lexeme.reading_set
+        next if readings.blank?
+
+        headline = ReadingForms.malformed?(lexeme.text, lexeme.readings["zhuyin"])
+        next if readings == lexeme.reading_set && !headline
 
         lexeme.data = lexeme.data.merge("readings" => readings)
-        lexeme.readings = readings.first
+        lexeme.readings = readings.first if headline || lexeme.readings["zhuyin"].blank?
         lexeme.save!
         stats[:written] += 1
         stats[:several] += 1 if readings.size > 1
@@ -47,7 +50,7 @@ module Huayu
 
       mine, rest = merged.partition { |one| same?(one, canonical) }
       return mine + rest if mine.any?
-      return [canonical] + rest if official.nil?
+      return [canonical] + rest unless ReadingForms.malformed?(lexeme.text, canonical["zhuyin"])
 
       stats[:replaced] += 1
       rest

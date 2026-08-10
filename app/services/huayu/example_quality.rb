@@ -59,12 +59,10 @@ module Huayu
     ]
       .freeze
 
+    extend MemoizedInstance
+
     class << self
       def call(...) = instance.call(...)
-
-      def instance = @instance ||= new
-
-      def reset! = @instance = nil
     end
 
     def initialize(frequency: WordFrequency)

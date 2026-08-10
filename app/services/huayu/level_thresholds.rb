@@ -9,11 +9,9 @@ module Huayu
 
     COLUMNS = SCALES.to_h { |scale| [scale, STEPS.to_h { |step| [step, :"#{scale}_#{step}"] }] }.freeze
 
+    extend MemoizedInstance
+
     class << self
-      def instance = @instance ||= new
-
-      def reset! = @instance = nil
-
       def columns_for(scale) = COLUMNS.fetch(scale).values
 
       delegate :for_tokens, :for_level, to: :instance

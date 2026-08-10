@@ -8,8 +8,19 @@ module Huayu
     APPROXIMATE_COVERAGE = 0.9
     MAX_UNKNOWN_FOR_APPROXIMATE = 2
 
-    def initialize(io: $stdout)
+    SQL_HAN = "[一-鿿㐀-䶿]"
+
+    def self.stale
+      Lexeme
+        .where(kind: %i[sentence collocation])
+        .joins("LEFT JOIN sentence_profiles profile ON profile.lexeme_id = lexemes.id")
+        .where("lexemes.text ~ ?", SQL_HAN)
+        .where("profile.lexeme_id IS NULL OR profile.difficulty IS DISTINCT FROM (lexemes.data ->> 'difficulty')::int")
+    end
+
+    def initialize(io: $stdout, scope: nil)
       @io = io
+      @scope = scope
       @analyzer = TextAnalyzer.new
     end
 
@@ -31,7 +42,7 @@ module Huayu
         Bulk.patch(target: "lexemes", columns: THRESHOLD_TYPES, rows: computed.map(&:last))
       end
 
-      atomic_thresholds
+      atomic_thresholds if @scope.nil?
       report
     end
 
@@ -57,7 +68,7 @@ module Huayu
       "updated_at" => "timestamp"
     }.freeze
 
-    def composite = Lexeme.where(kind: %i[sentence collocation])
+    def composite = @scope || Lexeme.where(kind: %i[sentence collocation])
 
     def warm
       thresholds

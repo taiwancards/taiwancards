@@ -8,11 +8,9 @@ module Huayu
 
     NAMES = {COMMON => "常用", SECONDARY => "次常用", RARE => "罕用"}.freeze
 
+    extend MemoizedInstance
+
     class << self
-      def instance = @instance ||= new
-
-      def reset! = @instance = nil
-
       delegate :tier, :text_tier, :listed?, :name, :size, :chars_in, :exceptions, to: :instance
     end
 

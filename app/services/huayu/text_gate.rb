@@ -36,11 +36,9 @@ module Huayu
       punctuation: :strict
     )
 
+    extend MemoizedInstance
+
     class << self
-      def instance = @instance ||= new
-
-      def reset! = @instance = nil
-
       delegate :call, :ok?, :tier_of, to: :instance
     end
 

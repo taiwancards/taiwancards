@@ -117,4 +117,40 @@ RSpec.describe Huayu::ReadingLinker do
     expect(run).to(include(unresolved: 1))
     expect(link_reading(unknown, jue)).to(be_nil)
   end
+
+  it "clears a reading the character no longer has" do
+    qing = create(:lexeme, :character, text: "青", readings: {"pinyin" => "qīng", "zhuyin" => "ㄑㄧㄥ"})
+    unknown = word("覺青", {}, [jue, qing])
+    LexemeLink.find_by(parent: unknown, child: jue).update_column(:reading, "gǔ")
+
+    expect(run).to(include(cleared: 1))
+    expect(link_reading(unknown, jue)).to(be_nil)
+  end
+
+  it "still links what it can when the reference dictionaries are missing" do
+    school = word("學校", {"zhuyin" => "ㄒㄩㄝˊ　ㄒㄧㄠˋ"}, [create(:lexeme, :character, text: "學"), xiao])
+
+    described_class.new(io: StringIO.new, cedict: dir.join("absent.json"), concised: dir.join("gone.json")).call
+
+    expect(link_reading(school, xiao)).to(eq("xiào"))
+  end
+
+  it "reports drift while a character with one reading has an unlinked word" do
+    word("中午", {}, [create(:lexeme, :character, text: "中"), wu])
+
+    linker = described_class.new(io: StringIO.new, cedict: cedict, concised: concised)
+    expect(linker.drift?).to(be(true))
+
+    linker.call
+    expect(described_class.new(io: StringIO.new, cedict: cedict, concised: concised).drift?).to(be(false))
+  end
+
+  it "does not call an unresolvable 破音字 link drift" do
+    qing = create(:lexeme, :character, text: "青", readings: {"pinyin" => "qīng", "zhuyin" => "ㄑㄧㄥ"})
+    word("覺青", {}, [jue, qing])
+
+    run
+
+    expect(described_class.new(io: StringIO.new, cedict: cedict, concised: concised).drift?).to(be(false))
+  end
 end

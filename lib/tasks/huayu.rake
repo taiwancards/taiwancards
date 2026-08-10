@@ -105,24 +105,7 @@ namespace(:huayu) do
 
   desc("Order every 破音字 character's readings by how often each is used, Taiwanese first (idempotent)")
   task(reorder_readings: :environment) do
-    rank = Huayu::ReadingRank.new
-    weights = rank.weights
-    scope = Lexeme.where(kind: :character).where("jsonb_array_length(data->'readings') > 1")
-    total = scope.count
-    changed = 0
-
-    RakeProgress.counter(total, "破音字") do |tick|
-      scope.find_each do |lexeme|
-        ordered = rank.order(lexeme, weights[lexeme.id] || Hash.new(0.0))
-        if ordered != lexeme.reading_set
-          lexeme.update_columns(readings: ordered.first, data: lexeme.data.merge("readings" => ordered))
-          changed += 1
-        end
-        tick.call
-      end
-    end
-
-    puts("reading order updated: #{changed}")
+    pp(Lexemes::ReadingOrder.new.call)
   end
 
   desc("Collapse full-width and stray whitespace in stored readings to a single space (idempotent)")

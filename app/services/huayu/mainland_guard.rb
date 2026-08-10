@@ -2,11 +2,9 @@
 
 module Huayu
   class MainlandGuard
+    extend MemoizedInstance
+
     class << self
-      def instance = @instance ||= new
-
-      def reset! = @instance = nil
-
       delegate :offender, :marker?, :soft_offender, to: :instance
     end
 

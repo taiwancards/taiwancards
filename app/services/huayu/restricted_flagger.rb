@@ -27,11 +27,12 @@ module Huayu
     def candidates = "(restricted OR kind = #{Lexeme.kinds.fetch("phrase")})"
 
     def verdict
-      @verdict ||= <<~SQL.squish
+      @verdict ||= <<~SQL
         (kind = #{Lexeme.kinds.fetch("phrase")}
           AND EXISTS (SELECT 1 FROM jsonb_array_elements_text(sources) s WHERE #{like_any(RESTRICTED_PREFIXES)})
           AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements_text(sources) s WHERE #{like_any(OPEN_PREFIXES)}))
       SQL
+        .squish
     end
 
     def like_any(prefixes)

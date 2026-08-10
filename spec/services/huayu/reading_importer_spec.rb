@@ -64,11 +64,27 @@ RSpec.describe Huayu::ReadingImporter do
     expect(lexeme.reload.reading_set.map { |reading| reading["zhuyin"] }).to(eq(%w[ㄐㄩㄝˊ ㄐㄧㄠˋ]))
   end
 
-  it "drops a reading the learner dictionary does not list" do
+  it "keeps a sound reading the learner dictionary does not list, in front of the ones it does" do
     lexeme = character("企", {"pinyin" => "qǐ", "zhuyin" => "ㄑㄧˇ"})
+
+    expect(import).to(include(replaced: 0))
+    expect(lexeme.reload.reading_set).to(
+      eq([{"pinyin" => "qǐ", "zhuyin" => "ㄑㄧˇ"}, {"pinyin" => "qì", "zhuyin" => "ㄑㄧˋ"}])
+    )
+    expect(lexeme.readings).to(eq({"pinyin" => "qǐ", "zhuyin" => "ㄑㄧˇ"}))
+  end
+
+  it "drops a reading whose syllables cannot belong to the text" do
+    lexeme = create(
+      :lexeme,
+      kind: :word,
+      text: "企",
+      readings: {"pinyin" => "qǐ qì", "zhuyin" => "ㄑㄧˇ ㄑㄧˋ"}
+    )
 
     expect(import).to(include(replaced: 1))
     expect(lexeme.reload.reading_set).to(eq([{"pinyin" => "qì", "zhuyin" => "ㄑㄧˋ"}]))
+    expect(lexeme.readings).to(eq({"pinyin" => "qì", "zhuyin" => "ㄑㄧˋ"}))
   end
 
   it "falls back to the revised dictionary for characters the learner edition skips" do

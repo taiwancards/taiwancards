@@ -81,6 +81,29 @@ RSpec.describe Huayu::SentenceBracketRepair do
     expect(described_class.new).not_to(be_drift)
   end
 
+  it "drops a quote mark whose partner was left in the next sentence" do
+    lexeme = sentence("俗話說：「欲速則不達。")
+
+    result = described_class.new.call
+
+    expect(result.cleaned).to(eq(1))
+    expect(lexeme.reload.text).to(eq("俗話說：欲速則不達。"))
+  end
+
+  it "drops a bracket opened but never closed" do
+    lexeme = sentence("(寶寶非新北市市民之家長也可參加，但無法領取禮袋。")
+
+    described_class.new.call
+
+    expect(lexeme.reload.text).to(eq("寶寶非新北市市民之家長也可參加，但無法領取禮袋。"))
+  end
+
+  it "leaves balanced quotation alone" do
+    sentence("他說「今天天氣真好」，然後就出門了。")
+
+    expect(described_class.new).not_to(be_drift)
+  end
+
   it "reports without writing in a dry run" do
     lexeme = sentence("北港（）古稱笨港，位於雲林縣的一座城鎮。")
 

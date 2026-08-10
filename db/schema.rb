@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_10_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_10_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -417,14 +417,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_120000) do
   create_table("sentence_profiles", force: :cascade) do |t|
     t.datetime("created_at", null: false)
     t.integer("difficulty", default: 0, null: false)
-    t.integer("formalities", default: [], null: false, array: true)
     t.boolean("freq_exact", default: false, null: false)
     t.integer("freq_index")
     t.integer("han_length", default: 0, null: false)
     t.bigint("lexeme_id", null: false)
-    t.integer("mediums", default: [], null: false, array: true)
-    t.integer("productions", default: [], null: false, array: true)
-    t.integer("purposes", default: [], null: false, array: true)
     t.integer("registers", default: [], null: false, array: true)
     t.integer("source_ids", default: [], null: false, array: true)
     t.boolean("tbcl_exact", default: false, null: false)
@@ -434,12 +430,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_120000) do
     t.integer("unknown_count", default: 0, null: false)
     t.datetime("updated_at", null: false)
     t.index(["difficulty"], name: "index_sentence_profiles_on_difficulty")
-    t.index(["formalities"], name: "index_sentence_profiles_on_formalities", using: :gin)
     t.index(["freq_index", "difficulty"], name: "index_sentence_profiles_on_freq")
     t.index(["lexeme_id"], name: "index_sentence_profiles_on_lexeme_id", unique: true)
-    t.index(["mediums"], name: "index_sentence_profiles_on_mediums", using: :gin)
-    t.index(["productions"], name: "index_sentence_profiles_on_productions", using: :gin)
-    t.index(["purposes"], name: "index_sentence_profiles_on_purposes", using: :gin)
     t.index(["registers"], name: "index_sentence_profiles_on_registers", using: :gin)
     t.index(["source_ids"], name: "index_sentence_profiles_on_source_ids", using: :gin)
     t.index(["tbcl_index", "difficulty"], name: "index_sentence_profiles_on_tbcl")

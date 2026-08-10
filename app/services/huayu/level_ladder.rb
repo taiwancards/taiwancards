@@ -8,11 +8,9 @@ module Huayu
     MAX_LEVEL = 7
     BUCKETS = 101
 
+    extend MemoizedInstance
+
     class << self
-      def instance = @instance ||= new
-
-      def reset! = @instance = nil
-
       delegate :tolerance, :table, to: :instance
     end
 

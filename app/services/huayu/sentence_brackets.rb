@@ -21,10 +21,7 @@ module Huayu
         PAIRS.map { |open, close| /#{Regexp.escape(open)}#{FILLER}#{Regexp.escape(close)}/ }
       )
       .freeze
-    SQL_EMPTY = PAIRS
-      .map { |open, close| "#{Regexp.escape(open)}#{FILLER}#{Regexp.escape(close)}" }
-      .join("|")
-      .freeze
+    SQL_ANY = "[#{Regexp.escape(PAIRS.keys.join + PAIRS.values.join)}]"
     SEPARATORS = "，、"
     TRAILING = "。！？；："
 

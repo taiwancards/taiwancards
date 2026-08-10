@@ -225,7 +225,7 @@ module Huayu
         .gsub(/[[:space:]]+/, "")
         .gsub(COMPAT) { |char| char.unicode_normalize(:nfkc) }
 
-      return SentenceText.trim(text) unless SentenceBrackets.hollow?(text)
+      return SentenceText.trim(text) unless SentenceBrackets.residue?(text)
       return "" if SentenceBrackets.beheaded?(text)
 
       SentenceBrackets.clean(text)

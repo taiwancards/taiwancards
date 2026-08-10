@@ -21,19 +21,25 @@ module Huayu
     def reading_groups(limit: nil)
       senses = grouped_senses
       words = grouped_words
+      listed = readings.filter_map { |reading| reading["pinyin"].presence }
+
       groups = readings.map do |reading|
         key = reading["pinyin"]
-        ReadingGroup.new(
-          reading: reading,
-          senses: senses.fetch(key, []),
-          words: limit ? words.fetch(key, []).first(limit) : words.fetch(key, [])
-        )
+        ReadingGroup.new(reading: reading, senses: senses.fetch(key, []), words: capped(words[key], limit))
       end
 
-      rest = words.fetch(nil, [])
-      rest = rest.first(limit) if limit
+      groups += senses
+        .except(nil, *listed)
+        .map { |key, extra| ReadingGroup.new(reading: {"pinyin" => key}, senses: extra, words: []) }
+
+      rest = capped(words[nil], limit)
       groups += [ReadingGroup.new(reading: nil, senses: [], words: rest)] if rest.any?
       groups.reject { |group| group.senses.empty? && group.words.empty? }
+    end
+
+    def capped(words, limit)
+      words = words.to_a
+      limit ? words.first(limit) : words
     end
 
     TOP_WORDS_LIMIT = 10

@@ -12,6 +12,8 @@ module Huayu
       @concised_path = Pathname(concised || AppData.path(CONCISED))
     end
 
+    def drift? = unlinked.exists?
+
     def call
       @readings = character_readings
       @cedict = cedict_syllables
@@ -24,7 +26,9 @@ module Huayu
         reading = resolve(row, stats)
         if reading.blank?
           stats[:unresolved] += 1
-          next
+          next unless disowned?(row)
+
+          stats[:cleared] += 1
         end
 
         pending[reading] << row.id
@@ -42,6 +46,19 @@ module Huayu
 
     private
 
+    def disowned?(row)
+      return false if row.stored.blank?
+
+      @readings[row.child_text].to_a.none? { |one| one["pinyin"] == row.stored }
+    end
+
+    def unlinked
+      rows
+        .where(reading: nil)
+        .where("coalesce(jsonb_array_length(child.data -> 'readings'), 1) = 1")
+        .where("child.readings <> '{}'::jsonb OR child.data -> 'readings' <> '[]'::jsonb")
+    end
+
     def rows
       LexemeLink
         .joins("JOIN lexemes parent ON parent.id = lexeme_links.parent_id")
@@ -51,6 +68,7 @@ module Huayu
         .select(
           "lexeme_links.id",
           "lexeme_links.position",
+          "lexeme_links.reading AS stored",
           "child.text AS child_text",
           "parent.text AS parent_text",
           "parent.readings AS parent_readings"
@@ -150,6 +168,8 @@ module Huayu
     end
 
     def cedict_syllables
+      return {} unless @cedict_path.exist?
+
       JSON
         .parse(@cedict_path.read)
         .transform_values { |entry| entry["pinyin"].to_s.split(/\s+/) }
@@ -157,6 +177,8 @@ module Huayu
     end
 
     def moe_examples
+      return {} unless @concised_path.exist?
+
       JSON.parse(@concised_path.read).each_with_object({}) do |entry, all|
         text = entry["word"].to_s
         next unless text.chars.size == 1
@@ -183,6 +205,7 @@ module Huayu
       @io.puts(format("by CC-CEDICT pinyin   : %6d", stats[:pinyin]))
       @io.puts(format("by dictionary examples    : %6d", stats[:examples]))
       @io.puts(format("unresolved        : %6d", stats[:unresolved]))
+      @io.puts(format("cleared, the character dropped that reading : %6d", stats[:cleared]))
     end
   end
 end

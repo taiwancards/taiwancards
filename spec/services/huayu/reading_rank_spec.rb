@@ -13,15 +13,16 @@ RSpec.describe Huayu::ReadingRank do
     )
   end
 
-  def word(text, reading, rank)
-    lexeme = create(:lexeme, kind: :word, text:, data: {"freq_rank" => rank})
+  def word(text, reading, rank, level: "B1")
+    lexeme = create(:lexeme, kind: :word, text:, data: {"freq_rank" => rank, "tocfl_level" => level}.compact)
     LexemeLink.create!(parent: lexeme, child: zhi, position: 1, reading:)
     lexeme
   end
 
   it "puts the reading that its common words use first" do
-    word("品質", "zhí", 300)
+    word("品質", "zhí", 300, level: "A2")
     word("本質", "zhí", 900)
+    word("素質", "zhí", 2000)
     word("人質", "zhì", 8000)
 
     ordered = described_class.new.order(zhi.reload)
@@ -42,11 +43,29 @@ RSpec.describe Huayu::ReadingRank do
   end
 
   it "keeps a reading that has no words below one that does, not above" do
-    word("品質", "zhí", 300)
+    word("品質", "zhí", 300, level: "A2")
+    word("本質", "zhí", 900)
+    word("素質", "zhí", 2000)
 
     ordered = described_class.new.order(zhi.reload)
 
     expect(ordered.first["zhuyin"]).to(eq("ㄓˊ"))
+  end
+
+  it "leaves the dictionary order alone when too little graded vocabulary backs the leader" do
+    word("品質", "zhí", 300, level: nil)
+    word("人質", "zhì", 8000, level: nil)
+
+    expect(described_class.new.order(zhi.reload).map { |r| r["zhuyin"] }).to(eq(%w[ㄓˋ ㄓˊ]))
+  end
+
+  it "refuses to promote a reading whose vocabulary is harder than its rival's" do
+    word("品質", "zhí", 9000, level: "A2")
+    word("人質", "zhì", 300, level: "C")
+    word("實質", "zhì", 400, level: "C")
+    word("質詢", "zhì", 500, level: "C")
+
+    expect(described_class.new.order(zhi.reload).map { |r| r["zhuyin"] }).to(eq(%w[ㄓˋ ㄓˊ]))
   end
 
   it "lifts a spoken function reading that has few compounds above the rare literary ones" do
