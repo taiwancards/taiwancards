@@ -7,7 +7,7 @@ module Huayu
     MINIMUM_WORD = 3
     STOP = %w[to a an the of in on for and or with by as at is be one used].to_set.freeze
     REGISTER = /\A(?:literary|figurative|colloquial|книжн\.|перен\.|разг\.)\s*:\s*/i
-    SENSES_DESCRIBE_ANOTHER_READING = %w[台 并 洒].freeze
+    SENSES_DESCRIBE_ANOTHER_READING = %w[台].freeze
 
     Result = Data.define(:examined, :texts) do
       def repaired = texts.length
@@ -61,6 +61,8 @@ module Huayu
     end
 
     def rebuild(lexeme)
+      return nil if lexeme.reading_set.length > 1
+
       senses = lexeme.senses_for_main_reading
       return nil if senses.empty?
       return nil unless contradicted?(lexeme, senses)

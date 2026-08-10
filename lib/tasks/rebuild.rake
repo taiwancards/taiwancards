@@ -172,11 +172,13 @@ namespace(:huayu) do
 
   desc("Index which words occur in which sentences, for examples on word pages")
   task(link_sentence_words: :environment) do
+    MaintenanceWindow.open!
     Huayu::SentenceWordLinker.new.call
   end
 
   desc("Re-split every stored sentence with the current segmenter")
   task(resegment: :environment) do
+    MaintenanceWindow.open!
     analyzer = Huayu::TextAnalyzer.new
     difficulty = Huayu::SentenceDifficulty.new
     changed = 0
@@ -212,6 +214,7 @@ namespace(:huayu) do
 
   desc("Place every sentence on the TOCFL, school-grade and frequency scales")
   task(profile_sentences: :environment) do
+    MaintenanceWindow.open!
     Huayu::SentenceProfiler.new.call
   end
 

@@ -3,8 +3,14 @@
 require "rails_helper"
 
 RSpec.describe Huayu::CharacterGlossRepair do
-  def character(text, meanings, senses)
-    lexeme = Lexeme.create!(kind: :character, text: text, meanings: meanings, readings: {"pinyin" => "lí"})
+  def character(text, meanings, senses, readings: ["lí"])
+    lexeme = Lexeme.create!(
+      kind: :character,
+      text: text,
+      meanings: meanings,
+      readings: {"pinyin" => readings.first},
+      data: {"readings" => readings.map { |pinyin| {"pinyin" => pinyin} }}
+    )
     senses.each_with_index do |sense, position|
       LexemeSense.create!(lexeme: lexeme, position: position, meanings: sense)
     end
@@ -60,6 +66,18 @@ RSpec.describe Huayu::CharacterGlossRepair do
     described_class.new(tainted: {"幹" => "arid, dry"}).call
 
     expect(lexeme.reload.meanings["en"]).to(eq("the trunk, the main body"))
+  end
+
+  it "leaves a character that has more than one reading" do
+    lexeme = character(
+      "幾",
+      {"en" => "small table; how many; a few, some"},
+      [{"en" => "nearly, almost, close to"}, {"en" => "how many; how much"}],
+      readings: %w[jī jǐ]
+    )
+
+    expect(described_class.new(tainted: {"幾" => "small table; how many; a few, some"}).call.repaired).to(eq(0))
+    expect(lexeme.reload.meanings["en"]).to(eq("small table; how many; a few, some"))
   end
 
   it "leaves characters whose senses describe another reading" do

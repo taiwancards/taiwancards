@@ -9,6 +9,12 @@ namespace(:deploy) do
       code: %w[app/services/textbook/lexeme_importer.rb]
     },
     {
+      name: "textbook_lexemes",
+      task: "textbook:import_lexemes",
+      paths: %w[textbook],
+      code: %w[app/services/textbook/lexeme_importer.rb app/services/textbook/sentence_extractor.rb]
+    },
+    {
       name: "content_sources",
       task: "huayu:import_sources",
       paths: %w[content_sources.json],
@@ -60,7 +66,11 @@ namespace(:deploy) do
       name: "phrase_drills",
       task: "huayu:import_phrase_drills",
       paths: %w[huayu/phrase_drills.txt huayu/bigram_frequency.json],
-      code: %w[app/services/huayu/phrase_drills_importer.rb app/services/huayu/phrase_levels.rb]
+      code: %w[
+        app/services/huayu/phrase_drills_importer.rb
+        app/services/huayu/phrase_levels.rb
+        app/services/textbook/lexeme_importer.rb
+      ]
     },
     {
       name: "sense_meanings",
@@ -205,11 +215,6 @@ namespace(:deploy) do
     result
   end
 
-  LIFT_TIMEOUTS = lambda do
-    ActiveRecord::Base.connection.execute("SET statement_timeout = '15min'")
-    ActiveRecord::Base.connection.execute("SET lock_timeout = '1min'")
-  end
-
   desc("Import committed data sources that changed since the last boot (idempotent, no-op when unchanged)")
   task(sync: :environment) do
     started = Time.current
@@ -217,7 +222,7 @@ namespace(:deploy) do
     skipped = []
     failed = []
 
-    LIFT_TIMEOUTS.call
+    MaintenanceWindow.open!
 
     SYNC_STEPS.each do |step|
       sources = step[:paths].to_a.map { |relative| AppData.path(relative) } +
@@ -269,7 +274,7 @@ namespace(:deploy) do
 
   desc("Fill glosses, parts of speech and register mix from the dictionary already in the database")
   task(fillers: :environment) do
-    LIFT_TIMEOUTS.call
+    MaintenanceWindow.open!
 
     failed = FILLERS.filter_map do |name|
       service = name.safe_constantize

@@ -196,8 +196,16 @@ namespace(:huayu) do
     puts(format("of those, on a TOCFL or TBCL list : %7d", graded.size))
     return if graded.empty?
 
+    gate = Huayu::TextGate.instance
+    outside, missing = graded.partition { |word| !gate.call(word).ok }
+
+    puts(format("  excluded from the corpus by our own gate : %7d", outside.size))
+    puts(format("  absent for no stated reason              : %7d", missing.size))
+    outside.first(10).each_slice(10) { |slice| puts("\nrightly outside Taiwan usage:\n  #{slice.join(" ")}") }
+    return if missing.empty?
+
     puts("\ncurriculum words the segmenter cannot favour:")
-    graded.first(40).each_slice(10) { |slice| puts("  #{slice.join(" ")}") }
+    missing.first(40).each_slice(10) { |slice| puts("  #{slice.join(" ")}") }
   end
 
   desc(
