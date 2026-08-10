@@ -219,13 +219,16 @@ module Huayu
     COMPAT = /[\u{2E80}-\u{2FDF}\u{F900}-\u{FAFF}]/
 
     def normalize(text)
-      SentenceText.trim(
-        text
-          .to_s
-          .strip
-          .gsub(/[[:space:]]+/, "")
-          .gsub(COMPAT) { |char| char.unicode_normalize(:nfkc) }
-      )
+      text = text
+        .to_s
+        .strip
+        .gsub(/[[:space:]]+/, "")
+        .gsub(COMPAT) { |char| char.unicode_normalize(:nfkc) }
+
+      return SentenceText.trim(text) unless SentenceBrackets.hollow?(text)
+      return "" if SentenceBrackets.beheaded?(text)
+
+      SentenceBrackets.clean(text)
     end
 
     def attach(lexeme_id, source, stats)

@@ -4,7 +4,7 @@ module Huayu
   class BigramFrequency
     PATH = AppData.path("huayu/bigram_frequency.json")
     START = "<s>"
-    TOKEN_PENALTY = 1.0
+    TOKEN_PENALTY = 0.0
     FLOOR = 1e-9
     CACHE_LIMIT = 100_000
 
@@ -13,7 +13,7 @@ module Huayu
         @instance ||= new
       end
 
-      delegate :cost, :available?, :size, :cached_entries, to: :instance
+      delegate :cost, :available?, :knows?, :size, :cached_entries, to: :instance
 
       def reset!
         @instance = nil
@@ -44,6 +44,10 @@ module Huayu
 
     def size
       @table.size
+    end
+
+    def knows?(token)
+      @table.key?(token) || @continuation.key?(token)
     end
 
     def cached_entries

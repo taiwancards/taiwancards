@@ -91,4 +91,28 @@ RSpec.describe Accounts::Owner do
       expect(user.reload.admin).to(be(false))
     end
   end
+
+  describe "without ADMIN_GOOGLE_EMAIL" do
+    around do |example|
+      google = ENV.delete("ADMIN_GOOGLE_EMAIL")
+      example.run
+      ENV["ADMIN_GOOGLE_EMAIL"] = google
+    end
+
+    it "grants nobody administrator rights" do
+      expect(User.owner_google_email).to(be_nil)
+      expect(build(:user, email: "someone@example.com", google_email: "someone@example.com")).not_to(be_admin)
+    end
+
+    it "creates no account and demotes nobody" do
+      other = create(:user, google_email: "someone@example.com")
+
+      result = described_class.new.call
+
+      expect(result.status).to(eq(:unconfigured))
+      expect(result).not_to(be_changed)
+      expect(User.count).to(eq(1))
+      expect(other.reload.google_email).to(eq("someone@example.com"))
+    end
+  end
 end

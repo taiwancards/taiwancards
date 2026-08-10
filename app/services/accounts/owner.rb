@@ -3,12 +3,18 @@
 module Accounts
   class Owner
     Result = Data.define(:status, :id, :unlinked, :demoted) do
-      def changed? = status != :kept || unlinked.positive? || demoted.positive?
+      def changed? = status != :kept && status != :unconfigured || unlinked.positive? || demoted.positive?
 
-      def to_s = "owner #{status}: ##{id}, google links released #{unlinked}, admin taken from #{demoted}"
+      def to_s
+        return "owner unconfigured: ADMIN_GOOGLE_EMAIL is unset, no administrator exists" if status == :unconfigured
+
+        "owner #{status}: ##{id}, google links released #{unlinked}, admin taken from #{demoted}"
+      end
     end
 
     def call
+      return Result.new(status: :unconfigured, id: nil, unlinked: 0, demoted: 0) if User.owner_google_email.nil?
+
       keeper = locate
       unlinked = release(keeper)
       status = keeper.new_record? ? :created : :kept

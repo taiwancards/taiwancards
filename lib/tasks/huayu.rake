@@ -173,6 +173,33 @@ namespace(:huayu) do
     puts("restricted flag recomputed: #{Lexeme.where(restricted: true).count} restricted (#{updated} rows scanned)")
   end
 
+  desc("Report vocabulary the segmentation model was never trained on and therefore can never choose")
+  task(segmentation_drift: :environment) do
+    vocabulary = Huayu::TextAnalyzer.vocabulary[:words]
+    model = Huayu::BigramFrequency.instance
+    unless model.available?
+      abort("no bigram model at #{Huayu::BigramFrequency::PATH}")
+    end
+
+    blind = vocabulary.reject { |word| model.knows?(word) }
+    puts(format("runtime vocabulary   : %7d", vocabulary.size))
+    puts(format("model knows          : %7d", vocabulary.size - blind.size))
+    puts(format("model has never seen : %7d (%.1f%%)", blind.size, 100.0 * blind.size / [vocabulary.size, 1].max))
+    return if blind.empty?
+
+    graded = Lexeme
+      .where(kind: %i[word collocation], text: blind)
+      .where("jsonb_exists(data, 'tocfl_level') OR (data ->> 'tbcl_grade') IS NOT NULL")
+      .order(:text)
+      .pluck(:text)
+
+    puts(format("of those, on a TOCFL or TBCL list : %7d", graded.size))
+    return if graded.empty?
+
+    puts("\ncurriculum words the segmenter cannot favour:")
+    graded.first(40).each_slice(10) { |slice| puts("  #{slice.join(" ")}") }
+  end
+
   desc(
     "Re-apply only translations (RU glosses, word overrides, lesson summaries + vocab RU) without re-downloading or re-importing. Fast + idempotent."
   )

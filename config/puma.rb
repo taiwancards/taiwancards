@@ -13,7 +13,11 @@ if worker_count > 1
   workers(worker_count)
   preload_app!
 
-  before_fork { ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base) }
+  before_fork do
+    Content::Preload.new.call if defined?(Content::Preload)
+    ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base)
+  end
+
   before_worker_boot { ActiveRecord::Base.establish_connection if defined?(ActiveRecord::Base) }
   before_worker_shutdown { ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base) }
   before_worker_boot { Process.warmup }

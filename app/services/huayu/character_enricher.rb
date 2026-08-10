@@ -55,13 +55,17 @@ module Huayu
         .compact
       lexeme.meanings = lexeme
         .meanings
-        .merge("en" => lexeme.meanings["en"].presence || entry["definition"])
+        .merge("en" => lexeme.meanings["en"].presence || trustworthy(lexeme.text, entry["definition"]))
         .compact_blank
       backfill_reading(lexeme, entry["pinyin"])
       return false unless lexeme.changed?
 
       lexeme.save!
       true
+    end
+
+    def trustworthy(text, definition)
+      GlossCollisions.tainted?(text) ? nil : definition
     end
 
     def backfill_reading(lexeme, pinyin)

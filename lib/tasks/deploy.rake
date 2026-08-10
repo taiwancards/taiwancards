@@ -59,7 +59,7 @@ namespace(:deploy) do
     {
       name: "phrase_drills",
       task: "huayu:import_phrase_drills",
-      paths: %w[huayu/phrase_drills.txt],
+      paths: %w[huayu/phrase_drills.txt huayu/bigram_frequency.json],
       code: %w[app/services/huayu/phrase_drills_importer.rb app/services/huayu/phrase_levels.rb]
     },
     {
@@ -109,6 +109,12 @@ namespace(:deploy) do
       task: "huayu:register_mix",
       paths: %w[content_sources.json],
       code: %w[app/services/lexemes/register_mix.rb]
+    },
+    {
+      name: "segmentation",
+      task: "huayu:resegment",
+      paths: %w[huayu/bigram_frequency.json huayu/segmentation_vocab.json],
+      code: %w[app/services/huayu/text_analyzer.rb app/services/huayu/bigram_frequency.rb]
     }
   ].freeze
 
@@ -125,6 +131,20 @@ namespace(:deploy) do
       next :skipped unless order.drift?
 
       order.call
+      :ran
+    },
+    "sentence_brackets" => -> {
+      repair = Huayu::SentenceBracketRepair.new
+      next :skipped unless repair.drift?
+
+      $stdout.puts(repair.call.to_s)
+      :ran
+    },
+    "character_glosses" => -> {
+      repair = Huayu::CharacterGlossRepair.new
+      next :skipped unless repair.drift?
+
+      $stdout.puts(repair.call.to_s)
       :ran
     },
     "admin_rights" => -> {

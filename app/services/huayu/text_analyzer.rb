@@ -180,7 +180,11 @@ module Huayu
     end
 
     def merge_longest(batches)
-      candidates = batches.flat_map { |tokens| joins_in(tokens).keys }.uniq
+      vocabulary = known_words
+      candidates = batches
+        .flat_map { |tokens| joins_in(tokens).keys }
+        .uniq
+        .reject { |text| vocabulary.include?(text) }
       return batches if candidates.empty?
 
       known = Lexeme.where(kind: TOKEN_KINDS, text: candidates).distinct.pluck(:text).to_set

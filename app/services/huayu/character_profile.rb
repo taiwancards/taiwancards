@@ -65,18 +65,7 @@ module Huayu
     SENTENCE_LIMIT = 10
 
     def phrases
-      @phrases ||= begin
-        ids = SentenceWord.where(lexeme: lexeme).ranked.limit(SENTENCE_LIMIT).pluck(:sentence_id)
-        if ids.empty?
-          []
-        else
-          Lexeme
-            .where(id: ids)
-            .visible
-            .includes(:content_sources, :sentence_profile)
-            .sort_by { |found| ids.index(found.id) }
-        end
-      end
+      @phrases ||= ExampleSentences.for(lexeme, limit: SENTENCE_LIMIT)
     end
 
     def memories

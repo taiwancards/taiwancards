@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_01_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_10_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -271,12 +271,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_01_120000) do
       "(((data ->> 'radical_number'::text))::integer)",
       name: "index_lexemes_on_radical_number",
       where: "((kind = 0) AND ((data ->> 'radical_number'::text) ~ '^[0-9]+$'::text))"
-    )
-    t.index(
-      "((data -> 'segments'::text))",
-      name: "index_lexemes_on_sentence_segments",
-      where: "(kind = 4)",
-      using: :gin
     )
     t.index("((data ->> 'radical'::text))", name: "index_lexemes_on_radical", where: "(kind = 0)")
     t.index(

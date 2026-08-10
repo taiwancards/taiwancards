@@ -4,6 +4,8 @@ namespace(:accounts) do
   desc("Leave only the owner's Google account, renumber it to 1 and restart ids from 2 (CONFIRM=yes)")
   task(consolidate: :environment) do
     owner_email = User.owner_google_email
+    abort("ADMIN_GOOGLE_EMAIL is unset, so there is no owner to consolidate onto.") if owner_email.nil?
+
     keeper = User.find_by(google_email: owner_email)
     doomed = User.where.not(google_email: owner_email)
 

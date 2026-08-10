@@ -72,12 +72,6 @@ RSpec.describe Huayu::TextAnalyzer do
       "不下雪" => %w[不 下雪]
     }.each do |input, expected|
       it "splits #{input} as #{expected.join(" / ")}" do
-        if input == "再見到"
-          pending(
-            "再見 and 見到 are both in the dictionary; the bigram context is insufficient to prefer 再/見到"
-          )
-        end
-
         expect(segment(input)).to(eq(expected))
       end
     end
@@ -111,6 +105,24 @@ RSpec.describe Huayu::TextAnalyzer do
   describe "characters with no dictionary entry" do
     it "keeps an unknown character as its own token rather than dropping it" do
       expect(segment("我們鑫可以")).to(eq(%w[我們 鑫 可以]))
+    end
+  end
+
+  describe "the merge pass" do
+    it "does not re-glue a span the frequency model already rejected" do
+      word!("我等")
+      described_class.reset_vocabulary!
+
+      expect(described_class.vocabulary[:words]).to(include("我等"))
+      expect(segment("我等一下")).to(eq(%w[我 等 一下]))
+    end
+
+    it "still merges a span the frequency model never saw" do
+      Lexeme.find_or_create_by!(kind: :measure_word, text: "公斤")
+      described_class.reset_vocabulary!
+
+      expect(described_class.vocabulary[:words]).not_to(include("公斤"))
+      expect(segment("公斤")).to(eq(["公斤"]))
     end
   end
 end

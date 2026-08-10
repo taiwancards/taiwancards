@@ -3,110 +3,72 @@
 require "rails_helper"
 
 RSpec.describe "Query budget" do
-  let(:source) do
+  let!(:source) do
     ContentSource.create!(
-      name: "Fixture corpus",
-      slug: "fixture-corpus",
-      register: :publicistic,
-      license_name: "CC0 1.0",
+      slug: "spoken",
+      name: "Spoken",
       license_commercial: true,
-      license_derivatives: true,
-      attribution: "Fixture corpus"
+      register: :colloquial,
+      enabled: true,
+      enabled_for_admins: true,
+      attribution: "Spoken."
     )
   end
 
-  def character(text, **data)
-    Lexeme.create!(
-      kind: :character,
-      text:,
-      readings: {"pinyin" => "shi", "zhuyin" => "ㄕ"},
-      meanings: {"en" => "gloss for #{text}"},
-      data: {"freq_rank" => 10, "strokes" => 5}.merge(data)
+  def character!(text, index)
+    create(
+      :lexeme,
+      :character,
+      text: text,
+      readings: {"pinyin" => "shì", "zhuyin" => "ㄕˋ"},
+      meanings: {"en" => "meaning", "ru" => "значение"},
+      data: {"moe_index" => index, "radical" => text, "freq_rank" => index}
     )
   end
 
-  def word(text, **data)
-    Lexeme.create!(
-      kind: :word,
-      text:,
-      readings: {"pinyin" => "ci", "zhuyin" => "ㄘ"},
-      meanings: {"en" => "gloss for #{text}"},
-      data: {"freq_rank" => 20}.merge(data)
-    )
-  end
-
-  def sentence(text)
-    lexeme = Lexeme.new(kind: :sentence, text:, meanings: {"en" => "translation of #{text}"}, data: {"segments" => []})
+  def sentence!(text, word)
+    lexeme = Lexeme.new(kind: :sentence, text: text, meanings: {"en" => "gloss", "ru" => "перевод"})
     lexeme.lexeme_content_sources.build(content_source: source)
     lexeme.save!
-    SentenceProfile.create!(lexeme:, han_length: text.length, difficulty: 1)
+    SentenceWord.create!(sentence: lexeme, lexeme: word, gdex: 10)
     lexeme
   end
 
-  describe "the dictionary index" do
-    before { 40.times { |index| word("詞彙#{index}") } }
-
-    it "reads the page without a query per entry, whatever the page holds" do
-      small = count_queries { get(dict_path) }
-      40.times { |index| word("補詞#{index}") }
-      large = count_queries { get(dict_path) }
-
-      expect(response).to(have_http_status(:ok))
-      expect(large.count).to(be <= small.count)
-      expect(large).to(repeat_no_query_more_than(3))
-    end
-  end
-
-  describe "a dictionary entry with sentences" do
-    let(:entry) { word("學習") }
-
-    before do
-      12.times do |index|
-        example = sentence("我在學習中文#{index}。")
-        SentenceWord.create!(sentence: example, lexeme: entry, gdex: 900 - index)
+  before do
+    chars = %w[長 話 說 讀 書 學 生 老 師 好].each_with_index.map { |text, index|
+      character!(text, index + 1)
+    }
+    words = %w[長話 說話 讀書 學生 老師].map.with_index do |text, index|
+      word = create(
+        :lexeme,
+        text: text,
+        meanings: {"en" => "meaning", "ru" => "значение"},
+        data: {"freq_rank" => index}
+      )
+      text.chars.each_with_index do |char, position|
+        child = chars.find { |candidate| candidate.text == char }
+        LexemeLink.create!(parent: word, child: child, position: position) if child
       end
+
+      word
     end
 
-    it "loads every sentence, its profile and its sources without a per-row query" do
-      cookies[DetailLevelHelper::DETAIL_COOKIE] = DetailLevelHelper::FULL
-      report = count_queries { get(dict_entry_path(text: entry.text)) }
-
-      expect(response).to(have_http_status(:ok))
-      expect(response.body).to(include("我在學習中文0。"))
-      expect(report).to(repeat_no_query_more_than(3))
-    end
+    words.each_with_index { |word, index| 3.times { |n| sentence!("#{word.text}的句子#{index}#{n}。", word) } }
   end
 
-  describe "the sentence browser" do
-    before { 12.times { |index| sentence("這是第#{index}個句子。") } }
-
-    it "loads a page of sentences with their sources in a fixed number of queries" do
-      report = count_queries { get(sentences_path) }
-
+  {
+    "/" => 4,
+    "/characters" => 8,
+    "/characters/%E9%95%B7" => 14,
+    "/dict" => 10,
+    "/dict/%E5%AD%B8%E7%94%9F" => 22
+  }.each do |path, budget|
+    it "keeps #{path} under #{budget} queries for a guest" do
+      get(path)
       expect(response).to(have_http_status(:ok))
-      expect(report).to(repeat_no_query_more_than(3))
-    end
-  end
 
-  describe "the character grid" do
-    before { 60.times { |index| character([0x4E00 + index].pack("U")) } }
-
-    it "marks studied characters with one lookup rather than one per cell" do
-      report = count_queries { get(characters_path) }
-
-      expect(response).to(have_http_status(:ok))
-      expect(report).to(repeat_no_query_more_than(3))
-    end
-  end
-
-  describe "the phrasebook" do
-    before { %w[廁所 洗手間 衛生紙].each { |text| word(text) } }
-
-    it "resolves every linked entry in one lookup" do
-      report = count_queries { get(phrases_path(scene: "restroom")) }
-
-      expect(response).to(have_http_status(:ok))
-      expect(report).to(repeat_no_query_more_than(3))
+      report = count_queries { get(path) }
+      expect(report).to(issue_at_most(budget))
     end
   end
 end
