@@ -14,9 +14,7 @@ class NoticesController < ApplicationController
   private
 
   def tokens_for(notices)
-    lines = notices.flat_map { |notice| [notice.zh, *notice.items.map(&:zh)] }.compact.uniq
-    Huayu::TextAnalyzer.new(locale: I18n.locale).analyze_lines(lines).each_with_index.to_h { |tokens, index|
-      [lines[index], tokens]
-    }
+    lines = notices.flat_map { |notice| [notice.zh, *notice.items.map(&:zh)] }.compact
+    Huayu::TextAnalyzer.new(locale: I18n.locale).analyze_map(lines)
   end
 end

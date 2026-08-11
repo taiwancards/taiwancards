@@ -19,4 +19,8 @@
             .text-sm.font-semibold = t("graded.tiers.#{tier.id}")
             .text-xs.text-muted-foreground.tabular-nums = tier.size
           p.mt-1.text-xs.text-muted-foreground = t("graded.tier_hint", count: texts.size)
-          p.mt-2.text-sm.leading-relaxed lang="zh-TW" = texts.map(&:zh).join("・")
+          ul.mt-2.space-y-1
+            - texts.each do |text|
+              li.text-sm.leading-snug
+                span.font-medium lang="zh-TW" = text.zh
+                span.text-muted-foreground = " (#{text.title(I18n.locale)})"

@@ -27,7 +27,7 @@
               .flex.items-baseline.gap-2
                 span.exam-number.tabular-nums class=(correct ? "bg-emerald-500/15 text-emerald-600" : "bg-red-500/15 text-red-500")
                   = slot.number
-                div.min-w-0
+                .min-w-0
                   - if question.ask.present?
                     p.text-base.leading-relaxed lang="zh-TW" = question.ask
                     - if question.ask_name(I18n.locale).present?

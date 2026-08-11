@@ -3,7 +3,7 @@
 
 .py-6.space-y-6 data-controller="countdown" data-countdown-seconds-value=(@sheet.minutes * 60)
   header.flex.flex-wrap.items-start.justify-between.gap-3
-    div.min-w-0
+    .min-w-0
       h1.text-2xl.font-bold.tracking-tight = t("mock.exam_title", level: level_name)
       p.text-sm.text-muted-foreground = t("mock.exam_paper_lede", count: @sheet.count, minutes: @sheet.minutes)
     .shrink-0.rounded-xl.border.border-border.px-4.py-2.text-xl.font-bold.tabular-nums data-countdown-target="display"

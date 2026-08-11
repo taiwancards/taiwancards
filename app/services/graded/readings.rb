@@ -3,6 +3,8 @@
 module Graded
   class Readings
     HAN = /\p{Han}/
+    NEUTRAL = "˙"
+    SPLITS = {"都會" => %w[都 會]}.freeze
     Line = Data.define(:zhuyin, :pinyin)
 
     def initialize(analyzer: Huayu::TextAnalyzer.new)
@@ -10,12 +12,21 @@ module Graded
     end
 
     def lines(text)
-      chunks = text.lines.map { |line| @analyzer.segment(line.zh) }
+      chunks = text.lines.map { |line| resplit(@analyzer.segment(line.zh)) }
       preload(chunks.flatten)
       text.lines.zip(chunks).to_h { |line, tokens| [line.zh, compose(tokens)] }
     end
 
     private
+
+    def resplit(tokens)
+      tokens.each_with_index.flat_map do |token, index|
+        parts = SPLITS[token]
+        next [token] if parts.nil? || tokens[index + 1]&.start_with?("區")
+
+        parts
+      end
+    end
 
     def compose(tokens)
       pairs = tokens.map { |token| reading_for(token) }
@@ -28,22 +39,40 @@ module Graded
     def reading_for(token)
       return [token, token] unless token.match?(HAN)
 
-      entry = @entries[token]
-      return [entry.readings["zhuyin"], entry.readings["pinyin"]] if entry&.readings&.dig("zhuyin").present?
+      read(entry_for(token)) || spell(token)
+    end
 
-      spelled = token.chars.map { |char| @entries[char] }
+    def entry_for(token)
+      word = @words[token]
+      return word if token.length > 1
+
+      return word if word&.readings&.dig("zhuyin").to_s.start_with?(NEUTRAL)
+
+      @chars[token] || word
+    end
+
+    def read(entry)
+      zhuyin = entry&.readings&.dig("zhuyin")
+      return nil if zhuyin.blank?
+
+      [first_variant(zhuyin), first_variant(entry.readings["pinyin"].to_s)]
+    end
+
+    def first_variant(reading) = reading.split(" / ").first.to_s
+
+    def spell(token)
+      pairs = token.chars.map { |char| read(entry_for(char)) }
       [
-        spelled.map { |one| one&.readings&.dig("zhuyin") || "•" }.join(" "),
-        spelled.map { |one| one&.readings&.dig("pinyin") || "?" }.join
+        pairs.map { |pair| pair&.first || "•" }.join(" "),
+        pairs.map { |pair| pair&.last || "?" }.join
       ]
     end
 
     def preload(tokens)
       wanted = (tokens + tokens.flat_map(&:chars)).uniq.select { |text| text.match?(HAN) }
-      @entries = Lexeme
-        .where(kind: %i[word character], text: wanted)
-        .order(:kind)
-        .index_by(&:text)
+      grouped = Lexeme.where(kind: %i[word character], text: wanted).group_by(&:kind)
+      @words = grouped.fetch("word", []).index_by(&:text)
+      @chars = grouped.fetch("character", []).index_by(&:text)
     end
   end
 end

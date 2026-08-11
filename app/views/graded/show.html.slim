@@ -29,16 +29,28 @@
         data-action="graded-reader#toggle" data-graded-reader-target="button" ]
         = t("graded.show_translation")
 
-  article.space-y-3.rounded-xl.border.border-border.bg-card.p-5
-    - @text.lines.each do |line|
-      - reading = @readings[line.zh]
-      .space-y-1
-        p.graded-line.text-xl.leading-loose lang="zh-TW" = line.zh
-        - if reading&.zhuyin.present?
-          .zy-line lang="zh-TW" = reading.zhuyin
-        - if reading&.pinyin.present?
-          .py-line lang="zh-Latn" = reading.pinyin
-        p.graded-gloss.text-sm.leading-relaxed.text-muted-foreground = line.name(I18n.locale)
+  .grid.items-start.gap-4[
+    class="lg:grid-cols-[minmax(0,1fr)_18rem]"
+    data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
+    data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
+    article.space-y-4.rounded-xl.border.border-border.bg-card.p-5
+      - @text.lines.each do |line|
+        - reading = @readings[line.zh]
+        .space-y-1
+          p.graded-line.text-2xl.leading-loose lang="zh-TW" = render("notices/line", text: line.zh, tokens: @tokens[line.zh], ruby: false)
+          - if reading&.zhuyin.present?
+            .zy-line lang="zh-TW" = reading.zhuyin
+          - if reading&.pinyin.present?
+            .py-line lang="zh-Latn" = reading.pinyin
+          p.graded-gloss.text-sm.leading-relaxed.text-muted-foreground = line.name(I18n.locale)
+
+    aside.hidden.rounded-xl.border.border-border.bg-card.p-4[
+      class="lg:sticky lg:top-20 lg:block" data-analyzer-target="panel" ]
+      p.text-sm.text-muted-foreground data-analyzer-target="panelEmpty" = t("graded.panel_empty")
+      .hidden data-analyzer-target="panelBody"
+
+    .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
+      data-analyzer-target="popover" class="max-w-[85vw]" ]
 
   - if @text.notes.any?
     section.space-y-2

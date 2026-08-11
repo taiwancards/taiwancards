@@ -19,5 +19,6 @@ class GradedController < ApplicationController
 
     @cover = @tier.cover.call(@text.body)
     @readings = Graded::Readings.new.lines(@text)
+    @tokens = Huayu::TextAnalyzer.new(locale: I18n.locale).analyze_map(@text.lines.map(&:zh))
   end
 end

@@ -44,6 +44,11 @@ module Huayu
       batches.map { |tokens| build(tokens, index) }
     end
 
+    def analyze_map(lines)
+      lines = Array(lines).uniq
+      analyze_lines(lines).each_with_index.to_h { |tokens, index| [lines[index], tokens] }
+    end
+
     def segment(text, excluding: nil)
       text = text.to_s.strip
       return [] if text.blank?

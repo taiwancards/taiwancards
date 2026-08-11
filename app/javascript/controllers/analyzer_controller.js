@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { computePosition, offset, flip, shift } from "@floating-ui/dom";
 
 export default class extends Controller {
-  static targets = ["popover"];
+  static targets = ["popover", "panel", "panelEmpty", "panelBody"];
   static values = { activateUrl: String, add: String, added: String };
 
   connect() {
@@ -29,6 +29,14 @@ export default class extends Controller {
   open(event) {
     const anchor = event.currentTarget;
     const token = JSON.parse(anchor.dataset.token);
+    if (this.docked()) {
+      if (event.type === "mouseenter") return;
+      this.mark(anchor);
+      this.panelEmptyTarget.hidden = true;
+      this.panelBodyTarget.innerHTML = this.render(token);
+      this.panelBodyTarget.classList.remove("hidden");
+      return;
+    }
     this.popoverTarget.innerHTML = this.render(token);
     this.popoverTarget.classList.remove("hidden");
     computePosition(anchor, this.popoverTarget, {
@@ -45,6 +53,18 @@ export default class extends Controller {
 
   close() {
     this.popoverTarget.classList.add("hidden");
+  }
+
+  docked() {
+    return (
+      this.hasPanelTarget && window.matchMedia("(min-width: 1024px)").matches
+    );
+  }
+
+  mark(anchor) {
+    this.marked?.classList.remove("bg-primary/10");
+    this.marked = anchor;
+    anchor.classList.add("bg-primary/10");
   }
 
   play(event) {

@@ -1581,6 +1581,7 @@ en:
     show_translation: Translation
     notes: Above the tier
     notes_hint: These items are outside this tier's ceiling. Tap one to open the dictionary.
+    panel_empty: Tap any word in the text — its card will appear here.
     tiers:
       chars150: First 150 characters
       chars300: First 300 characters
