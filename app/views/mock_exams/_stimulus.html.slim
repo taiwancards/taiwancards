@@ -1,0 +1,11 @@
+- if block.sign?
+  .exam-sign class="exam-sign-#{block.sign.style}"
+    .exam-sign-title lang="zh-TW" = block.sign.title
+    - block.sign.lines.each do |line|
+      .exam-sign-line lang="zh-TW" = line
+    - if block.sign.foot.present?
+      .exam-sign-foot lang="zh-TW" = block.sign.foot
+- elsif block.format == "passage"
+  p.exam-passage.text-base.leading-relaxed lang="zh-TW" = block.text
+- else
+  p.text-lg.leading-relaxed lang="zh-TW" = block.text

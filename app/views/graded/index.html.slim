@@ -1,0 +1,22 @@
+- content_for(:title, t("graded.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("graded.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("graded.lede")
+
+  .rounded-xl.border.border-border.px-4.py-3.text-xs.leading-relaxed.text-muted-foreground class="bg-muted/30"
+    = t("graded.method")
+
+  - if @tiers.empty?
+    p.text-sm.text-muted-foreground = t("graded.empty")
+  - else
+    .grid.gap-3 class="sm:grid-cols-2"
+      - @tiers.each do |tier|
+        - texts = Graded::Library.texts(tier.id)
+        = link_to graded_tier_path(tier: tier.id), class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+          .flex.items-baseline.justify-between.gap-2
+            .text-sm.font-semibold = t("graded.tiers.#{tier.id}")
+            .text-xs.text-muted-foreground.tabular-nums = tier.size
+          p.mt-1.text-xs.text-muted-foreground = t("graded.tier_hint", count: texts.size)
+          p.mt-2.text-sm.leading-relaxed lang="zh-TW" = texts.map(&:zh).join("・")

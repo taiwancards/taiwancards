@@ -43,6 +43,7 @@ module NavHelper
       [:desk, t("nav.today"), desk_path],
       [:decks, t("nav.my_desks"), desks_path],
       [:book, t("nav.reader"), reader_path],
+      [:book, t("nav.graded"), graded_path],
       [:stats, t("nav.placement"), placement_path],
       [:stats, t("nav.plan"), study_plan_path],
       [:study, t("nav.triage"), triage_path]

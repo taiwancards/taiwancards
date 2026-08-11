@@ -6,14 +6,14 @@ class MockExamsController < ApplicationController
   def index
   end
 
-  def reading
-    @paper = MockExam::Reading.build(band: band_param(MockExam::Reading), seed: seed_param)
+  def show
+    @sheet = sheet
   end
 
   def grade
-    @paper = MockExam::Reading.build(band: band_param(MockExam::Reading), seed: seed_param)
-    @results = results_for(@paper)
-    @score = @results.count { |row| row[:correct] }
+    @sheet = sheet
+    @given = given_for(@sheet)
+    @score = @sheet.slots.count { |slot| @given[slot.number] == slot.question.answer }
   end
 
   def pictures
@@ -37,6 +37,20 @@ class MockExamsController < ApplicationController
   end
 
   private
+
+  def sheet
+    MockExam::Paper.build(level: level_param, seed: seed_param)
+  end
+
+  def level_param
+    MockExam::Bank.find(params[:level]) || MockExam::Bank.levels.first
+  end
+
+  def given_for(sheet)
+    allowed = sheet.slots.map { |slot| slot.number.to_s }
+    answers = params.fetch(:answers, {}).permit(*allowed).to_h
+    answers.to_h { |number, index| [number.to_i, index.presence&.to_i] }
+  end
 
   def results_for(paper)
     allowed = paper.questions.map { |question| question.number.to_s }

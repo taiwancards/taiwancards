@@ -55,6 +55,19 @@ RSpec.describe "Dictionary" do
     expect(response.body).to(include("/characters/"))
   end
 
+  it "resolves a 臺 spelling through its 台 twin and back" do
+    create(:lexeme, kind: :word, text: "台南", meanings: {"en" => "Tainan", "ru" => "Тайнань"})
+    create(:lexeme, kind: :word, text: "月臺", meanings: {"en" => "platform", "ru" => "перрон"})
+
+    get("/dict/#{CGI.escape("臺南")}")
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("Tainan").or(include("Тайнань")))
+
+    get("/dict/#{CGI.escape("月台")}")
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("platform").or(include("перрон")))
+  end
+
   it "shows a collocation on the same entry page" do
     get("/dict/#{CGI.escape("超商")}")
     expect(response).to(have_http_status(:ok))

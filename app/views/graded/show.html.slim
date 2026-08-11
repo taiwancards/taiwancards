@@ -1,0 +1,51 @@
+- content_for(:title, "#{@text.title(I18n.locale)} · #{t("graded.tiers.#{@tier.id}")}")
+
+.py-6.space-y-5.reading-hints.hints-zhuyin data-controller="graded-reader reading-hints"
+  header.space-y-2
+    = link_to graded_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+      = t("graded.back")
+    h1.text-2xl.font-bold.tracking-tight lang="zh-TW" = @text.zh
+    p.text-sm.text-muted-foreground = @text.title(I18n.locale)
+
+  .flex.flex-wrap.items-center.gap-2
+    - @texts.each do |text|
+      = link_to text.zh, graded_text_path(tier: @tier.id, id: text.id), lang: "zh-TW",
+        class: "rounded-lg border px-2.5 py-1 text-sm #{text.id == @text.id ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted"}"
+
+  .flex.flex-wrap.items-center.justify-between.gap-3
+    .flex.flex-wrap.gap-2.text-xs.text-muted-foreground
+      span.rounded-lg.border.border-border.px-2.py-1 = t("graded.tiers.#{@tier.id}")
+      span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.coverage", percent: (@cover.rate * 100).round(1))
+      span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.size", lines: @text.sentences, chars: @text.length)
+    .flex.shrink-0.items-center.gap-2
+      - pill = "rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted"
+      button[ type="button" class=pill aria-pressed="true"
+        data-reading-hints-target="zhuyin" data-action="reading-hints#toggleZhuyin" ]
+        = t("grammar.zhuyin")
+      button[ type="button" class=pill aria-pressed="false"
+        data-reading-hints-target="pinyin" data-action="reading-hints#togglePinyin" ]
+        = t("grammar.pinyin")
+      button[ type="button" class=pill aria-pressed="false"
+        data-action="graded-reader#toggle" data-graded-reader-target="button" ]
+        = t("graded.show_translation")
+
+  article.space-y-3.rounded-xl.border.border-border.bg-card.p-5
+    - @text.lines.each do |line|
+      - reading = @readings[line.zh]
+      .space-y-1
+        p.graded-line.text-xl.leading-loose lang="zh-TW" = line.zh
+        - if reading&.zhuyin.present?
+          .zy-line lang="zh-TW" = reading.zhuyin
+        - if reading&.pinyin.present?
+          .py-line lang="zh-Latn" = reading.pinyin
+        p.graded-gloss.text-sm.leading-relaxed.text-muted-foreground = line.name(I18n.locale)
+
+  - if @text.notes.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("graded.notes")
+      p.text-xs.text-muted-foreground = t("graded.notes_hint")
+      .flex.flex-wrap.gap-2
+        - @text.notes.each do |note|
+          = link_to dict_entry_path(text: note.zh), class: "rounded-lg border border-border px-2.5 py-1.5 text-sm hover:bg-muted" do
+            span.font-medium lang="zh-TW" = note.zh
+            span.ml-2.text-xs.text-muted-foreground = note.name(I18n.locale)

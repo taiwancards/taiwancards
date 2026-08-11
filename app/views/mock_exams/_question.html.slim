@@ -1,0 +1,16 @@
+- question = slot.question
+- short = question.options.all? { |option| option.length <= 6 }
+fieldset.space-y-2
+  legend.sr-only = t("mock.question_n", n: slot.number)
+  .flex.items-baseline.gap-2
+    span.exam-number.tabular-nums = slot.number
+    - if question.ask.present?
+      p.text-base.leading-relaxed lang="zh-TW" = question.ask
+    - else
+      p.text-base.leading-relaxed.text-muted-foreground lang="zh-TW" = question.slot
+  .grid.gap-2 class=(short ? "sm:grid-cols-2" : "")
+    - question.options.each_with_index do |option, index|
+      label.flex.cursor-pointer.items-start.gap-2.rounded-lg.border.border-border.px-3.py-2 class="hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-primary/10"
+        = radio_button_tag "answers[#{slot.number}]", index, false, id: "q#{slot.number}o#{index}", class: "mt-1 accent-current"
+        span.shrink-0.text-sm.font-medium.text-muted-foreground = "(#{("A".ord + index).chr})"
+        span.text-base.leading-snug lang="zh-TW" = option

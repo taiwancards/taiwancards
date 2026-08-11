@@ -184,6 +184,7 @@ en:
     phrase_drills: Phrases
     my_desks: My decks
     reader: Read texts
+    graded: Graded reader
     songs: Songs
     placement: Level test
     numbers: Numbers
@@ -1568,18 +1569,62 @@ en:
       "3": 3rd · dipping ˇ
       "4": 4th · falling ˋ
       "5": neutral ·
+  graded:
+    title: Graded TW Reader
+    lede: Short stories written for a fixed vocabulary ceiling. Everything above the ceiling is footnoted, so you can read a whole text without a dictionary.
+    method: Each tier is the N most frequent items of the TBCL standard inventory, ranked by everyday narrative use. A text stays above 90% inside its tier; every character or word above the ceiling is listed underneath with a gloss.
+    empty: No texts yet.
+    back: All tiers
+    tier_hint: "%{count} texts"
+    coverage: "%{percent}% inside the tier"
+    size: "%{lines} sentences · %{chars} characters"
+    show_translation: Translation
+    notes: Above the tier
+    notes_hint: These items are outside this tier's ceiling. Tap one to open the dictionary.
+    tiers:
+      chars150: First 150 characters
+      chars300: First 300 characters
+      chars450: First 450 characters
+      words500: First 500 words
+      words1000: First 1000 words
+      words1500: First 1500 words
+      words2000: First 2000 words
+      words3000: First 3000 words
+      words4808: First 4808 words
   mock:
     title: TOCFL emulation
     lede: Timed practice in the format of the real exam, built entirely from our own corpus.
     disclaimer: This is an unofficial practice mode. It follows the publicly documented TOCFL format (sections, question style, timing) but is not affiliated with or endorsed by SC-TOP, and no real exam questions are used. For the official mock papers, use the SC-TOP downloads below.
     pick_band: Choose a band
-    reading_section: Reading — fill the blank
-    pictures_section: Reading — pictures
-    pictures_lede: Official part-one format — read a sentence, pick the matching picture. Emoji stand in for the exam's drawings.
-    listening_section: Listening
-    listening_lede: Real Taiwanese voices from Common Voice — play the clip, pick the picture or the sentence you heard.
+    exam_section: Reading — exam format
+    exam_lede: All five official item types of the 閱讀測驗 section. Every run draws 10 fresh questions from a bank of 50; the items are written by us and checked against the word list for the level.
+    exam_title: "Reading · %{level}"
+    exam_paper_lede: "%{count} questions · %{minutes} minutes. The timer submits automatically."
+    levels:
+      novice1: Novice 1 準備級一級
+      novice2: Novice 2 準備級二級
+      a1: A1 入門級
+      a2: A2 基礎級
+      b1: B1 進階級
+    level_hint: "%{count} questions drawn from a bank of %{bank} · %{minutes} min"
+    formats:
+      sentence: 單句理解 · Sentence comprehension
+      sign: 看圖釋義 · Signs and notices
+      paragraph: 完成段落 · Complete the paragraph
+      cloze: 選詞填空 · Choose the word
+      passage: 閱讀理解 · Reading comprehension
+    short_formats:
+      sentence: 單句理解
+      sign: 看圖釋義
+      paragraph: 完成段落
+      cloze: 選詞填空
+      passage: 閱讀理解
+    practice_section: Listening — our own drills
+    practice_lede: These are not TOCFL formats. They are our drills on real native recordings (Common Voice, CC0). We do not write audio for the exam items — we have no way to voice them at exam quality.
+    pictures_section: Pictures
     pictures_title: Pictures · %{band}
     pictures_paper_lede: "%{count} questions · %{minutes} minutes. Read each sentence and pick the matching picture."
+    listening_section: Listening
     listening_title: Listening · %{band}
     listening_paper_lede: "%{count} questions · %{minutes} minutes. Play each clip as many times as you like."
     listening_hint: Play the clip, then answer.
@@ -1591,16 +1636,14 @@ en:
     band_hint: "%{count} questions · %{minutes} min"
     official_title: The real thing
     official_lede: Before exam day, sit at least one official mock paper — free from SC-TOP, with answer keys and audio.
-    reading_title: Reading · %{band}
-    reading_lede: "%{count} gap-fill questions · %{minutes} minutes. Pick the word that fits each blank. The timer submits automatically."
     question_n: Question %{n}
     submit: Finish and check
     abort: Quit
     results_title: Your result
     results_percent: "%{percent}% correct"
-    results_note: Green marks the correct answer, red marks yours where it differed. As a rough guide, aim for 60–70% before booking this band.
+    results_note: Green marks the correct answer, red marks yours where it differed. As a rough guide, a steady 60–70%% at %{level} is a good sign before booking the exam.
     try_again: New set
-    back: All bands
+    back: All levels
   grammar:
     for_form: Grammar points built on
     as_grammar_point: as a grammar point

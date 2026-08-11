@@ -1,0 +1,24 @@
+- level_name = t("mock.levels.#{MockExam::Bank.slug(@sheet.level)}")
+- content_for(:title, t("mock.exam_title", level: level_name))
+
+.py-6.space-y-6 data-controller="countdown" data-countdown-seconds-value=(@sheet.minutes * 60)
+  header.flex.flex-wrap.items-start.justify-between.gap-3
+    div.min-w-0
+      h1.text-2xl.font-bold.tracking-tight = t("mock.exam_title", level: level_name)
+      p.text-sm.text-muted-foreground = t("mock.exam_paper_lede", count: @sheet.count, minutes: @sheet.minutes)
+    .shrink-0.rounded-xl.border.border-border.px-4.py-2.text-xl.font-bold.tabular-nums data-countdown-target="display"
+
+  = form_with url: grade_mock_exam_path(level: MockExam::Bank.slug(@sheet.level)), method: :post, data: {countdown_target: "form", turbo: false} do |form|
+    = form.hidden_field :seed, value: @sheet.seed
+    .space-y-4
+      - @sheet.groups.each do |group|
+        section.space-y-3.rounded-xl.border.border-border.bg-card.p-4
+          .text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.formats.#{group.format}")
+          = render("stimulus", block: group.block)
+          .space-y-4
+            - group.slots.each do |slot|
+              = render("question", slot: slot)
+
+      .flex.flex-wrap.items-center.justify-between.gap-3
+        = link_to t("mock.abort"), mock_exams_path, class: "text-sm text-muted-foreground hover:text-foreground"
+        = form.submit t("mock.submit"), class: "rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"

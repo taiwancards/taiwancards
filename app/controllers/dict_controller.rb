@@ -80,7 +80,11 @@ class DictController < ApplicationController
   end
 
   def find_entry(text)
-    Lexeme.visible.where(kind: KINDS, text: text).order(:kind).first
+    entry = Lexeme.visible.where(kind: KINDS, text: text).order(:kind).first
+    return entry if entry || !text.to_s.match?(/[台臺]/)
+
+    twin = text.include?("臺") ? text.tr("臺", "台") : text.tr("台", "臺")
+    Lexeme.visible.where(kind: KINDS, text: twin).order(:kind).first
   end
 
   def level_lexeme_ids(level)
