@@ -3,41 +3,59 @@
 require "rails_helper"
 
 RSpec.describe Sentences::Breakdown do
-  let(:source) { ContentSource.create!(slug: "breakdown_spec", name: "Breakdown spec") }
-
-  def sentence_for(text, segments)
-    create(
-      :lexeme,
-      kind: :sentence,
-      text: text,
-      content_sources: [source],
-      data: {"segments" => segments}
+  let!(:source) do
+    ContentSource.create!(
+      slug: "spoken",
+      name: "Spoken",
+      license_commercial: true,
+      register: :colloquial,
+      enabled: true,
+      enabled_for_admins: true,
+      attribution: "Spoken."
     )
   end
 
-  it "glosses a 破音字 with the sense of the reading it actually has" do
-    hui = create(
-      :lexeme,
-      :character,
-      text: "會",
-      readings: {"pinyin" => "huì", "zhuyin" => "ㄏㄨㄟˋ"},
-      meanings: {},
-      data: {"readings" => [{"pinyin" => "huì"}, {"pinyin" => "guì"}]}
-    )
-    hui.senses.create!(position: 0, reading: "guì", meanings: {"ru" => "чтение в названии уезда"})
-    hui.senses.create!(position: 1, reading: "huì", meanings: {"ru" => "уметь, мочь"})
-
-    words = described_class.new(sentence_for("會", ["會"])).call.words
-
-    expect(words.first.senses.first.meaning(:ru)).to(eq("уметь, мочь"))
+  def sentence!(text, segments)
+    lexeme = Lexeme.new(kind: :sentence, text:, data: {"segments" => segments})
+    lexeme.lexeme_content_sources.build(content_source: source)
+    lexeme.save!
+    lexeme
   end
 
-  it "falls back to every sense when the character has only one reading" do
-    shui = create(:lexeme, :character, text: "水", readings: {"pinyin" => "shuǐ"}, meanings: {})
-    shui.senses.create!(position: 0, reading: nil, meanings: {"ru" => "вода"})
+  it "finds a unit that the dictionary keeps as a collocation" do
+    create(:lexeme, kind: :collocation, text: "避雨", meanings: {"ru" => "укрываться от дождя"})
+    lexeme = sentence!("有騎樓可避雨。", %w[有 騎樓 可 避雨])
 
-    words = described_class.new(sentence_for("水", ["水"])).call.words
+    words = described_class.new(lexeme).call.words
 
-    expect(words.first.senses.map { |sense| sense.meaning(:ru) }).to(eq(["вода"]))
+    expect(words.find { |word| word.text == "避雨" }.lexeme).not_to(be_nil)
+  end
+
+  it "finds a unit that the dictionary keeps as a measure word" do
+    create(:lexeme, kind: :measure_word, text: "顆", meanings: {"ru" => "штука (о круглом)"})
+    lexeme = sentence!("一顆蛋。", %w[一 顆 蛋])
+
+    words = described_class.new(lexeme).call.words
+
+    expect(words.find { |word| word.text == "顆" }.lexeme).not_to(be_nil)
+  end
+
+  it "still reports a unit no kind of entry covers" do
+    lexeme = sentence!("稍事休息。", %w[稍事 休息])
+
+    result = described_class.new(lexeme).call
+
+    expect(result.words.find { |word| word.text == "稍事" }.lexeme).to(be_nil)
+    expect(result.unknown_count).to(eq(2))
+  end
+
+  it "prefers the word entry over the character of the same text" do
+    create(:lexeme, :character, text: "有", meanings: {"ru" => "иероглиф"})
+    create(:lexeme, kind: :word, text: "有", meanings: {"ru" => "иметь"})
+    lexeme = sentence!("有。", %w[有])
+
+    word = described_class.new(lexeme).call.words.first
+
+    expect(word.lexeme.kind).to(eq("word"))
   end
 end

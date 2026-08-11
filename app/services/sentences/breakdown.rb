@@ -32,8 +32,9 @@ module Sentences
     def build_words(units)
       texts = units.uniq
       lexemes = Lexeme
-        .where(kind: %i[word character], text: texts)
+        .where(kind: Huayu::TextAnalyzer::TOKEN_KINDS, text: texts)
         .includes(senses: :examples)
+        .order(:kind)
         .index_by(&:text)
 
       units.map do |unit|
