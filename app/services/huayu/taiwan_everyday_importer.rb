@@ -27,6 +27,7 @@ module Huayu
       admin
       health
       leisure
+      faith
     ]
       .freeze
     FACETS = %w[recognition production reading tone].freeze
@@ -156,12 +157,27 @@ module Huayu
         "lines" => entry["lines"].presence,
         "lat" => entry["lat"],
         "lon" => entry["lon"],
+        "hokkien" => hokkien(entry),
         "note" => {"en" => entry["note_en"], "ru" => entry["note_ru"]}.compact_blank.presence,
-        "example" => entry["example"].presence,
+        "examples" => examples(entry),
         "abbr" => short_form(entry, "abbr"),
         "full" => short_form(entry, "full"),
         "capital" => capital(entry)
       }.compact
+    end
+
+    def examples(entry)
+      rows = entry["examples"].presence || [entry["example"]].compact
+      rows
+        .filter_map { |row| row.slice("zh", "en", "ru").compact_blank.presence if row.is_a?(Hash) }
+        .presence
+    end
+
+    def hokkien(entry)
+      tailo = entry["tailo"].presence
+      return if tailo.nil?
+
+      {"tailo" => tailo, "hanzi" => entry["hokkien"].presence}.compact
     end
 
     def capital(entry)

@@ -108,6 +108,66 @@ RSpec.describe Huayu::TextAnalyzer do
     end
   end
 
+  describe "mixed-script vocabulary words" do
+    it "keeps a Latin-plus-Han word whole" do
+      word!("K書")
+      word!("中心")
+      described_class.reset_vocabulary!
+
+      expect(segment("我在K書中心")).to(eq(%w[我 在 K書 中心]))
+    end
+
+    it "keeps a zhuyin-written word whole" do
+      word!("ㄍㄧㄥ")
+      described_class.reset_vocabulary!
+
+      tokens = described_class.new.analyze("不要再ㄍㄧㄥ了")
+      expect(tokens.map(&:text)).to(include("ㄍㄧㄥ"))
+    end
+
+    it "refuses the match when the Latin part continues" do
+      word!("K書")
+      described_class.reset_vocabulary!
+
+      tokens = described_class.new.analyze("OK書店")
+      expect(tokens.map(&:text)).not_to(include("K書"))
+    end
+  end
+
+  describe "lunar-date normalisation" do
+    it "rebuilds month and day around a stolen 月初" do
+      word!("月初")
+      word!("七月")
+      word!("初一")
+      described_class.reset_vocabulary!
+
+      expect(segment("七月初一")).to(eq(%w[七月 初一]))
+    end
+
+    it "leaves a real 月初 alone" do
+      word!("月初")
+      described_class.reset_vocabulary!
+
+      expect(segment("七月初的天氣")).to(include("月初"))
+    end
+
+    it "keeps 媽祖 ahead of 祖廟" do
+      word!("媽祖")
+      word!("祖廟")
+      described_class.reset_vocabulary!
+
+      expect(segment("媽祖廟")).to(eq(%w[媽祖 廟]))
+    end
+
+    it "keeps the good brothers whole before 們" do
+      word!("好兄弟")
+      word!("兄弟")
+      described_class.reset_vocabulary!
+
+      expect(segment("好兄弟們")).to(eq(%w[好兄弟 們]))
+    end
+  end
+
   describe "the merge pass" do
     it "does not re-glue a span the frequency model already rejected" do
       word!("我等")

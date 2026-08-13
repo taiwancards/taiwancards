@@ -205,6 +205,7 @@ namespace(:huayu) do
     end
 
     puts("\nresegmented: #{changed} of #{seen}")
+    Rake::Task["huayu:link_sentence_words"].invoke if changed.positive?
   end
 
   desc("Connect dictionary examples to their sentence records")

@@ -75,9 +75,29 @@
               class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
             = render("shared/quick_add", lexeme:)
 
+  - hokkien = lexeme.data["hokkien"]
+  - if hokkien.present?
+    p.text-sm.text-muted-foreground
+      span.font-medium = t("words.hokkien_source")
+      = " "
+      - if hokkien["hanzi"].present? && hokkien["hanzi"] != lexeme.text
+        span.text-foreground lang="nan-TW" = hokkien["hanzi"]
+        = " "
+      span.italic = hokkien["tailo"]
+
   - everyday_note = lexeme.data.dig("note", I18n.locale.to_s).presence
   - if everyday_note
     p.rounded-xl.border.border-border.p-3.text-sm.leading-relaxed = everyday_note
+
+  - everyday_examples = Array(lexeme.data["examples"]).select { |row| row.is_a?(Hash) && row["zh"].present? }
+  - if everyday_examples.any?
+    .space-y-3.rounded-xl.border.border-border.p-3
+      - everyday_examples.each do |example|
+        .space-y-1
+          p.text-base.leading-relaxed lang="zh-TW" = example["zh"]
+          - example_gloss = example[I18n.locale.to_s].presence || example["en"].presence
+          - if example_gloss
+            p.text-sm.text-muted-foreground = example_gloss
 
   = render("shared/liangci", sidecar: @liangci)
 

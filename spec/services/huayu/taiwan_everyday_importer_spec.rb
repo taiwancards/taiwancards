@@ -96,6 +96,20 @@ RSpec.describe Huayu::TaiwanEverydayImporter do
     expect(Lexeme.exists?(text: "測試19")).to(be(true))
   end
 
+  it "stores the Hokkien reading and source spelling when given" do
+    write(
+      [
+        base("測試丙", "origin" => "hokkien", "tailo" => "pháinn-sè", "hokkien" => "歹勢"),
+        base("測試丁")
+      ]
+    )
+
+    described_class.new(path:).call
+
+    expect(Lexeme.find_by!(text: "測試丙").data["hokkien"]).to(eq({"tailo" => "pháinn-sè", "hanzi" => "歹勢"}))
+    expect(Lexeme.find_by!(text: "測試丁").data).not_to(have_key("hokkien"))
+  end
+
   it "skips malformed entries instead of failing the whole import" do
     write([base("測試甲"), {"text" => "壞", "pinyin" => "huài"}])
 

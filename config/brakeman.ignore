@@ -107,7 +107,11 @@
     {
       "fingerprint": "a02d7236cc4044fe0224b0dd0800f9ea40e4896e95b91a102fdbb8bb0a334b03",
       "note": "The clip id is matched against an anchored allowlist regex with no dot or slash, and the resolved path is checked to sit under the audio directory before it reaches the filesystem."
+    },
+    {
+      "fingerprint": "83b3a1f88212e12b0771cbdde13f4944db143247585e11bd20ab11680b2837e6",
+      "note": "Offline corpus-build helper that never runs on the server. The Marshal payload is read from a pipe written by a child process this same script forked moments earlier, so the data source is the process itself, never user input."
     }
   ],
-  "brakeman_version": "8.0.5"
+  "brakeman_version": "8.0.6"
 }

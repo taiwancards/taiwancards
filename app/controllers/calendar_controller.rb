@@ -29,7 +29,7 @@ class CalendarController < ApplicationController
 
   def holiday_lexemes
     Lexeme
-      .where(kind: :word, text: Huayu::Holidays.word_texts)
+      .where(kind: Lexeme::DICTIONARY_KINDS, text: Huayu::Holidays.word_texts)
       .visible_to(current_user)
       .index_by(&:text)
   end

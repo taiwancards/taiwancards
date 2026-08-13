@@ -3,6 +3,7 @@
 module Huayu
   class TextAnalyzer
     HAN = /\p{Han}/
+    ALNUM = /[A-Za-z0-9]/
     MAX_WORD = 8
     MERGE_SPAN = 5
     TOKEN_KINDS = %i[word collocation measure_word character].freeze
@@ -16,12 +17,27 @@ module Huayu
         @vocabulary[:zh_tw] ||= begin
           words = Lexeme.where(kind: %i[word collocation]).where("length(text) >= 2").pluck(:text).to_set
           words |= SegmentationVocabulary.words
-          {words: words, max: [words.map(&:length).max || 2, MAX_WORD].min}
+          {words: words, max: [words.map(&:length).max || 2, MAX_WORD].min, mixed: mixed_pattern(words)}
         end
       end
 
       def reset_vocabulary!
         @vocabulary = nil
+      end
+
+      private
+
+      def mixed_pattern(words)
+        specials = words.reject { |word| word.each_char.all? { |char| char.match?(HAN) } }
+        return nil if specials.empty?
+
+        parts = specials.sort_by { |word| -word.length }.map do |word|
+          head = word[0].match?(ALNUM) ? "(?<![A-Za-z0-9])" : ""
+          tail = word[-1].match?(ALNUM) ? "(?![A-Za-z0-9])" : ""
+          "#{head}#{Regexp.escape(word)}#{tail}"
+        end
+
+        Regexp.new(parts.join("|"))
       end
     end
 
@@ -69,7 +85,59 @@ module Huayu
       end
     end
 
+    MONTH_HEADS = %w[正 一 二 三 四 五 六 七 八 九 十 十一 十二].to_set.freeze
+    DAY_TAILS = %w[一 二 三 四 五 六 七 八 九 十].to_set.freeze
+
     def tokenize(text, words)
+      pattern = self.class.vocabulary[:mixed]
+      return normalize(tokenize_plain(text, words)) if pattern.nil?
+
+      result = []
+      cursor = 0
+      text.scan(pattern) do
+        match = Regexp.last_match
+        result.concat(tokenize_plain(text[cursor...match.begin(0)], words)) if match.begin(0) > cursor
+        result << [:word, match[0]]
+        cursor = match.end(0)
+      end
+
+      result.concat(tokenize_plain(text[cursor..], words)) if cursor < text.length
+      normalize(result)
+    end
+
+    def normalize(tokens)
+      out = []
+      index = 0
+
+      while index < tokens.length
+        kind, text = tokens[index]
+        second = tokens[index + 1]
+        third = tokens[index + 2]
+
+        if kind != :literal &&
+            second &&
+            second[1] == "月初" &&
+            MONTH_HEADS.include?(text) &&
+            third &&
+            DAY_TAILS.include?(third[1])
+          out << [:word, "#{text}月"] << [:word, "初#{third[1]}"]
+          index += 3
+        elsif text == "媽" && second && second[1] == "祖廟"
+          out << [:word, "媽祖"] << [:char, "廟"]
+          index += 2
+        elsif text == "好" && second && second[1] == "兄弟" && third && third[1] == "們"
+          out << [:word, "好兄弟"]
+          index += 2
+        else
+          out << tokens[index]
+          index += 1
+        end
+      end
+
+      out
+    end
+
+    def tokenize_plain(text, words)
       result = []
       run = +""
       literal = +""

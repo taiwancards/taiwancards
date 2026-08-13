@@ -22,14 +22,15 @@ module EverydayHelper
     "people" => "人",
     "slang" => "話",
     "civics" => "民",
-    "leisure" => "樂"
+    "leisure" => "樂",
+    "faith" => "廟"
   }.freeze
 
   GROUPS = {
     "daily" => %w[food drinks breakfast produce life],
     "errands" => %w[health money payments housing admin work],
     "moving" => %w[transport places nature travel leisure],
-    "society" => %w[people slang civics]
+    "society" => %w[people slang civics faith]
   }.freeze
 
   def everyday_glyph(domain)

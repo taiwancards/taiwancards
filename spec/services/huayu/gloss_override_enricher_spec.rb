@@ -46,6 +46,16 @@ RSpec.describe Huayu::GlossOverrideEnricher do
     expect(classifier.reload.meanings["en"]).to(eq("Counts hours."))
   end
 
+  it "leaves radicals to the radical importer that owns them" do
+    character = Lexeme.create!(kind: :character, text: "覀", meanings: {"en" => "west (old form)"})
+    radical = Lexeme.create!(kind: :radical, text: "覀", meanings: {"en" => "west"})
+    write({"覀" => {"en" => "to cover; west (archaic)", "replace" => true}})
+
+    expect(described_class.new(path:).call).to(include(replaced_en: 1))
+    expect(character.reload.meanings["en"]).to(eq("to cover; west (archaic)"))
+    expect(radical.reload.meanings["en"]).to(eq("west"))
+  end
+
   it "never empties a side the entry says nothing about" do
     lexeme = Lexeme.create!(kind: :word, text: "上面", meanings: {"en" => "above", "ru" => "сверху"})
     write({"上面" => {"ru" => "сверху; выше", "replace" => true}})

@@ -1023,6 +1023,7 @@ en:
     badge: TBCL %{n}
     words_count: "%{count} in the dictionary"
   words:
+    hokkien_source: "Taiwanese Hokkien:"
     no_corpus: no written data
     no_corpus_hint: "This one lives in speech: it does not occur in our written corpora, so no corpus frequency has been measured."
     collocations: Collocations
@@ -2123,6 +2124,7 @@ en:
       slang: How people actually talk
       civics: News and society
       leisure: Somewhere to go
+      faith: Temples and festivals
     tea:
       title: "Tea: six classes and the Taiwanese scale"
       hint: Classes differ by what was done to the leaf, not by the plant. Percentages are accepted ballparks, not constants.
@@ -2166,6 +2168,16 @@ en:
       超商: Convenience stores
       付款: Paying at the till
       夜市小吃: Night-market street food
+      中元節: Ghost Month and Zhongyuan
+      媽祖: Mazu and processions
+      拜拜: Worship and offerings
+      清明節: Tomb-sweeping
+      端午節: Dragon Boat customs
+      元宵節: Lantern Festival
+      教師節: Confucius and Teacher's Day
+      過年: New Year customs
+      冬至: Winter solstice
+      節慶食物: Festival food
       飯類: Rice dishes and lunchboxes
       點餐: Placing your order
       外食場合: "Eating out: places and occasions"
@@ -2310,6 +2322,7 @@ en:
       admin: Paperwork and residency
       health: Health and medicine
       leisure: Leisure and days out
+      faith: Temples and festivals
     origins:
       hokkien: from Hokkien
       japanese: from Japanese
