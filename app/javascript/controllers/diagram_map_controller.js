@@ -47,6 +47,7 @@ export default class extends Controller {
     this.pairTextTarget.textContent = card.pairText || "";
     this.pairReadingTarget.textContent = card.pairReading || "";
     this.pairTarget.classList.toggle("hidden", !card.pairText);
+    this.pairTarget.classList.toggle("inline-flex", !!card.pairText);
     this.linkTarget.href = card.href;
 
     this.emptyTarget.classList.add("hidden");
