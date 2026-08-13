@@ -2,11 +2,20 @@
 
 module Huayu
   class WordProfile
-    def initialize(lexeme)
+    def initialize(lexeme, twin: nil)
       @lexeme = lexeme
+      @twin = twin
     end
 
     attr_reader :lexeme
+
+    def content
+      @content ||= richer_twin? ? @twin : lexeme
+    end
+
+    def meaning
+      lexeme.meaning.presence || content.meaning
+    end
 
     def readings
       @readings ||= lexeme.reading_set
@@ -47,13 +56,13 @@ module Huayu
     end
 
     def candidate_sentences
-      ExampleSentences.for(lexeme, limit: SENTENCE_LIMIT)
+      ExampleSentences.for(content, limit: SENTENCE_LIMIT)
     end
 
     COLLOCATION_LIMIT = 12
 
     def collocations
-      @collocations ||= lexeme
+      @collocations ||= content
         .containers
         .where(kind: :collocation)
         .visible
@@ -63,7 +72,7 @@ module Huayu
     end
 
     def senses
-      @senses ||= lexeme.senses.includes(examples: :lexeme).to_a
+      @senses ||= content.senses.includes(examples: :lexeme).to_a
     end
 
     def translated_senses
@@ -85,7 +94,7 @@ module Huayu
 
     def appears_in
       @appears_in ||= SenseExample
-        .where(lexeme_id: lexeme.id)
+        .where(lexeme_id: content.id)
         .includes(lexeme_sense: :lexeme)
         .limit(APPEARS_IN_LIMIT)
         .filter_map { |example| example.lexeme_sense }
@@ -96,14 +105,14 @@ module Huayu
     REVISED_MIN_LEVEL = 3
 
     def sketch
-      @sketch ||= WordSketch.for(lexeme.text)
+      @sketch ||= WordSketch.for(content.text)
     end
 
     def revised_senses(level: nil)
       return [] if senses.any?
       return [] if level && level < REVISED_MIN_LEVEL
 
-      MoeRevised.for(lexeme.text).senses
+      MoeRevised.for(content.text).senses
     end
 
     def taiwan_specific?
@@ -111,15 +120,19 @@ module Huayu
     end
 
     def etymology
-      lexeme.data["etymology_text"].presence
+      lexeme.data["etymology_text"].presence || content.data["etymology_text"].presence
     end
 
     def pos
-      lexeme.data["pos"]
+      lexeme.data["pos"].presence || content.data["pos"]
     end
 
     def sources
       lexeme.sources
+    end
+
+    def richer_twin?
+      @twin.present? && @twin.senses.size > lexeme.senses.size
     end
 
     def tocfl_level

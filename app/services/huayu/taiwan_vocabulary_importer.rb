@@ -71,7 +71,7 @@ module Huayu
         meanings: {"en" => info["gloss"].to_s.strip}.compact_blank,
         data: {
           "taiwan_specific" => true,
-          "etymology_text" => info["etymology"].to_s.strip.presence
+          "etymology_text" => EtymologyText.normalize(info["etymology"]).presence
         }.compact
       )
       lexeme.present?

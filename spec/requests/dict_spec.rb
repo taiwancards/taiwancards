@@ -68,6 +68,43 @@ RSpec.describe "Dictionary" do
     expect(response.body).to(include("platform").or(include("перрон")))
   end
 
+  it "shows the same entry for both spellings and links them" do
+    create(
+      :lexeme,
+      kind: :word,
+      text: "臺獨",
+      meanings: {
+        "en" => "Taiwan independence (position and movement)",
+        "ru" => "тайваньская независимость"
+      }
+    )
+    create(
+      :lexeme,
+      kind: :word,
+      text: "台獨",
+      meanings: {"en" => "independence", "ru" => "независимость"}
+    )
+
+    get("/dict/#{CGI.escape("台獨")}")
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("Taiwan independence (position and movement)"))
+    expect(response.body).to(include("/dict/#{CGI.escape("臺獨")}"))
+  end
+
+  it "keeps the senses of the other spelling on the page" do
+    plain = create(:lexeme, kind: :word, text: "舞台", meanings: {"en" => "stage", "ru" => "сцена"})
+    rich = create(:lexeme, kind: :word, text: "舞臺", meanings: {"en" => "stage", "ru" => "сцена"})
+    rich.senses.create!(position: 0, meanings: {"ru" => "площадка, на которой играют"})
+
+    get("/ru/dict/#{CGI.escape("舞臺")}")
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("площадка, на которой играют"))
+    expect(response.body).to(include("/ru/dict/#{CGI.escape("舞臺")}"))
+    expect(plain.reload.senses).to(be_empty)
+  end
+
   it "shows a collocation on the same entry page" do
     get("/dict/#{CGI.escape("超商")}")
     expect(response).to(have_http_status(:ok))

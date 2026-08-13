@@ -6,6 +6,6 @@
       .flex.items-baseline.justify-between.gap-1
         span.text-lg.font-medium lang="zh-TW" = lexeme.text
         = render("shared/speak", lexeme:, size: :sm)
-      - reading = lexeme.reading_set.first
+      - reading, reading_css = headline_reading(lexeme.reading_set.first)
       - if reading
-        .text-xs.text-muted-foreground = reading["zhuyin"].presence || reading["pinyin"]
+        .text-xs.text-muted-foreground class=reading_css = reading

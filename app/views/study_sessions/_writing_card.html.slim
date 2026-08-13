@@ -1,7 +1,7 @@
 - readings_label = lexeme.reading_set.map { |r| r["zhuyin"].presence || r["pinyin"] }.compact_blank.join(" · ")
 - action_button = "rounded-full border border-border px-5 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-40 disabled:hover:bg-transparent"
 
-.select-none.pinyin-locked[
+.select-none.pinyin-locked.zhuyin-locked[
   data-controller="card-writing"
   data-card-writing-label-correct-value=t("study.writing.correct")
   data-card-writing-label-hinted-value=t("study.writing.hinted")

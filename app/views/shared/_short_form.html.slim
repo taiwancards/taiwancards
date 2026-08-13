@@ -7,7 +7,7 @@
     span.text-muted-foreground = t("everyday.capital_label")
     span.text-sm.font-semibold lang="zh-TW" = capital["text"]
     - if capital["zhuyin"].present?
-      span.text-brand lang="zh-TW" = capital["zhuyin"]
+      span.zhuyin.text-brand lang="zh-TW" = capital["zhuyin"]
     - if capital["pinyin"].present?
       span.pinyin.text-muted-foreground = capital["pinyin"]
     - if capital.dig("meaning", I18n.locale.to_s).present?
@@ -22,7 +22,7 @@
         span.text-muted-foreground = t("everyday.#{kind}_label")
         span.text-sm.font-semibold.text-brand lang="zh-TW" = form["text"]
         - if form["zhuyin"].present?
-          span.text-muted-foreground lang="zh-TW" = form["zhuyin"]
+          span.zhuyin.text-muted-foreground lang="zh-TW" = form["zhuyin"]
         - if form["pinyin"].present?
           span.pinyin.text-muted-foreground = form["pinyin"]
       - css = "inline-flex flex-wrap items-baseline gap-x-1 rounded-lg border px-2 text-xs py-0.5 border-brand/40 bg-brand/5"

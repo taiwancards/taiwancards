@@ -16,6 +16,34 @@ module ZhuyinHelper
     end
   end
 
+  def headline_reading(reading)
+    zhuyin = reading.to_h["zhuyin"].to_s.strip
+    pinyin = reading.to_h["pinyin"].to_s.strip
+    return [zhuyin, "zhuyin"] if zhuyin.present?
+
+    [pinyin.presence, ("pinyin" if pinyin.present?)]
+  end
+
+  def sentence_readings(sentences)
+    @sentence_readings ||= {}
+    missing = Array(sentences).compact_blank.uniq - @sentence_readings.keys
+    @sentence_readings.merge!(Huayu::SentenceReadings.new.call(missing)) if missing.any?
+
+    @sentence_readings
+  end
+
+  def reading_lines(sentence)
+    line = sentence_readings([sentence])[sentence]
+    return if line.nil?
+
+    safe_join(
+      [
+        (tag.div(line.zhuyin, class: "zy-line", lang: "zh-TW") if line.zhuyin.present?),
+        (tag.div(line.pinyin, class: "py-line", lang: "zh-Latn") if line.pinyin.present?)
+      ].compact
+    )
+  end
+
   def zhuyin_position_for(context)
     return "right" if context == :entry || vertical_text?
 
@@ -49,7 +77,9 @@ module ZhuyinHelper
 
   HANZI_FONTS = %w[kai sans].freeze
   HANZI_FONT_COOKIE = "hanzi_font"
-  PINYIN_COOKIE = "show_pinyin"
+  READINGS_COOKIE = "readings"
+  READINGS = %w[off zhuyin pinyin].freeze
+  DEFAULT_READINGS = "zhuyin"
   CHINA_COOKIE = "show_china"
 
   def hanzi_font
@@ -62,15 +92,23 @@ module ZhuyinHelper
   end
 
   def html_preference_classes
-    class_names("font-kai" => kai_font?, "no-pinyin" => !show_pinyin?, "show-china" => show_china?)
+    class_names(
+      "font-kai" => kai_font?,
+      "no-zhuyin" => !show_zhuyin?,
+      "no-pinyin" => !show_pinyin?,
+      "show-china" => show_china?
+    )
   end
 
-  def show_pinyin?
-    chosen = cookies[PINYIN_COOKIE].to_s
-    return chosen == "1" if chosen.present?
+  def readings_mode
+    chosen = cookies[READINGS_COOKIE].to_s
 
-    current_user.nil?
+    READINGS.include?(chosen) ? chosen : DEFAULT_READINGS
   end
+
+  def show_zhuyin? = readings_mode != "off"
+
+  def show_pinyin? = readings_mode == "pinyin"
 
   def show_china?
     cookies[CHINA_COOKIE].to_s == "1"

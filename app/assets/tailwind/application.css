@@ -176,6 +176,18 @@
     display: none;
   }
 
+  .no-zhuyin .zhuyin:not(.zhuyin-locked):not(.zhuyin-locked *) {
+    display: none;
+  }
+
+  .no-zhuyin ruby.zy:not(.zhuyin-locked *) > rt {
+    display: none;
+  }
+
+  .no-zhuyin .zy-right ruby.zy:not(.zhuyin-locked *) {
+    margin-right: 0;
+  }
+
   .china-note {
     display: none;
   }
@@ -202,11 +214,13 @@
     opacity: 1;
   }
 
+  .pref-mark-zhuyin,
   .pref-mark-pinyin {
     opacity: 1;
     transition: opacity 150ms ease;
   }
 
+  .no-zhuyin .pref-mark-zhuyin,
   .no-pinyin .pref-mark-pinyin {
     opacity: 0.25;
   }
@@ -613,37 +627,14 @@
     display: none;
   }
 
-  .reading-hints .zy-line,
-  .reading-hints .zy-reading,
-  .reading-hints .py-line,
-  .reading-hints .py-reading {
+  .no-zhuyin .zy-line:not(.zhuyin-locked),
+  .no-zhuyin .zy-reading:not(.zhuyin-locked),
+  .no-zhuyin .reading:not(.zhuyin-locked) {
     display: none;
   }
 
-  .reading-hints.hints-zhuyin .zy-line,
-  .reading-hints.hints-pinyin .py-line {
-    display: block;
-  }
-
-  .reading-hints.hints-zhuyin .zy-reading,
-  .reading-hints.hints-pinyin .py-reading {
-    display: inline;
-  }
-
-  .reading-hints:not(.hints-zhuyin) .reading {
+  .no-pinyin .py-reading:not(.pinyin-locked) {
     display: none;
-  }
-
-  .reading-hints:not(.hints-zhuyin) ruby.zy > rt {
-    display: none;
-  }
-
-  .reading-hints:not(.hints-zhuyin) .zy-right ruby.zy {
-    margin-right: 0;
-  }
-
-  .reading-hints:not(.hints-zhuyin) .py-reading {
-    margin-left: 0;
   }
 
   .reading {

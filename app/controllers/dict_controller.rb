@@ -39,9 +39,9 @@ class DictController < ApplicationController
 
   def show
     @text = params[:text]
-    lexeme = find_entry(@text)
+    entry = find_entry(@text)
 
-    if lexeme.nil?
+    if entry.nil?
       neighbor = Lexeme.visible.find_by(kind: %i[character radical], text: @text)
       neighbor ||= Lexeme.visible.find_by(id: @text) if @text.match?(/\A\d+\z/)
       return redirect_to(lexeme_page_path(neighbor)) if neighbor
@@ -49,10 +49,15 @@ class DictController < ApplicationController
       return render(:missing, status: :not_found)
     end
 
-    @profile = Huayu::WordProfile.new(lexeme)
+    @variants = Huayu::VariantForms.new.call(entry)
+    @spelling = entry.text
+    lexeme = @variants.first || entry
+    twin = (@variants - [lexeme]).max_by { |row| row.senses.size }
+
+    @profile = Huayu::WordProfile.new(lexeme, twin:)
     @sentence_profile = lexeme.sentence_profile
-    @liangci = Liangci::Sidecar.new.call(lexeme)
-    @thesaurus = Lexemes::Thesaurus.new.call(lexeme)
+    @liangci = Liangci::Sidecar.new.call(@profile.content)
+    @thesaurus = Lexemes::Thesaurus.new.call(@profile.content)
     @sketch = @profile.sketch
     @sketch_lexemes = resolve_collocates(@sketch)
     @revised = @profile.revised_senses(level: current_user&.level_grade)

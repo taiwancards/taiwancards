@@ -162,7 +162,7 @@ en:
     hanzi_font_hint: >-
       Character face. On: kaishu, the calligraphic face that shows strokes the way a hand writes them. Off:
       a plain sans. On by default.
-    pinyin_toggle: Show or hide pinyin
+    readings_toggle: Zhuyin and pinyin
     detail_toggle: How much a dictionary page shows
     detail_hint: >-
       How much a dictionary page shows. 詳 — everything we hold: rarity score, register mix, memory cards,
@@ -176,9 +176,10 @@ en:
     china_hint: >-
       The word used in China. On: a small line on the card shows what China says instead. Off: nothing
       extra. Off by default — this app teaches the Taiwanese word; the Chinese one is reference only.
-    pinyin_hint: >-
-      Pinyin next to zhuyin. Zhuyin is always shown and cannot be turned off. On: the romanisation appears
-      beside it. Off: zhuyin alone. Off by default — Taiwan reads by zhuyin.
+    readings_hint: >-
+      Readings above the characters, in three steps: zhuyin alone, zhuyin with pinyin, and nothing at all.
+      Pinyin never comes without zhuyin — Taiwan reads by zhuyin. Zhuyin alone by default, and whatever you
+      pick holds on every page until you change it.
     locale_switch: EN
     textbook: Textbook
     phrase_drills: Phrases
@@ -1033,6 +1034,8 @@ en:
     etymology: Origin
     taiwan_specific: Taiwanese
     taiwan_specific_hint: Marked as specifically used in Taiwan
+    variant_forms: "Spellings:"
+    variant_main: main
     score_hint: "Difficulty rank across the whole dictionary: 1 — simplest and most frequent, 999 — rarest and hardest"
     register_mix: Speech styles
     register_mix_note: "Shares are rescaled so that every register weighs the same as in a balanced corpus: a flat %{neutral} % means a stylistically neutral word. Measured on %{count} occurrences."
@@ -1664,8 +1667,6 @@ en:
       5: B1
     tip: "Tip: "
     examples: Examples
-    zhuyin: Zhuyin
-    pinyin: Pinyin
   mistakes:
     title: Mistake notebook
     lede: "Every word you miss lands here on its own — nothing to manage. Getting things wrong is a normal part of how memory works: each miss tells the app to bring that word back sooner."
@@ -2906,8 +2907,10 @@ en:
               They control how text looks across the whole app. A tap applies everywhere immediately —
               go ahead and try them now.
           pinyin_toggle:
-            title: Pinyin above the characters
-            body: Try tapping it. It helps some people and gets in the way of learning zhuyin for others.
+            title: Readings above the characters
+            body: >-
+              Each tap moves it on: zhuyin alone, zhuyin with pinyin, nothing. Pinyin never comes without
+              zhuyin.
           font_kai:
             title: The calligraphic font
             body: The shapes Taiwan teaches handwriting from. Tap it and look at the characters.

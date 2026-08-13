@@ -76,7 +76,8 @@
               span.text-xl.font-semibold lang="zh-TW" = entry.text
               - reading = entry.reading_set.first
               - if reading
-                span.text-xs.text-muted-foreground = reading["zhuyin"].presence || reading["pinyin"]
+                - chengyu_reading, chengyu_reading_css = headline_reading(reading)
+                span.text-xs.text-muted-foreground class=chengyu_reading_css = chengyu_reading
               - tone = entry.data["chengyu_tone"]
               - if detailed? && tone.present?
                 span.flex.items-center.gap-1.text-xs.text-muted-foreground

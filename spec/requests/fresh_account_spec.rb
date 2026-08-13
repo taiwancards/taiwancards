@@ -17,7 +17,7 @@ RSpec.describe "Coming back after the account was deleted" do
   it "drops the cookies of the account that is gone before anything else happens", :no_auth do
     victim = sign_in(create(:user, google_uid: "returner", google_email: "returner@example.com"))
     cookies[ZhuyinHelper::HANZI_FONT_COOKIE] = "kai"
-    cookies[ZhuyinHelper::PINYIN_COOKIE] = "0"
+    cookies[ZhuyinHelper::READINGS_COOKIE] = "off"
     cookies[:locale] = "ru"
     victim.destroy!
 
@@ -25,7 +25,7 @@ RSpec.describe "Coming back after the account was deleted" do
 
     expect(cookies[:user_id]).to(be_blank)
     expect(cookies[ZhuyinHelper::HANZI_FONT_COOKIE]).to(be_blank)
-    expect(cookies[ZhuyinHelper::PINYIN_COOKIE]).to(be_blank)
+    expect(cookies[ZhuyinHelper::READINGS_COOKIE]).to(be_blank)
     expect(cookies[:locale]).to(be_blank)
   end
 

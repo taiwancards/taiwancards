@@ -55,7 +55,8 @@
                   = link_to lexeme.text, path, class: "text-lg font-semibold hover:text-primary", lang: "zh-TW"
                 - else
                   span.text-lg.font-semibold lang="zh-TW" = lexeme.text
-                .text-xs.text-muted-foreground = lexeme.reading("zhuyin").presence || lexeme.reading("pinyin")
+                - history_reading, history_reading_css = headline_reading(lexeme.reading_set.first)
+                .text-xs.text-muted-foreground class=history_reading_css = history_reading
               td.px-3.py-2.text-muted-foreground
                 .line-clamp-1 = lexeme.meaning
               td.px-3.py-2

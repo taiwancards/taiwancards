@@ -142,7 +142,7 @@
                   - if row["glyph"].present?
                     span.text-2xl.leading-none.text-brand lang="zh-TW" = row["glyph"]
                   span.font-semibold lang="zh-TW" = row["text"]
-                  span.text-brand lang="zh-TW" class="text-[11px]" = row["zhuyin"]
+                  span.zhuyin.text-brand lang="zh-TW" class="text-[11px]" = row["zhuyin"]
                   span.pinyin.text-muted-foreground class="text-[10px]" = row["pinyin"]
                   - if row["example"].present?
                     = link_to character_path(row["example"]), class: "ml-auto shrink-0 text-lg font-semibold hover:text-brand", lang: "zh-TW" do

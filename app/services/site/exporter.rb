@@ -176,25 +176,6 @@ module Site
             });
           });
 
-          var warming = false;
-          function warmKai() {
-            var url = document.body && document.body.getAttribute("data-kai-font-url-value");
-            if (warming || !url || !window.FontFace) return;
-            warming = true;
-            var load = function () {
-              var face = new FontFace("TW Kai", 'url(' + url + ') format("woff2")', {
-                style: "normal", weight: "400", display: "swap"
-              });
-              face.load().then(function (ready) { document.fonts.add(ready); }, function () { warming = false; });
-            };
-            if (window.requestIdleCallback) requestIdleCallback(load, {timeout: 3000});
-            else setTimeout(load, 1200);
-          }
-          if (root.classList.contains("font-kai")) {
-            if (document.readyState === "complete") warmKai();
-            else window.addEventListener("load", warmKai, {once: true});
-          }
-
           document.addEventListener("click", function (event) {
             var opener = event.target.closest("[data-action~='menu#toggle']");
             var panels = document.querySelectorAll("[data-menu-target=panel]");

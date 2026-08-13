@@ -79,10 +79,13 @@ RSpec.describe "Grammar pages" do
     expect(examples.first.css(".grammar-gloss").text).to(start_with("“"))
   end
 
-  it "gives a signed-out visitor both readings", :no_auth do
+  it "gives a signed-out visitor zhuyin and holds the pinyin back", :no_auth do
     get("/grammar/shi")
 
-    expect(Nokogiri::HTML(response.body).at("html")["class"]).not_to(include("no-pinyin"))
+    classes = Nokogiri::HTML(response.body).at("html")["class"]
+
+    expect(classes).to(include("no-pinyin"))
+    expect(classes).not_to(include("no-zhuyin"))
   end
 
   it "anchors explanations in the language, never in a country" do

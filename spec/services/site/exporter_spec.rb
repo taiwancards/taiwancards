@@ -152,10 +152,6 @@ RSpec.describe Site::Exporter do
     end
   end
 
-  it "loads the heavy brush face from the address the app uses too" do
-    expect(page("en", "index.html")).to(include("data-kai-font-url-value=\"#{FontAssets.kai_full_url}\""))
-  end
-
   it "opens the connections and preloads the face the page paints with" do
     html = page("en", "index.html")
 

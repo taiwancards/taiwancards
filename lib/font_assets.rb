@@ -6,7 +6,7 @@ module FontAssets
     "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
   CACHE_CONTROL = "public, max-age=31536000, immutable"
   KAI_CORE = "tw-kai-core.woff2"
-  KAI_FULL = "tw-kai-full.woff2"
+  KAI_SLICES = "tw-kai-[0-9]*.woff2"
 
   module_function
 
@@ -19,11 +19,11 @@ module FontAssets
   end
 
   def kai_installed?
-    kai_faces.all? { |file| file.exist? && file.size.positive? }
+    kai_faces.size > 1 && kai_faces.all? { |file| file.exist? && file.size.positive? }
   end
 
   def kai_faces
-    [directory.join(KAI_CORE), directory.join(KAI_FULL)]
+    [directory.join(KAI_CORE), *directory.glob(KAI_SLICES).sort]
   end
 
   def base_url = SharedAssets.base_url
@@ -31,10 +31,6 @@ module FontAssets
   def url_for(name) = SharedAssets.url_for("fonts", name)
 
   def forget_stamps! = SharedAssets.forget_stamps!
-
-  def kai_full_url
-    url_for(KAI_FULL)
-  end
 
   def kai_core_url
     url_for(KAI_CORE)

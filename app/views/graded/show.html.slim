@@ -1,6 +1,6 @@
 - content_for(:title, "#{@text.title(I18n.locale)} · #{t("graded.tiers.#{@tier.id}")}")
 
-.py-6.space-y-5.reading-hints.hints-zhuyin data-controller="graded-reader reading-hints"
+.py-6.space-y-5 data-controller="graded-reader"
   header.space-y-2
     = link_to graded_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
       = t("graded.back")
@@ -19,12 +19,6 @@
       span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.size", lines: @text.sentences, chars: @text.length)
     .flex.shrink-0.items-center.gap-2
       - pill = "rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted"
-      button[ type="button" class=pill aria-pressed="true"
-        data-reading-hints-target="zhuyin" data-action="reading-hints#toggleZhuyin" ]
-        = t("grammar.zhuyin")
-      button[ type="button" class=pill aria-pressed="false"
-        data-reading-hints-target="pinyin" data-action="reading-hints#togglePinyin" ]
-        = t("grammar.pinyin")
       button[ type="button" class=pill aria-pressed="false"
         data-action="graded-reader#toggle" data-graded-reader-target="button" ]
         = t("graded.show_translation")

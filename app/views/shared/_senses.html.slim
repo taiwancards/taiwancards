@@ -1,5 +1,7 @@
 - senses = profile.translated_senses
-- runs_map = Huayu::SentenceSegments.runs_for(senses.flat_map { |s| s.examples.select(&:sentence?).first(3) }.filter_map(&:lexeme))
+- sentence_examples = senses.flat_map { |s| s.examples.select(&:sentence?).first(3) }
+- runs_map = Huayu::SentenceSegments.runs_for(sentence_examples.filter_map(&:lexeme))
+- sentence_readings(sentence_examples.map(&:text))
 - headword = profile.respond_to?(:lexeme) ? profile.lexeme&.text : nil
 - if senses.any?
   section.space-y-3
@@ -28,6 +30,7 @@
                         = link_to example.text, sentence_path(example.lexeme), class: "hover:text-foreground hover:underline"
                       - else
                         = example.text
+                      = reading_lines(example.text)
               - if collocations.any?
                 .flex.flex-wrap class="gap-1.5"
                   - collocations.first(8).each do |example|

@@ -1,14 +1,14 @@
 <!-- BEGIN app/views/layouts/application.html.slim -->
-<!DOCTYPE html><html class="font-kai" lang="ru"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport" /><!-- BEGIN app/views/shared/_meta.html.slim -->
+<!DOCTYPE html><html class="font-kai no-pinyin" lang="ru"><head><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport" /><!-- BEGIN app/views/shared/_meta.html.slim -->
 <title>TaiwanCards — тайваньский мандарин: чжуинь и традиционные иероглифы</title><meta content="TaiwanCards — приложение с карточками без рекламы для изучения тайваньского мандарина: традиционные иероглифы, чжуинь рядом с каждым чтением, уровни TOCFL, интервальные повторения и словари для повседневной жизни в Тайване." name="description" /><meta content="TaiwanCards" name="application-name" /><meta content="TaiwanCards" name="apple-mobile-web-app-title" /><link href="https://taiwancards.app/ru/" rel="canonical" /><meta content="TaiwanCards" property="og:site_name" /><meta content="TaiwanCards — тайваньский мандарин" property="og:title" /><meta content="Традиционные иероглифы, чжуинь, интервальные повторения, словари, произношение и уровни TOCFL." property="og:description" /><meta content="website" property="og:type" /><meta content="https://taiwancards.app/ru/" property="og:url" /><meta content="ru_RU" property="og:locale" /><meta content="https://taiwancards.app/og.png?v=3" property="og:image" /><meta content="1200" property="og:image:width" /><meta content="630" property="og:image:height" /><meta content="TaiwanCards — тайваньский мандарин" property="og:image:alt" /><meta content="summary_large_image" name="twitter:card" /><meta content="TaiwanCards — тайваньский мандарин" name="twitter:title" /><meta content="Традиционные иероглифы, чжуинь, интервальные повторения, словари, произношение и уровни TOCFL." name="twitter:description" /><meta content="https://taiwancards.app/og.png?v=3" name="twitter:image" /><meta content="index, follow" name="robots" /><meta content="telephone=no" name="format-detection" /><!-- END app/views/shared/_meta.html.slim -->
 <meta content="false" name="turbo-prefetch" /><meta content="yes" name="apple-mobile-web-app-capable" /><meta content="yes" name="mobile-web-app-capable" /><meta content="#ffffff" name="theme-color" /><link href="/favicon.ico?v=6" rel="icon" sizes="16x16 32x32" /><link href="/icon.svg?v=6" rel="icon" type="image/svg+xml" /><link href="/apple-touch-icon.png?v=6" rel="apple-touch-icon" /><link rel="stylesheet" href="/assets/fonts-28c9d5a1.css" data-turbo-track="reload" />
-<link rel="stylesheet" href="/assets/kai_faces-db209215.css" data-turbo-track="reload" />
-<link rel="stylesheet" href="/assets/tailwind-385f47c9.css" data-turbo-track="reload" /><script type="module">import "application"</script><link rel="alternate" hreflang="en" href="https://taiwancards.app/en/">
+<link rel="stylesheet" href="/assets/kai_faces-7191d839.css" data-turbo-track="reload" />
+<link rel="stylesheet" href="/assets/tailwind-9f2d0487.css" data-turbo-track="reload" /><script type="module">import "application"</script><link rel="alternate" hreflang="en" href="https://taiwancards.app/en/">
 <link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/">
 <link rel="alternate" hreflang="x-default" href="https://taiwancards.app/en/">
 <link rel="preconnect" href="https://study.taiwancards.app" crossorigin>
 <link rel="preconnect" href="https://assets.taiwancards.app" crossorigin>
-<link rel="preload" as="font" type="font/woff2" crossorigin href="https://assets.taiwancards.app/fonts/tw-kai-core.woff2?v=652c215f">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://assets.taiwancards.app/fonts/tw-kai-core.woff2?v=dd0e6002">
 <script>
 (function () {
   var root = document.documentElement;
@@ -21,25 +21,6 @@
       panel.classList.add("hidden");
     });
   });
-
-  var warming = false;
-  function warmKai() {
-    var url = document.body && document.body.getAttribute("data-kai-font-url-value");
-    if (warming || !url || !window.FontFace) return;
-    warming = true;
-    var load = function () {
-      var face = new FontFace("TW Kai", 'url(' + url + ') format("woff2")', {
-        style: "normal", weight: "400", display: "swap"
-      });
-      face.load().then(function (ready) { document.fonts.add(ready); }, function () { warming = false; });
-    };
-    if (window.requestIdleCallback) requestIdleCallback(load, {timeout: 3000});
-    else setTimeout(load, 1200);
-  }
-  if (root.classList.contains("font-kai")) {
-    if (document.readyState === "complete") warmKai();
-    else window.addEventListener("load", warmKai, {once: true});
-  }
 
   document.addEventListener("click", function (event) {
     var opener = event.target.closest("[data-action~='menu#toggle']");
@@ -62,7 +43,7 @@
 })();
 </script>
 
-</head><body class="min-h-dvh bg-background text-foreground antialiased" data-controller="kai-font" data-kai-font-url-value="https://assets.taiwancards.app/fonts/tw-kai-full.woff2?v=66bd85b5"><div class="mx-auto w-full max-w-3xl px-4"><!-- BEGIN app/views/shared/_flash.html.slim -->
+</head><body class="min-h-dvh bg-background text-foreground antialiased"><div class="mx-auto w-full max-w-3xl px-4"><!-- BEGIN app/views/shared/_flash.html.slim -->
 <!-- END app/views/shared/_flash.html.slim -->
 </div><!-- BEGIN app/views/landing/show.html.slim -->
 <div aria-hidden="true" class="flag-wash pointer-events-none fixed inset-0 -z-10"></div><!-- BEGIN app/views/landing/_nav.html.slim -->

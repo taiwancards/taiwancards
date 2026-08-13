@@ -14,7 +14,7 @@ article.rounded-2xl.border.border-border.p-4.space-y-2 class=("bg-muted/30" if p
     span.pinyin.text-sm.text-muted-foreground = pattern.pinyin
 
   - if pattern.zhuyin.present?
-    p.text-2xs.text-muted-foreground lang="zh-TW" = pattern.zhuyin
+    p.zhuyin.text-2xs.text-muted-foreground lang="zh-TW" = pattern.zhuyin
 
   p.text-sm = pattern.name(I18n.locale)
 

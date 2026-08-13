@@ -34,7 +34,7 @@
               span.text-lg = word.text
               = render("shared/speak", lexeme: word.lexeme, size: :sm)
             - if word.lexeme.reading("zhuyin").present?
-              .text-xs.text-muted-foreground = word.lexeme.reading("zhuyin")
+              .zhuyin.text-xs.text-muted-foreground = word.lexeme.reading("zhuyin")
             - gloss = word.lexeme.meaning(I18n.locale).presence || word.senses.filter_map { |sense| sense.meaning(I18n.locale) }.first
             - if gloss.present?
               .mt-1.max-w-56.text-xs.text-muted-foreground = gloss
@@ -63,7 +63,8 @@
                     span.text-2xs.text-muted-foreground = "##{char.rank}"
               - char_reading = char.lexeme.reading_set.first
               - if char_reading
-                span.text-2xs.text-muted-foreground lang="zh-TW" = char_reading["zhuyin"].presence || char_reading["pinyin"]
+                - char_headline, char_headline_css = headline_reading(char_reading)
+                span.text-2xs.text-muted-foreground lang="zh-TW" class=char_headline_css = char_headline
               - if char.lexeme.meaning.present?
                 span.truncate.text-2xs.text-muted-foreground style="max-width: 9rem" = char.lexeme.meaning
         - else

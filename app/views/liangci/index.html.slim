@@ -28,5 +28,6 @@
           = link_to liangci_entry_path(entry.text), class: "rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
             .flex.items-baseline.gap-2
               span.text-2xl.font-semibold lang="zh-TW" = entry.text
-              span.text-xs.text-muted-foreground = entry.readings["zhuyin"].presence || entry.readings["pinyin"]
+              - liangci_reading, liangci_reading_css = headline_reading(entry.readings)
+              span.text-xs.text-muted-foreground class=liangci_reading_css = liangci_reading
             .line-clamp-2.text-xs.text-muted-foreground class="mt-0.5" = entry.meaning

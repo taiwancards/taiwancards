@@ -163,6 +163,20 @@ namespace(:deploy) do
       order.call
       :ran
     },
+    "gloss_text" => -> {
+      repair = Huayu::GlossRepair.new
+      next :skipped unless repair.drift?
+
+      $stdout.puts(repair.call.to_s)
+      :ran
+    },
+    "etymology_text" => -> {
+      repair = Huayu::EtymologyRepair.new
+      next :skipped unless repair.drift?
+
+      $stdout.puts(repair.call.to_s)
+      :ran
+    },
     "notices" => -> {
       importer = Huayu::NoticeImporter.new
       next :skipped unless importer.drift?

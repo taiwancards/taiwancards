@@ -87,14 +87,20 @@ export default class extends Controller {
   }
 
   render(token) {
-    const reading = [token.zhuyin, token.pinyin].filter(Boolean).join(" · ");
+    const zhuyin = token.zhuyin
+      ? `<span class="zhuyin" lang="zh-TW">${token.zhuyin}</span>`
+      : "";
+    const pinyin = token.pinyin
+      ? `<span class="pinyin">${token.zhuyin ? " · " : ""}${token.pinyin}</span>`
+      : "";
+    const reading = `${zhuyin}${pinyin}`;
     const chars = (token.chars || [])
       .map(
         (
           c,
         ) => `<div class="grid grid-cols-[1.5rem_auto_1fr] items-baseline gap-x-2 gap-y-0.5 text-sm">
           <span lang="zh-TW" class="text-base">${c.text}</span>
-          <span class="whitespace-nowrap text-muted-foreground">${c.zhuyin || ""}</span>
+          <span class="zhuyin whitespace-nowrap text-muted-foreground" lang="zh-TW">${c.zhuyin || ""}</span>
           <span class="text-muted-foreground">${c.meaning || ""}</span>
         </div>`,
       )

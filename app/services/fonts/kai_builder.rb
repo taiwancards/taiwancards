@@ -11,8 +11,9 @@ module Fonts
       "U+3105-312F,U+31A0-31BF,U+02C7,U+02CA,U+02CB,U+02D9"
     UI_GLYPHS = "U+81FA"
     CORE_SIZE = 300
+    SLICE_SIZE = 1200
     CORE_FILE = "tw-kai-core.woff2"
-    FULL_FILE = "tw-kai-full.woff2"
+    SLICE_FILE = "tw-kai-%02d.woff2"
     FACES_FILE = Rails.root.join("app/assets/stylesheets/kai_faces.css")
 
     def initialize(workspace)
@@ -38,13 +39,19 @@ module Fonts
       ttf = extract(archive)
       raise "#{MEMBER} missing from the archive" if ttf.nil?
 
-      core, full = plan
-      puts("fonts:kai #{core.size} codepoints in the core face, #{full.size} in the full face")
+      core, slices = plan
+      puts("fonts:kai #{core.size} codepoints in the core face, #{slices.sum(&:size)} in #{slices.size} slices")
 
       FileUtils.mkdir_p(directory)
+      FileUtils.rm_f(directory.glob("tw-kai-*.woff2"))
       raise "pyftsubset failed for the core face" unless subset(python, ttf, core, directory.join(CORE_FILE))
-      raise "pyftsubset failed for the full face" unless subset(python, ttf, full, directory.join(FULL_FILE))
-      write_faces(core)
+
+      slices.each_with_index do |points, index|
+        target = directory.join(format(SLICE_FILE, index + 1))
+        raise "pyftsubset failed for #{target.basename}" unless subset(python, ttf, points, target)
+      end
+
+      write_faces(core, slices)
       report(directory)
     end
 
@@ -65,8 +72,8 @@ module Fonts
       pinned = expand("#{RANGES},#{UI_GLYPHS}")
       characters = ordered_characters
       core = (pinned + characters.first(CORE_SIZE).map(&:ord)).uniq.sort
-      full = (pinned + characters.map(&:ord)).uniq.sort
-      [core, full]
+      rest = characters.drop(CORE_SIZE).map(&:ord).uniq - core
+      [core, rest.each_slice(SLICE_SIZE).map(&:sort)]
     end
 
     def ordered_characters
@@ -123,19 +130,23 @@ module Fonts
       )
     end
 
-    def write_faces(core)
-      FACES_FILE.write(
-        <<~CSS
-          @font-face {
-            font-family: 'TW Kai';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: url("#{FontAssets::MOUNT}/#{CORE_FILE}") format('woff2');
-            unicode-range: #{unicode_range(core)};
-          }
-        CSS
-      )
+    def write_faces(core, slices)
+      faces = [face(CORE_FILE, core)]
+      slices.each_with_index { |points, index| faces << face(format(SLICE_FILE, index + 1), points) }
+      FACES_FILE.write(faces.join("\n"))
+    end
+
+    def face(file, points)
+      <<~CSS
+        @font-face {
+          font-family: 'TW Kai';
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: url("#{FontAssets::MOUNT}/#{file}") format('woff2');
+          unicode-range: #{unicode_range(points)};
+        }
+      CSS
     end
 
     def unicode_range(points)
@@ -149,8 +160,8 @@ module Fonts
 
     def report(directory)
       core = directory.join(CORE_FILE).size
-      full = directory.join(FULL_FILE).size
-      puts("fonts:kai core face #{(core / 1024.0).round} KB, full face #{(full / 1024.0 / 1024).round(2)} MB")
+      slices = directory.glob("tw-kai-[0-9]*.woff2").sum(&:size)
+      puts("fonts:kai core face #{(core / 1024.0).round} KB, slices #{(slices / 1024.0 / 1024).round(2)} MB in total")
       puts("fonts:kai faces written to #{FACES_FILE.relative_path_from(Rails.root)}")
     end
   end

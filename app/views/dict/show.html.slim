@@ -18,9 +18,11 @@
         - reading = zhuyin.present? ? @profile.pinyin_label : @profile.reading_label
         - if reading.present?
           .text-base.font-medium.text-muted-foreground class=(zhuyin.present? ? "pinyin" : nil) = reading
-        - if @profile.show_flat_meaning? && lexeme.meaning.present?
-          p.text-base = lexeme.meaning
+        - if @profile.show_flat_meaning? && @profile.meaning.present?
+          p.text-base = @profile.meaning
         = render("shared/short_form", lexeme:)
+        - if @variants.present?
+          = render("shared/variant_forms", variants: @variants, current: @spelling)
       .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-md sm:justify-end"
         - if detailed?
           = score_badge(lexeme)
@@ -91,10 +93,12 @@
 
   - everyday_examples = Array(lexeme.data["examples"]).select { |row| row.is_a?(Hash) && row["zh"].present? }
   - if everyday_examples.any?
+    - sentence_readings(everyday_examples.map { |example| example["zh"] })
     .space-y-3.rounded-xl.border.border-border.p-3
       - everyday_examples.each do |example|
         .space-y-1
           p.text-base.leading-relaxed lang="zh-TW" = example["zh"]
+          = reading_lines(example["zh"])
           - example_gloss = example[I18n.locale.to_s].presence || example["en"].presence
           - if example_gloss
             p.text-sm.text-muted-foreground = example_gloss
@@ -114,6 +118,7 @@
         - if chengyu_example.present? && chengyu_example["zh"].present?
           .space-y-1
             p.text-base lang="zh-TW" = hanzi(chengyu_example["zh"])
+            = reading_lines(chengyu_example["zh"])
             - example_gloss = chengyu_example[I18n.locale.to_s].presence || chengyu_example["en"].presence
             - if example_gloss
               p.text-sm.text-muted-foreground = example_gloss
@@ -222,7 +227,8 @@
           = link_to character_path(char.text), class: "flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
             span.text-2xl lang="zh-TW" = char.text
             .min-w-0
-              .text-xs.font-medium = char.reading_set.first&.dig("zhuyin").presence || char.reading_set.first&.dig("pinyin")
+              - char_reading, char_reading_css = headline_reading(char.reading_set.first)
+              .text-xs.font-medium class=char_reading_css = char_reading
               - if char.meaning.present?
                 .truncate.text-xs.text-muted-foreground style="max-width: 9rem" = char.meaning
 

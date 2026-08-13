@@ -15,12 +15,11 @@
 
   - if inside_app
     button[ type="button" class=button_classes
-      title=t("nav.pinyin_hint") aria-label=t("nav.pinyin_toggle")
-      data-controller="display-pref" data-action="display-pref#toggle display-pref:reflect->display-pref#reflect"
-      data-tour="pref-pinyin" data-display-pref-name-value="show_pinyin" data-display-pref-css-value="no-pinyin"
-      data-display-pref-on-value="0" data-display-pref-off-value="1" data-display-pref-invert-value="true" ]
+      title=t("nav.readings_hint") aria-label=t("nav.readings_toggle")
+      data-controller="readings" data-action="readings#cycle readings:reflect->readings#reflect"
+      data-tour="pref-pinyin" ]
       span.flex.items-baseline class="gap-px"
-        span lang="zh-TW" class="text-[15px] leading-none" ㄅ
+        span.pref-mark-zhuyin lang="zh-TW" class="text-[15px] leading-none" ㄅ
         span.pref-mark-pinyin class="text-[11px] leading-none" a
 
     button[ type="button" class=wide_classes

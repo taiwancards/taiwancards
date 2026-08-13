@@ -131,14 +131,13 @@ RSpec.describe "Phrase drills" do
       expect(response.body).to(include("data-scheme=\"tbcl\""))
     end
 
-    it "lets the readings be switched off" do
+    it "leaves the readings to the header switch" do
       drill("我好餓。", 1)
 
       get("/textbook/phrases")
 
-      expect(response.body).to(include("data-controller=\"reading-hints\""))
-      expect(response.body).to(include("data-reading-hints-target=\"pinyin\""))
       expect(response.body).to(include("py-line"))
+      expect(response.body).not_to(include("reading-hints"))
     end
 
     it "pages through a long list" do

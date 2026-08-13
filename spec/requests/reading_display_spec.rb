@@ -27,25 +27,29 @@ RSpec.describe "Reading display" do
     expect(response.body).to(match(/text-2xl[^>]*lang="zh-TW"[^>]*>\s*ㄏㄜˊ/m))
   end
 
-  it "hides pinyin when the browser cookie turns it off" do
-    cookies[:show_pinyin] = "0"
-
+  it "shows zhuyin alone until the reader asks for more" do
     get(character_path(text: "和"))
 
     expect(response.body).to(match(/<html[^>]*class="[^"]*no-pinyin/))
+    expect(response.body).not_to(match(/<html[^>]*class="[^"]*no-zhuyin/))
   end
 
-  it "hides pinyin until it is asked for" do
-    get(character_path(text: "和"))
+  it "adds pinyin when the cookie asks for it" do
+    cookies[:readings] = "pinyin"
 
-    expect(response.body).to(match(/<html[^>]*class="[^"]*no-pinyin/))
-  end
-
-  it "shows pinyin once the cookie asks for it" do
-    cookies[:show_pinyin] = "1"
     get(character_path(text: "和"))
 
     expect(response.body).not_to(match(/<html[^>]*class="[^"]*no-pinyin/))
+    expect(response.body).not_to(match(/<html[^>]*class="[^"]*no-zhuyin/))
+  end
+
+  it "drops both readings when the cookie turns them off" do
+    cookies[:readings] = "off"
+
+    get(character_path(text: "和"))
+
+    expect(response.body).to(match(/<html[^>]*class="[^"]*no-zhuyin/))
+    expect(response.body).to(match(/<html[^>]*class="[^"]*no-pinyin/))
   end
 
   it "keeps the China word hidden until it is asked for" do

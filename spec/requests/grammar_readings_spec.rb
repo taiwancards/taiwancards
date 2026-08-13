@@ -3,37 +3,32 @@
 require "rails_helper"
 
 RSpec.describe "Reading hints on a grammar page" do
-  it "offers both scripts by name in the interface language, zhuyin already on" do
+  it "carries both readings and leaves the choice to the header switch" do
     get("/ru/grammar/a-not-a")
 
-    expect(response.body).to(include("Чжуинь"))
-    expect(response.body).to(include("Пиньинь"))
-    expect(response.body).not_to(include("注音"))
-    expect(response.body).to(include("reading-hints hints-zhuyin"))
-    expect(response.body).not_to(include("hints-pinyin"))
+    expect(response.body).to(include("zy-line"))
+    expect(response.body).to(include("py-line"))
+    expect(response.body).not_to(include("reading-hints"))
+    expect(response.body).to(match(/<html[^>]*class="[^"]*no-pinyin/))
+    expect(response.body).not_to(match(/<html[^>]*class="[^"]*no-zhuyin/))
   end
 
-  it "names them in English on an English page" do
-    get("/en/grammar/a-not-a")
-
-    expect(response.body).to(include(">Zhuyin<"))
-    expect(response.body).to(include(">Pinyin<"))
-  end
-
-  it "starts with zhuyin on for a level 5 point too" do
+  it "carries the readings on a level 5 point too" do
     lesson = Huayu::GrammarLessons.taught.find { |row| row.level == 5 }
 
     get("/ru/grammar/#{lesson.slug}")
 
-    expect(response.body).to(include("reading-hints hints-zhuyin"))
+    expect(response.body).to(include("zy-line"))
+    expect(response.body).to(include("py-line"))
   end
 
-  it "keeps the pinyin off the page out of the global preference's reach" do
+  it "drops both readings when the header switch is off" do
+    cookies[:readings] = "off"
+
     get("/ru/grammar/a-not-a")
 
-    expect(response.body).to(include("py-line"))
-    expect(response.body).not_to(match(/class="pinyin py-line"/))
-    expect(response.body).not_to(match(/class="pinyin py-reading"/))
+    expect(response.body).to(match(/<html[^>]*class="[^"]*no-zhuyin/))
+    expect(response.body).to(match(/<html[^>]*class="[^"]*no-pinyin/))
   end
 end
 
