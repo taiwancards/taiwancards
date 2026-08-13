@@ -1,0 +1,118 @@
+- floors = MedicineHelper::FLOORS
+
+section.space-y-3
+  h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("medicine.diagrams.hospital")
+  .overflow-x-auto.rounded-2xl.border.border-border class="bg-muted/20"
+    svg viewBox="0 0 900 780" class="h-auto w-full" role="img" aria-label=t("medicine.diagrams.hospital")
+      line x1="60" y1="610" x2="870" y2="610" stroke="var(--muted-foreground)" stroke-width="2" stroke-dasharray="7 5" opacity="0.6"
+      rect x="150" y="70" width="600" height="540" fill="var(--card)" stroke="var(--border)" stroke-width="2"
+      rect x="150" y="610" width="600" height="68" fill="var(--muted)" stroke="var(--border)" stroke-width="1.5" opacity="0.7"
+
+      g
+        circle cx="195" cy="40" r="20" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"
+        path d="M 191 30 h 8 v 6 h 6 v 8 h -6 v 6 h -8 v -6 h -6 v -8 h 6 Z" fill="var(--destructive)"
+
+      g.cursor-pointer[
+        data-station="醫院" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_rect]:stroke-[var(--brand)]" ]
+        title 醫院
+        rect x="340" y="18" width="220" height="44" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"
+        text x="450" y="48" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-bold text-[26px]" 醫院
+
+      rect x="702" y="78" width="46" height="526" fill="var(--muted)" stroke="var(--border)" stroke-width="1.5"
+      g.cursor-pointer[
+        data-station="電梯" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_.zh-label]:fill-[var(--brand)]" ]
+        title 電梯
+        rect x="702" y="78" width="46" height="526" fill="transparent"
+        text.zh-label x="725" y="102" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[14px]" 電
+        text.zh-label x="725" y="120" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[14px]" 梯
+      - [148, 218, 288, 358, 428, 498].each do |y|
+        line x1="150" y1=y x2="750" y2=y stroke="var(--border)" stroke-width="1.5"
+      - [148, 218, 288, 358, 428, 498].each do |top|
+        rect x="712" y=(top + 16) width="26" height="36" rx="2" fill="var(--background)" stroke="var(--border)"
+
+      - floors.each do |label, top, rooms|
+        text x="136" y=(top + 42) text-anchor="end" class="fill-[var(--muted-foreground)] font-semibold text-[12px]" = label
+        - rooms.each do |text, x, w|
+          = render("room", text:, x:, y: top + 9, w:)
+
+      text x="136" y="560" text-anchor="end" class="fill-[var(--muted-foreground)] font-semibold text-[12px]" 1F
+      text x="136" y="648" text-anchor="end" class="fill-[var(--muted-foreground)] font-semibold text-[12px]" B1
+      = render("room", text: "掛號", x: 288, y: 503, w: 76)
+      = render("room", text: "批價", x: 372, y: 503, w: 76)
+      = render("room", text: "領藥", x: 456, y: 503, w: 76)
+      = render("room", text: "藥局", x: 540, y: 503, w: 76)
+      = render("room", text: "急診", x: 624, y: 503, w: 71, tone: :alert)
+      = render("room", text: "美食廣場", x: 404, y: 557, w: 130)
+      = render("room", text: "廁所", x: 542, y: 557, w: 70)
+
+      g.cursor-pointer[
+        data-station="門診大樓" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_rect]:stroke-[var(--brand)]" ]
+        title 門診大樓
+        rect x="158" y="552" width="130" height="16" rx="4" fill="var(--muted)" stroke="var(--border)"
+        text x="223" y="564" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[11px]" 門診大樓
+        rect x="188" y="572" width="30" height="32" fill="var(--background)" stroke="var(--border)"
+        rect x="218" y="572" width="30" height="32" fill="var(--background)" stroke="var(--border)"
+
+      g.cursor-pointer[
+        data-station="服務時間" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_rect]:stroke-[var(--brand)]" ]
+        title 服務時間
+        rect x="296" y="568" width="60" height="28" rx="4" fill="var(--card)" stroke="var(--border)"
+        text x="326" y="586" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[10px]" 服務時間
+
+      g.cursor-pointer[
+        data-station="號碼牌" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_rect]:stroke-[var(--brand)]" ]
+        title 號碼牌
+        rect x="360" y="558" width="40" height="46" rx="4" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"
+        rect x="366" y="564" width="28" height="16" rx="2" fill="var(--brand)" opacity="0.35"
+        line x1="368" y1="586" x2="392" y2="586" stroke="var(--muted-foreground)" stroke-width="2"
+        text x="380" y="599" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[9px]" 號碼牌
+
+      g.cursor-pointer[
+        data-station="樓層簡介" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_rect]:stroke-[var(--brand)]" ]
+        title 樓層簡介
+        line x1="111" y1="592" x2="111" y2="610" stroke="var(--border)" stroke-width="3"
+        rect x="84" y="548" width="54" height="44" rx="4" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"
+        text x="111" y="566" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[11px]" 樓層
+        text x="111" y="582" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[11px]" 簡介
+
+      g.cursor-pointer[
+        data-station="救護車" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_.zh-label]:fill-[var(--brand)]" ]
+        title 救護車
+        text.zh-label x="807" y="544" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[13px]" 救護車
+        rect x="770" y="552" width="20" height="8" rx="2" fill="var(--destructive)" opacity="0.8"
+        rect x="762" y="560" width="68" height="41" rx="5" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"
+        path d="M 830 570 h 18 q 8 0 8 9 v 22 h -26 Z" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"
+        rect x="834" y="574" width="14" height="11" rx="2" fill="var(--muted)"
+        path d="M 790 568 h 10 v 8 h 8 v 10 h -8 v 8 h -10 v -8 h -8 v -10 h 8 Z" fill="var(--destructive)"
+        circle cx="782" cy="601" r="9" fill="var(--muted)" stroke="var(--border)" stroke-width="1.5"
+        circle cx="838" cy="601" r="9" fill="var(--muted)" stroke="var(--border)" stroke-width="1.5"
+        path d="M 758 580 L 712 580 M 720 574 L 710 580 L 720 586" fill="none" stroke="var(--destructive)" stroke-width="2" stroke-dasharray="5 4"
+
+      g.cursor-pointer[
+        data-station="停車場" data-active="false"
+        data-action="click->diagram-map#open"
+        class="hover:opacity-75 [&[data-active=true]_.zh-label]:fill-[var(--brand)]" ]
+        title 停車場
+        rect x="150" y="610" width="600" height="68" fill="transparent"
+        circle cx="192" cy="644" r="15" fill="var(--brand)" opacity="0.85"
+        text x="192" y="650" text-anchor="middle" class="fill-[var(--background)] font-bold text-[16px]" P
+        text.zh-label x="430" y="640" text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[15px]" 停車場
+        text x="430" y="658" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[9px]" = med_caption("停車場")
+        rect x="600" y="634" width="72" height="20" rx="8" fill="var(--muted)" stroke="var(--border)" stroke-width="1.5"
+        path d="M 614 634 q 6 -12 22 -12 h 8 q 16 0 20 12 Z" fill="var(--muted)" stroke="var(--border)" stroke-width="1.5"
+        circle cx="618" cy="656" r="7" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"
+        circle cx="654" cy="656" r="7" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"

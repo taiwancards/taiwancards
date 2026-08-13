@@ -1,0 +1,37 @@
+- lexeme = local_assigns.fetch(:lexeme)
+- audio = audio_for(lexeme)
+- data = lexeme.data
+- med = data["med"] || {}
+- marks = []
+- marks << [t("everyday.tier_core"), "bg-brand"] if med["tier"].to_i == 1
+- marks << [t("everyday.taiwan_marked"), "bg-emerald-500"] if data["taiwan_only"]
+- marks << [t("everyday.registers.vulgar"), "bg-red-500"] if data["register"] == "vulgar"
+- pair_text = med["folk"] || med["formal"]
+- pair = @by_text[pair_text] if pair_text
+
+.flex.items-start.gap-1.rounded-lg.border.border-border.px-2.py-1.transition-colors class="hover:bg-muted/40"
+  = link_to dict_entry_path(lexeme.text), class: "min-w-0 flex-1" do
+    .flex.flex-wrap.items-baseline.gap-x-2
+      span.font-semibold.leading-tight lang="zh-TW" class="text-[17px]" = lexeme.text
+      span.leading-tight.text-brand lang="zh-TW" class="text-[11px]" = lexeme.readings["zhuyin"]
+      span.pinyin.leading-tight.text-muted-foreground class="text-[10px]" = lexeme.readings["pinyin"]
+      - marks.each do |label, tone|
+        span.inline-block.shrink-0.rounded-full class="size-[5px] #{tone}" title=label
+    p.leading-snug.text-muted-foreground class="line-clamp-2 text-[11px]" = lexeme.meaning
+    - if pair_text.present?
+      span.leading-snug.text-muted-foreground class="text-[10px]"
+        => t(med["folk"] ? "medicine.folk_label" : "medicine.formal_label")
+        span lang="zh-TW" = pair_text
+        - if pair
+          span.ml-1 lang="zh-TW" = pair.readings["zhuyin"] || pair.readings["pinyin"]
+    - if data["mainland"].present?
+      span.mainland-note.leading-snug.text-muted-foreground class="text-[10px]"
+        => t("everyday.mainland_says")
+        span lang="zh-TW" = data["mainland"]
+        - if data["mainland_trad"].present?
+          span.ml-1 lang="zh-TW" = "(#{data["mainland_trad"]})"
+
+  .flex.shrink-0.items-center
+    = render("shared/speak", audio:, size: :sm)
+    - if current_user
+      = render("shared/quick_add", lexeme:, compact: true)

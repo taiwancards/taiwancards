@@ -1,0 +1,24 @@
+- text = local_assigns.fetch(:text)
+- x = local_assigns.fetch(:x)
+- y = local_assigns.fetch(:y)
+- w = local_assigns.fetch(:w)
+- tone = local_assigns.fetch(:tone, nil)
+- caption = med_caption(text, limit: (w / 5.4).floor)
+g.cursor-pointer[
+  data-station=text data-active="false"
+  data-action="click->diagram-map#open"
+  class="hover:opacity-75 [&[data-active=true]_rect]:stroke-[var(--brand)]" ]
+  title = text
+  rect[
+    x=x y=y width=w height="52" rx="8"
+    style="fill: #{tone == :alert ? "color-mix(in oklab, var(--destructive) 12%, var(--card))" : "var(--card)"}"
+    stroke=(tone == :alert ? "var(--destructive)" : "var(--border)") stroke-width="1.5" ]
+  text[
+    x=(x + (w / 2)) y=(y + 24) text-anchor="middle" lang="zh-TW"
+    class="fill-[var(--foreground)] font-semibold text-[15px]" ]
+    = text
+  - if caption.present?
+    text[
+      x=(x + (w / 2)) y=(y + 41) text-anchor="middle"
+      class="fill-[var(--muted-foreground)] text-[9px]" ]
+      = caption

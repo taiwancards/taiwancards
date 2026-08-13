@@ -1,0 +1,70 @@
+- hand = med_callouts([["指甲", 176, 248], ["大拇指", 196, 286], ["手背", 250, 318], ["手腕", 262, 384]], top: 240, gap: 48)
+- back = med_callouts([["背部", 540, 168], ["屁股", 546, 258]], top: 160, gap: 92)
+- fingers = [["食指", 218, 108, 229, 160], ["中指", 270, 84, 270, 142], ["無名指", 330, 108, 313, 164], ["小指", 368, 146, 350, 198]]
+- skin = "color-mix(in oklab, var(--brand) 14%, var(--muted))"
+
+section.space-y-3
+  h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("medicine.diagrams.extremities")
+  .overflow-x-auto.rounded-2xl.border.border-border class="bg-muted/20"
+    svg viewBox="0 0 940 440" class="h-auto w-full" role="img" aria-label=t("medicine.diagrams.extremities")
+      text x="275" y="36" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" = t("medicine.insets.hand")
+      text x="520" y="36" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" = t("medicine.insets.back")
+      text x="820" y="36" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" = t("medicine.insets.foot")
+
+      g
+        line x1="218" y1="315" x2="178" y2="258" style="stroke: #{skin}" stroke-width="28" stroke-linecap="round"
+        line x1="240" y1="278" x2="230" y2="170" style="stroke: #{skin}" stroke-width="26" stroke-linecap="round"
+        line x1="273" y1="272" x2="270" y2="152" style="stroke: #{skin}" stroke-width="26" stroke-linecap="round"
+        line x1="306" y1="278" x2="312" y2="174" style="stroke: #{skin}" stroke-width="26" stroke-linecap="round"
+        line x1="337" y1="290" x2="348" y2="208" style="stroke: #{skin}" stroke-width="24" stroke-linecap="round"
+        ellipse cx="275" cy="315" rx="62" ry="52" style="fill: #{skin}"
+      g fill="var(--card)" stroke="var(--muted-foreground)" stroke-width="1.5" opacity="0.85"
+        ellipse cx="178" cy="256" rx="7" ry="9"
+        ellipse cx="230" cy="168" rx="7" ry="9"
+        ellipse cx="270" cy="150" rx="7" ry="9"
+        ellipse cx="312" cy="172" rx="7" ry="9"
+        ellipse cx="348" cy="206" rx="6" ry="8"
+      path d="M 238 380 Q 275 392 312 380" fill="none" stroke="var(--muted-foreground)" stroke-width="2" opacity="0.5"
+
+      g
+        circle cx="520" cy="62" r="26" fill="var(--muted-foreground)" opacity="0.75"
+        circle cx="520" cy="74" r="27" style="fill: #{skin}"
+        path d="M 493 66 Q 494 46 520 44 Q 546 46 547 66 Q 540 52 520 52 Q 500 52 493 66 Z" fill="var(--muted-foreground)" opacity="0.75"
+        rect x="508" y="96" width="24" height="20" rx="8" style="fill: #{skin}"
+        path d="M 472 116 Q 462 130 464 170 Q 466 210 476 240 L 564 240 Q 574 210 576 170 Q 578 130 568 116 Q 544 106 520 108 Q 496 106 472 116 Z" style="fill: #{skin}"
+        ellipse cx="498" cy="258" rx="25" ry="21" style="fill: #{skin}"
+        ellipse cx="542" cy="258" rx="25" ry="21" style="fill: #{skin}"
+        line x1="520" y1="242" x2="520" y2="276" stroke="var(--muted-foreground)" stroke-width="1.5" opacity="0.5"
+        line x1="500" y1="282" x2="496" y2="382" style="stroke: #{skin}" stroke-width="30" stroke-linecap="round"
+        line x1="540" y1="282" x2="544" y2="382" style="stroke: #{skin}" stroke-width="30" stroke-linecap="round"
+
+      g
+        path d="M 746 208 L 794 208 L 794 300 Q 800 330 830 344 Q 876 360 908 362 Q 928 364 929 372 Q 929 380 906 382 L 748 382 Q 722 381 720 368 Q 718 352 730 340 Q 744 328 746 300 Z" style="fill: #{skin}"
+        path d="M 900 382 Q 902 372 898 364" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" opacity="0.5"
+        path d="M 916 381 Q 919 374 916 368" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" opacity="0.5"
+        circle cx="768" cy="318" r="5" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" opacity="0.6"
+
+      = render("callout", items: hand, side: :left, lx: 118)
+      = render("callout", items: back, side: :right, lx: 610)
+
+      - fingers.each do |text, x, y, ax, ay|
+        g.cursor-pointer[
+          data-station=text data-active="false"
+          data-action="click->diagram-map#open"
+          class="hover:opacity-75 [&[data-active=true]_.zh-label]:fill-[var(--brand)]" ]
+          title = text
+          polyline fill="none" stroke="var(--border)" stroke-width="1.5" points="#{x},#{y + 6} #{ax},#{ay}"
+          circle cx=ax cy=ay r="3.5" fill="var(--brand)" opacity="0.85"
+          text.zh-label x=x y=y text-anchor="middle" lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[13px]" = text
+          text x=x y=(y + 13) text-anchor="middle" class="fill-[var(--muted-foreground)] text-[8.5px]" = med_caption(text, limit: 14)
+
+      - [["腳踝", 700, 225, :end, 752, 316], ["腳跟", 700, 330, :end, 728, 362], ["腳背", 860, 300, :middle, 846, 340], ["腳底", 820, 412, :middle, 820, 386], ["腳趾", 900, 412, :middle, 908, 386]].each do |text, x, y, anchor, ax, ay|
+        g.cursor-pointer[
+          data-station=text data-active="false"
+          data-action="click->diagram-map#open"
+          class="hover:opacity-75 [&[data-active=true]_.zh-label]:fill-[var(--brand)]" ]
+          title = text
+          polyline fill="none" stroke="var(--border)" stroke-width="1.5" points="#{x + (anchor == :end ? 6 : 0)},#{y - (y > ay ? 16 : 5)} #{ax},#{ay}"
+          circle cx=ax cy=ay r="3.5" fill="var(--brand)" opacity="0.85"
+          text.zh-label x=x y=y text-anchor=anchor lang="zh-TW" class="fill-[var(--foreground)] font-semibold text-[13px]" = text
+          text x=x y=(y + 13) text-anchor=anchor class="fill-[var(--muted-foreground)] text-[8.5px]" = med_caption(text, limit: 14)

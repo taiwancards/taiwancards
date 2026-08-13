@@ -1,0 +1,103 @@
+- left = med_callouts([["大腦", 362, 86], ["靜脈", 356, 300], ["肺臟", 318, 340], ["橫膈膜", 300, 442], ["肝臟", 322, 478], ["膽囊", 366, 518], ["腎臟", 334, 602], ["大腸", 318, 630], ["盲腸", 306, 692], ["膀胱", 368, 742]], top: 70, gap: 86)
+- right = med_callouts([["甲狀腺", 392, 168], ["氣管", 390, 220], ["食道", 374, 256], ["動脈", 400, 296], ["心臟", 404, 362], ["胃", 438, 486], ["脾臟", 458, 500], ["胰臟", 446, 548], ["小腸", 406, 650]], top: 90, gap: 86)
+- skin = "color-mix(in oklab, var(--brand) 10%, var(--muted))"
+
+section.space-y-3
+  h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("medicine.diagrams.organs")
+  .overflow-x-auto.rounded-2xl.border.border-border class="bg-muted/20"
+    svg viewBox="0 0 760 900" class="h-auto w-full" role="img" aria-label=t("medicine.diagrams.organs")
+      g opacity="0.75"
+        ellipse cx="380" cy="96" rx="44" ry="52" style="fill: #{skin}"
+        rect x="364" y="140" width="32" height="36" rx="10" style="fill: #{skin}"
+        path d="M 364 170 Q 306 184 296 224 Q 288 260 292 340 L 292 560 Q 292 640 316 700 Q 330 736 352 756 L 408 756 Q 430 736 444 700 Q 468 640 468 560 L 468 340 Q 472 260 464 224 Q 454 184 396 170 Z" style="fill: #{skin}"
+
+      g stroke-linecap="round"
+        line x1="388" y1="136" x2="388" y2="252" stroke="#93b7cc" stroke-width="9"
+        line x1="372" y1="132" x2="372" y2="262" stroke="#c9a36b" stroke-width="7"
+        - [160, 186, 212, 238].each do |y|
+          line x1="383" y1=y x2="393" y2=y stroke="#6f94a8" stroke-width="2"
+
+      g.cursor-pointer data-station="大腦" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 大腦
+        ellipse cx="380" cy="88" rx="34" ry="28" fill="#d488a8"
+        path d="M 356 84 Q 366 74 376 84 Q 386 94 396 84 M 352 96 Q 364 90 374 98 M 386 98 Q 396 90 406 96" fill="none" stroke="#a85f82" stroke-width="2.5" stroke-linecap="round"
+
+      g.cursor-pointer data-station="甲狀腺" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 甲狀腺
+        ellipse cx="370" cy="168" rx="8" ry="12" fill="#cc6f8e"
+        ellipse cx="390" cy="168" rx="8" ry="12" fill="#cc6f8e"
+        rect x="368" y="162" width="24" height="7" rx="3" fill="#cc6f8e"
+
+      g.cursor-pointer data-station="肺臟" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 肺臟
+        path d="M 352 262 Q 320 270 308 320 Q 300 370 312 412 Q 322 434 344 428 Q 358 420 360 380 L 360 290 Q 360 266 352 262 Z" fill="#e8a1a1"
+        path d="M 408 262 Q 440 270 452 320 Q 460 370 448 412 Q 438 434 416 428 Q 402 420 400 380 L 400 290 Q 400 266 408 262 Z" fill="#e8a1a1"
+
+      g.cursor-pointer data-station="靜脈" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 靜脈
+        path d="M 356 330 L 356 296 Q 356 284 366 282" fill="none" stroke="#5b7fc9" stroke-width="8" stroke-linecap="round"
+
+      g.cursor-pointer data-station="動脈" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 動脈
+        path d="M 396 322 Q 400 294 382 289 Q 368 286 366 298" fill="none" stroke="#c94f4f" stroke-width="8" stroke-linecap="round"
+
+      g.cursor-pointer data-station="心臟" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 心臟
+        path d="M 382 318 Q 358 306 344 326 Q 332 346 352 372 Q 372 396 392 408 Q 418 392 424 366 Q 428 340 408 326 Q 394 316 382 318 Z" fill="#cf4f5e"
+        path d="M 372 330 Q 384 340 380 356" fill="none" stroke="#a83a48" stroke-width="2.5" stroke-linecap="round"
+
+      g.cursor-pointer data-station="橫膈膜" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 橫膈膜
+        path d="M 296 446 Q 380 418 464 446" fill="none" stroke="#b08a68" stroke-width="5" stroke-linecap="round"
+
+      g.cursor-pointer data-station="胰臟" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 胰臟
+        line x1="372" y1="542" x2="448" y2="552" stroke="#d3b268" stroke-width="16" stroke-linecap="round"
+
+      g.cursor-pointer data-station="肝臟" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 肝臟
+        path d="M 300 452 L 404 446 Q 416 470 402 492 Q 380 512 340 514 Q 306 512 298 488 Q 292 468 300 452 Z" fill="#a3573e"
+
+      g.cursor-pointer data-station="胃" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 胃
+        path d="M 408 452 Q 442 448 452 476 Q 460 504 436 520 Q 414 530 400 516 Q 390 500 398 480 Q 402 460 408 452 Z" fill="#e0aa54"
+
+      g.cursor-pointer data-station="膽囊" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 膽囊
+        ellipse cx="368" cy="516" rx="11" ry="16" fill="#6f9e6f"
+
+      g.cursor-pointer data-station="脾臟" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 脾臟
+        ellipse cx="456" cy="500" rx="13" ry="21" fill="#7a5f9e" transform="rotate(-18 456 500)"
+
+      g.cursor-pointer data-station="腎臟" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 腎臟
+        ellipse cx="336" cy="600" rx="15" ry="23" fill="#8a5a7a" transform="rotate(14 336 600)"
+        ellipse cx="424" cy="600" rx="15" ry="23" fill="#8a5a7a" transform="rotate(-14 424 600)"
+
+      g.cursor-pointer data-station="大腸" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 大腸
+        path d="M 320 668 L 320 600 Q 322 584 340 582 L 420 582 Q 440 584 440 600 L 440 668" fill="none" stroke="#cf8f5f" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+
+      g.cursor-pointer data-station="小腸" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 小腸
+        path d="M 352 612 Q 380 602 406 614 Q 380 628 354 634 Q 382 642 406 652 Q 380 666 354 674 Q 382 686 404 690" fill="none" stroke="#e3b08a" stroke-width="14" stroke-linecap="round"
+
+      g.cursor-pointer data-station="盲腸" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 盲腸
+        line x1="318" y1="676" x2="308" y2="694" stroke="#b46a42" stroke-width="7" stroke-linecap="round"
+
+      g.cursor-pointer data-station="膀胱" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 膀胱
+        ellipse cx="380" cy="740" rx="25" ry="19" fill="#6f8fc9"
+
+      g.cursor-pointer data-station="食道" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 食道
+        line x1="372" y1="248" x2="372" y2="262" stroke="#c9a36b" stroke-width="7" stroke-linecap="round"
+
+      g.cursor-pointer data-station="氣管" data-active="false" data-action="click->diagram-map#open" class="hover:opacity-80"
+        title 氣管
+        line x1="388" y1="206" x2="388" y2="234" stroke="#93b7cc" stroke-width="9" stroke-linecap="round"
+
+      = render("callout", items: left, side: :left, lx: 150)
+      = render("callout", items: right, side: :right, lx: 610)

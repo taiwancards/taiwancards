@@ -27,6 +27,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/taiwan_everyday_importer.rb app/services/lexemes/upserter.rb]
     },
     {
+      name: "medicine",
+      task: "huayu:import_medicine",
+      paths: %w[huayu/medicine.json],
+      code: %w[app/services/huayu/medicine_importer.rb app/services/lexemes/upserter.rb]
+    },
+    {
       name: "grammar",
       task: "huayu:import_grammar",
       paths: %w[huayu/grammar_lessons.json],
@@ -47,7 +53,7 @@ namespace(:deploy) do
     {
       name: "difficulty",
       task: "huayu:compute_difficulty",
-      paths: %w[huayu/taiwan_everyday.json huayu/moe_idioms.json],
+      paths: %w[huayu/taiwan_everyday.json huayu/medicine.json huayu/moe_idioms.json],
       code: %w[app/services/lexemes/difficulty.rb]
     },
     {

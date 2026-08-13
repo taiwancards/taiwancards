@@ -1,0 +1,24 @@
+- items = local_assigns.fetch(:items)
+- side = local_assigns.fetch(:side)
+- lx = local_assigns.fetch(:lx)
+- start = side == :right
+- items.each do |callout|
+  - edge = start ? lx - 6 : lx + 6
+  - bend = start ? lx - 22 : lx + 22
+  g.cursor-pointer[
+    data-station=callout[:text] data-active="false"
+    data-action="click->diagram-map#open"
+    class="hover:opacity-75 [&[data-active=true]_.zh-label]:fill-[var(--brand)]" ]
+    title = callout[:text]
+    polyline[
+      fill="none" stroke="var(--border)" stroke-width="1.5"
+      points="#{edge},#{callout[:ly] - 5} #{bend},#{callout[:ly] - 5} #{callout[:ax]},#{callout[:ay]}" ]
+    circle cx=callout[:ax] cy=callout[:ay] r="4" fill="var(--brand)" opacity="0.85"
+    text.zh-label[
+      x=lx y=callout[:ly] text-anchor=(start ? "start" : "end") lang="zh-TW"
+      class="fill-[var(--foreground)] font-semibold text-[15px]" ]
+      = callout[:text]
+    text[
+      x=lx y=(callout[:ly] + 14) text-anchor=(start ? "start" : "end")
+      class="fill-[var(--muted-foreground)] text-[9.5px]" ]
+      = med_caption(callout[:text])

@@ -1,0 +1,34 @@
+- left = med_callouts([["頭", 330, 84], ["眉毛", 356, 96], ["鼻子", 374, 128], ["臉頰", 348, 136], ["嘴巴", 366, 150], ["下巴", 374, 170], ["喉嚨", 376, 198], ["皮膚", 324, 240], ["胸口", 374, 288], ["手臂", 282, 300], ["肚子", 374, 392], ["肚臍", 376, 438], ["手腕", 250, 486], ["手指", 247, 532], ["大腿", 346, 590], ["小腿", 336, 720], ["腳", 310, 798]], top: 64, gap: 51)
+- right = med_callouts([["頭髮", 410, 58], ["眼睛", 402, 108], ["耳朵", 436, 116], ["牙齒", 392, 150], ["脖子", 397, 186], ["肩膀", 438, 218], ["手肘", 492, 352], ["腰", 447, 420], ["手", 514, 514], ["膝蓋", 419, 652], ["腳踝", 424, 776]], top: 70, gap: 78)
+- skin = "color-mix(in oklab, var(--brand) 14%, var(--muted))"
+
+section.space-y-3
+  h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("medicine.diagrams.body")
+  .overflow-x-auto.rounded-2xl.border.border-border class="bg-muted/20"
+    svg viewBox="0 0 760 940" class="h-auto w-full" role="img" aria-label=t("medicine.diagrams.body")
+      g
+        polyline points="316,236 270,350 252,478" fill="none" style="stroke: #{skin}" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"
+        polyline points="444,236 490,350 508,478" fill="none" style="stroke: #{skin}" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"
+        ellipse cx="246" cy="514" rx="17" ry="24" style="fill: #{skin}"
+        ellipse cx="512" cy="514" rx="17" ry="24" style="fill: #{skin}"
+        polyline points="348,510 342,650 338,780" fill="none" style="stroke: #{skin}" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"
+        polyline points="412,510 418,650 422,780" fill="none" style="stroke: #{skin}" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"
+        ellipse cx="320" cy="800" rx="30" ry="13" style="fill: #{skin}" transform="rotate(-10 320 800)"
+        ellipse cx="440" cy="800" rx="30" ry="13" style="fill: #{skin}" transform="rotate(10 440 800)"
+        path d="M 306 240 Q 306 216 332 208 L 428 208 Q 454 216 454 240 L 460 300 Q 466 364 452 412 Q 446 448 452 472 Q 458 504 446 524 L 314 524 Q 302 504 308 472 Q 314 448 308 412 Q 294 364 300 300 Z" style="fill: #{skin}"
+        rect x="362" y="166" width="36" height="48" rx="12" style="fill: #{skin}"
+        ellipse cx="326" cy="116" rx="9" ry="14" style="fill: #{skin}"
+        ellipse cx="434" cy="116" rx="9" ry="14" style="fill: #{skin}"
+        ellipse cx="380" cy="112" rx="52" ry="62" style="fill: #{skin}"
+        path d="M 328 106 Q 330 46 380 44 Q 430 46 432 106 Q 424 60 380 58 Q 336 60 328 106 Z" fill="var(--muted-foreground)" opacity="0.75"
+      g fill="none" stroke="var(--foreground)" stroke-width="2" stroke-linecap="round" opacity="0.55"
+        path d="M 348 96 Q 358 91 368 95"
+        path d="M 392 95 Q 402 91 412 96"
+        ellipse cx="358" cy="108" rx="7" ry="4.5"
+        ellipse cx="402" cy="108" rx="7" ry="4.5"
+        path d="M 380 114 L 377 130 Q 380 134 386 131"
+        path d="M 364 148 Q 380 156 396 148"
+        circle cx="380" cy="438" r="3.5"
+
+      = render("callout", items: left, side: :left, lx: 168)
+      = render("callout", items: right, side: :right, lx: 592)

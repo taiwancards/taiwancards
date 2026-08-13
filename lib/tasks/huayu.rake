@@ -210,7 +210,7 @@ namespace(:huayu) do
     )
     task(open: :environment) do
       started = RakeProgress.clock
-      steps = ["lang:zh_tw:fetch_open", "huayu:import_characters", "huayu:import_tbcl", "huayu:import_tocfl", "huayu:import_frequency", "huayu:import_cangjie", "huayu:enrich_characters", "huayu:import_radicals", "huayu:enrich_cedict", "huayu:import_readings", "huayu:enrich_ru", "huayu:enrich_gloss_overrides", "huayu:import_everyday", "huayu:import_common_words", "huayu:compute_difficulty", "huayu:reorder_readings", "huayu:normalize_readings", "huayu:rebuild_search", "huayu:flag_restricted"]
+      steps = ["lang:zh_tw:fetch_open", "huayu:import_characters", "huayu:import_tbcl", "huayu:import_tocfl", "huayu:import_frequency", "huayu:import_cangjie", "huayu:enrich_characters", "huayu:import_radicals", "huayu:enrich_cedict", "huayu:import_readings", "huayu:enrich_ru", "huayu:enrich_gloss_overrides", "huayu:import_everyday", "huayu:import_medicine", "huayu:import_common_words", "huayu:compute_difficulty", "huayu:reorder_readings", "huayu:normalize_readings", "huayu:rebuild_search", "huayu:flag_restricted"]
       RakeProgress.banner("Taiwan Huayu · open data", steps.size)
       steps.each_with_index do |name, index|
         RakeProgress.step(index + 1, steps.size, name) { Rake::Task[name].invoke }
@@ -246,6 +246,12 @@ namespace :huayu do
   task import_everyday: :environment do
     result = Huayu::TaiwanEverydayImporter.new.call
     puts("Taiwan everyday: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
+  end
+
+  desc "Import Taiwan medicine, anatomy and hospital vocabulary"
+  task import_medicine: :environment do
+    result = Huayu::MedicineImporter.new.call
+    puts("Taiwan medicine: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
   end
 end
 

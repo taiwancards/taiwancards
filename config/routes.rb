@@ -131,6 +131,7 @@ Rails.application.routes.draw do
     get("phrases", to: "phrases#index", as: :phrases)
     get("notices", to: "notices#index", as: :notices)
     get("calendar", to: "calendar#show", as: :calendar)
+    get("medicine", to: "medicine#show", as: :medicine)
     get("variants", to: "variants#show", as: :variants)
     get("metro", to: "metro#show", as: :metro)
     get("radicals", to: "radicals#index", as: :radicals)

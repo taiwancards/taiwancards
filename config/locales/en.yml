@@ -211,6 +211,7 @@ en:
     variants: Vocabulary differences
     metro: Taipei metro
     calendar: Festivals & calendar
+    medicine: Medicine & hospitals
     sounds_drill: Zhuyin ↔ pinyin
     group_learn: My study
     group_dictionary: Dictionary
@@ -2360,6 +2361,34 @@ en:
       one: 1 station
       other: "%{count} stations"
     attribution: Map drawn from open station coordinates — OpenStreetMap contributors, and station data published by Taipei Rapid Transit Corporation under Taiwan's Open Government Data License. Positions are real; hollow circles are interchanges. Branch lines are drawn as separate segments, so a gap in a color is a branch, not missing track.
+  medicine:
+    title: Medicine and hospitals
+    hint: Tap any label on the pictures to see how the word is read.
+    open_entry: Full entry
+    close: Close
+    empty: The medicine collection has not been imported yet.
+    folk_label: "in everyday speech:"
+    formal_label: "medical term:"
+    categories:
+      body: The body
+      organs: Organs and systems
+      symptoms: Symptoms
+      diseases: Diseases
+      vaccines: Vaccines
+      hospital: At the hospital
+      departments: Departments
+      treatment: Tests and treatment
+      people: Medical staff
+      nhi: National Health Insurance
+    diagrams:
+      hospital: A typical Taiwanese hospital
+      body: The human body
+      extremities: Hand, back and foot
+      organs: Internal organs
+    insets:
+      hand: back of the hand
+      back: from behind
+      foot: the foot
   calendar:
     title: Festivals and the lunar calendar
     year_label: Year
@@ -2498,6 +2527,14 @@ en:
       and the card at the top shows its zhuyin, pinyin and meaning; from there you can open the full dictionary
       entry or add it to a deck.</p><p>Hollow dots are interchanges — the card lists every line that station
       belongs to. The layout is deliberately schematic rather than geographic.</p>
+    medicine_html: >-
+      <p>Western medicine as Taiwan actually speaks it: the body and the organs, the diseases a doctor
+      names and the words a family uses at home, the vaccines on the CDC schedule, and the signs you follow
+      through a hospital — 掛號, 批價, 領藥. Tap any label on the pictures for the reading, then open the full
+      dictionary entry.</p><p>Where a medical term has an everyday counterpart (闌尾炎 next to 盲腸炎), the
+      pair is shown side by side. Terms that differ from mainland usage are marked, and Hokkien loans carry
+      their Tâi-lô readings. Everything is checked against the MOE dictionaries and Taiwan's own health
+      authorities.</p>
     dict_html: >-
       <p>One dictionary: single words and set phrases are simply entries here, with no split between them.
       The line is arbitrary anyway — 便利商店 and 超商 mean the same thing, and hunting for them in two separate

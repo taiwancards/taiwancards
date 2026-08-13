@@ -1,0 +1,82 @@
+- content_for(:title) { t("medicine.title") }
+
+.py-6.space-y-6[
+  data-controller="diagram-map"
+  data-diagram-map-cards-value=@cards.to_json ]
+
+  div
+    = render("shared/page_help", key: "medicine", title: t("medicine.title"))
+
+  - if @lexemes.empty?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("medicine.empty")
+
+  - else
+    .sticky.top-14.z-20.rounded-2xl.border.border-border.bg-card.p-4.shadow-sm
+      .hidden.space-y-2 data-diagram-map-target="card"
+        .flex.flex-wrap.items-baseline.gap-x-3
+          span.text-2xl.font-bold lang="zh-TW" data-diagram-map-target="text"
+          span.text-lg.text-brand lang="zh-TW" data-diagram-map-target="zhuyin"
+          span.text-sm.text-muted-foreground data-diagram-map-target="pinyin"
+        p.text-sm data-diagram-map-target="meaning"
+        p.text-xs.leading-relaxed.text-muted-foreground data-diagram-map-target="note"
+        .hidden.inline-flex.flex-wrap.items-baseline.gap-x-2.rounded-lg.border.px-2.py-1.text-xs[
+          data-diagram-map-target="pair" class="border-brand/40 bg-brand/5" ]
+          span.text-muted-foreground data-diagram-map-target="pairLabel"
+          span.text-sm.font-semibold.text-brand lang="zh-TW" data-diagram-map-target="pairText"
+          span.text-muted-foreground lang="zh-TW" data-diagram-map-target="pairReading"
+        .flex.flex-wrap.gap-2.pt-1
+          a.rounded-lg.bg-primary.px-3.py-2.text-xs.font-semibold.text-primary-foreground[
+            data-diagram-map-target="link" href="#" ]
+            = t("medicine.open_entry")
+          button.rounded-lg.border.border-border.px-3.py-2.text-xs.font-medium[
+            type="button" data-action="diagram-map#close" class="hover:bg-muted" ]
+            = t("medicine.close")
+      p.text-sm.text-muted-foreground data-diagram-map-target="empty" = t("medicine.hint")
+
+    = render("hospital")
+    = render("body")
+    = render("extremities")
+    = render("organs")
+
+    .flex.flex-wrap.items-center.gap-x-3.gap-y-1.text-xs.text-muted-foreground
+      - [[t("everyday.tier_core"), "bg-brand"], [t("everyday.taiwan_marked"), "bg-emerald-500"], [t("everyday.registers.vulgar"), "bg-red-500"]].each do |label, tone|
+        span.inline-flex.items-center class="gap-1.5"
+          span.inline-block.rounded-full class="size-[5px] #{tone}"
+          = label
+
+    - if current_user
+      .relative.flex.justify-end data-controller="menu"
+        button.inline-flex.items-center.gap-1.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
+          type="button" data-action="menu#toggle" class="hover:bg-muted"
+          title=t("everyday.make_deck", count: @lexemes.size) aria-label=t("everyday.make_deck_button") ]
+          span.text-sm.leading-none aria-hidden="true" +
+          span = t("everyday.make_deck_button")
+
+        .absolute.right-0.top-full.z-50.hidden.mt-1.rounded-xl.border.border-border.bg-background.p-4.shadow-xl[
+          class="w-[min(22rem,88vw)]" data-menu-target="panel" ]
+          = form_with url: desks_path, method: :post, class: "space-y-3" do |form|
+            p.text-sm.font-medium = t("everyday.make_deck", count: @lexemes.size)
+            p.text-xs.text-muted-foreground = t("everyday.make_deck_hint")
+
+            - @lexemes.each do |lexeme|
+              = hidden_field_tag "lexeme_ids[]", lexeme.id, id: nil
+
+            = text_field_tag :name, t("medicine.title"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+            = render("shared/facet_picker", scope: "medicine")
+
+            .flex.flex-wrap.gap-2
+              = form.submit t("everyday.make_deck_button"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+              - if @collection.present?
+                = link_to t("everyday.study"), study_path(mode: "collection", collection_id: @collection.id),
+                  class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+
+    .space-y-2
+      - @sections.each do |category, lexemes|
+        details.rounded-xl.border.border-border id="med-#{category}"
+          summary.flex.cursor-pointer.list-none.items-baseline.gap-x-2.px-3.py-2 class="[&::-webkit-details-marker]:hidden hover:bg-muted/40"
+            h2.text-sm.font-semibold.uppercase.tracking-wide = t("medicine.categories.#{category}")
+            span.ml-auto.shrink-0.rounded-full.px-2.text-xs.text-muted-foreground class="py-0.5 bg-muted"
+              = lexemes.size
+          .grid.border-t.border-border.p-2 class="gap-1.5 sm:grid-cols-2 lg:grid-cols-3"
+            - lexemes.each do |lexeme|
+              = render("word", lexeme:)
