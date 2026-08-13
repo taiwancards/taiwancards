@@ -97,8 +97,9 @@ module Site
     end
 
     def hints
-      core = FontAssets.url_for(FontAssets::KAI_CORE)
-      lines = ["<link rel=\"preload\" as=\"font\" type=\"font/woff2\" crossorigin href=\"#{core}\">"]
+      core = FontAssets.kai_core_url
+      lines = []
+      lines << "<link rel=\"preload\" as=\"font\" type=\"font/woff2\" crossorigin href=\"#{core}\">" if core
 
       [FontAssets.base_url, app_url].compact.uniq.each do |origin|
         lines.unshift("<link rel=\"preconnect\" href=\"#{origin}\" crossorigin>")

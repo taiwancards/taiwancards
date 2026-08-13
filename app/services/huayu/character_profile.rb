@@ -86,8 +86,21 @@ module Huayu
       lexeme.data["etymology"]
     end
 
+    def etymology_hint
+      translated("hint") || etymology&.dig("hint").presence
+    end
+
     def etymology_text
-      lexeme.data["etymology_text"].presence
+      translated("text") || lexeme.data["etymology_text"].presence
+    end
+
+    def etymology_type
+      kind = etymology&.dig("type").presence
+      kind && I18n.t("characters.etymology_types.#{kind}", default: kind)
+    end
+
+    def etymology_translated?
+      EtymologyTranslations::FIELDS.any? { |field| translated(field).present? }
     end
 
     def etymology_source
@@ -135,6 +148,12 @@ module Huayu
 
     def strokes_available?
       Huayu::StrokeData.has?(lexeme.text)
+    end
+
+    private
+
+    def translated(field)
+      lexeme.data.dig(EtymologyTranslations::KEY, I18n.locale.to_s, field).presence
     end
   end
 end

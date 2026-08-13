@@ -5,7 +5,7 @@ module FontAssets
   USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " \
     "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
   CACHE_CONTROL = "public, max-age=31536000, immutable"
-  KAI_CORE = "tw-kai-core.woff2"
+  KAI_CORE = "tw-kai-core-*.woff2"
   KAI_SLICES = "tw-kai-[0-9]*.woff2"
 
   module_function
@@ -23,7 +23,11 @@ module FontAssets
   end
 
   def kai_faces
-    [directory.join(KAI_CORE), *directory.glob(KAI_SLICES).sort]
+    [*directory.glob(KAI_CORE), *directory.glob(KAI_SLICES).sort]
+  end
+
+  def kai_core
+    directory.glob(KAI_CORE).first
   end
 
   def base_url = SharedAssets.base_url
@@ -33,6 +37,7 @@ module FontAssets
   def forget_stamps! = SharedAssets.forget_stamps!
 
   def kai_core_url
-    url_for(KAI_CORE)
+    file = kai_core
+    file && url_for(file.basename.to_s)
   end
 end

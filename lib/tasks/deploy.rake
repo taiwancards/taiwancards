@@ -69,6 +69,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/gloss_override_enricher.rb]
     },
     {
+      name: "etymology_translations",
+      task: "huayu:translate_etymologies",
+      paths: %w[huayu/etymology_ru.json],
+      code: %w[app/services/huayu/etymology_translations.rb]
+    },
+    {
       name: "phrase_drills",
       task: "huayu:import_phrase_drills",
       paths: %w[huayu/phrase_drills.txt huayu/bigram_frequency.json],

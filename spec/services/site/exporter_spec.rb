@@ -157,7 +157,7 @@ RSpec.describe Site::Exporter do
 
     expect(html).to(include("rel=\"preconnect\" href=\"#{app_url}\""))
     expect(html).to(include("rel=\"preload\" as=\"font\""))
-    expect(html).to(include(FontAssets.url_for(FontAssets::KAI_CORE)))
+    expect(html).to(include(FontAssets.kai_core_url))
   end
 
   it "gives the legal pages a way back to the landing" do
@@ -170,7 +170,7 @@ RSpec.describe Site::Exporter do
   end
 
   it "asks for fonts at the same address the app asks for them" do
-    expect(root.glob("assets/*.css").map(&:read).join).to(include(FontAssets.url_for(FontAssets::KAI_CORE)))
+    expect(root.glob("assets/*.css").map(&:read).join).to(include(FontAssets.kai_core_url))
   end
 
   it "bakes the counts in rather than leaving them to a server" do

@@ -591,6 +591,11 @@ ru:
     practice_done: "✓ Отлично"
     due: Повтор %{when}
     etymology: Этимология
+    etymology_translated: Перевод наш.
+    etymology_types:
+      pictographic: пиктограмма
+      ideographic: идеограмма
+      pictophonetic: фоноидеограмма
     decomposition: Разбор
     ids:
       left_right: слева · справа

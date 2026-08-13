@@ -12,8 +12,8 @@ module Fonts
     UI_GLYPHS = "U+81FA"
     CORE_SIZE = 300
     SLICE_SIZE = 1200
-    CORE_FILE = "tw-kai-core.woff2"
-    SLICE_FILE = "tw-kai-%02d.woff2"
+    CORE_PREFIX = "tw-kai-core"
+    SLICE_PREFIX = "tw-kai-%02d"
     FACES_FILE = Rails.root.join("app/assets/stylesheets/kai_faces.css")
 
     def initialize(workspace)
@@ -44,14 +44,12 @@ module Fonts
 
       FileUtils.mkdir_p(directory)
       FileUtils.rm_f(directory.glob("tw-kai-*.woff2"))
-      raise "pyftsubset failed for the core face" unless subset(python, ttf, core, directory.join(CORE_FILE))
-
+      faces = [[build(python, ttf, core, CORE_PREFIX, directory), core]]
       slices.each_with_index do |points, index|
-        target = directory.join(format(SLICE_FILE, index + 1))
-        raise "pyftsubset failed for #{target.basename}" unless subset(python, ttf, points, target)
+        faces << [build(python, ttf, points, format(SLICE_PREFIX, index + 1), directory), points]
       end
 
-      write_faces(core, slices)
+      write_faces(faces)
       report(directory)
     end
 
@@ -106,7 +104,9 @@ module Fonts
         .each_with_object({}) do |(text, frequency, dictionary), map|
           next unless text.chars.size == 1
 
-          map[text] = [frequency || Float::INFINITY, dictionary || Float::INFINITY]
+          candidate = [frequency || Float::INFINITY, dictionary || Float::INFINITY]
+          current = map[text]
+          map[text] = candidate if current.nil? || (candidate <=> current).negative?
         end
     end
 
@@ -115,6 +115,15 @@ module Fonts
         bounds = token.strip.delete_prefix("U+").split("-").map { |value| value.to_i(16) }
         bounds.size == 1 ? bounds : (bounds.first..bounds.last).to_a
       }
+    end
+
+    def build(python, ttf, points, prefix, directory)
+      scratch = @workspace.join("#{prefix}.woff2")
+      raise "pyftsubset failed for #{prefix}" unless subset(python, ttf, points, scratch)
+
+      name = "#{prefix}-#{Digest::SHA256.file(scratch).hexdigest[0, 8]}.woff2"
+      FileUtils.mv(scratch, directory.join(name))
+      name
     end
 
     def subset(python, ttf, points, target)
@@ -130,10 +139,8 @@ module Fonts
       )
     end
 
-    def write_faces(core, slices)
-      faces = [face(CORE_FILE, core)]
-      slices.each_with_index { |points, index| faces << face(format(SLICE_FILE, index + 1), points) }
-      FACES_FILE.write(faces.join("\n"))
+    def write_faces(faces)
+      FACES_FILE.write(faces.map { |file, points| face(file, points) }.join("\n"))
     end
 
     def face(file, points)
@@ -159,7 +166,7 @@ module Fonts
     end
 
     def report(directory)
-      core = directory.join(CORE_FILE).size
+      core = directory.glob("#{CORE_PREFIX}-*.woff2").sum(&:size)
       slices = directory.glob("tw-kai-[0-9]*.woff2").sum(&:size)
       puts("fonts:kai core face #{(core / 1024.0).round} KB, slices #{(slices / 1024.0 / 1024).round(2)} MB in total")
       puts("fonts:kai faces written to #{FACES_FILE.relative_path_from(Rails.root)}")

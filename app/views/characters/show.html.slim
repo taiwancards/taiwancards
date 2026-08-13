@@ -86,10 +86,10 @@
             span.text-muted-foreground = t("characters.decomposition") + ":"
             span.text-lg lang="zh-TW" = decomposition_html(@profile.decomposition, skip: lexeme.text)
         - if @profile.etymology.present?
-          - if @profile.etymology["type"].present?
-            .text-xs.uppercase.tracking-wide.text-muted-foreground = @profile.etymology["type"]
-          - if @profile.etymology["hint"].present?
-            p = @profile.etymology["hint"]
+          - if @profile.etymology_type.present?
+            .text-xs.uppercase.tracking-wide.text-muted-foreground = @profile.etymology_type
+          - if @profile.etymology_hint.present?
+            p = @profile.etymology_hint
           - if @profile.etymology["phonetic"].present? || @profile.etymology["semantic"].present?
             p.text-muted-foreground
               - if @profile.etymology["semantic"].present?
@@ -102,7 +102,10 @@
           .mt-2.space-y-1.border-t.border-border.pt-2
             p.leading-relaxed = @profile.etymology_text
             - if @profile.etymology_source
-              p.text-xs.text-muted-foreground = @profile.etymology_source.attribution
+              p.text-xs.text-muted-foreground
+                = @profile.etymology_source.attribution
+                - if @profile.etymology_translated?
+                  span.ml-1 = t("characters.etymology_translated")
 
   - if detailed? || @profile.several_readings?
     - groups = @profile.reading_groups(limit: detailed? ? nil : 6)

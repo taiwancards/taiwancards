@@ -565,6 +565,11 @@ en:
     practice_done: "✓ Well done"
     due: Due %{when}
     etymology: Etymology
+    etymology_translated: Translation ours.
+    etymology_types:
+      pictographic: pictogram
+      ideographic: ideogrammic compound
+      pictophonetic: phono-semantic compound
     decomposition: Decomposition
     ids:
       left_right: left · right
