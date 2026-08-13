@@ -118,11 +118,11 @@ en:
   glossary:
     fsrs: "A spaced-repetition algorithm: from your own ratings it predicts the moment you are about to forget a card, and shows it then."
     tocfl: Taiwan's national Mandarin proficiency exam and its level scale, from Novice up to Band C.
-    tbcl: "Taiwan's benchmarks for Chinese language: the grades the island's own schools teach to."
+    tbcl: "Taiwan's benchmarks for Chinese language: the grades Taiwan's own schools teach to."
     zhuyin: Taiwan's phonetic alphabet, ㄅㄆㄇㄈ. Children learn it instead of pinyin, and it is how people type.
     pinyin: Writing Mandarin syllables in Latin letters. Primary in China, a secondary aid in Taiwan.
     putonghua: The standard variety of Mandarin in China.
-    hokkien: Taiwanese Southern Min, spoken by a large share of the island.
+    hokkien: Taiwanese Southern Min, spoken by a large share of Taiwan's population.
     hanzi: The full character forms kept in Taiwan, Hong Kong and Macau, as opposed to the simplified set used in China.
   locales:
     en: English
@@ -381,7 +381,7 @@ en:
     name_label: Name
     name_placeholder: "Leave blank for Random #N"
     paste_label: Paste text
-    paste_placeholder: Paste any Chinese text — signs, chats, articles…
+    paste_placeholder: Paste any Mandarin text — signs, chats, articles…
     empty: No decks yet. Create one from any text.
     empty_text: No known words found in that text.
     created: Deck created.
@@ -749,7 +749,7 @@ en:
     delete_account_confirm: "Delete the account and all its data, with no way back?"
     signed_out: Logged out.
     profile_saved: Profile saved.
-    reading_title: Reading Chinese text
+    reading_title: Reading Mandarin text
     zhuyin_position: Zhuyin placement
     zhuyin_positions:
       right: To the right of each character
@@ -1183,7 +1183,7 @@ en:
     accuracy: Correct
     done: Words done
     how_title: Why learn to type this way
-    how_body: "This is the layout printed on every keyboard sold in Taiwan, and it is how most people here type. You do not need to install anything to practice: press the same keys you would press on a Taiwanese keyboard and the zhuyin appears. Tones live on 6, 3, 4 and 7; the neutral tone is 7. Once the layout is in your fingers, typing Chinese stops being a lookup exercise and becomes muscle memory — and because you type the sound, it drills the reading at the same time."
+    how_body: "This is the layout printed on every keyboard sold in Taiwan, and it is how most people here type. You do not need to install anything to practice: press the same keys you would press on a Taiwanese keyboard and the zhuyin appears. Tones live on 6, 3, 4 and 7; the neutral tone is 7. Once the layout is in your fingers, typing Mandarin stops being a lookup exercise and becomes muscle memory — and because you type the sound, it drills the reading at the same time."
   cangjie:
     title: Cangjie input
     subtitle: Cangjie 5 (五代) — type Latin keys to compose traditional Taiwan characters. Every character's card also shows its Cangjie code.
@@ -1308,7 +1308,7 @@ en:
     done_title: Run complete
     restart: Again
     system_title: Digits group in fours, not threes
-    system_body: European languages cut a number every three digits; Chinese cuts every four. That is why 'million' is not its own word but 一百萬 — a hundred lots of 萬. The easiest way in is to mentally place a space every four digits from the right instead of every three.
+    system_body: European languages cut a number every three digits; Mandarin cuts every four. That is why 'million' is not its own word but 一百萬 — a hundred lots of 萬. The easiest way in is to mentally place a space every four digits from the right instead of every three.
     col_digits: In digits
     col_huayu: In characters
     col_western: What we would call it
@@ -1327,7 +1327,7 @@ en:
       taiwan: 民國
     stage_hint:
       glyphs: "Every character numbers need: the ten digits, 十百千萬億兆 and 兩. There are few of them, but you need all of them."
-      myriads: The anchor magnitudes. Digits are grouped in fours, the way Chinese actually counts them.
+      myriads: The anchor magnitudes. Digits are grouped in fours, the way Mandarin actually counts them.
       reading: "A random number in characters: say it back in digits."
       traps: "Where people slip most: 兩 versus 二, a dropped 零, and 十 in the middle of a number."
       taiwan: "Republic years: Taiwanese documents, ID cards and forms use 民國. Add 1911 to get the year you are used to."
@@ -1438,7 +1438,7 @@ en:
         body: They appear only with ㄧ and ㄩ, so they can never be confused with ㄓㄔㄕ if you watch what follows.
       retroflex:
         title: Curled tongue
-        body: The tip curls up towards the roof of the mouth. Taiwan says these softer than mainland textbooks do — nearly ㄗㄘㄙ.
+        body: The tip curls up towards the roof of the mouth. Taiwan says these softer than China's textbooks do — nearly ㄗㄘㄙ.
       sibilant:
         title: Whistling
         body: Tongue at the lower teeth, air in a narrow stream. The pair to the three above.
@@ -1456,7 +1456,7 @@ en:
         body: ㄢ/ㄤ and ㄣ/ㄥ differ in where the tongue ends. Taiwan often blurs it, but the dictionary keeps it.
       rhotic:
         title: One of a kind
-        body: A syllable in its own right, found in 二, 兒 and 耳. Not the mainland r-ending on other words.
+        body: A syllable in its own right, found in 二, 兒 and 耳. Not the r-ending China tacks onto other words.
       compound:
         title: Compound finals
         body: A medial plus a final. They need no drill of their own — they are built from symbols you have already practised.
@@ -1979,7 +1979,7 @@ en:
       taiwancards: The study application in full — Rails, importers, spaced repetition, pronunciation scoring, mock exams. Nothing is held back.
       corpora: Download, processing, polishing, calibration, cleaning and analysis of every source the dictionary is built from.
       twpipeline: Corpus construction for Taiwan Mandarin — nine JSONL stages from a raw crawl to a segmented, frequency-annotated corpus.
-      twfilter: "Provenance analysis: script inventory, orthography, lexical and grammatical markers that separate Taiwan Mandarin from mainland, Hong Kong and Southeast Asian usage."
+      twfilter: "Provenance analysis: script inventory, orthography, lexical and grammatical markers that separate Taiwan Mandarin from China, Hong Kong and Southeast Asian usage."
       dsprb: Speech signal processing in pure Ruby — WAV decoding, FFT power spectra, MFCC, YIN pitch tracking. It scores your pronunciation.
       dtwrb: Dynamic time warping with a Sakoe-Chiba band and DBA barycenter averaging. It compares your recording against the reference contour.
       twngrams: Word and character n-gram frequencies from the Taiwan Mandarin corpus, released into the public domain.
@@ -1992,7 +1992,7 @@ en:
     corpora_note: Every text corpus in the database, with the license it arrives under. Only sources whose license permits both free and commercial use are published here; the rest are used for statistics alone and no sentence from them is stored.
     data_title: Reference data
     data_note: "Bodies whose published reference material the app builds on: level lists, stroke inventories, character standards, calendar tables and classification scales. These are factual lists rather than creative works, and are credited here rather than licensed. Where a body released its material under a named license, that license is stated."
-    outro: All Chinese content is Taiwan traditional characters, cross-checked against the Ministry of Education dictionaries. Names, brands and lesson texts remain the property of their respective owners.
+    outro: All Mandarin content is Taiwan traditional characters, cross-checked against the Ministry of Education dictionaries. Names, brands and lesson texts remain the property of their respective owners.
     donate_title: Support the project
     donate_body: >-
       The app is free and ad-free, and it will stay that way. If it has been useful, you can buy the
@@ -2014,7 +2014,7 @@ en:
       tocfl: The official TOCFL graded vocabulary lists, level by level.
       naer: National Academy for Educational Research — the TBCL benchmark, COCT corpus and general word-frequency table.
       moe_strokes: The normative list of stroke names behind the basic and compound stroke inventory.
-      moe_idioms: "The official dictionary of 成語: definition, classical source, origin story and examples for every idiom. The Chinese text is shown verbatim — the license forbids adaptation; the English and Russian glosses and notes are written by us."
+      moe_idioms: "The official dictionary of 成語: definition, classical source, origin story and examples for every idiom. The original text is shown verbatim — the license forbids adaptation; the English and Russian glosses and notes are written by us."
       cwa: Rainfall scales, typhoon categories and the UV index bands.
       tbrs: Tea classification, processing stages and oxidation levels for Taiwanese cultivars.
       hko: The lunar calendar and solar term tables the festival dates are computed from.
@@ -2458,7 +2458,7 @@ en:
       recognizing it, and the counter does not move. You can leave at any time.</p>
     numbers_html: >-
       <p>Numbers need only a handful of characters and you do need all of them — but the real difficulty
-      is not the characters, it is the magnitudes.</p><p>Chinese groups digits in fours: 萬 is 10,000, and
+      is not the characters, it is the magnitudes.</p><p>Mandarin groups digits in fours: 萬 is 10,000, and
       everything above builds on it. That is why a million is 一百萬 and a billion is 十億. The five sections
       below run from the characters to the traps; the last covers 民國 years, which appear on every Taiwanese
       form.</p>
@@ -2487,7 +2487,7 @@ en:
       4 (ˋ) and 7 (˙); a first-tone syllable needs no tone key.</p><p>Words come from your dictionary in
       learning order, so this drills readings and typing at the same time.</p>
     reader_html: >-
-      <p>Read real Chinese with the dictionary built in. Words you already know are muted; everything new
+      <p>Read real Mandarin with the dictionary built in. Words you already know are muted; everything new
       is colored by level and underlined, with its reading printed above.</p><p>Tap any word for the full
       entry, audio and a button to start learning it. The whole text can be turned into a deck in one click.</p><p>Paste
       anything yourself, or import song lyrics. Simplified characters are always converted to Taiwan traditional
@@ -2532,7 +2532,7 @@ en:
       names and the words a family uses at home, the vaccines on the CDC schedule, and the signs you follow
       through a hospital — 掛號, 批價, 領藥. Tap any label on the pictures for the reading, then open the full
       dictionary entry.</p><p>Where a medical term has an everyday counterpart (闌尾炎 next to 盲腸炎), the
-      pair is shown side by side. Terms that differ from mainland usage are marked, and Hokkien loans carry
+      pair is shown side by side. Terms that differ from China's usage are marked, and Hokkien loans carry
       their Tâi-lô readings. Everything is checked against the MOE dictionaries and Taiwan's own health
       authorities.</p>
     dict_html: >-
@@ -2854,7 +2854,7 @@ en:
             title: Everything by situation
             body: >-
               Food, drinks, transport, paperwork, weather, slang. Each word is marked with where it is
-              actually used and how it differs from the mainland.
+              actually used and how it differs from China.
       phonetics:
         title: Sounds and zhuyin
         summary: How the sounds work and where to drill them
@@ -2912,8 +2912,8 @@ en:
             title: The calligraphic font
             body: The shapes Taiwan teaches handwriting from. Tap it and look at the characters.
           mainland_toggle:
-            title: Mainland equivalents
-            body: Turn it on if you want to see where the mainland standard parts ways with Taiwan.
+            title: Chinese equivalents
+            body: Turn it on if you want to see where China's standard parts ways with Taiwan.
       profile:
         title: Profile and progress
         summary: Your level, your statistics and your export
@@ -2936,13 +2936,13 @@ en:
     title: Reader
     new_text: Paste a text
     new_hint: >-
-      Anything in Chinese — an article, a chat, a page from a book. Simplified characters are converted
+      Anything in Mandarin — an article, a chat, a page from a book. Simplified characters are converted
       to Taiwan traditional automatically.
     title_label: Title
     kind_label: Kind
     level_label: Level (optional)
     body_label: Text
-    body_placeholder: Paste the Chinese text here…
+    body_placeholder: Paste the Mandarin text here…
     save: Save and read
     untitled: Untitled text
     created: Text saved.
@@ -2968,7 +2968,7 @@ en:
   songs:
     search: Search
     search_placeholder: Artist or song — 五月天, 周杰倫…
-    no_results: Nothing found. Try the artist in Chinese.
+    no_results: Nothing found. Try the artist in Chinese characters.
     error_network: Could not reach the lyrics service. Try again in a moment.
   meta:
     title: TaiwanCards — learn Taiwanese Mandarin with zhuyin and traditional characters
@@ -3391,7 +3391,7 @@ en:
         tones_theory:
           title: How the tones work
           body: >-
-            Four tones plus the neutral one — and the Taiwanese details that mainland textbooks leave out:
+            Four tones plus the neutral one — and the Taiwanese details that China's textbooks leave out:
             the third tone stays low instead of dipping back up, and 一 and 不 shift tone depending on what
             follows. Read it, then go straight to the drill from that same page.
         tones:
