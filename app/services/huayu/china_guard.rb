@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Huayu
-  class MainlandGuard
+  class ChinaGuard
     extend MemoizedInstance
 
     class << self
@@ -27,7 +27,7 @@ module Huayu
     private
 
     def load_markers
-      stored = MainlandMarker.hard.pluck(:word) if MainlandMarker.table_exists?
+      stored = ChinaMarker.hard.pluck(:word) if ChinaMarker.table_exists?
       return stored.to_set if stored.present?
 
       TWFilter::Checks::Lexicon.hard_terms.keys.to_set

@@ -39,7 +39,7 @@ RSpec.describe "Landing page" do
 
   it "names what it will never become, in both locales", :aggregate_failures do
     %i[en ru].each do |locale|
-      %w[game machine decks mainland course teacher ads].each do |key|
+      %w[game machine decks china course teacher ads].each do |key|
         expect(I18n.t("landing.isnt.items.#{key}", locale:)).to(be_present)
       end
     end

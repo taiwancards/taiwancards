@@ -187,8 +187,8 @@ chapters:
         target: pref-kai
         interactive: true
         version: 1
-      - id: mainland_toggle
-        target: pref-mainland
+      - id: china_toggle
+        target: pref-china
         interactive: true
         version: 1
 

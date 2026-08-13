@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MainlandMarker < ApplicationRecord
+class ChinaMarker < ApplicationRecord
   enum(:band, {hard: 0, soft: 1}, prefix: true)
 
   validates :word, presence: true, uniqueness: true
@@ -15,7 +15,7 @@ class MainlandMarker < ApplicationRecord
 
   def self.reset_cache!
     @words = nil
-    Huayu::MainlandGuard.reset!
+    Huayu::ChinaGuard.reset!
   end
 
   def self.detect(text)

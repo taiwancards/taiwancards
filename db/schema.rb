@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_10_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_13_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -25,6 +25,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_140000) do
     t.string("verb", null: false)
     t.index(["created_at"], name: "index_activity_events_on_created_at")
     t.index(["user_id", "created_at"], name: "index_activity_events_on_user_id_and_created_at")
+  end
+
+  create_table("china_markers", force: :cascade) do |t|
+    t.boolean("active", default: true, null: false)
+    t.integer("band", default: 0, null: false)
+    t.integer("china_hits", default: 0, null: false)
+    t.datetime("created_at", null: false)
+    t.text("note")
+    t.string("taiwan_form")
+    t.integer("taiwan_hits", default: 0, null: false)
+    t.datetime("updated_at", null: false)
+    t.string("word", null: false)
+    t.index(["active"], name: "index_china_markers_on_active")
+    t.index(["band", "active"], name: "index_china_markers_on_band_and_active")
+    t.index(["word"], name: "index_china_markers_on_word", unique: true)
   end
 
   create_table("collection_group_items", primary_key: ["collection_group_id", "collection_id"], force: :cascade) do |t|
@@ -313,21 +328,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_140000) do
     t.index(["tocfl_half", "kind"], name: "index_lexemes_on_tocfl_half")
     t.index(["tocfl_third", "kind"], name: "index_lexemes_on_tocfl_third")
     t.index(["tocfl_twothirds", "kind"], name: "index_lexemes_on_tocfl_twothirds")
-  end
-
-  create_table("mainland_markers", force: :cascade) do |t|
-    t.boolean("active", default: true, null: false)
-    t.integer("band", default: 0, null: false)
-    t.datetime("created_at", null: false)
-    t.integer("mainland_hits", default: 0, null: false)
-    t.text("note")
-    t.string("taiwan_form")
-    t.integer("taiwan_hits", default: 0, null: false)
-    t.datetime("updated_at", null: false)
-    t.string("word", null: false)
-    t.index(["active"], name: "index_mainland_markers_on_active")
-    t.index(["band", "active"], name: "index_mainland_markers_on_band_and_active")
-    t.index(["word"], name: "index_mainland_markers_on_word", unique: true)
   end
 
   create_table("placement_tests", force: :cascade) do |t|

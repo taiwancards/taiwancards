@@ -50,7 +50,7 @@ module ZhuyinHelper
   HANZI_FONTS = %w[kai sans].freeze
   HANZI_FONT_COOKIE = "hanzi_font"
   PINYIN_COOKIE = "show_pinyin"
-  MAINLAND_COOKIE = "show_mainland"
+  CHINA_COOKIE = "show_china"
 
   def hanzi_font
     value = cookies[HANZI_FONT_COOKIE].to_s
@@ -62,7 +62,7 @@ module ZhuyinHelper
   end
 
   def html_preference_classes
-    class_names("font-kai" => kai_font?, "no-pinyin" => !show_pinyin?, "show-mainland" => show_mainland?)
+    class_names("font-kai" => kai_font?, "no-pinyin" => !show_pinyin?, "show-china" => show_china?)
   end
 
   def show_pinyin?
@@ -72,8 +72,8 @@ module ZhuyinHelper
     current_user.nil?
   end
 
-  def show_mainland?
-    cookies[MAINLAND_COOKIE].to_s == "1"
+  def show_china?
+    cookies[CHINA_COOKIE].to_s == "1"
   end
 
   private

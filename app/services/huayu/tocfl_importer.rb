@@ -56,7 +56,7 @@ module Huayu
     end
 
     def taiwanese(pairs)
-      pairs.reject { |form, _pinyin| MainlandGuard.marker?(form) }
+      pairs.reject { |form, _pinyin| ChinaGuard.marker?(form) }
     end
 
     def parse_variants(raw)

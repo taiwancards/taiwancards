@@ -171,13 +171,13 @@ namespace(:pronunciation) do
   task(ladder: :environment) do
     labels = {
       "tw_exact" => "Taiwan   · same syllable · same tone",
-      "cn_exact" => "mainland · same syllable · same tone",
+      "cn_exact" => "China · same syllable · same tone",
       "tw_near_tone" => "Taiwan   · same syllable · other tone",
       "tw_near_syllable" => "Taiwan   · near syllable · same tone",
       "tw_near_both" => "Taiwan   · near syllable · other tone",
       "tw_far_syllable" => "Taiwan   · other syllable · same tone",
       "tw_far_both" => "Taiwan   · other syllable · other tone",
-      "cn_far_both" => "mainland · other syllable · other tone"
+      "cn_far_both" => "China · other syllable · other tone"
     }
 
     r = Pronunciation::Corpus::Ladder.new(part: ENV["SPLIT"].presence || "test").call

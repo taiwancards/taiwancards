@@ -6,7 +6,7 @@ module Pronunciation
   module Corpus
     module Tokens
       TAIWAN = "tokens"
-      MAINLAND = "tokens_mainland"
+      CHINA = "tokens_mainland"
 
       module_function
 

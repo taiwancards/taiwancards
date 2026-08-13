@@ -12,7 +12,7 @@ module Graded
       def to_s = format("%-10s %-10s %5.1f%% %s", tier, text, rate * 100, issues.join("; "))
     end
 
-    def initialize(guard: Huayu::MainlandGuard.new)
+    def initialize(guard: Huayu::ChinaGuard.new)
       @guard = guard
     end
 
@@ -63,7 +63,7 @@ module Graded
       simplified = Huayu::SimpToTrad.available? ? strays(text.body) : []
 
       issues = []
-      issues << "mainland wording #{offender}" if offender
+      issues << "China wording #{offender}" if offender
       issues << "simplified #{simplified.join(" ")}" if simplified.any?
       issues
     end

@@ -15,7 +15,7 @@ RSpec.describe "Taiwan everyday vocabulary" do
         "origin" => "abbreviation",
         "register" => "casual",
         "domain" => "food",
-        "mainland" => "珍珠奶茶"
+        "china" => "珍珠奶茶"
       },
       {
         "text" => "三小",
@@ -50,7 +50,7 @@ RSpec.describe "Taiwan everyday vocabulary" do
 
     lexeme = Lexeme.find_by(text: "珍奶")
     expect(lexeme.readings["zhuyin"]).to(eq("ㄓㄣ ㄋㄞˇ"))
-    expect(lexeme.data).to(include("taiwan_only" => true, "origin" => "abbreviation", "mainland" => "珍珠奶茶"))
+    expect(lexeme.data).to(include("taiwan_only" => true, "origin" => "abbreviation", "china" => "珍珠奶茶"))
     expect(lexeme.restricted).to(be(false))
   end
 

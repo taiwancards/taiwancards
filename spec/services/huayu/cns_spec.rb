@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "CNS11643 reference data" do
   describe Huayu::CnsStrokes do
-    it "carries the Taiwan stroke count, which differs from the mainland one" do
+    it "carries the Taiwan stroke count, which differs from the China one" do
       expect(described_class.count("之")).to(eq(4))
       expect(described_class.count("以")).to(eq(5))
     end

@@ -6,7 +6,7 @@ module Placement
       "experience" => %w[none some year more],
       "script" => %w[none pinyin zhuyin both],
       "characters" => %w[none few read write],
-      "variety" => %w[none unsure mainland taiwan]
+      "variety" => %w[none unsure china taiwan]
     }.freeze
 
     EXPERIENCE_PRIOR = {"none" => 1, "some" => 2, "year" => 3, "more" => 5}.freeze
@@ -28,7 +28,7 @@ module Placement
 
       def reads? = answers["characters"] != "none"
 
-      def simplified? = answers["variety"] == "mainland"
+      def simplified? = answers["variety"] == "china"
     end
 
     def self.call(...) = new.call(...)
@@ -86,8 +86,8 @@ module Placement
       axes << "syllables" if answers["script"] != "none"
       axes.concat(READING_AXES) if answers["characters"] != "none"
       axes << "script" unless answers["script"] == "none"
-      axes << "taiwan" if answers["variety"] == "mainland" || answers["characters"] != "none"
-      axes << "traditional" if answers["variety"] == "mainland"
+      axes << "taiwan" if answers["variety"] == "china" || answers["characters"] != "none"
+      axes << "traditional" if answers["variety"] == "china"
       axes << "writing" if answers["characters"] == "write"
       axes
     end

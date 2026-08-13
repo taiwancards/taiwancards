@@ -48,13 +48,13 @@ RSpec.describe "Reading display" do
     expect(response.body).not_to(match(/<html[^>]*class="[^"]*no-pinyin/))
   end
 
-  it "keeps the mainland word hidden until it is asked for" do
+  it "keeps the China word hidden until it is asked for" do
     get(character_path(text: "和"))
-    expect(response.body).not_to(match(/<html[^>]*class="[^"]*show-mainland/))
+    expect(response.body).not_to(match(/<html[^>]*class="[^"]*show-china/))
 
-    cookies[:show_mainland] = "1"
+    cookies[:show_china] = "1"
     get(character_path(text: "和"))
-    expect(response.body).to(match(/<html[^>]*class="[^"]*show-mainland/))
+    expect(response.body).to(match(/<html[^>]*class="[^"]*show-china/))
   end
 
   it "uses the kai face by default and drops it when the cookie says sans" do

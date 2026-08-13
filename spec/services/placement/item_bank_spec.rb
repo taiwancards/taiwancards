@@ -87,7 +87,7 @@ RSpec.describe Placement::ItemBank do
     expect(row["grade"]).to(eq(3))
   end
 
-  it "tests Taiwanese usage against the mainland alternative" do
+  it "tests Taiwanese usage against the China alternative" do
     rows = Array.new(12) { item("taiwan", grade: 2) }.compact
     answers = rows.map { |row| row["choices"][row["answer"]] }
 
@@ -95,7 +95,7 @@ RSpec.describe Placement::ItemBank do
     expect(rows.flat_map { |row| row["choices"] }).to(include("不客氣").or(include("地鐵")))
   end
 
-  it "asks a mainland learner to pick the traditional form of a simplified glyph" do
+  it "asks a China-variant learner to pick the traditional form of a simplified glyph" do
     row = item("traditional")
 
     expect(described_class::TRADITIONAL_PAIRS.values).to(include(row["prompt"]))

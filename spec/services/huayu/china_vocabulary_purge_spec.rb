@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Huayu::MainlandVocabularyPurge do
+RSpec.describe Huayu::ChinaVocabularyPurge do
   def word(text, level: nil)
     Lexeme.create!(kind: :word, text:, data: level ? {"tocfl_level" => level} : {})
   end

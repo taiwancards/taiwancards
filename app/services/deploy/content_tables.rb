@@ -4,7 +4,7 @@ module Deploy
   module ContentTables
     ALL = %w[
       content_sources
-      mainland_markers
+      china_markers
       lexemes
       lexeme_links
       lexeme_content_sources

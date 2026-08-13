@@ -4,7 +4,7 @@ module Huayu
   class RejectionLog
     PATH = Rails.root.join("tmp/rejected")
 
-    REASONS = %i[unlisted junk mainland no_han empty].freeze
+    REASONS = %i[unlisted junk china no_han empty].freeze
 
     def initialize(name, path: nil)
       @name = name

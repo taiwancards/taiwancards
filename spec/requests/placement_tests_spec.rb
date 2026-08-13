@@ -117,13 +117,13 @@ RSpec.describe "Placement test" do
     expect(profile["tolerance"]).to(be_in(Placement::Ability::TOLERANCES))
   end
 
-  it "warns a mainland learner that nothing here is simplified" do
-    start(READER.merge(variety: "mainland"))
+  it "warns a China-variant learner that nothing here is simplified" do
+    start(READER.merge(variety: "china"))
     current_test.update!(status: :finished, result_grade: 2, pending: {}, profile: {"axes" => {}, "position" => 0.0})
 
     get("/placement")
 
-    expect(response.body).to(include(I18n.t("placement.mainland.title")))
+    expect(response.body).to(include(I18n.t("placement.china.title")))
   end
 
   it "does not seed twice when applied again" do

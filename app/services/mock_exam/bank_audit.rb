@@ -100,7 +100,7 @@ module MockExam
       def to_s = format("%-8s %-10s %-12s %s", level, block, kind, detail)
     end
 
-    def initialize(guard: Huayu::MainlandGuard.new)
+    def initialize(guard: Huayu::ChinaGuard.new)
       @guard = guard
     end
 
@@ -208,7 +208,7 @@ module MockExam
       issues = []
       issues << issue(level, block, :simplified, text) if simplified?(text)
       offender = @guard.offender(text)
-      issues << issue(level, block, :mainland, "#{offender} in #{text}") if offender
+      issues << issue(level, block, :china, "#{offender} in #{text}") if offender
       issues
     end
 

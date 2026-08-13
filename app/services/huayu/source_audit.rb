@@ -13,7 +13,7 @@ module Huayu
       huayu/corpus_frequency.json
       huayu/gloss_overrides.json
       huayu/kangxi_radicals.json
-      huayu/mainland_markers.json
+      huayu/china_markers.json
       huayu/measure_words.json
       huayu/moe4808.json
       huayu/moe_idioms.json

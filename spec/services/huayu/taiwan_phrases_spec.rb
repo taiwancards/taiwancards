@@ -74,7 +74,7 @@ RSpec.describe Huayu::TaiwanPhrases do
     expect(described_class.counts["nonexistent"]).to(eq(0))
   end
 
-  it "records the Taiwanese form to use instead of a mainland one" do
+  it "records the Taiwanese form to use instead of the China form" do
     pattern = described_class.patterns.find { |candidate| candidate.id == "courtesy.welcome" }
 
     expect(pattern.avoid["wrong"]).to(eq("不客氣"))

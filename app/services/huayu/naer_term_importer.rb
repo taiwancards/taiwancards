@@ -22,6 +22,7 @@ module Huayu
       return report(0, 0) unless @path.exist?
 
       rows = JSON.parse(@path.read)
+      rows.each { |row| row["text"] = row["text"].to_s.tr("体", "體") }
       known = Lexeme.where(kind: %i[word collocation], text: rows.map { |row| row["text"] }).pluck(:text).to_set
       fresh = rows.reject { |row| known.include?(row["text"]) }
 

@@ -140,14 +140,14 @@ namespace(:huayu) do
     Huayu::EtymologyImporter.new.call
   end
 
-  desc("Load the verified mainland-marker word list")
-  task(import_mainland_markers: :environment) do
-    Huayu::MainlandMarkerImporter.new.call
+  desc("Load the verified China-marker word list")
+  task(import_china_markers: :environment) do
+    Huayu::ChinaMarkerImporter.new.call
   end
 
-  desc("Remove dictionary entries that are mainland usage, erhua included. DRY_RUN=1 to only list them")
-  task(purge_mainland_vocabulary: :environment) do
-    pp(Huayu::MainlandVocabularyPurge.new.call(dry_run: ENV["DRY_RUN"].present?))
+  desc("Remove dictionary entries that are China usage, erhua included. DRY_RUN=1 to only list them")
+  task(purge_china_vocabulary: :environment) do
+    pp(Huayu::ChinaVocabularyPurge.new.call(dry_run: ENV["DRY_RUN"].present?))
   end
 
   desc("Add vocabulary Wiktionary labels as Taiwanese Mandarin")
@@ -280,7 +280,7 @@ namespace(:huayu) do
       ["huayu:import_pos", "parts of speech from official tables"],
       ["huayu:import_thesaurus", "thesaurus: synonyms, antonyms, neighbours"],
       ["huayu:import_etymology", "etymology"],
-      ["huayu:import_mainland_markers", "mainland vocabulary markers"],
+      ["huayu:import_china_markers", "China vocabulary markers"],
       ["huayu:import_sentences", "sentences"],
       ["huayu:dedupe_template_sentences", "collapse template families"],
       ["huayu:supplement_characters", "supplement character inventory"],
@@ -372,7 +372,7 @@ namespace(:huayu) do
       ["huayu:import_pos", "parts of speech from official tables"],
       ["huayu:import_thesaurus", "thesaurus: synonyms, antonyms, neighbours"],
       ["huayu:import_etymology", "etymology"],
-      ["huayu:import_mainland_markers", "mainland vocabulary markers"],
+      ["huayu:import_china_markers", "China vocabulary markers"],
       ["huayu:import_sentences", "sentences from every corpus"],
       ["huayu:dedupe_template_sentences", "collapse template families"],
       ["huayu:supplement_characters", "supplement character inventory"]

@@ -112,8 +112,7 @@ module Huayu
         "tier" => tier(entry),
         "facets" => FACETS,
         "taiwan_only" => (true if entry["marked"]),
-        "mainland" => entry["mainland"].presence,
-        "mainland_trad" => entry["mainland_trad"].presence,
+        "china" => entry["china"].presence,
         "hokkien" => hokkien(entry),
         "note" => {"en" => entry["note_en"], "ru" => entry["note_ru"]}.compact_blank.presence
       }

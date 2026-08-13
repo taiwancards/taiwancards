@@ -172,8 +172,8 @@ en:
     script_setup_hint: >-
       How the language is shown: face, pinyin, the Chinese word, how much a dictionary page shows — and the
       language you read the site in.
-    mainland_toggle: Show the Chinese word
-    mainland_hint: >-
+    china_toggle: Show the Chinese word
+    china_hint: >-
       The word used in China. On: a small line on the card shows what China says instead. Off: nothing
       extra. Off by default — this app teaches the Taiwanese word; the Chinese one is reference only.
     pinyin_hint: >-
@@ -2089,7 +2089,7 @@ en:
     abbr_label: people say
     capital_label: capital
     full_label: full form
-    mainland_says: "in China:"
+    china_says: "in China:"
     taiwan_marked: Taiwan-marked
     pick_scenario: Pick a situation and get the words it actually calls for.
     all_scenarios: All situations
@@ -2340,7 +2340,7 @@ en:
     reading: Reading
     meaning: Meaning
     taiwan: Taiwan
-    mainland: China
+    china: China
     hongkong: Hong Kong
     singapore: Singapore / Malaysia
     checked: Readings checked against the Ministry of Education dictionaries; vocabulary against the MOE cross-strait comparison table and regional sources. Where a form is contested or the standard has shifted, the note says so rather than picking a side.
@@ -2622,7 +2622,7 @@ en:
       you have spoken into the mic this section is empty — that is expected, it is not connected to the
       cards.</p>
   placement:
-    mainland:
+    china:
       title: "You learned the variety spoken in China"
       body: "Be straight with you: there are no simplified characters here at all, and no vocabulary from China. Nothing in this app will walk you from 简体 to 正體 — it only ever shows you the Taiwan side."
       traditional: "You read %{percent}%% of the traditional forms we showed you."
@@ -2673,7 +2673,7 @@ en:
         question: "Which variety did you learn?"
         options:
           taiwan: "Taiwanese Mandarin"
-          mainland: "China, in simplified characters"
+          china: "The China variant"
           unsure: "Not sure"
           none: "Neither, I am starting now"
     what_to_expect: What to expect
@@ -2911,7 +2911,7 @@ en:
           font_kai:
             title: The calligraphic font
             body: The shapes Taiwan teaches handwriting from. Tap it and look at the characters.
-          mainland_toggle:
+          china_toggle:
             title: Chinese equivalents
             body: Turn it on if you want to see where China's standard parts ways with Taiwan.
       profile:
@@ -3358,7 +3358,7 @@ en:
       lede: Better to find out now than a month from now.
       cards: "You just want flashcards. This is a good deal more than that: a dictionary, a reader, pronunciation, handwriting, and one shared record of progress underneath all of it. For flashcards alone it is overkill."
       course: "You want a course that takes you from zero to fluent. This is not a textbook: it does not teach grammar, and you will need to work through that elsewhere."
-      mainland: "You are moving to China. Everything here is Taiwanese Mandarin: traditional characters, zhuyin, Taiwanese vocabulary. There is no Chinese variant, and simplified characters cannot be switched on."
+      china: "You are moving to China. Everything here is Taiwanese Mandarin: traditional characters, zhuyin, Taiwanese vocabulary. There is no Chinese variant, and simplified characters cannot be switched on."
       nudging: You want to be chased. There are no reminders, no streaks and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular.
       close: If none of that puts you off, pick an option above and let us begin.
     path:

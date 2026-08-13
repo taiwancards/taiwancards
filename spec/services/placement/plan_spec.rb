@@ -28,8 +28,8 @@ RSpec.describe Placement::Plan do
     expect(intake(reader).axes).to(include("characters", "lexis", "sentences"))
   end
 
-  it "adds a traditional-recognition axis for a mainland background" do
-    answers = reader.merge("variety" => "mainland")
+  it "adds a traditional-recognition axis for a China-variant background" do
+    answers = reader.merge("variety" => "china")
 
     expect(intake(answers).axes).to(include("traditional"))
   end

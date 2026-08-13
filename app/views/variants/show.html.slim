@@ -21,7 +21,7 @@
           tr.border-b.border-border.bg-muted
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.word")
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("variants.taiwan")
-            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.mainland")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.china")
         tbody
           - VariantsHelper::READINGS.each do |text, tw_pinyin, tw_zhuyin, cn_pinyin|
             tr.border-b.border-border class="last:border-b-0"
@@ -38,7 +38,7 @@
           tr.border-b.border-border.bg-muted
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("variants.taiwan")
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.hongkong")
-            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.mainland")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.china")
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.reading")
         tbody
           - VariantsHelper::GLYPHS.each do |tw, hk, cn, reading|
@@ -55,7 +55,7 @@
           tr.border-b.border-border.bg-muted
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.meaning")
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-brand = t("variants.taiwan")
-            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.mainland")
+            th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.china")
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.hongkong")
             th.px-3.py-2.text-left.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("variants.singapore")
         tbody

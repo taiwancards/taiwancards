@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Huayu
-  class MainlandVocabularyPurge
+  class ChinaVocabularyPurge
     KINDS = %i[character word collocation measure_word].freeze
     LEVEL_KEYS = %w[tocfl_level tbcl_grade].freeze
 
@@ -18,7 +18,7 @@ module Huayu
       return {curriculum: curriculum.size, removed: 0, studied: studied.size, review: untagged.size} if dry_run
 
       removable.map(&:first).each_slice(200) { |slice| Lexeme.where(id: slice).destroy_all }
-      MainlandGuard.reset!
+      ChinaGuard.reset!
 
       {curriculum: curriculum.size, removed: removable.size, studied: studied.size, review: untagged.size}
     end
@@ -32,7 +32,7 @@ module Huayu
         .not("sources @> ?", [TaiwanEverydayImporter::SOURCE].to_json)
         .pluck(:id, :text, :data)
         .filter_map { |id, text, data|
-          [id, text, LEVEL_KEYS.any? { |key| data[key].present? }] if MainlandGuard.marker?(text)
+          [id, text, LEVEL_KEYS.any? { |key| data[key].present? }] if ChinaGuard.marker?(text)
         }
     end
 

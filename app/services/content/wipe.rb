@@ -17,7 +17,7 @@ module Content
       SenseExample.delete_all
       LexemeSense.delete_all
       LexemeContentSource.delete_all
-      MainlandMarker.delete_all
+      ChinaMarker.delete_all
 
       LexemeLink.where(parent_id: derived.select(:id)).delete_all
       LexemeLink.where(child_id: derived.select(:id)).delete_all

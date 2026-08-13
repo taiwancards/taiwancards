@@ -5,17 +5,17 @@ module Pronunciation
     class Ladder
       RUNGS = [
         {id: "tw_exact", speakers: :taiwan, syllable: :same, tone: :same},
-        {id: "cn_exact", speakers: :mainland, syllable: :same, tone: :same},
+        {id: "cn_exact", speakers: :china, syllable: :same, tone: :same},
         {id: "tw_near_tone", speakers: :taiwan, syllable: :same, tone: :other},
         {id: "tw_near_syllable", speakers: :taiwan, syllable: :near, tone: :same},
         {id: "tw_near_both", speakers: :taiwan, syllable: :near, tone: :other},
         {id: "tw_far_syllable", speakers: :taiwan, syllable: :far, tone: :same},
         {id: "tw_far_both", speakers: :taiwan, syllable: :far, tone: :other},
-        {id: "cn_far_both", speakers: :mainland, syllable: :far, tone: :other}
+        {id: "cn_far_both", speakers: :china, syllable: :far, tone: :other}
       ].freeze
 
       PER_RUNG = 4
-      SOURCES = {taiwan: Tokens::TAIWAN, mainland: Tokens::MAINLAND}.freeze
+      SOURCES = {taiwan: Tokens::TAIWAN, china: Tokens::CHINA}.freeze
 
       def initialize(part: "test", store: TemplateStore.instance, io: $stdout)
         @part = part

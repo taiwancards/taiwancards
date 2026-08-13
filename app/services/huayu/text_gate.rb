@@ -18,12 +18,12 @@ module Huayu
       above_tier: :unlisted,
       simplified: :unlisted,
       converted_orthography: :unlisted,
-      mainland: :mainland,
-      mainland_soft: :mainland,
-      cantonese: :mainland,
-      regional: :mainland,
-      foreign_topic: :mainland,
-      erhua: :mainland,
+      mainland: :china,
+      mainland_soft: :china,
+      cantonese: :china,
+      regional: :china,
+      foreign_topic: :china,
+      erhua: :china,
       literary_density: :wenyan
     }.freeze
 
@@ -43,7 +43,7 @@ module Huayu
     end
 
     def initialize
-      @mainland = MainlandGuard.instance
+      @china = ChinaGuard.instance
     end
 
     def call(text)
@@ -51,8 +51,8 @@ module Huayu
       finding = report.rejects.first
       return reject(finding) if finding
 
-      stored = @mainland.offender(report.text)
-      return Verdict.new(ok: false, tier: nil, reason: :mainland, offender: stored) if stored
+      stored = @china.offender(report.text)
+      return Verdict.new(ok: false, tier: nil, reason: :china, offender: stored) if stored
 
       Verdict.new(ok: true, tier: report.tier || CharacterTiers::COMMON, reason: nil, offender: nil)
     end

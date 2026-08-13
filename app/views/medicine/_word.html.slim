@@ -24,12 +24,10 @@
         span lang="zh-TW" = pair_text
         - if pair
           span.ml-1 lang="zh-TW" = pair.readings["zhuyin"] || pair.readings["pinyin"]
-    - if data["mainland"].present?
-      span.mainland-note.leading-snug.text-muted-foreground class="text-[10px]"
-        => t("everyday.mainland_says")
-        span lang="zh-TW" = data["mainland"]
-        - if data["mainland_trad"].present?
-          span.ml-1 lang="zh-TW" = "(#{data["mainland_trad"]})"
+    - if data["china"].present?
+      span.china-note.leading-snug.text-muted-foreground class="text-[10px]"
+        => t("everyday.china_says")
+        span lang="zh-TW" = data["china"]
 
   .flex.shrink-0.items-center
     = render("shared/speak", audio:, size: :sm)

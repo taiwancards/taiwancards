@@ -36,7 +36,7 @@ module Huayu
             entry = entries[lexeme.text]
             next if entry.nil?
 
-            text = entry["text"].to_s.strip
+            text = strip_simplified(entry["text"].to_s.strip)
             next if text.blank?
             next if lexeme.data["etymology_text"] == text
 
@@ -50,6 +50,16 @@ module Huayu
 
       @io.puts(format("etymologies attached: %d", applied))
       applied
+    end
+
+    private
+
+    def strip_simplified(text)
+      text.gsub(/(\p{Han}+)／(\p{Han}+)/) do
+        traditional = Regexp.last_match(1)
+        simplified = Regexp.last_match(2)
+        traditional.length == simplified.length ? traditional : "#{traditional}／#{simplified}"
+      end
     end
   end
 end

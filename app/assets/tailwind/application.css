@@ -176,20 +176,20 @@
     display: none;
   }
 
-  .mainland-note {
+  .china-note {
     display: none;
   }
 
-  .show-mainland .mainland-note {
+  .show-china .china-note {
     display: inline;
   }
 
-  .pref-mark-mainland {
+  .pref-mark-china {
     opacity: 0.3;
     transition: opacity 150ms ease;
   }
 
-  .show-mainland .pref-mark-mainland {
+  .show-china .pref-mark-china {
     opacity: 1;
   }
 
