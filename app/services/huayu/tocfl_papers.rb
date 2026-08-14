@@ -8,7 +8,28 @@ module Huayu
     MEDIA_DIR = "tocfl_official"
     BANDS = %w[Novice A B].freeze
 
-    Paper = Data.define(:slug, :band, :set, :level, :skill, :paper, :transcript, :audio, :clips, :answers, :count) do
+    Item = Data.define(:number, :context, :stem, :options) do
+      def letters = options.keys.sort
+
+      def option(letter) = options[letter]
+
+      def context? = context.to_s.strip.present?
+    end
+
+    Paper = Data.define(
+      :slug,
+      :band,
+      :set,
+      :level,
+      :skill,
+      :paper,
+      :transcript,
+      :audio,
+      :clips,
+      :answers,
+      :count,
+      :items
+    ) do
       def to_param = slug
 
       def listening? = skill == "listening"
@@ -16,6 +37,10 @@ module Huayu
       def numbers = (1..count).to_a
 
       def answer(number) = answers[number.to_s]
+
+      def item(number) = items.find { |row| row.number == number }
+
+      def interactive = items.size
 
       def label = "#{band} · #{I18n.t("exams.set", number: set)}"
     end
@@ -75,10 +100,22 @@ module Huayu
               audio: row["audio"],
               clips: Array(row["clips"]),
               answers: row["answers"] || {},
-              count: row["count"].to_i
+              count: row["count"].to_i,
+              items: build_items(row)
             )
           end
           .freeze
+      end
+
+      def build_items(row)
+        Array(row["items"]).map do |item|
+          Item.new(
+            number: item["number"].to_i,
+            context: item["context"],
+            stem: item["stem"],
+            options: item["options"] || {}
+          )
+        end
       end
     end
   end

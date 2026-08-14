@@ -33,3 +33,5 @@
               span = paper.level
               - if paper.clips.any?
                 span.tabular-nums = t("exams.clips", count: paper.clips.size)
+              - if paper.interactive.positive?
+                span.tabular-nums.text-emerald-600 = t("exams.interactive", count: paper.interactive)

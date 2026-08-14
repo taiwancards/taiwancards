@@ -37,10 +37,32 @@
   = form_with url: grade_exam_path(@paper), method: :post, class: "space-y-4" do
     section.space-y-3
       h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("exams.answer_sheet")
-      .grid.gap-2 class="sm:grid-cols-2"
-        - @paper.numbers.each do |number|
-          - row = results[number]
-          .flex.items-center.gap-2.rounded-lg.border.px-3.py-2 class=(row.nil? ? "border-border bg-card" : (row[:correct] ? "border-emerald-500 bg-emerald-500/10" : "border-red-500 bg-red-500/10"))
+      - shown_context = nil
+      - @paper.numbers.each do |number|
+        - row = results[number]
+        - item = @paper.item(number)
+        - frame = row.nil? ? "border-border bg-card" : (row[:correct] ? "border-emerald-500 bg-emerald-500/10" : "border-red-500 bg-red-500/10")
+        - if item
+          - if item.context? && item.context != shown_context
+            - shown_context = item.context
+            .rounded-xl.border.border-border.bg-muted.px-4.py-3.text-base.leading-loose lang="zh-TW" class=text_flow_class
+              - item.context.split("\n").each do |paragraph|
+                p.break-words = paragraph
+          .space-y-2.rounded-lg.border.px-3.py-3 class=frame
+            .flex.items-start.gap-2
+              span.w-7.shrink-0.text-xs.tabular-nums.text-muted-foreground = number
+              p.min-w-0.break-words.text-base.leading-relaxed lang="zh-TW" = item.stem
+            .space-y-1 class="pl-9"
+              - item.letters.each do |letter|
+                label.flex.cursor-pointer.items-start.gap-2.rounded-md.px-2.py-1 class="has-[:checked]:bg-muted"
+                  input.mt-1.shrink-0 type="radio" name="answers[#{number}]" value=letter checked=(row && row[:given] == letter)
+                  span.min-w-0.break-words.text-sm
+                    span.mr-1.text-muted-foreground = "(#{letter})"
+                    span lang="zh-TW" = item.option(letter)
+                  - if row && row[:expected] == letter
+                    span.ml-auto.shrink-0.text-xs.font-medium.text-emerald-700 = t("exams.correct_answer")
+        - else
+          .flex.items-center.gap-2.rounded-lg.border.px-3.py-2 class=frame
             span.w-7.shrink-0.text-xs.tabular-nums.text-muted-foreground = number
             .flex.flex-wrap.gap-1
               - letters.each do |letter|

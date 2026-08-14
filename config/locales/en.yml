@@ -362,6 +362,8 @@ en:
     open_paper: Open the paper
     open_transcript: Listening transcript
     audio: Audio
+    correct_answer: correct
+    interactive: "%{count} on screen"
     answer_sheet: Answer sheet
     check: Mark my sheet
     check_hint: Marked against the official answer key; your best score is kept.
@@ -3030,6 +3032,8 @@ en:
               The Backups tab holds an export of your whole progress in one file. The data is yours and
               it is not locked in here.
   reader:
+    show_translation: Show translation
+    hide_translation: Hide translation
     title: Reader
     new_text: Paste a text
     new_hint: >-

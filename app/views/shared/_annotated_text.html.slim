@@ -1,32 +1,49 @@
-.rounded-2xl.border.border-border.bg-card.p-5[
-  data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
+- translated = lines.any? { |_line, _tokens, translation, _speaker| translation.present? }
+- readings = sentence_readings(lines.map(&:first).compact_blank) if show_pinyin?
+
+.space-y-3[
+  data-controller="analyzer translations" data-analyzer-activate-url-value=reader_activate_path
   data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
-  .space-y-3 lang="zh-TW" class=text_flow_class
-    - lines.each do |line, tokens, translation, speaker|
-      - next if line.blank?
-      p.text-2xl
-        - if speaker.present?
-          span.mr-2.align-middle.text-xs.font-medium.text-muted-foreground = speaker
-        - tokens.each do |token|
-          - if token.kind == :literal
-            span style="white-space: pre-wrap" = token.text
-          - else
-            - unknown = token.lexeme && !known_ids.include?(token.lexeme.id)
-            - zhuyin = (reader_zhuyin(token.lexeme) if unknown)
-            span.cursor-pointer.rounded.transition-colors[class="mx-0.5"
-              class=reader_token_classes(token, known_ids) class="hover:bg-primary/10"
-              data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
-              data-action="mouseenter->analyzer#open click->analyzer#open" ]
-              - if zhuyin.present?
-                = zhuyin_ruby(token.text, zhuyin, context: :text)
-              - elsif unknown && (reading = reader_reading(token.lexeme))
-                ruby
+
+  - if translated
+    .flex.justify-end
+      button.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.text-muted-foreground[
+        type="button" data-action="translations#toggle" data-translations-target="button"
+        data-show-label=t("reader.show_translation") data-hide-label=t("reader.hide_translation")
+        class="hover:bg-muted hover:text-foreground" ]
+        = t("reader.show_translation")
+
+  .rounded-2xl.border.border-border.bg-card.p-5
+    .space-y-3 class=text_flow_class
+      - lines.each do |line, tokens, translation, speaker|
+        - next if line.blank?
+        p.text-2xl lang="zh-TW"
+          - if speaker.present?
+            span.mr-2.align-middle.text-xs.font-medium.text-muted-foreground = speaker
+          - tokens.each do |token|
+            - if token.kind == :literal
+              span style="white-space: pre-wrap" = token.text
+            - else
+              - unknown = token.lexeme && !known_ids.include?(token.lexeme.id)
+              - zhuyin = (reader_zhuyin(token.lexeme) if unknown)
+              span.cursor-pointer.rounded.transition-colors[class="mx-0.5"
+                class=reader_token_classes(token, known_ids) class="hover:bg-primary/10"
+                data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
+                data-action="mouseenter->analyzer#open click->analyzer#open" ]
+                - if zhuyin.present?
+                  = zhuyin_ruby(token.text, zhuyin, context: :text)
+                - elsif unknown && (reading = reader_reading(token.lexeme))
+                  ruby
+                    = token.text
+                    rt.text-xs.font-normal.text-muted-foreground = reading
+                - else
                   = token.text
-                  rt.text-xs.font-normal.text-muted-foreground = reading
-              - else
-                = token.text
-      - if translation.present?
-        p.text-sm.leading-relaxed.text-muted-foreground lang=I18n.locale = translation
+        - if show_pinyin? && (reading = readings&.dig(line)) && reading.pinyin.present?
+          .py-line lang="zh-Latn" = reading.pinyin
+        - if translation.present?
+          p.hidden.text-sm.leading-relaxed.text-muted-foreground[
+            lang=I18n.locale data-translations-target="line" ]
+            = translation
 
   .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
     data-analyzer-target="popover" class="max-w-[85vw]" ]

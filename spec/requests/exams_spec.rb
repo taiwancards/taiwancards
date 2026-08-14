@@ -68,6 +68,26 @@ RSpec.describe "Exams" do
       end
     end
 
+    it "renders an extracted question with its options instead of bare letters" do
+      with_items = Huayu::TocflPapers.all.find { |row| row.interactive.positive? }
+      item = with_items.items.first
+
+      get("/exams/#{with_items.slug}")
+
+      expect(response.body).to(include(CGI.escapeHTML(item.stem)))
+      expect(response.body).to(include(CGI.escapeHTML(item.options.values.first)))
+    end
+
+    it "keeps every extracted question answerable and unambiguous" do
+      Huayu::TocflPapers.all.flat_map { |row| row.items.map { |item| [row, item] } }.each do |row, item|
+        key = row.answer(item.number)
+
+        expect(item.options).to(include(key), "#{row.slug} ##{item.number}: key #{key} is not among the options")
+        expect(item.options.values.uniq.size).to(eq(item.options.size))
+        expect(item.stem).to(match(/[　\s]{4,}|＿|_{2,}/), "#{row.slug} ##{item.number}: no gap in the stem")
+      end
+    end
+
     it "answers with not found for a paper that does not exist" do
       get("/exams/no-such-paper")
 
