@@ -5,6 +5,7 @@ module Huayu
     HAN = /\p{Han}/
     NEUTRAL = "˙"
     SPLITS = {"都會" => %w[都 會]}.freeze
+    PREFERRED = {"和" => ["ㄏㄢˋ", "hàn"]}.freeze
     Line = Data.define(:zhuyin, :pinyin)
 
     def initialize(analyzer: TextAnalyzer.new)
@@ -42,7 +43,7 @@ module Huayu
     def reading_for(token)
       return [token, token] unless token.match?(HAN)
 
-      read(entry_for(token)) || spell(token)
+      PREFERRED[token] || read(entry_for(token)) || spell(token)
     end
 
     def entry_for(token)
