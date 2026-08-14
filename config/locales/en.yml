@@ -3032,6 +3032,7 @@ en:
               The Backups tab holds an export of your whole progress in one file. The data is yours and
               it is not locked in here.
   reader:
+    panel_empty: Tap any word in the text — its card will appear here.
     show_translation: Show translation
     hide_translation: Hide translation
     title: Reader

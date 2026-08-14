@@ -13,37 +13,43 @@
         class="hover:bg-muted hover:text-foreground" ]
         = t("reader.show_translation")
 
-  .rounded-2xl.border.border-border.bg-card.p-5
-    .space-y-3 class=text_flow_class
-      - lines.each do |line, tokens, translation, speaker|
-        - next if line.blank?
-        p.text-2xl lang="zh-TW"
-          - if speaker.present?
-            span.mr-2.align-middle.text-xs.font-medium.text-muted-foreground = speaker
-          - tokens.each do |token|
-            - if token.kind == :literal
-              span style="white-space: pre-wrap" = token.text
-            - else
-              - unknown = token.lexeme && !known_ids.include?(token.lexeme.id)
-              - zhuyin = (reader_zhuyin(token.lexeme) if unknown)
-              span.cursor-pointer.rounded.transition-colors[class="mx-0.5"
-                class=reader_token_classes(token, known_ids) class="hover:bg-primary/10"
-                data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
-                data-action="mouseenter->analyzer#open click->analyzer#open" ]
-                - if zhuyin.present?
-                  = zhuyin_ruby(token.text, zhuyin, context: :text)
-                - elsif unknown && (reading = reader_reading(token.lexeme))
-                  ruby
+  .grid.items-start.gap-4 class="lg:grid-cols-[minmax(0,1fr)_17rem] min-[1440px]:-mr-[18rem]"
+    .rounded-2xl.border.border-border.bg-card.p-5
+      .space-y-3 class=text_flow_class
+        - lines.each do |line, tokens, translation, speaker|
+          - next if line.blank?
+          p.text-2xl lang="zh-TW"
+            - if speaker.present?
+              span.mr-2.align-middle.text-xs.font-medium.text-muted-foreground = speaker
+            - tokens.each do |token|
+              - if token.kind == :literal
+                span style="white-space: pre-wrap" = token.text
+              - else
+                - unknown = token.lexeme && !known_ids.include?(token.lexeme.id)
+                - zhuyin = (reader_zhuyin(token.lexeme) if unknown)
+                span.cursor-pointer.rounded.transition-colors[class="mx-0.5"
+                  class=reader_token_classes(token, known_ids) class="hover:bg-primary/10"
+                  data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
+                  data-action="click->analyzer#open" ]
+                  - if zhuyin.present?
+                    = zhuyin_ruby(token.text, zhuyin, context: :text)
+                  - elsif unknown && (reading = reader_reading(token.lexeme))
+                    ruby
+                      = token.text
+                      rt.text-xs.font-normal.text-muted-foreground = reading
+                  - else
                     = token.text
-                    rt.text-xs.font-normal.text-muted-foreground = reading
-                - else
-                  = token.text
-        - if show_pinyin? && (reading = readings&.dig(line)) && reading.pinyin.present?
-          .py-line lang="zh-Latn" = reading.pinyin
-        - if translation.present?
-          p.hidden.text-sm.leading-relaxed.text-muted-foreground[
-            lang=I18n.locale data-translations-target="line" ]
-            = translation
+          - if show_pinyin? && (reading = readings&.dig(line)) && reading.pinyin.present?
+            .py-line lang="zh-Latn" = reading.pinyin
+          - if translation.present?
+            p.hidden.text-sm.leading-relaxed.text-muted-foreground[
+              lang=I18n.locale data-translations-target="line" ]
+              = translation
+
+    aside.hidden.rounded-xl.border.border-border.bg-card.p-4[
+      class="lg:sticky lg:top-40 lg:block" data-analyzer-target="panel" ]
+      p.text-sm.text-muted-foreground data-analyzer-target="panelEmpty" = t("reader.panel_empty")
+      .hidden data-analyzer-target="panelBody"
 
   .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
     data-analyzer-target="popover" class="max-w-[85vw]" ]

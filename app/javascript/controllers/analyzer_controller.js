@@ -13,7 +13,9 @@ export default class extends Controller {
       )
         this.close();
     };
-    this.onScroll = () => this.close();
+    this.onScroll = () => {
+      if (!this.sheet) this.close();
+    };
     document.addEventListener("click", this.outside);
     window.addEventListener("scroll", this.onScroll, true);
     this.escHandler = (e) => e.key === "Escape" && this.close();
@@ -39,6 +41,27 @@ export default class extends Controller {
     }
     this.popoverTarget.innerHTML = this.render(token);
     this.popoverTarget.classList.remove("hidden");
+
+    if (this.narrow()) {
+      this.sheet = true;
+      Object.assign(this.popoverTarget.style, {
+        left: "0.75rem",
+        right: "0.75rem",
+        bottom: "5.5rem",
+        top: "auto",
+        width: "auto",
+        maxWidth: "none",
+      });
+      return;
+    }
+
+    this.sheet = false;
+    Object.assign(this.popoverTarget.style, {
+      right: "",
+      bottom: "",
+      width: "",
+      maxWidth: "",
+    });
     computePosition(anchor, this.popoverTarget, {
       placement: "top",
       strategy: "fixed",
@@ -51,7 +74,12 @@ export default class extends Controller {
     });
   }
 
+  narrow() {
+    return window.matchMedia("(max-width: 1023px)").matches;
+  }
+
   close() {
+    this.sheet = false;
     this.popoverTarget.classList.add("hidden");
   }
 
