@@ -40,6 +40,7 @@ module Huayu
       lines = Array(text["lines"])
       {
         kind: :story,
+        title: text["title"],
         author: text["author"],
         level_tag: text["level_tag"],
         restricted: true,
@@ -56,8 +57,12 @@ module Huayu
       }
     end
 
+    def existing(slug)
+      ReadingText.where(source: SOURCE).find_by("body_data ->> 'slug' = ?", slug.to_s)
+    end
+
     def apply(text, save:)
-      reading_text = ReadingText.find_or_initialize_by(source: SOURCE, title: text["title"])
+      reading_text = existing(text["slug"]) || ReadingText.new(source: SOURCE)
       reading_text.assign_attributes(attributes(text))
       return :unchanged unless reading_text.changed?
 

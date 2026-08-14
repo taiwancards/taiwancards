@@ -1,0 +1,26 @@
+- content_for(:title, "#{t("course.level_exam")} · #{@stage.title(I18n.locale)}")
+
+= render("course/progress_bar", slice: @slice, compact: true)
+
+.py-6.space-y-6
+  = link_to course_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("course.title")
+
+  header.space-y-2
+    .flex.flex-wrap.items-center.gap-2.text-xs.text-muted-foreground
+      span.rounded-full.border.border-border.px-2.py-0.5 = @stage.band
+      - if @completion
+        span.text-emerald-600 = "✓ #{@completion.score}/#{@completion.total}"
+    h1.text-2xl.font-bold.tracking-tight = t("course.level_exam")
+    p.text-lg.font-semibold = @stage.title(I18n.locale)
+    p.text-sm.leading-relaxed.text-muted-foreground = t("course.exam_lede", count: @stage.exam.size, lessons: @lessons.size)
+
+  .rounded-xl.border.border-amber-400.px-4.py-3.text-sm.leading-relaxed class="bg-amber-500/10"
+    span<> = t("course.exam_disclaimer")
+    = link_to t("course.exam_disclaimer_link"), mock_exams_path, class: "underline"
+
+  = render("course/exercises", exercises: @stage.exam, url: course_exam_done_path(@stage), heading: t("course.exam_tasks"))
+
+  nav.text-sm
+    = link_to t("course.details"), course_progress_path, class: "text-muted-foreground hover:text-foreground"

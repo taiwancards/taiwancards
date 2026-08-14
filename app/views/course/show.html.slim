@@ -1,0 +1,91 @@
+- content_for(:title, @lesson.title_for(I18n.locale))
+
+= render("course/progress_bar", slice: @slice)
+
+.py-6.space-y-6
+  = link_to course_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("course.title")
+
+  header.space-y-2
+    .flex.flex-wrap.items-center.gap-2.text-xs.text-muted-foreground
+      span.tabular-nums = course_lesson_number(@lesson)
+      span.rounded-full.border.border-border.px-2.py-0.5 = Huayu::CourseLessons.stage(@lesson.stage)&.band
+      - if @completion
+        span.text-emerald-600 = "✓ #{@completion.score}/#{@completion.total}"
+    h1.text-2xl.font-bold.tracking-tight = @lesson.title_for(I18n.locale)
+    p.text-lg.font-semibold lang="zh-TW" = @lesson.zh_title
+    p.text-sm.leading-relaxed.text-muted-foreground = @lesson.goal_for(I18n.locale)
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+      = @lesson.dialogue? ? t("course.dialogue") : t("course.passage")
+    = render("shared/annotated_text", lines: @lines, known_ids: @known_ids)
+
+  section.space-y-3
+    .flex.flex-wrap.items-center.justify-between.gap-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.vocabulary")
+      = button_to t("course.make_deck"), course_lesson_deck_path(@lesson), class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+    ul.divide-y.divide-border.overflow-hidden.rounded-xl.border.border-border.bg-card
+      - @lesson.vocabulary.each do |word|
+        li.flex.items-start.gap-3.px-4.py-3
+          .min-w-0.flex-1
+            .flex.flex-wrap.items-baseline.gap-2
+              - path = course_word_path(word, @entries)
+              - if path
+                = link_to path, class: "text-lg font-semibold hover:underline" do
+                  = zhuyin_ruby(word.zh, word.zhuyin, context: :entry)
+              - else
+                span.text-lg.font-semibold = zhuyin_ruby(word.zh, word.zhuyin, context: :entry)
+              - if word.pinyin.present?
+                span.py-line.text-xs.text-muted-foreground lang="zh-Latn" = word.pinyin
+              - if word.pos.present?
+                span.text-xs.text-muted-foreground = word.pos
+              = course_register_chip(word)
+            .text-sm = word.gloss(I18n.locale)
+            - if word.note_for(I18n.locale).present?
+              .mt-1.text-xs.leading-relaxed.text-muted-foreground = word.note_for(I18n.locale)
+
+  - if @grammar.any?
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.grammar")
+      ul.space-y-2
+        - @grammar.each do |ref, lesson|
+          li.rounded-xl.border.border-border.bg-card.px-4.py-3
+            = link_to grammar_lesson_path(lesson.slug), class: "flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 hover:underline" do
+              span.min-w-0.break-words.font-semibold = lesson.title(I18n.locale)
+              span.max-w-full.break-all.rounded-lg.bg-muted.px-2.py-0.5.text-xs.font-medium lang="zh-TW" = lesson.formula_for(I18n.locale)
+            - if ref.note_for(I18n.locale).present?
+              p.mt-1.text-sm.leading-relaxed.text-muted-foreground = ref.note_for(I18n.locale)
+
+  - if @lesson.usage.any?
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.usage")
+      ul.space-y-2
+        - @lesson.usage.each do |entry|
+          li.rounded-xl.border.border-amber-400.px-4.py-3.text-sm.leading-relaxed class="bg-amber-500/10"
+            .flex.flex-wrap.items-baseline.gap-2
+              span.font-semibold lang="zh-TW" = entry.street
+              span.text-xs.text-muted-foreground = t("course.on_the_street")
+              span.mx-1 ↔
+              span.font-semibold lang="zh-TW" = entry.standard
+              span.text-xs.text-muted-foreground = t("course.in_the_exam")
+            p.mt-1 = entry.body(I18n.locale)
+
+  - if @lesson.culture_for(I18n.locale).present?
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.culture")
+      .rounded-xl.border.border-border.bg-card.px-4.py-3
+        h3.font-semibold = @lesson.culture_for(I18n.locale)["title"]
+        p.mt-1.text-sm.leading-relaxed = @lesson.culture_for(I18n.locale)["body"]
+
+  - if @lesson.exercises.any?
+    = render("course/exercises", exercises: @lesson.exercises, url: course_lesson_done_path(@lesson))
+
+  nav.flex.justify-between.gap-3.text-sm
+    - if @previous
+      = link_to "← #{@previous.title_for(I18n.locale)}", course_lesson_path(@previous), class: "text-muted-foreground hover:text-foreground"
+    - else
+      span
+    - if @next
+      = link_to "#{@next.title_for(I18n.locale)} →", course_lesson_path(@next), class: "text-muted-foreground hover:text-foreground"

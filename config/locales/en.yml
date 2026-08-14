@@ -181,9 +181,11 @@ en:
       Pinyin never comes without zhuyin — Taiwan reads by zhuyin. Zhuyin alone by default, and whatever you
       pick holds on every page until you change it.
     locale_switch: EN
-    textbook: Textbook
+    textbook: Book lessons
     phrase_drills: Phrases
     stories: Reading room
+    course: Course
+    exams: Real TOCFL papers
     my_desks: My decks
     reader: Read texts
     graded: Graded reader
@@ -279,6 +281,91 @@ en:
     study_lesson: Study this lesson
     no_summary: No summary for this lesson.
     play_audio: Play audio
+  course:
+    title: Course
+    lede: "A lesson-by-lesson path from your first hello to TOCFL Band B. Every lesson has a text from real life in Taipei and New Taipei, the words behind it, the grammar it runs on, a note on what people say on the street versus what the exam wants, and drills that mark themselves."
+    empty: The course has not been loaded yet.
+    resume: Continue where you left off
+    lesson_number: "Lesson %{number}"
+    dialogue: Dialogue
+    passage: Text
+    vocabulary: Words
+    grammar: Grammar
+    usage: Street and exam
+    culture: About Taiwan
+    exercises: Practice
+    make_deck: Make a deck
+    deck_prefix: "Course %{number}"
+    save_progress: Save progress
+    save_hint: The score is stored once you have worked through the tasks.
+    saved: Progress saved.
+    check: Check
+    again: Again
+    right: correct
+    wrong: not quite
+    on_the_street: heard on the street
+    in_the_exam: written in the exam
+    details: Details
+    level_progress: "Progress through %{level}"
+    bar_lessons: Lessons
+    bar_words: Words
+    bar_grammar: Grammar
+    bar_exercises: Tasks
+    bar_each_lesson: "each lesson ≈ %{share}% of the level"
+    progress_title: Progress and pace
+    progress_lede: How much of each TOCFL level the course has taken you through, how fast you are moving, and when you will get there at this rate.
+    whole_course: The whole course
+    by_level: By level
+    pace_speed: Pace
+    pace_per_week: "%{count} lessons a week"
+    pace_window: Measured over
+    pace_days: "%{days} days, %{lessons} lessons"
+    pace_finish_course: Whole course finished by
+    pace_unknown: Finish two lessons and the pace and the finishing date appear here.
+    each_lesson_worth: "Each lesson is worth %{share}% of this level."
+    level_finish_by: "at this rate, done by %{date}"
+    level_done: level complete
+    level_exam: Level test
+    level_exam_hint: "%{count} tasks over the whole level"
+    exam_lede: "%{count} mixed tasks drawn from all %{lessons} lessons of this level — words, gap-filling, word order and matching."
+    exam_tasks: Test
+    exam_disclaimer: This is a check on the course material, not a TOCFL paper. For a simulation of the real exam format see
+    exam_disclaimer_link: the TOCFL simulator
+    registers:
+      spoken: spoken only
+      written: written only
+    tasks:
+      meaning: What does it mean?
+      word: Choose the Chinese
+      cloze: Fill the gap
+      order: Put the sentence in order
+      pair: Match the pairs
+
+  exams:
+    title: Real TOCFL papers
+    lede: The official mock papers published free by the Steering Committee for the Test of Proficiency-Huayu, with their audio, their transcripts and their answer keys. Sit a paper, mark your sheet and let the app score it against the official key.
+    notice: These are the examination board's own materials, kept for personal study only. They are visible to you alone, are never published by this app, and are not reproduced anywhere in the public sections.
+    empty: No official papers have been downloaded onto this machine yet.
+    band: "Band %{band}"
+    set: "Set %{number}"
+    skills:
+      reading: Reading
+      listening: Listening
+    questions:
+      one: "%{count} question"
+      other: "%{count} questions"
+    clips:
+      one: "%{count} clip"
+      other: "%{count} clips"
+    best: "best %{score}/%{total}"
+    percent: "%{value}%% correct"
+    open_paper: Open the paper
+    open_transcript: Listening transcript
+    audio: Audio
+    answer_sheet: Answer sheet
+    check: Mark my sheet
+    check_hint: Marked against the official answer key; your best score is kept.
+
   common:
     search: Search…
     save: Save

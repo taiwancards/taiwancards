@@ -1,0 +1,63 @@
+- content_for(:title, t("course.progress_title"))
+
+.py-6.space-y-6
+  = link_to course_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("course.title")
+
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("course.progress_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("course.progress_lede")
+
+  section.rounded-xl.border.border-border.bg-card.p-4.space-y-3
+    .flex.items-baseline.justify-between.gap-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.whole_course")
+      span.text-2xl.font-bold.tabular-nums = "#{@progress.overall}%"
+    .h-2.w-full.overflow-hidden.rounded-full.bg-muted
+      .h-full.rounded-full.bg-primary style="width: #{@progress.overall}%"
+    - if @pace
+      dl.grid.gap-3 class="sm:grid-cols-3"
+        .space-y-0.5
+          dt.text-xs.text-muted-foreground = t("course.pace_speed")
+          dd.text-sm.font-medium.tabular-nums = t("course.pace_per_week", count: @pace.per_week)
+        .space-y-0.5
+          dt.text-xs.text-muted-foreground = t("course.pace_window")
+          dd.text-sm.font-medium.tabular-nums = t("course.pace_days", days: @pace.days, lessons: @pace.lessons)
+        - if @finish_all
+          .space-y-0.5
+            dt.text-xs.text-muted-foreground = t("course.pace_finish_course")
+            dd.text-sm.font-medium.tabular-nums = l(@finish_all, format: :long)
+    - else
+      p.text-sm.text-muted-foreground = t("course.pace_unknown")
+
+  section.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.by_level")
+    - @progress.slices.each do |slice|
+      .rounded-xl.border.border-border.bg-card.p-4.space-y-3
+        .flex.flex-wrap.items-baseline.justify-between.gap-2
+          div
+            .text-base.font-semibold = slice.stage.title(I18n.locale)
+            .text-xs.text-muted-foreground = slice.stage.band
+          .text-right
+            .text-xl.font-bold.tabular-nums = "#{slice.percent}%"
+            .text-xs.text-muted-foreground.tabular-nums = "#{slice.done}/#{slice.lessons}"
+        .h-2.w-full.overflow-hidden.rounded-full.bg-muted
+          .h-full.rounded-full.bg-primary style="width: #{slice.percent}%"
+
+        dl.grid.gap-3 class="sm:grid-cols-3"
+          - [[t("course.bar_words"), slice.words_met, slice.words_total, slice.words_percent], [t("course.bar_grammar"), slice.grammar_met, slice.grammar_total, slice.grammar_percent], [t("course.bar_exercises"), slice.exercises_score, slice.exercises_total, slice.exercises_total.zero? ? 0 : (slice.exercises_score * 100 / slice.exercises_total)]].each do |label, met, total, percent|
+            .space-y-1
+              .flex.items-baseline.justify-between.gap-2
+                dt.text-xs.text-muted-foreground = label
+                dd.text-xs.font-medium.tabular-nums = "#{met}/#{total} · #{percent}%"
+              .h-1.w-full.overflow-hidden.rounded-full.bg-muted
+                .h-full.rounded-full.bg-foreground style="width: #{percent}%"
+
+        .flex.flex-wrap.items-center.gap-3.text-xs.text-muted-foreground
+          span = t("course.each_lesson_worth", share: number_with_precision(slice.lesson_share, precision: 1))
+          - if (target = @finish_by[slice.stage.slug])
+            span.font-medium.text-foreground = t("course.level_finish_by", date: l(target, format: :long))
+          - elsif slice.finished?
+            span.font-medium.text-emerald-600 = t("course.level_done")
+        - if slice.finished? || slice.started?
+          = link_to t("course.level_exam"), course_exam_path(slice.stage.slug), class: "inline-flex w-fit rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"

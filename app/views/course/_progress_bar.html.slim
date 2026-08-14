@@ -1,0 +1,29 @@
+- slice = local_assigns.fetch(:slice)
+- compact = local_assigns.fetch(:compact, false)
+
+- if slice
+  .sticky.top-0.z-30.-mx-4.border-b.border-border.bg-background class="px-4 py-2"
+    .flex.items-center.justify-between.gap-3
+      .flex.min-w-0.items-baseline.gap-2
+        span.truncate.text-xs.font-semibold = slice.stage.band
+        - unless compact
+          span.hidden.truncate.text-xs.text-muted-foreground class="sm:inline" = slice.stage.title(I18n.locale)
+      .flex.shrink-0.items-baseline.gap-2
+        span.text-sm.font-semibold.tabular-nums = "#{slice.percent}%"
+        = link_to t("course.details"), course_progress_path, class: "text-xs text-muted-foreground hover:text-foreground"
+    .mt-1.h-1.5.w-full.overflow-hidden.rounded-full.bg-muted[
+      role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow=slice.percent
+      aria-label=t("course.level_progress", level: slice.stage.band) ]
+      .h-full.rounded-full.bg-primary.transition-all style="width: #{slice.percent}%"
+    .mt-1.flex.flex-wrap.gap-x-3.gap-y-0.5.text-xs.text-muted-foreground
+      span.tabular-nums
+        = t("course.bar_lessons")
+        span.ml-1 = "#{slice.done}/#{slice.lessons}"
+      span.tabular-nums
+        = t("course.bar_words")
+        span.ml-1 = "#{slice.words_met}/#{slice.words_total} (#{slice.words_percent}%)"
+      span.tabular-nums
+        = t("course.bar_grammar")
+        span.ml-1 = "#{slice.grammar_met}/#{slice.grammar_total} (#{slice.grammar_percent}%)"
+      span.hidden.tabular-nums class="sm:inline"
+        = t("course.bar_each_lesson", share: number_with_precision(slice.lesson_share, precision: 1))

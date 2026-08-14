@@ -39,6 +39,7 @@ module NavHelper
 
   def learn_items
     items = [
+      [:book, t("nav.course"), course_path],
       [:study, t("nav.roadmap"), roadmap_path],
       [:desk, t("nav.today"), desk_path],
       [:decks, t("nav.my_desks"), desks_path],
@@ -52,6 +53,7 @@ module NavHelper
       items << [:book, t("nav.textbook"), textbook_path]
       items << [:sentences, t("nav.phrase_drills"), textbook_phrases_path]
       items << [:book, t("nav.stories"), stories_path]
+      items << [:stats, t("nav.exams"), exams_path]
     end
 
     items

@@ -1,0 +1,60 @@
+- content_for(:title, t("course.title"))
+
+= render("course/progress_bar", slice: @slice)
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("course.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("course.lede")
+
+  - if @resume
+    = link_to course_lesson_path(@resume), class: "flex items-center justify-between gap-3 rounded-xl border border-primary bg-card px-4 py-3 hover:bg-muted" do
+      div
+        .text-xs.uppercase.tracking-wide.text-muted-foreground = t("course.resume")
+        .text-sm.font-semibold
+          span.tabular-nums = course_lesson_number(@resume)
+          span.mx-1 ·
+          = @resume.title_for(I18n.locale)
+      span.text-muted-foreground →
+
+  - if @stages.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("course.empty")
+
+  - @stages.each do |stage|
+    - lessons = @by_stage[stage.slug].to_a
+    - next if lessons.empty?
+    - slice = @progress.slice_for(stage.slug)
+    section.space-y-3
+      header.space-y-1
+        .flex.flex-wrap.items-baseline.gap-2
+          h2.text-lg.font-semibold = stage.title(I18n.locale)
+          span.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground = stage.band
+          span.ml-auto.text-sm.font-semibold.tabular-nums = "#{slice.percent}%"
+        .h-1.5.w-full.overflow-hidden.rounded-full.bg-muted
+          .h-full.rounded-full.bg-primary style="width: #{slice.percent}%"
+        p.text-xs.tabular-nums.text-muted-foreground
+          = "#{t("course.bar_lessons")} #{slice.done}/#{slice.lessons} · #{t("course.bar_words")} #{slice.words_met}/#{slice.words_total} · #{t("course.bar_grammar")} #{slice.grammar_met}/#{slice.grammar_total}"
+        p.text-sm.leading-relaxed.text-muted-foreground = stage.body(I18n.locale)
+      .grid.gap-3 class="sm:grid-cols-2"
+        - lessons.each do |lesson|
+          - completion = @completions[lesson.slug]
+          = link_to course_lesson_path(lesson), class: "block min-w-0 rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+            .flex.items-baseline.justify-between.gap-3
+              span.text-xs.tabular-nums.text-muted-foreground = course_lesson_number(lesson)
+              - if completion
+                span.shrink-0.text-xs.text-emerald-600 = "✓ #{completion.score}/#{completion.total}"
+            .mt-1.flex.min-w-0.flex-wrap.items-baseline.gap-x-2
+              span.min-w-0.break-words.text-base.font-semibold = lesson.title_for(I18n.locale)
+              span.break-all.text-sm.text-muted-foreground lang="zh-TW" = lesson.zh_title
+            .mt-1.line-clamp-2.text-sm.text-muted-foreground = lesson.goal_for(I18n.locale)
+      - if stage.exam.any?
+        - exam_done = @completions["#{CourseController::EXAM_PREFIX}#{stage.slug}"]
+        = link_to course_exam_path(stage), class: "flex items-center justify-between gap-3 rounded-xl border border-dashed border-border px-4 py-3 text-sm hover:bg-muted" do
+          span
+            span.font-medium = t("course.level_exam")
+            span.ml-2.text-xs.text-muted-foreground = t("course.level_exam_hint", count: stage.exam.size)
+          - if exam_done
+            span.shrink-0.text-xs.text-emerald-600 = "✓ #{exam_done.score}/#{exam_done.total}"
+          - else
+            span.text-muted-foreground →

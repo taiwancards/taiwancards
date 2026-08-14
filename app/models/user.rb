@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :collections, dependent: :destroy
   has_many :collection_groups, dependent: :delete_all
   has_many :deck_shares, dependent: :delete_all
+  has_many :course_completions, dependent: :delete_all
   has_many :placement_tests, dependent: :destroy
   has_many :study_plans, dependent: :destroy
   has_one :voice_profile, dependent: :destroy

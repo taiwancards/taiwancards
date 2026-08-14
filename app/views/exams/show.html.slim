@@ -1,0 +1,56 @@
+- content_for(:title, "#{@paper.label} · #{t("exams.skills.#{@paper.skill}")}")
+- letters = ExamsController::LETTERS.first(@paper.skill == "reading" && @paper.band != "Novice" ? 6 : 4)
+- results = (@results || []).index_by { |row| row[:number] }
+
+.py-6.space-y-6
+  = link_to exams_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("exams.title")
+
+  header.space-y-2
+    .flex.flex-wrap.items-center.gap-2.text-xs.text-muted-foreground
+      span.rounded-full.border.border-border.px-2.py-0.5 = @paper.label
+      span = @paper.level
+      - if @best
+        span.text-emerald-600 = t("exams.best", score: @best.score, total: @best.total)
+    h1.text-2xl.font-bold.tracking-tight = t("exams.skills.#{@paper.skill}")
+
+  - if @score
+    .rounded-xl.border.px-4.py-3 class=(@score * 2 >= @paper.count ? "border-emerald-500 bg-emerald-500/10" : "border-amber-400 bg-amber-500/10")
+      .text-lg.font-semibold.tabular-nums = "#{@score} / #{@paper.count}"
+      .text-sm.text-muted-foreground.tabular-nums = t("exams.percent", value: (@score * 100.0 / @paper.count).round)
+
+  .flex.flex-wrap.gap-2
+    = link_to t("exams.open_paper"), exam_paper_path(@paper), target: "_blank", rel: "noopener", class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+    - if @paper.transcript.present?
+      = link_to t("exams.open_transcript"), exam_transcript_path(@paper), target: "_blank", rel: "noopener", class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+
+  - if @paper.clips.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("exams.audio")
+      .-mx-4.flex.gap-2.overflow-x-auto.px-4.pb-1
+        - @paper.clips.each do |name|
+          .shrink-0.rounded-lg.border.border-border.bg-card.p-2
+            .mb-1.text-xs.tabular-nums.text-muted-foreground = File.basename(name, ".mp3")
+            audio controls="controls" preload="none" src=exam_clip_path(@paper, name: name) class="h-8 w-44"
+
+  = form_with url: grade_exam_path(@paper), method: :post, class: "space-y-4" do
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("exams.answer_sheet")
+      .grid.gap-2 class="sm:grid-cols-2"
+        - @paper.numbers.each do |number|
+          - row = results[number]
+          .flex.items-center.gap-2.rounded-lg.border.px-3.py-2 class=(row.nil? ? "border-border bg-card" : (row[:correct] ? "border-emerald-500 bg-emerald-500/10" : "border-red-500 bg-red-500/10"))
+            span.w-7.shrink-0.text-xs.tabular-nums.text-muted-foreground = number
+            .flex.flex-wrap.gap-1
+              - letters.each do |letter|
+                label.cursor-pointer
+                  input.peer.sr-only type="radio" name="answers[#{number}]" value=letter checked=(row && row[:given] == letter)
+                  span.inline-flex.size-8.items-center.justify-center.rounded-md.border.border-border.text-sm class="peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground"
+                    = letter
+            - if row && !row[:correct]
+              span.ml-auto.shrink-0.text-xs.font-medium.text-emerald-700 = row[:expected]
+
+    .flex.flex-wrap.items-center.gap-3
+      = submit_tag t("exams.check"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+      span.text-xs.text-muted-foreground = t("exams.check_hint")

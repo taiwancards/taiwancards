@@ -229,6 +229,25 @@ Rails.application.routes.draw do
     get("stories", to: "stories#index", as: :stories)
     get("stories/:id", to: "stories#show", as: :story, constraints: {id: /\d+/})
 
+    scope("exams", constraints: {slug: /[a-z0-9-]+/}) do
+      get("", to: "exams#index", as: :exams)
+      get(":slug", to: "exams#show", as: :exam)
+      post(":slug", to: "exams#grade", as: :grade_exam)
+      get(":slug/paper", to: "exams#paper", as: :exam_paper)
+      get(":slug/transcript", to: "exams#transcript", as: :exam_transcript)
+      get(":slug/audio", to: "exams#clip", as: :exam_clip)
+    end
+
+    scope("course", constraints: {slug: /[a-z0-9-]+/, stage: /[a-z0-9]+/}) do
+      get("", to: "course#index", as: :course)
+      get("progress", to: "course#progress_report", as: :course_progress)
+      get("exam/:stage", to: "course#exam", as: :course_exam)
+      post("exam/:stage", to: "course#complete_exam", as: :course_exam_done)
+      get(":slug", to: "course#show", as: :course_lesson)
+      post(":slug/done", to: "course#complete", as: :course_lesson_done)
+      post(":slug/deck", to: "course#deck", as: :course_lesson_deck)
+    end
+
     get("start", to: "onboarding#show", as: :onboarding_start)
     post("start", to: "onboarding#create")
     get("path", to: "onboarding#path", as: :roadmap)

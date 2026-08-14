@@ -2,9 +2,11 @@
   data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
   data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
   .space-y-3 lang="zh-TW" class=text_flow_class
-    - lines.each do |line, tokens, translation|
+    - lines.each do |line, tokens, translation, speaker|
       - next if line.blank?
       p.text-2xl
+        - if speaker.present?
+          span.mr-2.align-middle.text-xs.font-medium.text-muted-foreground = speaker
         - tokens.each do |token|
           - if token.kind == :literal
             span style="white-space: pre-wrap" = token.text

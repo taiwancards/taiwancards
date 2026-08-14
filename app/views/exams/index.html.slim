@@ -1,0 +1,35 @@
+- content_for(:title, t("exams.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("exams.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("exams.lede")
+
+  .rounded-xl.border.border-amber-400.px-4.py-3.text-sm.leading-relaxed class="bg-amber-500/10"
+    = t("exams.notice")
+
+  - if @by_band.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("exams.empty")
+
+  - Huayu::TocflPapers::BANDS.each do |band|
+    - papers = @by_band[band].to_a
+    - next if papers.empty?
+    section.space-y-3
+      h2.flex.items-baseline.gap-2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+        = t("exams.band", band: band)
+        span.text-xs.font-normal.tabular-nums = "· #{papers.size}"
+      .grid.gap-3 class="sm:grid-cols-2"
+        - papers.sort_by { |paper| [paper.set, paper.skill] }.each do |paper|
+          - best = @scores["#{ExamsController::SLUG_PREFIX}#{paper.slug}"]
+          = link_to exam_path(paper), class: "block min-w-0 rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+            .flex.items-baseline.justify-between.gap-3
+              span.text-xs.text-muted-foreground = paper.label
+              - if best
+                span.shrink-0.text-xs.text-emerald-600 = "#{best.score}/#{best.total}"
+            .mt-1.text-base.font-semibold = t("exams.skills.#{paper.skill}")
+            .mt-1.flex.flex-wrap.gap-x-3.text-xs.text-muted-foreground
+              span.tabular-nums = t("exams.questions", count: paper.count)
+              span = paper.level
+              - if paper.clips.any?
+                span.tabular-nums = t("exams.clips", count: paper.clips.size)

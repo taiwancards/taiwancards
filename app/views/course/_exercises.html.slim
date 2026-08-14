@@ -1,0 +1,63 @@
+- exercises = local_assigns.fetch(:exercises)
+- url = local_assigns.fetch(:url)
+- heading = local_assigns.fetch(:heading, t("course.exercises"))
+- option_classes = "w-full rounded-lg border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
+
+section.space-y-3 data-controller="course-quiz" data-course-quiz-total-value=exercises.size
+  .flex.flex-wrap.items-center.justify-between.gap-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = heading
+    span.text-xs.tabular-nums.text-muted-foreground data-course-quiz-target="tally"
+
+  ol.space-y-3
+    - exercises.each_with_index do |exercise, index|
+      li.space-y-3.rounded-xl.border.border-border.bg-card.p-4[
+        data-controller="course-task" data-course-task-kind-value=exercise.kind
+        data-course-task-answer-value=exercise.answer.to_i
+        data-course-task-right-label-value=t("course.right")
+        data-course-task-wrong-label-value=t("course.wrong")
+        data-action="course-task:done->course-quiz#record" ]
+        .flex.items-start.gap-2
+          span.shrink-0.text-xs.tabular-nums.text-muted-foreground = "#{index + 1}."
+          .min-w-0.flex-1.space-y-1
+            - if exercise.kind == "meaning" || exercise.kind == "cloze"
+              p.break-words.text-xl.font-semibold lang="zh-TW" = exercise.zh
+            - if exercise.prompt(I18n.locale).present? && exercise.kind != "meaning"
+              p.text-base.leading-relaxed = exercise.prompt(I18n.locale)
+            p.text-xs.text-muted-foreground = t("course.tasks.#{exercise.kind}")
+
+        - if exercise.kind == "order"
+          .flex.min-h-11.flex-wrap.gap-2.rounded-lg.border.border-dashed.border-border.p-2 data-course-task-target="tray"
+          .flex.flex-wrap.gap-2
+            - exercise.order.each do |slot|
+              button.rounded-lg.border.border-border.px-3.py-1.5.text-base.font-medium[
+                type="button" lang="zh-TW" data-course-task-target="chunk" data-slot=slot
+                data-action="course-task#place" class="hover:bg-muted" ]
+                = exercise.chunks[slot]
+          .flex.gap-2
+            button.rounded-lg.border.border-border.px-3.py-1.5.text-xs[
+              type="button" data-action="course-task#check" class="hover:bg-muted" ] = t("course.check")
+            button.rounded-lg.border.border-border.px-3.py-1.5.text-xs[
+              type="button" data-action="course-task#reset" class="hover:bg-muted" ] = t("course.again")
+        - elsif exercise.kind == "pair"
+          .grid.gap-2 class="sm:grid-cols-2"
+            .space-y-2
+              - exercise.pairs.each_with_index do |pair, slot|
+                button class=option_classes lang="zh-TW" type="button" data-course-task-target="left" data-slot=slot data-action="course-task#pickLeft"
+                  = pair["zh"]
+            .space-y-2
+              - exercise.order.each do |slot|
+                button class=option_classes type="button" data-course-task-target="right" data-slot=slot data-action="course-task#pickRight"
+                  = exercise.option_text(exercise.pairs[slot], I18n.locale)
+        - else
+          - option_lang = exercise.kind == "meaning" ? I18n.locale.to_s : "zh-TW"
+          .space-y-2
+            - exercise.options.each_with_index do |option, slot|
+              button class=option_classes type="button" data-course-task-target="option" data-slot=slot data-action="course-task#choose"
+                span lang=option_lang = exercise.option_text(option, I18n.locale)
+
+        p.text-sm data-course-task-target="feedback"
+
+  = form_with url: url, method: :post, class: "flex flex-wrap items-center gap-3" do |form|
+    = form.hidden_field :score, value: 0, data: {course_quiz_target: "score"}
+    = form.submit t("course.save_progress"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+    span.text-xs.text-muted-foreground = t("course.save_hint")

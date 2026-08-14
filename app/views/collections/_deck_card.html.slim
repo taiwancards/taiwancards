@@ -1,7 +1,7 @@
 - sortable = local_assigns.fetch(:sortable, false)
 - group = local_assigns[:group]
 
-.rounded-xl.border.border-border.bg-card.p-4.space-y-3[
+.min-w-0.rounded-xl.border.border-border.bg-card.p-4.space-y-3[
   data-sortable-target=(sortable ? "item" : nil)
   data-sortable-id=(sortable ? deck.id : nil) ]
   .flex.min-w-0.items-start.gap-2
