@@ -11,6 +11,9 @@
       span.inline-flex.rounded-lg.bg-muted.px-3.py-1.text-sm.font-medium lang="zh-TW" = @lesson.formula_for(I18n.locale)
       span.ml-2.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground
         = t("grammar.level_label", level: @lesson.level)
+      - if @lesson.supplementary?
+        span.ml-2.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground
+          = t("grammar.supplementary")
 
   - heads = grammar_heads(@lesson, entries: @entries)
   - if heads.any?

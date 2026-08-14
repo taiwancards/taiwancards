@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Huayu::GrammarImporter do
-  def lesson(id:, slug:, pattern:, head:, level: 1, excluded: nil)
+  def lesson(id:, slug:, pattern:, head:, level: 1, excluded: nil, supplementary: nil)
     Huayu::GrammarLessons::Lesson.new(
       id:,
       slug:,
@@ -15,6 +15,7 @@ RSpec.describe Huayu::GrammarImporter do
       ru: {"title" => "#{slug} по-русски", "body" => "тело", "tip" => "подсказка"},
       examples: [],
       excluded:,
+      supplementary:,
       glossary: {}
     )
   end

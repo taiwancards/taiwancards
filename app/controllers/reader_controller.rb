@@ -4,8 +4,8 @@ class ReaderController < ApplicationController
   before_action :set_text, only: %i[show destroy create_desk]
 
   def index
-    @kind = params[:kind].presence_in(ReadingText.kinds.keys)
-    scope = ReadingText.visible_to(current_user).recent
+    @kind = params[:kind].presence_in(ReadingText::LIBRARY_KINDS)
+    scope = ReadingText.visible_to(current_user).library.recent
     scope = scope.where(kind: @kind) if @kind
     @texts = scope.limit(100).to_a
   end

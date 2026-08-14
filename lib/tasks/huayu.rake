@@ -33,6 +33,11 @@ namespace(:huayu) do
     pp(Huayu::GrammarImporter.new.call)
   end
 
+  desc("Load the owner-only reading texts from reading_stories.json (idempotent, offline)")
+  task(import_stories: :environment) do
+    pp(Huayu::ReadingStories.new.call)
+  end
+
   desc("Mark the sentences that have a listening clip, from the listening manifest (idempotent, offline)")
   task(mark_voiced: :environment) do
     pp(Huayu::VoicedSentences.new.call)

@@ -1,0 +1,31 @@
+- content_for(:title, t("stories.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("stories.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("stories.lede")
+
+  = render("shared/tabs", tabs: story_category_tabs(@category))
+
+  - if @groups.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("stories.empty")
+  - else
+    - Huayu::ReadingStories::CATEGORIES.each do |category|
+      - texts = @groups[category]
+      - next if texts.blank?
+      section.space-y-3
+        h2.flex.items-baseline.gap-2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+          = t("stories.categories.#{category}")
+          span.text-xs.font-normal.tabular-nums = "· #{texts.size}"
+        .grid.gap-3 class="sm:grid-cols-2"
+          - texts.each do |text|
+            = link_to story_path(text), class: "block rounded-xl border border-border bg-card p-4 hover:bg-muted" do
+              .flex.items-baseline.justify-between.gap-3
+                span.truncate.text-lg.font-semibold lang="zh-TW" = text.title
+                - if text.level_tag.present?
+                  span.shrink-0.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground = text.level_tag
+              .mt-1.truncate.text-sm.text-muted-foreground
+                - if text.author.present?
+                  span.mr-2 lang="zh-TW" = text.author
+                = story_opening(text)

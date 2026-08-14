@@ -23,9 +23,12 @@ module Huayu
       :ru,
       :examples,
       :excluded,
+      :supplementary,
       :glossary
     ) do
       def excluded? = excluded.present?
+
+      def supplementary? = supplementary.present?
 
       def reading(run) = glossary[run]
 
@@ -146,6 +149,7 @@ module Huayu
                 )
               end,
               excluded: row["excluded"],
+              supplementary: row["supplementary"],
               glossary: row["glossary"] || {}
             )
           end

@@ -226,6 +226,9 @@ Rails.application.routes.draw do
     delete("reader/:id", to: "reader#destroy")
     post("reader/:id/desk", to: "reader#create_desk", as: :reader_text_desk)
 
+    get("stories", to: "stories#index", as: :stories)
+    get("stories/:id", to: "stories#show", as: :story, constraints: {id: /\d+/})
+
     get("start", to: "onboarding#show", as: :onboarding_start)
     post("start", to: "onboarding#create")
     get("path", to: "onboarding#path", as: :roadmap)

@@ -1,0 +1,30 @@
+.rounded-2xl.border.border-border.bg-card.p-5[
+  data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
+  data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
+  .space-y-3 lang="zh-TW" class=text_flow_class
+    - lines.each do |line, tokens, translation|
+      - next if line.blank?
+      p.text-2xl
+        - tokens.each do |token|
+          - if token.kind == :literal
+            span style="white-space: pre-wrap" = token.text
+          - else
+            - unknown = token.lexeme && !known_ids.include?(token.lexeme.id)
+            - zhuyin = (reader_zhuyin(token.lexeme) if unknown)
+            span.cursor-pointer.rounded.transition-colors[class="mx-0.5"
+              class=reader_token_classes(token, known_ids) class="hover:bg-primary/10"
+              data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
+              data-action="mouseenter->analyzer#open click->analyzer#open" ]
+              - if zhuyin.present?
+                = zhuyin_ruby(token.text, zhuyin, context: :text)
+              - elsif unknown && (reading = reader_reading(token.lexeme))
+                ruby
+                  = token.text
+                  rt.text-xs.font-normal.text-muted-foreground = reading
+              - else
+                = token.text
+      - if translation.present?
+        p.text-sm.leading-relaxed.text-muted-foreground lang=I18n.locale = translation
+
+  .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
+    data-analyzer-target="popover" class="max-w-[85vw]" ]

@@ -79,6 +79,16 @@ RSpec.describe "Grammar" do
     expect(response.body).to(include("Not part of the course"))
   end
 
+  it "marks a point the TBCL list does not carry" do
+    get("/grammar/hen-linker")
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("Outside the TBCL list"))
+
+    get("/grammar/shi")
+    expect(response.body).not_to(include("Outside the TBCL list"))
+  end
+
   it "returns 404 for an unknown lesson" do
     get("/grammar/999")
 

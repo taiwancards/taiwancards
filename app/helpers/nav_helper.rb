@@ -51,6 +51,7 @@ module NavHelper
     if current_user&.restricted_access?
       items << [:book, t("nav.textbook"), textbook_path]
       items << [:sentences, t("nav.phrase_drills"), textbook_phrases_path]
+      items << [:book, t("nav.stories"), stories_path]
     end
 
     items

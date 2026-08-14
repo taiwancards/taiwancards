@@ -1,0 +1,34 @@
+- content_for(:title, @text.title)
+
+.py-6.space-y-5
+  = link_to stories_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("stories.title")
+
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight lang="zh-TW" = @text.title
+    p.text-sm.text-muted-foreground
+      = t("stories.categories.#{@text.category}")
+      - if @text.author.present?
+        span.mx-1 ·
+        span lang="zh-TW" = @text.author
+      - if @text.level_tag.present?
+        span.mx-1 ·
+        = @text.level_tag
+
+  p.flex.flex-wrap.gap-x-4.gap-y-1.text-xs.text-muted-foreground
+    span = t("reader.legend_known")
+    span = t("reader.legend_unknown")
+
+  = render("shared/annotated_text", lines: @lines, known_ids: @known_ids)
+
+  - if @text.attribution.present?
+    p.text-xs.text-muted-foreground lang="zh-TW" = @text.attribution
+
+  nav.flex.justify-between.gap-3.text-sm
+    - if @neighbours[:previous]
+      = link_to "← #{t("stories.previous")}", story_path(@neighbours[:previous]), class: "text-muted-foreground hover:text-foreground"
+    - else
+      span
+    - if @neighbours[:next]
+      = link_to "#{t("stories.next")} →", story_path(@neighbours[:next]), class: "text-muted-foreground hover:text-foreground"

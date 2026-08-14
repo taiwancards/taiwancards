@@ -39,6 +39,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/grammar_importer.rb app/services/huayu/grammar_lessons.rb]
     },
     {
+      name: "stories",
+      task: "huayu:import_stories",
+      paths: %w[huayu/reading_stories.json],
+      code: %w[app/services/huayu/reading_stories.rb app/models/reading_text.rb]
+    },
+    {
       name: "voiced_sentences",
       task: "huayu:mark_voiced",
       media_paths: %w[listening/manifest.json],

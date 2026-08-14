@@ -24,3 +24,4 @@
 /tmp/
 __pycache__/
 /phrase_drills.txt
+*.pdf
