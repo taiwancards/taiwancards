@@ -34,6 +34,7 @@ export default class extends Controller {
 
   connect() {
     this.place = this.place.bind(this);
+    this.settleDown = this.settleDown.bind(this);
     this.guard = this.guard.bind(this);
     this.intercept = this.intercept.bind(this);
 
@@ -136,12 +137,20 @@ export default class extends Controller {
     this.place();
     requestAnimationFrame(this.place);
     clearTimeout(this.settle);
-    this.settle = setTimeout(this.place, 320);
+    this.settle = setTimeout(this.settleDown, 320);
+  }
+
+  settleDown() {
+    const el = this.anchor;
+    if (el) this.bring(el);
+    this.place();
   }
 
   bring(el) {
     const box = el.getBoundingClientRect();
     const room = window.innerHeight;
+    if (box.height > room) return;
+
     const hidden =
       box.top < 80 || box.bottom > room - 80 || box.height > room * 0.7;
     if (!hidden) return;
@@ -197,6 +206,7 @@ export default class extends Controller {
     if (step.landsOn) {
       const link = event.target.closest("a[href]");
       event.preventDefault();
+      this.index = Math.min(this.index + 1, this.steps.length - 1);
       this.sync();
       setTimeout(() => {
         window.location = link?.getAttribute("href") || step.landsOn;

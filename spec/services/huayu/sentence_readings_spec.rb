@@ -10,7 +10,12 @@ RSpec.describe Huayu::SentenceReadings do
   before do
     create(:lexeme, kind: :character, text: "和", readings: {"zhuyin" => "ㄏㄜˊ", "pinyin" => "hé"})
     create(:lexeme, kind: :word, text: "和平", readings: {"zhuyin" => "ㄏㄜˊ ㄆㄧㄥˊ", "pinyin" => "hépíng"})
-    create(:lexeme, kind: :word, text: "暖和", readings: {"zhuyin" => "ㄋㄨㄢˇ ˙ㄏㄨㄛ", "pinyin" => "nuǎnhuo"})
+    create(
+      :lexeme,
+      kind: :word,
+      text: "暖和",
+      readings: {"zhuyin" => "ㄋㄨㄢˇ ˙ㄏㄨㄛ", "pinyin" => "nuǎnhuo"}
+    )
     create(:lexeme, kind: :character, text: "我", readings: {"zhuyin" => "ㄨㄛˇ", "pinyin" => "wǒ"})
     create(:lexeme, kind: :character, text: "你", readings: {"zhuyin" => "ㄋㄧˇ", "pinyin" => "nǐ"})
     Huayu::TextAnalyzer.reset_vocabulary!

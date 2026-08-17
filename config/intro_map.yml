@@ -1,40 +1,32 @@
-version: 1
+version: 2
 
 essential:
   - id: welcome
     path: /desk
     version: 1
-  - id: search
-    path: /desk
-    target: search
-    version: 1
+  - id: start_level
+    path: /menu
+    target: nav-item-path
+    version: 2
+  - id: course
+    path: /menu
+    target: nav-item-course
+    version: 2
   - id: dictionary
     path: /menu
     target: nav-dictionary
     version: 1
-  - id: language_section
+  - id: search
     path: /menu
-    target: nav-language
-    version: 1
-  - id: practice
-    path: /menu
-    target: nav-practice
-    version: 1
-  - id: taiwan
-    path: /menu
-    target: nav-taiwan
-    version: 1
-  - id: profile
-    path: /menu
-    target: nav-settings
+    target: search
     version: 1
   - id: new_deck
-    path: /desk
+    path: /menu
     target: new-desk
     version: 1
   - id: display
-    path: /desk
-    target: pref-pinyin
+    path: /menu
+    target: script-setup
     interactive: true
     version: 1
   - id: guide
@@ -96,6 +88,34 @@ chapters:
         lands_on: /desks
         version: 1
       - id: facets
+        version: 1
+
+  - id: course
+    icon: book
+    steps:
+      - id: open_group
+        target: nav-learn
+        advance: click
+        only: desktop
+        version: 1
+      - id: open_more
+        target: nav-more
+        advance: click
+        lands_on: /menu
+        only: mobile
+        version: 1
+      - id: pick_course
+        target: nav-item-course
+        advance: click
+        lands_on: /course
+        version: 1
+      - id: stages
+        target: course-stages
+        advance: scroll
+        version: 1
+      - id: band_progress
+        target: course-progress
+        advance: scroll
         version: 1
 
   - id: taiwan

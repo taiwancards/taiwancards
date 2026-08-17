@@ -28,10 +28,13 @@ RSpec.describe Intro::Map do
     expect(described_class.essential).to(be_present)
   end
 
-  it "starts from scratch, with no step pretending to be newer than the map" do
-    expect(described_class.version).to(eq(1))
-    expect(described_class.all_steps.map(&:version).uniq).to(eq([1]))
+  it "has no step pretending to be newer than the map itself" do
+    expect(described_class.all_steps.map(&:version).max).to(be <= described_class.version)
     expect(described_class.newer_than(described_class.version)).to(be_empty)
+  end
+
+  it "announces the steps added since the previous release, and only those" do
+    expect(described_class.newer_than(described_class.version - 1).map(&:id)).to(eq(%w[start_level course]))
   end
 
   it "keeps the mandatory tour short enough to finish in a minute" do

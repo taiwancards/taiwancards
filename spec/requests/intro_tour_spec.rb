@@ -9,20 +9,20 @@ RSpec.describe "Intro tour" do
     before { user.update!(prefs: user.prefs.merge("intro_stage" => "running", "intro_step" => "search")) }
 
     it "renders for a user who is walking it" do
-      get("/desk")
+      get("/menu")
 
       expect(response.body).to(include("intro-tour"))
     end
 
     it "anchors its step to an element that exists on the page" do
-      get("/desk")
+      get("/menu")
 
       expect(response.body).to(include("data-tour=\"search\""))
       expect(response.body).to(include("data-intro-start-value=\"search\""))
     end
 
     it "offers no way to skip a step, only to put the whole tour off" do
-      get("/desk")
+      get("/menu")
 
       expect(response.body).not_to(include(I18n.t("intro.skip")))
       expect(response.body).to(include(I18n.t("intro.later")))

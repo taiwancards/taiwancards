@@ -6,7 +6,7 @@ module NavHelper
   end
 
   GROUPS = [
-    {id: "learn", key: :study, tour: "nav-learn", items: :learn_items, chapters: %w[cards], signed_in: true},
+    {id: "learn", key: :study, tour: "nav-learn", items: :learn_items, chapters: %w[course cards], signed_in: true},
     {id: "dictionary", key: :characters, tour: "nav-dictionary", items: :dictionary_items, chapters: %w[dictionary]},
     {id: "language", key: :book, tour: "nav-language", items: :language_items, chapters: %w[phonetics]},
     {id: "practice", key: :pencil, tour: "nav-practice", items: :practice_items, chapters: %w[trainers]},

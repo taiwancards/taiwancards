@@ -51,12 +51,12 @@ RSpec.describe "The intro tour" do
       stand_on("search")
       get("/progress")
 
-      expect(response).to(redirect_to("/en/desk"))
+      expect(response).to(redirect_to("/en/menu"))
     end
 
     it "allows the page the step sits on" do
       stand_on("search")
-      get("/desk")
+      get("/menu")
 
       expect(response).to(have_http_status(:ok))
     end
@@ -95,17 +95,19 @@ RSpec.describe "The intro tour" do
 
   describe "moving through the tour" do
     it "advances and remembers" do
-      stand_on("search")
+      first, second = Intro::Map.essential.first(2)
+      stand_on(first.id)
       post("/intro/next")
 
-      expect(step_id).to(eq("dictionary"))
+      expect(step_id).to(eq(second.id))
     end
 
     it "goes back" do
-      stand_on("dictionary")
+      first, second = Intro::Map.essential.first(2)
+      stand_on(second.id)
       post("/intro/back")
 
-      expect(step_id).to(eq("search"))
+      expect(step_id).to(eq(first.id))
     end
 
     it "cannot go back past the first step" do

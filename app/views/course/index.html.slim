@@ -25,7 +25,7 @@
     - lessons = @by_stage[stage.slug].to_a
     - next if lessons.empty?
     - slice = @progress.slice_for(stage.slug)
-    section.space-y-3
+    section.space-y-3 data-tour="course-stages"
       header.space-y-1
         .flex.flex-wrap.items-baseline.gap-2
           h2.text-lg.font-semibold = stage.title(I18n.locale)

@@ -2,7 +2,8 @@
 - compact = local_assigns.fetch(:compact, false)
 
 - if slice
-  .sticky.z-20.-mx-4.border-b.border-border.bg-background class="top-14 px-4 py-2 md:top-[6.1rem]"
+  .sticky.z-20.-mx-4.border-b.border-border.bg-background[
+    data-tour="course-progress" class="top-14 px-4 py-2 md:top-[6.1rem]" ]
     .flex.items-center.justify-between.gap-3
       .flex.min-w-0.items-baseline.gap-2
         span.truncate.text-xs.font-semibold = slice.stage.band

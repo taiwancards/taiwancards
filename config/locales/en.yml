@@ -2835,41 +2835,34 @@ en:
       welcome:
         title: Welcome to TaiwanCards
         body: >-
-          A quick look at the parts you will use every day — a minute is plenty. It ends at the full
-          guide, which covers every corner of the system. Everything a learner of Taiwan Mandarin could
-          ever need is gathered here and wired together.
+          Seven short stops, a minute in all: where to begin, the textbook that runs from zero to B1, the
+          dictionary, search, cards out of anything, and the switches that decide what you see above the
+          characters. Everything a learner of Taiwan Mandarin needs is here, and all of it is wired
+          together.
+      start_level:
+        title: Start here if you are starting from zero
+        body: >-
+          Where to start lays the whole route out in order — sounds and zhuyin first, then reading, then
+          the rest — and ticks itself off as you go. Already read a little? Take the Level test in the
+          same section instead and everything will be set to where you actually are.
+      course:
+        title: The textbook to walk through
+        body: >-
+          Sixty lessons in five stages, zero to TOCFL B1, one real situation each: the bank, the clinic,
+          renting a flat, the night market, elections. A dialogue, the words and grammar it stands on,
+          exercises that mark themselves, and a button that turns the lesson into a deck. If you want one
+          path through all of this rather than a pile of sections, take this one.
+      dictionary:
+        title: The dictionary and everything in it
+        body: >-
+          Radicals, characters, words, sentences, idioms and measure words, each its own page — plus the
+          TBCL and TOCFL level lists if you are working towards an exam. Anything here goes into study
+          with one tap.
       search:
         title: Search is the fastest way in
         body: >-
           Type it however suits you: characters, pinyin, zhuyin, or just the English meaning. It finds
           characters, words, idioms and real sentences from the corpus.
-      dictionary:
-        title: The dictionary
-        body: >-
-          Characters, words, sentences, idioms, measure words — and the TBCL and TOCFL level lists if you
-          are working towards an exam. Anything here goes into study with one tap.
-      language_section:
-        title: Everything about the language
-        body: >-
-          Come here when you want to understand rather than just memorise: how the sounds and zhuyin fit
-          together, what really happens to tones, how a character is built, how counting works, how the
-          grammar behaves.
-      practice:
-        title: Everything to practise with
-        body: >-
-          Everything you can drill with your hands and your voice: zhuyin, sounds, tones, pronunciation,
-          handwriting, typing on a Taiwanese keyboard and mock exams.
-      taiwan:
-        title: The Taiwan part
-        body: >-
-          The things a textbook leaves out: how tea gets ordered here, what the cashier asks you, how the
-          metro stations are read, and why the calendar carries two sets of dates.
-      profile:
-        title: Your profile and its settings
-        body: >-
-          Your level, what the dictionary shows, which tabs sit at the bottom on a phone, statistics,
-          review history and a full export of your progress. There really is a lot in here — drop by once
-          and set it up your way.
       new_deck:
         title: A deck out of anything
         body: >-
@@ -2877,15 +2870,18 @@ en:
           worth reading? Tap here and any of it turns into a deck of cards, which then joins the same
           daily queue as everything else.
       display:
-        title: Show pinyin, or don't
+        title: You decide what is shown
         body: >-
-          Pinyin helps some people and gets in the way of reading zhuyin for others. These buttons turn
-          it on and off, and switch the calligraphic font while they are at it. Tap and see.
+          This little panel rules the whole system: zhuyin above the characters, zhuyin with pinyin, or
+          neither. Beside it sit the calligraphic font, whether China's wording is shown next to ours, and
+          how far a dictionary entry unfolds. Press them now and watch the page change. On a phone the
+          panel is on this page; on a computer it lives in the top bar.
       guide:
-        title: Here is the full guide
+        title: The rest of it lives in the guide
         body: >-
-          Every corner of the system opens from here: each section, page by page. Tap anything to open
-          it, or run a chapter to be walked through it. The guide stays put — come back when you need it.
+          Whatever we skipped opens from here: how the language works, the trainers for your voice and
+          your hand, the pages about living in Taiwan. Section by section, page by page — and each one can
+          be walked through with the interface highlighted. It sits under Profile, so come back whenever.
     chapters:
       dictionary:
         title: Dictionary and search
@@ -2910,6 +2906,31 @@ en:
             body: >-
               This switch in the header decides how much is shown: the main sense only, or collocations,
               thesaurus, etymology and every sense at once.
+      course:
+        title: The textbook
+        summary: One path from zero to B1, and how a lesson is built
+        steps:
+          open_group:
+            title: Open My study
+            body: Click My study in the top bar and the textbook will be the first thing in the list.
+          open_more:
+            title: Tap the menu
+            body: On a phone every section lives behind this button in the corner. Tap it.
+          pick_course:
+            title: Pick the Course
+            body: Tap it and we will look at how the whole thing is laid out.
+          stages:
+            title: Five stages, sixty lessons
+            body: >-
+              Each stage carries a whole exam level and ends with a mock paper. Inside it the lessons run
+              in order: a dialogue from real life, the words and grammar under it, exercises that mark
+              themselves, and a button that turns the lesson into a deck.
+          band_progress:
+            title: How much of the level is done
+            body: >-
+              The bar stays at the top of every page in the section. It counts words and grammar covered
+              against what the level asks for; the details page adds your pace and the date you are on
+              course to finish by.
       cards:
         title: Cards and decks
         summary: Where cards come from and how reviews work
