@@ -13,9 +13,17 @@ module AudioHelper
 
   def moe_clip_for(lexeme, zhuyin)
     clip = Huayu::MoeAudio.for(lexeme.text, zhuyin:)
+    return {url: clip_url(clip), stop_ms: clip.head_ms} unless clip.nil?
+
+    syllable_clip_for(zhuyin)
+  end
+
+  def syllable_clip_for(zhuyin)
+    clip = Huayu::CnsVoice.for(zhuyin)
     return nil if clip.nil?
 
-    {url: clip_url(clip), stop_ms: clip.head_ms}
+    url = Huayu::CnsVoice.clip_url(clip.voice, clip.key)
+    url && {url: url, stop_ms: nil}
   end
 
   def audio_url_for(lexeme)

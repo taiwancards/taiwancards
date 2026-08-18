@@ -2,8 +2,9 @@
 
 module LocalisedPaths
   MACHINE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|s/|locale|zhuyin|
+    sitemap|sitemaps|
     textbook/audio|listening/clips|export|progress/data|tones/refill|
-    pronunciation/(?:health|grade|thresholds|templates))(?:/|\z|\?)}x
+    pronunciation/(?:health|grade|thresholds|templates))(?:/|\.|\z|\?)}x
 
   STROKES = %r{\A/characters/[^/]+/strokes}
 

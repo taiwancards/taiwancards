@@ -38,10 +38,10 @@ module Locales
     ALL.to_h { |code| [code, swap(url, code)] }
   end
 
-  BARE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|locale|
+  BARE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|locale|sitemap|sitemaps|
     textbook/audio|listening/clips|export|progress/data|tones/refill|
     characters/[^/]+/strokes|
-    pronunciation/(?:health|grade|thresholds|templates))(?:/|\z|\?)}x
+    pronunciation/(?:health|grade|thresholds|templates))(?:/|\.|\z|\?)}x
 
   def prefixable?(path)
     return false unless path.to_s.start_with?("/")

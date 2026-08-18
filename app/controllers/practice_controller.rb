@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PracticeController < ApplicationController
-  allow_unauthenticated_access only: %i[zhuyin]
+  allow_unauthenticated_access only: %i[zhuyin drill drill_result typing typing_result]
   publicly_cacheable only: %i[zhuyin]
   PHONETICS_PARTS = %w[intro initials finals tricky].freeze
 
@@ -30,13 +30,13 @@ class PracticeController < ApplicationController
     drill = Huayu::PhoneticsDrill.new(locale: I18n.locale)
     @stages = Huayu::PhoneticsDrill::STAGES
     @items = @stages.index_with { |stage| drill.items(stage) }
-    @weak = current_user.phonetic_misses
+    @weak = current_user&.phonetic_misses || {}
     @size = DRILL_SIZE
   end
 
   def drill_result
-    current_user.record_phonetic_misses!(submitted_misses)
-    current_user.record_practice_run!(:drill)
+    current_user&.record_phonetic_misses!(submitted_misses)
+    current_user&.record_practice_run!(:drill)
     head(:no_content)
   end
 
@@ -55,7 +55,7 @@ class PracticeController < ApplicationController
   end
 
   def typing_result
-    current_user.record_practice_run!(:typing)
+    current_user&.record_practice_run!(:typing)
     head(:no_content)
   end
 
@@ -75,7 +75,7 @@ class PracticeController < ApplicationController
   private
 
   def default_typing_mode
-    current_user.level_grade.positive? ? "hanzi" : "pinyin"
+    current_user&.level_grade.to_i.positive? ? "hanzi" : "pinyin"
   end
 
   def typing_words(mode)

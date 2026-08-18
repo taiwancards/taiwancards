@@ -10,7 +10,8 @@ module Admin
 
     def update
       source = ContentSource.find(params[:id])
-      source.update(source_params)
+      changed = source.update(source_params) && source.saved_changes?
+      Render::Cloudflare.new.purge_everything if changed
       redirect_to(admin_content_sources_path, notice: t("admin.sources.saved", name: source.name))
     end
 

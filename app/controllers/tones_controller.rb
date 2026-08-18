@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TonesController < ApplicationController
-  allow_unauthenticated_access only: %i[show]
+  allow_unauthenticated_access only: %i[show drill refill]
   publicly_cacheable only: %i[show]
   def show
     current_user&.record_practice_run!(:tones_theory)
@@ -11,7 +11,7 @@ class TonesController < ApplicationController
 
   def drill
     @items = drill_items
-    current_user.record_practice_run!(:tones)
+    current_user&.record_practice_run!(:tones)
   end
 
   def refill

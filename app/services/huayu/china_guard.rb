@@ -12,9 +12,11 @@ module Huayu
       @markers = load_markers
     end
 
+    ERHUA = "兒"
+
     def offender(text)
       value = text.to_s
-      @markers.find { |marker| value.include?(marker) } || TWFilter::Checks::Erhua.offender(value)
+      @markers.find { |marker| value.include?(marker) } || erhua_offender(value)
     end
 
     def soft_offender(text)
@@ -25,6 +27,14 @@ module Huayu
     def marker?(text) = !offender(text).nil?
 
     private
+
+    def erhua_offender(value)
+      hit = TWFilter::Checks::Erhua.offender(value)
+      return nil if hit.nil?
+      return hit unless hit.include?(ERHUA)
+
+      value.end_with?(ERHUA) ? hit : nil
+    end
 
     def load_markers
       stored = ChinaMarker.hard.pluck(:word) if ChinaMarker.table_exists?

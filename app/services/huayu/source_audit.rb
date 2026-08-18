@@ -34,6 +34,7 @@ module Huayu
     DATA_OPTIONAL = %w[
       huayu/bigram_frequency.json
       huayu/segmentation_vocab.json
+      huayu/song_vocabulary.json
       huayu/hanzi_structure.json
       huayu/holidays.json
       huayu/lunar_years.json

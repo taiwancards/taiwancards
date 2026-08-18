@@ -1,4 +1,5 @@
 - content_for(:title, @lesson.title(I18n.locale))
+- content_for(:head) { structured_data(grammar_structured_data(@lesson)) }
 - seen = Set.new
 
 .py-6.space-y-6
@@ -14,6 +15,22 @@
       - if @lesson.supplementary?
         span.ml-2.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground
           = t("grammar.supplementary")
+
+  - point = grammar_syllabus(@lesson)
+  - source = Huayu::TbclGrammar.source
+  .rounded-xl.border.border-border.px-4.py-3.text-xs.leading-relaxed.text-muted-foreground
+    - if point
+      p
+        span.font-semibold.text-foreground = t("grammar.syllabus.official")
+        span<> = t("grammar.syllabus.placed", tier: point.tier, level: point.level, number: point.id)
+        - if point.starred?
+          span.ml-2.rounded-full.border.border-border.px-2.py-0.5 = t("grammar.syllabus.starred")
+    - else
+      p
+        span.font-semibold.text-foreground = t("grammar.syllabus.beyond")
+        span<> = t("grammar.syllabus.beyond_note")
+    - if source&.attribution.present?
+      p.mt-1 lang="zh-TW" = source.attribution
 
   - heads = grammar_heads(@lesson, entries: @entries)
   - if heads.any?

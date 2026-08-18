@@ -1,0 +1,35 @@
+[
+  {
+    "text": "心底",
+    "pos": "N",
+    "pinyin": "xin1 di3",
+    "zhuyin": "ㄒㄧㄣ ㄉㄧˇ",
+    "en": "deep down",
+    "ru": "в глубине души"
+  },
+  {
+    "text": "街燈",
+    "pos": "N",
+    "pinyin": "jie1 deng1",
+    "zhuyin": "ㄐㄧㄝ ㄉㄥ",
+    "en": "street lamp",
+    "ru": "уличный фонарь"
+  },
+  {
+    "text": "信息",
+    "pos": "N",
+    "pinyin": "xin4 xi2",
+    "zhuyin": "ㄒㄧㄣˋ ㄒㄧˊ",
+    "en": "message",
+    "ru": "сообщение"
+  },
+  {
+    "text": "说明",
+    "pos": "N",
+    "pinyin": "shuo1 ming2",
+    "zhuyin": "ㄕㄨㄛ ㄇㄧㄥˊ",
+    "en": "explanation",
+    "ru": "пояснение"
+  },
+  { "text": "", "pos": "N", "pinyin": "", "zhuyin": "", "en": "", "ru": "" }
+]

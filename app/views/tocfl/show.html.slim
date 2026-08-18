@@ -14,5 +14,7 @@
         = t("tocfl.readiness", percent: @stat.readiness)
     = render "shared/practice_links", collection: @collection
 
+  = render("shared/level_download", path: tocfl_level_path(@collection, format: :csv))
+
   = render("shared/lexeme_grid", lexemes: @lexemes, known_ids: @known_ids, started_ids: @started_ids)
   = render("shared/pager", page: @page, pages: @pages, path: ->(n) { tocfl_level_path(@collection, page: n) })

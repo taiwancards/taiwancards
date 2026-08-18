@@ -2,6 +2,7 @@
 
 class MockExamsController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable only: %i[index]
 
   def index
   end

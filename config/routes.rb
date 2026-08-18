@@ -30,6 +30,14 @@ Rails.application.routes.draw do
   get("listening/clips/:id", to: "listening_clips#show", as: :listening_clip)
   get("tones/refill", to: "tones#refill", as: :tones_refill, defaults: {format: :json})
   get("manifest", to: "rails/pwa#manifest", as: :pwa_manifest, defaults: {format: :json})
+  get("sitemap", to: "sitemaps#index", as: :sitemap, defaults: {format: :xml})
+  get(
+    "sitemaps/:name",
+    to: "sitemaps#show",
+    as: :sitemap_section,
+    defaults: {format: :xml},
+    constraints: {name: /[a-z]+(?:-\d+)?/}
+  )
 
   post("locale/:code", to: "locales#update", as: :locale, constraints: {code: /en|ru/})
 
@@ -154,6 +162,9 @@ Rails.application.routes.draw do
     post("practice/numbers", to: "numbers#result", as: :practice_numbers_result)
     get("practice/typing", to: "practice#typing", as: :practice_typing)
     post("practice/typing", to: "practice#typing_result", as: :practice_typing_result)
+    get("syllables", to: "syllables#show", as: :syllables)
+    get("names", to: "names#show", as: :names)
+    get("names/data", to: "names#data", as: :names_data, defaults: {format: :json})
     get("hanzi", to: "hanzi#show", as: :hanzi)
     get("cangjie", to: "cangjie#show", as: :cangjie)
     get("pronunciation", to: "pronunciation#show", as: :pronunciation)

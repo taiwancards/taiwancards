@@ -24,6 +24,12 @@ module GrammarHelper
     def meaning(locale) = entry&.meaning(locale).presence
   end
 
+  def grammar_syllabus(lesson)
+    return nil if lesson.supplementary?
+
+    Huayu::TbclGrammar.find(lesson.id)
+  end
+
   def grammar_practice_path(lesson)
     route = PRACTICE[lesson.slug]
     route && public_send(route)

@@ -168,13 +168,15 @@ export default class extends Controller {
   async submit() {
     if (!this.urlValue || this.results.length === 0) return;
 
+    const token = document.querySelector("meta[name='csrf-token']")?.content;
+    if (!token) return;
+
     try {
       await fetch(this.urlValue, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-Token":
-            document.querySelector("meta[name='csrf-token']")?.content || "",
+          "X-CSRF-Token": token,
         },
         body: JSON.stringify({ results: this.results }),
       });

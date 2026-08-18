@@ -3,6 +3,7 @@
 module Huayu
   class BigramFrequency
     PATH = AppData.path("huayu/bigram_frequency.json")
+    PRIORS_PATH = AppData.path("huayu/segmentation_priors.json")
     START = "<s>"
     TOKEN_PENALTY = 0.0
     FLOOR = 1e-9
@@ -32,6 +33,8 @@ module Huayu
       if @continuation.values.any? { |value| value > 1 }
         @continuation = @continuation.transform_values { |value| value / 1_000_000.0 }
       end
+
+      @continuation = priors.merge(@continuation)
 
       @unigram = Huayu::WordFrequency.instance
       @cache = {}
@@ -76,6 +79,15 @@ module Huayu
     end
 
     private
+
+    def priors
+      return {} unless File.exist?(PRIORS_PATH)
+
+      payload = JSON.parse(File.read(PRIORS_PATH))
+      (payload["continuation"] || {}).transform_values(&:to_f).select { |_, value| value.positive? }
+    rescue JSON::ParserError
+      {}
+    end
 
     def fallback(token)
       value = @unigram.per_million(token)

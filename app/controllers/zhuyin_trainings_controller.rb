@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ZhuyinTrainingsController < ApplicationController
+  allow_unauthenticated_access
   SIZE = 10
 
   def show
@@ -28,10 +29,10 @@ class ZhuyinTrainingsController < ApplicationController
       )
     end
 
-    current_user.update_zhuyin_mastery!(trainer.mastery)
-    current_user.record_practice_run!(:zhuyin_trainer)
-    current_user.record_practice_run!(:drill)
-    current_user.mark_path_step!("zhuyin") if trainer.complete?
+    current_user&.update_zhuyin_mastery!(trainer.mastery)
+    current_user&.record_practice_run!(:zhuyin_trainer)
+    current_user&.record_practice_run!(:drill)
+    current_user&.mark_path_step!("zhuyin") if trainer.complete?
 
     render(json: trainer.progress)
   end
@@ -39,6 +40,6 @@ class ZhuyinTrainingsController < ApplicationController
   private
 
   def build_trainer(group: nil, block: nil, set: nil)
-    Huayu::ZhuyinTrainer.new(current_user.zhuyin_mastery, group:, block:, set:)
+    Huayu::ZhuyinTrainer.new(current_user&.zhuyin_mastery || {}, group:, block:, set:)
   end
 end

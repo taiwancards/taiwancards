@@ -3,6 +3,8 @@
 module LandingHelper
   GOLD_CARD_URL = "https://goldcard.nat.gov.tw/en"
 
+  SCIENCE_POINTS = %w[corpus open linked].freeze
+
   def disclaimer_html
     t(
       "landing.disclaimer_html",
@@ -44,7 +46,8 @@ module LandingHelper
     ["hanzii", "dictionary", [:unknown, nil], [:unknown, nil], [:yes, "ios_only"], [:unknown, nil], [:unknown, nil]],
     ["hanzidict", "dictionary", [:yes, nil], [:yes, nil], [:yes, "tw_textbooks"], [:unknown, nil], [:no, "no_srs"]],
     ["todaii", "reader", [:unknown, nil], [:unknown, nil], [:yes, "tagging"], [:no, nil], [:no, nil]],
-    ["chineseguru", "trainer", [:yes, nil], [:unknown, nil], [:yes, nil], [:unknown, "training_only"], [:yes, "four"]]
+    ["chineseguru", "trainer", [:yes, nil], [:unknown, nil], [:yes, nil], [:unknown, "training_only"], [:yes, "four"]],
+    ["zhongchinese", "course", [:yes, "only"], [:yes, "with_pinyin"], [:yes, nil], [:no, nil], [:no, "one"]]
   ].freeze
 
   WIDER_NAMES = {
@@ -59,7 +62,8 @@ module LandingHelper
     "hanzii" => "Hanzii",
     "hanzidict" => "Chinese Hanzi Dictionary",
     "todaii" => "Todaii Easy Chinese",
-    "chineseguru" => "Chinese Guru"
+    "chineseguru" => "Chinese Guru",
+    "zhongchinese" => "Zhong Chinese"
   }.freeze
 
   WIDER_COLUMNS = %w[traditional zhuyin tocfl tone facets].freeze

@@ -162,9 +162,14 @@ RSpec.describe "Phonetics drill" do
     expect(response.body).to(include(practice_drill_path))
   end
 
-  it "is closed to visitors who are not signed in", :no_auth do
+  it "opens to a visitor who is not signed in and keeps nothing from them", :no_auth do
     get(practice_drill_path)
 
-    expect(response).to(redirect_to(login_path))
+    expect(response).to(have_http_status(:ok))
+
+    post(practice_drill_result_path, params: {misses: {"ㄓ" => 2}}, as: :json)
+
+    expect(response).to(have_http_status(:no_content))
+    expect(User.count).to(eq(0))
   end
 end

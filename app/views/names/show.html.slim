@@ -1,0 +1,178 @@
+- content_for(:title) { t("names.title") }
+- content_for(:meta_description) { t("names.meta_description") }
+- filtered = @field.present? || @position.present? || @tone.present? || @cohort.present?
+
+.py-6.space-y-4
+  = render("shared/page_help", key: "names", title: t("names.title"))
+
+  div data-controller="tabs" data-tabs-active-value=(filtered ? "learn" : "pick")
+    .inline-flex.rounded-lg.border.border-border.bg-muted.p-1 role="tablist"
+      - %w[pick learn].each do |tab|
+        button.rounded-md.px-3.py-1.text-sm.font-medium.transition-colors[
+          type="button" role="tab" data-tabs-target="tab" data-tab-name=tab data-action="tabs#select" ]
+          = t("names.tabs.#{tab}")
+
+    section.mt-4.space-y-4 data-tabs-target="panel" data-tab-name="pick"
+      .rounded-xl.border.border-border.bg-card.px-4.py-3
+        .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1
+          span.text-2xl.font-semibold lang="zh-TW" 陳
+          span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("names.shape.example_surname")
+          span.text-2xl.font-semibold lang="zh-TW" 怡君
+          span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("names.shape.example_given")
+        p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("names.shape.compact")
+
+      section.space-y-3[
+        data-controller="name-assistant"
+        data-name-assistant-url-value=names_data_path
+        data-label-pair=t("names.assistant.badge_pair")
+        data-label-contour=t("names.assistant.badge_contour")
+        data-label-repeat=t("names.assistant.badge_repeat")
+        data-label-strokes=t("names.assistant.badge_strokes")
+        data-label-why=t("names.assistant.why_heading")
+        data-copy=names_assistant_copy.to_json ]
+        p.text-xs.leading-relaxed.text-muted-foreground
+          span.font-semibold.text-foreground = t("names.assistant.privacy_title")
+          | :
+          =< t("names.assistant.privacy_body")
+
+        p.text-sm.text-muted-foreground data-name-assistant-target="status" = t("names.assistant.loading")
+
+        form.space-y-3 data-name-assistant-target="form" data-action="submit->name-assistant#run" hidden=true
+          .grid.gap-3 class="sm:grid-cols-2"
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.your_surname")
+              input.w-full.rounded-lg.border.border-border.bg-background.px-3.py-2.text-sm type="text" autocomplete="off" data-name-assistant-target="surname"
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.your_given")
+              input.w-full.rounded-lg.border.border-border.bg-background.px-3.py-2.text-sm type="text" autocomplete="off" data-name-assistant-target="given"
+
+          .grid.gap-3 class="sm:grid-cols-3"
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.age")
+              select.w-full.rounded-lg.border.border-border.bg-background.px-3.py-2.text-sm data-name-assistant-target="cohort"
+                - Huayu::TaiwanNames::COHORTS.reverse.each do |cohort|
+                  option value=cohort = t("names.cohorts.#{cohort}")
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.gender")
+              select.w-full.rounded-lg.border.border-border.bg-background.px-3.py-2.text-sm data-name-assistant-target="gender"
+                option value="any" = t("names.assistant.gender_any")
+                option value="male" = t("names.sex.male")
+                option value="female" = t("names.sex.female")
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.length")
+              select.w-full.rounded-lg.border.border-border.bg-background.px-3.py-2.text-sm data-name-assistant-target="length"
+                option value="2" = t("names.assistant.two_characters")
+                option value="1" = t("names.assistant.one_character")
+
+          fieldset.space-y-2
+            legend.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.qualities")
+            p.text-xs.text-muted-foreground = t("names.assistant.qualities_note")
+            .flex.flex-wrap.gap-1.text-xs
+              - Huayu::TaiwanNames::FIELDS.each do |field|
+                label.cursor-pointer.rounded-md.border.border-border.text-muted-foreground.transition-colors[
+                  class="px-2 py-1 hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:font-medium has-[:checked]:text-foreground has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary" ]
+                  input.sr-only type="checkbox" value=field data-name-assistant-target="field"
+                  = t("names.fields.#{field}")
+
+          .grid.gap-3 class="sm:grid-cols-3"
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.strokes")
+              select.w-full.rounded-lg.border.border-border.bg-background.px-3.py-2.text-sm data-name-assistant-target="strokes"
+                option value="any" = t("names.assistant.any")
+                option value="simple" = t("names.assistant.simple")
+                option value="complex" = t("names.assistant.complex")
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.rarity")
+              select.w-full.rounded-lg.border.border-border.bg-background.px-3.py-2.text-sm data-name-assistant-target="rarity"
+                option value="any" = t("names.assistant.any")
+                option value="common" = t("names.assistant.common")
+                option value="unique" = t("names.assistant.unique")
+            label.space-y-1
+              span.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("names.assistant.closeness")
+              input.w-full type="range" min="0" max="100" value="50" data-name-assistant-target="closeness"
+
+          .flex.flex-wrap.items-center.gap-x-4.gap-y-2
+            label.inline-flex.items-center.gap-2.text-sm
+              input type="checkbox" data-name-assistant-target="official"
+              span = t("names.assistant.official")
+            button.rounded-xl.bg-primary.px-4.py-2.text-sm.font-semibold.text-primary-foreground type="submit" class="ml-auto hover:opacity-90"
+              = t("names.assistant.submit")
+
+        p.text-xs.text-muted-foreground data-name-assistant-target="note" hidden=true = t("names.assistant.results_note")
+        ul.space-y-3 data-name-assistant-target="results" hidden=true
+
+        p.text-xs.leading-relaxed.text-muted-foreground = t("names.assistant.disclaimer")
+
+    section.mt-4.space-y-8.hidden data-tabs-target="panel" data-tab-name="learn"
+      p.text-xs.leading-relaxed.text-muted-foreground = t("names.caveat", people: @meta["parsed"].to_i)
+
+      section.space-y-3
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("names.surnames.heading")
+        p.text-sm.text-muted-foreground = t("names.surnames.note", shown: @surnames.size, total: @meta["surname_total"], people: number_with_delimiter(@meta["surname_people"].to_i))
+        .grid.gap-2 class="grid-cols-3 sm:grid-cols-5 lg:grid-cols-8"
+          - @surnames.each do |entry|
+            .rounded-xl.border.border-border.bg-card.p-2.text-center
+              .text-xl.font-semibold lang="zh-TW" = entry.text
+              .text-xs.text-muted-foreground lang="zh-TW" = entry.zhuyin
+              .text-xs.text-muted-foreground.tabular-nums = t("names.percent", value: entry.percent)
+              .text-xs.tabular-nums class=(entry.rising? ? "text-primary" : "text-muted-foreground/60")
+                = t("names.young", value: entry.young_percent)
+
+      section.space-y-3
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("names.characters.heading")
+        p.text-sm.leading-relaxed.text-muted-foreground = t("names.characters.body")
+
+        nav.flex.flex-wrap.gap-1
+          = link_to t("names.filters.all"), names_path, class: names_chip_class(!filtered)
+          - Huayu::TaiwanNames::FIELDS.each do |field|
+            - next if @field_counts[field].to_i.zero?
+            = link_to names_path(field: field, position: @position, tone: @tone, cohort: @cohort), class: names_chip_class(@field == field) do
+              = t("names.fields.#{field}")
+              span.ml-1.tabular-nums.opacity-60 = @field_counts[field]
+
+        nav.flex.flex-wrap.gap-1
+          - Huayu::TaiwanNames::COHORTS.each do |cohort|
+            - next if @cohort_sizes[cohort].to_i.zero?
+            = link_to names_path(field: @field, position: @position, tone: @tone, cohort: (@cohort == cohort ? nil : cohort)), class: names_chip_class(@cohort == cohort) do
+              = t("names.cohorts.#{cohort}")
+              span.ml-1.tabular-nums.opacity-60 = @cohort_sizes[cohort]
+
+        - if @cohort
+          p.text-xs.leading-relaxed.text-muted-foreground = t("names.cohort_note")
+
+        nav.flex.flex-wrap.gap-1
+          - %w[first second].each do |position|
+            = link_to t("names.positions.#{position}"), names_path(field: @field, position: (@position == position ? nil : position), tone: @tone, cohort: @cohort), class: names_chip_class(@position == position)
+          - %w[1 2 3 4].each do |tone|
+            = link_to t("names.tone", n: tone), names_path(field: @field, position: @position, tone: (@tone == tone ? nil : tone), cohort: @cohort), class: names_chip_class(@tone == tone)
+
+        - if @characters.empty?
+          p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("names.characters.none")
+        - else
+          .grid.gap-2 class="sm:grid-cols-2"
+            - @characters.each do |row|
+              = link_to character_path(row.text), class: "flex items-start gap-3 rounded-xl border border-border bg-card px-3 py-2 hover:bg-muted" do
+                .shrink-0.text-center
+                  .text-2xl.font-semibold.leading-none lang="zh-TW" = row.text
+                  .text-xs.text-muted-foreground lang="zh-TW" = row.zhuyin
+                .min-w-0.flex-1.space-y-1
+                  .line-clamp-2.text-sm.text-muted-foreground = row.meaning(I18n.locale)
+                  .flex.flex-wrap.items-center.gap-1.text-xs.text-muted-foreground
+                    span.rounded-full.bg-muted class="px-1.5 py-0.5" = t("names.leans.#{row.leans}")
+                    - row.fields.each do |field|
+                      span.rounded-full.bg-muted class="px-1.5 py-0.5" = t("names.fields.#{field}")
+
+          p.text-xs.leading-relaxed.text-muted-foreground = t("names.characters.caution")
+
+      - if @pairs.any?
+        section.space-y-3
+          h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("names.pairs.heading")
+          p.text-sm.leading-relaxed.text-muted-foreground = t("names.pairs.body")
+          .flex.flex-wrap.gap-2
+            - @pairs.each do |pair|
+              span.inline-flex.items-baseline.gap-2.rounded-full.border.border-border.px-3.py-1.5
+                span.text-sm.font-semibold lang="zh-TW" = pair.text
+                span.text-xs.text-muted-foreground.tabular-nums = t("names.pmi", value: pair.pmi.round(1))
+
+      - if @source&.attribution.present?
+        p.text-xs.text-muted-foreground = @source.attribution

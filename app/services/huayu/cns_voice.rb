@@ -39,6 +39,20 @@ module Huayu
         "#{base}/#{DIRECTORY}/audio/#{voice}/#{filename(voice, key)}"
       end
 
+      PLACEHOLDER = "aaaaaa"
+
+      def clip_url_template(voice)
+        return nil unless VOICES.include?(voice)
+
+        base = base_url
+        if base.nil?
+          path = Rails.application.routes.url_helpers.cns_clip_path(voice, PLACEHOLDER)
+          return path.sub(PLACEHOLDER, "%s")
+        end
+
+        "#{base}/#{DIRECTORY}/audio/#{voice}/#{voice[0].upcase}_%s.mp3"
+      end
+
       def covers?(zhuyin) = table.key?(normalize(zhuyin))
 
       def available? = table.any?

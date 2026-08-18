@@ -23,6 +23,19 @@ RSpec.describe "Guest access", :no_auth do
     /calendar
     /metro
     /menu
+    /notices
+    /medicine
+    /grammar
+    /graded
+    /mock
+    /handwriting
+    /liangci/game
+    /practice/drill
+    /practice/typing
+    /practice/zhuyin-trainer
+    /tones/drill
+    /syllables
+    /names
   ]
     .freeze
 
@@ -33,8 +46,7 @@ RSpec.describe "Guest access", :no_auth do
     /triage
     /placement
     /practice
-    /practice/drill
-    /practice/typing
+    /practice/progress
     /pronunciation
     /writing
     /reader
@@ -42,7 +54,7 @@ RSpec.describe "Guest access", :no_auth do
     /progress/history
     /profile
     /help
-    /tones/drill
+    /mistakes
   ]
     .freeze
 

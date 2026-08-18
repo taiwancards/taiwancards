@@ -57,6 +57,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/common_words_importer.rb]
     },
     {
+      name: "song_vocabulary",
+      task: "huayu:import_song_vocabulary",
+      paths: %w[huayu/song_vocabulary.json],
+      code: %w[app/services/huayu/song_vocabulary_importer.rb]
+    },
+    {
       name: "difficulty",
       task: "huayu:compute_difficulty",
       paths: %w[huayu/taiwan_everyday.json huayu/medicine.json huayu/moe_idioms.json],
@@ -330,6 +336,13 @@ namespace(:deploy) do
       rescue => e
         failed << "derived_caches (#{e.class})"
         warn("deploy:sync step derived_caches failed: #{e.class}: #{e.message}")
+      end
+
+      if Render::Cloudflare.configured?
+        STEP_TIMER.call("edge_purge") { Render::Cloudflare.new.purge_everything }
+        ran << "edge_purge"
+      else
+        skipped << "edge_purge (unconfigured)"
       end
     else
       skipped << "derived_caches"

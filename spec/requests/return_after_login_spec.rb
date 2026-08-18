@@ -17,12 +17,12 @@ RSpec.describe "Coming back to where the sign-in started", :no_auth do
   end
 
   it "sends a guest turned away from a page back to that page" do
-    get(zhuyin_training_path(group: "initials", from: "initials"))
+    get(practice_path(from: "initials"))
     expect(response).to(redirect_to(login_path))
 
     google!
 
-    expect(response).to(redirect_to(zhuyin_training_path(group: "initials", from: "initials")))
+    expect(response).to(redirect_to(practice_path(from: "initials")))
   end
 
   it "brings an existing account back to the page it signed in from" do

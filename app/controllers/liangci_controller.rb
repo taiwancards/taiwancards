@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class LiangciController < ApplicationController
-  allow_unauthenticated_access only: %i[index show]
-  publicly_cacheable only: %i[index show]
+  allow_unauthenticated_access only: %i[index show game]
+  publicly_cacheable only: %i[index show game]
   NOUN_LIMIT = 60
   KINDS_PER_TEXT = 3
   EXAMPLE_LIMIT = 12

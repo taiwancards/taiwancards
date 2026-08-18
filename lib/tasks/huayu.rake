@@ -263,6 +263,12 @@ namespace :huayu do
     result = Huayu::MedicineImporter.new.call
     puts("Taiwan medicine: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
   end
+
+  desc "Import the everyday vocabulary that song lyrics rely on"
+  task import_song_vocabulary: :environment do
+    result = Huayu::SongVocabularyImporter.new.call
+    puts("song vocabulary: #{result.imported} imported, #{result.skipped} skipped")
+  end
 end
 
 namespace :huayu do

@@ -1,0 +1,39 @@
+- content_for(:title) { t("syllables.title") }
+- content_for(:meta_description) { t("syllables.meta_description", clips: @clips) }
+
+.py-6.space-y-6.pinyin-locked.zhuyin-locked data-controller="syllable-chart" data-syllable-chart-templates-value=@templates.to_json data-syllable-chart-voice-value=@voices.first
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("syllables.title")
+    p.text-sm.text-muted-foreground = t("syllables.lede", clips: @clips, bases: @bases)
+
+  .flex.flex-wrap.items-center.gap-2
+    span.text-xs.font-medium.uppercase.tracking-widest.text-muted-foreground = t("syllables.voice")
+    - @voices.each do |voice|
+      button.rounded-full.border.border-border.px-3.py-1.5.text-xs.font-medium[
+        type="button" data-voice=voice data-syllable-chart-target="voiceButton"
+        data-action="click->syllable-chart#choose"
+        class="hover:bg-muted aria-pressed:bg-primary aria-pressed:text-primary-foreground"]
+        = t("syllables.voices.#{voice}")
+
+  - @groups.each do |group|
+    section.space-y-2
+      h2.text-xs.font-semibold.uppercase.tracking-widest.text-muted-foreground = group.initial
+      .grid.gap-2 class="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+        - group.syllables.each do |syllable|
+          .rounded-xl.border.border-border.p-2.space-y-1
+            .flex.items-baseline.justify-between.gap-1
+              span.text-sm.font-medium.text-foreground = syllable.base
+              span.text-base.leading-none.text-muted-foreground lang="zh-TW" = syllable.zhuyin
+            .flex.gap-1
+              - Huayu::SyllableChart::TONES.each do |tone|
+                - key = syllable.clip(tone)
+                - if key
+                  button.inline-flex.items-center.justify-center.rounded-lg.border.border-border.text-xs.font-semibold[
+                    type="button" data-key=key data-action="click->syllable-chart#play"
+                    aria-label=t("syllables.play", syllable: syllable.base, tone: tone)
+                    class="h-9 flex-1 hover:bg-primary hover:text-primary-foreground sm:h-8"]
+                    = tone == 5 ? "˙" : tone
+                - else
+                  span.inline-flex.items-center.justify-center.text-xs class="h-9 flex-1 text-muted-foreground/30 sm:h-8" ·
+
+  p.text-xs.text-muted-foreground = t("syllables.credit", attribution: Huayu::CnsVoice::ATTRIBUTION)

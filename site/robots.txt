@@ -13,7 +13,10 @@
 # costs us real money on a small budget, and gives you worse data. See
 # https://study.taiwancards.app/en/licenses
 #
-# See https://www.robotstxt.org/robotstxt.html
+# Search engines: the reference pages listed in the sitemap are served from the
+# shared cache and cost us nothing, so crawl those freely. Everything under the
+# Disallow lines below is either behind a login or built per request — it is not
+# cacheable, so please leave it alone. See https://www.robotstxt.org/robotstxt.html
 
 User-agent: meta-webindexer
 Disallow: /
@@ -21,10 +24,61 @@ Disallow: /
 User-agent: meta-externalagent
 Disallow: /
 
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
 User-agent: *
 Disallow: /search
 Disallow: /*word=
 Disallow: /*page=
 Disallow: /*q=
-Crawl-delay: 10
+Disallow: /*/login
+Disallow: /*/logout
+Disallow: /*/start
+Disallow: /*/path
+Disallow: /*/desk
+Disallow: /*/desks
+Disallow: /*/study
+Disallow: /*/triage
+Disallow: /*/plan
+Disallow: /*/placement
+Disallow: /*/progress
+Disallow: /*/profile
+Disallow: /*/settings
+Disallow: /*/mistakes
+Disallow: /*/course
+Disallow: /*/exams
+Disallow: /*/stories
+Disallow: /*/textbook
+Disallow: /*/reader
+Disallow: /*/writing
+Disallow: /*/pronunciation
+Disallow: /*/markup
+Disallow: /*/admin
+Disallow: /*/shares
+Disallow: /*/groups
+Disallow: /*/quick_add
+Disallow: /*/tones/drill
+Disallow: /tones/refill
+Disallow: /*/practice/drill
+Disallow: /*/practice/typing
+Disallow: /*/practice/zhuyin-trainer
+Disallow: /*/practice/progress
+Disallow: /*/mock/
+Disallow: /s/
+Disallow: /auth/
+Disallow: /export
+Disallow: /configurations/
+Crawl-delay: 5
+
+Sitemap: https://study.taiwancards.app/sitemap.xml
 Sitemap: https://taiwancards.app/sitemap.xml

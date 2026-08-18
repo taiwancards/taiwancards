@@ -142,6 +142,156 @@ en:
       reading the explanations are fine; the trainers, handwriting, pronunciation and text analysis expect
       a computer. Real study belongs there.
     dismiss: Understood
+  names:
+    title: How a Taiwanese name is built
+    meta_description: >-
+      What Taiwanese names are made of, which surnames the island actually uses, and which characters
+      turn up in given names — from the national registration statistics.
+    caveat: >-
+      Counted from %{people} names of people connected to Taiwan. The record leans towards people notable
+      enough to be written about, so it describes naming across the last century rather than what is given
+      to children this year.
+    percent: "%{value}%"
+    young: "0–14: %{value}%"
+    pmi: "PMI %{value}"
+    tone: "Tone %{n}"
+    tabs:
+      pick: Pick a name
+      learn: How it works
+    assistant:
+      privacy_title: What you type never leaves this device
+      privacy_body: >-
+        The whole calculation runs in your browser: there is no request at all, which you can confirm in
+        the network panel.
+      loading: Loading the counts…
+      your_surname: Your surname, in Latin letters
+      your_given: Your given name, in Latin letters
+      age: Your generation
+      gender: Read as
+      gender_any: No preference
+      length: Given name
+      two_characters: Two characters
+      one_character: One character
+      qualities: What it should say about you
+      qualities_note: One or two. Three already thins the pool badly.
+      strokes: Writing
+      rarity: How common
+      any: No preference
+      simple: Simpler
+      complex: More elaborate
+      common: Familiar
+      unique: Less usual
+      closeness: Like your own ⟷ typical
+      official: I will use this on official paperwork in Taiwan
+      submit: Show options
+      badge_pair: pair PMI
+      badge_contour: tone pattern
+      badge_repeat: repeated tone, usually avoided
+      badge_strokes: strokes
+      disclaimer: >-
+        This is not a finished name and not a recommendation for you personally. It is register statistics
+        — which characters and combinations turn up more often than others. A name is chosen together with
+        someone who grew up with the language; treat this list as material for that conversation.
+      results_note: Five candidates, each with the reasoning. Change your answers and the list rebuilds.
+      why_heading: Why this combination works
+      vibes:
+        light: clarity
+        virtue: decency
+        wisdom: learning
+        strength: firmness
+        nature: natural force
+        prosperity: prosperity
+        peace: calm
+        aspiration: ambition
+      why:
+        meaning_two: "The name says two things at once — %{first}, %{second}."
+        meaning_one: Both characters pull the same way — %{first} — which makes the name feel whole.
+        meaning_single: "The meaning rests on %{text} — %{first}; the other character is there for the sound."
+        meaning_solo: "A single character, and it is about %{first}: short given names are rarer in Taiwan, so this one sticks."
+        meaning_plain: >-
+          These characters were not picked out of a dictionary: a Taiwanese reader takes a name like this
+          as a mood rather than a sentence.
+        sound_common: >-
+          The %{tones} melody is one of the most ordinary shapes a Taiwanese name takes, and the mouth
+          finds it without stumbling.
+        sound_rare: >-
+          The %{tones} tone pattern is uncommon, so the name sounds like its own thing while staying easy
+          to say.
+        sound_repeat: Two identical tones in a row is a shape Taiwan avoids — together it sounds flat.
+        pair_strong: >-
+          These two characters really do go together: the pair turns up in the register far more often
+          than chance would give, so the name lands as a real one rather than something assembled.
+        pair_fresh: >-
+          The register has no ready-made pairing here, so the name reads as yours rather than as one
+          taken off a list.
+        era_match: Both characters are current for your generation — neither a grandparent's name nor a baby's.
+        era_older: >-
+          The characters run older than your generation: the name carries a parent's era, which Taiwan
+          tends to hear as solidity.
+        era_recent: This is what children born recently are called — the name will sound pointedly young.
+        rare_char: "The character %{text} is uncommon: people remember the name at once but will ask how to write it."
+        gender_male: Clearly male to the ear.
+        gender_female: Clearly female to the ear.
+        gender_neutral: Neutral on gender — in Taiwan names like this belong to men and women alike.
+        echo: The sound echoes your real name, so the connection is audible the moment you introduce yourself.
+        official: "It will print cleanly on paperwork: both characters are in the standard set."
+    cohorts:
+      elder: Born before 1960
+      middle: Born 1960–1979
+      young: Born 1980–1994
+      recent: Born 1995 and later
+    cohort_note: >-
+      Sorted by how common the character is in that generation, per thousand people. Naming turns over
+      fast: only two of the thirty commonest second characters are shared between the oldest and the
+      youngest group here.
+    filters:
+      all: Everything
+    positions:
+      first: Usually first
+      second: Usually second
+    leans:
+      first: leans first
+      second: leans second
+      any: either position
+    fields:
+      light: light
+      virtue: virtue
+      wisdom: learning
+      strength: strength
+      nature: nature
+      prosperity: prosperity
+      peace: calm
+      aspiration: aspiration
+    pairs:
+      heading: Pairs that go together
+      body: >-
+        Ranked by pointwise mutual information: how much more often these two characters appear together
+        than chance would give. A high score means the pair is a real convention, not a coincidence.
+    shape:
+      example_surname: surname
+      example_given: given name
+      compact: >-
+        The surname is one inherited character; the given name is one or two characters chosen by the
+        family. The order never changes, whatever the Latin letters on a passport do.
+    surnames:
+      heading: The surnames Taiwan uses
+      note: "The %{shown} commonest of %{total} surnames, counted across %{people} people in the household register."
+    characters:
+      heading: Characters that appear in given names
+      body: >-
+        Ranked by how often they occur in registered given names, each linked to its dictionary entry
+        so you can read what it actually means.
+      caution: >-
+        A character carries its dictionary meaning, its sound, and the company it keeps. Meaning alone
+        does not make a name work — homophones, register and the pairing with a surname all matter,
+        which is why this page shows evidence rather than suggestions.
+      none: Nothing matches those filters together.
+    given:
+      heading: Given names in the record
+      note: The most frequently registered given names, with the sex recorded against them.
+    sex:
+      male: male
+      female: female
   nav:
     mock: TOCFL simulator
     more: More
@@ -213,6 +363,7 @@ en:
     notices: Notice board
     everyday: Everyday life
     variants: Vocabulary differences
+    names: Taiwanese names
     metro: Taipei metro
     calendar: Festivals & calendar
     medicine: Medicine & hospitals
@@ -223,6 +374,7 @@ en:
     group_basics: Basics
     pinyin: Pinyin
     phonetics: Zhuyin and pinyin
+    syllables: Syllable chart
     tones: Tones
     zhuyin_trainer: Zhuyin by ear
     zhuyin: Zhuyin (bopomofo)
@@ -1755,6 +1907,13 @@ en:
     all_levels: All levels
     not_taught: "Not part of the course. "
     supplementary: Outside the TBCL list
+    syllabus:
+      official: In the official syllabus.
+      placed: "Point %{number}, tier %{tier}, level %{level} of Taiwan's TBCL benchmarks."
+      starred: core point
+      beyond: Beyond the official syllabus.
+      beyond_note: >-
+        Not a TBCL point. We teach it because it turns up constantly in real Taiwanese Mandarin.
     level_bands:
       1: Novice 1
       2: Novice 2
@@ -2061,6 +2220,23 @@ en:
     licenses: Licenses & credits
     privacy: Privacy
     terms: Terms
+  syllables:
+    title: Every Mandarin syllable, spoken
+    meta_description: >-
+      All %{clips} Mandarin syllable recordings used in Taiwan, in zhuyin and pinyin, in two studio voices.
+    lede: >-
+      %{bases} syllables and %{clips} recordings, every tone each syllable actually has. Two studio voices
+      from the CNS11643 corpus. Tap a tone to hear it.
+    voice: Voice
+    voices:
+      female: Female
+      male: Male
+    play: "%{syllable}, tone %{tone}"
+    credit: "Audio: %{attribution}. Open Government Data Licence."
+  levels:
+    download: Download this list (CSV)
+    download_note: >-
+      Free, no address asked. Every source and licence is named inside the file.
   licenses:
     moe_notice: 使用說明 — the official usage notice, retained in full as the license requires
     title: Licenses & credits
@@ -2525,6 +2701,18 @@ en:
       out_of_range: Outside the covered range.
       bounds: Covers %{from} to %{to}. The table is taken from the Hong Kong Observatory's Gregorian-Lunar Calendar Conversion Table and every date in it was checked back against that source.
   page_help:
+    names_html: >-
+      <p>This section explains how a Taiwanese name is built and shows what the island actually uses,
+      counted from the household registration record. It does not invent names for you: choosing one
+      is personal, and usually done with a Taiwanese friend or teacher.</p><p>The <strong>surname</strong>
+      is one character, inherited, written before the given name; two-character surnames exist but are
+      rare. The <strong>given name</strong> is one or two characters chosen by the family, and two is
+      the common case. The order never changes: in Chinese the surname stays in front whatever a
+      passport prints, and you address someone by surname plus title until invited to do
+      otherwise.</p><p>On the "Pick a name" tab, characters are ranked against the same counts shown on
+      the second tab: frequency by generation, tone pattern, how firmly a pair holds together, and
+      stroke count. It hands back five candidates with the reasoning, so a shortlist is something you
+      can actually talk about.</p>
     desks_html: >-
       <p>A deck is built from whatever you paste: a list one per line, separated by commas, or plain running
       text — the system works it out. You can upload a file, or pull the words out of a song instead.</p><p>The
@@ -3226,6 +3414,22 @@ en:
         of an iceberg — beneath it are years of collecting, measuring and verifying data, with our own
         libraries and datasets released for the research community. All of it is open — knowledge
         belongs to everyone.
+      points:
+        corpus:
+          title: Measured, not guessed
+          body: >-
+            Levels, difficulty and word order come out of a Taiwan corpus we built and measured
+            ourselves — frequency, dispersion, collocation strength, register.
+        open:
+          title: Open to inspection
+          body: >-
+            The corpus tables, the syllable inventory and the libraries behind them are published as
+            datasets, and this application is open source. Every source and licence is on the credits page.
+        linked:
+          title: One place, wired together
+          body: >-
+            A character leads to its words, a word to real sentences, a sentence back to its grammar
+            point — and anything you meet can go straight into a deck.
     quality:
       heading: Where the quality comes from
       items:
@@ -3352,10 +3556,12 @@ en:
         None of that makes the others bad software, and most of them are not trying to teach Taiwanese Mandarin
         at all. Anki's ecosystem is unmatched. Pleco's dictionaries are far deeper than anything here. Skritter's
         stroke-level handwriting grading is the best in the category. And Duolingo is better than anyone at
-        getting you back tomorrow.
+        getting you back tomorrow. Zhong Chinese, newly out of Taipei, is the one other place here teaching the
+        Mandarin of Taiwan rather than the mainland one, and it is a pleasure to look at — its material follows
+        a single textbook and its dictionary is small, but what is in it is the real thing. 嗨嗨 👋🏻
       toggle: Show the full comparison table
       checked: >-
-        Checked in July 2026 against official documentation and store listings. Features and prices change
+        Checked in August 2026 against official documentation and store listings. Features and prices change
         — verify anything that matters to you.
       rows:
         target: Taiwanese Mandarin as the target
@@ -3415,7 +3621,7 @@ en:
         The same questions asked of the popular Chinese apps on Android and iOS. A question mark means the
         product does not document the feature either way — absence of evidence, not evidence of absence.
       checked: >-
-        Compiled in July 2026 from each product's own store listing or official site. Claims that appear
+        Compiled in August 2026 from each product's own store listing or official site. Claims that appear
         only in marketing copy are marked as claimed.
       product: App
       type: Type

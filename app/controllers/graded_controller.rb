@@ -2,6 +2,7 @@
 
 class GradedController < ApplicationController
   allow_unauthenticated_access
+  publicly_cacheable
 
   def index
     @tiers = Graded::Levels.all.select { |tier| Graded::Library.texts(tier.id).any? }

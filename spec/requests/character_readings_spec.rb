@@ -97,11 +97,12 @@ RSpec.describe "Character readings" do
     expect(doc.text).to(include(I18n.t("characters.reading_unknown")).and(include("覺青")))
   end
 
-  it "offers the recording only for the reading it was recorded for" do
-    buttons = page.css("button[data-controller=audio]")
+  it "never lends the recording of one reading to another, and leaves no reading silent" do
+    urls = page.css("button[data-controller=audio]").map { |node| node["data-audio-url-value"] }.uniq
 
-    expect(buttons.size).to(be_positive)
-    expect(buttons.map { |node| node["data-audio-url-value"] }.uniq).to(all(include("3485")))
+    expect(urls.size).to(eq(2))
+    expect(urls.count { |url| url.include?("3485") }).to(eq(1))
+    expect(urls.find { |url| !url.include?("3485") }).to(include("jiao4"))
   end
 
   describe "a word read two ways" do

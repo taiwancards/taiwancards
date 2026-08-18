@@ -3,8 +3,9 @@
 module PubliclyCacheable
   extend ActiveSupport::Concern
 
-  SHARED_TTL = 10.minutes
-  STALE_TTL = 1.day
+  SHARED_TTL = ENV.fetch("PUBLIC_SHARED_TTL", 1.day.to_i).to_i
+  STALE_TTL = ENV.fetch("PUBLIC_STALE_TTL", 7.days.to_i).to_i
+  SHARED_VARY = "Accept-Encoding"
 
   PERSONAL = [
     ZhuyinHelper::HANZI_FONT_COOKIE,
@@ -22,6 +23,11 @@ module PubliclyCacheable
     helper_method :sessionless?
   end
 
+  def cache_at_the_edge(ttl: SHARED_TTL, stale: STALE_TTL)
+    expires_in(0, public: true, "s-maxage": ttl, "stale-while-revalidate": stale)
+    response.headers["Vary"] = SHARED_VARY
+  end
+
   class_methods do
     def publicly_cacheable(only: nil)
       self.public_cache_actions = only ? Array(only).map(&:to_s) : :all
@@ -35,10 +41,12 @@ module PubliclyCacheable
     return false if actions.nil?
     return false unless actions == :all || actions.include?(action_name)
 
-    request.get? && !request.xhr? && html_answer? && current_user.nil? && plain_reader?
+    request.get? && !request.xhr? && shareable_format? && current_user.nil? && plain_reader?
   end
 
-  def html_answer? = request.format.html? || request.format.to_s == Mime::ALL.to_s
+  def shareable_format?
+    request.format.html? || request.format.csv? || request.format.json? || request.format.to_s == Mime::ALL.to_s
+  end
 
   def plain_reader? = PERSONAL.none? { |name| cookies[name].present? }
 
@@ -52,6 +60,6 @@ module PubliclyCacheable
     return unless sessionless?
     return unless response.status == 200
 
-    expires_in(0, public: true, "s-maxage": SHARED_TTL.to_i, "stale-while-revalidate": STALE_TTL.to_i)
+    cache_at_the_edge
   end
 end

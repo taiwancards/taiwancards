@@ -294,12 +294,13 @@ export default class extends Controller {
     if (Object.keys(this.misses).length === 0) return;
     const token = document.querySelector("meta[name='csrf-token']")?.content;
     this.weakValue = { ...this.weakValue, ...this.misses };
+    if (!token) return;
 
     fetch(this.urlValue, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": token || "",
+        "X-CSRF-Token": token,
       },
       body: JSON.stringify({ misses: this.misses }),
     }).catch(() => {});
