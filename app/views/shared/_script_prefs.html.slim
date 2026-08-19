@@ -1,5 +1,6 @@
 - inside_app = local_assigns.fetch(:inside_app, false)
 - compact = local_assigns.fetch(:compact, false)
+- language = local_assigns.fetch(:language, true)
 - button_classes = "inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 - wide_classes = compact ? button_classes.sub("inline-flex", "hidden md:inline-flex") : button_classes
 
@@ -38,18 +39,19 @@
         lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
         = detailed? ? "詳" : "簡"
 
-  - other = I18n.locale.to_s == "ru" ? :en : :ru
-  - mark = capture do
-    span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
-      class="size-6 text-[10px] leading-none" ]
-      = I18n.locale.to_s.upcase
+  - if language
+    - other = I18n.locale.to_s == "ru" ? :en : :ru
+    - mark = capture do
+      span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
+        class="size-6 text-[10px] leading-none" ]
+        = I18n.locale.to_s.upcase
 
-  - if authenticated?
-    = button_to locale_path(other, locale: nil), method: :post,
-      form: {class: "contents"}, class: wide_classes,
-      title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
-      = mark
-  - else
-    = link_to Locales.swap(request.fullpath, other), class: wide_classes,
-      title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
-      = mark
+    - if authenticated?
+      = button_to locale_path(other, locale: nil), method: :post,
+        form: {class: "contents"}, class: wide_classes,
+        title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+        = mark
+    - else
+      = link_to Locales.swap(request.fullpath, other), class: wide_classes,
+        title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+        = mark

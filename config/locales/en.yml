@@ -3019,71 +3019,103 @@ en:
       replay_title: Replay the introduction
       replay_body: The same short walk through the essentials that you saw on your first day.
       replay_cta: Start the introduction
-    steps:
-      welcome:
-        title: Welcome to TaiwanCards
-        body: >-
-          Seven short stops, a minute in all: where to begin, the textbook that runs from zero to B1, the
-          dictionary, search, cards out of anything, and the switches that decide what you see above the
-          characters. Everything a learner of Taiwan Mandarin needs is here, and all of it is wired
-          together.
-      start_level:
-        title: Start here if you are starting from zero
-        body: >-
-          Where to start lays the whole route out in order — sounds and zhuyin first, then reading, then
-          the rest — and ticks itself off as you go. Already read a little? Take the Level test in the
-          same section instead and everything will be set to where you actually are.
-      course:
-        title: The textbook to walk through
-        body: >-
-          Sixty lessons in five stages, zero to TOCFL B1, one real situation each: the bank, the clinic,
-          renting a flat, the night market, elections. A dialogue, the words and grammar it stands on,
-          exercises that mark themselves, and a button that turns the lesson into a deck. If you want one
-          path through all of this rather than a pile of sections, take this one.
-      dictionary:
-        title: The dictionary and everything in it
-        body: >-
-          Radicals, characters, words, sentences, idioms and measure words, each its own page — plus the
-          TBCL and TOCFL level lists if you are working towards an exam. Anything here goes into study
-          with one tap.
-      search:
-        title: Search is the fastest way in
-        body: >-
-          Type it however suits you: characters, pinyin, zhuyin, or just the English meaning. It finds
-          characters, words, idioms and real sentences from the corpus.
-      new_deck:
-        title: A deck out of anything
-        body: >-
-          Like a song and want to pull it apart? Got a text or a word list in class? Found an article
-          worth reading? Tap here and any of it turns into a deck of cards, which then joins the same
-          daily queue as everything else.
+    page:
+      title: Welcome to TaiwanCards
+      lede: >-
+        One page on what is here and where to start. Nothing to page through and nowhere to be sent: see
+        what is inside, open whatever is closest to you, and come back from the guide whenever you like.
+      start:
+        heading: Where to start
+        zero:
+          title: Starting from nothing
+          body: >-
+            Sounds and zhuyin first, then reading, then the rest. The route is laid out in order and ticks
+            itself off as you go — you just walk it.
+        reading:
+          title: I can already read a little
+          body: >-
+            Take the placement test and the system tunes itself to where you actually are: it picks what
+            to learn next and stops drilling what you already know.
+      inside:
+        heading: What is inside
+        lede: >-
+          Everything is wired together: a word from the textbook opens in the dictionary, goes from there
+          into a deck, and the deck joins your daily queue. Tap any card to look.
+      blocks:
+        course:
+          title: Textbook
+          body: >-
+            One coherent path from nothing to TOCFL B1. Every lesson is a real situation — the bank, the
+            clinic, renting a flat, the night market — with a dialogue, its words and grammar, exercises
+            that mark themselves, and a button that turns the lesson into a deck.
+        dictionary:
+          title: Dictionary
+          body: >-
+            Characters, words, sentences, collocations, idioms, measure words and radicals, each with its
+            own page: readings, meanings and examples from the corpus. TBCL and TOCFL level lists too.
+        search:
+          title: Search
+          body: >-
+            Type it however suits you: characters, pinyin with or without tones, zhuyin, or just the
+            meaning in your own language. Characters, words and real sentences all come back.
+        decks:
+          title: Cards
+          body: >-
+            A deck can be built from anything: a word list from class, song lyrics, an article. You never
+            type translations — they come from the dictionary. Spacing is handled for you.
+        grammar:
+          title: Grammar
+          body: >-
+            Lessons that take a pattern apart with examples, graded by level, from the basics up to ones
+            that sit beyond the exam lists.
+        trainers:
+          title: Trainers
+          body: >-
+            Pronunciation scored from your microphone, handwriting checked stroke by stroke, and drills
+            for zhuyin and tones.
+        taiwan:
+          title: Taiwan
+          body: >-
+            The island's everyday vocabulary that textbooks leave out: renting, the clinic and the
+            pharmacy, food, transport, paperwork — and how Taiwanese Mandarin differs from China's.
+        reader:
+          title: Text reader
+          body: >-
+            Paste any text and it is split into words, each one openable in the dictionary or sendable to
+            a deck. Handy for news, songs and whatever else you run into.
+      figures:
+        lessons: "lessons: %{value}"
+        stages: "stages: %{value}"
+        characters: "characters: %{value}"
+        words: "words: %{value}"
+        sentences: "sentences: %{value}"
       display:
-        title: You decide what is shown
+        heading: What shows above the characters
         body: >-
-          This little panel rules the whole system: zhuyin above the characters, zhuyin with pinyin, or
-          neither. Beside it sit the calligraphic font, whether China's wording is shown next to ours, and
-          how far a dictionary entry unfolds. Press them now and watch the page change. On a phone the
-          panel is on this page; on a computer it lives in the top bar.
+          This panel drives the whole system at once: zhuyin above the characters, zhuyin together with
+          pinyin, or neither; the kai calligraphic face; whether China's variant sits beside ours; and how
+          far a dictionary entry unfolds.
+        hint: Press one — the page changes at once.
       guide:
-        title: The rest of it lives in the guide
+        heading: If you want more detail
         body: >-
-          Whatever we skipped opens from here: how the language works, the trainers for your voice and
-          your hand, the pages about living in Taiwan. Section by section, page by page — and each one can
-          be walked through with the interface highlighted. It sits under Profile, so come back whenever.
+          The guide holds every section and every page. Any section can be walked with hints laid over the
+          interface, and they point at the page itself rather than at a menu. The guide lives under Profile.
+        cta: Open the guide
+      finish:
+        body: The rest is your studying. You can always open this page again from the guide.
+        cta: Got it, let me in
+    steps:
+      overview:
+        title: The introduction has changed
+        body: >-
+          Instead of a walk through the menus there is now a single page: what the system holds, where to
+          start and where things live. Open it if you want to refresh the picture.
     chapters:
       dictionary:
         title: Dictionary and search
         summary: How to find anything and how to read an entry
         steps:
-          open_group:
-            title: Open the dictionary
-            body: Click Dictionary in the top bar and the list of what is inside will drop down.
-          open_more:
-            title: Tap the menu
-            body: On a phone every section lives behind this button in the corner. Tap it.
-          pick_dict:
-            title: Pick Words
-            body: This is the main dictionary page. Tap it and we will be inside.
           entry:
             title: This is what an entry looks like
             body: >-
@@ -3098,15 +3130,6 @@ en:
         title: The textbook
         summary: One path from zero to B1, and how a lesson is built
         steps:
-          open_group:
-            title: Open My study
-            body: Click My study in the top bar and the textbook will be the first thing in the list.
-          open_more:
-            title: Tap the menu
-            body: On a phone every section lives behind this button in the corner. Tap it.
-          pick_course:
-            title: Pick the Course
-            body: Tap it and we will look at how the whole thing is laid out.
           stages:
             title: Five stages, sixty lessons
             body: >-
@@ -3128,15 +3151,6 @@ en:
             body: >-
               This button is on every page. A song, a text from class, a word list, an article — all of it
               turns into a deck.
-          open_group:
-            title: Open My study
-            body: "Tap it — this is everything that belongs to you: today's queue, your decks, the reader."
-          open_more:
-            title: Tap the menu
-            body: On a phone every section lives behind this button. Tap it.
-          pick_desks:
-            title: Pick My decks
-            body: Tap it and let us look at what a deck list is like.
           facets:
             title: Six memories per word
             body: >-
@@ -3147,15 +3161,6 @@ en:
         title: Life in Taiwan
         summary: The vocabulary tied to living here
         steps:
-          open_group:
-            title: Open Taiwan
-            body: Tap it — this is the part a textbook leaves out.
-          open_more:
-            title: Tap the menu
-            body: On a phone every section lives behind this button. Tap it.
-          pick_everyday:
-            title: Pick Everyday life
-            body: Tap it and the vocabulary opens, sorted by situation.
           domains:
             title: Everything by situation
             body: >-
@@ -3165,15 +3170,6 @@ en:
         title: Sounds and zhuyin
         summary: How the sounds work and where to drill them
         steps:
-          open_group:
-            title: Open About the language
-            body: Tap it — come here when you want to understand rather than just memorise.
-          open_more:
-            title: Tap the menu
-            body: On a phone every section lives behind this button. Tap it.
-          pick_zhuyin:
-            title: Pick Zhuyin and pinyin
-            body: Tap it — this is the main page about the sounds.
           parts:
             title: Four parts
             body: >-
@@ -3188,15 +3184,6 @@ en:
         title: The trainers
         summary: What you can drill with your hands and your voice
         steps:
-          open_group:
-            title: Open Practice
-            body: Tap it — every trainer lives here.
-          open_more:
-            title: Tap the menu
-            body: On a phone every section lives behind this button. Tap it.
-          pick_pronunciation:
-            title: Pick Pronunciation
-            body: Tap it and we will show you how the app listens to you.
           what_else:
             title: And there is more
             body: >-
@@ -3226,15 +3213,6 @@ en:
         title: Profile and progress
         summary: Your level, your statistics and your export
         steps:
-          open_group:
-            title: Open Settings
-            body: Tap it — this part is about you rather than about the language.
-          open_more:
-            title: Tap the menu
-            body: On a phone every section lives behind this button. Tap it.
-          pick_progress:
-            title: Pick Progress
-            body: Tap it and let us see what the app knows about you.
           backup:
             title: And you can take it all with you
             body: >-

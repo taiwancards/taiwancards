@@ -1,64 +1,21 @@
-version: 2
+version: 3
 
 essential:
-  - id: welcome
-    path: /desk
-    version: 1
-  - id: start_level
-    path: /menu
-    target: nav-item-path
-    version: 2
-  - id: course
-    path: /menu
-    target: nav-item-course
-    version: 2
-  - id: dictionary
-    path: /menu
-    target: nav-dictionary
-    version: 1
-  - id: search
-    path: /menu
-    target: search
-    version: 1
-  - id: new_deck
-    path: /menu
-    target: new-desk
-    version: 1
-  - id: display
-    path: /menu
-    target: script-setup
-    interactive: true
-    version: 1
-  - id: guide
-    path: /help
-    target: profile-guide
-    version: 1
+  - id: overview
+    path: /intro
+    version: 3
 
 chapters:
   - id: dictionary
     icon: book
     steps:
-      - id: open_group
-        target: nav-dictionary
-        advance: click
-        only: desktop
-        version: 1
-      - id: open_more
-        target: nav-more
-        advance: click
-        lands_on: /menu
-        only: mobile
-        version: 1
-      - id: pick_dict
-        target: nav-item-dict
-        advance: click
-        lands_on: /dict
-        version: 1
       - id: entry
+        path: /dict
         target: dict-entry
         advance: scroll
         version: 1
       - id: detail_level
+        path: /dict
         target: pref-detail
         advance: scroll
         only: desktop
@@ -68,52 +25,24 @@ chapters:
     icon: decks
     steps:
       - id: new_deck
+        path: /desks
         target: new-desk
         advance: scroll
         version: 1
-      - id: open_group
-        target: nav-learn
-        advance: click
-        only: desktop
-        version: 1
-      - id: open_more
-        target: nav-more
-        advance: click
-        lands_on: /menu
-        only: mobile
-        version: 1
-      - id: pick_desks
-        target: nav-item-desks
-        advance: click
-        lands_on: /desks
-        version: 1
       - id: facets
+        path: /desks
         version: 1
 
   - id: course
     icon: book
     steps:
-      - id: open_group
-        target: nav-learn
-        advance: click
-        only: desktop
-        version: 1
-      - id: open_more
-        target: nav-more
-        advance: click
-        lands_on: /menu
-        only: mobile
-        version: 1
-      - id: pick_course
-        target: nav-item-course
-        advance: click
-        lands_on: /course
-        version: 1
       - id: stages
+        path: /course
         target: course-stages
         advance: scroll
         version: 1
       - id: band_progress
+        path: /course
         target: course-progress
         advance: scroll
         version: 1
@@ -121,23 +50,8 @@ chapters:
   - id: taiwan
     icon: desk
     steps:
-      - id: open_group
-        target: nav-taiwan
-        advance: click
-        only: desktop
-        version: 1
-      - id: open_more
-        target: nav-more
-        advance: click
-        lands_on: /menu
-        only: mobile
-        version: 1
-      - id: pick_everyday
-        target: nav-item-everyday
-        advance: click
-        lands_on: /everyday
-        version: 1
       - id: domains
+        path: /everyday
         target: everyday-domains
         advance: scroll
         version: 1
@@ -145,27 +59,13 @@ chapters:
   - id: phonetics
     icon: speaker
     steps:
-      - id: open_group
-        target: nav-language
-        advance: click
-        only: desktop
-        version: 1
-      - id: open_more
-        target: nav-more
-        advance: click
-        lands_on: /menu
-        only: mobile
-        version: 1
-      - id: pick_zhuyin
-        target: nav-item-practice-zhuyin
-        advance: click
-        lands_on: /practice/zhuyin
-        version: 1
       - id: parts
+        path: /practice/zhuyin
         target: practice-parts
         advance: scroll
         version: 1
       - id: drill_block
+        path: /practice/zhuyin
         target: practice-block-drill
         advance: scroll
         version: 1
@@ -173,41 +73,30 @@ chapters:
   - id: trainers
     icon: pencil
     steps:
-      - id: open_group
-        target: nav-practice
-        advance: click
-        only: desktop
-        version: 1
-      - id: open_more
-        target: nav-more
-        advance: click
-        lands_on: /menu
-        only: mobile
-        version: 1
-      - id: pick_pronunciation
-        target: nav-item-pronunciation
-        advance: click
-        lands_on: /pronunciation
-        version: 1
       - id: what_else
+        path: /pronunciation
         version: 1
 
   - id: display
     icon: settings
     steps:
       - id: prefs
+        path: /menu
         target: script-setup
         advance: scroll
         version: 1
       - id: pinyin_toggle
+        path: /menu
         target: pref-pinyin
         interactive: true
         version: 1
       - id: font_kai
+        path: /menu
         target: pref-kai
         interactive: true
         version: 1
       - id: china_toggle
+        path: /menu
         target: pref-china
         interactive: true
         version: 1
@@ -215,21 +104,6 @@ chapters:
   - id: profile
     icon: user
     steps:
-      - id: open_group
-        target: nav-settings
-        advance: click
-        only: desktop
-        version: 1
-      - id: open_more
-        target: nav-more
-        advance: click
-        lands_on: /menu
-        only: mobile
-        version: 1
-      - id: pick_progress
-        target: nav-item-progress
-        advance: click
-        lands_on: /progress
-        version: 1
       - id: backup
+        path: /progress
         version: 1

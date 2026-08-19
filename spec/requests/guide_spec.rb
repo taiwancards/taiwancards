@@ -50,19 +50,17 @@ RSpec.describe "The full guide" do
 end
 
 RSpec.describe "The introduction" do
-  it "shows a newcomer where to start, what to walk through, and where the rest of it is" do
-    ids = Intro::Map.essential.map(&:id)
-
-    expect(ids).to(eq(%w[welcome start_level course dictionary search new_deck display guide]))
-    expect(Intro::Map.essential.first.path).to(eq("/desk"))
-    expect(Intro::Map.essential.last.path).to(eq("/help"))
+  it "is one page rather than a walk through the menus" do
+    expect(Intro::Map.essential.map(&:id)).to(eq(%w[overview]))
+    expect(Intro::Map.essential.first.path).to(eq("/intro"))
+    expect(Intro::Map.essential.first.target).to(be_nil)
   end
 
-  it "spends its middle on one page, so it is not a chain of redirects" do
-    middle = Intro::Map.essential[1..-2]
+  it "shows what the system holds instead of pointing at navigation" do
+    blocks = Intro::Highlights.compute
 
-    expect(middle.map(&:path).uniq).to(eq(["/menu"]))
-    expect(middle.map(&:target)).to(all(be_present))
+    expect(blocks.map(&:id)).to(include("course", "dictionary", "search", "decks"))
+    expect(blocks.map(&:path)).to(all(start_with("/")))
   end
 
   it "spotlights something that is really on the page for every anchored step" do

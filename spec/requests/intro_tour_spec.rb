@@ -5,27 +5,36 @@ require "rails_helper"
 RSpec.describe "Intro tour" do
   let(:user) { @authenticated_user }
 
-  describe "the essential tour" do
-    before { user.update!(prefs: user.prefs.merge("intro_stage" => "running", "intro_step" => "search")) }
+  describe "the introduction" do
+    before { user.update!(prefs: user.prefs.merge("intro_stage" => "running", "intro_step" => "overview")) }
 
-    it "renders for a user who is walking it" do
-      get("/menu")
+    it "is a page of its own, with no overlay on top of it" do
+      get("/intro")
 
-      expect(response.body).to(include("intro-tour"))
+      expect(response).to(have_http_status(:ok))
+      expect(response.body).not_to(include("intro-tour"))
     end
 
-    it "anchors its step to an element that exists on the page" do
-      get("/menu")
+    it "names every section it offers and links straight to it" do
+      get("/intro")
 
-      expect(response.body).to(include("data-tour=\"search\""))
-      expect(response.body).to(include("data-intro-start-value=\"search\""))
+      Intro::Highlights.compute.each do |block|
+        expect(response.body).to(include(CGI.escapeHTML(I18n.t("intro.page.blocks.#{block.id}.title"))))
+        expect(response.body).to(include("href=\"/en#{block.path}\""))
+      end
     end
 
-    it "offers no way to skip a step, only to put the whole tour off" do
-      get("/menu")
+    it "counts what is really in the database rather than promising vaguely" do
+      get("/intro")
 
+      expect(response.body).to(include(I18n.t("intro.page.figures.lessons", value: 60)))
+    end
+
+    it "lets the reader finish it, and never nags with a skip" do
+      get("/intro")
+
+      expect(response.body).to(include(CGI.escapeHTML(I18n.t("intro.page.finish.cta"))))
       expect(response.body).not_to(include(I18n.t("intro.skip")))
-      expect(response.body).to(include(I18n.t("intro.later")))
     end
   end
 
@@ -88,22 +97,38 @@ RSpec.describe "Intro tour" do
       end
     end
 
-    it "keeps the reader where they are and walks them from there" do
+    it "opens the page the chapter is about, without walking a menu first" do
       post("/intro/chapter/taiwan")
 
-      expect(response).to(redirect_to(guide_path))
+      expect(response).to(redirect_to("/en/everyday"))
     end
 
-    it "hands the whole chapter to the page, so a dropdown can stay open between steps" do
+    it "opens every chapter straight onto its own page" do
+      Intro::Map.chapters.each do |chapter|
+        post("/intro/chapter/#{chapter.id}")
+
+        expect(response).to(redirect_to("/en#{chapter.steps.first.path}"))
+        delete("/intro/chapter")
+      end
+    end
+
+    it "asks for no menu click anywhere in the guide" do
+      actions = Intro::Map.chapters.flat_map(&:steps).map(&:advance)
+
+      expect(actions).not_to(include("click"))
+      expect(Intro::Map.chapters.flat_map(&:steps).map(&:lands_on).compact).to(be_empty)
+    end
+
+    it "hands the whole chapter to the page and never asks for a menu click" do
       post("/intro/chapter/taiwan")
-      get(guide_path)
+      get("/everyday")
 
       chapter = Intro::Map.chapter("taiwan")
       payload = response.body[/data-intro-steps-value="([^"]*)"/, 1]
       steps = JSON.parse(CGI.unescapeHTML(payload.to_s))
 
       expect(steps.map { |step| step["id"] }).to(eq(chapter.steps.map(&:id)))
-      expect(steps.map { |step| step["action"] }).to(include("click"))
+      expect(steps.map { |step| step["action"] }).not_to(include("click"))
       expect(response.body).to(include("data-intro-walkable-value=\"true\""))
     end
 
@@ -141,12 +166,12 @@ RSpec.describe "Intro tour" do
     end
 
     it "steps back inside the chapter instead of touching the mandatory tour" do
-      post("/intro/chapter/taiwan")
+      post("/intro/chapter/course")
       post("/intro/next")
       post("/intro/back")
 
-      first = Intro::Map.chapter("taiwan").steps.first
-      get(guide_path)
+      first = Intro::Map.chapter("course").steps.first
+      get("/course")
       expect(response.body).to(include("data-intro-start-value=\"#{first.id}\""))
       expect(user.reload.intro_step).to(be_nil)
     end

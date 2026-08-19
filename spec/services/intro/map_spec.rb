@@ -34,7 +34,7 @@ RSpec.describe Intro::Map do
   end
 
   it "announces the steps added since the previous release, and only those" do
-    expect(described_class.newer_than(described_class.version - 1).map(&:id)).to(eq(%w[start_level course]))
+    expect(described_class.newer_than(described_class.version - 1).map(&:id)).to(eq(%w[overview]))
   end
 
   it "keeps the mandatory tour short enough to finish in a minute" do

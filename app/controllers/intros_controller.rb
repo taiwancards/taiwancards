@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class IntrosController < ApplicationController
+  def show
+    @blocks = Intro::Highlights.fetch
+    @running = intro_progress&.required?
+    @level_chosen = current_user.start_chosen?
+  end
+
   def start
     remember_return_path(referring_path)
     redirect_to(here(intro_progress.start!&.path.presence || session[:return_to] || desk_path))
@@ -13,8 +19,10 @@ class IntrosController < ApplicationController
 
   def advance
     landed = params[:step].to_s.presence
+    walking_chapter = runner.call&.mode == :chapter
     landed ? runner.jump_to!(landed) : runner.advance!
     return head(:no_content) if request.xhr?
+    return redirect_to(here(guide_path)) if walking_chapter && runner.call.nil?
 
     back_to_step
   end
@@ -55,7 +63,10 @@ class IntrosController < ApplicationController
 
   def after_intro_path
     stored = take_return_path
-    current_user.intro_done? ? guide_path : (stored || desk_path)
+    return stored if stored.present? && current_user.start_chosen?
+    return onboarding_start_path unless current_user.start_chosen?
+
+    desk_path
   end
 
   def here(path) = Locales.swap(path, I18n.locale)

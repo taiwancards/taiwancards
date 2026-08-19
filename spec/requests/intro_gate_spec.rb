@@ -35,41 +35,42 @@ RSpec.describe "The intro tour" do
     it "opens on the desk, where the search and the sections it talks about live" do
       post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
 
-      expect(response).to(redirect_to("/en/desk"))
+      expect(response).to(redirect_to("/en/intro"))
     end
   end
 
   describe "while the tour is running" do
-    it "renders the tour" do
-      stand_on("welcome")
-      get("/desk")
+    it "shows the introduction page instead of an overlay" do
+      stand_on("overview")
+      get("/intro")
 
-      expect(response.body).to(include("intro-tour"))
+      expect(response.body).not_to(include("intro-tour"))
+      expect(response.body).to(include(CGI.escapeHTML(I18n.t("intro.page.title"))))
     end
 
     it "sends the reader back to the step they wandered off" do
-      stand_on("search")
+      stand_on("overview")
       get("/progress")
 
-      expect(response).to(redirect_to("/en/menu"))
+      expect(response).to(redirect_to("/en/intro"))
     end
 
     it "allows the page the step sits on" do
-      stand_on("search")
-      get("/menu")
+      stand_on("overview")
+      get("/intro")
 
       expect(response).to(have_http_status(:ok))
     end
 
     it "hides the setup strip it would otherwise nag with" do
-      stand_on("welcome")
+      stand_on("overview")
       get("/desk")
 
       expect(response.body).not_to(include(I18n.t("intro.setup.tour")))
     end
 
     it "can be put off, and asks again from the strip" do
-      stand_on("search")
+      stand_on("overview")
       delete("/intro")
 
       expect(user.reload.intro).to(be_pending)
@@ -78,12 +79,12 @@ RSpec.describe "The intro tour" do
       expect(response.body).to(include(I18n.t("intro.setup.tour")))
     end
 
-    it "resumes on the step it was left on" do
-      stand_on("display")
+    it "resumes where it was left off" do
+      stand_on("overview")
       delete("/intro")
       post("/intro/start")
 
-      expect(step_id).to(eq("display"))
+      expect(step_id).to(eq("overview"))
     end
 
     it "falls back to the first step when the stored id is gone from the map" do
@@ -94,20 +95,11 @@ RSpec.describe "The intro tour" do
   end
 
   describe "moving through the tour" do
-    it "advances and remembers" do
-      first, second = Intro::Map.essential.first(2)
-      stand_on(first.id)
+    it "finishes as soon as the one page is done" do
+      stand_on(Intro::Map.essential.first.id)
       post("/intro/next")
 
-      expect(step_id).to(eq(second.id))
-    end
-
-    it "goes back" do
-      first, second = Intro::Map.essential.first(2)
-      stand_on(second.id)
-      post("/intro/back")
-
-      expect(step_id).to(eq(first.id))
+      expect(user.reload).to(be_intro_done)
     end
 
     it "cannot go back past the first step" do
@@ -126,13 +118,11 @@ RSpec.describe "The intro tour" do
       expect(response).to(have_http_status(:ok))
     end
 
-    it "hands the reader over to the guide when it ends, wherever it was started from" do
+    it "sends a reader who has no level yet to choose one" do
       stand_on(Intro::Map.essential.last.id)
-      get("/dict")
-      post("/intro/start", headers: {"HTTP_REFERER" => "http://www.example.com/dict"})
       post("/intro/next")
 
-      expect(response).to(redirect_to("/en/help"))
+      expect(response).to(redirect_to("/en/start"))
     end
 
     it "no longer asks which language to read in" do
@@ -140,14 +130,14 @@ RSpec.describe "The intro tour" do
       expect(Rails.application.routes.url_helpers).not_to(respond_to(:intro_language_path))
     end
 
-    it "leaves the reader on the guide when the tour ends" do
-      expect(Intro::Map.essential.last.path).to(eq("/help"))
+    it "lives on a page of its own rather than borrowing another" do
+      expect(Intro::Map.essential.map(&:path)).to(eq(["/intro"]))
     end
   end
 
   describe "the escape hatch" do
     it "lets everyone through when the gate is switched off" do
-      stand_on("search")
+      stand_on("overview")
       allow(Intro).to(receive(:gated?).and_return(false))
 
       get("/progress")
