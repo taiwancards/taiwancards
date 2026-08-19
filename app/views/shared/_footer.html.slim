@@ -1,7 +1,7 @@
 footer.border-t.border-border.text-muted-foreground class="mt-10"
   .mx-auto.w-full.max-w-3xl.px-4.pt-4.md:hidden
     .flex.justify-center
-      = render "shared/script_prefs", inside_app: authenticated?
+      = render "shared/script_prefs", inside_app: authenticated?, readings: true
   .mx-auto.w-full.max-w-3xl.px-4.pt-8.text-sm.flex.flex-wrap.items-center.gap-x-2.gap-y-1[
     class="pb-[calc(env(safe-area-inset-bottom)+5rem)] md:pb-8" ]
     span

@@ -6,7 +6,7 @@
   h1.text-2xl.font-bold.tracking-tight = t("nav.more")
 
   .flex.min-h-12.items-center.justify-center.rounded-xl.border.border-border.bg-card.px-3.py-2
-    = render "shared/script_prefs", inside_app: authenticated?
+    = render "shared/script_prefs", inside_app: authenticated?, readings: true
 
   - settings_entries.each do |entry|
     section.space-y-2 data-tour=entry[:tour]

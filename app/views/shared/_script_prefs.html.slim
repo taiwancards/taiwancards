@@ -1,14 +1,17 @@
 - inside_app = local_assigns.fetch(:inside_app, false)
 - compact = local_assigns.fetch(:compact, false)
 - language = local_assigns.fetch(:language, true)
+- readings = local_assigns.fetch(:readings, inside_app)
 - button_classes = "inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 - wide_classes = compact ? button_classes.sub("inline-flex", "hidden md:inline-flex") : button_classes
 
 .flex.items-center.rounded-lg.border.border-border data-tour="script-setup" title=t("nav.script_setup_hint")
   = render "shared/prefs/font", class: button_classes
 
-  - if inside_app
+  - if readings
     = render "shared/prefs/readings", class: button_classes
+
+  - if inside_app
     = render "shared/prefs/china", class: wide_classes
     = render "shared/prefs/detail", class: wide_classes
 

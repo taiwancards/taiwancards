@@ -19,6 +19,15 @@ module GrammarHelper
   /x
 
   PRACTICE = {"numbers" => :practice_numbers_path}.freeze
+  HEAD_SINGLE = {1 => "text-3xl", 2 => "text-xl", 3 => "text-base", 4 => "text-sm"}.freeze
+  HEAD_STACKED = {
+    [2, 1] => "text-lg",
+    [2, 2] => "text-sm",
+    [3, 1] => "text-base",
+    [3, 2] => "text-xs",
+    [4, 1] => "text-xs"
+  }.freeze
+  HEAD_SMALLEST = "text-xs"
 
   Head = Data.define(:text, :zhuyin, :entry) do
     def meaning(locale) = entry&.meaning(locale).presence
@@ -114,6 +123,13 @@ module GrammarHelper
     found = Lexeme.where(kind: %i[word collocation], text: words).index_by(&:text)
     singles = words.select { |word| word.length == 1 } - found.keys
     found.merge(Lexeme.where(kind: :character, text: singles).index_by(&:text))
+  end
+
+  def grammar_head_lines(lesson)
+    parts = lesson.heads.presence || [lesson.head.to_s]
+    return [parts, HEAD_SINGLE.fetch(parts.first.length, HEAD_SMALLEST)] if parts.one?
+
+    [parts, HEAD_STACKED.fetch([parts.size, parts.map(&:length).max], HEAD_SMALLEST)]
   end
 
   def grammar_level_tabs(levels, selected)

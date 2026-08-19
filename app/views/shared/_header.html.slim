@@ -41,7 +41,7 @@ header.sticky.top-0.z-40.border-b.border-border
         = link_to t("auth.login"), login_path, class: "inline-flex shrink-0 items-center rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
 
       .hidden.md:block
-        = render "shared/script_prefs", inside_app: authenticated?, compact: true
+        = render "shared/script_prefs", inside_app: authenticated?, readings: true, compact: true
 
       - if current_user&.admin?
         = link_to admin_users_path, class: "hidden size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:inline-flex", title: t("admin.console"), aria: {label: t("admin.console")} do
