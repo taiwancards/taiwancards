@@ -1,0 +1,15 @@
+- other = I18n.locale.to_s == "ru" ? :en : :ru
+- mark = capture do
+  span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
+    class="size-6 text-[10px] leading-none" ]
+    = I18n.locale.to_s.upcase
+
+- if authenticated?
+  = button_to locale_path(other, locale: nil), method: :post,
+    form: {class: "contents"}, class: local_assigns.fetch(:class),
+    title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+    = mark
+- else
+  = link_to Locales.swap(request.fullpath, other), class: local_assigns.fetch(:class),
+    title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
+    = mark

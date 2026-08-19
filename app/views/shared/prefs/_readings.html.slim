@@ -1,0 +1,7 @@
+button[ type="button" class=local_assigns.fetch(:class)
+  title=t("nav.readings_hint") aria-label=t("nav.readings_toggle")
+  data-controller="readings" data-action="readings#cycle readings:reflect->readings#reflect"
+  data-tour="pref-pinyin" ]
+  span.flex.items-baseline class="gap-px"
+    span.pref-mark-zhuyin lang="zh-TW" class="text-[15px] leading-none" ㄅ
+    span.pref-mark-pinyin class="text-[11px] leading-none" a

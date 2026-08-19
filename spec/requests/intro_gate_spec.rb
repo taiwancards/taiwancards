@@ -62,6 +62,16 @@ RSpec.describe "The intro tour" do
       expect(response).to(have_http_status(:ok))
     end
 
+    it "stops holding the reader the moment the page has been shown" do
+      stand_on("overview")
+      get("/intro")
+
+      expect(user.reload).to(be_intro_done)
+
+      get("/course")
+      expect(response).to(have_http_status(:ok))
+    end
+
     it "hides the setup strip it would otherwise nag with" do
       stand_on("overview")
       get("/desk")

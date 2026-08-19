@@ -2996,7 +2996,6 @@ en:
     keyboard_hint: "Tip: the 1-4 keys work too."
   intro:
     label: Getting started
-    label_whats_new: What's new
     click_target: Tap the highlighted item to continue.
     scroll_target: Look at the highlighted part, then tap Next.
     skip: Skip
@@ -3021,21 +3020,6 @@ en:
       replay_cta: Start the introduction
     page:
       title: Welcome to TaiwanCards
-      lede: >-
-        One page on what is here and where to start. Nothing to page through and nowhere to be sent: see
-        what is inside, open whatever is closest to you, and come back from the guide whenever you like.
-      start:
-        heading: Where to start
-        zero:
-          title: Starting from nothing
-          body: >-
-            Sounds and zhuyin first, then reading, then the rest. The route is laid out in order and ticks
-            itself off as you go — you just walk it.
-        reading:
-          title: I can already read a little
-          body: >-
-            Take the placement test and the system tunes itself to where you actually are: it picks what
-            to learn next and stops drilling what you already know.
       inside:
         heading: What is inside
         lede: >-
@@ -3044,67 +3028,56 @@ en:
       blocks:
         course:
           title: Textbook
-          body: >-
-            One coherent path from nothing to TOCFL B1. Every lesson is a real situation — the bank, the
-            clinic, renting a flat, the night market — with a dialogue, its words and grammar, exercises
-            that mark themselves, and a button that turns the lesson into a deck.
+          body: "One path from nothing to TOCFL B1: dialogue, words, grammar, exercises — and a lesson into a deck in one tap."
         dictionary:
           title: Dictionary
-          body: >-
-            Characters, words, sentences, collocations, idioms, measure words and radicals, each with its
-            own page: readings, meanings and examples from the corpus. TBCL and TOCFL level lists too.
+          body: Characters, words, sentences, idioms, measure words, radicals and level lists.
         search:
           title: Search
-          body: >-
-            Type it however suits you: characters, pinyin with or without tones, zhuyin, or just the
-            meaning in your own language. Characters, words and real sentences all come back.
+          body: By characters, pinyin, zhuyin, or simply the meaning in your language.
         decks:
           title: Cards
-          body: >-
-            A deck can be built from anything: a word list from class, song lyrics, an article. You never
-            type translations — they come from the dictionary. Spacing is handled for you.
+          body: A deck from a word list, a song or an article. You never type translations.
         grammar:
           title: Grammar
-          body: >-
-            Lessons that take a pattern apart with examples, graded by level, from the basics up to ones
-            that sit beyond the exam lists.
+          body: Patterns taken apart with examples, sorted by level.
         trainers:
           title: Trainers
-          body: >-
-            Pronunciation scored from your microphone, handwriting checked stroke by stroke, and drills
-            for zhuyin and tones.
+          body: Pronunciation from your microphone, handwriting, zhuyin and tones.
         taiwan:
           title: Taiwan
-          body: >-
-            The island's everyday vocabulary that textbooks leave out: renting, the clinic and the
-            pharmacy, food, transport, paperwork — and how Taiwanese Mandarin differs from China's.
+          body: The island's vocabulary that textbooks skip, and where it parts from China.
         reader:
           title: Text reader
-          body: >-
-            Paste any text and it is split into words, each one openable in the dictionary or sendable to
-            a deck. Handy for news, songs and whatever else you run into.
+          body: Paste any text — it splits into words, each one into the dictionary or a deck.
       figures:
         lessons: "lessons: %{value}"
         stages: "stages: %{value}"
         characters: "characters: %{value}"
         words: "words: %{value}"
         sentences: "sentences: %{value}"
-      display:
-        heading: What shows above the characters
-        body: >-
-          This panel drives the whole system at once: zhuyin above the characters, zhuyin together with
-          pinyin, or neither; the kai calligraphic face; whether China's variant sits beside ours; and how
-          far a dictionary entry unfolds.
-        hint: Press one — the page changes at once.
+      prefs:
+        heading: First, set how things are shown to you
+        lede: Press right here — the page changes at once, and the choice follows you everywhere.
+        readings:
+          title: Readings above the characters
+          body: Cycles zhuyin → zhuyin with pinyin → neither. Pinyin never shows on its own.
+        font:
+          title: The shape of the characters
+          body: Kai draws the strokes the way a hand writes them. Otherwise a plain face.
+        china:
+          title: China's variant alongside
+          body: On shows the Chinese word beside the Taiwanese one. Off keeps Taiwan only.
+        detail:
+          title: How much a dictionary entry shows
+          body: 詳 gives everything down to origin and thesaurus. 簡 keeps readings, meanings and a dozen examples.
       guide:
-        heading: If you want more detail
-        body: >-
-          The guide holds every section and every page. Any section can be walked with hints laid over the
-          interface, and they point at the page itself rather than at a menu. The guide lives under Profile.
-        cta: Open the guide
+        body: Every section and every page can be walked with hints laid over the interface —
+        cta: open the guide
       finish:
-        body: The rest is your studying. You can always open this page again from the guide.
-        cta: Got it, let me in
+        body: Next we pick where you should start.
+        body_known: The rest is your studying. You can open this page again from the guide.
+        cta: Next
     steps:
       overview:
         title: The introduction has changed

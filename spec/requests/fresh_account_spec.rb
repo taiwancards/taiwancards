@@ -50,7 +50,7 @@ RSpec.describe "Coming back after the account was deleted" do
 
     expect(fresh.prefs.keys.grep(/intro|path_steps|practice_runs/)).to(be_empty)
     expect(fresh.intro).to(be_pending)
-    expect(fresh.intro.unseen).to(be_empty)
+    expect(fresh.intro).not_to(be_required)
     expect(fresh.lexeme_memories).to(be_empty)
   end
 

@@ -5,6 +5,7 @@ class IntrosController < ApplicationController
     @blocks = Intro::Highlights.fetch
     @running = intro_progress&.required?
     @level_chosen = current_user.start_chosen?
+    intro_progress.finish! if @running
   end
 
   def start
@@ -30,12 +31,6 @@ class IntrosController < ApplicationController
   def rewind
     runner.rewind!
     back_to_step
-  end
-
-  def seen
-    session.delete(:intro_news_step)
-    intro_progress.acknowledge_new!
-    redirect_back(fallback_location: desk_path)
   end
 
   def chapter

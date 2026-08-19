@@ -65,18 +65,6 @@ module Intro
       nil
     end
 
-    def unseen
-      return [] unless user&.intro_done?
-
-      Map.newer_than(user.intro_seen_version)
-    end
-
-    def whats_new? = unseen.any?
-
-    def acknowledge_new!
-      user.update!(prefs: user.prefs.merge("intro_version" => Map.version))
-    end
-
     def chapter_done?(id) = user.intro_chapters.include?(id.to_s)
 
     def complete_chapter!(id)

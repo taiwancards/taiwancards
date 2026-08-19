@@ -5,53 +5,12 @@
 - wide_classes = compact ? button_classes.sub("inline-flex", "hidden md:inline-flex") : button_classes
 
 .flex.items-center.rounded-lg.border.border-border data-tour="script-setup" title=t("nav.script_setup_hint")
-  button[ type="button" class=button_classes
-    title=t("nav.hanzi_font_hint") aria-label=t("nav.hanzi_font_toggle")
-    data-controller="display-pref" data-action="display-pref#toggle display-pref:reflect->display-pref#reflect"
-    data-tour="pref-kai" data-display-pref-name-value="hanzi_font" data-display-pref-css-value="font-kai"
-    data-display-pref-on-value="kai" data-display-pref-off-value="sans" ]
-    span.pref-mark-kai.flex.items-center.justify-center.rounded-full.border.border-current[
-      lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
-      | 臺
+  = render "shared/prefs/font", class: button_classes
 
   - if inside_app
-    button[ type="button" class=button_classes
-      title=t("nav.readings_hint") aria-label=t("nav.readings_toggle")
-      data-controller="readings" data-action="readings#cycle readings:reflect->readings#reflect"
-      data-tour="pref-pinyin" ]
-      span.flex.items-baseline class="gap-px"
-        span.pref-mark-zhuyin lang="zh-TW" class="text-[15px] leading-none" ㄅ
-        span.pref-mark-pinyin class="text-[11px] leading-none" a
-
-    button[ type="button" class=wide_classes
-      title=t("nav.china_hint") aria-label=t("nav.china_toggle")
-      data-controller="display-pref" data-action="display-pref#toggle display-pref:reflect->display-pref#reflect"
-      data-tour="pref-china" data-display-pref-name-value="show_china" data-display-pref-css-value="show-china"
-      data-display-pref-on-value="1" data-display-pref-off-value="0" ]
-      span.pref-mark-china.flex.items-center.justify-center.rounded-full.border.border-current[
-        lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
-        | 陸
-
-    = button_to detail_pref_path(mode: detailed? ? "brief" : "full"), method: :post,
-      form: {class: "contents"}, data: {tour: "pref-detail"}, class: wide_classes,
-      title: t("nav.detail_hint"), aria: {label: t("nav.detail_toggle"), pressed: detailed?.to_s} do
-      span.flex.items-center.justify-center.rounded-full.border.border-current[
-        lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
-        = detailed? ? "詳" : "簡"
+    = render "shared/prefs/readings", class: button_classes
+    = render "shared/prefs/china", class: wide_classes
+    = render "shared/prefs/detail", class: wide_classes
 
   - if language
-    - other = I18n.locale.to_s == "ru" ? :en : :ru
-    - mark = capture do
-      span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
-        class="size-6 text-[10px] leading-none" ]
-        = I18n.locale.to_s.upcase
-
-    - if authenticated?
-      = button_to locale_path(other, locale: nil), method: :post,
-        form: {class: "contents"}, class: wide_classes,
-        title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
-        = mark
-    - else
-      = link_to Locales.swap(request.fullpath, other), class: wide_classes,
-        title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
-        = mark
+    = render "shared/prefs/language", class: wide_classes

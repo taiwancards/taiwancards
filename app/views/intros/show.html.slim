@@ -1,48 +1,42 @@
 - content_for(:title) { t("intro.page.title") }
+- row = "flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2"
+- control = "inline-flex size-10 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 
-.py-6.space-y-8 class="pb-40 md:pb-24"
-  header.space-y-3
-    h1.text-2xl.font-bold.tracking-tight = t("intro.page.title")
-    p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("intro.page.lede")
+.py-6.space-y-6 class="pb-40 md:pb-24"
+  h1.text-2xl.font-bold.tracking-tight = t("intro.page.title")
 
-  section.space-y-3
-    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("intro.page.start.heading")
-    .grid.gap-3 class="sm:grid-cols-2"
-      - %w[zero reading].each do |door|
-        = link_to onboarding_start_path, class: "block rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/60 hover:bg-muted" do
-          span.block.font-semibold = t("intro.page.start.#{door}.title")
-          span.mt-1.block.text-sm.leading-relaxed.text-muted-foreground = t("intro.page.start.#{door}.body")
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("intro.page.prefs.heading")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("intro.page.prefs.lede")
+    .grid.gap-2 class="lg:grid-cols-2"
+      - %w[readings font china detail].each do |name|
+        div class=row
+          = render "shared/prefs/#{name}", class: control
+          .min-w-0
+            .text-sm.font-semibold = t("intro.page.prefs.#{name}.title")
+            p.text-sm.leading-snug.text-muted-foreground = t("intro.page.prefs.#{name}.body")
 
-  section.space-y-3
+  section.space-y-2
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("intro.page.inside.heading")
-    p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("intro.page.inside.lede")
-    .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+    .grid.gap-2 class="sm:grid-cols-2 lg:grid-cols-4"
       - @blocks.each do |block|
-        = link_to Locales.swap(block.path, I18n.locale), class: "flex flex-col rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/60 hover:bg-muted" do
+        = link_to Locales.swap(block.path, I18n.locale), class: "flex flex-col rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/60 hover:bg-muted" do
           span.text-sm.font-semibold = t("intro.page.blocks.#{block.id}.title")
-          span.mt-1.flex-1.text-sm.leading-relaxed.text-muted-foreground = t("intro.page.blocks.#{block.id}.body")
+          span.mt-1.flex-1.text-sm.leading-snug.text-muted-foreground = t("intro.page.blocks.#{block.id}.body")
           - if block.figures.any?
-            span.mt-3.flex.flex-wrap.gap-1
+            span.mt-2.flex.flex-wrap class="gap-1"
               - block.figures.each do |name, value|
                 span.rounded-full.bg-muted.text-xs.text-muted-foreground class="px-2 py-0.5 tabular-nums"
-                  = t("intro.page.figures.#{name}", count: value, value: number_with_delimiter(value))
+                  = t("intro.page.figures.#{name}", value: number_with_delimiter(value))
 
-  section.space-y-3
-    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("intro.page.display.heading")
-    .rounded-2xl.border.border-border.bg-card.p-5.space-y-3
-      p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("intro.page.display.body")
-      .flex.flex-wrap.items-center.gap-3
-        = render "shared/script_prefs", inside_app: true, language: false
-        span.text-xs.text-muted-foreground = t("intro.page.display.hint")
-
-  section.space-y-3
-    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("intro.page.guide.heading")
-    .rounded-2xl.border.border-dashed.border-border.p-5.space-y-2 class="bg-muted/30"
-      p.text-sm.leading-relaxed.text-muted-foreground = t("intro.page.guide.body")
-      = link_to t("intro.page.guide.cta"), guide_path, class: "inline-flex rounded-xl border border-border bg-background px-4 py-2 text-sm font-semibold hover:bg-muted"
+  p.text-sm.leading-relaxed.text-muted-foreground
+    = t("intro.page.guide.body")
+    = " "
+    = link_to t("intro.page.guide.cta"), guide_path, class: "font-medium text-brand hover:underline"
 
   - if @running
     .sticky.z-30.flex.flex-wrap.items-center.gap-3.rounded-2xl.border.border-border.bg-background.p-4.shadow-lg class="bottom-20 md:bottom-4"
-      p.min-w-0.flex-1.text-sm.text-muted-foreground = t("intro.page.finish.body")
+      p.min-w-0.flex-1.text-sm.text-muted-foreground
+        = @level_chosen ? t("intro.page.finish.body_known") : t("intro.page.finish.body")
       = button_to t("intro.page.finish.cta"), intro_next_path, method: :post,
         class: "rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"

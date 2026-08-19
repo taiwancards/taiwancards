@@ -50,10 +50,6 @@ module Intro
 
       def all_steps = essential + chapters.flat_map(&:steps)
 
-      def newer_than(version)
-        essential.select { |step| step.version > version.to_i }
-      end
-
       def reset!
         @load = nil
         @data = nil

@@ -39,12 +39,12 @@ RSpec.describe "Intro tour" do
   end
 
   describe "a fresh account" do
-    it "is never handed the release notes it could not have missed" do
-      expect(user.intro.unseen).to(be_empty)
-
+    it "is asked whether it wants the introduction, not shown it unbidden" do
       get("/desk")
 
-      expect(response.body).not_to(include(CGI.escapeHTML(I18n.t("intro.label_whats_new"))))
+      expect(response).to(have_http_status(:ok))
+      expect(response.body).to(include(I18n.t("intro.setup.tour")))
+      expect(response.body).not_to(include("intro-tour"))
     end
 
     it "is offered the tour rather than pushed through it" do
@@ -53,29 +53,25 @@ RSpec.describe "Intro tour" do
     end
   end
 
-  describe "what is new" do
-    before do
-      user.intro.finish!
-      user.update!(prefs: user.prefs.merge("intro_version" => 0))
+  describe "someone who has already finished" do
+    before { user.intro.finish! }
+
+    it "is never shown the introduction again, whatever version they finished on" do
+      [0, 1, 2, Intro::Map.version].each do |stamp|
+        user.update!(prefs: user.prefs.merge("intro_version" => stamp))
+
+        get("/desk")
+
+        expect(response).to(have_http_status(:ok))
+        expect(response.body).not_to(include("intro-tour"))
+        expect(response.body).not_to(include(CGI.escapeHTML(I18n.t("intro.page.title"))))
+      end
     end
 
-    it "greets a finished user with the release notes instead of the tour" do
-      get("/desk")
+    it "is left alone on every other page too" do
+      get("/progress")
 
-      expect(response.body).to(include(CGI.escapeHTML(I18n.t("intro.label_whats_new"))))
-    end
-
-    it "can be dismissed" do
-      get("/desk")
-
-      expect(response.body).to(include(I18n.t("intro.skip")))
-    end
-
-    it "announces a release only once" do
-      post("/intro/seen")
-      get("/desk")
-
-      expect(response.body).not_to(include("intro-tour"))
+      expect(response).to(have_http_status(:ok))
     end
 
     it "shows nothing when the user is already on the current version" do

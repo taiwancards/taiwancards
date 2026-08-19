@@ -30,11 +30,11 @@ RSpec.describe Intro::Map do
 
   it "has no step pretending to be newer than the map itself" do
     expect(described_class.all_steps.map(&:version).max).to(be <= described_class.version)
-    expect(described_class.newer_than(described_class.version)).to(be_empty)
   end
 
-  it "announces the steps added since the previous release, and only those" do
-    expect(described_class.newer_than(described_class.version - 1).map(&:id)).to(eq(%w[overview]))
+  it "has no way to announce itself to someone who already finished" do
+    expect(described_class).not_to(respond_to(:newer_than))
+    expect(Intro::Progress.instance_methods).not_to(include(:unseen))
   end
 
   it "keeps the mandatory tour short enough to finish in a minute" do

@@ -21,8 +21,6 @@ module IntroHelper
     case view.mode
     when :essential
       t("intro.label")
-    when :whats_new
-      t("intro.label_whats_new")
     else
       t("intro.chapters.#{view.chapter}.title")
     end

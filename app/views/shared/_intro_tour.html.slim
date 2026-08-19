@@ -36,8 +36,7 @@
 
     .mt-4.flex.items-center.justify-between.gap-3
       - if view.skippable?
-        = button_to t("intro.skip"), (view.mode == :chapter ? intro_close_chapter_path : intro_seen_path),
-          method: (view.mode == :chapter ? :delete : :post),
+        = button_to t("intro.skip"), intro_close_chapter_path, method: :delete,
           class: "text-sm text-muted-foreground hover:text-foreground"
       - else
         = button_to t("intro.later"), intro_pause_path, method: :delete,

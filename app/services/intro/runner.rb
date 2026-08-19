@@ -18,7 +18,7 @@ module Intro
     end
 
     def call
-      essential || chapter || whats_new
+      essential || chapter
     end
 
     def chapter_steps
@@ -68,10 +68,8 @@ module Intro
       case view.mode
       when :essential
         offset.positive? ? progress.advance! : progress.rewind!
-      when :chapter
-        step_chapter(view.position + offset)
       else
-        step_news(view.position + offset)
+        step_chapter(view.position + offset)
       end
     end
 
@@ -79,23 +77,6 @@ module Intro
       return close_chapter!(completed: true) if index >= chapter_steps.length
 
       @session[:intro_chapter_step] = index.clamp(0, chapter_steps.length - 1)
-    end
-
-    def step_news(index)
-      pending = progress.unseen
-      if index >= pending.length
-        @session.delete(:intro_news_step)
-        return progress.acknowledge_new!
-      end
-
-      @session[:intro_news_step] = index.clamp(0, pending.length - 1)
-    end
-
-    def news_position
-      pending = progress.unseen
-      return 0 if pending.empty?
-
-      @session[:intro_news_step].to_i.clamp(0, pending.length - 1)
     end
 
     def progress = @user.intro
@@ -126,14 +107,6 @@ module Intro
         length: steps.length,
         chapter: @session[:intro_chapter]
       )
-    end
-
-    def whats_new
-      pending = progress.unseen
-      return nil if pending.empty?
-
-      position = news_position
-      View.new(mode: :whats_new, step: pending[position], position:, length: pending.length, chapter: nil)
     end
   end
 end

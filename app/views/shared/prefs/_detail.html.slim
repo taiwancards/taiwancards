@@ -1,0 +1,6 @@
+= button_to detail_pref_path(mode: detailed? ? "brief" : "full"), method: :post,
+  form: {class: "contents"}, data: {tour: "pref-detail"}, class: local_assigns.fetch(:class),
+  title: t("nav.detail_hint"), aria: {label: t("nav.detail_toggle"), pressed: detailed?.to_s} do
+  span.flex.items-center.justify-center.rounded-full.border.border-current[
+    lang="zh-TW" class="size-6 text-[13px] font-light leading-none" ]
+    = detailed? ? "詳" : "簡"
