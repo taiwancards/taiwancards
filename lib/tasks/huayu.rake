@@ -220,22 +220,55 @@ namespace(:huayu) do
     )
     task(open: :environment) do
       started = RakeProgress.clock
-      steps = ["lang:zh_tw:fetch_open", "huayu:import_characters", "huayu:import_tbcl", "huayu:import_tocfl", "huayu:import_frequency", "huayu:import_cangjie", "huayu:enrich_characters", "huayu:import_radicals", "huayu:enrich_cedict", "huayu:import_readings", "huayu:enrich_ru", "huayu:enrich_gloss_overrides", "huayu:import_everyday", "huayu:import_medicine", "huayu:import_common_words", "huayu:compute_difficulty", "huayu:reorder_readings", "huayu:normalize_readings", "huayu:rebuild_search", "huayu:flag_restricted"]
+      steps = [
+        "lang:zh_tw:fetch_open",
+        "huayu:import_characters",
+        "huayu:import_tbcl",
+        "huayu:import_tocfl",
+        "huayu:import_frequency",
+        "huayu:import_cangjie",
+        "huayu:enrich_characters",
+        "huayu:import_radicals",
+        "huayu:enrich_cedict",
+        "huayu:import_readings",
+        "huayu:enrich_ru",
+        "huayu:enrich_gloss_overrides",
+        "huayu:import_everyday",
+        "huayu:import_medicine",
+        "huayu:import_games",
+        "huayu:import_common_words",
+        "huayu:compute_difficulty",
+        "huayu:reorder_readings",
+        "huayu:normalize_readings",
+        "huayu:rebuild_search",
+        "huayu:flag_restricted"
+      ]
       RakeProgress.banner("Taiwan Huayu · open data", steps.size)
       steps.each_with_index do |name, index|
         RakeProgress.step(index + 1, steps.size, name) { Rake::Task[name].invoke }
       end
+
       RakeProgress.finish("huayu:build:open", started)
     end
 
     desc("Add the restricted (license-violating) Textbook lessons, vocabulary and scraped audio on top (idempotent)")
     task(restricted: :environment) do
       started = RakeProgress.clock
-      steps = ["textbook:download_audio", "textbook:load", "textbook:import_lexemes", "textbook:enrich_vocab_ru", "huayu:reorder_readings", "huayu:normalize_readings", "huayu:rebuild_search", "huayu:flag_restricted"]
+      steps = [
+        "textbook:download_audio",
+        "textbook:load",
+        "textbook:import_lexemes",
+        "textbook:enrich_vocab_ru",
+        "huayu:reorder_readings",
+        "huayu:normalize_readings",
+        "huayu:rebuild_search",
+        "huayu:flag_restricted"
+      ]
       RakeProgress.banner("Textbook materials", steps.size)
       steps.each_with_index do |name, index|
         RakeProgress.step(index + 1, steps.size, name) { Rake::Task[name].invoke }
       end
+
       RakeProgress.finish("huayu:build:restricted", started)
     end
 
@@ -251,29 +284,35 @@ namespace(:huayu) do
   end
 end
 
-namespace :huayu do
-  desc "Import Taiwan everyday and slang vocabulary"
-  task import_everyday: :environment do
+namespace(:huayu) do
+  desc("Import Taiwan everyday and slang vocabulary")
+  task(import_everyday: :environment) do
     result = Huayu::TaiwanEverydayImporter.new.call
     puts("Taiwan everyday: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
   end
 
-  desc "Import Taiwan medicine, anatomy and hospital vocabulary"
-  task import_medicine: :environment do
+  desc("Import Taiwan medicine, anatomy and hospital vocabulary")
+  task(import_medicine: :environment) do
     result = Huayu::MedicineImporter.new.call
     puts("Taiwan medicine: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
   end
 
-  desc "Import the everyday vocabulary that song lyrics rely on"
-  task import_song_vocabulary: :environment do
+  desc("Import Taiwan board game, mahjong, xiangqi and go vocabulary")
+  task(import_games: :environment) do
+    result = Huayu::GamesImporter.new.call
+    puts("Taiwan games: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
+  end
+
+  desc("Import the everyday vocabulary that song lyrics rely on")
+  task(import_song_vocabulary: :environment) do
     result = Huayu::SongVocabularyImporter.new.call
     puts("song vocabulary: #{result.imported} imported, #{result.skipped} skipped")
   end
 end
 
-namespace :huayu do
-  desc "Recompute the difficulty score for every character, word and phrase"
-  task compute_difficulty: :environment do
+namespace(:huayu) do
+  desc("Recompute the difficulty score for every character, word and phrase")
+  task(compute_difficulty: :environment) do
     started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     RakeProgress.banner("Difficulty", 1)
     updated = RakeProgress.step(1, 1, "scoring lexemes") { Lexemes::Difficulty.new.call }
@@ -282,17 +321,17 @@ namespace :huayu do
   end
 end
 
-namespace :huayu do
-  desc "Recount the dictionary numbers shown on the landing page"
-  task refresh_landing: :environment do
+namespace(:huayu) do
+  desc("Recount the dictionary numbers shown on the landing page")
+  task(refresh_landing: :environment) do
     Site::Counts.reset!
     RakeProgress.report(**Site::Counts.fetch)
   end
 end
 
-namespace :huayu do
-  desc "Import the drill phrases from data/huayu/phrase_drills.txt and rescore difficulty (idempotent, offline)"
-  task import_phrase_drills: :environment do
+namespace(:huayu) do
+  desc("Import the drill phrases from data/huayu/phrase_drills.txt and rescore difficulty (idempotent, offline)")
+  task(import_phrase_drills: :environment) do
     pp(Huayu::PhraseDrillsImporter.new.call)
     pp(Huayu::PhraseLevels.new.call)
     pp(rescored: Lexemes::Difficulty.new.call)

@@ -28,6 +28,7 @@ module Site
       /phrases
       /notices
       /medicine
+      /games
       /calendar
       /metro
       /variants

@@ -1,0 +1,64 @@
+- content_for(:title) { t("games.title") }
+
+.py-6.space-y-6
+  = render("shared/page_help", key: "games", title: t("games.title"))
+
+  - if @active.nil?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("games.empty")
+
+  - else
+    .flex.flex-wrap.gap-1.rounded-lg.border.border-border.bg-muted.p-1
+      - @boards.each do |name|
+        - active = name == @active
+        = link_to games_path(game: name),
+          class: "rounded-md px-3 py-1 text-sm font-medium transition-colors #{active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-background"}" do
+          = t("games.boards.#{name}")
+          span.ml-1 class="text-[11px] opacity-70" = @counts[name]
+
+    .rounded-xl.border.border-border.bg-card.p-4.space-y-2.text-sm.leading-relaxed
+      h2.text-base.font-semibold = t("games.leads.#{@active}.title")
+      p.text-muted-foreground = t("games.leads.#{@active}.body")
+      p.text-xs.text-muted-foreground = t("games.leads.#{@active}.note")
+
+    .space-y-2
+      - @sections.each_with_index do |(category, lexemes), index|
+        details.rounded-xl.border.border-border open=index.zero?
+          summary.flex.cursor-pointer.list-none.items-baseline.gap-x-2.px-3.py-2 class="[&::-webkit-details-marker]:hidden hover:bg-muted/40"
+            h3.text-sm.font-semibold.uppercase.tracking-wide = t("games.categories.#{category}")
+            span.ml-auto.shrink-0.rounded-full.px-2.text-xs.text-muted-foreground class="py-0.5 bg-muted"
+              = lexemes.size
+          .grid.border-t.border-border.p-2 class="gap-1.5 sm:grid-cols-2 xl:grid-cols-3"
+            - lexemes.each do |lexeme|
+              = render("word", lexeme:)
+
+    .flex.flex-wrap.items-center.gap-x-3.gap-y-1.text-xs.text-muted-foreground
+      - [[t("everyday.tier_core"), "bg-brand"], [t("everyday.taiwan_marked"), "bg-emerald-500"]].each do |label, tone|
+        span.inline-flex.items-center class="gap-1.5"
+          span.inline-block.rounded-full class="size-[5px] #{tone}"
+          = label
+
+    - if current_user
+      .relative.flex.justify-end data-controller="menu"
+        button.inline-flex.items-center.gap-1.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.transition-colors[
+          type="button" data-action="menu#toggle" class="hover:bg-muted"
+          title=t("everyday.make_deck", count: @lexemes.size) aria-label=t("everyday.make_deck_button") ]
+          span.text-sm.leading-none aria-hidden="true" +
+          span = t("everyday.make_deck_button")
+
+        .absolute.right-0.top-full.z-50.hidden.mt-1.rounded-xl.border.border-border.bg-background.p-4.shadow-xl[
+          class="w-[min(22rem,88vw)]" data-menu-target="panel" ]
+          = form_with url: desks_path, method: :post, class: "space-y-3" do |form|
+            p.text-sm.font-medium = t("everyday.make_deck", count: @lexemes.size)
+            p.text-xs.text-muted-foreground = t("everyday.make_deck_hint")
+
+            - @lexemes.each do |lexeme|
+              = hidden_field_tag "lexeme_ids[]", lexeme.id, id: nil
+
+            = text_field_tag :name, t("games.boards.#{@active}"), class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+            = render("shared/facet_picker", scope: "games")
+
+            .flex.flex-wrap.gap-2
+              = form.submit t("everyday.make_deck_button"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
+              - if @collection.present?
+                = link_to t("everyday.study"), study_path(mode: "collection", collection_id: @collection.id),
+                  class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"

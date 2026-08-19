@@ -367,6 +367,7 @@ en:
     metro: Taipei metro
     calendar: Festivals & calendar
     medicine: Medicine & hospitals
+    games: Board games
     sounds_drill: Zhuyin ↔ pinyin
     group_learn: My study
     group_dictionary: Dictionary
@@ -2662,6 +2663,55 @@ en:
       hand: back of the hand
       back: from behind
       foot: the foot
+  games:
+    title: "Board games in Taiwan"
+    empty: "The board game collection has not been imported yet."
+    boards:
+      mahjong: "Mahjong"
+      mcr: "Chinese official"
+      xiangqi: "Xiangqi"
+      go: "Go"
+      tabletop: "Board and card games"
+    leads:
+      mahjong:
+        title: "Taiwanese mahjong"
+        body: "The sixteen-tile game is Taiwanese, not pan-Chinese. A hand is five sets plus a pair, pattern points add up in tai rather than multiplying, the eight flower tiles score on their own, and the profit of an evening rests on the dealer's streak. There is no minimum: a hand worth zero tai still wins."
+        note: "This is terminology and what the words mean, not a rulebook."
+      mcr:
+        title: "Chinese official mahjong"
+        body: "The sporting rules adopted in China in 1998. Thirteen tiles, 81 patterns and an eight-point threshold: a cheaper hand is not a win at all. The scoring unit is the fan rather than the tai, and many of its patterns are simply unknown at a Taiwanese table."
+        note: "Taiwan plays these rules at tournaments and its own at home."
+      xiangqi:
+        title: "Xiangqi, Chinese chess"
+        body: "The pieces stand on the intersections of the lines, not inside squares. The general and advisors never leave the palace, the elephant never crosses the river, the horse is blocked by an adjacent piece, and the cannon captures only across a mount. Stalemate loses, and perpetual check is forbidden."
+        note: "Red and Black write the same pieces with different characters."
+      go:
+        title: "Go, also called weiqi"
+        body: "Go and weiqi are one game: 圍棋 means the surrounding game, Japanese calls it go, and Taiwan uses both words. Stones are placed on intersections and never moved, a group with two real eyes lives, and Taiwan counts by area rather than by territory."
+        note: "Many terms came from Japanese but are written with their own characters."
+      tabletop:
+        title: "Board games, cards and street games"
+        body: "Modern board games are called 桌遊 in Taiwan and are played in pay-by-the-hour game cafes. Beside them lives a local card canon: 大老二, 十三支, 心臟病, and the street game 暗棋, blind xiangqi on half a board."
+        note: "It also holds the words you need at any table: turns, scoring, chips, drawing for seats."
+    categories:
+      game: "The games themselves"
+      board: "The board"
+      piece: "Tiles, pieces and stones"
+      equipment: "Equipment and venue"
+      roles: "Seats and roles"
+      procedure: "How a game runs"
+      meld: "Sets"
+      call: "Calls and claims"
+      wait: "Waits"
+      scoring: "Scoring units"
+      pattern: "Patterns"
+      tactic: "Tactics"
+      opening: "The opening"
+      endgame: "The endgame"
+      strategy: "Strategy"
+      rule: "Rules"
+      rank: "Ranks"
+      talk: "What players say"
   calendar:
     title: Festivals and the lunar calendar
     year_label: Year
@@ -2812,6 +2862,7 @@ en:
       and the card at the top shows its zhuyin, pinyin and meaning; from there you can open the full dictionary
       entry or add it to a deck.</p><p>Hollow dots are interchanges — the card lists every line that station
       belongs to. The layout is deliberately schematic rather than geographic.</p>
+    games_html: "<p>The vocabulary of Taiwanese mahjong, Chinese official mahjong, xiangqi, go and board games, each word explained by what it does inside the game. This is not a rulebook: the aim is to follow the talk at the table and to read signs, apps and streams.</p><p>The tabs split the vocabulary by game and, inside each, by role: tiles and pieces, how a game runs, calls, patterns, strategy, what players say. A green dot marks what is said differently outside Taiwan, and where China uses another word it is shown beside the entry. Meanings are checked against the Ministry of Education dictionary, the Taiwanese sixteen-tile rules and the 1998 Chinese official rules.</p>"
     medicine_html: >-
       <p>Western medicine as Taiwan actually speaks it: the body and the organs, the diseases a doctor
       names and the words a family uses at home, the vaccines on the CDC schedule, and the signs you follow

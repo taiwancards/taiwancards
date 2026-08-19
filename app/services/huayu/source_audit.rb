@@ -11,6 +11,7 @@ module Huayu
       huayu/collocation_glosses.jsonl
       huayu/common_words.json
       huayu/corpus_frequency.json
+      huayu/games.json
       huayu/gloss_overrides.json
       huayu/kangxi_radicals.json
       huayu/china_markers.json

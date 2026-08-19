@@ -1,0 +1,28 @@
+- lexeme = local_assigns.fetch(:lexeme)
+- audio = audio_for(lexeme)
+- data = lexeme.data
+- note = data.dig("note", I18n.locale.to_s)
+- marks = []
+- marks << [t("everyday.tier_core"), "bg-brand"] if data.dig("game", "tier").to_i == 1
+- marks << [t("everyday.taiwan_marked"), "bg-emerald-500"] if data["taiwan_only"]
+
+.flex.items-start.gap-1.rounded-lg.border.border-border.px-2.py-1.transition-colors class="hover:bg-muted/40"
+  = link_to dict_entry_path(lexeme.text), class: "min-w-0 flex-1" do
+    .flex.flex-wrap.items-baseline.gap-x-2
+      span.font-semibold.leading-tight lang="zh-TW" class="text-[17px]" = lexeme.text
+      span.zhuyin.leading-tight.text-brand lang="zh-TW" class="text-[11px]" = lexeme.readings["zhuyin"]
+      span.pinyin.leading-tight.text-muted-foreground class="text-[10px]" = lexeme.readings["pinyin"]
+      - marks.each do |label, tone|
+        span.inline-block.shrink-0.rounded-full class="size-[5px] #{tone}" title=label
+    p.leading-snug class="text-[12px]" = lexeme.meaning
+    - if note.present?
+      p.leading-snug.text-muted-foreground class="text-[11px]" = note
+    - if data["china"].present?
+      span.china-note.leading-snug.text-muted-foreground class="text-[10px]"
+        => t("everyday.china_says")
+        span lang="zh-TW" = data["china"]
+
+  .flex.shrink-0.items-center
+    = render("shared/speak", audio:, size: :sm)
+    - if current_user
+      = render("shared/quick_add", lexeme:, compact: true)

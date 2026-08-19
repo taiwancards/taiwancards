@@ -33,6 +33,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/medicine_importer.rb app/services/lexemes/upserter.rb]
     },
     {
+      name: "games",
+      task: "huayu:import_games",
+      paths: %w[huayu/games.json],
+      code: %w[app/services/huayu/games_importer.rb app/services/lexemes/upserter.rb]
+    },
+    {
       name: "grammar",
       task: "huayu:import_grammar",
       paths: %w[huayu/grammar_lessons.json],
@@ -65,7 +71,7 @@ namespace(:deploy) do
     {
       name: "difficulty",
       task: "huayu:compute_difficulty",
-      paths: %w[huayu/taiwan_everyday.json huayu/medicine.json huayu/moe_idioms.json],
+      paths: %w[huayu/taiwan_everyday.json huayu/medicine.json huayu/games.json huayu/moe_idioms.json],
       code: %w[app/services/lexemes/difficulty.rb]
     },
     {
@@ -269,7 +275,8 @@ namespace(:deploy) do
     Huayu::LiangciImporter
     Huayu::ThesaurusImporter
     Lexemes::RegisterMix
-  ].freeze
+  ]
+    .freeze
 
   STEP_TIMER = lambda do |name, &block|
     $stdout.puts("deploy:sync → #{name}")
@@ -332,6 +339,7 @@ namespace(:deploy) do
           Site::Counts.warm!
           Pronunciation::SyllableIndex.for
         end
+
         ran << "derived_caches"
       rescue => e
         failed << "derived_caches (#{e.class})"

@@ -140,6 +140,7 @@ Rails.application.routes.draw do
     get("notices", to: "notices#index", as: :notices)
     get("calendar", to: "calendar#show", as: :calendar)
     get("medicine", to: "medicine#show", as: :medicine)
+    get("games", to: "games#show", as: :games)
     get("variants", to: "variants#show", as: :variants)
     get("metro", to: "metro#show", as: :metro)
     get("radicals", to: "radicals#index", as: :radicals)

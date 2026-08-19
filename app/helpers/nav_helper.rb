@@ -105,7 +105,8 @@ module NavHelper
       [:book, t("nav.notices"), notices_path],
       [:desk, t("nav.metro"), metro_path],
       [:book, t("nav.calendar"), calendar_path],
-      [:health, t("nav.medicine"), medicine_path]
+      [:health, t("nav.medicine"), medicine_path],
+      [:desk, t("nav.games"), games_path]
     ]
   end
 

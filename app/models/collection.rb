@@ -10,7 +10,7 @@ class Collection < ApplicationRecord
   has_many :collection_group_items, dependent: :delete_all, inverse_of: :collection
   has_many :groups, through: :collection_group_items, source: :collection_group
 
-  enum :kind, {manual: 0, lesson: 1, tocfl: 2, phrases: 3, everyday: 4, medicine: 5}
+  enum :kind, {manual: 0, lesson: 1, tocfl: 2, phrases: 3, everyday: 4, medicine: 5, games: 6}
 
   validates :name, presence: true, length: {maximum: 200}, uniqueness: {scope: :user_id}
 
