@@ -14,6 +14,9 @@
             .min-w-0.flex-1
               .flex.items-center.gap-2
                 span.truncate.text-sm.font-medium = search_reading(lexeme, @query)
+                - taigi = search_taigi_reading(lexeme, @query)
+                - if taigi.present?
+                  span.shrink-0.text-xs.font-medium.text-brand title=t("words.taigi_say") = taigi
                 span.shrink-0.rounded.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground class="px-1.5 py-0.5" = lexeme_kind_label(lexeme)
               - if lexeme.meaning.present?
                 .truncate.text-sm.text-muted-foreground = lexeme.meaning

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module SearchHelper
+  NATIVE_TAIGI = "native"
+
   def lexeme_search_path(lexeme)
     case lexeme.kind.to_sym
     when :character
@@ -27,6 +29,17 @@ module SearchHelper
     return reading["pinyin"].presence || reading["zhuyin"] if search_source(query) == :pinyin
 
     reading["zhuyin"].presence || reading["pinyin"]
+  end
+
+  def search_taigi_reading(lexeme, query = nil)
+    hokkien = lexeme.data["hokkien"]
+    return nil unless hokkien.is_a?(Hash) && hokkien["reading"] == NATIVE_TAIGI
+
+    say = hokkien["say"]
+    return nil unless say.is_a?(Hash)
+    return say["pinyin"].presence || say["zhuyin"] if search_source(query) == :pinyin
+
+    say["zhuyin"].presence || say["pinyin"]
   end
 
   def search_query_param(query)

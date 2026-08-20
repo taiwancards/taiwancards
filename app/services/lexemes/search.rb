@@ -10,9 +10,10 @@ module Lexemes
     TONED = 1
     PARTIAL = 2
     PLAIN = 3
-    PREFIX = 4
-    MEANING = 5
-    FUZZY = 6
+    HOKKIEN = 4
+    PREFIX = 5
+    MEANING = 6
+    FUZZY = 7
 
     Result = Data.define(:lexeme, :tier)
 
@@ -51,6 +52,7 @@ module Lexemes
         end
       end
 
+      return HOKKIEN if hokkien_hit?(lexeme, parsed)
       return PREFIX if parsed.han? && lexeme.text.start_with?(parsed.raw)
       return MEANING if meaning_hit?(lexeme, parsed)
       return FUZZY if parsed.han?
@@ -149,6 +151,20 @@ module Lexemes
       @numbered[lexeme.id] ||= lexeme
         .reading_set
         .filter_map { |reading| Huayu::ReadingForms.numbered_pinyin(reading["pinyin"]).presence }
+    end
+
+    def hokkien_forms(lexeme)
+      @hokkien ||= {}
+      @hokkien[lexeme.id] ||= Huayu::ReadingForms.hokkien_terms(lexeme.data["hokkien"]).to_set
+    end
+
+    def hokkien_hit?(lexeme, parsed)
+      forms = hokkien_forms(lexeme)
+      return false if forms.empty?
+      return true if parsed.reading? && forms.intersect?(parsed.tokens.to_set)
+
+      letters = Huayu::ReadingForms.latin_letters(parsed.lower)
+      letters.present? && forms.include?(letters)
     end
 
     def tones_agree?(lexeme, parsed)

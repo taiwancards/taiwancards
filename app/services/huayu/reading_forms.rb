@@ -121,12 +121,36 @@ module Huayu
     end
 
     READING_MARK = "="
+    COMBINING = /\p{Mn}/
 
     def reading_token(form)
       "#{READING_MARK}#{form}"
     end
 
-    def search_bag(text:, readings:, meanings:)
+    def unmarked(text)
+      text.to_s.unicode_normalize(:nfd).gsub(COMBINING, "")
+    end
+
+    def latin_letters(text)
+      unmarked(text).downcase.gsub(/[^a-z]/, "")
+    end
+
+    def romanized_terms(romanization)
+      text = romanization.to_s.downcase.strip
+      return [] if text.blank?
+
+      [text, text.delete("-"), unmarked(text), latin_letters(text)].compact_blank.uniq
+    end
+
+    def hokkien_terms(hokkien)
+      return [] unless hokkien.is_a?(Hash)
+
+      say = hokkien["say"]
+      spoken = say.is_a?(Hash) ? reading_terms(say["pinyin"], say["zhuyin"]) : []
+      (spoken + romanized_terms(hokkien["tailo"])).compact_blank.uniq
+    end
+
+    def search_bag(text:, readings:, meanings:, hokkien: nil)
       terms = [text]
       Array(readings).each do |reading|
         pinyin = reading["pinyin"].to_s
@@ -135,6 +159,8 @@ module Huayu
 
         terms.concat(reading_terms(pinyin, zhuyin).compact_blank.map { |form| reading_token(form) })
       end
+
+      terms.concat(hokkien_terms(hokkien).map { |form| reading_token(form) })
 
       Array(meanings).each { |meaning| terms << meaning.to_s.downcase.gsub(%r{[;,/()\[\].!?]+}, " ") }
       terms.map(&:strip).reject(&:blank?).uniq.join(" ")

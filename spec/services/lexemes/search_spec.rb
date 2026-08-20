@@ -139,4 +139,92 @@ RSpec.describe Lexemes::Search do
       expect(texts("a")).to(include("啊"))
     end
   end
+
+  describe "words borrowed from Taiwanese Hokkien" do
+    it "finds a word by the way Taiwanese Hokkien says it, not by its characters" do
+      create(
+        :lexeme,
+        kind: :word,
+        text: "歹勢",
+        score: 40,
+        readings: {"pinyin" => "dǎishì", "zhuyin" => "ㄉㄞˇ ㄕˋ"},
+        meanings: {"en" => "sorry"},
+        data: {
+          "readings" => [{"pinyin" => "dǎishì", "zhuyin" => "ㄉㄞˇ ㄕˋ"}],
+          "hokkien" => {
+            "tailo" => "pháinn-sè",
+            "reading" => "native",
+            "say" => {"zhuyin" => "ㄆㄞˋ ㄙㄝˋ", "pinyin" => "pài sè"}
+          }
+        }
+      )
+
+      [
+        "paise",
+        "pài sè",
+        "pai4se4",
+        "ㄆㄞˋㄙㄝˋ",
+        "ㄆㄞㄙㄝ",
+        "pháinn-sè",
+        "phainn-se",
+        "phainnse",
+        "dǎishì"
+      ].each do |query|
+        expect(texts(query)).to(include("歹勢"), "expected #{query} to find 歹勢")
+      end
+    end
+
+    it "finds a word whose Hokkien sound is not a Mandarin syllable at all" do
+      create(
+        :lexeme,
+        kind: :word,
+        text: "囝仔",
+        score: 60,
+        readings: {"pinyin" => "jiǎnzǐ", "zhuyin" => "ㄐㄧㄢˇ ㄗˇ"},
+        meanings: {"en" => "child"},
+        data: {
+          "readings" => [{"pinyin" => "jiǎnzǐ", "zhuyin" => "ㄐㄧㄢˇ ㄗˇ"}],
+          "hokkien" => {
+            "tailo" => "gín-á",
+            "reading" => "native",
+            "say" => {"zhuyin" => "ㄍㄧㄣˇ ㄚˋ", "pinyin" => "gǐn à"}
+          }
+        }
+      )
+
+      ["gina", "gǐn à", "gin-a", "gín-á"].each do |query|
+        expect(texts(query)).to(include("囝仔"), "expected #{query} to find 囝仔")
+      end
+    end
+
+    it "keeps a Hokkien sound below a word that really reads that way in Mandarin" do
+      create(
+        :lexeme,
+        kind: :word,
+        text: "派色",
+        score: 5,
+        readings: {"pinyin" => "pàisè", "zhuyin" => "ㄆㄞˋ ㄙㄝˋ"},
+        meanings: {"en" => "a made-up test word"},
+        data: {"readings" => [{"pinyin" => "pàisè", "zhuyin" => "ㄆㄞˋ ㄙㄝˋ"}]}
+      )
+      create(
+        :lexeme,
+        kind: :word,
+        text: "歹勢",
+        score: 1,
+        readings: {"pinyin" => "dǎishì", "zhuyin" => "ㄉㄞˇ ㄕˋ"},
+        meanings: {"en" => "sorry"},
+        data: {
+          "readings" => [{"pinyin" => "dǎishì", "zhuyin" => "ㄉㄞˇ ㄕˋ"}],
+          "hokkien" => {
+            "tailo" => "pháinn-sè",
+            "reading" => "native",
+            "say" => {"zhuyin" => "ㄆㄞˋ ㄙㄝˋ", "pinyin" => "pài sè"}
+          }
+        }
+      )
+
+      expect(texts("paise").index("派色")).to(be < texts("paise").index("歹勢"))
+    end
+  end
 end

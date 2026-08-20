@@ -229,6 +229,13 @@ namespace(:deploy) do
       $stdout.puts(repair.call.to_s)
       :ran
     },
+    "hokkien_search" => -> {
+      index = Lexemes::HokkienIndex.new
+      next :skipped unless index.drift?
+
+      $stdout.puts(index.call.to_s)
+      :ran
+    },
     "admin_rights" => -> {
       result = Accounts::Owner.new.call
       next :skipped unless result.changed?

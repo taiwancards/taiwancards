@@ -129,7 +129,8 @@ class Lexeme < ApplicationRecord
     self.search_text = Huayu::ReadingForms.search_bag(
       text: text,
       readings: reading_set,
-      meanings: meanings.values
+      meanings: meanings.values,
+      hokkien: data["hokkien"]
     )
   end
 
