@@ -18,6 +18,12 @@
         - reading = zhuyin.present? ? @profile.pinyin_label : @profile.reading_label
         - if reading.present?
           .text-base.font-medium.text-muted-foreground class=(zhuyin.present? ? "pinyin" : nil) = reading
+        - taigi_reading = lexeme.data.dig("hokkien", "say") if lexeme.data.dig("hokkien", "reading") == "native"
+        - if taigi_reading.present?
+          .flex.flex-wrap.items-baseline.gap-x-2.rounded-lg.border.px-2.py-1 class="border-brand/40 bg-brand/5"
+            span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("words.taigi_say")
+            span.zhuyin.text-base.font-medium.text-brand lang="zh-TW" = taigi_reading["zhuyin"]
+            span.pinyin.text-sm.text-muted-foreground = taigi_reading["pinyin"]
         - if @profile.show_flat_meaning? && @profile.meaning.present?
           p.text-base = @profile.meaning
         = render("shared/short_form", lexeme:)
@@ -79,13 +85,18 @@
 
   - hokkien = lexeme.data["hokkien"]
   - if hokkien.present?
-    p.text-sm.text-muted-foreground
-      span.font-medium = t("words.hokkien_source")
-      = " "
-      - if hokkien["hanzi"].present? && hokkien["hanzi"] != lexeme.text
-        span.text-foreground lang="nan-TW" = hokkien["hanzi"]
-        = " "
-      span.italic = hokkien["tailo"]
+    .space-y-2.rounded-xl.border.border-border.p-3.text-sm
+      .flex.flex-wrap.items-baseline.gap-x-2
+        span.font-medium = t("words.hokkien_source")
+        - if hokkien["hanzi"].present? && hokkien["hanzi"] != lexeme.text
+          span.text-foreground lang="nan-TW" = hokkien["hanzi"]
+        span.italic.text-muted-foreground = hokkien["tailo"]
+
+      - case hokkien["reading"]
+      - when "native"
+        p.leading-relaxed.text-muted-foreground = t("words.taigi_native")
+      - when "phonetic"
+        p.leading-relaxed.text-muted-foreground = t("words.taigi_phonetic")
 
   - everyday_note = lexeme.data.dig("note", I18n.locale.to_s).presence
   - if everyday_note

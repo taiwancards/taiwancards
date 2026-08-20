@@ -113,7 +113,7 @@ en:
     zhuyin: zhuyin
     pinyin: pinyin
     putonghua: Putonghua
-    hokkien: Hokkien
+    hokkien: Taiwanese Hokkien
     hanzi: traditional characters
   glossary:
     fsrs: "A spaced-repetition algorithm: from your own ratings it predicts the moment you are about to forget a card, and shows it then."
@@ -122,7 +122,7 @@ en:
     zhuyin: Taiwan's phonetic alphabet, ㄅㄆㄇㄈ. Children learn it instead of pinyin, and it is how people type.
     pinyin: Writing Mandarin syllables in Latin letters. Primary in China, a secondary aid in Taiwan.
     putonghua: The standard variety of Mandarin in China.
-    hokkien: Taiwanese Southern Min, spoken by a large share of Taiwan's population.
+    hokkien: Taiwanese Hokkien, a Southern Min language spoken by a large share of Taiwan's population. It is a separate language, not a dialect of Mandarin.
     hanzi: The full character forms kept in Taiwan, Hong Kong and Macau, as opposed to the simplified set used in China.
   locales:
     en: English
@@ -1274,6 +1274,9 @@ en:
     words_count: "%{count} in the dictionary"
   words:
     hokkien_source: "Taiwanese Hokkien:"
+    taigi_native: "The characters are not read the Mandarin way: this is how the word is written in Taiwanese Hokkien, and that is the language it is spoken in. The approximate Mandarin sound is shown beside the headword."
+    taigi_phonetic: "The characters were picked for their sound, not their meaning: read them with their ordinary Mandarin readings and the Taiwanese Hokkien word comes out. What the characters themselves mean does not matter."
+    taigi_say: "Sounds roughly like"
     no_corpus: no written data
     no_corpus_hint: "This one lives in speech: it does not occur in our written corpora, so no corpus frequency has been measured."
     collocations: Collocations
@@ -2599,7 +2602,7 @@ en:
       leisure: Leisure and days out
       faith: Temples and festivals
     origins:
-      hokkien: from Hokkien
+      hokkien: from Taiwanese Hokkien
       japanese: from Japanese
       internet: internet
       abbreviation: abbreviation
@@ -2841,7 +2844,7 @@ en:
       sounds imported, the Taiwanese form is given and the other is struck through.</p>
     everyday_html: >-
       <p>Vocabulary that is genuinely Taiwanese and sits outside every exam list — drink-ordering shorthand,
-      Hokkien-derived slang, the words Taiwan uses where China uses something else.</p><p>Filter
+      slang from Taiwanese Hokkien, the words Taiwan uses where China uses something else.</p><p>Filter
       by area of life or by where the word came from. Anything marked as strong language is exactly that.
       Where a Chinese equivalent exists it is shown, so you can see the contrast rather than memorize a
       single form.</p>
@@ -2868,7 +2871,7 @@ en:
       names and the words a family uses at home, the vaccines on the CDC schedule, and the signs you follow
       through a hospital — 掛號, 批價, 領藥. Tap any label on the pictures for the reading, then open the full
       dictionary entry.</p><p>Where a medical term has an everyday counterpart (闌尾炎 next to 盲腸炎), the
-      pair is shown side by side. Terms that differ from China's usage are marked, and Hokkien loans carry
+      pair is shown side by side. Terms that differ from China's usage are marked, and Taiwanese Hokkien loans carry
       their Tâi-lô readings. Everything is checked against the MOE dictionaries and Taiwan's own health
       authorities.</p>
     dict_html: >-

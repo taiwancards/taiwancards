@@ -9,6 +9,7 @@ module Huayu
     REGISTERS = TaiwanEverydayImporter::REGISTERS
     CATEGORIES = %w[body organs symptoms diseases vaccines hospital departments treatment people nhi].freeze
     FACETS = TaiwanEverydayImporter::FACETS
+    TAIGI_READINGS = TaiwanEverydayImporter::TAIGI_READINGS
     DEFAULT_TIER = 2
     MIN_PRUNE_RATIO = 0.9
 
@@ -134,7 +135,15 @@ module Huayu
       tailo = entry["tailo"].presence
       return if tailo.nil?
 
-      {"tailo" => tailo, "hanzi" => entry["hokkien"].presence}.compact
+      {
+        "tailo" => tailo,
+        "hanzi" => entry["hokkien"].presence,
+        "reading" => entry["taigi_reading"].presence_in(TAIGI_READINGS),
+        "say" => {
+          "zhuyin" => entry["say_zhuyin"].presence,
+          "pinyin" => entry["say_pinyin"].presence
+        }.compact_blank.presence
+      }.compact
     end
 
     def tier(entry)
