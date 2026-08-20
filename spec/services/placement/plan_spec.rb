@@ -88,11 +88,10 @@ RSpec.describe Placement::Plan do
     expect(intake(reader, short: true).budget).to(eq(Placement::Intake::SHORT_BUDGET))
   end
 
-  it "widens the tolerance only when the estimate is confident" do
+  it "grows more certain the more answers it has seen" do
     vague = described_class.new(intake(reader), rows("lexis", 4, true, 1)).outcome
     sure = described_class.new(intake(reader), rows("lexis", 4, true, 8)).outcome
 
-    expect(Placement::Ability::TOLERANCES).to(include(vague.tolerance, sure.tolerance))
     expect(sure.error).to(be < vague.error)
   end
 end

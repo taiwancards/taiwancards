@@ -2974,7 +2974,6 @@ en:
     by_axis: "What each part came out at"
     result_split: "Two different levels"
     split_hint: "Your ear is well ahead of your reading, so a single number would be misleading. Pick whichever you want the app tuned to."
-    tolerance_hint: "We also set your visibility tolerance to %{tolerance}. You can change it any time in the profile."
     axes:
       listening: "Listening"
       tones: "Tones"

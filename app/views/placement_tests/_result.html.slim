@@ -42,8 +42,6 @@ section.space-y-4
       span.text-sm.font-medium = t("placement.adjust_label")
       = form.select :grade, placement_grade_options, {selected: test.result_grade.to_i}, class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
     p.text-xs.text-muted-foreground = t("placement.apply_hint")
-    - if test.tolerance
-      p.text-xs.text-muted-foreground = t("placement.tolerance_hint", tolerance: t("profiles.tolerances.#{test.tolerance}", default: test.tolerance))
     .flex.flex-wrap.gap-2
       = form.submit t("placement.apply"), class: "cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
       = button_to t("placement.retake"), placement_path, class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"

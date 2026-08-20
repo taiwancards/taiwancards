@@ -36,7 +36,7 @@ module Placement
 
     Step = Data.define(:finished, :axis, :grade, :outcome)
 
-    Outcome = Data.define(:grade, :position, :error, :tolerance, :axes, :split, :diagnostics) do
+    Outcome = Data.define(:grade, :position, :error, :axes, :split, :diagnostics) do
       def split? = split.present?
     end
 
@@ -61,7 +61,6 @@ module Placement
         grade: overall.grade,
         position: overall.position,
         error: overall.error,
-        tolerance: overall.tolerance,
         axes: estimates.transform_values(&:grade),
         split: split_for(estimates),
         diagnostics: diagnostics

@@ -37,20 +37,16 @@ module Huayu
           key: "lexeme_id",
           conflict: "lexeme_id",
           columns: PROFILE_COLUMNS,
-          rows: computed.map(&:first)
+          rows: computed
         )
-        Bulk.patch(target: "lexemes", columns: THRESHOLD_TYPES, rows: computed.map(&:last))
       end
 
-      atomic_thresholds if @scope.nil?
       report
     end
 
     private
 
     BATCH = 50_000
-    THRESHOLD_COLUMNS = LevelThresholds::SCALES.flat_map { |scale| LevelThresholds.columns_for(scale) }.freeze
-    THRESHOLD_TYPES = THRESHOLD_COLUMNS.to_h { |column| [column.to_s, "smallint"] }.freeze
 
     PROFILE_COLUMNS = {
       "difficulty" => "integer",
@@ -71,7 +67,6 @@ module Huayu
     def composite = @scope || Lexeme.where(kind: %i[sentence collocation])
 
     def warm
-      thresholds
       @analyzer.segment("暖機")
     end
 
@@ -112,12 +107,7 @@ module Huayu
 
       return nil if units.empty?
 
-      [profile_row(id, text, data, units), threshold_row(id, units)]
-    end
-
-    def threshold_row(id, units)
-      values = LevelThresholds::SCALES.reduce({}) { |memo, scale| memo.merge(thresholds.for_tokens(scale, units)) }
-      [id, *THRESHOLD_COLUMNS.map { |column| values.fetch(column) }]
+      profile_row(id, text, data, units)
     end
 
     def profile_row(id, text, data, units)
@@ -144,25 +134,6 @@ module Huayu
         now
       ]
     end
-
-    def atomic_thresholds
-      rows = Lexeme
-        .where(kind: %i[word character measure_word])
-        .pluck(:id, :data)
-        .map do |id, data|
-          tbcl = data["tbcl_grade"]&.to_i
-          tocfl = TOCFL_LEVELS.index(data["tocfl_level"])
-          values = thresholds
-            .for_level("tbcl", tbcl&.positive? ? tbcl : nil)
-            .merge(thresholds.for_level("tocfl", tocfl ? tocfl + 1 : nil))
-
-          [id, *THRESHOLD_COLUMNS.map { |column| values.fetch(column) }]
-        end
-
-      Bulk.patch(target: "lexemes", columns: THRESHOLD_TYPES, rows: rows)
-    end
-
-    def thresholds = @thresholds ||= LevelThresholds.instance
 
     def load_vocabulary
       @tocfl = {}

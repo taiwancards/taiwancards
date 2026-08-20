@@ -219,16 +219,6 @@ namespace(:huayu) do
     Huayu::SentenceProfiler.new.call
   end
 
-  desc("Recompute the level thresholds that drive per-user visibility (idempotent)")
-  task(compute_thresholds: :environment) do
-    Huayu::ThresholdBuilder.new.call
-  end
-
-  desc("Calibrate the expansion ladder against the corpus: exact tolerance per scale and level")
-  task(calibrate_ladder: :environment) do
-    Huayu::LadderCalibrator.new.call
-  end
-
   desc("Derive per-lexeme speech-style distributions from corpus sentences")
   task(register_mix: :environment) do
     Lexemes::RegisterMix.new.call
@@ -289,8 +279,6 @@ namespace(:huayu) do
       ["huayu:link_examples", "examples linked to sentences"],
       ["huayu:link_sentence_words", "word→sentence index"],
       ["huayu:profile_sentences", "sentence levels"],
-      ["huayu:calibrate_ladder", "calibrate expansion ladder"],
-      ["huayu:compute_thresholds", "visibility thresholds"],
       ["huayu:compute_difficulty", "difficulty and 1…999 rating"],
       ["huayu:import_liangci", "measure words and noun index"],
       ["huayu:register_mix", "register mix per lexeme"],
@@ -384,8 +372,6 @@ namespace(:huayu) do
       ["huayu:link_examples", "examples linked to sentences"],
       ["huayu:link_sentence_words", "word→sentence index"],
       ["huayu:profile_sentences", "sentence levels on three scales"],
-      ["huayu:calibrate_ladder", "calibrate expansion ladder against the corpus"],
-      ["huayu:compute_thresholds", "visibility thresholds per step"],
       ["huayu:compute_difficulty", "difficulty and 1…999 rating"],
       ["huayu:compact", "reclaim space after the mass rewrites"],
       ["huayu:import_liangci", "measure words and noun index"],

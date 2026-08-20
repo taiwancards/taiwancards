@@ -15,7 +15,6 @@ RSpec.describe "The level tab" do
     get(profile_level_path)
 
     expect(response.body).not_to(include("user[projection]"))
-    expect(response.body).not_to(include("user[visibility_tolerance]"))
   end
 
   it "keeps the full dictionary visible whatever the level" do

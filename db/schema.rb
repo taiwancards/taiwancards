@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_14_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -276,22 +276,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_120000) do
     t.float("score")
     t.text("search_text")
     t.jsonb("sources", default: [], null: false)
-    t.integer("tbcl_at0", limit: 2, default: 99, null: false)
     t.virtual(
       "tbcl_grade",
       type: :integer,
       as: "\nCASE\n    WHEN ((data ->> 'tbcl_grade'::text) ~ '^[0-9]+$'::text) THEN ((data ->> 'tbcl_grade'::text))::integer\n    ELSE NULL::integer\nEND",
       stored: true
     )
-    t.integer("tbcl_half", limit: 2, default: 99, null: false)
-    t.integer("tbcl_third", limit: 2, default: 99, null: false)
-    t.integer("tbcl_twothirds", limit: 2, default: 99, null: false)
     t.string("text", null: false)
     t.integer("tier", default: 0, null: false)
-    t.integer("tocfl_at0", limit: 2, default: 99, null: false)
-    t.integer("tocfl_half", limit: 2, default: 99, null: false)
-    t.integer("tocfl_third", limit: 2, default: 99, null: false)
-    t.integer("tocfl_twothirds", limit: 2, default: 99, null: false)
     t.datetime("updated_at", null: false)
     t.index(
       "(((data ->> 'radical_number'::text))::integer)",
@@ -329,16 +321,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_120000) do
       using: :gin
     )
     t.index(["sources"], name: "index_lexemes_on_sources", using: :gin)
-    t.index(["tbcl_at0", "kind"], name: "index_lexemes_on_tbcl_at0")
-    t.index(["tbcl_half", "kind"], name: "index_lexemes_on_tbcl_half")
-    t.index(["tbcl_third", "kind"], name: "index_lexemes_on_tbcl_third")
-    t.index(["tbcl_twothirds", "kind"], name: "index_lexemes_on_tbcl_twothirds")
     t.index(["text"], name: "index_lexemes_on_text", opclass: :gin_trgm_ops, where: "(kind <> 4)", using: :gin)
     t.index(["tier", "kind"], name: "index_lexemes_on_tier_and_kind")
-    t.index(["tocfl_at0", "kind"], name: "index_lexemes_on_tocfl_at0")
-    t.index(["tocfl_half", "kind"], name: "index_lexemes_on_tocfl_half")
-    t.index(["tocfl_third", "kind"], name: "index_lexemes_on_tocfl_third")
-    t.index(["tocfl_twothirds", "kind"], name: "index_lexemes_on_tocfl_twothirds")
   end
 
   create_table("placement_tests", force: :cascade) do |t|

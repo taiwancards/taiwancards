@@ -34,7 +34,5 @@ class PlacementTest < ApplicationRecord
 
   def position = profile["position"].to_f
 
-  def tolerance = profile["tolerance"].presence
-
   def diagnostics = profile.fetch("diagnostics", {})
 end

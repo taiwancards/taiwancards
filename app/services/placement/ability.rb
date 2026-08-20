@@ -9,16 +9,9 @@ module Placement
     HIGH = 3.0
     PRIOR_SIGMA = 1.5
     GUESS = 0.25
-    TOLERANCES = %w[at0 third half twothirds].freeze
 
     Estimate = Data.define(:theta, :error, :grade, :position) do
       def confident? = error < 0.9
-
-      def tolerance
-        return TOLERANCES.first unless confident?
-
-        TOLERANCES[(position * TOLERANCES.length).floor.clamp(0, TOLERANCES.length - 1)]
-      end
     end
 
     def self.call(...) = new.call(...)

@@ -78,7 +78,6 @@ class PlacementTestsController < ApplicationController
         "axes" => outcome.axes,
         "position" => outcome.position,
         "error" => outcome.error,
-        "tolerance" => outcome.tolerance,
         "split" => outcome.split,
         "diagnostics" => outcome.diagnostics
       }

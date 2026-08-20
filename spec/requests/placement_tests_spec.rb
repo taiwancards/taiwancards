@@ -114,7 +114,7 @@ RSpec.describe "Placement test" do
 
     profile = current_test.reload.profile
     expect(profile["axes"]).to(be_present)
-    expect(profile["tolerance"]).to(be_in(Placement::Ability::TOLERANCES))
+    expect(profile["position"]).to(be_present)
   end
 
   it "warns a China-variant learner that nothing here is simplified" do
