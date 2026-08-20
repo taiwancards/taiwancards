@@ -129,6 +129,31 @@ RSpec.describe "Guest access", :no_auth do
     expect(response.body).to(include(I18n.t("nav.group_practice")))
   end
 
+  it "asks crawlers not to index a single example sentence" do
+    source = ContentSource.find_by(slug: "corpus") ||
+      ContentSource.create!(
+        slug: "corpus",
+        name: "Corpus",
+        attribution: "Corpus.",
+        register: :colloquial,
+        license_commercial: true,
+        enabled: true,
+        enabled_for_admins: true
+      )
+    sentence = create(:lexeme, kind: :sentence, text: "我去學校。", content_sources: [source])
+
+    get("/en/sentences/#{sentence.public_id}")
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("content=\"noindex, follow\" name=\"robots\""))
+  end
+
+  it "keeps the reference pages indexable" do
+    get("/dict")
+
+    expect(response.body).to(include("content=\"index, follow\" name=\"robots\""))
+  end
+
   it "explains on the login page that an account only unlocks more" do
     get(login_path)
 

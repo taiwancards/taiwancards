@@ -30,5 +30,5 @@ meta name="twitter:title" content=t("meta.share_title")
 meta name="twitter:description" content=t("meta.share_description")
 meta name="twitter:image" content=share_image
 
-meta name="robots" content="index, follow"
+meta name="robots" content=(content_for(:robots).presence || "index, follow")
 meta name="format-detection" content="telephone=no"
