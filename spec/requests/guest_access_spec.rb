@@ -79,7 +79,12 @@ RSpec.describe "Guest access", :no_auth do
   end
 
   it "reads a section without an account, but does not walk it word by word" do
-    {"/sentences" => {word: "水果"}, "/dict" => {q: "水果"}}.each do |path, query|
+    {
+      "/sentences" => {word: "水果"},
+      "/dict" => {q: "水果"},
+      "/characters" => {q: "水"},
+      "/chengyu" => {q: "水果"}
+    }.each do |path, query|
       get(path, params: query)
       expect(response).to(redirect_to(login_path), "expected #{path} to gate its query")
 

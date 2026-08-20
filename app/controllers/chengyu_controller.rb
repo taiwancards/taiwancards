@@ -5,6 +5,8 @@ class ChengyuController < ApplicationController
   publicly_cacheable
   include Paginated
   include ProgressMarks
+  include Filtered
+  filtered_by :q
 
   PER_PAGE = 60
   BANDS = %w[easy medium hard].freeze

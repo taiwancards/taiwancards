@@ -4,6 +4,8 @@ class CharactersController < ApplicationController
   allow_unauthenticated_access
   publicly_cacheable
   include Paginated
+  include Filtered
+  filtered_by :q
 
   PER_PAGE = 96
 
