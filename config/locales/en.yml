@@ -489,8 +489,11 @@ en:
       written: written only
     tasks:
       meaning: What does it mean?
-      word: Choose the Chinese
+      word: How do you say it?
+      reading: Which word reads like this?
       cloze: Fill the gap
+      reply: What do you answer?
+      street: What would you actually hear?
       order: Put the sentence in order
       pair: Match the pairs
 

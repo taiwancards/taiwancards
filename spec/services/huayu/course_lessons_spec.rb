@@ -64,7 +64,7 @@ RSpec.describe Huayu::CourseLessons do
 
     tasks.each do |task|
       case task.kind
-      when "meaning", "word", "cloze"
+      when "meaning", "word", "cloze", "reading", "reply", "street"
         expect(task.options.size).to(eq(4))
         expect(task.answer).to(be_between(0, 3))
       when "order"
@@ -73,6 +73,54 @@ RSpec.describe Huayu::CourseLessons do
         expect(task.order.sort).to(eq((0...task.pairs.size).to_a))
       end
     end
+  end
+
+  it "gives every dialogue at least two speakers" do
+    lonely = described_class.lessons.select do |lesson|
+      lesson.dialogue? && lesson.lines.filter_map(&:who).uniq.size < 2
+    end
+
+    expect(lonely.map(&:slug)).to(be_empty)
+  end
+
+  it "keeps a passage free of speaker labels" do
+    labelled = described_class.lessons.reject(&:dialogue?).select { |lesson| lesson.lines.any?(&:who) }
+
+    expect(labelled.map(&:slug)).to(be_empty)
+  end
+
+  it "carries a pinyin reading beside every zhuyin one" do
+    silent = described_class.lessons.flat_map { |lesson| lesson.vocabulary.reject { |word| word.pinyin.present? } }
+
+    expect(silent.map(&:zh)).to(be_empty)
+  end
+
+  it "translates every word rather than repeating it back in characters" do
+    untranslated = described_class.lessons.flat_map do |lesson|
+      lesson.vocabulary.reject { |word| word.en.to_s.match?(/[A-Za-z]/) && word.ru.to_s.match?(/\p{Cyrillic}/) }
+    end
+
+    expect(untranslated.map(&:zh)).to(be_empty)
+  end
+
+  it "asks every task in a form the page knows how to draw" do
+    kinds = (described_class.lessons.flat_map(&:exercises) + described_class.stages.flat_map(&:exam)).map(&:kind)
+
+    expect(kinds.uniq).to(all(be_in(%w[meaning word reading cloze reply street order pair])))
+  end
+
+  it "never offers the same option twice in one task" do
+    tasks = described_class.lessons.flat_map(&:exercises) + described_class.stages.flat_map(&:exam)
+    repeated = tasks.select { |task| task.options.any? && task.options.size != task.options.uniq.size }
+
+    expect(repeated.map(&:zh)).to(be_empty)
+  end
+
+  it "mixes reading aloud with reading off the page" do
+    kinds = described_class.lessons.map(&:kind).tally
+
+    expect(kinds["dialogue"]).to(be >= 20)
+    expect(kinds["passage"]).to(be >= 10)
   end
 
   it "finds a lesson by slug and knows its neighbours" do
