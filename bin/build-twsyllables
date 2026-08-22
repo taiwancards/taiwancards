@@ -5,7 +5,6 @@ import argparse
 import hashlib
 import json
 import re
-import shutil
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -268,7 +267,7 @@ def main():
                 json.dumps(kept, indent=2, ensure_ascii=False) + "\n"
             )
             continue
-        shutil.copyfile(source, out / "calibration" / name)
+        (out / "calibration" / name).write_text(source.read_text().rstrip("\n") + "\n")
 
     manifest(out, counts, args.version, args.previous)
     for name, rows in counts.items():

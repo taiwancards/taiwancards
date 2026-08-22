@@ -7,11 +7,12 @@ module Pronunciation
     class DrillsBuilder
       PATH = "drills.json"
       CRITERIA = "lists: self>=80, top1>=80%, margin>=5; pairs: both members self>=80, " \
-        "the pair told apart >=70% on held-out corpus tokens, " \
-        "and the contrast told apart >=60% on speakers no template was built from"
+        "the pair told apart >=70% on held-out corpus tokens, and the contrast told apart " \
+        ">=62% on speakers no template was built from, which is the gap between the weakest " \
+        "aspiration pair and the strongest sibilant one; the measured share is the section's decided field"
       DECIDABLE = 70.0
-      FAMILY_FLOOR = 60.0
-      ON_A_STRANGER = {"aspiration" => 83.2, "sibilant" => 68.6, "coda" => 52.0}.freeze
+      FAMILY_FLOOR = 62.0
+      ON_A_STRANGER = {"aspiration" => 79.8, "sibilant" => 63.9, "coda" => 59.1}.freeze
 
       GOOD_SELF = 80
       GOOD_TOP1 = 80.0
@@ -129,6 +130,7 @@ module Pronunciation
             "en" => "the only difference is the puff of air"
           },
           "kind" => "pair",
+          "decided" => ON_A_STRANGER["aspiration"],
           "pairs" => decidable("aspiration").first(PAIR_LIMIT).map { |pair| pair["keys"] }
         }
       end
@@ -142,6 +144,7 @@ module Pronunciation
             "en" => "Retroflex, dental and palatal series"
           },
           "kind" => "pair",
+          "decided" => ON_A_STRANGER["sibilant"],
           "pairs" => decidable("sibilant").first(PAIR_LIMIT).map { |pair| pair["keys"] }
         }
       end
@@ -164,6 +167,7 @@ module Pronunciation
             "en" => nucleus == "e" ? "In Taiwan feng leans toward [fong]" : "Front /a/ versus back"
           },
           "kind" => "pair",
+          "decided" => ON_A_STRANGER["coda"],
           "pairs" => picked.first(CODA_LIMIT).map { |pair| pair["keys"] }
         }
       end

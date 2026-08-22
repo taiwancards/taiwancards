@@ -42,6 +42,12 @@ RSpec.describe Pronunciation::Corpus::DrillsBuilder do
     expect(section(rows, "coda_a")).to(be_nil)
   end
 
+  it "states on the section how often the contrast is decided on an unfamiliar voice" do
+    rows = sections(quality("ba1", "pa1"), [pair("aspiration", %w[ba1 pa1], 92.0)])
+
+    expect(section(rows, "aspiration")["decided"]).to(eq(described_class::ON_A_STRANGER["aspiration"]))
+  end
+
   it "ranks the pairs we tell apart best first" do
     rows = sections(
       quality("ba1", "pa1", "da1", "ta1"),
