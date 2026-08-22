@@ -201,6 +201,13 @@ namespace(:deploy) do
       $stdout.puts(repair.call.to_s)
       :ran
     },
+    "cangjie_codes" => -> {
+      repair = Huayu::CangjieRepair.new
+      next :skipped unless repair.drift?
+
+      $stdout.puts(repair.call.to_s)
+      :ran
+    },
     "notices" => -> {
       importer = Huayu::NoticeImporter.new
       next :skipped unless importer.drift?
