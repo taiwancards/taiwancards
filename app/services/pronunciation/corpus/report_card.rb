@@ -41,11 +41,12 @@ module Pronunciation
         }
 
         keys.each do |key|
-          template = @store.template(key) or next
-          norm = template["norm"] || TemplateStore::CITATION
-          rivals = Rivals.for(key, store: @store, norm: norm)
+          next unless @store.template(key)
 
           Tokens.each(key) do |features|
+            norm = norm_of(features)
+            template = @store.template(key, norm) || @store.template(key) or next
+            rivals = rivals_for(key, norm)
             own = syllable_score(analyzer, features, template, norm)
             next if own.nil?
 
@@ -72,6 +73,17 @@ module Pronunciation
         result[:pairs] = result[:pairs].to_h
         result[:levels] = result[:levels].to_h
         result
+      end
+
+      # The norm follows the position the token was spoken in, the way a graded
+      # recording is scored, so the report measures what the app actually does.
+      def norm_of(features)
+        @store.norm_for(position: features["_index"].to_i, total: features["_n_syllables"].to_i)
+      end
+
+      def rivals_for(key, norm)
+        @rivals ||= {}
+        @rivals[[key, norm]] ||= Rivals.for(key, store: @store, norm: norm)
       end
 
       def syllable_score(analyzer, features, template, norm)

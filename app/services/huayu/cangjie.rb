@@ -33,10 +33,22 @@ module Huayu
 
     ROWS = [%w[q w e r t y u i o p], %w[a s d f g h j k l], %w[z x c v b n m]].freeze
 
+    SUPERSEDED = {
+      "修" => "oloh",
+      "倏" => "olok",
+      "儵" => "olof",
+      "凳" => "nthn",
+      "條" => "olod",
+      "絛" => "olof",
+      "脩" => "olob",
+      "鯈" => "olof"
+    }.freeze
+
     module_function
+    def fifth(char, code) = SUPERSEDED.fetch(char, code)
 
     def radicals(code)
-      code.to_s.downcase.chars.map { |letter| KEYS[letter] }.compact.join
+      code.to_s.downcase.each_char.filter_map { |letter| KEYS[letter] }.join
     end
   end
 end

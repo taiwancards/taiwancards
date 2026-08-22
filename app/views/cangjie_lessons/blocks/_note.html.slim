@@ -1,0 +1,4 @@
+- warn = block["tone"] == "warn"
+.rounded-2xl.border.px-4.py-3.text-sm.leading-relaxed[
+  class=(warn ? "border-amber-400 bg-amber-500/10" : "border-border bg-brand/5") ]
+  = cangjie_text(block["text"])

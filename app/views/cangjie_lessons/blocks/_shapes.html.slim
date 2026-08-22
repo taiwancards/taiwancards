@@ -1,0 +1,14 @@
+section.space-y-3
+  = cangjie_block_heading(block)
+  .overflow-hidden.rounded-2xl.border.border-border
+    - block["rows"].to_a.each_with_index do |row, index|
+      .flex.flex-wrap.items-center.gap-x-4.gap-y-2.px-4.py-3 class=(index.positive? ? "border-t border-border" : "")
+        .flex.w-16.shrink-0.items-center.justify-center.text-4xl.leading-none.text-brand
+          = cangjie_glyph(row["glyph"], rotate: row["rotate"])
+        .min-w-40.flex-1
+          p.text-sm.leading-snug = cangjie_text(row["rule"])
+          - if row["hint"]
+            p.text-xs.leading-snug.text-muted-foreground = cangjie_text(row["hint"])
+        .flex.min-w-0.flex-wrap.gap-2
+          - row["chars"].to_a.each do |entry|
+            = render("cangjie_lessons/chip", entry: entry, size: "text-xl")

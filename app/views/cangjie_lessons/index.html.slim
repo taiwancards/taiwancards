@@ -1,0 +1,47 @@
+- content_for(:title, t("cangjie_lessons.title"))
+
+.py-6.space-y-8.pinyin-locked.zhuyin-locked data-controller="cangjie-progress"
+  header.space-y-3
+    = render("shared/page_help", key: "cangjie_lessons", title: t("cangjie_lessons.title"))
+    = link_to cangjie_path, class: "inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-muted" do
+      = icon(:keyboard, css: "size-4")
+      = t("cangjie_lessons.open_trainer")
+
+  - if !Huayu::CangjieLessons.available?
+    p.rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("cangjie_lessons.empty")
+
+  - else
+    section.space-y-3 hidden=true data-cangjie-progress-target="panel"
+      h2.text-lg.font-semibold = t("cangjie_lessons.progress.title")
+      .grid.gap-2.text-center class="grid-cols-2 sm:grid-cols-4"
+        - %w[lessons keys chars pace].each do |stat|
+          .rounded-xl.border.border-border.bg-card.px-3.py-2
+            .text-xs.text-muted-foreground = t("cangjie_lessons.progress.#{stat}")
+            .text-lg.font-semibold.tabular-nums data={"cangjie-progress-target" => stat}
+      p.text-xs.text-muted-foreground = t("cangjie_lessons.progress.device")
+
+    section.space-y-3
+      h2.text-lg.font-semibold = t("cangjie_lessons.map")
+      p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("cangjie_lessons.map_lede")
+      = render("cangjie_lessons/keyboard")
+
+    = render("cangjie_lessons/speed")
+
+    - @stages.each do |stage|
+      - lessons = @by_stage.fetch(stage["id"], [])
+      - next if lessons.empty?
+      section.space-y-3
+        h2.flex.items-baseline.gap-2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+          = cangjie_stage_label(stage["id"])
+          span.text-xs.font-normal.tabular-nums = "· #{lessons.size}"
+        .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+          - lessons.each do |lesson|
+            = link_to cangjie_lesson_path(lesson), class: "flex h-full min-w-0 items-center gap-3 rounded-xl border border-border bg-card p-3 transition-colors hover:bg-muted",
+              data: {cangjie_progress_target: "card", slug: lesson.slug, key: lesson.key} do
+              span.flex.size-12.shrink-0.items-center.justify-center.rounded-lg.text-2xl.font-semibold[
+                lang="zh-TW" class=cangjie_group_tint(cangjie_group_for(lesson.key)&.id) ]
+                = cangjie_lesson_badge(lesson)
+              .min-w-0.flex-1.space-y-1
+                .text-sm.font-semibold.leading-snug class="line-clamp-2" = lesson.title_for(I18n.locale)
+                .text-xs.leading-snug.text-muted-foreground class="line-clamp-2" = lesson.lede_for(I18n.locale)

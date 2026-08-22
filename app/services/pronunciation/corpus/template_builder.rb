@@ -10,7 +10,8 @@ module Pronunciation
         "citation" => TemplateStore::CITATION,
         "word" => "taiwan_word",
         "word_initial" => TemplateStore::WORD_INITIAL,
-        "word_medial" => TemplateStore::WORD_MEDIAL
+        "word_medial" => TemplateStore::WORD_MEDIAL,
+        "word_final" => TemplateStore::WORD_FINAL
       }.freeze
 
       MIN_CITATION = 6
@@ -111,22 +112,34 @@ module Pronunciation
       def source_family(row) = row["_source"].to_s.start_with?("moe") ? "moe" : "textbook"
 
       def choose(rows)
-        citation = rows.select { |r| r["_n_syllables"] == 1 }
-        initial = rows.select { |r| r["_n_syllables"].to_i > 1 && r["_index"].to_i.zero? }
-        medial = rows.select { |r| r["_n_syllables"].to_i > 1 && r["_index"].to_i.positive? }
+        citation = rows.select { |r| r["_n_syllables"].to_i == 1 }
+        initial = rows.select { |r| connected?(r) && r["_index"].to_i.zero? }
+        tail = rows.select { |r| connected?(r) && r["_index"].to_i.positive? }
+        final = tail.select { |r| last?(r) }
 
         case @style
         when "word_initial"
           initial.length >= MIN_WORD ? ["word_initial", initial] : ["wi+citation", initial + citation]
         when "word_medial"
-          medial.length >= MIN_WORD ? ["word_medial", medial] : ["wm+word", medial + initial]
+          medial = tail.reject { |row| last?(row) }
+          return ["word_medial", medial] if medial.length >= MIN_WORD
+
+          tail.length >= MIN_WORD ? ["wm+tail", tail] : ["wm+word", tail + initial]
+        when "word_final"
+          return ["word_final", final] if final.length >= MIN_WORD
+
+          tail.length >= MIN_WORD ? ["wf+tail", tail] : ["wf+word", tail + initial]
         when "word"
-          both = initial + medial
+          both = initial + tail
           both.length >= MIN_CITATION ? ["word", both] : ["word+citation", both + citation]
         else
           citation_style(citation, initial, rows)
         end
       end
+
+      def connected?(row) = row["_n_syllables"].to_i > 1
+
+      def last?(row) = row["_index"].to_i == row["_n_syllables"].to_i - 1
 
       def citation_style(citation, initial, rows)
         return ["citation", citation] if citation.length >= MIN_CITATION

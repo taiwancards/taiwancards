@@ -78,7 +78,7 @@ namespace(:pronunciation) do
     end
   end
 
-  desc("Per-token features to reference templates. STYLE=citation|word|word_initial|word_medial")
+  desc("Per-token features to reference templates. STYLE=citation|word|word_initial|word_medial|word_final")
   task(templates: :environment) do
     styles = ENV["STYLE"].presence&.split(",") || Pronunciation::Corpus::TemplateBuilder::STYLES.keys
     styles.each do |style|
@@ -89,6 +89,12 @@ namespace(:pronunciation) do
     end
 
     Pronunciation::TemplateStore.reset!
+  end
+
+  desc("Pause, pitch step and energy dip at every syllable junction of native connected speech")
+  task(junction_norms: :environment) do
+    Pronunciation::Corpus::JunctionNorms.new(io: $stdout).write!
+    Pronunciation::Acoustic::Junctions.reset!
   end
 
   desc("Measure how much wider connected speech scatters than a citation form (MOE, one voice)")

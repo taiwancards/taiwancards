@@ -1,0 +1,11 @@
+- action = local_assigns.fetch(:action)
+- key_class = local_assigns.fetch(:key_class)
+- glyph_class = local_assigns.fetch(:glyph_class, "text-base")
+- attrs = local_assigns.fetch(:attrs, {})
+- Huayu::Cangjie::ROWS.each do |row|
+  .flex.justify-center class="gap-0.5 sm:gap-1"
+    - row.each do |letter|
+      button.flex.flex-col.items-center.justify-center.rounded-lg.border.border-border.bg-card.transition-colors[
+        type="button" class=key_class data-key=letter data-action=action *attrs ]
+        span.font-medium class=glyph_class lang="zh-TW" = Huayu::Cangjie::KEYS[letter]
+        span.text-muted-foreground class="text-[10px] uppercase" = letter

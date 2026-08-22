@@ -1,0 +1,7 @@
+- entry = local_assigns.fetch(:entry)
+- size = local_assigns.fetch(:size, "text-2xl")
+= link_to character_path(entry["char"]), class: "flex shrink-0 flex-col items-center gap-0.5 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-brand hover:bg-muted",
+  data: {turbo_frame: "_top", cangjie_progress_target: "chip", char: entry["char"]} do
+  span.font-semibold.leading-none lang="zh-TW" class=size = entry["char"]
+  span.font-mono.uppercase.leading-none.text-muted-foreground class="text-[10px] tracking-wider" = entry["code"]
+  span.leading-none.text-muted-foreground lang="zh-TW" class="text-[11px]" = entry["parts"].join

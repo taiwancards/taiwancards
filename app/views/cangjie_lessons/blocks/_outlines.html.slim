@@ -1,0 +1,7 @@
+section.space-y-3
+  = cangjie_block_heading(block)
+  .flex.flex-wrap.gap-2
+    - block["rows"].to_a.each do |row|
+      .flex.w-20.flex-col.items-center.gap-1.rounded-xl.border.border-border.bg-card.px-2.py-3
+        span.text-3xl.leading-none.text-brand lang="zh-TW" = row["glyph"]
+        span.text-center.leading-tight.text-muted-foreground class="text-[11px]" = cangjie_text(row["rule"])

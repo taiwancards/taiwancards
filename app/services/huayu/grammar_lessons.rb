@@ -2,6 +2,8 @@
 
 module Huayu
   class GrammarLessons
+    extend LessonData
+
     DATA = JsonData.new("huayu/grammar_lessons.json", default: [], watch: true)
 
     Example = Data.define(:zh, :en, :ru, :zhuyin, :pinyin, :sentence, :segments) do
@@ -61,53 +63,37 @@ module Huayu
     end
 
     class << self
-      def all
-        payload
-      end
+      def all = lessons
 
-      def taught
-        payload.reject(&:excluded?)
-      end
+      def taught = payload[:taught]
 
-      def levels
-        taught.group_by(&:level)
-      end
+      def levels = payload[:levels]
 
       def find(param)
         value = param.to_s
-        payload.find { |lesson| lesson.slug == value } ||
-          payload.find { |lesson| lesson.id.to_s == value } ||
-          payload.find { |lesson| lesson.heads.include?(value) || lesson.pattern == value }
+        super || lessons.find { |lesson| lesson.heads.include?(value) || lesson.pattern == value }
       end
+
+      def neighbours(lesson) = super(lesson, taught)
 
       def search(query, limit: 6)
         needle = query.to_s.strip.downcase
         return [] if needle.empty?
 
-        payload.select { |lesson| matches?(lesson, needle) }.first(limit)
+        lessons.select { |lesson| matches?(lesson, needle) }.first(limit)
       end
-
-      def available? = payload.any?
 
       def for_form(text)
         form = text.to_s
         return [] if form.empty?
 
-        by_form.fetch(form, [])
-      end
-
-      def reset!
-        DATA.reset!
-        remove_instance_variable(:@payload) if defined?(@payload)
-        @rows = nil
-        @by_form = nil
+        payload[:by_form].fetch(form, [])
       end
 
       private
 
-      def by_form
-        payload
-        @by_form ||= taught.each_with_object(Hash.new { |memo, key| memo[key] = [] }) do |lesson, index|
+      def form_index(taught)
+        taught.each_with_object(Hash.new { |memo, key| memo[key] = [] }) do |lesson, index|
           lesson.head.to_s.scan(/\p{Han}+/).uniq.each { |form| index[form] << lesson }
         end
       end
@@ -120,13 +106,8 @@ module Huayu
         [lesson.en, lesson.ru].any? { |source| source["title"].to_s.downcase.include?(needle) }
       end
 
-      def payload
-        rows = DATA.value
-        return @payload if defined?(@payload) && @rows.equal?(rows)
-
-        @rows = rows
-        @by_form = nil
-        @payload = rows
+      def build(rows)
+        lessons = rows
           .map do |row|
             Lesson.new(
               id: row["id"],
@@ -154,6 +135,14 @@ module Huayu
             )
           end
           .freeze
+        taught = lessons.reject(&:excluded?).freeze
+        {
+          lessons: lessons,
+          taught: taught,
+          levels: taught.group_by(&:level).freeze,
+          by_slug: slug_index(lessons).merge(lessons.index_by { |lesson| lesson.id.to_s }).freeze,
+          by_form: form_index(taught).freeze
+        }
       end
     end
   end

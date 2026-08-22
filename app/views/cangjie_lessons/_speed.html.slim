@@ -1,0 +1,37 @@
+section.space-y-3[
+  data-controller="cangjie-speed"
+  data-action="keydown@document->cangjie-speed#keydown"
+  data-cangjie-speed-core-value=Huayu::CangjieLessons.core.to_json
+  data-cangjie-speed-exam-value=Huayu::CangjieLessons.exam.to_json
+  data-cangjie-speed-labels-value=cangjie_speed_labels.to_json ]
+  .flex.flex-wrap.items-center.justify-between.gap-3
+    h2.text-lg.font-semibold = t("cangjie_lessons.speed.title")
+    span.text-xs.tabular-nums.text-muted-foreground data-cangjie-speed-target="tally"
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("cangjie_lessons.speed.lede")
+
+  .space-y-4.rounded-2xl.border.border-border.bg-card.p-4
+    .flex.flex-wrap.justify-center.gap-2
+      - {"core" => t("cangjie_lessons.speed.mode_core"), "exam" => t("cangjie_lessons.speed.mode_exam")}.each do |mode, name|
+        button.rounded-lg.border.border-border.px-3.py-2.text-sm.transition-colors[
+          type="button" class="hover:bg-muted" data-mode=mode
+          data-cangjie-speed-target="mode" data-action="cangjie-speed#pick" ]
+          = name
+
+    .flex.min-h-24.items-center.justify-center
+      span.inline-block.text-6xl.font-semibold.leading-none lang="zh-TW" data-cangjie-speed-target="prompt"
+    p.min-h-5.text-center.text-sm data-cangjie-speed-target="feedback"
+
+    .space-y-3 hidden=true data-cangjie-speed-target="pad"
+      = render("cangjie_lessons/pad", scope: "cangjie-speed")
+
+    .grid.gap-2.text-center hidden=true class="grid-cols-2 sm:grid-cols-3" data-cangjie-speed-target="stats"
+
+    .flex.flex-wrap.justify-center.gap-2
+      button.rounded-lg.border.border-border.px-4.py-2.text-sm.font-medium.transition-colors[
+        type="button" class="hover:bg-muted"
+        data-cangjie-speed-target="start" data-action="cangjie-speed#start" ]
+        = t("cangjie_lessons.speed.start")
+      button.rounded-lg.border.border-border.px-4.py-2.text-sm.font-medium.transition-colors[
+        type="button" class="hover:bg-muted" hidden=true
+        data-cangjie-speed-target="resume" data-action="cangjie-speed#next" ]
+        = t("cangjie_lessons.drills.next")

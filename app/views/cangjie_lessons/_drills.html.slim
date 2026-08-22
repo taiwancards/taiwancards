@@ -1,0 +1,37 @@
+- lesson = local_assigns.fetch(:lesson)
+- labels = cangjie_drill_labels
+
+section.space-y-3[
+  data-controller="cangjie-drill"
+  data-action="keydown@document->cangjie-drill#handleKeydown"
+  data-cangjie-drill-tasks-value=lesson.drills.to_json
+  data-cangjie-drill-labels-value=labels.to_json
+  data-cangjie-drill-slug-value=lesson.slug ]
+  .flex.flex-wrap.items-center.justify-between.gap-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("cangjie_lessons.drills.title")
+    .flex.items-center.gap-3
+      span.text-xs.tabular-nums.text-emerald-600 data-cangjie-drill-target="best"
+      span.text-xs.tabular-nums.text-muted-foreground data-cangjie-drill-target="tally"
+
+  .space-y-4.rounded-2xl.border.border-border.bg-card.p-4
+    p.text-xs.uppercase.tracking-wide.text-muted-foreground data-cangjie-drill-target="kind"
+    .flex.min-h-24.items-center.justify-center
+      span.text-6xl.font-semibold.leading-none[
+        lang="zh-TW" class="inline-block" data-cangjie-drill-target="prompt" ]
+    p.text-center.text-sm.text-muted-foreground data-cangjie-drill-target="question"
+
+    .grid.gap-2 class="sm:grid-cols-2" data-cangjie-drill-target="options"
+
+    .space-y-3 hidden=true data-cangjie-drill-target="pad"
+      = render("cangjie_lessons/pad", scope: "cangjie-drill")
+
+    p.min-h-5.text-sm data-cangjie-drill-target="feedback"
+
+    .flex.flex-wrap.gap-2
+      button.rounded-lg.border.border-border.px-4.py-2.text-sm.font-medium.transition-colors[
+        type="button" class="hover:bg-muted" hidden=true
+        data-cangjie-drill-target="next" data-action="cangjie-drill#next" ]
+        = t("cangjie_lessons.drills.next")
+      button.rounded-lg.px-4.py-2.text-sm.text-muted-foreground.transition-colors[
+        type="button" class="hover:text-foreground" data-action="cangjie-drill#restart" ]
+        = t("cangjie_lessons.drills.restart")

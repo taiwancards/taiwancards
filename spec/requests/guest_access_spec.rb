@@ -18,6 +18,7 @@ RSpec.describe "Guest access", :no_auth do
     /practice/zhuyin
     /practice/numbers
     /cangjie
+    /cangjie/lessons
     /everyday
     /phrases
     /calendar

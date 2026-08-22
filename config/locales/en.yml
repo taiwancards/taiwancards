@@ -357,6 +357,7 @@ en:
     chengyu: Idioms 成語
     dict: Words & phrases
     cangjie: Cangjie trainer
+    cangjie_book: Cangjie
     sentences: Sentences
     liangci: Measure words 量詞
     phrases: "Phrasebook"
@@ -1448,6 +1449,66 @@ en:
     output_placeholder: Type Cangjie codes here…
     code: Code
     hint: Type letters to build a code, then Space (or a number) to pick a character. Backspace edits the code, Esc clears it.
+    open_lessons: The Cangjie textbook, key by key
+  cangjie_lessons:
+    title: Cangjie
+    map: The layout
+    map_lede: >-
+      Twenty-four letters in four families: nature, strokes, the body, shapes. Press a key to open
+      its lesson.
+    empty: The Cangjie textbook isn't built yet.
+    open_trainer: Open the keyboard trainer
+    trainer_cta: Practise on the Cangjie keyboard
+    bank: Characters in this lesson
+    index_title: Every character on this key
+    index_lede: >-
+      The standard 常用國字 list (4807 characters with a Cangjie code) filtered by the key a code
+      opens with — the way the manual's own 日部…卜部 sections are built. Ordered by corpus
+      frequency first, then by TBCL grade. The badge on the right is the TOCFL level.
+    walkthrough: Walkthrough
+    compare: Right and wrong
+    drills:
+      title: Practice
+      shape: Shape
+      shape_question: Which key does this shape live on?
+      first: First key
+      first_question: Which key does the code start with?
+      split: Split
+      split_question: How does this character break into pieces?
+      which: Recognition
+      which_question: Which of these characters uses this shape?
+      code: Typing
+      code_question: Type the code for this character.
+      right: Correct
+      wrong: "The answer is:"
+      done: Done
+      check: Check
+      next: Next
+      restart: Start over
+      best: "Best score:"
+    speed:
+      title: Speed typing
+      lede: >-
+        The characters almost every sentence is made of: 的, 是, 在, 我, 不, 了 and friends. Type
+        each code as fast as you can — the trainer serves the most frequent, least practised
+        characters and tracks your pace from round to round.
+      mode_core: Most frequent
+      mode_exam: Novice 1–2 and A1
+      start: Start a round
+      again: Another round
+      wrong: "The code is:"
+      done: Round finished
+      pace: Pace
+      pace_unit: chars/min
+      rounds: Rounds
+      delta: vs earlier rounds
+    progress:
+      title: Your progress
+      lessons: Lessons
+      keys: Keys
+      chars: Characters typed
+      pace: Pace, chars/min
+      device: Progress lives in this browser, on this device.
   tocfl:
     title: TOCFL readiness
     subtitle: Your progress toward each official level — counts every character and word you've learned anywhere.
@@ -2757,6 +2818,15 @@ en:
       out_of_range: Outside the covered range.
       bounds: Covers %{from} to %{to}. The table is taken from the Hong Kong Observatory's Gregorian-Lunar Calendar Conversion Table and every date in it was checked back against that source.
   page_help:
+    cangjie_lessons_html: >-
+      <p>Cangjie is the Taiwanese way of typing traditional characters by shape rather than by sound:
+      a character is cut into visible pieces, and each piece is one Latin key. This textbook covers
+      the fifth generation of the method (倉頡五代) only — not Cangjie 3, and not Simplified Cangjie.</p><p>The
+      order runs like this: four lessons on how a code is built, then one lesson per key for all
+      twenty-six, then the splitting rules and the closed lists of exceptions. It ends with Taiwan's
+      own characters and the whole of Novice 1–2.</p><p>Every lesson carries its own practice: name
+      the key from a shape, name a character's first key, pick the right split, and type a full code.
+      Free typing lives separately, in the <strong>Cangjie trainer</strong> under Practice.</p>
     names_html: >-
       <p>This section explains how a Taiwanese name is built and shows what the island actually uses,
       counted from the household registration record. It does not invent names for you: choosing one

@@ -50,7 +50,6 @@ module Pronunciation
 
         keys.each do |key|
           template = @store.template(key) or next
-          norm = template["norm"] || TemplateStore::CITATION
           syllable, tone = Acoustic::Syllables.parse_key(key)
           next if syllable.nil?
 
@@ -62,7 +61,8 @@ module Pronunciation
 
             candidates(rung, syllable, tone, near, far, source).each do |candidate|
               Tokens.sample(candidate, PER_RUNG, source).each do |features|
-                score = overall(analyzer, features, template, norm)
+                spoken = @store.norm_for(position: features["_index"].to_i, total: features["_n_syllables"].to_i)
+                score = overall(analyzer, features, @store.template(key, spoken) || template, spoken)
                 next if score.nil?
 
                 result[rung[:id]] << [score, verdict.level("overall", score)]

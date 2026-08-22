@@ -21,11 +21,11 @@ module Huayu
     def load
       char_code = {}
       code_chars = Hash.new { |hash, key| hash[key] = [] }
-      @path.each_line do |line|
-        char, code = line.chomp.split("\t", 2)
+      @path.each_line(chomp: true) do |line|
+        char, code = line.split("\t", 2)
         next if char.blank? || code.blank?
 
-        char_code[char] ||= code
+        char_code[char] ||= Cangjie.fifth(char, code)
         code_chars[code] << char unless code_chars[code].include?(char)
       end
 
@@ -38,9 +38,9 @@ module Huayu
 
     def tag_characters(char_code)
       count = 0
-      Lexeme.where(kind: :character).find_each do |lexeme|
+      Lexeme.where(kind: :character, text: char_code.keys).find_each do |lexeme|
         code = char_code[lexeme.text]
-        next if code.blank? || lexeme.data["cangjie"] == code
+        next if lexeme.data["cangjie"] == code
 
         lexeme.update!(data: lexeme.data.merge("cangjie" => code))
         count += 1

@@ -3,9 +3,11 @@
 module Pronunciation
   class TemplateStore
     DEFAULT_PATH = "/var/data/pronunciation"
+    MAX_CACHED_TEMPLATES = Integer(ENV.fetch("PRONUNCIATION_TEMPLATE_CACHE", 256))
     CITATION = "taiwan"
     WORD_INITIAL = "taiwan_wi"
     WORD_MEDIAL = "taiwan_wm"
+    WORD_FINAL = "taiwan_wf"
 
     class << self
       def instance
@@ -42,19 +44,28 @@ module Pronunciation
 
     def template(key, norm = CITATION)
       @mutex.synchronize do
-        @cache.fetch([key, norm]) do
-          path = File.join(@root, "templates", norm, "#{key}.json")
-          next nil unless File.exist?(path)
-
-          @cache[[key, norm]] = JSON.parse(File.read(path))
+        cache_key = [key, norm]
+        cached = @cache.delete(cache_key)
+        unless cached.nil?
+          @cache[cache_key] = cached
+          return cached
         end
+
+        path = File.join(@root, "templates", norm, "#{key}.json")
+        return nil unless File.exist?(path)
+
+        @cache.shift if @cache.size >= MAX_CACHED_TEMPLATES
+        @cache[cache_key] = JSON.parse(File.read(path))
       end
     end
 
+    def max_cached = MAX_CACHED_TEMPLATES
+
     def norm_for(position:, total:)
       return CITATION if total <= 1
+      return WORD_INITIAL if position.zero?
 
-      position.zero? ? WORD_INITIAL : WORD_MEDIAL
+      position == total - 1 ? WORD_FINAL : WORD_MEDIAL
     end
 
     def thresholds

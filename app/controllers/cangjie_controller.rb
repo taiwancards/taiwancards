@@ -6,8 +6,7 @@ class CangjieController < ApplicationController
   DATA = "cangjie5.json"
 
   def show
-    @rows = Huayu::Cangjie::ROWS
-    @keys = Huayu::Cangjie::KEYS
-    @available = SharedAssets.carried?("json", CangjieController::DATA)
+    @available = SharedAssets.carried?("json", DATA)
+    @url = SharedAssets.url_for("json", DATA) if @available
   end
 end

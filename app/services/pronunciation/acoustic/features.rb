@@ -23,7 +23,6 @@ module Pronunciation
         window = DSP::Window.hamming(win)
         spectrum = DSP::Spectrum.new(NFFT)
 
-        powers = []
         energy = []
         zcr = []
         centers = []
@@ -33,11 +32,6 @@ module Pronunciation
           raw = samples[pos, win]
           energy << DSP::Energy.frame_db(raw)
           zcr << DSP::Energy.zero_crossing_rate(raw)
-
-          pre = DSP::Framing.preemphasis(raw, coefficient: 0.97)
-          wf = Array.new(win) { |i| pre[i] * window[i] }
-          powers << spectrum.power(wf)
-
           centers << ((pos + (win / 2.0)) / sr)
           pos += hop
         end
@@ -48,34 +42,22 @@ module Pronunciation
 
         bank = DSP::MelFilterbank.new(sample_rate: sr, size: NFFT, filters: N_MEL, low: 50.0, warp: warp)
         mfcc = DSP::Mfcc.new(filterbank: bank, coefficients: N_MFCC, spectrum: spectrum)
-        mfccs = powers.map { |pw| mfcc.call(pw) }
 
+        powers = Spectra.new(
+          samples: samples,
+          win: win,
+          hop: hop,
+          window: window,
+          spectrum: spectrum,
+          length: centers.length
+        )
+
+        mfccs = Cepstra.new(spectra: powers, mfcc: mfcc, size: N_MFCC)
         speech_lo, speech_hi = energy_bounds(energy)
-        if speech_hi > speech_lo
-          mean = Array.new(N_MFCC, 0.0)
-          cnt = 0
-          (speech_lo..speech_hi).each do |i|
-            row = mfccs[i]
-            next unless row
+        mfccs.normalize(speech_lo..speech_hi) if speech_hi > speech_lo
 
-            d = 0
-            while d < N_MFCC
-              mean[d] += row[d]
-              d += 1
-            end
-
-            cnt += 1
-          end
-
-          if cnt.positive?
-            mean.map! { |v| v / cnt }
-            mfccs = mfccs.map { |row| Array.new(N_MFCC) { |d| row[d] - mean[d] } }
-          end
-        end
-
-        pitch = DSP::Yin.new(hop_seconds: HOP_MS / 1000.0).call(waveform_of(samples, sr))
-        yin_win_offset = 0.0
-        yin_centers = pitch.times.map { |t| t + yin_win_offset }
+        pitch, yin_offset = pitch_track(samples, sr, energy, hop)
+        yin_centers = pitch.times.map { |t| t + yin_offset }
 
         f0 = align(pitch.f0, yin_centers, centers)
         conf = align(pitch.confidence, yin_centers, centers)
@@ -102,31 +84,67 @@ module Pronunciation
 
       def waveform_of(samples, sr) = DSP::Waveform.new(samples: samples, sample_rate: sr)
 
+      PITCH_MARGIN_MS = 500.0
+
+      # Pitch is only ever read inside the syllable, so the lag search runs over
+      # the audible span with a margin instead of the whole recording.
+      def pitch_track(samples, sr, energy, hop)
+        yin = DSP::Yin.new(hop_seconds: HOP_MS / 1000.0)
+        span = audible_span(energy, hop, samples.length)
+        return [yin.call(waveform_of(samples, sr)), 0.0] if span.nil?
+
+        from, to = span
+        [yin.call(waveform_of(samples[from...to], sr)), from / sr.to_f]
+      end
+
+      def audible_span(energy, hop, length)
+        return nil if energy.length < 3
+
+        floor, peak = background_of(energy)
+        threshold = [floor + NOISE_MARGIN_DB, peak - PEAK_WINDOW_DB].max
+        first = energy.index { |value| value > threshold }
+        last = energy.rindex { |value| value > threshold }
+        return nil if first.nil? || last.nil?
+
+        margin = (PITCH_MARGIN_MS / HOP_MS).round
+        from = [(first - margin) * hop, 0].max
+        to = [(last + margin) * hop, length].min
+        to - from < length ? [from, to] : nil
+      end
+
       def formant_extractor(sr, ceiling)
         factor = [(sr / (2.0 * ceiling)).round, 1].max
         DSP::Formants.new(maximum_frequency: sr / (2.0 * factor))
       end
+
+      F3_PROBES = 40
+      F3_MIN_HZ = 1800.0
+      F3_MAX_HZ = 4200.0
+      F3_MIN_PROBES = 5
 
       def estimate_f3(samples, sr, win, hop, energy)
         return nil if energy.empty?
 
         sorted = energy.compact.sort
         thr = sorted[(sorted.length * 0.6).to_i]
+        loud = energy.each_index.select { |i| energy[i] && energy[i] >= thr && (i * hop) + win <= samples.length }
+        return nil if loud.length < F3_MIN_PROBES
+
         extractor = formant_extractor(sr, DSP::Formants::DEFAULT_MAXIMUM_HZ)
-        vals = []
-        energy.each_with_index do |e, i|
-          next if e.nil? || e < thr
-
-          start = i * hop
-          break if start + win > samples.length
-
-          f = extractor.call(waveform_of(samples[start, win], sr))[2]
-          vals << f if f && f > 1800 && f < 4200
+        vals = probes(loud).filter_map do |i|
+          f = extractor.call(waveform_of(samples[i * hop, win], sr))[2]
+          f if f && f > F3_MIN_HZ && f < F3_MAX_HZ
         end
 
-        return nil if vals.length < 5
+        return nil if vals.length < F3_MIN_PROBES
 
         vals.sort[vals.length / 2]
+      end
+
+      def probes(indexes)
+        return indexes if indexes.length <= F3_PROBES
+
+        Array.new(F3_PROBES) { |k| indexes[(k * indexes.length) / F3_PROBES] }
       end
 
       def align(values, src_times, dst_times)
@@ -167,17 +185,44 @@ module Pronunciation
 
         first = past_transient(e, first, last, thr)
 
-        back = [(150.0 / HOP_MS).round, first].min
+        [back_off_to_burst(e, first, floor), last]
+      end
+
+      BURST_REACH_MS = 150.0
+      BURST_RISE_DB = 6.0
+      BURST_FLOOR_DB = 4.0
+
+      def back_off_to_burst(e, first, floor)
+        reach = [(BURST_REACH_MS / HOP_MS).round, first].min
         burst = first
-        (1..back).each do |k|
+        (1..reach).each do |k|
           i = first - k
           break if i < 1
 
-          rise = e[i] - e[i - 1]
-          burst = i if rise > 6.0 && e[i] > floor + 4.0
+          burst = i if e[i] - e[i - 1] > BURST_RISE_DB && e[i] > floor + BURST_FLOOR_DB
         end
 
-        [burst, last]
+        burst
+      end
+
+      UTTERANCE_KEEP_DB = 26.0
+
+      # An utterance of several syllables carries pauses and unstressed dips that
+      # would end a single walk outwards from the loudest frame, so its bounds
+      # span every run that is not far below the loudest one.
+      def utterance_bounds(an, syllables)
+        return speech_bounds(an) if syllables.to_i <= 1
+
+        runs = speech_runs(an)
+        return speech_bounds(an) if runs.length < 2
+
+        e = an[:energy]
+        loudest = runs.map { |from, to| (from..to).max_by { |i| e[i].to_f } }.map { |i| e[i].to_f }.max
+        kept = runs.select { |from, to| (from..to).any? { |i| e[i].to_f >= loudest - UTTERANCE_KEEP_DB } }
+        return speech_bounds(an) if kept.empty?
+
+        floor, = background_level(an)
+        [back_off_to_burst(e, kept.first[0], floor), kept.last[1]]
       end
 
       def threshold(peak, floor)
@@ -188,8 +233,9 @@ module Pronunciation
       BACKGROUND_BIN_DB = 3.0
       BACKGROUND_GAP_DB = 15.0
 
-      def background_level(an)
-        e = an[:energy]
+      def background_level(an) = background_of(an[:energy])
+
+      def background_of(e)
         audible = e.reject { |v| v <= SILENCE_DB }
         sorted = (audible.length >= 3 ? audible : e).sort
         peak = sorted[(sorted.length * 0.95).floor]

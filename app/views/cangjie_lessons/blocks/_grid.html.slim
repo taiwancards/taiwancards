@@ -1,0 +1,5 @@
+section.space-y-2
+  = cangjie_block_heading(block)
+  .flex.flex-wrap.gap-2
+    - block["chars"].to_a.each do |entry|
+      = render("cangjie_lessons/chip", entry: entry, size: "text-xl")

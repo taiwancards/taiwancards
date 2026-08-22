@@ -3,7 +3,19 @@
 require "rails_helper"
 
 RSpec.describe "Public caching" do
-  REFERENCE_PAGES = %w[/grammar /tones /hanzi /variants /cangjie /practice/numbers /everyday /metro /chengyu].freeze
+  REFERENCE_PAGES = %w[
+    /grammar
+    /tones
+    /hanzi
+    /variants
+    /cangjie
+    /cangjie/lessons
+    /practice/numbers
+    /everyday
+    /metro
+    /chengyu
+  ]
+    .freeze
 
   def session_cookie = response.headers["Set-Cookie"].to_s
 

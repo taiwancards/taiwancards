@@ -1,0 +1,21 @@
+section.space-y-3
+  = cangjie_block_heading(block, t("cangjie_lessons.walkthrough"))
+  .space-y-3
+    - block["rows"].to_a.each do |row|
+      .space-y-3.rounded-2xl.border.border-border.bg-card.p-4
+        .flex.flex-wrap.items-center.gap-x-4.gap-y-3
+          = link_to character_path(row["char"]), class: "text-5xl font-semibold leading-none hover:text-brand", lang: "zh-TW", data: {turbo_frame: "_top"} do
+            = row["char"]
+          .flex.min-w-0.flex-wrap.items-center class="gap-1.5"
+            - (row["pieces"] || row["parts"]).each_with_index do |piece, index|
+              - if index.positive?
+                span.text-muted-foreground +
+              .flex.w-14.flex-col.items-center.gap-1.rounded-lg.border.border-dashed.border-border.px-1.py-1.5
+                span.text-2xl.leading-none lang="zh-TW" = piece
+                - if piece != row["parts"][index]
+                  span.leading-none.text-muted-foreground lang="zh-TW" class="text-[11px]" = "→ #{row["parts"][index]}"
+                span.font-mono.uppercase.leading-none.text-brand class="text-[10px]" = row["code"][index]
+          .ml-auto.shrink-0.text-right
+            = cangjie_code(row["code"])
+            p.text-sm.leading-none.text-muted-foreground lang="zh-TW" = row["parts"].join
+        p.text-sm.leading-relaxed.text-muted-foreground = cangjie_text(row["why"])

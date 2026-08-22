@@ -1,0 +1,18 @@
+- current = local_assigns.fetch(:current, nil)
+.space-y-3
+  - Huayu::CangjieLessons.groups.each do |group|
+    .space-y-1.5
+      .flex.flex-wrap.items-baseline.gap-x-2
+        span.text-base.font-semibold lang="zh-TW" = group.zh
+        span.text-xs.text-muted-foreground = group.name(I18n.locale)
+      .flex.flex-wrap class="gap-1.5"
+        - group.keys.each do |key|
+          - lesson = Huayu::CangjieLessons.for_key(key)
+          - next if lesson.nil?
+          - active = current == key
+          = link_to cangjie_lesson_path(lesson), title: lesson.title_for(I18n.locale),
+            class: class_names("flex h-14 w-12 flex-col items-center justify-center gap-0.5 rounded-lg border transition-colors",
+              active ? "border-brand bg-brand/10" : "border-border bg-card hover:bg-muted"),
+            data: {cangjie_progress_target: "cap", slug: lesson.slug} do
+            span.text-xl.font-medium.leading-none lang="zh-TW" = lesson.letter
+            span.font-mono.uppercase.leading-none.text-muted-foreground class="text-[10px]" = key

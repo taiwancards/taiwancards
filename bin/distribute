@@ -168,6 +168,7 @@ RUNTIME_FILES=(
   "data/pronunciation/inventory.json|pronunciation/inventory.json"
   "data/pronunciation/drills.json|pronunciation/drills.json"
   "data/pronunciation/axis_norms.json|pronunciation/axis_norms.json"
+  "data/pronunciation/junction_norms.json|pronunciation/junction_norms.json"
   "media/moe_audio/index.json|media/moe_audio/index.json"
   "media/moe_audio/notice.pdf|media/moe_audio/notice.pdf"
   "media/moe_audio/ATTRIBUTION.txt|media/moe_audio/ATTRIBUTION.txt"

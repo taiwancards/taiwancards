@@ -1,0 +1,17 @@
+section.space-y-3
+  = cangjie_block_heading(block, t("cangjie_lessons.compare"))
+  .grid.gap-3 class="sm:grid-cols-2"
+    - block["rows"].to_a.each do |row|
+      .space-y-2.rounded-2xl.border.border-border.bg-card.p-4
+        .flex.items-center.gap-3
+          span.text-4xl.font-semibold.leading-none lang="zh-TW" = row["char"]
+          .space-y-1
+            .flex.items-center.gap-2
+              span.text-emerald-600 ✓
+              = cangjie_code(row["code"])
+              span.text-sm.text-muted-foreground lang="zh-TW" = row["parts"].join
+            .flex.items-center.gap-2.line-through.opacity-70
+              span.text-red-500 ✗
+              = cangjie_code(row["wrong"]["code"])
+              span.text-sm.text-muted-foreground lang="zh-TW" = row["wrong"]["parts"].join
+        p.text-sm.leading-relaxed.text-muted-foreground = cangjie_text(row["why"])

@@ -1,34 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
 
-const RADICALS = {
-  a: "日",
-  b: "月",
-  c: "金",
-  d: "木",
-  e: "水",
-  f: "火",
-  g: "土",
-  h: "竹",
-  i: "戈",
-  j: "十",
-  k: "大",
-  l: "中",
-  m: "一",
-  n: "弓",
-  o: "人",
-  p: "心",
-  q: "手",
-  r: "口",
-  s: "尸",
-  t: "廿",
-  u: "山",
-  v: "女",
-  w: "田",
-  x: "難",
-  y: "卜",
-  z: "重",
-};
-
 export default class extends Controller {
   static targets = ["output", "code", "radicals", "candidates", "key"];
   static values = { url: String };
@@ -37,7 +8,8 @@ export default class extends Controller {
     this.buffer = "";
     this.lookup = {};
     this.codes = [];
-    fetch(this.urlValue)
+    this.abort = new AbortController();
+    fetch(this.urlValue, { signal: this.abort.signal })
       .then((r) => r.json())
       .then((data) => {
         this.lookup = data;
@@ -45,7 +17,21 @@ export default class extends Controller {
           (a, b) => a.length - b.length || (a < b ? -1 : 1),
         );
         this.refresh();
-      });
+      })
+      .catch(() => {});
+  }
+
+  disconnect() {
+    this.abort.abort();
+  }
+
+  get radicals() {
+    return (this.radicalMap ??= Object.fromEntries(
+      this.keyTargets.map((key) => [
+        key.dataset.key,
+        key.firstElementChild.textContent,
+      ]),
+    ));
   }
 
   keydown(event) {
@@ -121,6 +107,7 @@ export default class extends Controller {
 
   candidates() {
     if (!this.buffer) return [];
+    if (this.cached?.buffer === this.buffer) return this.cached.list;
     const exact = this.lookup[this.buffer] || [];
     const seen = new Set(exact);
     const result = [...exact];
@@ -135,6 +122,7 @@ export default class extends Controller {
       }
       if (result.length >= 60) break;
     }
+    this.cached = { buffer: this.buffer, list: result };
     return result;
   }
 
@@ -165,7 +153,7 @@ export default class extends Controller {
     this.codeTarget.textContent = this.buffer;
     this.radicalsTarget.textContent = this.buffer
       .split("")
-      .map((l) => RADICALS[l] || "")
+      .map((letter) => this.radicals[letter] || "")
       .join("");
     this.candidatesTarget.replaceChildren();
     this.candidates()
@@ -178,7 +166,10 @@ export default class extends Controller {
         chip.dataset.action = "cangjie#choose";
         chip.className =
           "flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-xl hover:bg-primary/10";
-        chip.innerHTML = `<span class="text-xs text-muted-foreground">${index + 1}</span>${char}`;
+        const badge = document.createElement("span");
+        badge.className = "text-xs text-muted-foreground";
+        badge.textContent = index + 1;
+        chip.replaceChildren(badge, document.createTextNode(char));
         this.candidatesTarget.appendChild(chip);
       });
   }

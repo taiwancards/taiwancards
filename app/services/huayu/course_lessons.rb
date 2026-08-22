@@ -4,15 +4,11 @@ module Huayu
   class CourseLessons
     DATA = JsonData.new("huayu/course_lessons.json", default: {}, watch: true)
 
+    extend LessonData
+
     REGISTERS = %w[standard spoken written].freeze
 
-    module Localised
-      def pick(source, locale)
-        return nil if source.blank?
-
-        source[locale.to_s].presence || source["en"]
-      end
-    end
+    Localised = LessonData::Localised
 
     Line = Data.define(:who, :zh, :en, :ru, :zhuyin, :pinyin) do
       include Localised
@@ -119,51 +115,20 @@ module Huayu
     class << self
       def stages = payload[:stages]
 
-      def lessons = payload[:lessons]
-
-      def available? = lessons.any?
-
-      def find(param)
-        value = param.to_s
-        index.fetch(value, nil)
-      end
-
-      def by_stage
-        @by_stage ||= lessons.group_by(&:stage)
-      end
+      def by_stage = payload[:by_stage]
 
       def stage(slug) = stages.find { |entry| entry.slug == slug.to_s }
 
-      def neighbours(lesson)
-        position = lessons.index(lesson)
-        return [nil, nil] if position.nil?
-
-        [position.positive? ? lessons[position - 1] : nil, lessons[position + 1]]
-      end
-
-      def reset!
-        DATA.reset!
-        remove_instance_variable(:@payload) if defined?(@payload)
-        @rows = nil
-        @index = nil
-        @by_stage = nil
-      end
-
       private
 
-      def index
-        payload
-        @index ||= lessons.index_by(&:slug)
-      end
-
-      def payload
-        rows = DATA.value
-        return @payload if defined?(@payload) && @rows.equal?(rows)
-
-        @rows = rows
-        @index = nil
-        @by_stage = nil
-        @payload = {stages: build_stages(rows), lessons: build_lessons(rows)}.freeze
+      def build(rows)
+        lessons = build_lessons(rows)
+        {
+          stages: build_stages(rows),
+          lessons: lessons,
+          by_slug: slug_index(lessons).freeze,
+          by_stage: lessons.group_by(&:stage).freeze
+        }.freeze
       end
 
       def build_stages(rows)

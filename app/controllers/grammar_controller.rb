@@ -20,9 +20,6 @@ class GrammarController < ApplicationController
     raise ActiveRecord::RecordNotFound if @lesson.nil?
 
     @entries = helpers.grammar_entries_for([@lesson])
-    lessons = Huayu::GrammarLessons.taught
-    position = lessons.index(@lesson)
-    @previous = position && position.positive? ? lessons[position - 1] : nil
-    @next = position ? lessons[position + 1] : nil
+    @previous, @next = Huayu::GrammarLessons.neighbours(@lesson)
   end
 end

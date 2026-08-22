@@ -19,6 +19,7 @@ module Site
       /grammar
       /hanzi
       /cangjie
+      /cangjie/lessons
       /tones
       /syllables
       /practice/zhuyin
@@ -146,7 +147,11 @@ module Site
       end
     end
 
-    def optional_pages = Huayu::TaiwanNames.available? ? ["/names"] : []
+    def optional_pages = (Huayu::TaiwanNames.available? ? ["/names"] : []) + cangjie_paths
+
+    def cangjie_paths
+      Huayu::CangjieLessons.all.map { |lesson| "/cangjie/lessons/#{lesson.slug}" }
+    end
 
     WORTH_INDEXING = "lexemes.readings ->> 'zhuyin' IS NOT NULL OR " \
       "EXISTS (SELECT 1 FROM lexeme_senses s WHERE s.lexeme_id = lexemes.id)"

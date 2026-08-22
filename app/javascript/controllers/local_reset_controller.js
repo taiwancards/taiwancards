@@ -6,6 +6,7 @@ const KEYS = [
   "desktop-hint.seen",
   "pron_prelisten",
   "graded.translations",
+  "cangjie.progress",
 ];
 
 export default class extends Controller {

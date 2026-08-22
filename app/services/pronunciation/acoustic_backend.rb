@@ -4,6 +4,7 @@ module Pronunciation
   class AcousticBackend
     MIN_SYLLABLE_MS = 70
     MAX_UTTERANCE_MS = 8000
+    PER_SYLLABLE_MS = 900
 
     TONE_MARKS = {1 => "ˉ", 2 => "ˊ", 3 => "ˇ", 4 => "ˋ", 5 => "˙"}.freeze
 
@@ -29,24 +30,31 @@ module Pronunciation
       return failure("unreadable") if samples.nil? || samples.empty?
 
       analysis = Acoustic::Features.analyze(samples, rate)
-      spans = segment(analysis, syllables.length)
+      expected = syllables.each_with_index.map { |target, index| resolve(target, index, syllables.length) }
+      spans = segment(analysis, syllables.length, expected.map { |row| row[:template] })
       return failure(spans) if spans.is_a?(String)
 
-      measured = syllables.each_with_index.map do |target, index|
-        measure_one(analysis, spans[index], target, index, syllables.length)
+      measured = expected.each_with_index.map do |row, index|
+        measure_one(analysis, spans[index], row, index)
       end
 
       normalize_tempo(measured)
 
-      graded = measured.map { |row| row[:absent] ? absent(row[:target], row[:key]) : score_one(row) }
+      rankings = measured.map { |row| ranking_for(row) }
+      graded = measured.each_with_index.map do |row, index|
+        row[:absent] ? absent(row[:target], row[:key]) : score_one(row, rankings[index])
+      end
 
+      overall = aggregate(graded)
       {
         "syllables" => graded,
-        "overall" => aggregate(graded),
-        "overall_level" => @verdict.level("overall", aggregate(graded)),
+        "overall" => overall,
+        "overall_level" => @verdict.level("overall", overall),
+        "flow" => flow(analysis, spans, expected),
+        "read" => Acoustic::Verification.check(measured, overall:, store: @store, analyzer:),
         "legend" => legend,
         "text" => text
-      }
+      }.compact
     end
 
     private
@@ -55,25 +63,37 @@ module Pronunciation
       {"status" => "retry", "reason" => reason}
     end
 
-    def segment(analysis, count)
+    def segment(analysis, count, templates)
       return "no_syllables" if count.zero?
 
-      low, high = Acoustic::Features.speech_bounds(analysis)
+      low, high = Acoustic::Features.utterance_bounds(analysis, count)
       return "no_speech" unless low && high && high > low
-      return "too_long" if (high - low + 1) * Acoustic::Features::HOP_MS > MAX_UTTERANCE_MS
+      return "too_long" if (high - low + 1) * Acoustic::Features::HOP_MS > allowance(count)
 
       Acoustic::Features.syllable_spans(analysis, count) ||
+        aligner.spans(analysis, templates) ||
         Acoustic::Features.forced_spans(analysis, count) ||
         "no_speech"
     end
 
-    def measure_one(analysis, span, target, index, total)
+    def allowance(count) = [MAX_UTTERANCE_MS, count * PER_SYLLABLE_MS].max
+
+    def flow(analysis, spans, expected)
+      Acoustic::Junctions.score(analysis, spans, expected.map { |row| row[:key] }, store: @store)
+    end
+
+    def aligner = @aligner ||= Acoustic::Alignment.new
+
+    def resolve(target, index, total)
       key = SyllableKey.for(target, store: @store)
       norm = @store.norm_for(position: index, total: total)
-      template = @store.template(key, norm) || @store.template(key, TemplateStore::CITATION)
+      {target:, key:, norm:, template: @store.template(key, norm) || @store.template(key, TemplateStore::CITATION)}
+    end
 
-      return {absent: true, target:, key:} if template.nil? || span.nil?
-      return {absent: true, target:, key:} if (span[1] - span[0]) * Acoustic::Features::HOP_MS < MIN_SYLLABLE_MS
+    def measure_one(analysis, span, row, index)
+      template = row[:template]
+      return {absent: true, target: row[:target], key: row[:key]} if template.nil? || span.nil?
+      return {absent: true, target: row[:target], key: row[:key]} if short?(span)
 
       features = Acoustic::Features.extract(
         analysis,
@@ -83,8 +103,10 @@ module Pronunciation
         f0_reference: speaker_reference_hz
       )
       features["f0_register"] = register(features)
-      {target:, key:, norm:, template:, features:, index:}
+      row.merge(features:, index:)
     end
+
+    def short?(span) = (span[1] - span[0]) * Acoustic::Features::HOP_MS < MIN_SYLLABLE_MS
 
     def speaker_reference_hz
       return nil unless @voice&.calibrated?
@@ -115,7 +137,15 @@ module Pronunciation
       end
     end
 
-    def score_one(row)
+    def ranking_for(row)
+      return [] if row[:absent] || !@tonal
+
+      analyzer.rank_candidates(row[:features], row[:key], row[:norm])
+    rescue StandardError
+      []
+    end
+
+    def score_one(row, ranking = [])
       target = row[:target]
       key = row[:key]
       norm = row[:norm]
@@ -131,7 +161,7 @@ module Pronunciation
       shares = Acoustic::Weights.shares(weights)
       overall = analyzer.weighted_overall(scored, weights)
 
-      best = @tonal ? best_match(features, key, template) : nil
+      best = ranking.first&.fetch("key", nil) || (@tonal ? key : nil)
       evaluation = {"overall" => overall, "parts" => scored, "best_match" => best, "expected" => key}
       lead = analyzer.lead_in(features, template)
 
@@ -319,13 +349,6 @@ module Pronunciation
 
     def legend
       @legend ||= Legend.new(verdict: @verdict, locale: @locale).rows
-    end
-
-    def best_match(features, key, template)
-      ranking = analyzer.rank_candidates(features, key, template["norm"] || TemplateStore::CITATION)
-      ranking.first&.fetch("key", nil)
-    rescue StandardError
-      key
     end
 
     def absent(target, key)

@@ -1,0 +1,47 @@
+- content_for(:title, @lesson.title_for(I18n.locale))
+
+.py-6.space-y-6.pinyin-locked.zhuyin-locked data-controller="cangjie-progress"
+  nav.flex.flex-wrap.items-center.justify-between.gap-3.text-sm
+    = link_to "← #{t("cangjie_lessons.title")}", cangjie_lessons_path, class: "text-muted-foreground hover:text-foreground"
+    span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5"
+      = cangjie_stage_label(@lesson.stage)
+
+  header.space-y-3
+    .flex.flex-wrap.items-center.gap-4
+      - if @lesson.letter?
+        .flex.size-16.shrink-0.flex-col.items-center.justify-center.rounded-2xl[
+          lang="zh-TW" class=cangjie_group_tint(cangjie_group_for(@lesson.key)&.id) ]
+          span.text-3xl.font-semibold.leading-none = @lesson.letter
+          span.font-mono.uppercase.leading-none class="mt-1 text-[11px]" = @lesson.key
+      h1.text-2xl.font-bold.tracking-tight = @lesson.title_for(I18n.locale)
+    p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = @lesson.lede_for(I18n.locale)
+
+  - @lesson.blocks.each do |block|
+    = render("cangjie_lessons/blocks/#{block["kind"]}", block: block, lesson: @lesson)
+
+  - if @lesson.bank.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("cangjie_lessons.bank")
+      .flex.flex-wrap.gap-2
+        - @lesson.bank.each do |entry|
+          = render("cangjie_lessons/chip", entry: entry, size: "text-xl")
+
+  - if @lesson.index.any?
+    = render("cangjie_lessons/index", lesson: @lesson)
+
+  - if @lesson.drills.any?
+    = render("cangjie_lessons/drills", lesson: @lesson)
+
+  = link_to cangjie_path, class: "flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm transition-colors hover:bg-muted" do
+    span.flex.items-center.gap-2
+      = icon(:keyboard, css: "size-4")
+      = t("cangjie_lessons.trainer_cta")
+    span.text-muted-foreground →
+
+  nav.flex.justify-between.gap-3.text-sm
+    - if @previous
+      = link_to "← #{@previous.title_for(I18n.locale)}", cangjie_lesson_path(@previous), class: "text-muted-foreground hover:text-foreground"
+    - else
+      span
+    - if @next
+      = link_to "#{@next.title_for(I18n.locale)} →", cangjie_lesson_path(@next), class: "text-right text-muted-foreground hover:text-foreground"

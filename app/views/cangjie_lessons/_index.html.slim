@@ -1,0 +1,20 @@
+- lesson = local_assigns.fetch(:lesson)
+section.space-y-3
+  .flex.flex-wrap.items-baseline.gap-x-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("cangjie_lessons.index_title")
+    span.text-xs.tabular-nums.text-muted-foreground = "· #{lesson.index.size}"
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("cangjie_lessons.index_lede")
+  .flex.flex-wrap.gap-1
+    - CangjieHelper::LEVEL_ORDER.each do |level|
+      span.rounded-full.px-2.text-xs class="py-0.5 #{cangjie_level_tint(level)}" = cangjie_level_label(level)
+  .flex.flex-wrap class="gap-1.5"
+    - lesson.index.each do |row|
+      = link_to character_path(row["char"]), class: "flex w-14 shrink-0 flex-col items-center gap-0.5 rounded-lg border border-border bg-card px-1 py-1.5 transition-colors hover:border-brand hover:bg-muted",
+        data: {turbo_frame: "_top", cangjie_progress_target: "chip", char: row["char"]} do
+        span.text-xl.font-semibold.leading-none lang="zh-TW" = row["char"]
+        span.font-mono.uppercase.leading-none.text-muted-foreground class="text-[9px] tracking-wider" = row["code"]
+        - if row["level"]
+          span.rounded-full.leading-none class="px-1 py-px text-[9px] #{cangjie_level_tint(row["level"])}"
+            = cangjie_level_label(row["level"])
+        - else
+          span.leading-none class="h-[11px]"

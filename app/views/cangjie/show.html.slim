@@ -1,8 +1,11 @@
 - content_for(:title, t("cangjie.title"))
 
 .py-6.space-y-6.pinyin-locked.zhuyin-locked
-  header.space-y-1
+  header.space-y-3
     = render("shared/page_help", key: "cangjie", title: t("cangjie.title"))
+    = link_to cangjie_lessons_path, class: "inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-muted" do
+      = icon(:book, css: "size-4")
+      = t("cangjie.open_lessons")
 
   - unless @available
     p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
@@ -10,7 +13,7 @@
 
   - if @available
     .space-y-4[
-      data-controller="cangjie" data-cangjie-url-value=SharedAssets.url_for("json", CangjieController::DATA) ]
+      data-controller="cangjie" data-cangjie-url-value=@url ]
 
       textarea.w-full.rounded-xl.border.border-border.bg-card.px-4.py-3.text-2xl.leading-relaxed[
         lang="zh-TW" rows="3" placeholder=t("cangjie.output_placeholder")
@@ -24,14 +27,9 @@
       .flex.flex-wrap.gap-1.min-h-9 data-cangjie-target="candidates"
 
       .space-y-1.select-none
-        - @rows.each do |row|
-          .flex.justify-center class="gap-0.5 sm:gap-1"
-            - row.each do |letter|
-              button.flex.flex-col.items-center.justify-center.rounded-lg.border.border-border.bg-card.transition-colors[
-                type="button" class="h-12 w-8 hover:bg-muted active:bg-primary/20 sm:h-14 sm:w-14"
-                data-cangjie-target="key" data-key=letter data-action="cangjie#press" ]
-                span.text-lg.font-medium lang="zh-TW" = @keys[letter]
-                span.text-muted-foreground class="text-[10px] uppercase" = letter
+        = render("shared/cangjie_keys", action: "cangjie#press", glyph_class: "text-lg",
+          key_class: "h-12 w-8 hover:bg-muted active:bg-primary/20 sm:h-14 sm:w-14",
+          attrs: {"data-cangjie-target" => "key"})
         .flex.justify-center.pt-1 class="gap-0.5 sm:gap-1"
           button.flex.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
             type="button" class="h-12 w-14 hover:bg-muted active:bg-primary/20 sm:h-12 sm:w-20"

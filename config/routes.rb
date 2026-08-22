@@ -168,6 +168,8 @@ Rails.application.routes.draw do
     get("names/data", to: "names#data", as: :names_data, defaults: {format: :json})
     get("hanzi", to: "hanzi#show", as: :hanzi)
     get("cangjie", to: "cangjie#show", as: :cangjie)
+    get("cangjie/lessons", to: "cangjie_lessons#index", as: :cangjie_lessons)
+    get("cangjie/lessons/:id", to: "cangjie_lessons#show", as: :cangjie_lesson)
     get("pronunciation", to: "pronunciation#show", as: :pronunciation)
     get("pronunciation/warmup", to: "warmups#show", as: :pronunciation_warmup)
     post("pronunciation/warmup", to: "warmups#create", defaults: {format: :json})
