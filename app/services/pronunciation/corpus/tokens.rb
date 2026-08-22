@@ -21,6 +21,26 @@ module Pronunciation
         end
       end
 
+      HELD_OUT = "held_out_speakers"
+
+      def held_out_speakers
+        @held_out_speakers ||= Array(split[HELD_OUT]).to_set
+      end
+
+      def reset!
+        @split = nil
+        @held_out_speakers = nil
+        @available = nil
+      end
+
+      def wanted?(row, speakers)
+        return true if speakers == :all
+        return speakers.include?(row["_speaker"]) if speakers.is_a?(Enumerable)
+        return true if held_out_speakers.empty?
+
+        (speakers == :held_out) == held_out_speakers.include?(row["_speaker"])
+      end
+
       def keys(part, source = TAIWAN)
         return available(source) if part.to_s == "all"
 
@@ -35,9 +55,9 @@ module Pronunciation
           .sort
       end
 
-      def each(key, source = TAIWAN)
+      def each(key, source = TAIWAN, speakers: :fitting)
         path = File.join(root(source), "#{key}.jsonl")
-        return to_enum(:each, key, source) unless block_given?
+        return to_enum(:each, key, source, speakers: speakers) unless block_given?
         return unless File.exist?(path)
 
         File.foreach(path) do |line|
@@ -47,21 +67,21 @@ module Pronunciation
             next
           end
 
-          yield(row)
+          yield(row) if wanted?(row, speakers)
         end
       end
 
-      def sample(key, limit, source = TAIWAN)
+      def sample(key, limit, source = TAIWAN, speakers: :fitting)
         rows = []
-        each(key, source) { |row| rows << row }
+        each(key, source, speakers: speakers) { |row| rows << row }
         return rows if rows.length <= limit
 
         step = rows.length.to_f / limit
         Array.new(limit) { |i| rows[(i * step).floor] }
       end
 
-      def count(keys, source = TAIWAN)
-        keys.sum { |key| each(key, source).count }
+      def count(keys, source = TAIWAN, speakers: :fitting)
+        keys.sum { |key| each(key, source, speakers: speakers).count }
       end
     end
   end

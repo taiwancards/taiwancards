@@ -8,6 +8,8 @@ end
 desc("List every pronunciation task")
 task(pronunciation: "pronunciation:help")
 
+VOICES = lambda { ENV["VOICES"].presence&.to_sym || :fitting }
+
 namespace(:pronunciation) do
   desc("Show all tasks in this namespace")
   task(:help) do
@@ -56,6 +58,16 @@ namespace(:pronunciation) do
         io: $stdout
       )
       .build!
+  end
+
+  desc("Common Voice zh-TW clips to syllable tokens, so the templates hear many Taiwanese voices")
+  task(common_voice_tokens: :environment) do
+    Pronunciation::Corpus::CommonVoiceTokens.new(io: $stdout).write!
+  end
+
+  desc("Mark every Common Voice speaker as unheard, so VOICES=held_out reports on a stranger")
+  task(speaker_split: :environment) do
+    Pronunciation::Corpus::SpeakerSplit.new(io: $stdout).write!
   end
 
   desc("Median pitch of each corpus speaker, the reference the tone register is measured against")
@@ -133,7 +145,9 @@ namespace(:pronunciation) do
   desc("Full local rebuild: audio to tokens to pooled norms to templates")
   task(rebuild: :environment) do
     %w[
+      common_voice_tokens
       ingest
+      speaker_split
       speaker_pitch
       vot_norms
       style_factor
@@ -186,7 +200,7 @@ namespace(:pronunciation) do
       "cn_far_both" => "China · other syllable · other tone"
     }
 
-    r = Pronunciation::Corpus::Ladder.new(part: ENV["SPLIT"].presence || "test").call
+    r = Pronunciation::Corpus::Ladder.new(part: ENV["SPLIT"].presence || "test", speakers: VOICES.call).call
     puts(
       format(
         "\n%-38s %7s %8s %6s %6s %8s %9s",
@@ -217,7 +231,7 @@ namespace(:pronunciation) do
 
   desc("Measure quality on the held-out split: top-1, d prime, AUC, how natives fare")
   task(report_card: :environment) do
-    r = Pronunciation::Corpus::ReportCard.new(part: ENV["SPLIT"].presence || "test").call
+    r = Pronunciation::Corpus::ReportCard.new(part: ENV["SPLIT"].presence || "test", speakers: VOICES.call).call
     n = r["natives"]
     puts(format("\ntop-1 %.4f", r["top1"]["value"]))
     puts(

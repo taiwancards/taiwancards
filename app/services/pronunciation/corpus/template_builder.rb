@@ -96,7 +96,7 @@ module Pronunciation
         return [] if Acoustic::Syllables.parse_key(key).nil?
 
         rows = []
-        Tokens.each(key, @source) do |row|
+        Tokens.each(key, @source, speakers: :fitting) do |row|
           row["f0_register"] = SpeakerPitch.register(row["_speaker"], row["f0_ref_hz"])
           rows << row
         end

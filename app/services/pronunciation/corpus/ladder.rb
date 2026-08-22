@@ -17,11 +17,14 @@ module Pronunciation
       PER_RUNG = 4
       SOURCES = {taiwan: Tokens::TAIWAN, china: Tokens::CHINA}.freeze
 
-      def initialize(part: "test", store: TemplateStore.instance, io: $stdout)
+      def initialize(part: "test", speakers: :fitting, store: TemplateStore.instance, io: $stdout)
         @part = part
+        @speakers = speakers
         @store = store
         @io = io
       end
+
+      def speakers_for(source) = (source == Tokens::TAIWAN) ? @speakers : :all
 
       def call
         keys = Tokens.keys(@part)
@@ -60,7 +63,7 @@ module Pronunciation
             source = SOURCES.fetch(rung[:speakers])
 
             candidates(rung, syllable, tone, near, far, source).each do |candidate|
-              Tokens.sample(candidate, PER_RUNG, source).each do |features|
+              Tokens.sample(candidate, PER_RUNG, source, speakers: speakers_for(source)).each do |features|
                 spoken = @store.norm_for(position: features["_index"].to_i, total: features["_n_syllables"].to_i)
                 score = overall(analyzer, features, @store.template(key, spoken) || template, spoken)
                 next if score.nil?

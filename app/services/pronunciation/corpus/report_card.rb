@@ -5,8 +5,9 @@ require "json"
 module Pronunciation
   module Corpus
     class ReportCard
-      def initialize(part: "test", store: TemplateStore.instance, io: $stdout)
+      def initialize(part: "test", speakers: :fitting, store: TemplateStore.instance, io: $stdout)
         @part = part
+        @speakers = speakers
         @store = store
         @io = io
       end
@@ -15,12 +16,13 @@ module Pronunciation
         keys = Tokens.keys(@part)
         raise "no keys in the '#{@part}' split" if keys.empty?
 
-        @io&.puts("Report over #{keys.length} syllables of the '#{@part}' split")
+        @io&.puts("Report over #{keys.length} syllables of the '#{@part}' split, #{@speakers} voices")
         chunks = FanOut.map(keys, io: @io) { |chunk| measure(chunk) }
 
         {
           "generated_at" => Time.current.utc.iso8601,
           "split" => @part,
+          "speakers" => @speakers.to_s,
           "n_keys" => keys.length,
           "top1" => top1(chunks),
           "contrasts" => contrasts(chunks),
@@ -43,7 +45,7 @@ module Pronunciation
         keys.each do |key|
           next unless @store.template(key)
 
-          Tokens.each(key) do |features|
+          Tokens.each(key, speakers: @speakers) do |features|
             norm = norm_of(features)
             template = @store.template(key, norm) || @store.template(key) or next
             rivals = rivals_for(key, norm)

@@ -5,17 +5,22 @@ require "json"
 module Pronunciation
   module Corpus
     class Manifest
-      DIRS = %w[corpus_tw corpus_cns].freeze
+      DIRS = {
+        "corpus_tw" => "manifest.json",
+        "corpus_cns" => "manifest.json",
+        "corpus_cv" => CommonVoiceTokens::FILE
+      }.freeze
       RELATIVE = %r{\Adata/([^/]+)/}
 
       def initialize(dirs: DIRS, base: nil)
         home = base || TemplateStore.instance.root
-        @roots = dirs.to_h { |dir| [dir, File.join(home, dir)] }
+        @files = dirs
+        @roots = dirs.keys.to_h { |dir| [dir, File.join(home, dir)] }
       end
 
       attr_reader :roots
 
-      def paths = @roots.transform_values { |root| File.join(root, "manifest.json") }
+      def paths = @roots.to_h { |dir, root| [dir, File.join(root, @files.fetch(dir))] }
 
       def exist? = manifests.any?
 
