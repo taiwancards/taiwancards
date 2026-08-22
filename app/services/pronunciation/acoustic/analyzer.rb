@@ -6,6 +6,7 @@ module Pronunciation
   module Acoustic
     class Analyzer
       REGISTER_CAP = 2.0
+      REGISTER_WEIGHT = 1.5
       CONTOUR_SIGMA_FLOOR = 1.0
       MIN_TONE_VOICED_MS = 60.0
       CONTOUR_SIGMA_CAP = 1.0
@@ -105,17 +106,20 @@ module Pronunciation
 
         if st["nasal_coda"] && tpl["nasal_ratio_tail"]
           zn = zscore(f["nasal_ratio_tail"], tpl["nasal_ratio_tail"], "nasal_ratio_tail")
-          za = if tpl["nasal_antiformant"] && f["nasal_antiformant"]
-            zscore(f["nasal_antiformant"], tpl["nasal_antiformant"], "nasal_antiformant")
-          end
-
-          parts = [zn, zf2, za].compact
-          zc = Math.sqrt(parts.sum { |v| v * v } / parts.length)
-          code, vars = coda_code(zn, zf2, za, st, zc)
-          axes << axis("coda", zc, code, vars)
+          axes <<
+            axis(
+              "coda",
+              zn.abs,
+              coda_code(zn),
+              {"coda" => st["coda"]},
+              measured: {
+                "nasal_ratio" => f["nasal_ratio_tail"]&.round(2),
+                "nasal_norm" => tpl["nasal_ratio_tail"]["median"]&.round(2)
+              }
+            )
         end
 
-        if tpl["mfcc"]
+        if tpl["mfcc"] && f["mfcc"]
           d = DTW.distance(f["mfcc"], tpl["mfcc"]["center"])
           z = d / mfcc_scale(tpl)
           axes << axis("timbre", z, AxisNorms.typical?("timbre", z) ? "timbre.ok" : "timbre.drift")
@@ -142,6 +146,8 @@ module Pronunciation
         return nil if f["voiced_ms"] && f["voiced_ms"] < MIN_TONE_VOICED_MS
 
         user = f["tone_curve"]
+        return nil if user.blank?
+
         center, sigma = reference_contour(tpl, tc)
 
         zs = user.each_index.map do |i|
@@ -158,7 +164,7 @@ module Pronunciation
         if f["f0_register"] && tpl["f0_register"]
           drift = fold_octave(f["f0_register"] - tpl["f0_register"]["median"])
           zreg = (drift / sigma_of(tpl["f0_register"], "f0_register")).clamp(-REGISTER_CAP, REGISTER_CAP)
-          z = Math.sqrt(((z ** 2) + (0.5 * (zreg ** 2))) / 1.5)
+          z = Math.sqrt(((z ** 2) + (REGISTER_WEIGHT * (zreg ** 2))) / (1.0 + REGISTER_WEIGHT))
           register = {
             "actual" => f["f0_register"].round(1),
             "norm" => tpl["f0_register"]["median"].round(1),
@@ -380,23 +386,10 @@ module Pronunciation
         [zf2.positive? ? "vowel.front" : "vowel.back", vars]
       end
 
-      CODA_WEAK_Z = -1.5
-      CODA_HEAVY_Z = 1.5
-      CODA_PLACE_Z = 1.2
+      def coda_code(zn)
+        return "coda.ok" if AxisNorms.typical?("coda", zn.abs)
 
-      def coda_code(zn, zf2, za, st, zc)
-        vars = {"coda" => st["coda"]}
-        return ["coda.ok", vars] if AxisNorms.typical?("coda", zc)
-        return ["coda.weak", vars] if zn <= CODA_WEAK_Z && zn.abs > zf2.abs
-        return ["coda.heavy", vars] if zn >= CODA_HEAVY_Z && right_place?(za, zf2)
-
-        ["coda.#{st["coda"] == "n" ? "ng_for_n" : "n_for_ng"}", vars]
-      end
-
-      def right_place?(za, zf2)
-        return false if za.nil?
-
-        za.abs < CODA_PLACE_Z && zf2.abs < CODA_PLACE_Z
+        zn.negative? ? "coda.weak" : "coda.heavy"
       end
 
       def duration_code(z, tone)
@@ -436,7 +429,7 @@ module Pronunciation
         "initial" => 2.0,
         "sibilant" => 2.0,
         "vowel" => 2.0,
-        "coda" => 2.0,
+        "coda" => 0.5,
         "medial" => 1.0,
         "timbre" => 1.5,
         "duration" => 0.7

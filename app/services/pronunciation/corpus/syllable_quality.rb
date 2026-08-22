@@ -7,7 +7,6 @@ module Pronunciation
     class SyllableQuality
       PATH = "syllable_quality.json"
       MIN_TOKENS = 3
-      MIN_TRAIN = 3
       PROBES = 8
 
       def initialize(part: "all", store: TemplateStore.instance, io: $stdout)
@@ -34,11 +33,12 @@ module Pronunciation
 
       def measure(keys)
         analyzer = Acoustic::Analyzer.new(@store)
-        keys.filter_map { |key| row(analyzer, key) }
+        held = HeldOut.new(store: @store)
+        keys.filter_map { |key| row(analyzer, held, key) }
       end
 
-      def row(analyzer, key)
-        rows = citations(key)
+      def row(analyzer, held, key)
+        rows = held.citations(key)
         return nil if rows.length < MIN_TOKENS
         return nil if @store.template(key).nil?
 
@@ -48,18 +48,15 @@ module Pronunciation
         seen = 0
 
         rows.first(PROBES).each do |features|
-          train = rows.reject { |other| other["_file"] == features["_file"] }
-          next if train.length < MIN_TRAIN
-
-          template = held_out(key, train)
+          template = held.template(key, held.without(rows, features))
           next if template.nil?
 
-          score = overall(analyzer, features, template)
+          score = held.overall(analyzer, features, template)
           next if score.nil?
 
           seen += 1
           selves << score
-          wins += 1 if best_rival(analyzer, features, key, score, margins)
+          wins += 1 if best_rival(analyzer, held, features, key, score, margins)
         end
 
         return nil if seen < MIN_TOKENS
@@ -73,10 +70,10 @@ module Pronunciation
         }
       end
 
-      def best_rival(analyzer, features, key, score, margins)
+      def best_rival(analyzer, held, features, key, score, margins)
         best = nil
         rivals(key).each do |rival|
-          other = overall(analyzer, features, rival)
+          other = held.overall(analyzer, features, rival)
           next if other.nil?
 
           best = other if best.nil? || other > best
@@ -94,42 +91,6 @@ module Pronunciation
           syllable, tone = Acoustic::Syllables.parse_key(key)
           Acoustic::Syllables.confusion_set(syllable, tone).filter_map { |other| @store.template(other) }
         end
-      end
-
-      def citations(key)
-        rows = []
-        Tokens.each(key) { |row| rows << row if row["_n_syllables"] == 1 }
-        rows
-      end
-
-      def held_out(key, train)
-        meta = train.map { |r| {"speaker" => r["_speaker"], "source" => r["_source"], "n_syllables" => 1} }
-        Acoustic::Templates.build(
-          key,
-          train,
-          meta,
-          variability: variability,
-          vot: VotNorms.for_rows(key, train)
-        )
-      rescue StandardError
-        nil
-      end
-
-      def variability
-        return @variability if defined?(@variability)
-
-        path = File.join(@store.root, "variability.json")
-        @variability = File.exist?(path) ? JSON.parse(File.read(path))["model"] : nil
-      end
-
-      def overall(analyzer, features, template)
-        return nil if template.nil?
-
-        norm = template["norm"] || TemplateStore::CITATION
-        parts = analyzer.part_scores(analyzer.score_axes(features, template, norm))
-        return nil if parts.empty?
-
-        analyzer.weighted_overall(parts, Acoustic::Weights::BASE.slice(*parts.map { |p| p["id"] }))
       end
 
       def median(values)

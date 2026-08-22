@@ -108,6 +108,7 @@ export default class extends Controller {
     labelFlowTitle: String,
     labelReadTitle: String,
     labelChartHint: String,
+    labelChartRange: String,
     labelWeight: String,
     tonal: { type: Boolean, default: true },
     healthUrl: String,
@@ -888,7 +889,11 @@ export default class extends Controller {
   }
 
   toneChart(syllable) {
-    const { curve, reference, sigma } = syllable.contour;
+    const { sigma, register } = syllable.contour;
+    const spoken = register?.actual ?? 0;
+    const wanted = register?.norm ?? 0;
+    const curve = syllable.contour.curve.map((v) => v + spoken);
+    const reference = syllable.contour.reference.map((v) => v + wanted);
     const w = 260;
     const h = 88;
     const pad = 6;
@@ -979,7 +984,12 @@ export default class extends Controller {
     const wrap = document.createElement("div");
     wrap.className = "space-y-1 text-muted-foreground";
     wrap.appendChild(svg);
-    wrap.appendChild(this.span(this.labelChartHintValue, "block text-3xs"));
+    wrap.appendChild(
+      this.span(
+        register ? this.labelChartRangeValue : this.labelChartHintValue,
+        "block text-3xs",
+      ),
+    );
     return wrap;
   }
 

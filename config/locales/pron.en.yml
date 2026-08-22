@@ -36,6 +36,7 @@ en:
       semitones: "semitones"
     ui:
       chart_hint: "Dashed is the reference, the band is the spread across real speakers, the solid line is you."
+      chart_range: "The scale is semitones from the middle of your voice, so it shows not only the shape of the tone but the height you took it at."
       parts_title: "What the score is made of"
       fix_title: "What to fix"
       reference: "How this works"

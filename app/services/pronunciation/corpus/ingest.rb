@@ -34,8 +34,18 @@ module Pronunciation
 
         keys = collect(spill)
         FileUtils.rm_rf(spill)
-        @io&.puts("  keys written: #{keys.length}")
+        dropped = forget_stale(keys)
+        @io&.puts("  keys written: #{keys.length}#{", stale removed: #{dropped}" if dropped.positive?}")
         keys
+      end
+
+      def forget_stale(keys)
+        return 0 if @only
+
+        wanted = keys.to_set
+        stale = Dir.glob(File.join(@out, "*.jsonl")).reject { |path| wanted.include?(File.basename(path, ".jsonl")) }
+        stale.each { |path| File.delete(path) }
+        stale.length
       end
 
       private

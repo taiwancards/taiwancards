@@ -33,18 +33,41 @@ module Pronunciation
         File.join(@roots.fetch(dir) { @roots.values.first }, relative.sub(RELATIVE, ""))
       end
 
+      TONE = /[1-5]\z/
+
       def by_file(only: nil)
         grouped = Hash.new { |hash, file| hash[file] = [] }
 
         manifests.each_value do |data|
           data.fetch("tokens", {}).each do |key, tokens|
-            next if only && !only.include?(key)
+            tokens.each do |token|
+              settled = settle(key, token)
+              next if only && !only.include?(settled)
 
-            tokens.each { |token| grouped[token["path"]] << token.merge("_key" => key) }
+              grouped[token["path"]] << token.merge("_key" => settled)
+            end
           end
         end
 
         grouped.select { |relative, _| File.exist?(resolve(relative)) }
+      end
+
+      def settle(key, token)
+        derived = spelled(token)
+        return key if derived.nil? || derived.sub(TONE, "") == key.to_s.sub(TONE, "")
+
+        "#{derived.sub(TONE, "")}#{key.to_s[TONE] || derived[TONE]}"
+      end
+
+      def spelled(token)
+        pinyin = token["pinyin"].to_s
+        return nil if pinyin.empty?
+
+        parts = Huayu::Zhuyin.syllabify(pinyin)
+        part = parts && parts[token["index"].to_i]
+        return nil if part.nil?
+
+        "#{Huayu::ReadingForms.plain_pinyin(part["pinyin"])}#{Huayu::Zhuyin.tone(part["pinyin"])}"
       end
 
       private

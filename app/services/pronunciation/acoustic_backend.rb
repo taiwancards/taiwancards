@@ -38,6 +38,7 @@ module Pronunciation
         measure_one(analysis, spans[index], row, index)
       end
 
+      place_in_range(measured)
       normalize_tempo(measured)
 
       rankings = measured.map { |row| ranking_for(row) }
@@ -122,6 +123,17 @@ module Pronunciation
       return nil unless @voice&.calibrated?
 
       @voice.reference_hz
+    end
+
+    def place_in_range(measured)
+      rows = measured.reject { |row| row[:absent] }
+      placed = Acoustic::Register.from_utterance(
+        rows.map { |row| row[:features]["f0_ref_hz"] },
+        rows.map { |row| row[:template].dig("f0_register", "median") }
+      )
+      return if placed.empty?
+
+      rows.each_with_index { |row, index| row[:features]["f0_register"] ||= placed[index] }
     end
 
     TEMPO_FIELDS = %w[voiced_ms duration_ms].freeze

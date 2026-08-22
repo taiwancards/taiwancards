@@ -20,13 +20,44 @@ module Pronunciation
           @zhuyin
         end
 
+        OFF_PINYIN = {"eh" => "ㄝ", "r" => "ㄦ"}.freeze
+
+        def spells_its_own_key?(key, stored)
+          return false if stored.blank?
+
+          spelled = spell(key)
+          return true if spelled.nil?
+
+          stored.delete(Parts::TONE_CHARS) == spelled.delete(Parts::TONE_CHARS)
+        end
+
+        def spell(key)
+          parsed = parse_key(key)
+          return nil if parsed.nil?
+
+          syllable, tone = parsed
+          base = OFF_PINYIN[syllable] || compose(syllable)
+          return nil if base.blank?
+
+          Huayu::Zhuyin.apply_tone(base, tone)
+        end
+
+        def compose(syllable)
+          parts = Huayu::Zhuyin.syllabify(syllable.tr("v", "ü"))
+          return nil if parts.blank?
+
+          parts.map { |part| part["zhuyin"].to_s.delete(Parts::TONE_CHARS) }.join.presence
+        end
+
         def load!(path = Syllables.default_path)
           @loaded = File.exist?(path)
           @inventory = @loaded ? JSON.parse(File.read(path))["keys"] : {}
           @by_syllable = Hash.new { |h, k| h[k] = [] }
-          @zhuyin = {}
+          @zhuyin = Hash.new { |cache, key| cache[key] = spell(key) }
           @inventory.each do |key, meta|
             @by_syllable[meta["syllable"]] << meta["tone"]
+            next unless spells_its_own_key?(key, meta["zhuyin"])
+
             @zhuyin[key] = meta["zhuyin"]
           end
 
@@ -35,6 +66,8 @@ module Pronunciation
           @neighbour_cache = {}
           @inventory
         end
+
+        def described?(key) = spells_its_own_key?(key, inventory.dig(key, "zhuyin"))
 
         def inventory
           load! unless @loaded

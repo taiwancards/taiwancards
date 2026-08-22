@@ -126,6 +126,15 @@ namespace(:pronunciation) do
     puts("measured #{rows.length}, usable for drills #{good}")
   end
 
+  desc("How well each minimal pair is told apart, held out — the drill sections are picked from this")
+  task(contrast_quality: :environment) do
+    payload = Pronunciation::Corpus::ContrastQuality.new(io: $stdout).write!
+    payload["pairs"].group_by { |pair| pair["family"] }.sort.each do |family, rows|
+      usable = rows.count { |row| row["accuracy"] >= Pronunciation::Corpus::DrillsBuilder::DECIDABLE }
+      puts(format("  %-10s %4d pairs, %3d decidable, best %.1f%%", family, rows.length, usable, rows.first["accuracy"]))
+    end
+  end
+
   desc("Build the drill sections from the syllables we actually recognise")
   task(drills: :environment) do
     payload = Pronunciation::Corpus::DrillsBuilder.new.write!
@@ -156,6 +165,7 @@ namespace(:pronunciation) do
       axis_norms
       thresholds_build
       syllable_quality
+      contrast_quality
       drills
     ]
       .each do |name|

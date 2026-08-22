@@ -1,0 +1,279 @@
+#!/usr/bin/env -S uv run --quiet --with pyarrow python
+"""Build the twsyllables release directory from data/pronunciation."""
+
+import argparse
+import hashlib
+import json
+import re
+import shutil
+from datetime import UTC, datetime
+from pathlib import Path
+
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+TEMPLATE_STYLES = {
+    "taiwan": "citation",
+    "taiwan_word": "word",
+    "taiwan_wi": "word_initial",
+    "taiwan_wm": "word_medial",
+    "taiwan_wf": "word_final",
+}
+
+TOKEN_RENAMES = {
+    "_key": "key",
+    "_file": "clip",
+    "_index": "syllable_index",
+    "_speaker": "speaker",
+    "_source": "source",
+    "_n_syllables": "n_syllables",
+    "_transcript": "transcript",
+}
+
+CALIBRATION = [
+    "axis_norms.json",
+    "thresholds.json",
+    "style_factor.json",
+    "speaker_pitch.json",
+]
+
+SYLLABLE_FIELDS = [
+    "key",
+    "zhuyin",
+    "syllable",
+    "tone",
+    "pinyin",
+    "chars",
+    "n_tokens",
+    "n_citation",
+    "style",
+    "confidence",
+    "sources",
+    "confusions",
+]
+
+
+def jsonl(path, rows):
+    with path.open("w", encoding="utf-8") as out:
+        for row in rows:
+            out.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+    return len(rows)
+
+
+KEY = re.compile(r"\A([a-zü]+)([1-5])\Z")
+
+
+def syllables(source, spelling):
+    index = json.loads((source / "templates" / "index.json").read_text())
+    quiz = {entry["key"]: entry for entry in index["quiz"]}
+    rows = []
+    for key in sorted(index["keys"]):
+        summary = index["keys"][key]
+        meta = quiz.get(key, {})
+        parsed = KEY.match(key)
+        rows.append(
+            {
+                "key": key,
+                "zhuyin": spelling.get(key) or meta.get("zhuyin"),
+                "syllable": parsed.group(1) if parsed else None,
+                "tone": int(parsed.group(2)) if parsed else None,
+                "pinyin": key,
+                "chars": meta.get("chars"),
+                "n_tokens": summary.get("n_tokens"),
+                "n_citation": summary.get("n_citation"),
+                "style": summary.get("style"),
+                "confidence": summary.get("confidence"),
+                "sources": summary.get("sources", {}),
+                "confusions": meta.get("confusions"),
+            }
+        )
+    return rows
+
+
+def templates(source):
+    rows = []
+    for directory, style in TEMPLATE_STYLES.items():
+        root = source / "templates" / directory
+        if not root.is_dir():
+            continue
+        for path in sorted(root.glob("*.json")):
+            row = json.loads(path.read_text())
+            row["style"] = style
+            rows.append(row)
+    return rows
+
+
+def held_out(source):
+    path = source / "test_split.json"
+    if not path.exists():
+        return set()
+    return set(json.loads(path.read_text()).get("held_out_speakers", []))
+
+
+def tokens(source):
+    strangers = held_out(source)
+    rows = []
+    for path in sorted((source / "tokens").glob("*.jsonl")):
+        for line in path.read_text().splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if row.get("_speaker") in strangers:
+                continue
+            rows.append(
+                {TOKEN_RENAMES.get(name, name): value for name, value in row.items()}
+            )
+    rows.sort(key=lambda row: (row["key"], row["clip"], row["syllable_index"]))
+    return rows
+
+
+def variability(source):
+    payload = json.loads((source / "variability.json").read_text())
+    rows = []
+    for feature, value in payload["model"].items():
+        curve = value if isinstance(value, list) else None
+        rows.append(
+            {
+                "feature": feature,
+                "mode": "relative" if feature.endswith("_ratio") else "absolute",
+                "sigma_between": None if curve else value,
+                "sigma_between_curve": curve,
+            }
+        )
+    return rows
+
+
+INITIAL_ZHUYIN = {
+    "b": "ㄅ",
+    "p": "ㄆ",
+    "m": "ㄇ",
+    "f": "ㄈ",
+    "d": "ㄉ",
+    "t": "ㄊ",
+    "n": "ㄋ",
+    "l": "ㄌ",
+    "g": "ㄍ",
+    "k": "ㄎ",
+    "h": "ㄏ",
+    "j": "ㄐ",
+    "q": "ㄑ",
+    "x": "ㄒ",
+    "zh": "ㄓ",
+    "ch": "ㄔ",
+    "sh": "ㄕ",
+    "r": "ㄖ",
+    "z": "ㄗ",
+    "c": "ㄘ",
+    "s": "ㄙ",
+}
+
+
+def vot_norms(source):
+    payload = json.loads((source / "vot_norms.json").read_text())
+    return [
+        dict(zhuyin=INITIAL_ZHUYIN.get(initial), initial=initial, **stat)
+        for initial, stat in sorted(payload.items())
+    ]
+
+
+def quality(source):
+    rows = json.loads((source / "syllable_quality.json").read_text())
+    return sorted(rows, key=lambda row: row["key"])
+
+
+def write_parquet(rows, path, schema_from):
+    table = pa.Table.from_pylist(rows)
+    if schema_from and schema_from.exists():
+        schema = pq.ParquetFile(schema_from).schema_arrow
+        missing = set(schema.names) - set(table.schema.names)
+        extra = set(table.schema.names) - set(schema.names)
+        if missing or extra:
+            raise SystemExit(
+                f"{path.name}: schema drift, missing {sorted(missing)}, extra {sorted(extra)}"
+            )
+        table = table.select(schema.names).cast(schema)
+    pq.write_table(table, path, compression="zstd", row_group_size=len(rows))
+    return len(rows)
+
+
+def digest(path):
+    sha = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            sha.update(chunk)
+    return sha.hexdigest()
+
+
+def manifest(out, counts, version, previous):
+    payload = json.loads((previous / "MANIFEST.json").read_text()) if previous else {}
+    payload["version"] = version
+    payload["generated"] = datetime.now(UTC).date().isoformat()
+    payload["files"] = {}
+    for name in list(counts) + [f"calibration/{name}" for name in CALIBRATION]:
+        path = out / name
+        entry = {"bytes": path.stat().st_size, "sha256": digest(path)}
+        if name in counts:
+            entry = {"rows": counts[name], **entry}
+        payload["files"][name] = entry
+    (out / "MANIFEST.json").write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("out", type=Path)
+    parser.add_argument("--source", type=Path, default=Path("data/pronunciation"))
+    parser.add_argument("--previous", type=Path, default=None)
+    parser.add_argument("--version", required=True)
+    args = parser.parse_args()
+
+    out = args.out
+    (out / "calibration").mkdir(parents=True, exist_ok=True)
+
+    rows_of_tokens = tokens(args.source)
+    rows = templates(args.source)
+    spelling = {
+        row["key"]: row["zhuyin"]
+        for row in rows
+        if row["style"] == "citation" and row.get("zhuyin")
+    }
+
+    counts = {
+        "syllables.jsonl": jsonl(
+            out / "syllables.jsonl", syllables(args.source, spelling)
+        ),
+        "templates.parquet": write_parquet(
+            rows,
+            out / "templates.parquet",
+            args.previous and args.previous / "templates.parquet",
+        ),
+        "tokens.parquet": write_parquet(
+            rows_of_tokens,
+            out / "tokens.parquet",
+            args.previous and args.previous / "tokens.parquet",
+        ),
+        "variability.jsonl": jsonl(out / "variability.jsonl", variability(args.source)),
+        "vot_norms.jsonl": jsonl(out / "vot_norms.jsonl", vot_norms(args.source)),
+        "quality.jsonl": jsonl(out / "quality.jsonl", quality(args.source)),
+    }
+
+    voices = {row["speaker"] for row in rows_of_tokens}
+    for name in CALIBRATION:
+        source = args.source / name
+        if name == "speaker_pitch.json":
+            pitch = json.loads(source.read_text())
+            kept = {speaker: hz for speaker, hz in pitch.items() if speaker in voices}
+            (out / "calibration" / name).write_text(
+                json.dumps(kept, indent=2, ensure_ascii=False) + "\n"
+            )
+            continue
+        shutil.copyfile(source, out / "calibration" / name)
+
+    manifest(out, counts, args.version, args.previous)
+    for name, rows in counts.items():
+        print(f"  {name:24s} {rows:>7d} rows")
+
+
+if __name__ == "__main__":
+    main()

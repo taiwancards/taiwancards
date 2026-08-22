@@ -37,8 +37,18 @@ module Pronunciation
         FileUtils.mkdir_p(@out)
         built = FanOut.map(keys, io: @io) { |chunk| chunk.filter_map { |key| build(key) } }.flatten(1)
         built.each { |key, template| File.write(File.join(@out, "#{key}.json"), JSON.generate(template)) }
-        @io&.puts("  templates: #{built.length}")
+        dropped = forget_stale(built.map(&:first))
+        @io&.puts("  templates: #{built.length}#{", stale removed: #{dropped}" if dropped.positive?}")
         built.to_h
+      end
+
+      def forget_stale(keys)
+        return 0 if @only
+
+        wanted = keys.to_set
+        stale = Dir.glob(File.join(@out, "*.json")).reject { |path| wanted.include?(File.basename(path, ".json")) }
+        stale.each { |path| File.delete(path) }
+        stale.length
       end
 
       def write_index!(built)
@@ -168,8 +178,8 @@ module Pronunciation
           "key" => key,
           "syllable" => meta["syllable"],
           "tone" => meta["tone"],
-          "zhuyin" => meta["zhuyin"],
-          "chars" => meta["chars"],
+          "zhuyin" => Acoustic::Syllables.zhuyin[key] || meta["zhuyin"],
+          "chars" => (meta["chars"] if Acoustic::Syllables.described?(key)),
           "confidence" => built[key].dig("provenance", "confidence"),
           "style" => built[key].dig("provenance", "style"),
           "confusions" => Acoustic::Syllables.confusion_set(meta["syllable"], meta["tone"]).select { |k|

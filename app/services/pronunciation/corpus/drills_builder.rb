@@ -6,7 +6,12 @@ module Pronunciation
   module Corpus
     class DrillsBuilder
       PATH = "drills.json"
-      CRITERIA = "self>=80, top1>=80%, margin>=5"
+      CRITERIA = "lists: self>=80, top1>=80%, margin>=5; pairs: both members self>=80, " \
+        "the pair told apart >=70% on held-out corpus tokens, " \
+        "and the contrast told apart >=60% on speakers no template was built from"
+      DECIDABLE = 70.0
+      FAMILY_FLOOR = 60.0
+      ON_A_STRANGER = {"aspiration" => 83.2, "sibilant" => 68.6, "coda" => 52.0}.freeze
 
       GOOD_SELF = 80
       GOOD_TOP1 = 80.0
@@ -20,12 +25,6 @@ module Pronunciation
       VOWEL_LIMIT = 20
       THIN = 5
 
-      SERIES = {
-        "retroflex" => %w[zh ch sh r],
-        "dental" => %w[z c s],
-        "alveolo_palatal" => %w[j q x]
-      }.freeze
-
       INITIAL_GROUPS = {
         "plosive" => {ru: "Взрывные ㄅㄆㄉㄊㄍㄎ", en: "Plosives", initials: %w[b p d t g k]},
         "affricate" => {ru: "Аффрикаты ㄗㄘㄓㄔㄐㄑ", en: "Affricates", initials: %w[z c zh ch j q]},
@@ -37,10 +36,11 @@ module Pronunciation
         }
       }.freeze
 
-      def initialize(quality: nil, store: TemplateStore.instance, io: $stdout)
+      def initialize(quality: nil, contrasts: nil, store: TemplateStore.instance, io: $stdout)
         @store = store
         @io = io
         @quality = quality || read_quality
+        @contrasts = contrasts || read_contrasts
       end
 
       def call
@@ -66,6 +66,28 @@ module Pronunciation
         raise "#{path} is missing — run rake pronunciation:syllable_quality first" unless File.exist?(path)
 
         JSON.parse(File.read(path))
+      end
+
+      def read_contrasts
+        path = File.join(@store.root, ContrastQuality::PATH)
+        raise "#{path} is missing — run rake pronunciation:contrast_quality first" unless File.exist?(path)
+
+        JSON.parse(File.read(path))["pairs"]
+      end
+
+      def sound_enough(key)
+        row = @quality.find { |candidate| candidate["key"] == key }
+        row && row["self"].to_i >= GOOD_SELF
+      end
+
+      def decidable(family)
+        return [] if ON_A_STRANGER.fetch(family, 0.0) < FAMILY_FLOOR
+
+        @decidable ||= {}
+        @decidable[family] ||= @contrasts
+          .select { |pair| pair["family"] == family && pair["accuracy"].to_f >= DECIDABLE }
+          .select { |pair| pair["keys"].all? { |key| sound_enough(key) } }
+          .sort_by { |pair| -pair["accuracy"].to_f }
       end
 
       def good
@@ -107,51 +129,11 @@ module Pronunciation
             "en" => "the only difference is the puff of air"
           },
           "kind" => "pair",
-          "pairs" => partner_pairs(Acoustic::Phonology::ASPIRATION_PAIRS).first(PAIR_LIMIT)
+          "pairs" => decidable("aspiration").first(PAIR_LIMIT).map { |pair| pair["keys"] }
         }
       end
 
-      def partner_pairs(map)
-        found = []
-
-        by_key.each_key do |key|
-          st = structure(key)
-          next if st.nil?
-
-          other = map[st[:initial]]
-          next if other.nil?
-
-          partner = "#{other}#{st[:final]}#{parse(key)[1]}"
-          next unless by_key.key?(partner)
-          next if found.any? { |pair| pair.include?(key) }
-
-          found << [key, partner].sort
-        end
-
-        found.sort_by { |pair| -(rank(pair[0]) + rank(pair[1])) }
-      end
-
       def sibilants
-        pairs = []
-
-        by_key.each_key do |key|
-          st = structure(key)
-          next if st.nil? || st[:sibilant].nil?
-
-          index = SERIES[st[:sibilant].to_s]&.index(st[:initial])
-          next if index.nil?
-
-          SERIES.each do |name, list|
-            next if name == st[:sibilant].to_s || list[index].nil?
-
-            partner = "#{list[index]}#{st[:final]}#{parse(key)[1]}"
-            next unless by_key.key?(partner)
-
-            pair = [key, partner].sort
-            pairs << pair unless pairs.include?(pair)
-          end
-        end
-
         {
           "id" => "sibilants",
           "title" => {"ru" => "Шипящие: ㄓㄔㄕ / ㄗㄘㄙ / ㄐㄑㄒ", "en" => "Sibilant series"},
@@ -160,23 +142,13 @@ module Pronunciation
             "en" => "Retroflex, dental and palatal series"
           },
           "kind" => "pair",
-          "pairs" => pairs.sort_by { |pair| -(rank(pair[0]) + rank(pair[1])) }.first(PAIR_LIMIT)
+          "pairs" => decidable("sibilant").first(PAIR_LIMIT).map { |pair| pair["keys"] }
         }
       end
 
       def codas
-        found = by_key.each_key.filter_map do |key|
-          st = structure(key)
-          next if st.nil? || st[:coda] != "n"
-
-          partner = "#{st[:initial]}#{st[:medial]}#{st[:nucleus]}ng#{parse(key)[1]}"
-          next unless by_key.key?(partner)
-
-          {keys: [key, partner], nucleus: st[:nucleus]}
-        end
-
         %w[a e].filter_map do |nucleus|
-          picked = found.select { |pair| pair[:nucleus] == nucleus }
+          picked = decidable("coda").select { |pair| pair["nucleus"] == nucleus }
           next if picked.empty?
 
           coda_section(nucleus, picked)
@@ -192,10 +164,7 @@ module Pronunciation
             "en" => nucleus == "e" ? "In Taiwan feng leans toward [fong]" : "Front /a/ versus back"
           },
           "kind" => "pair",
-          "pairs" => picked
-            .sort_by { |pair| -(rank(pair[:keys][0]) + rank(pair[:keys][1])) }
-            .first(CODA_LIMIT)
-            .map { |pair| pair[:keys] }
+          "pairs" => picked.first(CODA_LIMIT).map { |pair| pair["keys"] }
         }
       end
 

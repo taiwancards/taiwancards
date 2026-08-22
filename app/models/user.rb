@@ -81,7 +81,21 @@ class User < ApplicationRecord
 
   def self.owner_email = ENV["ADMIN_EMAIL"].to_s.strip.downcase.presence
 
+  DEV_LOGIN_OFF = "off"
+
+  def self.signed_in_by_default?
+    Rails.env.development? && ENV["DEV_LOGIN"] != DEV_LOGIN_OFF && !Site.exporting?
+  end
+
+  def self.default_owner
+    return nil unless signed_in_by_default?
+
+    find_by(email: owner_email) || order(:id).first
+  end
+
   def admin?
+    return true if self.class.signed_in_by_default?
+
     owner = self.class.owner_google_email
     return false if owner.nil? || google_email.blank? || google_email != owner
 

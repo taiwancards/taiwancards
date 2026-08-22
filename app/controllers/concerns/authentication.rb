@@ -26,7 +26,7 @@ module Authentication
     id = cookies.signed[:user_id]
     @true_user = id.present? ? User.find_by(id: id) : nil
     forget_deleted_account if id.present? && @true_user.nil?
-    @true_user
+    @true_user ||= User.default_owner
   end
 
   def forget_deleted_account
