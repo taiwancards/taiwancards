@@ -35,6 +35,8 @@ module Pronunciation
 
     def advisory(code, vars = nil) = t("codes.#{code}", default: nil, **symbolize(vars))
 
+    def fix(code, vars = nil) = t("fixes.#{code}", default: nil, **symbolize(vars))
+
     def level_name(level) = t("levels.#{level}.name")
 
     def confusion(expected, got)

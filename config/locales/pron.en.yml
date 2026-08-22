@@ -45,6 +45,8 @@ en:
       no_part: "none in this syllable"
       details: "Details"
       hide: "Collapse"
+      flow_title: "Flow"
+      read_title: "What we heard"
       focus_title: "What to work on"
       focus_empty: "Practice a little and personal recommendations will appear here."
       focus_attempts:
@@ -102,6 +104,15 @@ en:
         drift: "The overall color of the syllable drifts from the reference."
       lead_in:
         noisy: "There are %{ms} ms of stray sound before the syllable — a breath or noise. The initial cannot be checked through it: start the syllable right after the cue."
+      flow:
+        ok: "The syllables hold together the way they do in real speech."
+        choppy: "The pauses between syllables are too long — the words fall apart into separate syllables."
+        pitch_reset: "The voice picks its pitch afresh on every syllable: it sounds like a list, not a phrase."
+        clipped: "Loudness drops out at the joins — the syllables break off instead of running into each other."
+      read:
+        ok: "What was read matches what is written."
+        doubtful: "The recording fits the text poorly — something else may have been said."
+        mismatch: "This looks like a reading of something other than the text."
     fixes:
       near: "Try again, following the reference."
       tone:
@@ -132,6 +143,13 @@ en:
         neutral_long: "Shorten it — a neutral syllable is unstressed."
       timbre:
         drift: "Listen to the reference and copy it whole."
+      flow:
+        choppy: "Read the phrase in one breath, without stopping between syllables."
+        pitch_reset: "Carry one line of voice through the whole phrase: each syllable continues the pitch of the last."
+        clipped: "Do not cut the voice at the join — carry the sound from one syllable into the next."
+      read:
+        doubtful: "Check the text and read it again."
+        mismatch: "Check the text: the score is measured against what is written."
     confusion:
       tone_only: "Sounds are right, but that was tone %{tone} instead of %{expected_tone}"
       segments_only: "Tone is right, but that was /%{syllable}/ instead of /%{expected_syllable}/"

@@ -1,7 +1,17 @@
 const MIC_SETTLE_MS = 150;
+const CANONICAL_RATE = 22050;
+
+function audioContext() {
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  try {
+    return new Ctx({ sampleRate: CANONICAL_RATE });
+  } catch {
+    return new Ctx();
+  }
+}
 
 export async function toWav(blob) {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const ctx = audioContext();
   try {
     return encodeWav(await ctx.decodeAudioData(await blob.arrayBuffer()));
   } finally {

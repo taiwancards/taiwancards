@@ -94,6 +94,14 @@ RSpec.describe Huayu::CangjieLessons do
     expect(index.flatten).to(all(satisfy { |row| row["code"].present? && row["char"].present? }))
   end
 
+  it "types every character the canonical table settles the way it settles it" do
+    index = described_class.all.flat_map(&:index).to_h { |row| [row["char"], row["code"]] }
+    listed = Huayu::Cangjie::CANONICAL.select { |char, _| index.key?(char) }
+
+    expect(Huayu::Cangjie::PREFERRED.keys - index.keys).to(be_empty)
+    expect(listed.reject { |char, code| index[char] == code }).to(be_empty)
+  end
+
   it "opens every key index with its most frequent characters" do
     lesson = described_class.find("a")
 

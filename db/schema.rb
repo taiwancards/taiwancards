@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_22_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -477,6 +477,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
     t.datetime("created_at", null: false)
     t.integer("error_counts", default: [], null: false, array: true)
     t.float("ewma_final")
+    t.float("ewma_flow")
     t.float("ewma_initial")
     t.float("ewma_medial")
     t.float("ewma_overall")
@@ -487,6 +488,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
     t.integer("n", default: 0, null: false)
     t.integer("n_amber", default: 0, null: false)
     t.integer("n_dark", default: 0, null: false)
+    t.integer("n_flow", default: 0, null: false)
     t.integer("n_green", default: 0, null: false)
     t.integer("n_red", default: 0, null: false)
     t.integer("recent", default: [], null: false, array: true)

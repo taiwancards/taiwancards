@@ -16,8 +16,6 @@ module Pronunciation
 
       module_function
 
-      # A stop needs its closure and a vowel needs none, so what follows the
-      # junction decides how much silence there is any reason to expect.
       def cell(key)
         syllable, = Syllables.parse_key(key)
         return DEFAULT_CELL if syllable.nil?
@@ -68,10 +66,15 @@ module Pronunciation
         worst = rows.min_by { |row| row["score"] }
         {
           "score" => (rows.sum { |row| row["score"] } / rows.length).round,
-          "code" => worst["code"],
+          "code" => headline(rows, worst),
           "worst" => worst,
           "junctions" => rows
         }
+      end
+
+      def headline(rows, worst)
+        mean = rows.sum { |row| row["strain"] } / rows.length
+        mean < OK_STRAIN ? "flow.ok" : worst["code"]
       end
 
       def judged(junction, table, cell)
@@ -81,12 +84,13 @@ module Pronunciation
 
         junction.merge(
           "cell" => cell,
+          "strain" => strained.round(3),
           "score" => (100.0 * Math.exp(-(strained ** 2) / 2.0)).round,
           "code" => code_for(excess, strained)
         )
       end
 
-      OK_STRAIN = 0.7
+      OK_STRAIN = 1.0
 
       def code_for(excess, strained)
         return "flow.ok" if strained < OK_STRAIN
@@ -144,8 +148,6 @@ module Pronunciation
         (frames.negative? ? 0.0 : frames * Features::HOP_MS).clamp(0.0, MAX_GAP_MS)
       end
 
-      # A learner reading syllable by syllable restarts the pitch at each one, so
-      # the step across the junction separates connected speech from a list.
       def f0_jump(analysis, left, right)
         before = edge_pitch(analysis, left[1], -1)
         after = edge_pitch(analysis, right[0], 1)

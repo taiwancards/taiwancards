@@ -58,11 +58,6 @@ module Pronunciation
       DTW::Statistics.median(values)
     end
 
-    def decode(audio)
-      bytes = audio.respond_to?(:read) ? audio.read : audio.to_s
-      return [nil, nil] if bytes.blank?
-
-      DSP.decode(bytes).then { |signal| [signal.samples, signal.sample_rate] }
-    end
+    def decode(audio) = Recording.decode(audio)
   end
 end

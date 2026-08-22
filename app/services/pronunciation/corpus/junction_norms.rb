@@ -45,8 +45,6 @@ module Pronunciation
 
       private
 
-      # Readings are resolved here rather than inside a worker: a forked child
-      # must not touch the database connection it inherited.
       def readable
         path = File.join(@store.root, SOURCE, "manifest.json")
         return [] unless File.exist?(path)

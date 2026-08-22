@@ -43,6 +43,9 @@ class SyllableSkill < ApplicationRecord
     duration.short
     duration.neutral_long
     timbre.drift
+    flow.choppy
+    flow.pitch_reset
+    flow.clipped
   ]
     .freeze
 
@@ -54,7 +57,7 @@ class SyllableSkill < ApplicationRecord
     create_with(syllable:, tone: tone.to_i).find_or_create_by!(user:, syllable_key: key)
   end
 
-  def record!(overall:, level:, parts: {}, deviations: {}, codes: [], heard: nil, at: Time.current)
+  def record!(overall:, level:, parts: {}, deviations: {}, codes: [], heard: nil, flow: nil, at: Time.current)
     self.n += 1
     self.first_seen_at ||= at
     self.last_seen_at = at
@@ -70,10 +73,13 @@ class SyllableSkill < ApplicationRecord
     apply_deviations(deviations)
     apply_codes(codes)
     apply_heard(heard)
+    apply_flow(flow)
 
     save!
     self
   end
+
+  def flowing? = n_flow >= CONFIDENT_AT
 
   def tone_confusions
     return {} if heard_tones.blank?
@@ -171,6 +177,13 @@ class SyllableSkill < ApplicationRecord
 
     self.z_sum = sums
     self.z_n = counts
+  end
+
+  def apply_flow(score)
+    return if score.nil?
+
+    self.n_flow += 1
+    self.ewma_flow = blend(ewma_flow, score)
   end
 
   def apply_heard(heard)

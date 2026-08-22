@@ -18,11 +18,12 @@ class PronunciationController < ApplicationController
     @lexeme = pick_lexeme
     @audio = @lexeme && helpers.audio_for(@lexeme)
     @syllables = @lexeme ? Huayu::PronunciationTarget.new(@lexeme).syllables : []
-    @speech_url = pronunciation_path
+    @health_url = pronunciation_health_path(locale: nil)
+    @grade_url = pronunciation_grade_path(locale: nil)
     @advance_url = pronunciation_path(
       {collection_id: @collection&.id, section: @section&.fetch("id", nil)}.compact.merge(advance: 1)
     )
-    @auto = Setting.instance.pron_auto
+    @auto = recording_limits
     @legend = Pronunciation::Legend.new.rows
     @voice = voice_profile
     @risky = risky_syllables
@@ -58,13 +59,19 @@ class PronunciationController < ApplicationController
     return render(json: {status: "offline"}, status: :service_unavailable) if result.nil?
     return render(json: result, status: :unprocessable_entity) if result["status"] == "retry"
 
-    lexeme = Lexeme.where(kind: %i[word character]).find_by(id: params[:lexeme_id])
+    lexeme = Lexeme.where(kind: %i[word character sentence]).find_by(id: params[:lexeme_id])
     record_attempt(lexeme, result, schedule: params[:schedule].to_s != "false") if lexeme
     refine_voice(voice, result)
     render(json: result)
   end
 
   private
+
+  def recording_limits
+    auto = Setting.instance.pron_auto
+    room = @syllables.length * Pronunciation::AcousticBackend::PER_SYLLABLE_MS
+    room > auto[:max_ms] ? auto.merge(max_ms: room) : auto
+  end
 
   def warmup_needed?
     session[:warmup_skipped] = true if params[:anyway].present?
@@ -103,7 +110,8 @@ class PronunciationController < ApplicationController
 
   def record_attempt(lexeme, result, schedule: true)
     syllables = Array(result["syllables"])
-    Pronunciation::SkillRecorder.new(Current.user, lexeme).call(syllables)
+    Pronunciation::SkillRecorder.new(Current.user, lexeme).call(syllables, flow: result["flow"])
+    return if lexeme.sentence?
     return unless schedule
 
     ok = syllables.any? && syllables.all? { |s| s["level"] == "green" }
@@ -131,13 +139,15 @@ class PronunciationController < ApplicationController
   def risky_syllables
     return [] unless @drills.available?
 
-    @syllables.reject { |syllable|
+    risky = @syllables.reject { |syllable|
       Pronunciation::SyllableKey.candidates(syllable).any? { |key| @drills.approves?(key) }
     }
+
+    (risky.length * 2 > @syllables.length) ? [] : risky
   end
 
   def pick_lexeme
-    return pronounceable.find_by(id: params[:lexeme_id]) if params[:lexeme_id].present?
+    return practiceable(params[:lexeme_id]) if params[:lexeme_id].present?
     return pick_from_section if @section
 
     queue = Array(session[queue_key])
@@ -151,7 +161,17 @@ class PronunciationController < ApplicationController
 
     session[queue_key] = queue
     session[position_key] = position
-    pronounceable.find_by(id: queue[position]) || pronounceable.order(Arel.sql("RANDOM()")).first
+    practiceable(queue[position]) || pronounceable.order(Arel.sql("RANDOM()")).first
+  end
+
+  def practiceable(id)
+    pronounceable.find_by(id:) || phrase(id)
+  end
+
+  def phrase(id)
+    return nil if @collection || !Pronunciation::Phrases.instance.include?(id.to_i)
+
+    Lexeme.where(kind: :sentence).find_by(id:)
   end
 
   def pick_from_section

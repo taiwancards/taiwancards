@@ -14,18 +14,28 @@ module Pronunciation
 
     WINDOW = 16
 
-    def initialize(user:, collection: nil, drills: Drills.instance, store: TemplateStore.instance)
+    PHRASES = 4
+    PHRASE_EVERY = 7
+
+    def initialize(
+      user:,
+      collection: nil,
+      drills: Drills.instance,
+      store: TemplateStore.instance,
+      phrases: Phrases.instance
+    )
       @user = user
       @collection = collection
       @drills = drills
       @store = store
+      @phrases = phrases
     end
 
     def ids
       entries = candidates
       return [] if entries.empty?
 
-      diversify(entries, beginner? ? coverage(entries) : [])
+      weave(diversify(entries, beginner? ? coverage(entries) : []))
     end
 
     def coverage(entries)
@@ -47,6 +57,30 @@ module Pronunciation
     end
 
     private
+
+    def weave(picked)
+      phrases = phrase_ids
+      return picked if phrases.empty?
+
+      phrases.each_with_index do |id, index|
+        position = ((index + 1) * PHRASE_EVERY) + index
+        break if position > picked.length
+
+        picked.insert(position, id)
+      end
+
+      picked.first(SIZE)
+    end
+
+    def phrase_ids
+      return [] if @collection || !@phrases.available?
+
+      level = beginner? ? Phrases::BEGINNER_LEVEL : @phrases.level_for(@user)
+      pool = @phrases.ids_up_to(level)
+      return [] if pool.empty?
+
+      (pool - attempted_ids).presence&.sample(PHRASES) || pool.sample(PHRASES)
+    end
 
     def candidates
       weak = weak_ids

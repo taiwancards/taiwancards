@@ -9,11 +9,12 @@ module Pronunciation
       MIN_SPAN_MS = 90.0
       MIN_AUDIO_S = 0.12
 
-      def initialize(only: nil, manifest: Manifest.new, out: nil, io: nil)
+      def initialize(only: nil, manifest: Manifest.new, out: nil, io: nil, store: TemplateStore.instance)
         @only = only && Array(only).to_set
         @manifest = manifest
         @out = out || Tokens.root
         @io = io
+        @store = store
       end
 
       attr_reader :out
@@ -76,13 +77,31 @@ module Pronunciation
         return [] if signal.length < signal.sample_rate * MIN_AUDIO_S
 
         analysis = Acoustic::Features.analyze(signal.samples, signal.sample_rate)
-        spans = Acoustic::Features.syllable_spans(analysis, tokens.first["n_syllables"])
+        spans = segment(analysis, tokens)
         return [] if spans.nil?
 
         wanted.filter_map { |token| row(analysis, spans, token, relative) }
       rescue StandardError
         []
       end
+
+      def segment(analysis, tokens)
+        count = tokens.first["n_syllables"].to_i
+        Acoustic::Features.syllable_spans(analysis, count) || aligner.spans(analysis, priors(tokens, count))
+      end
+
+      def priors(tokens, count)
+        by_index = tokens.index_by { |token| token["index"].to_i }
+        Array.new(count) do |index|
+          key = by_index[index]&.fetch("_key", nil)
+          next nil if key.nil?
+
+          norm = @store.norm_for(position: index, total: count)
+          @store.template(key, norm) || @store.template(key)
+        end
+      end
+
+      def aligner = @aligner ||= Acoustic::Alignment.new
 
       def row(analysis, spans, token, relative)
         span = spans[token["index"]]

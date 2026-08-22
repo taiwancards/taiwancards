@@ -41,7 +41,8 @@
   - else
     .relative.mx-auto.max-w-md.space-y-3[
       data-controller="pronunciation"
-      data-pronunciation-url-value=@speech_url
+      data-pronunciation-health-url-value=@health_url
+      data-pronunciation-grade-url-value=@grade_url
       data-pronunciation-expected-value=@syllables.to_json
       data-pronunciation-text-value=@lexeme.text
       data-pronunciation-lexeme-id-value=@lexeme.id
@@ -54,6 +55,8 @@
       data-pronunciation-label-recording-value=t("pronunciation.recording")
       data-pronunciation-label-grading-value=t("pronunciation.grading")
       data-pronunciation-label-unavailable-value=t("pronunciation.unavailable")
+      data-pronunciation-label-flow-title-value=t("pron.ui.flow_title")
+      data-pronunciation-label-read-title-value=t("pron.ui.read_title")
       data-pronunciation-label-details-value=t("pron.ui.metrics")
       data-pronunciation-label-copy-value=t("pron.ui.copy")
       data-pronunciation-label-mic-denied-value=t("pronunciation.mic_denied")
@@ -93,7 +96,7 @@
       .rounded-2xl.border.border-border.bg-card.px-4.py-4.text-center.shadow-sm.transition-colors[
         class="sm:px-6 sm:py-6"
         data-pronunciation-target="card" ]
-        .text-4xl.font-semibold class="sm:text-5xl" lang="zh-TW" = hanzi(@lexeme.text)
+        .font-semibold class=prompt_size(@lexeme.text) lang="zh-TW" = hanzi(@lexeme.text)
         - if @lexeme.meaning.present?
           .mt-1.line-clamp-1.text-xs.text-muted-foreground = @lexeme.meaning
         .mt-3.flex.flex-wrap.justify-center.gap-2

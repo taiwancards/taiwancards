@@ -5,7 +5,7 @@ module Huayu
     Result = Data.define(:examined, :repaired) do
       def changed? = repaired.positive?
 
-      def to_s = "cangjie codes superseded by the fifth generation: #{repaired} of #{examined}"
+      def to_s = "cangjie codes restored to the canonical fifth-generation form: #{repaired} of #{examined}"
     end
 
     def call
@@ -23,15 +23,15 @@ module Huayu
 
     def stored
       @stored ||= Lexeme
-        .where(kind: :character, text: Cangjie::SUPERSEDED.keys)
+        .where(kind: :character, text: Cangjie::CANONICAL.keys)
         .pluck(:id, :text, Arel.sql("data->>'cangjie'"))
     end
 
     def pending
       @pending ||= stored
         .filter_map do |id, text, code|
-          fifth = Cangjie::SUPERSEDED.fetch(text)
-          [id, fifth] if code != fifth
+          canonical = Cangjie::CANONICAL.fetch(text)
+          [id, canonical] if code != canonical
         end
         .to_h
     end

@@ -11,8 +11,6 @@ module Pronunciation
 
       module_function
 
-      # A reading that already matches its own templates well cannot be a reading
-      # of something else, so the field is only consulted when the score is low.
       def check(rows, overall: nil, store: TemplateStore.instance, analyzer: nil)
         wanted = rows.reject { |row| row[:absent] }
         return nil if wanted.length < MIN_SYLLABLES
@@ -46,8 +44,6 @@ module Pronunciation
         "read.ok"
       end
 
-      # How the expected syllable places against a fixed spread of the inventory:
-      # a reading of some other text leaves it in the middle of the field.
       def place(analyzer, store, rivals, row)
         own = overall(analyzer, row[:features], row[:template], row[:norm])
         return nil if own.nil?
@@ -91,8 +87,6 @@ module Pronunciation
 
       def reset! = @pool = {}
 
-      # An even spread over the inventory, taken the same way every time so a
-      # reading is judged against the same field on every attempt.
       def build_pool(store)
         keys = store.index&.fetch("keys", nil)
         keys = keys.is_a?(Hash) ? keys.keys : Array(keys)

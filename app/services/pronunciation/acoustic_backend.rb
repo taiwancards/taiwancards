@@ -51,7 +51,7 @@ module Pronunciation
         "overall" => overall,
         "overall_level" => @verdict.level("overall", overall),
         "flow" => flow(analysis, spans, expected),
-        "read" => Acoustic::Verification.check(measured, overall:, store: @store, analyzer:),
+        "read" => read(measured, overall),
         "legend" => legend,
         "text" => text
       }.compact
@@ -79,7 +79,17 @@ module Pronunciation
     def allowance(count) = [MAX_UTTERANCE_MS, count * PER_SYLLABLE_MS].max
 
     def flow(analysis, spans, expected)
-      Acoustic::Junctions.score(analysis, spans, expected.map { |row| row[:key] }, store: @store)
+      coached(Acoustic::Junctions.score(analysis, spans, expected.map { |row| row[:key] }, store: @store))
+    end
+
+    def read(measured, overall)
+      coached(Acoustic::Verification.check(measured, overall:, store: @store, analyzer:))
+    end
+
+    def coached(block)
+      return nil if block.nil?
+
+      block.merge({"note" => @coach.advisory(block["code"]), "advice" => @coach.fix(block["code"])}.compact)
     end
 
     def aligner = @aligner ||= Acoustic::Alignment.new
@@ -380,10 +390,7 @@ module Pronunciation
     end
 
     def decode(audio)
-      bytes = audio.respond_to?(:read) ? audio.read : audio.to_s
-      return [nil, nil] if bytes.blank?
-
-      DSP.decode(bytes).then { |signal| [signal.samples, signal.sample_rate] }
+      Recording.decode(audio)
     rescue StandardError
       [nil, nil]
     end

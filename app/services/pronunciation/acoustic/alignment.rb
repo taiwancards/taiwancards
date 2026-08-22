@@ -119,8 +119,6 @@ module Pronunciation
         wanted.map { |ms| (ms * tempo / @hop_ms).clamp(minimum_frames, maximum_frames) }
       end
 
-      # Each unit may stretch or shrink by SPAN_FACTOR around what its template
-      # expects, which bounds the search without fixing an absolute duration.
       def bounds_for(wanted, length)
         total = wanted.sum
         wanted.map do |target|
@@ -206,8 +204,6 @@ module Pronunciation
         boundaries
       end
 
-      # A unit can only end where enough frames remain for the units after it,
-      # which keeps the search off most of the grid.
       def position_ranges(limits, length)
         count = limits.length
         forward = [[0, 0]]

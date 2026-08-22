@@ -25,7 +25,7 @@ module Huayu
         char, code = line.split("\t", 2)
         next if char.blank? || code.blank?
 
-        char_code[char] ||= Cangjie.fifth(char, code)
+        char_code[char] ||= Cangjie.canonical(char, code)
         code_chars[code] << char unless code_chars[code].include?(char)
       end
 

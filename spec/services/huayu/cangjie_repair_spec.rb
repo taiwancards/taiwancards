@@ -28,17 +28,24 @@ RSpec.describe Huayu::CangjieRepair do
     expect(lexeme.meanings["en"]).to(eq("stool"))
   end
 
-  it "leaves a dictionary that already types the fifth generation alone" do
-    Huayu::Cangjie::SUPERSEDED.each { |text, code| character(text, code) }
+  it "settles a code the table leaves ambiguous" do
+    lexeme = character("次", "imno")
+
+    expect(described_class.new.call.repaired).to(eq(1))
+    expect(lexeme.reload.data["cangjie"]).to(eq("mmno"))
+  end
+
+  it "leaves a dictionary that already types the canonical code alone" do
+    Huayu::Cangjie::CANONICAL.each { |text, code| character(text, code) }
 
     expect(described_class.new).not_to(be_drift)
   end
 
-  it "repairs every character the fifth generation recoded" do
-    Huayu::Cangjie::SUPERSEDED.each_key { |text| character(text, "wrong") }
+  it "repairs every character the canonical table names" do
+    Huayu::Cangjie::CANONICAL.each_key { |text| character(text, "wrong") }
 
-    expect(described_class.new.call.repaired).to(eq(Huayu::Cangjie::SUPERSEDED.size))
+    expect(described_class.new.call.repaired).to(eq(Huayu::Cangjie::CANONICAL.size))
     expect(Lexeme.where(kind: :character).pluck(:text, Arel.sql("data->>'cangjie'")).to_h)
-      .to(eq(Huayu::Cangjie::SUPERSEDED.to_h))
+      .to(eq(Huayu::Cangjie::CANONICAL.to_h))
   end
 end

@@ -86,8 +86,6 @@ module Pronunciation
 
       PITCH_MARGIN_MS = 500.0
 
-      # Pitch is only ever read inside the syllable, so the lag search runs over
-      # the audible span with a margin instead of the whole recording.
       def pitch_track(samples, sr, energy, hop)
         yin = DSP::Yin.new(hop_seconds: HOP_MS / 1000.0)
         span = audible_span(energy, hop, samples.length)
@@ -207,9 +205,6 @@ module Pronunciation
 
       UTTERANCE_KEEP_DB = 26.0
 
-      # An utterance of several syllables carries pauses and unstressed dips that
-      # would end a single walk outwards from the loudest frame, so its bounds
-      # span every run that is not far below the loudest one.
       def utterance_bounds(an, syllables)
         return speech_bounds(an) if syllables.to_i <= 1
 

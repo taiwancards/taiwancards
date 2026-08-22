@@ -75,8 +75,6 @@ module Pronunciation
         result
       end
 
-      # The norm follows the position the token was spoken in, the way a graded
-      # recording is scored, so the report measures what the app actually does.
       def norm_of(features)
         @store.norm_for(position: features["_index"].to_i, total: features["_n_syllables"].to_i)
       end

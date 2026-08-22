@@ -105,10 +105,13 @@ export default class extends Controller {
     labelNoTemplate: String,
     labelPartsTitle: String,
     labelFixTitle: String,
+    labelFlowTitle: String,
+    labelReadTitle: String,
     labelChartHint: String,
     labelWeight: String,
     tonal: { type: Boolean, default: true },
-    url: String,
+    healthUrl: String,
+    gradeUrl: String,
     expected: Array,
     text: String,
     lexemeId: Number,
@@ -153,7 +156,7 @@ export default class extends Controller {
 
   async checkHealth() {
     try {
-      const res = await fetch(`${this.urlValue}/health`, {
+      const res = await fetch(this.healthUrlValue, {
         signal: AbortSignal.timeout(1500),
       });
       const body = res.ok ? await res.json() : {};
@@ -379,7 +382,7 @@ export default class extends Controller {
       const headers = {};
       const token = this.csrfToken();
       if (token) headers["X-CSRF-Token"] = token;
-      const res = await fetch(`${this.urlValue}/grade`, {
+      const res = await fetch(this.gradeUrlValue, {
         method: "POST",
         body: form,
         headers,
@@ -527,14 +530,61 @@ export default class extends Controller {
       this.paint(el, result.syllables[i]),
     );
     this.lastResult = result;
-    this.renderDetails(result.syllables || []);
+    this.renderDetails(result);
   }
 
-  renderDetails(syllables) {
+  renderDetails(result) {
     if (!this.hasDetailTarget) return;
+    const cards = (result.syllables || [])
+      .filter(Boolean)
+      .map((s) => this.detailCard(s));
+    const summary = this.utteranceCard(result);
     this.detailTarget.replaceChildren(
-      ...syllables.filter(Boolean).map((s) => this.detailCard(s)),
+      ...(summary ? [summary, ...cards] : cards),
     );
+  }
+
+  utteranceCard(result) {
+    const rows = [
+      this.verdictRow(this.labelFlowTitleValue, result.flow, true),
+      this.verdictRow(this.labelReadTitleValue, result.read, false),
+    ].filter(Boolean);
+    if (rows.length === 0) return null;
+
+    const box = document.createElement("section");
+    box.className = "space-y-3 rounded-2xl border border-border bg-card p-4";
+    rows.forEach((row) => box.appendChild(row));
+    return box;
+  }
+
+  verdictRow(title, block, whenSettled) {
+    if (!block) return null;
+    const settled = String(block.code || "").endsWith(".ok");
+    if (settled && !whenSettled) return null;
+
+    const color = settled ? LEVELS.green : LEVELS.amber;
+    const row = document.createElement("div");
+    row.className = "space-y-1";
+
+    const head = document.createElement("div");
+    head.className = "flex items-baseline justify-between gap-3";
+    head.appendChild(this.span(title, "text-sm font-medium"));
+    if (block.score != null) {
+      const score = this.span(
+        String(block.score),
+        "text-lg font-bold tabular-nums",
+      );
+      score.style.color = color;
+      head.appendChild(score);
+    }
+    row.appendChild(head);
+
+    if (block.note) row.appendChild(this.span(block.note, "block text-sm"));
+    if (block.advice)
+      row.appendChild(
+        this.span(block.advice, "block text-sm text-muted-foreground"),
+      );
+    return row;
   }
 
   detailCard(syllable) {

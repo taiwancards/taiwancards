@@ -21,7 +21,7 @@ export default class extends Controller {
     "elapsed",
   ];
   static values = {
-    url: String,
+    gradeUrl: String,
     lexemeId: String,
     expected: Array,
     autoMs: Number,
@@ -95,7 +95,7 @@ export default class extends Controller {
       const headers = {};
       const token = document.querySelector('meta[name="csrf-token"]')?.content;
       if (token) headers["X-CSRF-Token"] = token;
-      const response = await fetch(`${this.urlValue}/grade`, {
+      const response = await fetch(this.gradeUrlValue, {
         method: "POST",
         body: form,
         headers,
