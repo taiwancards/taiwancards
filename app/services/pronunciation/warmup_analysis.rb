@@ -5,11 +5,11 @@ module Pronunciation
     MIN_VOICED_FRAMES = 20
     F3_FLOOR = 1500.0
 
-    def call(audio)
+    def call(audio, f0_low: nil)
       samples, rate = decode(audio)
       return nil if samples.nil? || samples.empty?
 
-      analysis = Acoustic::Features.analyze(samples, rate)
+      analysis = Acoustic::Features.analyze(samples, rate, f0_floor: Acoustic::Features.floor_for(f0_low))
       low, high = Acoustic::Features.speech_bounds(analysis)
       return nil unless low && high && high > low
 

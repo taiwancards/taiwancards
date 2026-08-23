@@ -10,7 +10,8 @@ class WarmupsController < ApplicationController
   def create
     return head(:unprocessable_entity) if params[:audio].blank?
 
-    analysis = Pronunciation::Admission.take { Pronunciation::WarmupAnalysis.new.call(params[:audio]) }
+    heard = profile.f0_low
+    analysis = Pronunciation::Admission.take { Pronunciation::WarmupAnalysis.new.call(params[:audio], f0_low: heard) }
     return render(json: {ok: false, error: "busy"}, status: :too_many_requests) if analysis == :busy
     return render(json: {ok: false, error: "too_short"}) if analysis.nil?
 

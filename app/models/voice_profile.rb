@@ -155,8 +155,8 @@ class VoiceProfile < ApplicationRecord
   OCTAVE_SPAN = 9.0
   OCTAVE_STEPS = 4
 
-  def octave_corrected(hz)
-    ref = reference_hz
+  def octave_corrected(hz, around: nil)
+    ref = around || reference_hz
     value = hz.to_f
     return value unless ref && ref > F0_MIN && value > F0_MIN
 

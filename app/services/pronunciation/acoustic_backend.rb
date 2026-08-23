@@ -29,10 +29,9 @@ module Pronunciation
       samples, rate = decode(audio)
       return failure("unreadable") if samples.nil? || samples.empty?
 
-      analysis = Acoustic::Features.analyze(samples, rate)
+      analysis = Acoustic::Features.analyze(samples, rate, speaker_f3: speaker_f3, f0_floor: pitch_floor)
       expected = syllables.each_with_index.map { |target, index| resolve(target, index, syllables.length) }
-      repeats = Acoustic::Takes.wanted(analysis, syllables.length, takes)
-      heard = spans_for(analysis, expected, repeats)
+      heard = spans_for(analysis, expected, takes)
       return failure(heard) if heard.is_a?(String)
 
       measured = measure_all(analysis, expected, heard)
@@ -64,12 +63,16 @@ module Pronunciation
       {"status" => "retry", "reason" => reason}
     end
 
-    def spans_for(analysis, expected, repeats)
+    TAKE_SHARE = 0.55
+
+    def spans_for(analysis, expected, asked)
       templates = expected.map { |row| row[:template] }
       count = expected.length
+      least = templates.sum { |t| t&.dig("duration_ms", "median").to_f } * TAKE_SHARE
+      repeats = Acoustic::Takes.wanted(analysis, count, asked, least_ms: least)
 
       if repeats > 1
-        windows = Acoustic::Takes.runs_of(analysis).first(repeats)
+        windows = Acoustic::Takes.windows(analysis, repeats, least_ms: least)
         if windows.length == repeats
           taken = windows.filter_map { |window| Acoustic::Takes.spans_within(analysis, window, count) }
           return taken if taken.length == repeats
@@ -142,9 +145,9 @@ module Pronunciation
         span,
         initial: template.dig("structure", "initial"),
         utterance_initial: index.zero?,
-        f0_reference: speaker_reference_hz
+        f0_reference: tone_reference_hz(template["tone"])
       )
-      features["f0_register"] = register(features)
+      features["f0_register"] = register(features, template["tone"])
       Acoustic::Vowel.place(features, speaker_reference_hz)
       row.merge(features:, index:)
     end
@@ -155,6 +158,24 @@ module Pronunciation
       return nil unless @voice&.calibrated?
 
       @voice.reference_hz
+    end
+
+    def tone_reference_hz(tone)
+      return nil unless @voice&.calibrated?
+
+      @voice.tone_anchor(tone) || @voice.reference_hz
+    end
+
+    def pitch_floor
+      return nil unless @voice&.calibrated?
+
+      Acoustic::Features.floor_for(@voice.f0_low)
+    end
+
+    def speaker_f3
+      return nil unless @voice&.calibrated?
+
+      @voice.trusted_f3
     end
 
     def place_in_range(measured)
@@ -421,13 +442,14 @@ module Pronunciation
       Acoustic::Contrasts.merged_profile(key, analyzer.candidate_templates(keys, norm))
     end
 
-    def register(features)
+    def register(features, tone = nil)
       return nil unless @voice&.tone_calibrated?
 
       ref = @voice.reference_hz
       return nil unless ref && ref > 50 && features["f0_ref_hz"].to_f > 50
 
-      12.0 * Math.log2(@voice.octave_corrected(features["f0_ref_hz"]) / ref)
+      hz = @voice.octave_corrected(features["f0_ref_hz"], around: @voice.tone_anchor(tone))
+      12.0 * Math.log2(hz / ref)
     end
 
     def digest(features, scored)

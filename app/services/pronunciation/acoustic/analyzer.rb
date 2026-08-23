@@ -372,13 +372,13 @@ module Pronunciation
         keys.to_h { |k| [k, template(k, norm)] }.compact
       end
 
-      CORE_REPORT = %w[f1_over_f0 f2_over_f1 duration_ms voiced_ms tone_range tone_slope f0_register].freeze
+      CORE_REPORT = %w[duration_ms voiced_ms tone_range tone_slope f0_register].freeze
       INITIAL_REPORT = %w[vot_ms fric_ms].freeze
       SIBILANT_REPORT = %w[fric_centroid fric_spread centroid_ratio].freeze
       CODA_REPORT = %w[nasal_ratio_tail nasal_antiformant f2_end_ratio].freeze
 
-      def relevant_fields(st)
-        fields = CORE_REPORT.dup
+      def relevant_fields(f, st)
+        fields = vowel_pair(f) + CORE_REPORT
         fields += INITIAL_REPORT unless st["initial"].to_s.empty?
         fields += SIBILANT_REPORT if st["sibilant"]
         fields += CODA_REPORT if st["nasal_coda"]
@@ -411,7 +411,7 @@ module Pronunciation
       def report(f, tpl)
         blind = blind_fields(f, tpl)
 
-        relevant_fields(tpl["structure"] || {}).filter_map do |field|
+        relevant_fields(f, tpl["structure"] || {}).filter_map do |field|
           stat = tpl[field]
           next if blind.include?(field) || stat.nil? || stat["median"].nil?
 

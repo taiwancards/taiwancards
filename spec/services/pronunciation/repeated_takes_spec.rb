@@ -138,7 +138,7 @@ RSpec.describe Pronunciation::AcousticBackend do
   it "keeps every reading inside the stretch of speech it came from" do
     gap = quiet((Pronunciation::Acoustic::Takes::GAP_MS / Pronunciation::Acoustic::Features::HOP_MS).round + 4)
     an = analysis(quiet(6) + speech(40) + gap + speech(40))
-    windows = Pronunciation::Acoustic::Takes.runs_of(an)
+    windows = Pronunciation::Acoustic::Takes.windows(an, 2)
     spans = backend.send(:spans_for, an, Array.new(2) { {template: nil} }, 2)
 
     spans.each_with_index do |take, index|
@@ -146,5 +146,26 @@ RSpec.describe Pronunciation::AcousticBackend do
       expect(take.first.first).to(be >= lo)
       expect(take.last.last).to(be <= hi)
     end
+  end
+
+  it "keeps a reading whole when the speaker pauses between its syllables" do
+    inner = quiet((Pronunciation::Acoustic::Takes::GAP_MS / Pronunciation::Acoustic::Features::HOP_MS).round + 6)
+    between = quiet((Pronunciation::Acoustic::Takes::GAP_MS / Pronunciation::Acoustic::Features::HOP_MS).round + 30)
+    word = speech(30) + inner + speech(30)
+    an = analysis(quiet(6) + word + between + word + between + word + quiet(6))
+    expected = Array.new(2) { {template: nil} }
+
+    spans = backend.send(:spans_for, an, expected, 3)
+
+    expect(spans.length).to(eq(3))
+    expect(spans.map(&:length)).to(all(eq(2)))
+  end
+
+  it "refuses to call one reading two when nothing was said twice" do
+    inner = quiet((Pronunciation::Acoustic::Takes::GAP_MS / Pronunciation::Acoustic::Features::HOP_MS).round + 6)
+    an = analysis(quiet(6) + speech(30) + inner + speech(30) + quiet(6))
+    expected = Array.new(2) { {template: {"duration_ms" => {"median" => 300.0}}} }
+
+    expect(backend.send(:spans_for, an, expected, 3).length).to(eq(1))
   end
 end

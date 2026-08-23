@@ -7,7 +7,7 @@ module Pronunciation
         "tone" => 3.0,
         "final" => 2.6,
         "initial" => 2.0,
-        "timbre" => 2.0,
+        "timbre" => 0.5,
         "medial" => 0.9
       }.freeze
 

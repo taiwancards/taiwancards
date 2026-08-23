@@ -23,7 +23,7 @@ module Pronunciation
 
       CANONICAL_F3 = 3000.0
 
-      def analyze(samples, sr, speaker_f3: nil)
+      def analyze(samples, sr, speaker_f3: nil, f0_floor: nil)
         win = (sr * FRAME_MS / 1000.0).round
         hop = (sr * HOP_MS / 1000.0).round
         window = DSP::Window.hamming(win)
@@ -62,7 +62,7 @@ module Pronunciation
         speech_lo, speech_hi = energy_bounds(energy)
         mfccs.normalize(speech_lo..speech_hi) if speech_hi > speech_lo
 
-        pitch, yin_offset = pitch_track(samples, sr, energy, hop)
+        pitch, yin_offset = pitch_track(samples, sr, energy, hop, f0_floor)
         yin_centers = pitch.times.map { |t| t + yin_offset }
 
         f0 = align(pitch.f0, yin_centers, centers)
@@ -92,8 +92,20 @@ module Pronunciation
 
       PITCH_MARGIN_MS = 500.0
 
-      def pitch_track(samples, sr, energy, hop)
-        yin = DSP::Yin.new(hop_seconds: HOP_MS / 1000.0)
+      PITCH_FLOOR = (50.0..DSP::Yin::DEFAULT_MINIMUM_HZ)
+      FLOOR_SHARE = 0.75
+
+      def floor_for(f0_low)
+        return nil unless f0_low.to_f.positive?
+
+        (f0_low * FLOOR_SHARE).clamp(PITCH_FLOOR.min, PITCH_FLOOR.max)
+      end
+
+      def pitch_track(samples, sr, energy, hop, f0_floor = nil)
+        yin = DSP::Yin.new(
+          hop_seconds: HOP_MS / 1000.0,
+          minimum_frequency: f0_floor || DSP::Yin::DEFAULT_MINIMUM_HZ
+        )
         span = audible_span(energy, hop, samples.length)
         return [yin.call(waveform_of(samples, sr)), 0.0] if span.nil?
 

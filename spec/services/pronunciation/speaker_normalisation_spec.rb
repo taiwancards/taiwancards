@@ -162,3 +162,58 @@ RSpec.describe VoiceProfile do
     expect(profile(f3: 3654.0, hz: 124.0).warp).to(be < profile(f3: 3654.0, hz: 230.0).warp)
   end
 end
+
+RSpec.describe Pronunciation::Acoustic::Features do
+  it "leaves the pitch floor where it is for a voice that never goes near it" do
+    expect(described_class.floor_for(190.0)).to(eq(DSP::Yin::DEFAULT_MINIMUM_HZ))
+  end
+
+  it "reaches below the default for a voice that lives down there" do
+    floor = described_class.floor_for(81.0)
+
+    expect(floor).to(be < DSP::Yin::DEFAULT_MINIMUM_HZ)
+    expect(floor).to(be > described_class::PITCH_FLOOR.min - 0.01)
+  end
+
+  it "never chases a pitch nobody has" do
+    expect(described_class.floor_for(40.0)).to(eq(described_class::PITCH_FLOOR.min))
+  end
+
+  it "asks for nothing when the voice is unknown" do
+    expect(described_class.floor_for(nil)).to(be_nil)
+  end
+end
+
+RSpec.describe Pronunciation::AcousticBackend do
+  let(:voice) do
+    VoiceProfile.new(f3_ref: 2650.0, calibrated_at: Time.current).tap do |v|
+      allow(v).to(receive(:reference_hz).and_return(124.0))
+      allow(v).to(receive(:tone_anchor)) { |tone| {1 => 140.0, 2 => 120.0, 3 => 96.0, 4 => 130.0}[tone] }
+    end
+  end
+
+  let(:backend) { described_class.new(voice:) }
+
+  it "measures the voice with the tract the warmup found, not one guessed per clip" do
+    expect(backend.send(:speaker_f3)).to(eq(voice.trusted_f3))
+    expect(described_class.new.send(:speaker_f3)).to(be_nil)
+  end
+
+  it "measures a low tone against the pitch that tone actually sits at" do
+    expect(backend.send(:tone_reference_hz, 3)).to(eq(96.0))
+    expect(backend.send(:tone_reference_hz, 1)).to(eq(140.0))
+  end
+
+  it "leaves a genuinely low third tone alone instead of doubling it" do
+    curve = Array.new(6, 70.0)
+
+    expect(Pronunciation::Acoustic::Features.octave_aligned(curve, 96.0)).to(eq(curve))
+    expect(Pronunciation::Acoustic::Features.octave_aligned(curve, 124.0).first).to(be > 100.0)
+  end
+
+  it "still catches a reading that came back an octave low" do
+    curve = Array.new(6, 48.0)
+
+    expect(Pronunciation::Acoustic::Features.octave_aligned(curve, 96.0).first).to(eq(96.0))
+  end
+end
