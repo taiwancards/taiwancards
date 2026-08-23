@@ -91,10 +91,19 @@ module Google
       http.use_ssl = true
       response = http.request(req)
       unless response.code.to_i.between?(200, 299)
-        raise Error, "Google Drive API #{response.code}"
+        reason = refusal(response)
+        Rails.logger.error("Google Drive API #{response.code} for user #{@user.id}: #{response.body}")
+        raise Error, "Google Drive API #{response.code}: #{reason}"
       end
 
       response.body
+    end
+
+    def refusal(response)
+      JSON.parse(response.body).dig("error", "message").to_s.truncate(300).presence ||
+        response.body.to_s.truncate(300)
+    rescue JSON::ParserError
+      response.body.to_s.truncate(300)
     end
   end
 end
