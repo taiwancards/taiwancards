@@ -114,3 +114,37 @@ RSpec.describe Pronunciation::Acoustic::Takes do
     expect(described_class.group([[0, 1], [2, 3], [4, 5]], 2, 3)).to(be_nil)
   end
 end
+
+RSpec.describe Pronunciation::AcousticBackend do
+  let(:backend) { described_class.new }
+
+  def analysis(pattern) = {energy: pattern, conf: Array.new(pattern.length, 0.0)}
+  def speech(frames) = Array.new(frames, -12.0)
+  def quiet(frames) = Array.new(frames, -60.0)
+
+  it "cuts each reading inside its own window, never across the whole recording" do
+    gap = quiet((Pronunciation::Acoustic::Takes::GAP_MS / Pronunciation::Acoustic::Features::HOP_MS).round + 4)
+    an = analysis(quiet(6) + speech(40) + gap + speech(40) + gap + speech(40) + quiet(6))
+    expected = Array.new(2) { {template: nil} }
+
+    spans = backend.send(:spans_for, an, expected, 3)
+
+    expect(spans.length).to(eq(3))
+    expect(spans.map(&:length)).to(all(eq(2)))
+    expect(spans.flatten(1).map(&:first)).to(eq(spans.flatten(1).map(&:first).sort))
+    expect(spans.first.last.last).to(be < spans.last.first.first)
+  end
+
+  it "keeps every reading inside the stretch of speech it came from" do
+    gap = quiet((Pronunciation::Acoustic::Takes::GAP_MS / Pronunciation::Acoustic::Features::HOP_MS).round + 4)
+    an = analysis(quiet(6) + speech(40) + gap + speech(40))
+    windows = Pronunciation::Acoustic::Takes.runs_of(an)
+    spans = backend.send(:spans_for, an, Array.new(2) { {template: nil} }, 2)
+
+    spans.each_with_index do |take, index|
+      lo, hi = windows[index]
+      expect(take.first.first).to(be >= lo)
+      expect(take.last.last).to(be <= hi)
+    end
+  end
+end

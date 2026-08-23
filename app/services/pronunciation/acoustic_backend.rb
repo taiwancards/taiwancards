@@ -69,9 +69,11 @@ module Pronunciation
       count = expected.length
 
       if repeats > 1
-        spans = segment(analysis, count * repeats, templates * repeats)
-        grouped = spans.is_a?(String) ? nil : Acoustic::Takes.group(spans, count, repeats)
-        return grouped if grouped
+        windows = Acoustic::Takes.runs_of(analysis).first(repeats)
+        if windows.length == repeats
+          taken = windows.filter_map { |window| Acoustic::Takes.spans_within(analysis, window, count) }
+          return taken if taken.length == repeats
+        end
       end
 
       once = segment(analysis, count, templates)
@@ -181,9 +183,11 @@ module Pronunciation
 
     def place_neighbours(rows)
       tones = rows.map { |row| row[:template]&.fetch("tone", nil).to_i }
+      onsets = rows.map { |row| row[:template]&.dig("structure", "initial") }
       rows.each_with_index do |row, index|
         row[:features]["tone_before"] = index.zero? ? Acoustic::ContextNorms::EDGE : tones[index - 1]
         row[:features]["tone_after"] = tones[index + 1] || Acoustic::ContextNorms::EDGE
+        row[:features]["onset_after"] = onsets[index + 1]
       end
     end
 
@@ -301,6 +305,7 @@ module Pronunciation
           "vot_ms" => features["vot_ms"]&.round(1),
           "vot_reliable" => features["vot_reliable"],
           "lead_ms" => lead&.dig("vars", "ms"),
+          "takes" => features["n_takes"],
           "register" => features["f0_register"]&.round(2)
         },
         "template" => {

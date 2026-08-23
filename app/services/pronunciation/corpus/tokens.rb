@@ -31,6 +31,7 @@ module Pronunciation
         @split = nil
         @held_out_speakers = nil
         @available = nil
+        @neighbours = nil
       end
 
       def wanted?(row, speakers)
@@ -74,7 +75,41 @@ module Pronunciation
       end
 
       def enrich(row)
+        row["onset_after"] = following(row)
         Acoustic::Vowel.place(row, SpeakerPitch.reference[row["_speaker"]])
+      end
+
+      def following(row)
+        return nil if row["_n_syllables"].to_i < 2
+
+        key = neighbours.dig(row["_file"], row["_index"].to_i + 1) or return nil
+        syllable, = Acoustic::Syllables.parse_key(key)
+        syllable && Acoustic::Phonology.analyze(syllable)[:initial]
+      end
+
+      def neighbours(source = TAIWAN)
+        @neighbours ||= {}
+        @neighbours[source] ||= build_neighbours(source)
+      end
+
+      def build_neighbours(source)
+        found = Hash.new { |hash, file| hash[file] = {} }
+        available(source).each do |key|
+          path = File.join(root(source), "#{key}.jsonl")
+          File.foreach(path) do |line|
+            row = begin
+              JSON.parse(line)
+            rescue JSON::ParserError
+              next
+            end
+
+            next if row["_n_syllables"].to_i < 2
+
+            found[row["_file"]][row["_index"].to_i] = key
+          end
+        end
+
+        found
       end
 
       def sample(key, limit, source = TAIWAN, speakers: :fitting)

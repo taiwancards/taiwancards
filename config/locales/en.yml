@@ -1547,7 +1547,11 @@ en:
     stop: Stop
     recording: Recording — speak. It stops on its own.
     arming: One moment — the microphone is settling…
-    repeat_hint: Say it %{count} times with a short pause — all of them count.
+    repeat_hint: Say it %{count} times, with pauses — there is no hurry.
+    takes_done: Heard %{done} of %{total} — say it again, take your time.
+    takes_full: Heard all %{total} — scoring now.
+    takes_finish: Done · %{done} of %{total}
+    takes_waiting: Listening — say it again whenever you are ready.
     heard_takes: Scored over %{count} readings.
     grading: Grading…
     retry: Not quite — say it again…

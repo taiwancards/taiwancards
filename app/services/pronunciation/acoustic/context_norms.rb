@@ -25,7 +25,24 @@ module Pronunciation
         {}
       end
 
+      VOICELESS = %w[f s sh x h p t k c ch q].freeze
+      VOICED = %w[m n l r].freeze
+
       def curves = data["curves"] || {}
+
+      def onset_class(initial)
+        return "vowel" if initial == ""
+        return "voiceless" if VOICELESS.include?(initial)
+        return "nasal" if VOICED.include?(initial)
+
+        "voiced"
+      end
+
+      def coda_factor(initial)
+        return nil if initial.nil?
+
+        (data["coda"] || {})[onset_class(initial)]
+      end
 
       def stretch(spot)
         return nil if spot == "alone"

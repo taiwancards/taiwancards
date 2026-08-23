@@ -122,16 +122,17 @@ module Pronunciation
         end
 
         if st["nasal_coda"] && tpl["nasal_ratio_tail"]
-          zn = zscore(f["nasal_ratio_tail"], tpl["nasal_ratio_tail"], "nasal_ratio_tail")
+          coda_tpl = muffled(tpl, f)
+          zn = zscore(f["nasal_ratio_tail"], coda_tpl["nasal_ratio_tail"], "nasal_ratio_tail")
           axes <<
             axis(
               "coda",
-              spread(f, tpl, CODA_FIELDS),
+              spread(f, coda_tpl, CODA_FIELDS),
               coda_code(zn),
               {"coda" => st["coda"]},
               measured: {
                 "nasal_ratio" => f["nasal_ratio_tail"]&.round(2),
-                "nasal_norm" => tpl["nasal_ratio_tail"]["median"]&.round(2)
+                "nasal_norm" => coda_tpl["nasal_ratio_tail"]["median"]&.round(2)
               }
             )
         end
@@ -164,6 +165,14 @@ module Pronunciation
       def vowel_fields(f) = pitch_referenced?(f) ? VOWEL_FIELDS : VOWEL_TRACT_FIELDS
 
       def vowel_pair(f) = pitch_referenced?(f) ? %w[f1_over_f0 f2_over_f1] : %w[f1_ratio f2_over_f1]
+
+      def muffled(tpl, f)
+        factor = ContextNorms.coda_factor(f["onset_after"])
+        stat = tpl["nasal_ratio_tail"]
+        return tpl if factor.nil? || factor <= 0.0 || stat.nil? || stat["median"].nil?
+
+        tpl.merge("nasal_ratio_tail" => stat.merge("median" => stat["median"] * factor))
+      end
 
       def stretched(stat, f)
         factor = ContextNorms.stretch(ContextNorms.spot_of(f["tone_before"], f["tone_after"]))

@@ -10,6 +10,9 @@ const TAKE_GAP_MS = 320;
 const TAKE_MIN_MS = 140;
 const TAKE_TARGET = 3;
 const REPEAT_MAX_SYLLABLES = 4;
+const TAKE_PATIENCE_MS = 2800;
+const TAKE_SETTLE_MS = 700;
+const NO_SPEECH_MS = 7000;
 
 const LEVELS = {
   green: "#10b981",
@@ -106,6 +109,7 @@ export default class extends Controller {
     "card",
     "detail",
     "cue",
+    "hint",
   ];
   static values = {
     labelBusy: String,
@@ -136,6 +140,10 @@ export default class extends Controller {
     labelArming: String,
     labelRepeatHint: String,
     labelHeardTakes: String,
+    labelTakesDone: String,
+    labelTakesFull: String,
+    labelTakesFinish: String,
+    labelTakesWaiting: String,
     labelGrading: String,
     labelDetails: String,
     labelCopy: String,
@@ -302,8 +310,8 @@ export default class extends Controller {
     this.recording = true;
     this.recordTarget.textContent = this.labelListeningValue;
     this.recordTarget.classList.add("bg-red-500", "text-white");
-    this.setStatus(this.labelArmingValue);
     this.renderCue();
+    this.setStatus(this.takeStatus());
     this.armTimer = setTimeout(() => this.arm(), LEAD_IN_MS);
     this.startMeter();
   }
@@ -312,10 +320,8 @@ export default class extends Controller {
     if (!this.recording) return;
     this.armed = true;
     this.armedAt = performance.now();
-    this.setStatus(
-      this.mode === "drill" ? this.drillPrompt() : this.labelRecordingValue,
-    );
     this.renderCue();
+    this.setStatus(this.takeStatus());
   }
 
   repeatTarget() {
@@ -324,29 +330,69 @@ export default class extends Controller {
   }
 
   renderCue() {
+    if (this.hasHintTarget) this.hintTarget.hidden = this.recording;
     if (!this.hasCueTarget) return;
     this.cueTarget.replaceChildren();
     if (!this.recording) return;
 
-    const dot = document.createElement("span");
-    dot.className = `inline-block size-2 rounded-full transition-colors ${
-      this.armed ? "bg-emerald-500" : "bg-amber-400 animate-pulse"
-    }`;
-    this.cueTarget.appendChild(dot);
-
-    if (this.wantTakes < 2) return;
+    if (this.wantTakes < 2) {
+      this.cueTarget.appendChild(this.stateDot());
+      return;
+    }
 
     for (let i = 0; i < this.wantTakes; i++) {
-      const pill = document.createElement("span");
-      pill.className = `inline-block h-1.5 w-4 rounded-full transition-colors ${
-        i < this.takes ? "bg-emerald-500" : "bg-border"
-      }`;
-      this.cueTarget.appendChild(pill);
+      this.cueTarget.appendChild(this.slot(i));
     }
-    const note = document.createElement("span");
-    note.className = "ml-1";
-    note.textContent = this.labelRepeatHintValue;
-    this.cueTarget.appendChild(note);
+    this.recordTarget.textContent = this.takes
+      ? this.fill(this.labelTakesFinishValue)
+      : this.labelListeningValue;
+  }
+
+  stateDot() {
+    const dot = document.createElement("span");
+    dot.className = `inline-block size-2.5 rounded-full transition-colors ${
+      this.armed ? "bg-emerald-500 animate-pulse" : "bg-amber-400 animate-pulse"
+    }`;
+    return dot;
+  }
+
+  slot(index) {
+    const done = index < this.takes;
+    const next = index === this.takes;
+    const box = document.createElement("span");
+    box.className = [
+      "inline-flex size-7 items-center justify-center rounded-lg border text-xs font-semibold tabular-nums transition-all",
+      this.slotTone(done, next),
+    ].join(" ");
+    box.textContent = done ? "✓" : String(index + 1);
+    return box;
+  }
+
+  slotTone(done, next) {
+    if (done) return "border-emerald-500 bg-emerald-500 text-white";
+    if (!next) return "border-border text-muted-foreground";
+
+    return this.armed
+      ? "animate-pulse border-emerald-500 text-emerald-600 ring-2 ring-emerald-500/30"
+      : "animate-pulse border-amber-400 text-amber-600 ring-2 ring-amber-400/30";
+  }
+
+  fill(text) {
+    return String(text || "")
+      .replace("%{done}", String(this.takes))
+      .replace("%{total}", String(this.wantTakes));
+  }
+
+  takeStatus() {
+    if (!this.armed) return this.labelArmingValue;
+    if (this.wantTakes < 2)
+      return this.mode === "drill"
+        ? this.drillPrompt()
+        : this.labelRecordingValue;
+    if (this.takes >= this.wantTakes)
+      return this.fill(this.labelTakesFullValue);
+    if (this.takes > 0) return this.fill(this.labelTakesDoneValue);
+    return this.fill(this.labelRepeatHintValue);
   }
 
   stop() {
@@ -403,24 +449,28 @@ export default class extends Controller {
       if (this.lastLoud - this.runFrom >= TAKE_MIN_MS) {
         this.takes += 1;
         this.renderCue();
+        this.setStatus(this.takeStatus());
       }
     }
     if (this.pendingStop && (silentFor > 180 || now > this.stopDeadline))
       return this.stop();
-    if (this.takes >= this.wantTakes && silentFor > TAKE_GAP_MS)
-      return this.stop();
-    if (
-      (this.spoke && silentFor > this.patience()) ||
-      elapsed > this.maxMsValue * this.wantTakes
-    ) {
-      this.stop();
+    if (!this.spoke) {
+      if (elapsed > NO_SPEECH_MS) this.stop();
+      return;
     }
+    if (this.takes >= this.wantTakes && silentFor > TAKE_SETTLE_MS)
+      return this.stop();
+    if (silentFor > this.patience() || elapsed > this.ceiling()) this.stop();
   }
 
   patience() {
     return this.wantTakes > 1
-      ? Math.max(this.silenceMsValue, TAKE_GAP_MS * 3)
+      ? Math.max(this.silenceMsValue, TAKE_PATIENCE_MS)
       : this.silenceMsValue;
+  }
+
+  ceiling() {
+    return this.maxMsValue * this.wantTakes + LEAD_IN_MS;
   }
 
   teardownMeter() {
@@ -779,6 +829,7 @@ export default class extends Controller {
       `${signal.register == null ? "" : `/${sgn(signal.register)}`}` +
       `  q7${signal.vot_ms == null ? "—" : n(signal.vot_ms, 0)}${signal.vot_reliable ? "+" : "-"}` +
       `${signal.lead_ms == null ? "" : `  q2 ${n(signal.lead_ms, 0)}`}` +
+      `${signal.takes > 1 ? `  ×${signal.takes}` : ""}` +
       `  τ${STYLE_MARK[template.style] || "s?"}·${template.tokens}/${template.speakers}·${CONF_MARK[template.confidence] || "?"}`;
 
     const axisLine =

@@ -55,6 +55,10 @@
       data-pronunciation-label-recording-value=t("pronunciation.recording")
       data-pronunciation-label-arming-value=t("pronunciation.arming")
       data-pronunciation-label-repeat-hint-value=t("pronunciation.repeat_hint", count: Pronunciation::Acoustic::Takes::MAX)
+      data-pronunciation-label-takes-done-value=t("pronunciation.takes_done", done: "%{done}", total: "%{total}")
+      data-pronunciation-label-takes-full-value=t("pronunciation.takes_full", total: "%{total}")
+      data-pronunciation-label-takes-finish-value=t("pronunciation.takes_finish", done: "%{done}", total: "%{total}")
+      data-pronunciation-label-takes-waiting-value=t("pronunciation.takes_waiting")
       data-pronunciation-label-heard-takes-value=t("pronunciation.heard_takes", count: "%{count}")
       data-pronunciation-label-grading-value=t("pronunciation.grading")
       data-pronunciation-label-unavailable-value=t("pronunciation.unavailable")
@@ -140,7 +144,7 @@
           type="button" data-pronunciation-target="record" data-action="pronunciation#toggle" ]
           = t("pronunciation.record")
         .flex.items-center.justify-center.gap-1.5.text-2xs.text-muted-foreground data-pronunciation-target="cue"
-        p.text-center.text-2xs.text-muted-foreground = t("pronunciation.record_hint")
+        p.text-center.text-2xs.text-muted-foreground data-pronunciation-target="hint" = t("pronunciation.record_hint")
         .min-h-5.text-center.text-xs.text-muted-foreground data-pronunciation-target="status"
 
       .space-y-3 data-pronunciation-target="detail"

@@ -49,14 +49,10 @@ module Google
     private
 
     def access_token
-      refresh! if token_expired?
-      @user.google_access_token
-    end
-
-    def token_expired?
-      @user.google_access_token.blank? ||
-        @user.google_token_expires_at.nil? ||
-        @user.google_token_expires_at <= 1.minute.from_now
+      @access_token ||= begin
+        refresh!
+        @user.google_access_token
+      end
     end
 
     def refresh!

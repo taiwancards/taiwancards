@@ -15,19 +15,23 @@ module Pronunciation
       end
 
       def call
-        cells, timing = gather
+        cells, timing, codas = gather
         kept = cells.select { |_, curves| curves.length >= MIN_CELL }
         @io&.puts("  tone cells #{kept.length} of #{cells.length}, tokens #{cells.values.sum(&:length)}")
         stretch = lengths(timing)
         @io&.puts("  duration by position #{stretch.map { |k, v| "#{k} ×#{v}" }.join(", ")}")
+        coda = coda_factors(codas)
+        @io&.puts("  nasal tail by next onset #{coda.map { |k, v| "#{k} ×#{v}" }.join(", ")}")
 
         {
           "generated_at" => Time.current.utc.iso8601,
           "method" => "how connected corpus speech bends a syllable away from its pooled template: " \
-            "the tone contour by the tones on either side, the voiced duration by position in the phrase",
+            "the tone contour by the tones on either side, the voiced duration by position in the phrase, " \
+            "the nasal murmur by the consonant that follows it",
           "min_cell" => MIN_CELL,
           "curves" => kept.transform_values { |curves| average(curves) },
-          "duration" => stretch
+          "duration" => stretch,
+          "coda" => coda
         }
       end
 
@@ -43,6 +47,7 @@ module Pronunciation
       def gather
         cells = Hash.new { |hash, cell| hash[cell] = [] }
         timing = Hash.new { |hash, spot| hash[spot] = [] }
+        codas = Hash.new { |hash, onset| hash[onset] = [] }
 
         recordings.each_value do |group|
           next if group.length < 2
@@ -53,13 +58,41 @@ module Pronunciation
           group.each_with_index do |row, index|
             spot = Acoustic::ContextNorms.position(index, group.length)
             timing[spot] << stretch_of(row, index, group.length)
+            nasal_of(row, group[index + 1], codas)
             deviation = deviation_of(row, index, group.length) or next
             cells[Acoustic::ContextNorms.cell(tones[index], tones[index - 1] || EDGE, tones[index + 1] || EDGE)] <<
               deviation
           end
         end
 
-        [cells, timing]
+        [cells, timing, codas]
+      end
+
+      def nasal_of(row, following, codas)
+        return if following.nil?
+
+        ratio = row["nasal_ratio_tail"]
+        return if ratio.nil?
+
+        template = @store.template(row["_key"]) or return
+        return unless template.dig("structure", "nasal_coda")
+
+        wanted = template.dig("nasal_ratio_tail", "median").to_f
+        return unless wanted.positive?
+
+        syllable, = Acoustic::Syllables.parse_key(following["_key"])
+        onset = Acoustic::ContextNorms.onset_class(Acoustic::Phonology.analyze(syllable.to_s)[:initial])
+        codas[onset] << (ratio / wanted)
+      end
+
+      def coda_factors(codas)
+        codas
+          .filter_map do |onset, ratios|
+            next if ratios.length < MIN_CELL
+
+            [onset, DTW::Statistics.median(ratios).round(3)]
+          end
+          .to_h
       end
 
       def stretch_of(row, index, total)

@@ -39,6 +39,16 @@ module Pronunciation
         end
       end
 
+      def spans_within(analysis, window, syllables)
+        lo, hi = window
+        return [window] if syllables <= 1
+
+        inside = Features.speech_runs(analysis).select { |from, to| from >= lo && to <= hi }
+        return inside if inside.length == syllables
+
+        Features.forced_spans(analysis, syllables, bounds: window)
+      end
+
       def group(spans, syllables, takes)
         return nil if spans.nil? || spans.length != syllables * takes
 
