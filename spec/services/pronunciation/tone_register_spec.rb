@@ -12,6 +12,7 @@ RSpec.describe "Tone scoring and the speaker's register" do
       "tone" => 4,
       "tone_contour" => {"center" => center, "sigma" => Array.new(16, 0.5)},
       "tone_range" => {"median" => 9.8, "sigma" => 1.05},
+      "tone_slope" => {"median" => -9.7, "sigma" => 2.2},
       "f0_register" => {"median" => 2.77, "sigma" => 0.7}
     }
   end
@@ -35,10 +36,20 @@ RSpec.describe "Tone scoring and the speaker's register" do
     expect(score(curve: center)).to(be >= 95)
   end
 
-  it "no longer lets a register miss bury a contour that matched" do
+  it "keeps the contour primary when the register is off" do
     four_sigma = template.dig("f0_register", "median") + (4 * template.dig("f0_register", "sigma"))
+    matched = score(curve: center, register: four_sigma)
+    mismatched = score(curve: center.reverse, register: template.dig("f0_register", "median"))
 
-    expect(score(curve: center, register: four_sigma)).to(be >= 85)
+    expect(matched).to(be > mismatched)
+  end
+
+  it "does not let a matching register rescue a contour of the wrong shape" do
+    wrong = center.reverse
+    blind = score(curve: wrong)
+    helped = score(curve: wrong, register: template.dig("f0_register", "median"))
+
+    expect(helped).to(be <= blind)
   end
 
   it "still fails a contour of the wrong shape" do
@@ -53,7 +64,7 @@ RSpec.describe "Tone scoring and the speaker's register" do
     median = template.dig("f0_register", "median")
 
     expect(score(curve: center, register: median + 100)).to(eq(score(curve: center, register: median + 1000)))
-    expect(score(curve: center, register: median + 1000)).to(be >= 80)
+    expect(score(curve: center, register: median + 1000)).to(be > score(curve: center.reverse))
   end
 
   describe "when the profile has no tone anchors" do

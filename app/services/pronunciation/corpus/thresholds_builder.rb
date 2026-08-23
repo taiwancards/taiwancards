@@ -12,8 +12,9 @@ module Pronunciation
       PER_KEY = 6
       RED_TOUCHES = 0.05
 
-      def initialize(part: "dev", store: TemplateStore.instance, io: $stdout)
+      def initialize(part: "dev", speakers: :fitting, store: TemplateStore.instance, io: $stdout)
         @part = part
+        @speakers = speakers
         @store = store
         @io = io
       end
@@ -22,7 +23,7 @@ module Pronunciation
         keys = Tokens.keys(@part)
         raise "no keys in the '#{@part}' split" if keys.empty?
 
-        @io&.puts("Thresholds over #{keys.length} syllables of the '#{@part}' split")
+        @io&.puts("Thresholds over #{keys.length} syllables of the '#{@part}' split, #{@speakers} voices")
         chunks = FanOut.map(keys, io: @io) { |chunk| tally(chunk) }
 
         good = merge(chunks.map { |c| c[:good] })
@@ -59,11 +60,13 @@ module Pronunciation
           template = @store.template(key) or next
           norm = template["norm"] || TemplateStore::CITATION
 
-          Tokens.sample(key, PER_KEY).each { |features| record(good, analyzer, features, template, norm, nil) }
+          Tokens.sample(key, PER_KEY, speakers: @speakers).each do |features|
+            record(good, analyzer, features, template, norm, nil)
+          end
 
           Acoustic::PartRivals.keys_by_part(key).each do |cell, rival_keys|
             rival_keys.select { |rival| available.include?(rival) }.first(2).each do |rival_key|
-              Tokens.sample(rival_key, PER_KEY).each do |features|
+              Tokens.sample(rival_key, PER_KEY, speakers: @speakers).each do |features|
                 record(bad, analyzer, features, template, norm, cell)
               end
             end

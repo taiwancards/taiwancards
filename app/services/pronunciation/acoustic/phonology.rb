@@ -24,6 +24,10 @@ module Pronunciation
         "c" => "z"
       }.freeze
 
+      APICAL_DENTAL = %w[z c s].freeze
+
+      APICAL_RETROFLEX = %w[zh ch sh r].freeze
+
       SIBILANT_SERIES = {
         "z" => :dental,
         "c" => :dental,
@@ -60,7 +64,7 @@ module Pronunciation
         "l" => "l",
         "g" => "k",
         "k" => "kʰ",
-        "h" => "x",
+        "h" => "h",
         "j" => "tɕ",
         "q" => "tɕʰ",
         "x" => "ɕ",
@@ -160,10 +164,18 @@ module Pronunciation
           sibilant: SIBILANT_SERIES[initial],
           medial: medial,
           nucleus: nucleus,
+          apical: apical(initial, final),
           coda: coda,
           nasal_coda: %w[n ng].include?(coda),
           final: final
         }
+      end
+
+      def apical(initial, final)
+        return nil unless final == "i"
+        return :dental if APICAL_DENTAL.include?(initial)
+
+        :retroflex if APICAL_RETROFLEX.include?(initial)
       end
 
       def neighbors(syllable, existing)

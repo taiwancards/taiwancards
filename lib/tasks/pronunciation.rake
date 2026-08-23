@@ -103,6 +103,11 @@ namespace(:pronunciation) do
     Pronunciation::TemplateStore.reset!
   end
 
+  desc("How connected speech bends a syllable away from its template: tone by neighbours, length by position")
+  task(context_norms: :environment) do
+    Pronunciation::Corpus::ContextNorms.new(io: $stdout).write!
+  end
+
   desc("Pause, pitch step and energy dip at every syllable junction of native connected speech")
   task(junction_norms: :environment) do
     Pronunciation::Corpus::JunctionNorms.new(io: $stdout).write!
@@ -162,6 +167,7 @@ namespace(:pronunciation) do
       style_factor
       variability
       templates
+      context_norms
       axis_norms
       thresholds_build
       syllable_quality
@@ -182,7 +188,10 @@ namespace(:pronunciation) do
 
   desc("Rebuild the color thresholds from the corpus recordings (local, uses every core)")
   task(thresholds_build: :environment) do
-    payload = Pronunciation::Corpus::ThresholdsBuilder.new(part: ENV["SPLIT"].presence || "dev").write!
+    payload = Pronunciation::Corpus::ThresholdsBuilder.new(
+      part: ENV["SPLIT"].presence || "dev",
+      speakers: ENV["VOICES"].presence&.to_sym || :fitting
+    ).write!
     payload["thresholds"].each do |cell, t|
       puts(
         format(

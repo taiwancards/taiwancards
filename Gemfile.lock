@@ -126,7 +126,7 @@ GEM
       railties (>= 6.1)
     drb (2.2.3)
     dsprb (2.0.0)
-    dtwrb (1.0.0)
+    dtwrb (1.1.0)
     erb (6.0.7)
     erubi (1.13.1)
     factory_bot (6.6.0)
@@ -505,7 +505,7 @@ CHECKSUMS
   dotenv-rails (3.2.0) sha256=657e25554ba622ffc95d8c4f1670286510f47f2edda9f68293c3f661b303beab
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dsprb (2.0.0) sha256=9c1784cd9d307574c759e16803d03c4d3f834429673c36775423cc7fb6e5ed8c
-  dtwrb (1.0.0) sha256=7e43535b968d61ad60fa873ce5f0bd01e693d47a4885353c246eda14d75a3ef4
+  dtwrb (1.1.0) sha256=909b6eed019b4b65a9c973a90c1c257d6b325b4ab4f99e14952b8b18f2257536
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   factory_bot (6.6.0) sha256=1fc1b3b5620ec980a6a27aec1b6ec8c250ca82962e970e8a40f93e8d388d4b89

@@ -120,6 +120,7 @@ module Pronunciation
 
         rows.each do |row|
           base = refs[row["_speaker"]]
+          Acoustic::Vowel.place(row, base)
           row["f0_register"] = if base && base > MIN_HZ && row["f0_ref_hz"].to_f > MIN_HZ
             12.0 * Math.log2(row["f0_ref_hz"] / base)
           end

@@ -34,7 +34,7 @@ module Pronunciation
         collected = Hash.new { |hash, speaker| hash[speaker] = [] }
 
         keys.each do |key|
-          Tokens.each(key, speakers: :all) do |row|
+          Tokens.each(key, speakers: :all, raw: true) do |row|
             hz = row["f0_ref_hz"].to_f
             collected[row["_speaker"]] << hz if hz > MIN_HZ
           end

@@ -5,6 +5,7 @@ module Pronunciation
     DEFAULT_PATH = "/var/data/pronunciation"
     MAX_CACHED_TEMPLATES = Integer(ENV.fetch("PRONUNCIATION_TEMPLATE_CACHE", 256))
     CITATION = "taiwan"
+    WORD = "taiwan_word"
     WORD_INITIAL = "taiwan_wi"
     WORD_MEDIAL = "taiwan_wm"
     WORD_FINAL = "taiwan_wf"
@@ -62,10 +63,7 @@ module Pronunciation
     def max_cached = MAX_CACHED_TEMPLATES
 
     def norm_for(position:, total:)
-      return CITATION if total <= 1
-      return WORD_INITIAL if position.zero?
-
-      position == total - 1 ? WORD_FINAL : WORD_MEDIAL
+      total <= 1 ? CITATION : WORD
     end
 
     def thresholds

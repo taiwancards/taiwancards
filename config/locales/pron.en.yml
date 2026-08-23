@@ -24,6 +24,7 @@ en:
       medial: "Medial"
       final: "Final"
       tone: "Tone"
+      timbre: "Whole syllable"
       absent: "none"
       empty_rime: "空韻"
     weight: "weight %{percent}%"
@@ -35,7 +36,7 @@ en:
       band: "speaker spread"
       semitones: "semitones"
     ui:
-      chart_hint: "Dashed is the reference, the band is the spread across real speakers, the solid line is you."
+      chart_hint: "The band is how living speakers actually produce this syllable: inside it nothing counts against you. Dashed is its middle, solid is you, red marks where you left the band."
       chart_range: "The scale is semitones from the middle of your voice, so it shows not only the shape of the tone but the height you took it at."
       parts_title: "What the score is made of"
       fix_title: "What to fix"
@@ -77,7 +78,9 @@ en:
       near: "No clear error, but it falls short of the reference."
       tone:
         wrong: "That was tone %{got}; tone %{tone} is needed."
-        shape: "Tone %{tone} is recognisable, but the contour drifts from the reference."
+        shape: "The contour parts from the tone %{tone} reference."
+        falls: "The voice went down; tone %{tone} goes up."
+        rises: "The voice went up; tone %{tone} goes down."
       initial:
         under_aspirated: "Not enough aspiration: %{initial} came out closer to %{pair}."
         over_aspirated: "Too much aspiration: %{initial} came out closer to %{pair}."
@@ -92,6 +95,7 @@ en:
         close: "The vowel is more closed than the reference."
         front: "The vowel is shifted forward."
         back: "The vowel is shifted back."
+        apical: "There is no separate vowel after %{initial}: the sound continues where the consonant leaves the tongue."
       coda:
         weak: "The nasal coda barely sounded."
         heavy: "The nasal is too heavy — the vowel is nasalised too early."
@@ -119,6 +123,8 @@ en:
       tone:
         wrong: "Follow the reference curve on the chart."
         shape: "Check the chart and see where your line parts from the reference."
+        falls: "Start lower and carry the voice up to the end of the syllable."
+        rises: "Start higher and let the voice down to the end of the syllable."
       initial:
         under_aspirated: "Push more air after the release — the puff must clearly precede the voice."
         over_aspirated: "Start voicing immediately after the release, with no puff in between."
@@ -133,6 +139,7 @@ en:
         close: "Drop the jaw."
         front: "Pull the tongue back."
         back: "Bring the tongue forward."
+        apical: "Do not put an ee sound here: keep the tongue on the consonant and voice it on."
       coda:
         weak: "Hold the end of the syllable: let the air go through the nose instead of stopping on the vowel."
         heavy: "Keep the vowel clean and let the nose in only at the very end."

@@ -46,6 +46,9 @@ class SyllableSkill < ApplicationRecord
     flow.choppy
     flow.pitch_reset
     flow.clipped
+    tone.falls
+    tone.rises
+    vowel.apical
   ]
     .freeze
 

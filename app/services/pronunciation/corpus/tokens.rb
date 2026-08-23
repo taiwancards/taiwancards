@@ -55,9 +55,9 @@ module Pronunciation
           .sort
       end
 
-      def each(key, source = TAIWAN, speakers: :fitting)
+      def each(key, source = TAIWAN, speakers: :fitting, raw: false)
         path = File.join(root(source), "#{key}.jsonl")
-        return to_enum(:each, key, source, speakers: speakers) unless block_given?
+        return to_enum(:each, key, source, speakers: speakers, raw: raw) unless block_given?
         return unless File.exist?(path)
 
         File.foreach(path) do |line|
@@ -67,8 +67,14 @@ module Pronunciation
             next
           end
 
-          yield(row) if wanted?(row, speakers)
+          next unless wanted?(row, speakers)
+
+          yield(raw ? row : enrich(row))
         end
+      end
+
+      def enrich(row)
+        Acoustic::Vowel.place(row, SpeakerPitch.reference[row["_speaker"]])
       end
 
       def sample(key, limit, source = TAIWAN, speakers: :fitting)

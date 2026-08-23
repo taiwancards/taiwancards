@@ -7,17 +7,19 @@ module Pronunciation
         "tone" => 3.0,
         "final" => 2.6,
         "initial" => 2.0,
+        "timbre" => 2.0,
         "medial" => 0.9
       }.freeze
 
       PART_FEATURES = {
         "tone" => %w[tone_contour tone_range tone_slope f0_register],
-        "final" => %w[f1_ratio f2_ratio f2_end_ratio f2_delta_ratio nasal_ratio_tail],
+        "final" => %w[f1_over_f0 f2_over_f1 f2_end_over_f1 nasal_ratio_tail nasal_ratio_mid energy_tail_ratio],
         "initial" => %w[vot_ms vot_ratio fric_ms fric_centroid centroid_ratio],
-        "medial" => %w[f2_ratio]
+        "medial" => %w[f2_over_f1],
+        "timbre" => []
       }.freeze
 
-      SATURATION = {"tone" => 2.0, "final" => 4.0, "initial" => 2.0, "medial" => 1.0}.freeze
+      SATURATION = {"tone" => 2.0, "final" => 4.0, "initial" => 2.0, "medial" => 1.0, "timbre" => 1.0}.freeze
 
       FLOOR = 0.45
       D_REF = 1.5
@@ -76,10 +78,11 @@ module Pronunciation
           "final" => all.count { |other|
             o = Phonology.analyze(other)
             o[:initial] == me[:initial] && o[:medial] == me[:medial] && rime(o) != rime(me)
-          }
+          },
+          "timbre" => 1
         }
       rescue StandardError
-        {"tone" => tone ? 3 : 0, "initial" => 1, "medial" => 1, "final" => 4}
+        {"tone" => tone ? 3 : 0, "initial" => 1, "medial" => 1, "final" => 4, "timbre" => 1}
       end
 
       def rime(structure) = "#{structure[:nucleus]}#{structure[:coda]}"

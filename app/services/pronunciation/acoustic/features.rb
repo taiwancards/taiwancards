@@ -11,6 +11,12 @@ module Pronunciation
 
       TONE_POINTS = 16
       FORMANT_POINTS = 8
+      FORMANT_MERGED = 0.95
+      FORMANT_F1_MERGED = 0.8
+      ONSET_POINT = 1
+      VOWEL_WINDOW = (2..3)
+      TAIL_SHARE = 0.75
+      BODY_SHARE = (0.35..0.6)
       MFCC_POINTS = 12
 
       module_function
@@ -643,14 +649,30 @@ module Pronunciation
 
         f2_end = f2c[(FORMANT_POINTS * 0.85).floor]
         f1_end = f1c[(FORMANT_POINTS * 0.85).floor]
+        f1_on = f1c[ONSET_POINT]
+        f2_on = f2c[ONSET_POINT]
+        f1v = window_median(f1c, VOWEL_WINDOW)
+        f2v = window_median(f2c, VOWEL_WINDOW)
+        vowel_ok = formants_reliable?(scale && f1v && f1v / scale, scale && f2v && f2v / scale)
+        f1_ratio = scale ? f1m / scale : nil
+        f2_ratio = scale ? f2m / scale : nil
 
         {
           "f1_mid" => f1m,
           "f2_mid" => f2m,
           "f3_mid" => f3m,
           "f2_end" => f2_end,
-          "f1_ratio" => scale ? f1m / scale : nil,
-          "f2_ratio" => scale ? f2m / scale : nil,
+          "f1_onset" => f1_on,
+          "f2_onset" => f2_on,
+          "f2_over_f1" => over(f2v, f1v),
+          "f2_onset_ratio" => over(f2_on, f1_on),
+          "f2_end_over_f1" => over(f2_end, f1v),
+          "energy_tail_ratio" => tail_ratio(energy_curve),
+          "formants_reliable" => vowel_ok,
+          "f1_vowel" => f1v,
+          "f2_vowel" => f2v,
+          "f1_ratio" => f1_ratio,
+          "f2_ratio" => f2_ratio,
           "f2_end_ratio" => scale ? f2_end / scale : nil,
           "f1_end_ratio" => scale ? f1_end / scale : nil,
           "f2_delta_ratio" => scale ? (f2_end - f2m) / scale : nil,
@@ -679,6 +701,42 @@ module Pronunciation
           "nasal_ratio_mid" => nasal_mid,
           "energy_curve" => energy_curve
         }
+      end
+
+      def window_median(curve, range)
+        return nil if curve.nil? || curve.length < 8
+
+        values = range.filter_map { |i| curve[i] }.select { |v| v.to_f > 0.0 }
+        values.empty? ? nil : DTW::Statistics.median(values)
+      end
+
+      def over(value, base)
+        return nil if value.nil? || base.nil? || base <= 0.0
+
+        value / base
+      end
+
+      def tail_ratio(curve)
+        return nil if curve.nil? || curve.length < 8
+
+        tail = curve[(curve.length * TAIL_SHARE).floor..]
+        body = curve[(curve.length * BODY_SHARE.begin).floor...(curve.length * BODY_SHARE.end).ceil]
+        return nil if tail.blank? || body.blank?
+
+        centre = body.sum / body.length
+        centre.abs < 1e-9 ? nil : (tail.sum / tail.length) / centre
+      end
+
+      def formants_reliable?(f1_ratio, f2_ratio)
+        return false if f1_ratio.nil? || f2_ratio.nil?
+        return false if f1_ratio <= 0.0 || f2_ratio <= 0.0
+        return false if f2_ratio >= FORMANT_MERGED
+
+        f1_ratio / f2_ratio < FORMANT_F1_MERGED
+      end
+
+      def row_formants_reliable?(row)
+        formants_reliable?(row["f1_ratio"], row["f2_ratio"])
       end
 
       def median_filter(v)

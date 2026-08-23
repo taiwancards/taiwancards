@@ -57,7 +57,7 @@ RSpec.describe "Pronunciation feedback", :aggregate_failures do
     result = grade(key: "ma3", zhuyin: "ㄇㄚˇ", tone: 3)
     syllable = result["syllables"].first
 
-    expect(syllable["parts"].map { |p| p["id"] }).to(eq(%w[initial medial final tone]))
+    expect(syllable["parts"].map { |p| p["id"] }).to(eq(%w[initial medial final tone timbre]))
     expect(syllable["parts"].map { |p| p["level"] }).to(all(be_in(%w[green amber red dark gray none])))
     expect(syllable["parts"].sum { |p| p["weight"] }).to(be_within(2).of(100))
   end

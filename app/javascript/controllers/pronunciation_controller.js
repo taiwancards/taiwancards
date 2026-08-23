@@ -15,7 +15,7 @@ const LEVELS = {
   none: "#d1d5db",
 };
 
-const PART_ORDER = ["initial", "medial", "final", "tone"];
+const PART_ORDER = ["initial", "medial", "final", "tone", "timbre"];
 
 const BARS = "▁▂▃▄▅▆▇█";
 const LEVEL_MARK = {
@@ -32,6 +32,7 @@ const STYLE_MARK = {
   word: "s2",
   word_initial: "s3",
   word_medial: "s4",
+  word_final: "s9",
   "citation+word_initial": "s5",
   "wi+citation": "s6",
   "wm+word": "s7",
@@ -52,6 +53,8 @@ const CODE_MARK = {
   near: "c0",
   "tone.wrong": "c7",
   "tone.shape": "c2",
+  "tone.falls": "cx",
+  "tone.rises": "cy",
   "initial.under_aspirated": "c9",
   "initial.over_aspirated": "c4",
   "initial.vot_off": "c1",
@@ -62,6 +65,7 @@ const CODE_MARK = {
   "vowel.close": "cb",
   "vowel.front": "cd",
   "vowel.back": "cf",
+  "vowel.apical": "cz",
   "coda.weak": "ch",
   "coda.ng_for_n": "ck",
   "coda.n_for_ng": "cm",
@@ -888,6 +892,25 @@ export default class extends Controller {
     return this.span(text, "block text-xs text-muted-foreground");
   }
 
+  strayRuns(curve, lows, highs) {
+    const runs = [];
+    let run = [];
+    curve.forEach((v, i) => {
+      if (v < lows[i] - 0.01 || v > highs[i] + 0.01) {
+        if (!run.length && i) run.push(i - 1);
+        run.push(i);
+        return;
+      }
+      if (run.length) {
+        run.push(i);
+        runs.push(run);
+        run = [];
+      }
+    });
+    if (run.length > 1) runs.push(run);
+    return runs;
+  }
+
   toneChart(syllable) {
     const { sigma, register } = syllable.contour;
     const spoken = register?.actual ?? 0;
@@ -899,8 +922,13 @@ export default class extends Controller {
     const pad = 6;
     const left = 16;
 
-    const lows = reference.map((v, i) => v - (sigma[i] || 0));
-    const highs = reference.map((v, i) => v + (sigma[i] || 0));
+    const band = syllable.contour.band;
+    const lows = band
+      ? band.map((edge) => edge[0] + wanted)
+      : reference.map((v, i) => v - (sigma[i] || 0));
+    const highs = band
+      ? band.map((edge) => edge[1] + wanted)
+      : reference.map((v, i) => v + (sigma[i] || 0));
     const min = Math.min(...curve, ...lows) - 0.5;
     const max = Math.max(...curve, ...highs) + 0.5;
     const span = Math.max(max - min, 2);
@@ -970,6 +998,24 @@ export default class extends Controller {
         "stroke-opacity": "0.65",
       }),
     );
+    this.strayRuns(curve, lows, highs).forEach((run) => {
+      svg.appendChild(
+        this.svgNode("path", {
+          d: run
+            .map(
+              (i, k) =>
+                `${k ? "L" : "M"}${x(i, curve.length).toFixed(1)},${y(curve[i]).toFixed(1)}`,
+            )
+            .join(" "),
+          fill: "none",
+          stroke: LEVELS.red,
+          "stroke-width": "5",
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke-opacity": "0.35",
+        }),
+      );
+    });
     svg.appendChild(
       this.svgNode("path", {
         d: path(curve),

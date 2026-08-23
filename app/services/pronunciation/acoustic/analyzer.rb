@@ -7,9 +7,17 @@ module Pronunciation
     class Analyzer
       REGISTER_CAP = 2.0
       REGISTER_WEIGHT = 1.5
+      RANGE_WEIGHT = 0.5
+      DIRECTION_PENALTY = 2.0
       CONTOUR_SIGMA_FLOOR = 1.0
       MIN_TONE_VOICED_MS = 60.0
       CONTOUR_SIGMA_CAP = 1.0
+      CONTOUR_SD_FLOOR = 1.0
+      CONTOUR_TOLERANCE = 0.6
+      CONTOUR_SPREAD_BLEND = 0.5
+      CONTOUR_SPREAD_RANGE = (0.35..3.0)
+      BAND_TOLERANCE = 0.8
+      BAND_SCORING = true
 
       SIGMA_FLOOR = {
         "vot_ms" => 8.0,
@@ -23,9 +31,15 @@ module Pronunciation
         "f2_mid" => 160.0,
         "f1_ratio" => 0.05,
         "f2_ratio" => 0.07,
+        "f1_over_f0" => 0.10,
+        "f2_over_f1" => 0.20,
+        "f2_onset_ratio" => 0.20,
+        "f1_onset_over_f0" => 0.10,
+        "f2_end_over_f1" => 0.20,
+        "energy_tail_ratio" => 0.05,
         "nasal_ratio_tail" => 0.05,
         "nasal_antiformant" => 2.5,
-        "nasal_ratio_mid" => 0.05,
+        "nasal_ratio_mid" => 0.04,
         "duration_ms" => 45.0,
         "voiced_ms" => 45.0,
         "tone_range" => 1.6,
@@ -37,7 +51,7 @@ module Pronunciation
         @store = store
       end
 
-      def template(key, norm) = @store.template(key, norm)
+      def template(key, norm) = @store.template(key, norm) || @store.template(key)
 
       def score_axes(f, tpl, norm)
         st = tpl["structure"]
@@ -85,31 +99,33 @@ module Pronunciation
             )
         end
 
-        if st["medial"] && !st["medial"].empty? && tpl["f2_ratio"]
-          z = zscore(f["f2_ratio"], tpl["f2_ratio"], "f2_ratio")
+        if st["medial"] && !st["medial"].empty? && tpl["f2_over_f1"] && formants?(f)
+          z = zscore(f["f2_over_f1"], tpl["f2_over_f1"], "f2_over_f1")
           medial_code = AxisNorms.typical?("medial", z) ? "medial.ok" : "medial.weak"
           axes << axis("medial", z, medial_code, {"medial" => st["medial"]})
         end
 
-        zf1 = tpl["f1_ratio"] ? zscore(f["f1_ratio"], tpl["f1_ratio"], "f1_ratio") : 0.0
-        zf2 = tpl["f2_ratio"] ? zscore(f["f2_ratio"], tpl["f2_ratio"], "f2_ratio") : 0.0
-        zv = Math.sqrt(((zf1 ** 2) + (zf2 ** 2)) / 2.0)
-        code, vars = vowel_code(zf1, zf2, st, zv)
-        axes <<
-          axis(
-            "vowel",
-            zv,
-            code,
-            vars,
-            measured: {"f1" => f["f1_mid"]&.round, "f2" => f["f2_mid"]&.round}
-          )
+        if tpl["f1_over_f0"] && f["f1_over_f0"] && formants?(f)
+          zf1 = zscore(f["f1_over_f0"], tpl["f1_over_f0"], "f1_over_f0")
+          zf2 = tpl["f2_over_f1"] ? zscore(f["f2_over_f1"], tpl["f2_over_f1"], "f2_over_f1") : 0.0
+          zv = spread(f, tpl, VOWEL_FIELDS)
+          code, vars = vowel_code(zf1, zf2, st, zv)
+          axes <<
+            axis(
+              "vowel",
+              zv,
+              code,
+              vars,
+              measured: {"f1" => f["f1_mid"]&.round, "f2" => f["f2_mid"]&.round}
+            )
+        end
 
         if st["nasal_coda"] && tpl["nasal_ratio_tail"]
           zn = zscore(f["nasal_ratio_tail"], tpl["nasal_ratio_tail"], "nasal_ratio_tail")
           axes <<
             axis(
               "coda",
-              zn.abs,
+              spread(f, tpl, CODA_FIELDS),
               coda_code(zn),
               {"coda" => st["coda"]},
               measured: {
@@ -126,7 +142,7 @@ module Pronunciation
         end
 
         if tpl["voiced_ms"] && f["voiced_ms"]
-          z = zscore(f["voiced_ms"], tpl["voiced_ms"], "voiced_ms")
+          z = zscore(f["voiced_ms"], stretched(tpl["voiced_ms"], f), "voiced_ms")
           axes <<
             axis(
               "duration",
@@ -140,6 +156,65 @@ module Pronunciation
         axes.compact
       end
 
+      def formants?(f) = f.fetch("formants_reliable", true)
+
+      def stretched(stat, f)
+        factor = ContextNorms.stretch(ContextNorms.spot_of(f["tone_before"], f["tone_after"]))
+        return stat if factor.nil? || factor <= 0.0
+
+        stat.merge("median" => stat["median"] * factor)
+      end
+
+      def band_of(tc, center)
+        low = tc["low"]
+        high = tc["high"]
+        return nil if low.blank? || high.blank? || low.length != center.length
+
+        middle = tc["center"]
+        center.each_index.map do |i|
+          shift = center[i] - middle[i]
+          [(low[i] + shift).round(3), (high[i] + shift).round(3)]
+        end
+      end
+
+      def outside(value, edge)
+        low, high = edge
+        return low - value if value < low
+        return value - high if value > high
+
+        0.0
+      end
+
+      def relative_spread(sigma, length)
+        values = Array.new(length) { |i| (sigma && sigma[i]).to_f }
+        centre = values.sum / values.length
+        return Array.new(length, 1.0) if centre <= 0.0
+
+        values.map do |v|
+          share = ((1.0 - CONTOUR_SPREAD_BLEND) + (CONTOUR_SPREAD_BLEND * (v / centre)))
+          share.clamp(CONTOUR_SPREAD_RANGE.begin, CONTOUR_SPREAD_RANGE.end)
+        end
+      end
+
+      def shape_of(curve, width = nil)
+        centre = curve.sum / curve.length
+        width ||= Math.sqrt(curve.sum { |v| (v - centre) ** 2 } / curve.length)
+        width = CONTOUR_SD_FLOOR if width < CONTOUR_SD_FLOOR
+        [curve.map { |v| (v - centre) / width }, width]
+      end
+
+      def spread(f, tpl, fields)
+        zs = fields.filter_map do |field|
+          next if tpl[field].nil? || f[field].nil?
+
+          zscore(f[field], tpl[field], field)
+        end
+
+        return 0.0 if zs.empty?
+
+        Math.sqrt(zs.sum { |v| v * v } / zs.length)
+      end
+
       def tone_axis(f, tpl, _norm)
         tc = tpl["tone_contour"]
         return nil unless tc
@@ -149,22 +224,31 @@ module Pronunciation
         return nil if user.blank?
 
         center, sigma = reference_contour(tpl, tc)
+        plain = center
+        center = ContextNorms.place(center, tpl["tone"], f["tone_before"], f["tone_after"])
 
-        zs = user.each_index.map do |i|
-          s = (sigma[i] || CONTOUR_SIGMA_FLOOR).clamp(CONTOUR_SIGMA_FLOOR, CONTOUR_SIGMA_CAP)
-          (user[i] - center[i]) / s
+        band = band_of(tc, center)
+        if BAND_SCORING && band
+          tolerance = band.map { |low, high| ((high - low) / 2.0).round(2) }
+          zs = user.each_index.map { |i| outside(user[i], band[i]) / BAND_TOLERANCE }
+        else
+          spoken, width = shape_of(user)
+          wanted, = shape_of(center, shape_of(plain).last)
+          spread = relative_spread(tc["spread"] || sigma, user.length)
+          tolerance = spread.map { |v| (CONTOUR_TOLERANCE * v * width).round(2) }
+          zs = spoken.each_index.map { |i| (spoken[i] - wanted[i]) / (CONTOUR_TOLERANCE * spread[i]) }
         end
 
-        z = Math.sqrt(zs.sum { |v| v * v } / zs.length)
+        shape = Math.sqrt(zs.sum { |v| v * v } / zs.length)
 
         zr = tpl["tone_range"] ? zscore(f["tone_range"], tpl["tone_range"], "tone_range") : 0.0
-        z = Math.sqrt(((z ** 2) + (0.5 * (zr ** 2))) / 1.5)
+        zsq = (shape ** 2) + (RANGE_WEIGHT * (zr ** 2))
 
         register = nil
         if f["f0_register"] && tpl["f0_register"]
           drift = fold_octave(f["f0_register"] - tpl["f0_register"]["median"])
           zreg = (drift / sigma_of(tpl["f0_register"], "f0_register")).clamp(-REGISTER_CAP, REGISTER_CAP)
-          z = Math.sqrt(((z ** 2) + (REGISTER_WEIGHT * (zreg ** 2))) / (1.0 + REGISTER_WEIGHT))
+          zsq += REGISTER_WEIGHT * (zreg ** 2)
           register = {
             "actual" => f["f0_register"].round(1),
             "norm" => tpl["f0_register"]["median"].round(1),
@@ -172,7 +256,10 @@ module Pronunciation
           }
         end
 
-        code, vars = tone_code(f, tpl, z)
+        turned = wrong_direction(f, tpl)
+        zsq += DIRECTION_PENALTY ** 2 if turned
+        z = Math.sqrt(zsq)
+        code, vars = tone_code(f, tpl, z, turned)
         axis(
           "tone",
           z,
@@ -184,12 +271,14 @@ module Pronunciation
             "register" => register,
             "curve" => user.map { |v| v.round(2) },
             "reference" => center.map { |v| v.round(2) },
-            "sigma" => sigma.map { |v| v.round(2) }
+            "sigma" => tolerance.map { |v| v.round(2) },
+            "band" => band&.map { |low, high| [low.round(2), high.round(2)] }
           }
         )
       end
 
       FLAT_SHARE = 0.65
+      MIN_CONTOUR_TOKENS = 8
       DYNAMIC_TONES = [2, 3, 4].freeze
 
       def reference_contour(tpl, tc)
@@ -201,6 +290,7 @@ module Pronunciation
 
       def canonical_target(tpl)
         return nil unless DYNAMIC_TONES.include?(tpl["tone"])
+        return nil if tpl.dig("tone_contour", "n").to_i >= MIN_CONTOUR_TOKENS
 
         target = Norms::TONE_TARGETS[Norms::TAIWAN][tpl["tone"]]
         measured = tpl.dig("tone_range", "median")
@@ -253,7 +343,7 @@ module Pronunciation
         keys.to_h { |k| [k, template(k, norm)] }.compact
       end
 
-      CORE_REPORT = %w[f1_ratio f2_ratio duration_ms voiced_ms tone_range tone_slope f0_register].freeze
+      CORE_REPORT = %w[f1_over_f0 f2_over_f1 duration_ms voiced_ms tone_range tone_slope f0_register].freeze
       INITIAL_REPORT = %w[vot_ms fric_ms].freeze
       SIBILANT_REPORT = %w[fric_centroid fric_spread centroid_ratio].freeze
       CODA_REPORT = %w[nasal_ratio_tail nasal_antiformant f2_end_ratio].freeze
@@ -322,37 +412,29 @@ module Pronunciation
         folded > (OCTAVE / 2) ? folded - OCTAVE : folded
       end
 
-      def guess_tone(f, norm)
-        targets = Norms::TONE_TARGETS[norm]
-        scored = targets.map do |t, spec|
-          target = Norms.resample(spec[:curve], f["tone_curve"].length)
-          d = Math.sqrt(
-            f["tone_curve"].each_index.sum { |i| (f["tone_curve"][i] - target[i]) ** 2 } /
-              f["tone_curve"].length
-          )
-          d += 1.5 if t == 5 && f["duration_ms"] > 260
-          d += 1.0 if t != 5 && f["duration_ms"] < 170
-          {"tone" => t, "distance" => d, "note" => spec[:note]}
-        end
+      SLOPE_DEAD_ZONE = 1.0
 
-        scored.sort_by { |r| r["distance"] }.first(3)
-      end
-
-      def tone_code(f, tpl, z)
+      def tone_code(f, tpl, z, turned)
         expected = tpl["tone"]
-        return ["tone.ok", {"tone" => expected}] if AxisNorms.typical?("tone", z)
+        return ["tone.ok", {"tone" => expected}] if turned.nil? && AxisNorms.typical?("tone", z)
 
-        got = guess_tone(f, tpl["norm"] || "standard").first["tone"]
         vars = {
           "tone" => expected,
-          "got" => got,
           "range" => f["tone_range"].round(1),
           "slope" => f["tone_slope"].round(1)
         }
 
-        return ["tone.wrong", vars] if got != expected
+        [turned || "tone.shape", vars]
+      end
 
-        ["tone.shape", vars]
+      def wrong_direction(f, tpl)
+        reference = tpl.dig("tone_slope", "median")
+        spoken = f["tone_slope"]
+        return nil if reference.nil? || spoken.nil? || reference.abs < SLOPE_DEAD_ZONE
+        return "tone.falls" if reference.positive? && spoken < -SLOPE_DEAD_ZONE
+        return "tone.rises" if reference.negative? && spoken > SLOPE_DEAD_ZONE
+
+        nil
       end
 
       def aspiration_code(z, st)
@@ -380,6 +462,7 @@ module Pronunciation
       def vowel_code(zf1, zf2, st, zv)
         vars = {"final" => st["final"], "nucleus" => st["nucleus"]}
         return ["vowel.ok", vars] if AxisNorms.typical?("vowel", zv)
+        return ["vowel.apical", vars.merge("initial" => st["initial"])] if st["apical"]
 
         return [zf1.positive? ? "vowel.open" : "vowel.close", vars] if zf1.abs >= zf2.abs
 
@@ -429,7 +512,7 @@ module Pronunciation
         "initial" => 2.0,
         "sibilant" => 2.0,
         "vowel" => 2.0,
-        "coda" => 0.5,
+        "coda" => 2.0,
         "medial" => 1.0,
         "timbre" => 1.5,
         "duration" => 0.7
@@ -455,19 +538,21 @@ module Pronunciation
         "medial" => "medial",
         "vowel" => "final",
         "coda" => "final",
-        "timbre" => nil,
+        "timbre" => "timbre",
         "duration" => nil
       }.freeze
 
-      SIBILANT_FIELDS = %w[fric_spread fric_centroid centroid_ratio fric_skewness].freeze
+      SIBILANT_FIELDS = %w[fric_spread fric_centroid centroid_ratio fric_skewness f2_onset_ratio].freeze
+      VOWEL_FIELDS = %w[f1_over_f0 f2_over_f1 f2_onset_ratio f1_onset_over_f0].freeze
+      CODA_FIELDS = %w[nasal_ratio_tail nasal_ratio_mid energy_tail_ratio f2_end_over_f1].freeze
 
       AXIS_FEATURES = {
         "tone" => %w[tone_contour tone_range tone_slope f0_register],
         "initial" => %w[vot_ms vot_ratio fric_ms],
         "sibilant" => %w[fric_spread fric_centroid centroid_ratio fric_skewness],
-        "vowel" => %w[f1_ratio f2_ratio],
-        "coda" => %w[f2_end_ratio nasal_antiformant nasal_ratio_tail f2_delta_ratio],
-        "medial" => %w[f2_ratio],
+        "vowel" => VOWEL_FIELDS,
+        "coda" => CODA_FIELDS,
+        "medial" => %w[f2_over_f1],
         "duration" => %w[duration_ms voiced_ratio],
         "timbre" => []
       }.freeze
@@ -494,7 +579,7 @@ module Pronunciation
         den.zero? ? 0 : (num / den).round
       end
 
-      PART_ORDER = %w[initial medial final tone].freeze
+      PART_ORDER = %w[initial medial final tone timbre].freeze
 
       def part_scores(axes)
         by_part = axes.group_by { |a| a["part"] }

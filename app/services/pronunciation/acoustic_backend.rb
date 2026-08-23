@@ -114,6 +114,7 @@ module Pronunciation
         f0_reference: speaker_reference_hz
       )
       features["f0_register"] = register(features)
+      Acoustic::Vowel.place(features, speaker_reference_hz)
       row.merge(features:, index:)
     end
 
@@ -127,6 +128,9 @@ module Pronunciation
 
     def place_in_range(measured)
       rows = measured.reject { |row| row[:absent] }
+      place_vowels(rows)
+      align_timbre(rows)
+      place_neighbours(rows)
       placed = Acoustic::Register.from_utterance(
         rows.map { |row| row[:features]["f0_ref_hz"] },
         rows.map { |row| row[:template].dig("f0_register", "median") }
@@ -134,6 +138,29 @@ module Pronunciation
       return if placed.empty?
 
       rows.each_with_index { |row, index| row[:features]["f0_register"] ||= placed[index] }
+    end
+
+    def align_timbre(rows)
+      Acoustic::Timbre.align(
+        rows.map { |row| [row[:features]["mfcc"], row[:template]&.dig("mfcc", "center")] }
+      )
+    end
+
+    def place_neighbours(rows)
+      tones = rows.map { |row| row[:template]&.fetch("tone", nil).to_i }
+      rows.each_with_index do |row, index|
+        row[:features]["tone_before"] = index.zero? ? Acoustic::ContextNorms::EDGE : tones[index - 1]
+        row[:features]["tone_after"] = tones[index + 1] || Acoustic::ContextNorms::EDGE
+      end
+    end
+
+    def place_vowels(rows)
+      return if speaker_reference_hz
+
+      centre = Acoustic::Vowel.speaker_hz(rows.map { |row| row[:features] })
+      return if centre.nil?
+
+      rows.each { |row| Acoustic::Vowel.place(row[:features], centre) }
     end
 
     TEMPO_FIELDS = %w[voiced_ms duration_ms].freeze
@@ -289,7 +316,7 @@ module Pronunciation
     def present_parts(scored, shares, zhuyin, tone)
       by_id = scored.to_h { |p| [p["id"], p] }
       percent = percentages(shares)
-      descriptors = Parts.describe(zhuyin) + [tone_descriptor(tone)]
+      descriptors = Parts.describe(zhuyin) + [tone_descriptor(tone), timbre_descriptor(zhuyin)]
 
       descriptors.filter_map do |descriptor|
         id = descriptor["id"]
@@ -314,6 +341,10 @@ module Pronunciation
           "measured" => part.present?
         )
       end
+    end
+
+    def timbre_descriptor(zhuyin)
+      {"id" => "timbre", "present" => zhuyin.present?, "zhuyin" => zhuyin, "pinyin" => nil, "ipa" => nil}
     end
 
     def tone_descriptor(tone)
