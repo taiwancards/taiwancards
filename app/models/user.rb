@@ -3,6 +3,9 @@
 class User < ApplicationRecord
   include Preferenced
 
+  DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file"
+  DRIVE_CONSENT_SCOPE = "email,profile,#{DRIVE_SCOPE}"
+
   has_secure_password
 
   encrypts :google_refresh_token
@@ -58,6 +61,7 @@ class User < ApplicationRecord
     self.google_refresh_token = credentials.refresh_token if credentials.refresh_token.present?
     self.google_access_token = credentials.token
     self.google_token_expires_at = credentials.expires_at ? Time.at(credentials.expires_at) : nil
+    self.google_scopes = widened_google_scopes(credentials.scope)
   end
 
   def link_google!(auth)
@@ -67,6 +71,14 @@ class User < ApplicationRecord
 
   def google_linked?
     google_uid.present?
+  end
+
+  def drive_linked?
+    google_refresh_token.present? && google_scopes.to_s.split.include?(DRIVE_SCOPE)
+  end
+
+  def widened_google_scopes(granted)
+    (google_scopes.to_s.split | granted.to_s.split).sort.join(" ").presence
   end
 
   def verified?

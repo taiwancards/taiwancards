@@ -21,6 +21,18 @@ RSpec.describe Pronunciation::Acoustic::Vowel do
     expect(described_class.place(features, nil)).not_to(have_key("f1_over_f0"))
   end
 
+  it "trusts the pitch reference for a voice inside the corpus range" do
+    features = {"f1_vowel" => 600.0, "f0_ref_hz" => 220.0}
+
+    expect(described_class.place(features, 220.0)["pitch_referenced"]).to(be(true))
+  end
+
+  it "refuses the pitch reference for a voice far below every corpus speaker" do
+    features = {"f1_vowel" => 800.0, "f0_ref_hz" => 124.0}
+
+    expect(described_class.place(features, 124.0)["pitch_referenced"]).to(be(false))
+  end
+
   it "takes the speaker's pitch as the median over the utterance" do
     rows = [{"f0_ref_hz" => 180.0}, {"f0_ref_hz" => 200.0}, {"f0_ref_hz" => 260.0}]
 
@@ -108,5 +120,45 @@ RSpec.describe Pronunciation::Acoustic::Phonology do
 
   it "gives the Taiwan glottal value for h" do
     expect(described_class.analyze("hao")[:initial_ipa]).to(eq("h"))
+  end
+end
+
+RSpec.describe Pronunciation::Acoustic::Analyzer do
+  let(:analyzer) { described_class.new(Pronunciation::TemplateStore.instance) }
+
+  it "measures the vowel against the voice when the pitch reference holds" do
+    expect(analyzer.vowel_pair({"pitch_referenced" => true}).first).to(eq("f1_over_f0"))
+    expect(analyzer.vowel_fields({"pitch_referenced" => true})).to(include("f1_over_f0"))
+  end
+
+  it "falls back to the tract's own ratios when the pitch reference does not hold" do
+    expect(analyzer.vowel_pair({"pitch_referenced" => false}).first).to(eq("f1_ratio"))
+    expect(analyzer.vowel_fields({"pitch_referenced" => false})).not_to(include("f1_over_f0"))
+  end
+
+  it "keeps frontness on a within-tract ratio either way" do
+    expect(analyzer.vowel_pair({"pitch_referenced" => true}).last).to(eq("f2_over_f1"))
+    expect(analyzer.vowel_pair({"pitch_referenced" => false}).last).to(eq("f2_over_f1"))
+  end
+end
+
+RSpec.describe VoiceProfile do
+  def profile(f3:, hz:)
+    described_class.new(f3_ref: f3).tap { |v| allow(v).to(receive(:f0_median).and_return(hz)) }
+  end
+
+  it "keeps a third formant that agrees with the voice's pitch" do
+    expect(profile(f3: 3300.0, hz: 230.0).trusted_f3).to(eq(3300.0))
+  end
+
+  it "drops a third formant that contradicts the voice's pitch" do
+    voice = profile(f3: 3654.0, hz: 124.0)
+
+    expect(voice.f3_disagrees?).to(be(true))
+    expect(voice.trusted_f3).to(eq(described_class::FALLBACK_F3["male"]))
+  end
+
+  it "does not stretch the analysis to a tract the pitch says is not there" do
+    expect(profile(f3: 3654.0, hz: 124.0).warp).to(be < profile(f3: 3654.0, hz: 230.0).warp)
   end
 end

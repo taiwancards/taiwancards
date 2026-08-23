@@ -16,6 +16,8 @@ class VoiceProfile < ApplicationRecord
   DYNAMIC_TONES = [2, 4].freeze
 
   FALLBACK_F3 = {"male" => 2750.0, "female" => 3250.0}.freeze
+  PITCH_SPLIT_HZ = 165.0
+  F3_DISAGREEMENT = 550.0
 
   def self.bin_for(hz)
     return nil if hz.nil? || hz <= F0_MIN || hz >= F0_MAX
@@ -73,11 +75,28 @@ class VoiceProfile < ApplicationRecord
   def f0_high = percentile(0.95)
 
   def warp
-    f3 = f3_ref || FALLBACK_F3[declared_gender]
+    f3 = trusted_f3
     return 1.0 unless f3
 
     (f3 / CANONICAL_F3).clamp(0.75, 1.35)
   end
+
+  def expected_f3
+    hz = f0_median
+    return FALLBACK_F3[declared_gender] if hz.nil? || hz <= 0
+
+    FALLBACK_F3[hz < PITCH_SPLIT_HZ ? "male" : "female"]
+  end
+
+  def trusted_f3
+    measured = f3_ref
+    expected = expected_f3
+    return measured || expected if measured.nil? || expected.nil?
+
+    (measured - expected).abs > F3_DISAGREEMENT ? expected : measured
+  end
+
+  def f3_disagrees? = f3_ref.present? && expected_f3.present? && (f3_ref - expected_f3).abs > F3_DISAGREEMENT
 
   def tone_anchor(tone)
     hist = f0_by_tone[tone.to_s]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_22_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_23_060000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -525,6 +525,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_22_120000) do
     t.text("google_access_token")
     t.string("google_email")
     t.text("google_refresh_token")
+    t.text("google_scopes")
     t.datetime("google_token_expires_at")
     t.string("google_uid")
     t.datetime("last_seen_at")

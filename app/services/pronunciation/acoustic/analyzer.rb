@@ -8,7 +8,6 @@ module Pronunciation
       REGISTER_CAP = 2.0
       REGISTER_WEIGHT = 1.5
       RANGE_WEIGHT = 0.5
-      DIRECTION_PENALTY = 2.0
       CONTOUR_SIGMA_FLOOR = 1.0
       MIN_TONE_VOICED_MS = 60.0
       CONTOUR_SIGMA_CAP = 1.0
@@ -18,6 +17,7 @@ module Pronunciation
       CONTOUR_SPREAD_RANGE = (0.35..3.0)
       BAND_TOLERANCE = 0.8
       BAND_SCORING = true
+      DIRECTION_GATE = 5.0
 
       SIGMA_FLOOR = {
         "vot_ms" => 8.0,
@@ -93,7 +93,7 @@ module Pronunciation
               code,
               vars,
               measured: {
-                "centroid" => f["fric_centroid"].round,
+                "centroid" => f["fric_centroid"]&.round,
                 "centroid_norm" => tpl["fric_centroid"]&.fetch("median", nil)&.round
               }
             )
@@ -105,10 +105,11 @@ module Pronunciation
           axes << axis("medial", z, medial_code, {"medial" => st["medial"]})
         end
 
-        if tpl["f1_over_f0"] && f["f1_over_f0"] && formants?(f)
-          zf1 = zscore(f["f1_over_f0"], tpl["f1_over_f0"], "f1_over_f0")
-          zf2 = tpl["f2_over_f1"] ? zscore(f["f2_over_f1"], tpl["f2_over_f1"], "f2_over_f1") : 0.0
-          zv = spread(f, tpl, VOWEL_FIELDS)
+        height, front = vowel_pair(f)
+        if tpl[height] && f[height] && formants?(f)
+          zf1 = zscore(f[height], tpl[height], height)
+          zf2 = tpl[front] && f[front] ? zscore(f[front], tpl[front], front) : 0.0
+          zv = spread(f, tpl, vowel_fields(f))
           code, vars = vowel_code(zf1, zf2, st, zv)
           axes <<
             axis(
@@ -158,6 +159,12 @@ module Pronunciation
 
       def formants?(f) = f.fetch("formants_reliable", true)
 
+      def pitch_referenced?(f) = f.fetch("pitch_referenced", true)
+
+      def vowel_fields(f) = pitch_referenced?(f) ? VOWEL_FIELDS : VOWEL_TRACT_FIELDS
+
+      def vowel_pair(f) = pitch_referenced?(f) ? %w[f1_over_f0 f2_over_f1] : %w[f1_ratio f2_over_f1]
+
       def stretched(stat, f)
         factor = ContextNorms.stretch(ContextNorms.spot_of(f["tone_before"], f["tone_after"]))
         return stat if factor.nil? || factor <= 0.0
@@ -175,6 +182,20 @@ module Pronunciation
           shift = center[i] - middle[i]
           [(low[i] + shift).round(3), (high[i] + shift).round(3)]
         end
+      end
+
+      REGISTER_SHARE = {2 => 0.5, 3 => 0.75}.freeze
+
+      def register_share(heard)
+        return 1.0 if heard.nil?
+
+        REGISTER_SHARE.fetch(heard.to_i, 1.0)
+      end
+
+      def gated(z, turned)
+        return DIRECTION_GATE + z if turned
+
+        DIRECTION_GATE * z / (DIRECTION_GATE + z)
       end
 
       def outside(value, edge)
@@ -248,7 +269,7 @@ module Pronunciation
         if f["f0_register"] && tpl["f0_register"]
           drift = fold_octave(f["f0_register"] - tpl["f0_register"]["median"])
           zreg = (drift / sigma_of(tpl["f0_register"], "f0_register")).clamp(-REGISTER_CAP, REGISTER_CAP)
-          zsq += REGISTER_WEIGHT * (zreg ** 2)
+          zsq += REGISTER_WEIGHT * register_share(f["n_register"]) * (zreg ** 2)
           register = {
             "actual" => f["f0_register"].round(1),
             "norm" => tpl["f0_register"]["median"].round(1),
@@ -257,8 +278,7 @@ module Pronunciation
         end
 
         turned = wrong_direction(f, tpl)
-        zsq += DIRECTION_PENALTY ** 2 if turned
-        z = Math.sqrt(zsq)
+        z = gated(Math.sqrt(zsq), turned)
         code, vars = tone_code(f, tpl, z, turned)
         axis(
           "tone",
@@ -359,7 +379,7 @@ module Pronunciation
       def blind_fields(f, tpl)
         return [] if f["vot_reliable"]
 
-        lead_in(f, tpl) ? INITIAL_REPORT : %w[vot_ms]
+        lead_in(f, tpl)&.fetch("code") == "lead_in.noisy" ? INITIAL_REPORT : %w[vot_ms]
       end
 
       LEAD_IN_MIN_MS = 120.0
@@ -370,10 +390,13 @@ module Pronunciation
 
         ms = f["fric_ms"].to_f
         stat = tpl["fric_ms"]
-        return nil if ms < LEAD_IN_MIN_MS || stat.nil? || stat["median"].nil?
-        return nil if zscore(ms, stat, "fric_ms") < LEAD_IN_Z
+        if stat && stat["median"] && ms >= LEAD_IN_MIN_MS && zscore(ms, stat, "fric_ms") >= LEAD_IN_Z
+          return {"id" => "lead_in", "code" => "lead_in.noisy", "vars" => {"ms" => ms.round}}
+        end
 
-        {"id" => "lead_in", "code" => "lead_in.noisy", "vars" => {"ms" => ms.round}}
+        return nil unless tpl["vot_ms"] && f["vot_ms"]
+
+        {"id" => "lead_in", "code" => "lead_in.clipped", "vars" => {"initial" => tpl.dig("structure", "initial")}}
       end
 
       def report(f, tpl)
@@ -413,6 +436,7 @@ module Pronunciation
       end
 
       SLOPE_DEAD_ZONE = 1.0
+      SLOPE_REVERSAL = 1.2
 
       def tone_code(f, tpl, z, turned)
         expected = tpl["tone"]
@@ -431,8 +455,8 @@ module Pronunciation
         reference = tpl.dig("tone_slope", "median")
         spoken = f["tone_slope"]
         return nil if reference.nil? || spoken.nil? || reference.abs < SLOPE_DEAD_ZONE
-        return "tone.falls" if reference.positive? && spoken < -SLOPE_DEAD_ZONE
-        return "tone.rises" if reference.negative? && spoken > SLOPE_DEAD_ZONE
+        return "tone.falls" if reference.positive? && spoken < -SLOPE_REVERSAL
+        return "tone.rises" if reference.negative? && spoken > SLOPE_REVERSAL
 
         nil
       end
@@ -544,6 +568,7 @@ module Pronunciation
 
       SIBILANT_FIELDS = %w[fric_spread fric_centroid centroid_ratio fric_skewness f2_onset_ratio].freeze
       VOWEL_FIELDS = %w[f1_over_f0 f2_over_f1 f2_onset_ratio f1_onset_over_f0].freeze
+      VOWEL_TRACT_FIELDS = %w[f1_ratio f2_over_f1 f2_onset_ratio f2_ratio].freeze
       CODA_FIELDS = %w[nasal_ratio_tail nasal_ratio_mid energy_tail_ratio f2_end_over_f1].freeze
 
       AXIS_FEATURES = {

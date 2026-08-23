@@ -71,10 +71,11 @@ RSpec.describe "Pages" do
   end
 
   it "names every Google permission the app actually asks for", :no_auth do
-    requested = File
-      .read(Rails.root.join("config/initializers/omniauth.rb"))[/scope: "([^"]+)"/, 1]
-      .split(",")
+    base = File.read(Rails.root.join("config/initializers/omniauth.rb"))[/scope: "([^"]+)"/, 1]
+    requested = [base, User::DRIVE_CONSENT_SCOPE]
+      .flat_map { |scope| scope.split(",") }
       .map { |scope| scope.split("/").last }
+      .uniq
 
     get("/privacy")
 

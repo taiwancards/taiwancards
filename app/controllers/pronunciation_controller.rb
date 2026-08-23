@@ -52,7 +52,7 @@ class PronunciationController < ApplicationController
     result = Pronunciation::Admission.take do
       Pronunciation::AcousticBackend
         .new(tonal:, voice:)
-        .grade(audio: params[:audio], text: params[:text], syllables: parse_expected)
+        .grade(audio: params[:audio], text: params[:text], syllables: parse_expected, takes: params[:takes].to_i)
     end
 
     return render(json: {status: "busy"}, status: :too_many_requests) if result == :busy

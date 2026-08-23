@@ -38,11 +38,24 @@ RSpec.describe "Sound recorded before the syllable" do
   it "is not invented out of the frication a fricative is supposed to have" do
     sh = template(initial: "sh", fric: {"median" => 140.0, "sigma" => 45.0})
 
-    expect(analyzer.lead_in(features(fric: 150.0, reliable: false), sh)).to(be_nil)
+    expect(analyzer.lead_in(features(fric: 150.0, reliable: false), sh)["code"]).not_to(eq("lead_in.noisy"))
   end
 
   it "is not invented out of the few frames of noise every recording opens with" do
-    expect(analyzer.lead_in(features(fric: 20.0, reliable: false), template)).to(be_nil)
+    expect(analyzer.lead_in(features(fric: 20.0, reliable: false), template)["code"]).not_to(eq("lead_in.noisy"))
+  end
+
+  it "says the recording opened on the sound when the release was never found" do
+    lead = analyzer.lead_in(features(fric: 20.0, reliable: false), template)
+
+    expect(lead["code"]).to(eq("lead_in.clipped"))
+    expect(lead.dig("vars", "initial")).to(eq("b"))
+  end
+
+  it "stays quiet about an initial the template never asks about" do
+    open_rime = template.except("vot_ms")
+
+    expect(analyzer.lead_in(features(fric: 20.0, reliable: false), open_rime)).to(be_nil)
   end
 
   describe "the worst-features report" do

@@ -43,13 +43,22 @@ RSpec.describe "Pronunciation feedback", :aggregate_failures do
     (header + body.pack("s<*")).b
   end
 
-  def grade(key:, zhuyin:, tone:, char: "馬")
+  def repeated_wav(times, gap_ms: 400)
+    one = synthetic_wav
+    body = one[44..]
+    silence = ([0] * (gap_ms * 16_000 / 1000)).pack("s<*")
+    joined = Array.new(times) { body }.join(silence)
+    one[0, 4] + [36 + joined.bytesize].pack("V") + one[8, 32] + [joined.bytesize].pack("V") + joined
+  end
+
+  def grade(key:, zhuyin:, tone:, char: "馬", audio: nil, takes: 1)
     Pronunciation::AcousticBackend
       .new(locale: :ru)
       .grade(
-        audio: synthetic_wav,
+        audio: audio || synthetic_wav,
         text: char,
-        syllables: [{"char" => char, "pinyin" => key, "tone" => tone, "key" => key, "zhuyin" => zhuyin}]
+        syllables: [{"char" => char, "pinyin" => key, "tone" => tone, "key" => key, "zhuyin" => zhuyin}],
+        takes: takes
       )
   end
 
@@ -104,5 +113,30 @@ RSpec.describe "Pronunciation feedback", :aggregate_failures do
     expect(skill).to(have_attributes(n: 1, syllable: "ma", tone: 3))
     expect(skill.ewma_overall).to(be_present)
     expect(skill.z_n.sum).to(be_positive)
+  end
+
+  describe "when the learner says it more than once" do
+    it "says how many readings it heard" do
+      result = grade(key: "ma3", zhuyin: "ㄇㄚˇ", tone: 3, audio: repeated_wav(3), takes: 3)
+
+      expect(result["takes"]).to(eq(3))
+      expect(result["syllables"].length).to(eq(1))
+    end
+
+    it "still returns one verdict for the syllable, not three" do
+      result = grade(key: "ma3", zhuyin: "ㄇㄚˇ", tone: 3, audio: repeated_wav(3), takes: 3)
+      syllable = result["syllables"].first
+
+      expect(syllable["overall"]).to(be_a(Integer))
+      expect(syllable["contour"]["curve"].length).to(eq(Pronunciation::Acoustic::Features::TONE_POINTS))
+    end
+
+    it "hears a single reading as one even when three were offered" do
+      expect(grade(key: "ma3", zhuyin: "ㄇㄚˇ", tone: 3, takes: 3)["takes"]).to(eq(1))
+    end
+
+    it "ignores the hint when the client never sent one" do
+      expect(grade(key: "ma3", zhuyin: "ㄇㄚˇ", tone: 3, audio: repeated_wav(3))["takes"]).to(eq(1))
+    end
   end
 end

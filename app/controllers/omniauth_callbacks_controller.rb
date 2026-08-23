@@ -9,6 +9,8 @@ class OmniauthCallbacksController < ApplicationController
 
     if authenticated?
       current_user.link_google!(auth)
+      return redirect_to(profile_backup_path, notice: t("auth.drive_connected")) if current_user.drive_linked?
+
       redirect_to(profile_path, notice: t("auth.google_linked"))
     else
       existing = User.exists?(google_uid: auth.uid) ||
@@ -26,7 +28,10 @@ class OmniauthCallbacksController < ApplicationController
   end
 
   def failure
-    redirect_to(login_path, alert: t("auth.oauth_failed"))
+    return redirect_to(login_path, alert: t("auth.oauth_failed")) unless authenticated?
+    return redirect_to(profile_backup_path, alert: t("auth.drive_declined")) if current_user.google_linked?
+
+    redirect_to(profile_path, alert: t("auth.oauth_failed"))
   end
 
   private

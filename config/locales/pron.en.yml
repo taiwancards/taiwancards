@@ -109,6 +109,7 @@ en:
         drift: "The overall color of the syllable drifts from the reference."
       lead_in:
         noisy: "There are %{ms} ms of stray sound before the syllable — a breath or noise. The initial cannot be checked through it: start the syllable right after the cue."
+        clipped: "The recording began on the sound itself, so the aspiration of %{initial}- could not be measured. Wait for the green circle before you speak."
       flow:
         ok: "The syllables hold together the way they do in real speech."
         choppy: "The pauses between syllables are too long — the words fall apart into separate syllables."

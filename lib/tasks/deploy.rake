@@ -159,6 +159,17 @@ namespace(:deploy) do
   ].freeze
 
   ALWAYS_STEPS = {
+    "google_scopes" => -> {
+      pending = User.where(google_scopes: nil).where.not(google_refresh_token: nil)
+      next :skipped if pending.none?
+
+      pending.find_each do |user|
+        Google::DriveClient.new(user).sync_scopes!
+      rescue => e
+        warn("google_scopes could not read scopes for user #{user.id}: #{e.class}: #{e.message}")
+      end
+      :ran
+    },
     "kind_merge" => -> {
       merge = Lexemes::KindMerge.new
       next :skipped unless merge.drift?
@@ -278,7 +289,7 @@ namespace(:deploy) do
     }
   }.freeze
 
-  WARMING_STEPS = %w[landing_counts syllable_index prune_activity].freeze
+  WARMING_STEPS = %w[landing_counts syllable_index prune_activity google_scopes].freeze
 
   FILLERS = %w[
     Huayu::GlossOverrideEnricher

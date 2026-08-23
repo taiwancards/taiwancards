@@ -11,12 +11,18 @@
         = form.file_field :file, accept: "application/json,.json", required: true, class: "min-w-0 max-w-full text-sm"
         = form.submit t("auth.import"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
-    - if @user.google_linked?
-      .flex.flex-wrap.items-center.gap-3.border-t.border-border.pt-3
-        = button_to t("auth.drive_backup"), profile_drive_backup_path,
-          class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
-        = button_to t("auth.drive_restore"), profile_drive_restore_path,
-          data: {turbo_confirm: t("auth.drive_restore_confirm")},
+    .space-y-3.border-t.border-border.pt-3
+      - if @user.drive_linked?
+        .flex.flex-wrap.items-center.gap-3
+          = button_to t("auth.drive_backup"), profile_drive_backup_path,
+            class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          = button_to t("auth.drive_restore"), profile_drive_restore_path,
+            data: {turbo_confirm: t("auth.drive_restore_confirm")},
+            class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+      - else
+        p.text-sm.text-muted-foreground = t("auth.drive_connect_hint")
+        = button_to t("auth.drive_connect"), "/auth/google_oauth2", data: {turbo: false},
+          params: {scope: User::DRIVE_CONSENT_SCOPE, access_type: "offline", prompt: "consent", include_granted_scopes: "true"},
           class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
   section.rounded-2xl.border.border-red-500.p-5.space-y-2 class="bg-red-500/5"

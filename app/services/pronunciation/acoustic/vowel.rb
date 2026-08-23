@@ -4,6 +4,7 @@ module Pronunciation
   module Acoustic
     module Vowel
       MIN_HZ = 50.0
+      TRUSTED_HZ = (170.0..310.0)
 
       FIELDS = %w[f1_over_f0 f1_onset_over_f0].freeze
 
@@ -15,6 +16,7 @@ module Pronunciation
 
         features["f1_over_f0"] = ratio(features["f1_vowel"] || features["f1_mid"], hz)
         features["f1_onset_over_f0"] = ratio(features["f1_onset"], hz)
+        features["pitch_referenced"] = TRUSTED_HZ.cover?(hz)
         features
       end
 

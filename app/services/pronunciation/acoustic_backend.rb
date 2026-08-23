@@ -23,7 +23,7 @@ module Pronunciation
       {"ok" => @store.available?, "backend" => "acoustic", "path" => @store.root}
     end
 
-    def grade(audio:, text:, syllables:)
+    def grade(audio:, text:, syllables:, takes: 1)
       return nil unless @store.available?
 
       samples, rate = decode(audio)
@@ -31,12 +31,11 @@ module Pronunciation
 
       analysis = Acoustic::Features.analyze(samples, rate)
       expected = syllables.each_with_index.map { |target, index| resolve(target, index, syllables.length) }
-      spans = segment(analysis, syllables.length, expected.map { |row| row[:template] })
-      return failure(spans) if spans.is_a?(String)
+      repeats = Acoustic::Takes.wanted(analysis, syllables.length, takes)
+      heard = spans_for(analysis, expected, repeats)
+      return failure(heard) if heard.is_a?(String)
 
-      measured = expected.each_with_index.map do |row, index|
-        measure_one(analysis, spans[index], row, index)
-      end
+      measured = measure_all(analysis, expected, heard)
 
       place_in_range(measured)
       normalize_tempo(measured)
@@ -48,10 +47,11 @@ module Pronunciation
 
       overall = aggregate(graded)
       {
+        "takes" => heard.length,
         "syllables" => graded,
         "overall" => overall,
         "overall_level" => @verdict.level("overall", overall),
-        "flow" => flow(analysis, spans, expected),
+        "flow" => flow(analysis, heard.first, expected),
         "read" => read(measured, overall),
         "legend" => legend,
         "text" => text
@@ -62,6 +62,35 @@ module Pronunciation
 
     def failure(reason)
       {"status" => "retry", "reason" => reason}
+    end
+
+    def spans_for(analysis, expected, repeats)
+      templates = expected.map { |row| row[:template] }
+      count = expected.length
+
+      if repeats > 1
+        spans = segment(analysis, count * repeats, templates * repeats)
+        grouped = spans.is_a?(String) ? nil : Acoustic::Takes.group(spans, count, repeats)
+        return grouped if grouped
+      end
+
+      once = segment(analysis, count, templates)
+      once.is_a?(String) ? once : [once]
+    end
+
+    def measure_all(analysis, expected, takes)
+      per_take = takes.map do |spans|
+        expected.each_with_index.map { |row, index| measure_one(analysis, spans[index], row, index) }
+      end
+
+      return per_take.first if per_take.length < 2
+
+      expected.each_index.map do |index|
+        rows = per_take.filter_map { |take| take[index] unless take[index][:absent] }
+        next per_take.first[index] if rows.empty?
+
+        rows.first.merge(features: Acoustic::Consensus.merge(rows.map { |row| row[:features] }))
+      end
     end
 
     def segment(analysis, count, templates)
@@ -137,7 +166,11 @@ module Pronunciation
       )
       return if placed.empty?
 
-      rows.each_with_index { |row, index| row[:features]["f0_register"] ||= placed[index] }
+      heard = placed.compact.length
+      rows.each_with_index do |row, index|
+        row[:features]["f0_register"] ||= placed[index]
+        row[:features]["n_register"] = heard
+      end
     end
 
     def align_timbre(rows)

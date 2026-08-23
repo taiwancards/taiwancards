@@ -35,7 +35,7 @@ RSpec.describe "deploy:sync" do
     body = Rails.root.join("lib/tasks/deploy.rake").read.split("task(sync: :environment)").last.split("desc(").first
 
     expect(body).to(include("ContentCache.clear"))
-    expect(WARMING_STEPS).to(match_array(%w[landing_counts syllable_index prune_activity]))
+    expect(WARMING_STEPS).to(match_array(%w[landing_counts syllable_index prune_activity google_scopes]))
     expect(ALWAYS_STEPS.keys - WARMING_STEPS).not_to(
       be_empty,
       "if every always-step only warms, the cache drop can never fire"

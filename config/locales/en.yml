@@ -952,7 +952,7 @@ en:
     data_excluded: "Not exported: the page-visit log, your password and Google tokens — those are credentials, not progress."
     export_full: Download all my data
     mobile_tabs: Bottom bar on your phone
-    google_backup_hint: Link your Google account and your whole progress can be backed up and restored with one button, no files to juggle.
+    google_backup_hint: Connect your Google account to sign in with one tap. Drive backup is a separate step you can take later on the backup tab.
     font_recommendation: "Character face and pinyin now live in the top bar: the 臺 button switches between the kaishu brush face and a plain sans one, and the ㄅa button shows or hides pinyin. Both are remembered in this browser. Kaishu is the default and worth keeping — it shows a character the way it is written by hand, which is what Taiwan teaches at school."
     security: Access
     save_failed: Not saved
@@ -1023,7 +1023,11 @@ en:
     drive_restore: Restore from Drive
     drive_restore_confirm: Restore your latest Drive backup? This adds any missing progress.
     drive_saved: Backed up to Drive as %{name}.
-    drive_needs_link: Connect your Google account first.
+    drive_needs_consent: Allow Google Drive access first.
+    drive_connect: Connect Google Drive
+    drive_connect_hint: Google will ask for permission to keep one backup file on your Drive. The app can only reach that one file and nothing else there.
+    drive_connected: Google Drive connected.
+    drive_declined: Google Drive was not connected. Backup and restore stay unavailable until you allow it.
     drive_error: "Google Drive error: %{message}"
     reset: Reset all progress
     reset_confirm: Delete ALL your progress? This can't be undone. Back up first if unsure.
@@ -1542,6 +1546,9 @@ en:
     listening: Listening…
     stop: Stop
     recording: Recording — speak. It stops on its own.
+    arming: One moment — the microphone is settling…
+    repeat_hint: Say it %{count} times with a short pause — all of them count.
+    heard_takes: Scored over %{count} readings.
     grading: Grading…
     retry: Not quite — say it again…
     silence: I didn't catch any speech — start talking right after pressing record.

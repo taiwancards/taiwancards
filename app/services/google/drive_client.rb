@@ -41,6 +41,11 @@ module Google
       request(:get, "#{FILES_URL}/#{file_id}?alt=media")
     end
 
+    def sync_scopes!
+      refresh!
+      @user.google_scopes
+    end
+
     private
 
     def access_token
@@ -69,7 +74,8 @@ module Google
 
       @user.update!(
         google_access_token: data["access_token"],
-        google_token_expires_at: Time.current + data["expires_in"].to_i.seconds
+        google_token_expires_at: Time.current + data["expires_in"].to_i.seconds,
+        google_scopes: @user.widened_google_scopes(data["scope"])
       )
     end
 

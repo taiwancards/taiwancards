@@ -5,6 +5,11 @@ const PRELISTEN_KEY = "pron_prelisten";
 const SPEECH_RMS = 0.02;
 const MAX_DRILL_TRIES = 5;
 const REFERENCE_GRACE_MS = 400;
+const LEAD_IN_MS = 550;
+const TAKE_GAP_MS = 320;
+const TAKE_MIN_MS = 140;
+const TAKE_TARGET = 3;
+const REPEAT_MAX_SYLLABLES = 4;
 
 const LEVELS = {
   green: "#10b981",
@@ -100,6 +105,7 @@ export default class extends Controller {
     "prelisten",
     "card",
     "detail",
+    "cue",
   ];
   static values = {
     labelBusy: String,
@@ -127,6 +133,9 @@ export default class extends Controller {
     labelRecord: String,
     labelListening: String,
     labelRecording: String,
+    labelArming: String,
+    labelRepeatHint: String,
+    labelHeardTakes: String,
     labelGrading: String,
     labelDetails: String,
     labelCopy: String,
@@ -280,6 +289,10 @@ export default class extends Controller {
     }
     this.chunks = [];
     this.pendingStop = false;
+    this.takes = 0;
+    this.armed = false;
+    this.inRun = false;
+    this.wantTakes = this.repeatTarget();
 
     this.recorder = new MediaRecorder(this.stream);
     this.recorder.ondataavailable = (e) =>
@@ -289,16 +302,59 @@ export default class extends Controller {
     this.recording = true;
     this.recordTarget.textContent = this.labelListeningValue;
     this.recordTarget.classList.add("bg-red-500", "text-white");
+    this.setStatus(this.labelArmingValue);
+    this.renderCue();
+    this.armTimer = setTimeout(() => this.arm(), LEAD_IN_MS);
+    this.startMeter();
+  }
+
+  arm() {
+    if (!this.recording) return;
+    this.armed = true;
+    this.armedAt = performance.now();
     this.setStatus(
       this.mode === "drill" ? this.drillPrompt() : this.labelRecordingValue,
     );
-    this.startMeter();
+    this.renderCue();
+  }
+
+  repeatTarget() {
+    const many = this.currentExpected().length;
+    return many > 0 && many <= REPEAT_MAX_SYLLABLES ? TAKE_TARGET : 1;
+  }
+
+  renderCue() {
+    if (!this.hasCueTarget) return;
+    this.cueTarget.replaceChildren();
+    if (!this.recording) return;
+
+    const dot = document.createElement("span");
+    dot.className = `inline-block size-2 rounded-full transition-colors ${
+      this.armed ? "bg-emerald-500" : "bg-amber-400 animate-pulse"
+    }`;
+    this.cueTarget.appendChild(dot);
+
+    if (this.wantTakes < 2) return;
+
+    for (let i = 0; i < this.wantTakes; i++) {
+      const pill = document.createElement("span");
+      pill.className = `inline-block h-1.5 w-4 rounded-full transition-colors ${
+        i < this.takes ? "bg-emerald-500" : "bg-border"
+      }`;
+      this.cueTarget.appendChild(pill);
+    }
+    const note = document.createElement("span");
+    note.className = "ml-1";
+    note.textContent = this.labelRepeatHintValue;
+    this.cueTarget.appendChild(note);
   }
 
   stop() {
     if (!this.recording) return;
     this.recording = false;
+    clearTimeout(this.armTimer);
     this.teardownMeter();
+    this.renderCue();
     this.recorder?.stop();
     this.stream?.getTracks().forEach((t) => t.stop());
     this.recordTarget.textContent = this.labelRecordValue;
@@ -331,20 +387,40 @@ export default class extends Controller {
     for (let i = 0; i < this.buf.length; i++) sum += this.buf[i] * this.buf[i];
     const rms = Math.sqrt(sum / this.buf.length);
     const now = performance.now();
-    if (rms > SPEECH_RMS) {
+    const loud = rms > SPEECH_RMS;
+    if (loud) {
       this.spoke = true;
       this.lastLoud = now;
+      if (this.armed && !this.inRun) {
+        this.inRun = true;
+        this.runFrom = now;
+      }
     }
     const silentFor = now - this.lastLoud;
     const elapsed = now - this.startedAt;
+    if (this.inRun && silentFor > TAKE_GAP_MS) {
+      this.inRun = false;
+      if (this.lastLoud - this.runFrom >= TAKE_MIN_MS) {
+        this.takes += 1;
+        this.renderCue();
+      }
+    }
     if (this.pendingStop && (silentFor > 180 || now > this.stopDeadline))
       return this.stop();
+    if (this.takes >= this.wantTakes && silentFor > TAKE_GAP_MS)
+      return this.stop();
     if (
-      (this.spoke && silentFor > this.silenceMsValue) ||
-      elapsed > this.maxMsValue
+      (this.spoke && silentFor > this.patience()) ||
+      elapsed > this.maxMsValue * this.wantTakes
     ) {
       this.stop();
     }
+  }
+
+  patience() {
+    return this.wantTakes > 1
+      ? Math.max(this.silenceMsValue, TAKE_GAP_MS * 3)
+      : this.silenceMsValue;
   }
 
   teardownMeter() {
@@ -381,6 +457,7 @@ export default class extends Controller {
     form.append("audio", wav, "utterance.wav");
     form.append("tonal", this.tonalValue ? "true" : "false");
     form.append("expected", JSON.stringify(expected));
+    form.append("takes", String(Math.max(this.takes, 1)));
     form.append("text", expected.map((s) => s.char).join(""));
     if (this.hasLexemeIdValue) form.append("lexeme_id", this.lexemeIdValue);
     try {
@@ -412,7 +489,7 @@ export default class extends Controller {
   }
 
   handleResult(result) {
-    this.setStatus("");
+    this.setStatus(this.heardNote(result));
     if (this.mode === "drill") return this.handleDrillResult(result);
 
     this.renderWord(result);
@@ -424,6 +501,13 @@ export default class extends Controller {
     if (this.expectedValue.length > 1 && wrong.length > 0)
       return this.enterDrill(wrong);
     this.retryWord();
+  }
+
+  heardNote(result) {
+    const heard = Number(result && result.takes);
+    if (!(heard > 1) || !this.labelHeardTakesValue) return "";
+
+    return this.labelHeardTakesValue.replace("%{count}", String(heard));
   }
 
   allGreen(result) {

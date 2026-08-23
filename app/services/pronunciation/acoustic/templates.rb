@@ -40,7 +40,7 @@ module Pronunciation
       BAND_MAX_RANGE = 20.0
       BAND_FLOOR = 0.4
 
-      def observed_band(curves)
+      def observed_band(curves, speakers = 1)
         usable = curves.compact.reject(&:empty?).select { |curve| sane_curve?(curve) }
         return {} if usable.length < MIN_BAND
 
@@ -52,7 +52,8 @@ module Pronunciation
           "spread" => columns.map { |c| [DTW::Statistics.median_absolute_deviation(c), SPREAD_FLOOR].max.round(3) },
           "low" => low.each_index.map { |i| widen(low[i], high[i], -1).round(3) },
           "high" => low.each_index.map { |i| widen(low[i], high[i], 1).round(3) },
-          "n_band" => usable.length
+          "n_band" => usable.length,
+          "n_band_speakers" => speakers
         }
       end
 
@@ -92,7 +93,7 @@ module Pronunciation
           "center" => tone_bary.center,
           "sigma" => tone_bary.dispersion.map { |v| [v, 0.4].max },
           "n" => tone_bary.count
-        }.merge(observed_band(tone_seqs))
+        }.merge(observed_band(tone_seqs, meta.map { |m| m["speaker"] }.uniq.length))
 
         mfcc_seqs = rows.map { |r| r["mfcc"] }
         mfcc_bary = DTW.barycenter(mfcc_seqs, length: Features::MFCC_POINTS, iterations: 3)
@@ -197,13 +198,21 @@ module Pronunciation
             tc["spread"] = tc["spread"].each_with_index.map do |x, i|
               Variability.combine(x, bt[i] || bt.last).round(3)
             end
-            tc["low"] = tc["low"].each_with_index.map { |x, i| (x - (bt[i] || bt.last)).round(3) }
-            tc["high"] = tc["high"].each_with_index.map { |x, i| (x + (bt[i] || bt.last)).round(3) }
+            reach = band_reach(tc["n_band_speakers"])
+            tc["low"] = tc["low"].each_with_index.map { |x, i| (x - (reach * (bt[i] || bt.last))).round(3) }
+            tc["high"] = tc["high"].each_with_index.map { |x, i| (x + (reach * (bt[i] || bt.last))).round(3) }
           end
         end
 
         tpl["mfcc_scale"] = v["mfcc_scale"] if v["mfcc_scale"]
         tpl["variability_applied"] = true
+      end
+
+      MAD_TO_PERCENTILE = 1.9
+      BAND_REACH = {1 => 1.0, 2 => 0.6, 3 => 0.3}.freeze
+
+      def band_reach(speakers)
+        MAD_TO_PERCENTILE * BAND_REACH.fetch(speakers.to_i, 0.0)
       end
 
       def confidence_label(n_tokens, n_speakers)

@@ -72,21 +72,21 @@ class ProfilesController < ApplicationController
   end
 
   def drive_backup
-    return redirect_to(profile_path, alert: t("auth.drive_needs_link")) unless current_user.google_linked?
+    return redirect_to(profile_backup_path, alert: t("auth.drive_needs_consent")) unless current_user.drive_linked?
 
     name = Progress::DriveBackup.new(current_user).save
-    redirect_to(profile_path, notice: t("auth.drive_saved", name:))
+    redirect_to(profile_backup_path, notice: t("auth.drive_saved", name:))
   rescue Google::DriveClient::Error => e
-    redirect_to(profile_path, alert: t("auth.drive_error", message: e.message))
+    redirect_to(profile_backup_path, alert: t("auth.drive_error", message: e.message))
   end
 
   def drive_restore
-    return redirect_to(profile_path, alert: t("auth.drive_needs_link")) unless current_user.google_linked?
+    return redirect_to(profile_backup_path, alert: t("auth.drive_needs_consent")) unless current_user.drive_linked?
 
     result = Progress::DriveBackup.new(current_user).restore
-    redirect_to(profile_path, notice: t("auth.import_done", **result))
+    redirect_to(profile_backup_path, notice: t("auth.import_done", **result))
   rescue Google::DriveClient::Error => e
-    redirect_to(profile_path, alert: t("auth.drive_error", message: e.message))
+    redirect_to(profile_backup_path, alert: t("auth.drive_error", message: e.message))
   end
 
   private
