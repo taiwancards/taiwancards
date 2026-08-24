@@ -39,6 +39,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/games_importer.rb app/services/lexemes/upserter.rb]
     },
     {
+      name: "naer_terms",
+      task: "huayu:import_naer",
+      paths: %w[huayu/naer_terms.json],
+      code: %w[app/services/huayu/naer_term_importer.rb]
+    },
+    {
       name: "grammar",
       task: "huayu:import_grammar",
       paths: %w[huayu/grammar_lessons.json],
@@ -158,6 +164,7 @@ namespace(:deploy) do
         huayu/segmentation_vocab.json
         huayu/segmentation_names.json
         huayu/segmentation_priors.json
+        huayu/naer_terms.json
       ],
       code: %w[
         app/services/huayu/text_analyzer.rb
