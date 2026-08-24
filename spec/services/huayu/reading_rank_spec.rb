@@ -110,4 +110,45 @@ RSpec.describe Huayu::ReadingRank do
 
     expect(described_class.new.order(dou.reload).first["zhuyin"]).to(eq("ㄉㄡ"))
   end
+
+  it "leads with the everyday reading when the rare one owns more compounds" do
+    ping = create(
+      :lexeme,
+      :character,
+      text: "屏",
+      readings: {"pinyin" => "bǐng", "zhuyin" => "ㄅㄧㄥˇ"},
+      data: {
+        "readings" => [
+          {"pinyin" => "bǐng", "zhuyin" => "ㄅㄧㄥˇ"},
+          {"pinyin" => "píng", "zhuyin" => "ㄆㄧㄥˊ"}
+        ]
+      }
+    )
+    %w[屏退 屏息 屏除 屏居].each_with_index do |text, index|
+      create(:lexeme, kind: :word, text:, data: {"freq_rank" => 9000 + index}).then do |w|
+        LexemeLink.create!(parent: w, child: ping, position: 0, reading: "bǐng")
+      end
+    end
+
+    create(:lexeme, kind: :word, text: "屏東", data: {"freq_rank" => 4000}).then do |w|
+      LexemeLink.create!(parent: w, child: ping, position: 0, reading: "píng")
+    end
+
+    expect(described_class.new.order(ping.reload).first["zhuyin"]).to(eq("ㄆㄧㄥˊ"))
+  end
+
+  it "leads with the neutral particle reading over the full-tone compound reading" do
+    ba = create(
+      :lexeme,
+      :character,
+      text: "吧",
+      readings: {"pinyin" => "bā", "zhuyin" => "ㄅㄚ"},
+      data: {"readings" => [{"pinyin" => "bā", "zhuyin" => "ㄅㄚ"}, {"pinyin" => "ba", "zhuyin" => "˙ㄅㄚ"}]}
+    )
+    create(:lexeme, kind: :word, text: "酒吧", data: {"freq_rank" => 3000, "tocfl_level" => "B1"}).then do |w|
+      LexemeLink.create!(parent: w, child: ba, position: 1, reading: "bā")
+    end
+
+    expect(described_class.new.order(ba.reload).first["zhuyin"]).to(eq("˙ㄅㄚ"))
+  end
 end

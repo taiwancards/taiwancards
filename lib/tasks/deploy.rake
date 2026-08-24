@@ -153,8 +153,17 @@ namespace(:deploy) do
     {
       name: "segmentation",
       task: "huayu:resegment",
-      paths: %w[huayu/bigram_frequency.json huayu/segmentation_vocab.json],
-      code: %w[app/services/huayu/text_analyzer.rb app/services/huayu/bigram_frequency.rb]
+      paths: %w[
+        huayu/bigram_frequency.json
+        huayu/segmentation_vocab.json
+        huayu/segmentation_names.json
+        huayu/segmentation_priors.json
+      ],
+      code: %w[
+        app/services/huayu/text_analyzer.rb
+        app/services/huayu/bigram_frequency.rb
+        app/services/huayu/segmentation_vocabulary.rb
+      ]
     }
   ].freeze
 

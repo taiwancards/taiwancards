@@ -81,6 +81,15 @@ module Huayu
     private
 
     def priors
+      names.merge(stated_priors)
+    end
+
+    def names
+      prior = Huayu::SegmentationVocabulary.name_prior
+      Huayu::SegmentationVocabulary.names.to_h { |text| [text, prior] }
+    end
+
+    def stated_priors
       return {} unless File.exist?(PRIORS_PATH)
 
       payload = JSON.parse(File.read(PRIORS_PATH))
