@@ -181,7 +181,7 @@ namespace(:huayu) do
     MaintenanceWindow.open!
     analyzer = Huayu::TextAnalyzer.new
     difficulty = Huayu::SentenceDifficulty.new
-    changed = 0
+    touched = []
     seen = 0
 
     Lexeme.where(kind: :sentence).find_in_batches(batch_size: 2000) do |batch|
@@ -199,13 +199,16 @@ namespace(:huayu) do
             "difficulty" => difficulty.call(sentence.text, tokens:)
           )
         )
-        changed += 1
+        touched << sentence.id
       end
       print(".") if (seen % 50_000).zero?
     end
 
-    puts("\nresegmented: #{changed} of #{seen}")
-    Rake::Task["huayu:link_sentence_words"].invoke if changed.positive?
+    puts("\nresegmented: #{touched.size} of #{seen}")
+    next if touched.empty?
+
+    Huayu::SentenceProfiler.new(scope: Lexeme.where(id: touched)).call
+    Rake::Task["huayu:link_sentence_words"].invoke
   end
 
   desc("Connect dictionary examples to their sentence records")

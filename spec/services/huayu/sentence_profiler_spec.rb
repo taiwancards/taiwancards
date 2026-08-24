@@ -61,4 +61,35 @@ RSpec.describe Huayu::SentenceProfiler do
 
     expect(described_class.stale).to(be_empty)
   end
+
+  it "notices a graded word changing even though every sentence still looks fresh" do
+    lexeme = sentence!("學生讀書。", difficulty: 240, segments: %w[學生 讀書])
+    word = create(:lexeme, kind: :word, text: "學生", data: {"tbcl_grade" => 1})
+    create(:lexeme, kind: :word, text: "讀書", data: {"tbcl_grade" => 1})
+    run
+    described_class.remember_vocabulary!
+
+    expect(SentenceProfile.find_by(lexeme_id: lexeme.id).tbcl_index).to(eq(1))
+
+    word.update_column(:data, word.data.merge("tbcl_grade" => 5))
+
+    expect(described_class.stale).to(be_empty)
+    expect(described_class.vocabulary_drift?).to(be(true))
+
+    run
+
+    expect(SentenceProfile.find_by(lexeme_id: lexeme.id).tbcl_index).to(eq(5))
+  end
+
+  it "settles once the grading it profiled against is remembered" do
+    sentence!("學生讀書。", difficulty: 240, segments: %w[學生 讀書])
+    create(:lexeme, kind: :word, text: "學生", data: {"tbcl_grade" => 1})
+    run
+
+    expect(described_class.vocabulary_drift?).to(be(true))
+
+    described_class.remember_vocabulary!
+
+    expect(described_class.vocabulary_drift?).to(be(false))
+  end
 end

@@ -243,10 +243,11 @@ namespace(:deploy) do
       :ran
     },
     "sentence_profiles" => -> {
-      stale = Huayu::SentenceProfiler.stale
-      next :skipped unless stale.exists?
+      scope = Huayu::SentenceProfiler.vocabulary_drift? ? nil : Huayu::SentenceProfiler.stale
+      next :skipped if scope && !scope.exists?
 
-      Huayu::SentenceProfiler.new(scope: stale).call
+      Huayu::SentenceProfiler.new(scope: scope).call
+      Huayu::SentenceProfiler.remember_vocabulary!
       :ran
     },
     "character_glosses" => -> {

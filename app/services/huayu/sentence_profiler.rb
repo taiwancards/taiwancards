@@ -7,6 +7,7 @@ module Huayu
 
     APPROXIMATE_COVERAGE = 0.9
     MAX_UNKNOWN_FOR_APPROXIMATE = 2
+    VOCABULARY_KEY = "profile_vocabulary"
 
     SQL_HAN = "[一-鿿㐀-䶿]"
 
@@ -16,6 +17,33 @@ module Huayu
         .joins("LEFT JOIN sentence_profiles profile ON profile.lexeme_id = lexemes.id")
         .where("lexemes.text ~ ?", SQL_HAN)
         .where("profile.lexeme_id IS NULL OR profile.difficulty IS DISTINCT FROM (lexemes.data ->> 'difficulty')::int")
+    end
+
+    def self.vocabulary_fingerprint
+      kinds = %w[word character].map { |name| Lexeme.kinds.fetch(name) }.join(", ")
+
+      Lexeme.connection.select_value(
+        <<~SQL
+          SELECT md5(string_agg(levels, ',' ORDER BY id))
+          FROM (
+            SELECT
+              id,
+              id::text || ':' ||
+              coalesce(data ->> 'tocfl_level', '') || ':' ||
+              coalesce(data ->> 'tbcl_grade', '') || ':' ||
+              coalesce(data ->> 'freq_rank', '') AS levels
+            FROM lexemes
+            WHERE kind IN (#{kinds})
+          ) graded
+        SQL
+      )
+    end
+
+    def self.vocabulary_drift? = Setting.instance.data[VOCABULARY_KEY] != vocabulary_fingerprint
+
+    def self.remember_vocabulary!
+      setting = Setting.instance
+      setting.update!(data: setting.data.merge(VOCABULARY_KEY => vocabulary_fingerprint))
     end
 
     def initialize(io: $stdout, scope: nil)
