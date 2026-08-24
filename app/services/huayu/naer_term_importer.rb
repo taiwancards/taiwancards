@@ -30,7 +30,9 @@ module Huayu
       taken = Lexeme.where(kind: %i[word collocation], text: texts).pluck(:text).to_set
 
       created = insert(rows.reject { |row| taken.include?(row["text"]) })
-      report(rows.length, created, refresh(rows, mine))
+      updated = refresh(rows, mine)
+      TextAnalyzer.reset_vocabulary! if created.positive?
+      report(rows.length, created, updated)
     rescue JSON::ParserError
       report(0, 0, 0)
     end

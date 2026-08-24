@@ -179,6 +179,9 @@ namespace(:huayu) do
   desc("Re-split every stored sentence with the current segmenter")
   task(resegment: :environment) do
     MaintenanceWindow.open!
+    Huayu::TextAnalyzer.reset_vocabulary!
+    Huayu::SegmentationVocabulary.reset!
+    Huayu::BigramFrequency.reset!
     analyzer = Huayu::TextAnalyzer.new
     difficulty = Huayu::SentenceDifficulty.new
     touched = []

@@ -58,6 +58,15 @@ RSpec.describe Huayu::NaerTermImporter do
     expect(lexeme.reload.data).not_to(have_key("origin"))
   end
 
+  it "lets the segmenter see the terms it just added" do
+    write([entry("測試臺戊")])
+    Huayu::TextAnalyzer.vocabulary
+
+    run
+
+    expect(Huayu::TextAnalyzer.vocabulary[:words]).to(include("測試臺戊"))
+  end
+
   it "leaves a word that belongs to another source alone" do
     create(:lexeme, kind: :word, text: "測試臺丁", meanings: {"en" => "owned elsewhere"}, sources: ["Common words"])
 
