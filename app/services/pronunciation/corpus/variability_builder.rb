@@ -101,16 +101,22 @@ module Pronunciation
           next if span.nil?
           next if (span[1] - span[0]) * Acoustic::Features::HOP_MS < Ingest::MIN_SPAN_MS
 
-          initial = initial_of(key)
+          st = structure_of(key)
           Acoustic::Features
-            .extract(analysis, span, initial: initial, utterance_initial: index.zero?)
+            .extract(
+              analysis,
+              span,
+              initial: st[:initial],
+              utterance_initial: index.zero?,
+              nasal_coda: st[:nasal_coda].present?
+            )
             .merge("_key" => key, "_speaker" => item[:speaker])
         end
       end
 
-      def initial_of(key)
+      def structure_of(key)
         parsed = Acoustic::Syllables.parse_key(key)
-        parsed && Acoustic::Syllables.structure(parsed[0])[:initial]
+        parsed ? Acoustic::Syllables.structure(parsed[0]) : {}
       end
 
       def with_register(rows)

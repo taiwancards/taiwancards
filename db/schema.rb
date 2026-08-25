@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_23_060000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_25_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -362,6 +362,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_23_060000) do
     t.index(["user_id", "syllable_key", "created_at"], name: "idx_attempts_user_syllable_time")
   end
 
+  create_table("pronunciation_recordings", force: :cascade) do |t|
+    t.binary("audio", null: false)
+    t.string("content_type")
+    t.datetime("created_at", null: false)
+    t.jsonb("expected", default: [], null: false)
+    t.bigint("lexeme_id")
+    t.string("note")
+    t.datetime("rated_at")
+    t.integer("rejected_indices", default: [], null: false, array: true)
+    t.string("syllable_keys", default: [], null: false, array: true)
+    t.jsonb("syllables", default: [], null: false)
+    t.string("text", null: false)
+    t.datetime("updated_at", null: false)
+    t.bigint("user_id", null: false)
+    t.integer("verdict", default: 0, null: false)
+    t.index(["lexeme_id"], name: "index_pronunciation_recordings_on_lexeme_id")
+    t.index(["user_id"], name: "index_pronunciation_recordings_on_user_id")
+    t.index(["verdict", "created_at"], name: "index_pronunciation_recordings_on_verdict_and_time")
+  end
+
   create_table("reading_texts", force: :cascade) do |t|
     t.string("author")
     t.text("body", null: false)
@@ -440,7 +460,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_23_060000) do
     t.index(
       ["lexeme_id", "gdex"],
       name: "index_sentence_words_by_quality",
-      order: {gdex: :desc},
+      order: { gdex: :desc },
       include: ["sentence_id"]
     )
     t.index(["sentence_id", "lexeme_id"], name: "index_sentence_words_unique", unique: true)
@@ -580,6 +600,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_23_060000) do
   add_foreign_key("placement_tests", "users")
   add_foreign_key("pronunciation_attempts", "lexemes")
   add_foreign_key("pronunciation_attempts", "users")
+  add_foreign_key("pronunciation_recordings", "lexemes", on_delete: :nullify)
+  add_foreign_key("pronunciation_recordings", "users", on_delete: :cascade)
   add_foreign_key("reading_texts", "collections")
   add_foreign_key("reading_texts", "content_sources")
   add_foreign_key("reading_texts", "users")

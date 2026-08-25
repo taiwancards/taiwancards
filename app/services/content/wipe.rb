@@ -29,6 +29,7 @@ module Content
       LexemeReview.delete_all
       LexemeMemory.delete_all
       PronunciationAttempt.delete_all
+      PronunciationRecording.delete_all
       SyllableSkill.delete_all
       ActivityEvent.delete_all
       LexemeLink.delete_all

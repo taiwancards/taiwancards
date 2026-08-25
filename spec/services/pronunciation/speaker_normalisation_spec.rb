@@ -80,16 +80,34 @@ RSpec.describe Pronunciation::Acoustic::Timbre do
 end
 
 RSpec.describe Pronunciation::Acoustic::Features do
-  it "takes the vowel from the steady part, not the midpoint of the whole syllable" do
-    track = [300.0, 800.0, 900.0, 910.0, 600.0, 350.0, 300.0, 290.0]
+  let(:glide_then_nucleus) { ([300.0] * 5) + ([900.0] * 10) + ([320.0] * 5) }
 
-    expect(described_class.window_median(track, described_class::VOWEL_WINDOW)).to(eq(905.0))
+  it "reads the nucleus of a rime that opens with a medial, not the medial itself" do
+    expect(described_class.span_median(glide_then_nucleus, described_class::VOWEL_SPAN)).to(eq(900.0))
+  end
+
+  it "reads the medial from the early window of the same rime" do
+    expect(described_class.span_median(glide_then_nucleus, described_class::GLIDE_SPAN)).to(eq(300.0))
   end
 
   it "ignores dropped frames inside the window" do
-    track = [300.0, 800.0, 0.0, 910.0, 600.0, 350.0, 300.0, 290.0]
+    track = ([300.0] * 5) + [0.0, 0.0, 910.0, 910.0, 910.0, 0.0, 0.0, 910.0, 910.0, 910.0] + ([320.0] * 5)
 
-    expect(described_class.window_median(track, described_class::VOWEL_WINDOW)).to(eq(910.0))
+    expect(described_class.span_median(track, described_class::VOWEL_SPAN)).to(eq(910.0))
+  end
+
+  it "reads a rime closed by a nasal before the murmur starts" do
+    rime = ([300.0] * 5) + ([900.0] * 8) + ([340.0] * 7)
+
+    expect(described_class.span_median(rime, described_class.nucleus_span(true))).to(eq(900.0))
+  end
+
+  it "reads an open rime later, where a medial has already given way to the nucleus" do
+    expect(described_class.nucleus_span(false).end).to(be > described_class.nucleus_span(true).end)
+  end
+
+  it "falls back to nothing when every frame of the window was dropped" do
+    expect(described_class.span_median(Array.new(20, 0.0), described_class::VOWEL_SPAN)).to(be_nil)
   end
 end
 

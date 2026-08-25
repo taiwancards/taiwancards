@@ -31,6 +31,7 @@ module Deploy
       lexeme_memories
       lexeme_reviews
       pronunciation_attempts
+      pronunciation_recordings
       syllable_skills
       voice_profiles
       reading_texts

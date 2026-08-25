@@ -118,12 +118,14 @@ module Pronunciation
         return nil if span.nil?
         return nil if (span[1] - span[0]) * Acoustic::Features::HOP_MS < MIN_SPAN_MS
 
+        st = structure_of(token["_key"])
         Acoustic::Features
           .extract(
             analysis,
             span,
-            initial: initial_of(token["_key"]),
-            utterance_initial: token["index"].to_i.zero?
+            initial: st[:initial],
+            utterance_initial: token["index"].to_i.zero?,
+            nasal_coda: st[:nasal_coda].present?
           )
           .merge(
             "_key" => token["_key"],
@@ -136,13 +138,13 @@ module Pronunciation
           )
       end
 
-      def initial_of(key)
-        @initials ||= Hash.new do |cache, syllable_key|
+      def structure_of(key)
+        @structures ||= Hash.new do |cache, syllable_key|
           parsed = Acoustic::Syllables.parse_key(syllable_key)
-          cache[syllable_key] = parsed && Acoustic::Syllables.structure(parsed[0])[:initial]
+          cache[syllable_key] = parsed ? Acoustic::Syllables.structure(parsed[0]) : {}
         end
 
-        @initials[key]
+        @structures[key]
       end
     end
   end

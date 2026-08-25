@@ -1,0 +1,59 @@
+- content_for(:title, t("pron.judge.title"))
+
+.mx-auto.max-w-2xl.space-y-5.py-6
+  header.space-y-1
+    h1.text-xl.font-semibold = t("pron.judge.title")
+    p.text-sm.text-muted-foreground = t("pron.judge.hint")
+
+  .flex.flex-wrap.items-center.gap-x-4.gap-y-1.rounded-xl.border.border-border.bg-card.px-4.py-3.text-xs
+    - PronunciationRecording::VERDICTS.each_key do |name|
+      span.flex.items-center.gap-1.tabular-nums
+        span.text-muted-foreground = t("pron.judge.verdicts.#{name}")
+        span.font-semibold = @tally.fetch(name.to_s, 0)
+    span.flex.items-center.gap-1.tabular-nums
+      span.text-muted-foreground = t("pron.judge.coverage")
+      span.font-semibold = "#{@coverage["distinct"]} / #{@coverage["rated"]}"
+
+  - if @pending.empty?
+    p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
+      = t("pron.judge.empty")
+  - else
+    - @pending.each do |recording|
+      .space-y-3.rounded-2xl.border.border-border.bg-card.p-4
+        .flex.flex-wrap.items-baseline.justify-between.gap-2
+          .space-y-0.5
+            .text-2xl.font-semibold lang="zh-TW" = recording.text
+            .text-xs.text-muted-foreground.tracking-wide
+              = recording.syllables.map { |s| s["zhuyin"].presence || s["key"] }.join(" ")
+          .text-3xs.text-muted-foreground.tabular-nums = l(recording.created_at, format: :short)
+
+        audio.w-full controls="controls" preload="none" src=pronunciation_judgement_audio_path(recording)
+
+        = form_with(url: pronunciation_judgement_path(recording), method: :patch, class: "space-y-3") do |form|
+          - if recording.syllables.length > 1
+            .flex.flex-wrap.items-center.gap-2
+              span.text-2xs.uppercase.tracking-wide.text-muted-foreground = t("pron.judge.which")
+              - recording.syllables.each do |syllable|
+                label.flex.items-center.gap-1.rounded-full.border.border-border.px-2.5.py-1.text-xs.cursor-pointer
+                  = check_box_tag("rejected[]", syllable["index"], false, class: "size-3")
+                  span lang="zh-TW" = syllable["char"].presence || syllable["key"]
+
+          .flex.flex-wrap.items-center.gap-2
+            = form.button(t("pron.judge.accept"), type: :submit, name: "verdict", value: "accepted", class: "cursor-pointer rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90")
+            = form.button(t("pron.judge.reject"), type: :submit, name: "verdict", value: "rejected", class: "cursor-pointer rounded-full border border-destructive px-4 py-2 text-sm font-semibold text-destructive hover:bg-destructive/10")
+            = form.button(t("pron.judge.unsure"), type: :submit, name: "verdict", value: "unsure", class: "cursor-pointer rounded-full border border-border px-4 py-2 text-sm font-medium hover:bg-muted")
+            = link_to(t("pron.judge.drop"), pronunciation_judgement_path(recording), data: {turbo_method: :delete, turbo_confirm: t("pron.judge.drop_confirm")}, class: "ml-auto text-xs text-muted-foreground underline underline-offset-2")
+
+        details.text-xs
+          summary.cursor-pointer.text-muted-foreground = t("pron.judge.reveal")
+          .mt-2.space-y-1
+            p.text-3xs.text-muted-foreground = t("pron.judge.reveal_hint")
+            - recording.syllables.each do |syllable|
+              .flex.flex-wrap.items-center.gap-2.tabular-nums
+                span.font-medium lang="zh-TW" = syllable["char"].presence || syllable["key"]
+                span.text-muted-foreground = syllable["level"]
+                span.font-semibold = syllable["overall"]
+                - Hash(syllable["cells"]).each do |id, score|
+                  span.flex.items-center.gap-1.text-muted-foreground
+                    span = t("pron.parts.#{id}", default: id)
+                    span = score

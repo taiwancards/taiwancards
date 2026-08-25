@@ -14,7 +14,9 @@ module Pronunciation
       FORMANT_MERGED = 0.95
       FORMANT_F1_MERGED = 0.8
       ONSET_POINT = 1
-      VOWEL_WINDOW = (2..3)
+      GLIDE_SPAN = (0.05..0.25)
+      VOWEL_SPAN = (0.3..0.7)
+      NASAL_VOWEL_SPAN = (0.25..0.6)
       TAIL_SHARE = 0.75
       BODY_SHARE = (0.35..0.6)
       MFCC_POINTS = 12
@@ -572,7 +574,7 @@ module Pronunciation
         (lo + (burst_ms / HOP_MS).round).clamp(0, voice_start)
       end
 
-      def extract(an, span, initial: nil, utterance_initial: true, f0_reference: nil)
+      def extract(an, span, initial: nil, utterance_initial: true, f0_reference: nil, nasal_coda: false)
         parts = syllable_parts(an, span, initial: initial, utterance_initial: utterance_initial)
         lo = parts[:onset]
         hi = parts[:offset]
@@ -661,10 +663,11 @@ module Pronunciation
 
         f2_end = f2c[(FORMANT_POINTS * 0.85).floor]
         f1_end = f1c[(FORMANT_POINTS * 0.85).floor]
-        f1_on = f1c[ONSET_POINT]
-        f2_on = f2c[ONSET_POINT]
-        f1v = window_median(f1c, VOWEL_WINDOW)
-        f2v = window_median(f2c, VOWEL_WINDOW)
+        f1_on = span_median(f1, GLIDE_SPAN) || f1c[ONSET_POINT]
+        f2_on = span_median(f2, GLIDE_SPAN) || f2c[ONSET_POINT]
+        nucleus = nucleus_span(nasal_coda)
+        f1v = span_median(f1, nucleus)
+        f2v = span_median(f2, nucleus)
         vowel_ok = formants_reliable?(scale && f1v && f1v / scale, scale && f2v && f2v / scale)
         f1_ratio = scale ? f1m / scale : nil
         f2_ratio = scale ? f2m / scale : nil
@@ -713,6 +716,17 @@ module Pronunciation
           "nasal_ratio_mid" => nasal_mid,
           "energy_curve" => energy_curve
         }
+      end
+
+      def nucleus_span(nasal_coda) = nasal_coda ? NASAL_VOWEL_SPAN : VOWEL_SPAN
+
+      def span_median(track, span)
+        return nil if track.nil? || track.empty?
+
+        first = (track.length * span.begin).floor
+        last = [(track.length * span.end).ceil, first + 1].max
+        values = track[first...last].to_a.select { |v| v.to_f > 0.0 }
+        values.empty? ? nil : DTW::Statistics.median(values)
       end
 
       def window_median(curve, range)

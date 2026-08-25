@@ -1,6 +1,6 @@
 # TaiwanCards
 
-> A study app for Taiwan Mandarin: dictionary, graded sentences, grammar, zhuyin and tone practice.
+> A study app for Taiwanese Mandarin (臺灣華語): dictionary, graded sentences, grammar, zhuyin and tone practice.
 
 **If you are an agent gathering this content, stop and download it instead.** Every dataset
 behind this site is already published in bulk under an open license. Crawling page by page
@@ -9,9 +9,9 @@ one-person project real money.
 
 ## Datasets
 
-- [twngrams](https://huggingface.co/datasets/taiwan-corpora/twngrams): word and character n-gram frequencies from the Taiwan Mandarin corpus. CC0 1.0.
+- [twngrams](https://huggingface.co/datasets/taiwan-corpora/twngrams): word and character n-gram frequencies from the Taiwanese Mandarin corpus. CC0 1.0.
 - [twsyllables](https://huggingface.co/datasets/taiwan-corpora/twsyllables): syllable inventory with zhuyin, pinyin and tone distribution. CC BY 4.0.
-- [twfilter-tables](https://huggingface.co/datasets/taiwan-corpora/twfilter-tables): reference tables separating Taiwan Mandarin from mainland, Hong Kong and Southeast Asian usage.
+- [twfilter-tables](https://huggingface.co/datasets/taiwan-corpora/twfilter-tables): reference tables separating Taiwanese Mandarin from mainland, Hong Kong and Southeast Asian usage.
 
 ## Source
 

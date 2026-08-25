@@ -5,6 +5,8 @@ require "json"
 module Pronunciation
   module Corpus
     class ReportCard
+      SERIES = ContrastQuality::SERIES
+
       def initialize(part: "test", speakers: :fitting, store: TemplateStore.instance, io: $stdout)
         @part = part
         @speakers = speakers
@@ -26,6 +28,7 @@ module Pronunciation
           "n_keys" => keys.length,
           "top1" => top1(chunks),
           "contrasts" => contrasts(chunks),
+          "families" => families(chunks),
           "natives" => natives(chunks)
         }
       end
@@ -39,7 +42,8 @@ module Pronunciation
           top1: [0, 0],
           pairs: Hash.new { |hash, dimension| hash[dimension] = {self: [], rival: []} },
           overall: [],
-          levels: Hash.new(0)
+          levels: Hash.new(0),
+          families: Hash.new { |hash, label| hash[label] = [0, 0] }
         }
 
         keys.each do |key|
@@ -59,6 +63,19 @@ module Pronunciation
             result[:top1][1] += 1
             result[:top1][0] += 1 if best.nil? || best["key"] == key
 
+            family_partners(key).each do |family, label, partner|
+              rival = @store.template(partner, norm) || @store.template(partner)
+              next if rival.nil?
+
+              other = syllable_score(analyzer, features, rival, norm)
+              next if other.nil?
+
+              [family, "#{family}:#{label}"].each do |bucket|
+                result[:families][bucket][1] += 1
+                result[:families][bucket][0] += 1 if own[:overall] > other[:overall]
+              end
+            end
+
             rivals.each do |dimension, list|
               cell = Rivals::PART_OF_DIMENSION[dimension]
               list.each do |rival|
@@ -74,7 +91,72 @@ module Pronunciation
 
         result[:pairs] = result[:pairs].to_h
         result[:levels] = result[:levels].to_h
+        result[:families] = result[:families].to_h
         result
+      end
+
+      def family_partners(key)
+        @partners ||= {}
+        @partners[key] ||= build_partners(key)
+      end
+
+      def build_partners(key)
+        parsed = Acoustic::Syllables.parse_key(key)
+        return [] if parsed.nil?
+
+        syllable, tone = parsed
+        st = Acoustic::Syllables.structure(syllable)
+
+        tone_partners(syllable, tone) + aspiration_partners(st, tone) + sibilant_partners(st, tone) +
+          coda_partners(st, tone)
+      end
+
+      def tone_partners(syllable, tone)
+        Acoustic::Syllables
+          .tones_for(syllable)
+          .reject { |other| other == tone }
+          .map { |other| ["tone", "#{tone}v#{other}", Acoustic::Syllables.key_for(syllable, other)] }
+      end
+
+      def aspiration_partners(st, tone)
+        other = Acoustic::Phonology::ASPIRATION_PAIRS[st[:initial]]
+        return [] if other.nil?
+
+        [["aspiration", [st[:initial], other].sort.join("/"), "#{other}#{st[:final]}#{tone}"]]
+      end
+
+      def sibilant_partners(st, tone)
+        series = st[:sibilant].to_s
+        index = SERIES[series]&.index(st[:initial])
+        return [] if index.nil?
+
+        SERIES.filter_map do |name, list|
+          next if name == series || list[index].nil?
+
+          ["sibilant", [series, name].sort.join("/"), "#{list[index]}#{st[:final]}#{tone}"]
+        end
+      end
+
+      def coda_partners(st, tone)
+        return [] unless %w[n ng].include?(st[:coda])
+
+        other = (st[:coda] == "n") ? "ng" : "n"
+        [["coda", "#{st[:nucleus]}n/#{st[:nucleus]}ng", "#{st[:initial]}#{st[:medial]}#{st[:nucleus]}#{other}#{tone}"]]
+      end
+
+      def families(chunks)
+        merged = Hash.new { |hash, label| hash[label] = [0, 0] }
+        chunks.each do |chunk|
+          chunk[:families].each do |label, (hit, total)|
+            merged[label][0] += hit
+            merged[label][1] += total
+          end
+        end
+
+        merged
+          .reject { |_, (_, total)| total < 30 }
+          .sort
+          .to_h { |label, (hit, total)| [label, {"accuracy" => (100.0 * hit / total).round(1), "n" => total}] }
       end
 
       def norm_of(features)

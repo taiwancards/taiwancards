@@ -278,6 +278,17 @@ namespace(:pronunciation) do
       )
     end
 
+    r["families"].each do |label, f|
+      next if label.include?(":")
+
+      puts(format("  %-10s %5.1f%% of minimal-pair decisions right  (n=%d)", label, f["accuracy"], f["n"]))
+      r["families"].each do |inner, detail|
+        next unless inner.start_with?("#{label}:")
+
+        puts(format("      %-12s %5.1f%%  (n=%d)", inner.split(":").last, detail["accuracy"], detail["n"]))
+      end
+    end
+
     if ENV["OUT"].present?
       File.write(ENV["OUT"], JSON.pretty_generate(r))
       puts("Written: #{ENV["OUT"]}")
@@ -384,6 +395,68 @@ namespace(:pronunciation) do
 
     puts("attempt log: #{before} rows, #{deleted} removed older than #{days} days")
     puts("accumulators: #{SyllableSkill.count} rows, #{SyllableSkill.sum(:n)} attempts in them")
+  end
+
+  desc("How the engine agrees with a native's accept or reject. RESCORE=1 re-measures the kept audio")
+  task(judged: :environment) do
+    report = Pronunciation::Corpus::Judged.new(rescore: ENV["RESCORE"].present?, io: $stdout).call
+
+    if report["n"].to_i.zero?
+      puts("no rated recordings yet")
+      next
+    end
+
+    puts(
+      format(
+        "%d syllables from %d recordings: %d accepted, %d rejected%s",
+        report["n"],
+        report["recordings"],
+        report["accepted"],
+        report["rejected"],
+        report["rescored"] ? " (re-measured)" : ""
+      )
+    )
+
+    report["cells"].each do |cell, c|
+      puts(
+        format(
+          "  %-8s AUC %.4f  accepted %3d / rejected %3d  (n %d/%d)  now green %d",
+          cell,
+          c["auc"],
+          c["accepted_median"],
+          c["rejected_median"],
+          c["n_accepted"],
+          c["n_rejected"],
+          c.dig("current", "green")
+        )
+      )
+      c["cuts"].each do |rate, cut|
+        puts(
+          format(
+            "      at %2d%% false accepts: green %3d  keeps %.1f%%  admits %.1f%%",
+            (rate.to_f * 100).round,
+            cut["green"],
+            cut["keeps"],
+            cut["admits"]
+          )
+        )
+      end
+    end
+
+    report["bands"].sort.each do |level, band|
+      puts(format("  band %-6s n %3d, accepted by the native %.1f%%", level, band["n"], 100.0 * band["accepted"] / band["n"]))
+    end
+
+    report["disagreements"].each do |kind, keys|
+      puts("  #{kind}: #{keys.map { |key, n| "#{key}×#{n}" }.join(", ")}")
+      blamed = report.dig("blamed", kind)
+      puts("    weakest axis there: #{blamed.map { |cell, n| "#{cell}×#{n}" }.join(", ")}") if blamed.present?
+    end
+
+    if ENV["OUT"].present?
+      File.write(ENV["OUT"], JSON.pretty_generate(report))
+      puts("Written: #{ENV["OUT"]}")
+    end
   end
 
   desc("Show where each learner stands and what they should drill next")

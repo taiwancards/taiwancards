@@ -57,6 +57,7 @@ class ProfilesController < ApplicationController
     current_user.placement_tests.destroy_all
     current_user.study_plans.destroy_all
     PronunciationAttempt.owned_by(current_user).delete_all
+    PronunciationRecording.owned_by(current_user).delete_all
     current_user.syllable_skills.delete_all
     current_user.update!(prefs: current_user.prefs.slice(*User::KEPT_ON_RESET))
 

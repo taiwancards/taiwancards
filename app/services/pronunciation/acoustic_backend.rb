@@ -145,7 +145,8 @@ module Pronunciation
         span,
         initial: template.dig("structure", "initial"),
         utterance_initial: index.zero?,
-        f0_reference: tone_reference_hz(template["tone"])
+        f0_reference: tone_reference_hz(template["tone"]),
+        nasal_coda: template.dig("structure", "nasal_coda").present?
       )
       features["f0_register"] = register(features, template["tone"])
       Acoustic::Vowel.place(features, speaker_reference_hz)

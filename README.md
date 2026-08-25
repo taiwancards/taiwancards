@@ -1,6 +1,6 @@
 # TaiwanCards
 
-Spaced repetition for **Taiwan Mandarin**: traditional characters, zhuyin first,
+Spaced repetition for **Taiwanese Mandarin** (臺灣華語): traditional characters, zhuyin first,
 Taiwan norms. The dictionary, sentence corpus, difficulty model and pronunciation
 scorer are all derived here from primary sources; every entry carries its
 provenance.
@@ -91,7 +91,7 @@ proportions — are kept because on a corpus of this size they still measure bes
 trigrams, deeper entropy pruning and truncated SVD were each tested against the
 gold set and rejected on the numbers.
 
-The corpus is Taiwan Mandarin, not Chinese text converted to traditional
+The corpus is Taiwanese Mandarin, not Chinese text converted to traditional
 characters. Sources are Taiwan-originated, or kept only after the origin filter
 and manual review. Frequency, segmentation and difficulty are fitted on that
 material.

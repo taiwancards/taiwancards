@@ -7,6 +7,8 @@
       - if @collection
         span.text-2xs.font-medium.text-primary = @collection.name
       = link_to t("pronunciation.another"), @advance_url, class: "rounded-md border border-border px-2.5 py-1 text-xs font-medium hover:bg-muted"
+      - if @keeping
+        = link_to t("pron.judge.title"), pronunciation_judgements_path, class: "rounded-md border border-border px-2.5 py-1 text-xs font-medium hover:bg-muted"
 
   p.rounded-lg.border.border-amber-500.px-3.py-2.text-xs.leading-snug.text-amber-700 class="bg-amber-500/10"
     = t("pronunciation.alpha")

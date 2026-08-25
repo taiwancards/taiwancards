@@ -28,6 +28,7 @@ class PronunciationController < ApplicationController
     @voice = voice_profile
     @risky = risky_syllables
     @sandhi = sandhi_syllables
+    @keeping = Current.user&.restricted_access?
   end
 
   def health
@@ -49,10 +50,11 @@ class PronunciationController < ApplicationController
   def grade
     tonal = params[:tonal].to_s != "false"
     voice = voice_profile
+    audio = recorded_bytes
     result = Pronunciation::Admission.take do
       Pronunciation::AcousticBackend
         .new(tonal:, voice:)
-        .grade(audio: params[:audio], text: params[:text], syllables: parse_expected, takes: params[:takes].to_i)
+        .grade(audio: audio, text: params[:text], syllables: parse_expected, takes: params[:takes].to_i)
     end
 
     return render(json: {status: "busy"}, status: :too_many_requests) if result == :busy
@@ -61,11 +63,30 @@ class PronunciationController < ApplicationController
 
     lexeme = Lexeme.where(kind: %i[word character sentence]).find_by(id: params[:lexeme_id])
     record_attempt(lexeme, result, schedule: params[:schedule].to_s != "false") if lexeme
+    keep_recording(audio, lexeme, result)
     refine_voice(voice, result)
     render(json: result)
   end
 
   private
+
+  def recorded_bytes
+    audio = params[:audio]
+    audio.respond_to?(:read) ? audio.read : audio.to_s
+  end
+
+  def keep_recording(audio, lexeme, result)
+    Pronunciation::Keeper.new(Current.user).keep(
+      audio: audio,
+      text: params[:text],
+      result: result,
+      expected: parse_expected,
+      lexeme: lexeme,
+      content_type: params[:audio].try(:content_type)
+    )
+  rescue StandardError => error
+    Rails.logger.warn("pronunciation recording not kept: #{error.class}")
+  end
 
   def recording_limits
     auto = Setting.instance.pron_auto

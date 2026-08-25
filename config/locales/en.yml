@@ -890,7 +890,7 @@ en:
     collocates: Frequent neighbors
   liangci:
     title: Measure words 量詞
-    subtitle: Taiwan Mandarin classifiers — what each one counts, which nouns it goes with, and how it looks in real sentences.
+    subtitle: Taiwanese Mandarin classifiers — what each one counts, which nouns it goes with, and how it looks in real sentences.
     all: All
     play: Play
     game_title: Classifier game
@@ -2321,7 +2321,7 @@ en:
     title: Licenses & credits
     intro: TaiwanCards is built with gratitude on freely licensed open resources and official Taiwan language data. Each is linked to its source and license.
     projects_title: Our own open work
-    projects_note: "TaiwanCards rests on a body of open linguistic research into Taiwan Mandarin: the corpus pipeline that builds the data, the provenance analysis that keeps it Taiwanese, the signal-processing libraries behind pronunciation scoring, and the published datasets. Every part of it, including this application, is open."
+    projects_note: "TaiwanCards rests on a body of open linguistic research into Taiwanese Mandarin: the corpus pipeline that builds the data, the provenance analysis that keeps it Taiwanese, the signal-processing libraries behind pronunciation scoring, and the published datasets. Every part of it, including this application, is open."
     groups:
       app: The application and its data preparation
       pipeline: Corpus construction and provenance analysis
@@ -2330,11 +2330,11 @@ en:
     works:
       taiwancards: The study application in full — Rails, importers, spaced repetition, pronunciation scoring, mock exams. Nothing is held back.
       corpora: Download, processing, polishing, calibration, cleaning and analysis of every source the dictionary is built from.
-      twpipeline: Corpus construction for Taiwan Mandarin — nine JSONL stages from a raw crawl to a segmented, frequency-annotated corpus.
-      twfilter: "Provenance analysis: script inventory, orthography, lexical and grammatical markers that separate Taiwan Mandarin from China, Hong Kong and Southeast Asian usage."
+      twpipeline: Corpus construction for Taiwanese Mandarin — nine JSONL stages from a raw crawl to a segmented, frequency-annotated corpus.
+      twfilter: "Provenance analysis: script inventory, orthography, lexical and grammatical markers that separate Taiwanese Mandarin from China, Hong Kong and Southeast Asian usage."
       dsprb: Speech signal processing in pure Ruby — WAV decoding, FFT power spectra, MFCC, YIN pitch tracking. It scores your pronunciation.
       dtwrb: Dynamic time warping with a Sakoe-Chiba band and DBA barycenter averaging. It compares your recording against the reference contour.
-      twngrams: Word and character n-gram frequencies from the Taiwan Mandarin corpus, released into the public domain.
+      twngrams: Word and character n-gram frequencies from the Taiwanese Mandarin corpus, released into the public domain.
       twsyllables: Syllable inventory with zhuyin, pinyin and tone distribution across the corpus.
       twfilter_tables: "The reference tables twfilter uses to judge provenance — orthographic pairs, lexical markers, script inventories."
     open_source_title: Open source
@@ -2681,7 +2681,7 @@ en:
       japanese: from Japanese
       internet: internet
       abbreviation: abbreviation
-      taiwan_mandarin: Taiwan Mandarin
+      taiwan_mandarin: Taiwanese Mandarin
     registers:
       neutral: neutral
       casual: casual
@@ -3001,7 +3001,7 @@ en:
       <p>The 214 Kangxi radicals — the building blocks every character is filed under. Tap a radical to
       see the characters that contain it.</p>
     liangci_html: >-
-      <p>Taiwan Mandarin classifiers (量詞) are the little words between a number and a noun: 一<b>本</b>書,
+      <p>Taiwanese Mandarin classifiers (量詞) are the little words between a number and a noun: 一<b>本</b>書,
       三<b>隻</b>貓. Each entry shows what it counts, which nouns actually take it and how it looks in real
       sentences. The lists come from 教育部國語辭典簡編本, CC-CEDICT and our Taiwanese corpora. There is also a game
       for matching the right classifier.</p>
