@@ -5,7 +5,7 @@ module Huayu
     PATH = AppData.path("huayu/taiwan_everyday.json")
     SOURCE = "Taiwan everyday"
     COLLECTION = "Taiwan everyday"
-    ORIGINS = %w[hokkien japanese internet abbreviation taiwan-mandarin].freeze
+    ORIGINS = %w[hokkien japanese internet abbreviation taiwanese-mandarin].freeze
     REGISTERS = %w[neutral casual vulgar].freeze
     DOMAINS = %w[
       food

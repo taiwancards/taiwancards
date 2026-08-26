@@ -165,6 +165,11 @@ namespace(:deploy) do
         huayu/segmentation_names.json
         huayu/segmentation_priors.json
         huayu/naer_terms.json
+        huayu/common_words.json
+        huayu/taiwan_everyday.json
+        huayu/medicine.json
+        huayu/games.json
+        huayu/song_vocabulary.json
       ],
       code: %w[
         app/services/huayu/text_analyzer.rb

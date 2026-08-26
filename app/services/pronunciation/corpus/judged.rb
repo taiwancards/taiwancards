@@ -68,6 +68,7 @@ module Pronunciation
             "cells" => Hash(syllable["cells"]).transform_values { |cell| cell["score"] }.compact
           }
         end
+
       rescue StandardError => error
         @io&.puts("  #{recording.id}: #{error.class}")
         nil

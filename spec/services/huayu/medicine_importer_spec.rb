@@ -45,7 +45,7 @@ RSpec.describe Huayu::MedicineImporter do
           "text" => "測試醫丙",
           "pinyin" => "yuán yǒu",
           "en" => "everyday gloss",
-          "origin" => "taiwan-mandarin",
+          "origin" => "taiwanese-mandarin",
           "register" => "casual",
           "domain" => "health",
           "note_en" => "everyday note",

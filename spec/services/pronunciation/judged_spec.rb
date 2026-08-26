@@ -10,7 +10,16 @@ RSpec.describe Pronunciation::Corpus::Judged do
       user: owner,
       text: "字",
       syllable_keys: [key],
-      syllables: [{"key" => key, "index" => 0, "char" => "字", "level" => level, "overall" => overall, "cells" => {"tone" => tone || overall}}],
+      syllables: [
+        {
+          "key" => key,
+          "index" => 0,
+          "char" => "字",
+          "level" => level,
+          "overall" => overall,
+          "cells" => {"tone" => tone || overall}
+        }
+      ],
       audio: "bytes"
     )
     row.rate!(verdict, rejected: rejected) if verdict

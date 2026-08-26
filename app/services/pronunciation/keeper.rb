@@ -6,7 +6,6 @@ module Pronunciation
     UNRATED_ROOM = 80
     MAX_BYTES = 512 * 1024
 
-
     def initialize(user)
       @user = user
     end

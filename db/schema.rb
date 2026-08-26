@@ -460,7 +460,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_120000) do
     t.index(
       ["lexeme_id", "gdex"],
       name: "index_sentence_words_by_quality",
-      order: { gdex: :desc },
+      order: {gdex: :desc},
       include: ["sentence_id"]
     )
     t.index(["sentence_id", "lexeme_id"], name: "index_sentence_words_unique", unique: true)

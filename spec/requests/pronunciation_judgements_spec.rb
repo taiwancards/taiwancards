@@ -7,8 +7,24 @@ RSpec.describe "Rating kept pronunciation recordings", :aggregate_failures do
 
   let(:syllables) do
     [
-      {"key" => "hao3", "index" => 0, "char" => "好", "zhuyin" => "ㄏㄠˇ", "level" => "green", "overall" => 90, "cells" => {"tone" => 88}},
-      {"key" => "shi4", "index" => 1, "char" => "事", "zhuyin" => "ㄕˋ", "level" => "amber", "overall" => 71, "cells" => {"tone" => 64}}
+      {
+        "key" => "hao3",
+        "index" => 0,
+        "char" => "好",
+        "zhuyin" => "ㄏㄠˇ",
+        "level" => "green",
+        "overall" => 90,
+        "cells" => {"tone" => 88}
+      },
+      {
+        "key" => "shi4",
+        "index" => 1,
+        "char" => "事",
+        "zhuyin" => "ㄕˋ",
+        "level" => "amber",
+        "overall" => 71,
+        "cells" => {"tone" => 64}
+      }
     ]
   end
 
@@ -29,7 +45,7 @@ RSpec.describe "Rating kept pronunciation recordings", :aggregate_failures do
     expect(response).to(redirect_to(root_path))
   end
 
-  context "as the owner" do
+  context("as the owner") do
     before { sign_in(owner) }
 
     it "lists what is waiting to be rated" do

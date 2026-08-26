@@ -172,8 +172,18 @@ Rails.application.routes.draw do
     get("cangjie/lessons/:id", to: "cangjie_lessons#show", as: :cangjie_lesson)
     get("pronunciation", to: "pronunciation#show", as: :pronunciation)
     get("pronunciation/judge", to: "pronunciation_judgements#index", as: :pronunciation_judgements)
-    get("pronunciation/judge/:id/audio", to: "pronunciation_judgements#audio", as: :pronunciation_judgement_audio, constraints: {id: /\d+/})
-    patch("pronunciation/judge/:id", to: "pronunciation_judgements#update", as: :pronunciation_judgement, constraints: {id: /\d+/})
+    get(
+      "pronunciation/judge/:id/audio",
+      to: "pronunciation_judgements#audio",
+      as: :pronunciation_judgement_audio,
+      constraints: {id: /\d+/}
+    )
+    patch(
+      "pronunciation/judge/:id",
+      to: "pronunciation_judgements#update",
+      as: :pronunciation_judgement,
+      constraints: {id: /\d+/}
+    )
     delete("pronunciation/judge/:id", to: "pronunciation_judgements#destroy", constraints: {id: /\d+/})
     get("pronunciation/warmup", to: "warmups#show", as: :pronunciation_warmup)
     post("pronunciation/warmup", to: "warmups#create", defaults: {format: :json})

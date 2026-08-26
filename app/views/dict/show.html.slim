@@ -64,7 +64,7 @@
           span.rounded-full.bg-primary/10.font-medium.text-primary class="px-2.5 py-1" title=t("words.taiwan_specific_hint")
             = t("words.taiwan_specific")
         - origin = lexeme.data["origin"].to_s.tr("-", "_").presence
-        - if origin && origin != "taiwan_mandarin"
+        - if origin && origin != "taiwanese_mandarin"
           span.rounded-full.bg-brand/10.font-medium.text-brand class="px-2.5 py-1" title=t("everyday.origin_hint")
             = t("everyday.origins.#{origin}", default: origin)
         - register = lexeme.data["register"].to_s.presence

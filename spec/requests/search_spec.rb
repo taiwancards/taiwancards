@@ -33,6 +33,36 @@ RSpec.describe "Search" do
     end
   end
 
+  it "reads a query typed in simplified characters" do
+    get("/search", params: {q: "学校"})
+
+    expect(response.body).to(include("學校"))
+  end
+
+  it "keeps a character the dictionary itself spells with" do
+    word(
+      "帶狀疱疹",
+      "dàizhuàng pàozhěn",
+      "ㄉㄞˋ ㄓㄨㄤˋ ㄆㄠˋ ㄓㄣˇ",
+      score: 5,
+      meaning: "shingles"
+    )
+
+    get("/search", params: {q: "帶狀疱疹", frame: "1"})
+
+    expect(response.body).to(include("帶狀疱疹"))
+    expect(response.body).not_to(include("帶狀皰疹"))
+  end
+
+  it "keeps a traditional character that doubles as a simplified one" do
+    word("台北", "táiběi", "ㄊㄞˊ ㄅㄟˇ", score: 5, meaning: "Taipei")
+
+    get("/search", params: {q: "台北", frame: "1"})
+
+    expect(response.body).to(include("台北"))
+    expect(response.body).not_to(include("臺北"))
+  end
+
   it "offers a way through to the whole search" do
     get("/search", params: {q: "xuexiao", frame: "1"})
 

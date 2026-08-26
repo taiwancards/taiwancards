@@ -48,7 +48,12 @@ RSpec.describe "Collecting a rating set from real attempts", :aggregate_failures
     post(
       "/pronunciation/grade",
       params: {
-        audio: Rack::Test::UploadedFile.new(StringIO.new(synthetic_wav), "audio/wav", true, original_filename: "take.wav"),
+        audio: Rack::Test::UploadedFile.new(
+          StringIO.new(synthetic_wav),
+          "audio/wav",
+          true,
+          original_filename: "take.wav"
+        ),
         text: "馬",
         lexeme_id: lexeme.id,
         expected: [{"char" => "馬", "pinyin" => "ma3", "tone" => 3, "key" => "ma3", "zhuyin" => "ㄇㄚˇ"}].to_json

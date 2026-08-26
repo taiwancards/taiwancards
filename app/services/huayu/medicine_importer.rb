@@ -108,7 +108,7 @@ module Huayu
 
     def shared_metadata(entry)
       {
-        "origin" => entry["origin"].presence || "taiwan-mandarin",
+        "origin" => entry["origin"].presence || "taiwanese-mandarin",
         "register" => entry["register"].presence || "neutral",
         "tier" => tier(entry),
         "facets" => FACETS,

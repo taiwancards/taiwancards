@@ -30,7 +30,9 @@ RSpec.describe Pronunciation::Keeper do
   it "keeps the scores the engine gave at the time, so the rating can be checked against them" do
     described_class.new(owner).keep(audio: "bytes", text: "好", result: result("hao3"))
 
-    expect(PronunciationRecording.last.syllables.first).to(include("overall" => 90, "cells" => {"tone" => 88, "final" => 91}))
+    expect(PronunciationRecording.last.syllables.first).to(
+      include("overall" => 90, "cells" => {"tone" => 88, "final" => 91})
+    )
   end
 
   it "keeps nothing for an ordinary learner" do
@@ -57,6 +59,7 @@ RSpec.describe Pronunciation::Keeper do
     described_class::PER_KEY.times do
       described_class.new(owner).keep(audio: "bytes", text: "好", result: result("hao3"))
     end
+
     described_class.new(owner).keep(audio: "bytes", text: "好事", result: result("hao3", "shi4"))
 
     expect(PronunciationRecording.count).to(eq(described_class::PER_KEY + 1))
@@ -75,7 +78,9 @@ RSpec.describe Pronunciation::Keeper do
   end
 
   it "stops collecting while a pile of recordings is still waiting to be rated" do
-    allow(PronunciationRecording).to(receive(:unrated).and_return(instance_double(ActiveRecord::Relation, count: described_class::UNRATED_ROOM)))
+    allow(PronunciationRecording).to(
+      receive(:unrated).and_return(instance_double(ActiveRecord::Relation, count: described_class::UNRATED_ROOM))
+    )
 
     expect(described_class.new(owner).collecting?).to(be(false))
   end

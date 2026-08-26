@@ -107,7 +107,9 @@ module Pronunciation
         syllable, tone = parsed
         st = Acoustic::Syllables.structure(syllable)
 
-        tone_partners(syllable, tone) + aspiration_partners(st, tone) + sibilant_partners(st, tone) +
+        tone_partners(syllable, tone) +
+          aspiration_partners(st, tone) +
+          sibilant_partners(st, tone) +
           coda_partners(st, tone)
       end
 

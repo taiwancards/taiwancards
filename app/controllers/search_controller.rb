@@ -2,7 +2,7 @@
 
 class SearchController < ApplicationController
   def index
-    @query = params[:q].to_s.strip
+    @query = Huayu::TypedQuery.normalize(params[:q])
 
     if params[:frame].present?
       @page = Lexemes::Search.new.call(@query)
@@ -11,7 +11,7 @@ class SearchController < ApplicationController
     end
 
     @grammar_hits = Huayu::GrammarLessons.search(@query)
-    @corpus = Search::Corpus.new(user: Current.user, params: params)
+    @corpus = Search::Corpus.new(user: Current.user, params: params.merge(q: @query))
     if @corpus.sentences?
       @concordance = @corpus.concordance
     else

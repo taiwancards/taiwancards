@@ -15,7 +15,7 @@ RSpec.describe Huayu::TaiwanEverydayImporter do
       "text" => text,
       "pinyin" => "cè shì",
       "en" => "test",
-      "origin" => "taiwan-mandarin",
+      "origin" => "taiwanese-mandarin",
       "register" => "neutral",
       "domain" => "life"
     }.merge(extra)

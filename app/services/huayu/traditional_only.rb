@@ -75,11 +75,23 @@ module Huayu
       simplified(opening).any? && SimpToTrad.convert(opening).first == previous
     end
 
+    def to_traditional(text, keep: nil)
+      text
+        .to_s
+        .each_char
+        .map { |char|
+          next char if keep&.include?(char)
+
+          simplified?(char) ? SimpToTrad.table[char] : char
+        }
+        .join
+    end
+
     def convert_runs(text)
       text.gsub(RUN) do |run|
         next run if run.length < 2 || run.each_char.none? { |char| simplified?(char) }
 
-        run.each_char.map { |char| simplified?(char) ? SimpToTrad.table[char] : char }.join
+        to_traditional(run)
       end
     end
   end
