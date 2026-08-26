@@ -57,4 +57,21 @@ RSpec.describe "Google OAuth", :no_auth do
 
     expect(response).to(redirect_to(login_path))
   end
+
+  it "keeps the text of an unexpected exception out of the failure redirect" do
+    OmniAuth.config.mock_auth[:google_oauth2] = :"undefined method 'bytesize' for nil"
+
+    get("/auth/google_oauth2/callback")
+
+    expect(response.headers["Location"]).to(include("message=oauth_failed"))
+    expect(response.headers["Location"]).not_to(include("bytesize"))
+  end
+
+  it "passes a failure reason of its own through untouched" do
+    OmniAuth.config.mock_auth[:google_oauth2] = :access_denied
+
+    get("/auth/google_oauth2/callback")
+
+    expect(response.headers["Location"]).to(include("message=access_denied"))
+  end
 end

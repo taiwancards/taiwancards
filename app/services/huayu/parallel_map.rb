@@ -33,16 +33,21 @@ module Huayu
 
       pid = fork do
         reader.close
-        writer.binmode
-        payload = Marshal.dump(slice.map(&block))
-        writer.write([payload.bytesize].pack("Q"))
-        writer.write(payload)
-        writer.close
+        work(writer, slice, &block)
         exit!(0)
       end
 
       writer.close
       [pid, reader]
+    end
+
+    def work(writer, slice, &block)
+      writer.binmode
+      payload = Marshal.dump(slice.map(&block))
+      writer.write([payload.bytesize].pack("Q"))
+      writer.write(payload)
+      writer.close
+      release_connections
     end
 
     def collect(readers)

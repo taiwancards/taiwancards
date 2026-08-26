@@ -25,4 +25,14 @@ RSpec.describe Huayu::ParallelMap do
 
     expect { described_class.collect([[pid, reader]]) }.to(raise_error(described_class::Error, /1 of 1/))
   end
+
+  it "hands its database connections back before the worker exits" do
+    reader, writer = IO.pipe
+    allow(described_class).to(receive(:release_connections))
+
+    described_class.work(writer, [1, 2]) { |value| value * 3 }
+
+    expect(described_class).to(have_received(:release_connections))
+    expect(described_class.receive(reader)).to(eq([3, 6]))
+  end
 end
