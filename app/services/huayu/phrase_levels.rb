@@ -2,8 +2,6 @@
 
 module Huayu
   class PhraseLevels
-    COVERAGE = 0.90
-    TOLERANCE = 0.05
     SCALES = {"tocfl" => SentenceProfile::TOCFL_LEVELS.length, "tbcl" => SentenceProfile::TBCL_GRADES.length}.freeze
     LINKABLE = %i[word collocation measure_word character].freeze
     BATCH = 2_000
@@ -45,44 +43,15 @@ module Huayu
     private
 
     def levels(units)
-      SCALES.each_with_object({}) do |(scale, ceiling), memo|
-        placed = place(units, vocabulary.fetch(scale), ceiling)
-        memo[scale] = placed[:index]
-        memo["#{scale}_exact"] = placed[:exact]
+      SCALES.each_key.with_object({}) do |scale, memo|
+        placed = vocabulary.fetch(scale).place(units)
+        memo[scale] = placed.index
+        memo["#{scale}_exact"] = placed.exact
       end
-    end
-
-    def place(units, table, ceiling)
-      total = units.length
-      target = (total * (COVERAGE - TOLERANCE)).ceil
-      return {index: nil, exact: false} if target.zero?
-
-      known = units.map { |unit| table[unit] }
-      running = 0
-
-      (1..ceiling).each do |level|
-        running += known.count { |value| value == level }
-        return {index: level, exact: running == total} if running >= target
-      end
-
-      {index: nil, exact: false}
     end
 
     def vocabulary
-      @vocabulary ||= begin
-        tocfl = {}
-        tbcl = {}
-
-        Lexeme.where(kind: %i[word character]).pluck(:text, :data).each do |text, data|
-          position = SentenceProfile::TOCFL_LEVELS.index(data["tocfl_level"])
-          tocfl[text] = [tocfl[text], position + 1].compact.min if position
-
-          grade = data["tbcl_grade"]&.to_i
-          tbcl[text] = [tbcl[text], grade].compact.min if grade&.positive?
-        end
-
-        {"tocfl" => tocfl, "tbcl" => tbcl}
-      end
+      @vocabulary ||= Lexemes::LevelScale.vocabulary
     end
 
     def relink(entries)

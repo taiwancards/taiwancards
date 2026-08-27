@@ -19,23 +19,36 @@ module Huayu
         .where("profile.lexeme_id IS NULL OR profile.difficulty IS DISTINCT FROM (lexemes.data ->> 'difficulty')::int")
     end
 
+    # The levels a profile carries depend on the graded vocabulary and on the rule that reads it, so
+    # the fingerprint covers both — a change to either has to force a recount.
     def self.vocabulary_fingerprint
-      kinds = %w[word character].map { |name| Lexeme.kinds.fetch(name) }.join(", ")
+      "#{vocabulary_digest}:#{rule_digest}"
+    end
 
+    def self.rule_digest
+      Digest::SHA256.file(Rails.root.join("app/services/lexemes/level_scale.rb")).hexdigest
+    end
+
+    def self.vocabulary_digest
       Lexeme.connection.select_value(
-        <<~SQL
-          SELECT md5(string_agg(levels, ',' ORDER BY id))
-          FROM (
-            SELECT
-              id,
-              id::text || ':' ||
-              coalesce(data ->> 'tocfl_level', '') || ':' ||
-              coalesce(data ->> 'tbcl_grade', '') || ':' ||
-              coalesce(data ->> 'freq_rank', '') AS levels
-            FROM lexemes
-            WHERE kind IN (#{kinds})
-          ) graded
-        SQL
+        Lexeme.sanitize_sql_array(
+          [
+            <<~SQL,
+              SELECT md5(string_agg(levels, ',' ORDER BY id))
+              FROM (
+                SELECT
+                  id,
+                  id::text || ':' ||
+                  coalesce(data ->> 'tocfl_level', '') || ':' ||
+                  coalesce(data ->> 'tbcl_grade', '') || ':' ||
+                  coalesce(data ->> 'freq_rank', '') AS levels
+                FROM lexemes
+                WHERE kind IN (?)
+              ) graded
+            SQL
+            Lexeme.kinds.fetch_values("word", "character")
+          ]
+        )
       )
     end
 
@@ -126,22 +139,22 @@ module Huayu
     def analyze(row)
       id, text, data, kind = row
       stored = data["segments"]
+      own = text if kind == Lexeme.kinds.fetch("collocation")
       units = if stored.is_a?(Array) && stored.any?
         stored
       else
-        collocation = kind == Lexeme.kinds.fetch("collocation")
-        @analyzer.segment(text, excluding: collocation ? text : nil)
+        @analyzer.segment(text, excluding: own)
       end
 
       return nil if units.empty?
 
-      profile_row(id, text, data, units)
+      profile_row(id, text, data, units, own)
     end
 
-    def profile_row(id, text, data, units)
+    def profile_row(id, text, data, units, own)
       source_ids, registers = @sources[id]
-      tocfl = scale(units, @tocfl, TOCFL_LEVELS.length)
-      tbcl = scale(units, @tbcl, 7)
+      tocfl = scale(units, @tocfl, own)
+      tbcl = scale(units, @tbcl, own)
       freq = frequency_scale(units)
       now = Time.current
 
@@ -164,32 +177,20 @@ module Huayu
     end
 
     def load_vocabulary
-      @tocfl = {}
-      @tbcl = {}
+      scales = Lexemes::LevelScale.vocabulary
+      @tocfl = scales.fetch("tocfl")
+      @tbcl = scales.fetch("tbcl")
       @rank = {}
 
       Lexeme.where(kind: %i[word character]).pluck(:text, :data).each do |text, data|
-        position = TOCFL_LEVELS.index(data["tocfl_level"])
-        @tocfl[text] = position + 1 if position
-
-        grade = data["tbcl_grade"]&.to_i
-        @tbcl[text] = grade if grade&.positive?
-
         rank = data["freq_rank"]&.to_i
         @rank[text] = rank if rank&.positive?
       end
     end
 
-    def scale(units, table, max_index)
-      known = units.map { |unit| table[unit] }
-      covered = known.compact
-      return blank if covered.empty?
-
-      unknown = known.count(&:nil?)
-      coverage = covered.length.to_f / known.length
-      return blank if too_thin?(unknown, coverage)
-
-      {index: [covered.max, max_index].min, exact: unknown.zero?, unknown: unknown}
+    def scale(units, scale, excluding)
+      placement = scale.place(units, excluding:)
+      {index: placement.index, exact: placement.exact, unknown: placement.unknown}
     end
 
     def frequency_scale(units)

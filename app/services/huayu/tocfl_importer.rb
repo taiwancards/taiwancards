@@ -88,15 +88,25 @@ module Huayu
       end
     end
 
+    # A form can appear on several lists: 好 is on Novice 1 as hǎo and on Band B as hào, 來 on three
+    # of them. The level that belongs on the lexeme is the lowest one — where a learner first meets
+    # the form — so a later, harder row must not overwrite it.
     def upsert(row, tag, text, pinyin)
       kind = text.length == 1 && text.match?(HAN) ? :character : :word
 
       lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[kind], text:)
       lexeme.readings = reading(pinyin) if lexeme.readings["pinyin"].blank? && pinyin.present?
-      lexeme.data = lexeme.data.merge("pos" => row["POS"].presence, "tocfl_level" => tag).compact
+      lexeme.data = lexeme.data.merge("pos" => row["POS"].presence, "tocfl_level" => lowest(lexeme, tag)).compact
       lexeme.add_source("TOCFL #{tag}")
       lexeme.save! if lexeme.changed?
       lexeme
+    end
+
+    def lowest(lexeme, tag)
+      known = lexeme.data["tocfl_level"]
+      return tag if known.blank?
+
+      [known, tag].min_by { |value| LEVELS.index { |level| level[:tag] == value } || LEVELS.length }
     end
 
     def reading(pinyin)

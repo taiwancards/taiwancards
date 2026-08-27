@@ -1303,6 +1303,8 @@ en:
     back: Back to grades
     grade: Grade %{n}
     badge: TBCL %{n}
+    approximate: "≈TBCL %{n}"
+    approximate_hint: "Not on the TBCL list. Read from the characters it is written with: at grade %{n} you already know enough of them."
     words_count: "%{count} in the dictionary"
   words:
     hokkien_source: "Taiwanese Hokkien:"
@@ -1538,6 +1540,8 @@ en:
       pace: Pace, chars/min
       device: Progress lives in this browser, on this device.
   tocfl:
+    approximate: "≈TOCFL %{n}"
+    approximate_hint: "Not on the TOCFL list. Read from the words it is built from: at %{n} you already know enough of them."
     title: TOCFL readiness
     subtitle: Your progress toward each official level — counts every character and word you've learned anywhere.
     back: TOCFL

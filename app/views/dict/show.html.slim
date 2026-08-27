@@ -41,6 +41,9 @@
         - if grade.present?
           = link_to t("tbcl.badge", n: grade), tbcl_level_path(grade),
             class: "rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20"
+        - unless @profile.tocfl_level
+          = approximate_level_badge(lexeme, "tocfl")
+        = approximate_level_badge(lexeme, "tbcl")
         - if @liangci&.measure_word
           = link_to liangci_entry_path(lexeme.text), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
             span lang="zh-TW" 量詞

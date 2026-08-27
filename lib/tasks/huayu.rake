@@ -343,3 +343,10 @@ namespace(:huayu) do
     pp(rescored: Lexemes::Difficulty.new.call)
   end
 end
+
+namespace(:huayu) do
+  desc("Derive an approximate TBCL and TOCFL level for every word and collocation (idempotent, offline)")
+  task(derive_levels: :environment) do
+    pp(Lexemes::DerivedLevels.new.call)
+  end
+end

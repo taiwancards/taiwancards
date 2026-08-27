@@ -28,7 +28,20 @@ RSpec.describe Huayu::PhraseLevels do
     expect(drill.data["tocfl_exact"]).to(be(true))
   end
 
-  it "tolerates a tenth of the words sitting above the level" do
+  it "files a phrase where most of it sits, marking it inexact" do
+    %w[甲 乙 丙 丁 戊 己 庚].each { |text| word(text, tbcl: 2) }
+    word("辛", tbcl: 4)
+    Huayu::TextAnalyzer.reset_vocabulary!
+    phrase("甲乙丙丁戊己庚辛。")
+
+    described_class.new(io: StringIO.new).call
+
+    drill = Lexeme.practice_phrases.first
+    expect(drill.data["tbcl"]).to(eq(2))
+    expect(drill.data["tbcl_exact"]).to(be(false))
+  end
+
+  it "refuses the lower level when a word sits more than two levels above it" do
     %w[甲 乙 丙 丁 戊 己 庚].each { |text| word(text, tbcl: 2) }
     word("辛", tbcl: 7)
     Huayu::TextAnalyzer.reset_vocabulary!
@@ -37,7 +50,7 @@ RSpec.describe Huayu::PhraseLevels do
     described_class.new(io: StringIO.new).call
 
     drill = Lexeme.practice_phrases.first
-    expect(drill.data["tbcl"]).to(eq(2))
+    expect(drill.data["tbcl"]).to(eq(5))
     expect(drill.data["tbcl_exact"]).to(be(false))
   end
 

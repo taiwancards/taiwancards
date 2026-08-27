@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 namespace(:deploy) do
+  DICTIONARY_SOURCES = %w[
+    huayu/common_words.json
+    huayu/naer_terms.json
+    huayu/taiwan_everyday.json
+    huayu/medicine.json
+    huayu/games.json
+    huayu/song_vocabulary.json
+  ].freeze
+
+  SEGMENTATION_SOURCES = (
+    %w[
+      huayu/bigram_frequency.json
+      huayu/segmentation_vocab.json
+      huayu/segmentation_names.json
+      huayu/segmentation_priors.json
+    ] + DICTIONARY_SOURCES
+  ).freeze
+
   SYNC_STEPS = [
     {
       name: "textbook",
@@ -81,9 +99,15 @@ namespace(:deploy) do
       code: %w[app/services/huayu/song_vocabulary_importer.rb]
     },
     {
+      name: "tocfl",
+      task: "huayu:import_tocfl",
+      paths: %w[huayu/tocfl.csv],
+      code: %w[app/services/huayu/tocfl_importer.rb]
+    },
+    {
       name: "difficulty",
       task: "huayu:compute_difficulty",
-      paths: %w[huayu/taiwan_everyday.json huayu/medicine.json huayu/games.json huayu/moe_idioms.json],
+      paths: DICTIONARY_SOURCES + %w[huayu/moe_idioms.json],
       code: %w[app/services/lexemes/difficulty.rb]
     },
     {
@@ -157,30 +181,29 @@ namespace(:deploy) do
       code: %w[app/services/huayu/liangci_importer.rb]
     },
     {
-      name: "register_mix",
-      task: "huayu:register_mix",
-      paths: %w[content_sources.json],
-      code: %w[app/services/lexemes/register_mix.rb]
-    },
-    {
       name: "segmentation",
       task: "huayu:resegment",
-      paths: %w[
-        huayu/bigram_frequency.json
-        huayu/segmentation_vocab.json
-        huayu/segmentation_names.json
-        huayu/segmentation_priors.json
-        huayu/naer_terms.json
-        huayu/common_words.json
-        huayu/taiwan_everyday.json
-        huayu/medicine.json
-        huayu/games.json
-        huayu/song_vocabulary.json
-      ],
+      paths: SEGMENTATION_SOURCES,
       code: %w[
         app/services/huayu/text_analyzer.rb
         app/services/huayu/bigram_frequency.rb
         app/services/huayu/segmentation_vocabulary.rb
+      ]
+    },
+    {
+      name: "register_mix",
+      task: "huayu:register_mix",
+      paths: SEGMENTATION_SOURCES + %w[content_sources.json],
+      code: %w[app/services/lexemes/register_mix.rb app/services/huayu/text_analyzer.rb]
+    },
+    {
+      name: "derived_levels",
+      task: "huayu:derive_levels",
+      paths: SEGMENTATION_SOURCES + %w[huayu/tocfl.csv],
+      code: %w[
+        app/services/lexemes/derived_levels.rb
+        app/services/lexemes/level_scale.rb
+        app/services/huayu/text_analyzer.rb
       ]
     }
   ].freeze
