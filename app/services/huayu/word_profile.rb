@@ -2,6 +2,9 @@
 
 module Huayu
   class WordProfile
+    REDUNDANT_SOURCE = /\A(TBCL \d|TOCFL \S+|Textbook )/
+    SOURCE_LABELS = {"moe_idioms" => "MOE 成語典"}.freeze
+
     def initialize(lexeme, twin: nil)
       @lexeme = lexeme
       @twin = twin
@@ -128,20 +131,11 @@ module Huayu
     end
 
     def sources
-      lexeme.sources
+      lexeme.sources.reject { |name| name.match?(REDUNDANT_SOURCE) }.map { |name| SOURCE_LABELS.fetch(name, name) }
     end
 
     def richer_twin?
       @twin.present? && @twin.senses.size > lexeme.senses.size
-    end
-
-    def tocfl_level
-      @tocfl_level ||= Collection
-        .where(kind: :tocfl)
-        .joins(:collection_items)
-        .where(collection_items: {lexeme_id: lexeme.id})
-        .order(:position)
-        .first
     end
   end
 end

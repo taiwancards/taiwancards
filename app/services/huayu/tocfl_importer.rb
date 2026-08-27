@@ -88,9 +88,6 @@ module Huayu
       end
     end
 
-    # A form can appear on several lists: 好 is on Novice 1 as hǎo and on Band B as hào, 來 on three
-    # of them. The level that belongs on the lexeme is the lowest one — where a learner first meets
-    # the form — so a later, harder row must not overwrite it.
     def upsert(row, tag, text, pinyin)
       kind = text.length == 1 && text.match?(HAN) ? :character : :word
 

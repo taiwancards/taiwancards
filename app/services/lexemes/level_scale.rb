@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 module Lexemes
-  # Places a text on a graded scale from the pieces a reader already knows: a unit that carries a
-  # level of its own counts whole, anything else is read character by character. The level is the
-  # lowest one covering COVERAGE of those pieces, and only when nothing sticks out more than SPREAD
-  # levels above it — so a long term is filed where most of it sits rather than where its rarest
-  # character does. Below four characters the allowance is inert: ceil(3 * 0.75) == 3.
   class LevelScale
     HAN = /\p{Han}/
     COVERAGE = 0.75

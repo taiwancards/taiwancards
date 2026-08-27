@@ -29,21 +29,13 @@
         = render("shared/short_form", lexeme:)
         - if @variants.present?
           = render("shared/variant_forms", variants: @variants, current: @spelling)
-      .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-md sm:justify-end"
-        - if detailed?
-          = score_badge(lexeme)
-        - parts_of_speech(lexeme).each do |label|
-          span.rounded-full.bg-muted.font-medium class="px-2.5 py-1" = label
-        - if @profile.tocfl_level
-          = link_to @profile.tocfl_level.name, tocfl_level_path(@profile.tocfl_level),
-            class: "rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20"
-        - grade = lexeme.data["tbcl_grade"]
-        - if grade.present?
-          = link_to t("tbcl.badge", n: grade), tbcl_level_path(grade),
-            class: "rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20"
-        - unless @profile.tocfl_level
-          = approximate_level_badge(lexeme, "tocfl")
-        = approximate_level_badge(lexeme, "tbcl")
+      .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-xl sm:justify-end"
+        .flex.flex-wrap.items-center class="gap-1.5 sm:flex-nowrap"
+          - if detailed?
+            = score_badge(lexeme)
+          - parts_of_speech(lexeme).each do |label|
+            span.rounded-full.bg-muted.font-medium class="px-2.5 py-1" = label
+          = level_badges(lexeme, profile: @sentence_profile, marks: true)
         - if @liangci&.measure_word
           = link_to liangci_entry_path(lexeme.text), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
             span lang="zh-TW" 量詞
@@ -66,14 +58,15 @@
               span.size-2.rounded-full class=chengyu_tone_dot(chengyu_tone)
               span = t("chengyu.tones.#{chengyu_tone}")
         - if detailed? && @sentence_profile
-          = render("sentences/badges", profile: @sentence_profile, sources: lexeme.content_sources)
+          = render("sentences/badges", profile: @sentence_profile, lexeme:, sources: lexeme.content_sources, levels: false)
         - if @profile.taiwan_specific?
           span.rounded-full.bg-primary/10.font-medium.text-primary class="px-2.5 py-1" title=t("words.taiwan_specific_hint")
             = t("words.taiwan_specific")
         - origin = lexeme.data["origin"].to_s.tr("-", "_").presence
-        - if origin && origin != "taiwanese_mandarin"
+        - origin_label = t("everyday.origins.#{origin}", default: nil) if origin && origin != "taiwanese_mandarin"
+        - if origin_label
           span.rounded-full.bg-brand/10.font-medium.text-brand class="px-2.5 py-1" title=t("everyday.origin_hint")
-            = t("everyday.origins.#{origin}", default: origin)
+            = origin_label
         - register = lexeme.data["register"].to_s.presence
         - if register && register != "neutral"
           span.rounded-full.bg-muted.font-medium class="px-2.5 py-1"
@@ -285,6 +278,6 @@
               .mt-1.text-sm.text-muted-foreground = sentence.meaning
             - if detailed? && sentence.sentence_profile
               .mt-1.flex.flex-wrap.items-center.gap-2.text-xs.text-muted-foreground
-                = render("sentences/badges", profile: sentence.sentence_profile, sources: sentence.content_sources)
+                = render("sentences/badges", profile: sentence.sentence_profile, lexeme: sentence, sources: sentence.content_sources)
       .pt-1
         = link_to t("words.all_sentences"), sentences_path(word: lexeme.text), class: "text-sm underline underline-offset-2 text-muted-foreground hover:text-foreground"

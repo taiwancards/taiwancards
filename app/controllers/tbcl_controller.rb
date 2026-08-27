@@ -6,6 +6,7 @@ class TbclController < ApplicationController
   publicly_cacheable
   include Paginated
   include ProgressMarks
+  include MarkedEntries
 
   PER_PAGE = 600
 
@@ -21,8 +22,10 @@ class TbclController < ApplicationController
     return send_level_list(readiness.scope(@grade).curriculum_order, "TBCL #{@grade}") if request.format.csv?
 
     @stat = readiness.stat(@grade)
-    page, = paginate(readiness.scope(@grade).curriculum_order, per_page: PER_PAGE, total: @stat.total)
+    ordered = readiness.scope(@grade).curriculum_order
+    page, = paginate(ordered, per_page: PER_PAGE, total: @stat.total, page: marked_page(ordered, PER_PAGE))
     @lexemes = page.to_a
+    @marked = marked_texts.to_set
     load_progress(@lexemes)
   end
 end

@@ -19,8 +19,6 @@ module Huayu
         .where("profile.lexeme_id IS NULL OR profile.difficulty IS DISTINCT FROM (lexemes.data ->> 'difficulty')::int")
     end
 
-    # The levels a profile carries depend on the graded vocabulary and on the rule that reads it, so
-    # the fingerprint covers both — a change to either has to force a recount.
     def self.vocabulary_fingerprint
       "#{vocabulary_digest}:#{rule_digest}"
     end

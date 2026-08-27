@@ -1,12 +1,8 @@
+- marks = local_assigns.fetch(:marks, false)
+- levels = local_assigns.fetch(:levels, true)
 .flex.flex-wrap.items-center.gap-1.text-muted-foreground class="text-[11px]"
-  - SentenceProfile::SCHEMES.each_key do |scheme|
-    - level = profile.level_for(scheme)
-    - next if level.blank?
-    - exact = profile.exact_for?(scheme)
-    span.inline-flex.items-center.gap-1.whitespace-nowrap.rounded class=("px-1.5 #{exact ? "bg-emerald-500/15 text-emerald-700" : "bg-amber-500/15 text-amber-700"}")
-      span = t("sentences.schemes.#{scheme}")
-      span.font-medium = scheme_level_label(scheme, level)
-      - unless exact
-        span title=t("sentences.approximate_hint", count: profile.unknown_count) ≈
+  - if levels
+    = level_badges(lexeme, profile:, marks:, compact: true)
+  = frequency_badge(profile)
   - sources.filter_map(&:register).uniq.each do |register|
     = link_to t("admin.sources.registers.#{register}"), sentences_path(registers: [register]), class: "relative whitespace-nowrap rounded bg-muted px-1.5 hover:bg-muted-foreground/20"

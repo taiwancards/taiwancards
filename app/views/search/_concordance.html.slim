@@ -19,7 +19,7 @@
               span lang="zh-TW" = part.text
         - if row.lexeme.meaning.present?
           p.text-sm.text-muted-foreground = row.lexeme.meaning
-        = render("sentences/badges", profile: row.profile, sources: row.lexeme.content_sources)
+        = render("sentences/badges", profile: row.profile, lexeme: row.lexeme, sources: row.lexeme.content_sources)
 
   - base = ->(number) { search_path(request.query_parameters.merge(page: number)) }
   = render("shared/pager", page: result.page, pages: result.pages, path: base)

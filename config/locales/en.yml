@@ -1541,6 +1541,8 @@ en:
       device: Progress lives in this browser, on this device.
   tocfl:
     approximate: "≈TOCFL %{n}"
+    badge: TOCFL %{n}
+    novice: Novice %{n}
     approximate_hint: "Not on the TOCFL list. Read from the words it is built from: at %{n} you already know enough of them."
     title: TOCFL readiness
     subtitle: Your progress toward each official level — counts every character and word you've learned anywhere.

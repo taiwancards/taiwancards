@@ -20,7 +20,7 @@
       .mt-3.flex.flex-wrap.items-center.gap-2.text-xs
         = score_badge(@sentence)
         - if @profile
-          = render("sentences/badges", profile: @profile, sources: @sentence.content_sources)
+          = render("sentences/badges", profile: @profile, lexeme: @sentence, sources: @sentence.content_sources, marks: true)
 
   - if detailed?
     = render("shared/register_mix", lexeme: @sentence)

@@ -6,6 +6,7 @@ class TocflController < ApplicationController
   publicly_cacheable
   include Paginated
   include ProgressMarks
+  include MarkedEntries
 
   PER_PAGE = 600
 
@@ -18,12 +19,10 @@ class TocflController < ApplicationController
     return send_level_list(@collection.lexemes.curriculum_order, @collection.name) if request.format.csv?
 
     @stat = Huayu::TocflReadiness.new.stat(@collection)
-    page, = paginate(
-      @collection.lexemes.order(Arel.sql("collection_items.position")),
-      per_page: PER_PAGE,
-      total: @stat.total
-    )
+    ordered = @collection.lexemes.order(Arel.sql("collection_items.position"))
+    page, = paginate(ordered, per_page: PER_PAGE, total: @stat.total, page: marked_page(ordered, PER_PAGE))
     @lexemes = page.to_a
+    @marked = marked_texts.to_set
     load_progress(@lexemes)
   end
 end

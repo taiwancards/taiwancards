@@ -47,6 +47,6 @@
         .relative.space-y-1.p-4 class="hover:bg-muted"
           = link_to("", sentence_path(lexeme), class: "absolute inset-0", aria: {label: lexeme.text})
           .text-lg.leading-relaxed lang="zh-TW" = lexeme.text
-          = render("sentences/badges", profile: profile, sources: lexeme.content_sources)
+          = render("sentences/badges", profile: profile, lexeme: lexeme, sources: lexeme.content_sources)
 
     = render("sentences/pagination", result: @result)

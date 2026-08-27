@@ -5,9 +5,9 @@ module Paginated
 
   private
 
-  def paginate(scope, per_page:, total: nil, content_key: nil)
+  def paginate(scope, per_page:, total: nil, content_key: nil, page: nil)
     total ||= counted(scope, content_key)
-    window = Pagination.for(total: total, per_page: per_page, page: params[:page])
+    window = Pagination.for(total: total, per_page: per_page, page: page || params[:page])
 
     @page = window.page
     @pages = window.pages

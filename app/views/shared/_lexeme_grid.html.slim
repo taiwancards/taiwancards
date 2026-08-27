@@ -1,8 +1,14 @@
+- marked = local_assigns.fetch(:marked, Set.new)
+- anchored = marked.present?
 .grid.gap-2 style="grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr))"
   - lexemes.each do |lexeme|
     - state = known_ids.include?(lexeme.id) ? "known" : (started_ids.include?(lexeme.id) ? "started" : "new")
-    = link_to lexeme_page_path(lexeme), class: class_names("block rounded-xl border px-3 py-2 transition-colors hover:border-primary/60",
-        state == "known" ? "border-primary/60 bg-primary/10" : (state == "started" ? "border-amber-400/60 bg-amber-400/10" : "border-border")) do
+    - highlighted = marked.include?(lexeme.text)
+    - anchor = highlighted && anchored
+    - anchored = false if anchor
+    = link_to lexeme_page_path(lexeme), id: (LevelBadgesHelper::MARK_ANCHOR if anchor), class: class_names("block rounded-xl border px-3 py-2 transition-colors hover:border-primary/60",
+        state == "known" ? "border-primary/60 bg-primary/10" : (state == "started" ? "border-amber-400/60 bg-amber-400/10" : "border-border"),
+        highlighted ? "ring-2 ring-brand ring-offset-2 ring-offset-background" : nil) do
       .flex.items-baseline.justify-between.gap-1
         span.text-lg.font-medium lang="zh-TW" = lexeme.text
         = render("shared/speak", lexeme:, size: :sm)
