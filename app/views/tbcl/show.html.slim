@@ -14,7 +14,12 @@
       span.mx-1 ·
       = t("tocfl.readiness", percent: @stat.readiness)
 
+  - if @marked.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("levels.marked")
+      = render("shared/lexeme_grid", lexemes: @marked, known_ids: @known_ids, started_ids: @started_ids)
+
   = render("shared/level_download", path: tbcl_level_path(@grade, format: :csv))
 
-  = render("shared/lexeme_grid", lexemes: @lexemes, known_ids: @known_ids, started_ids: @started_ids, marked: @marked)
-  = render("shared/pager", page: @page, pages: @pages, path: ->(n) { tbcl_level_path(@grade, page: n, mark: params[:mark]) })
+  = render("shared/lexeme_grid", lexemes: @lexemes, known_ids: @known_ids, started_ids: @started_ids)
+  = render("shared/pager", page: @page, pages: @pages, path: ->(n) { tbcl_level_path(@grade, page: n, mark: params[:mark].presence) })

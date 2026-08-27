@@ -11,11 +11,9 @@ module MarkedEntries
     @marked_texts ||= params[:mark].to_s.split(",").filter_map { |value| value.strip.presence }.uniq.first(MARK_LIMIT)
   end
 
-  def marked_page(scope, per_page)
-    return nil if marked_texts.empty? || params[:page].present?
+  def marked_entries(scope)
+    return [] if marked_texts.empty?
 
-    marks = marked_texts.to_set
-    position = scope.pluck(:text).index { |text| marks.include?(text) }
-    position && (position / per_page) + 1
+    scope.where(text: marked_texts).to_a
   end
 end

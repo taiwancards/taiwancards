@@ -3,33 +3,11 @@
 
 .py-6.space-y-5
   header.space-y-3
-    .flex.flex-wrap.items-start.justify-between.gap-x-6.gap-y-3
-      .min-w-0 class="space-y-1.5"
-        = link_to dict_path, class: "inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground" do
-          span ←
-          span = t("dict.back")
-        .flex.items-center.gap-3
-          - zhuyin = lexeme.reading_set.first&.dig("zhuyin")
-          - if zhuyin.present?
-            h1.text-4xl.font-bold = zhuyin_ruby(lexeme.text, zhuyin)
-          - else
-            h1.text-4xl.font-bold lang="zh-TW" = hanzi(lexeme.text)
-          = render("shared/speak", lexeme:)
-        - reading = zhuyin.present? ? @profile.pinyin_label : @profile.reading_label
-        - if reading.present?
-          .text-base.font-medium.text-muted-foreground class=(zhuyin.present? ? "pinyin" : nil) = reading
-        - taigi_reading = lexeme.data.dig("hokkien", "say") if lexeme.data.dig("hokkien", "reading") == "native"
-        - if taigi_reading.present?
-          .flex.flex-wrap.items-baseline.gap-x-2.rounded-lg.border.px-2.py-1 class="border-brand/40 bg-brand/5"
-            span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("words.taigi_say")
-            span.zhuyin.text-base.font-medium.text-brand lang="zh-TW" = taigi_reading["zhuyin"]
-            span.pinyin.text-sm.text-muted-foreground = taigi_reading["pinyin"]
-        - if @profile.show_flat_meaning? && @profile.meaning.present?
-          p.text-base = @profile.meaning
-        = render("shared/short_form", lexeme:)
-        - if @variants.present?
-          = render("shared/variant_forms", variants: @variants, current: @spelling)
-      .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-xl sm:justify-end"
+    .flex.flex-wrap.items-start.justify-between.gap-x-6.gap-y-2
+      = link_to dict_path, class: "inline-flex shrink-0 items-center gap-1 py-1 text-xs text-muted-foreground hover:text-foreground" do
+        span ←
+        span = t("dict.back")
+      .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:justify-end"
         .flex.flex-wrap.items-center class="gap-1.5 sm:flex-nowrap"
           - if detailed?
             = score_badge(lexeme)
@@ -76,12 +54,34 @@
             = t("words.no_corpus")
         - if detailed?
           - @profile.sources.each do |source|
-            span.rounded-full.border.border-border.text-muted-foreground class="px-2.5 py-1" = source
+            = source_badge(source)
         - if current_user
           .flex.shrink-0.items-center.gap-2
             = button_to t("words.add_study"), dict_activate_path(lexeme.text), data: {tour: "dict-add"},
               class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
             = render("shared/quick_add", lexeme:)
+    .min-w-0 class="space-y-1.5"
+      .flex.items-center.gap-3
+        - zhuyin = lexeme.reading_set.first&.dig("zhuyin")
+        - if zhuyin.present?
+          h1.text-4xl.font-bold = zhuyin_ruby(lexeme.text, zhuyin)
+        - else
+          h1.text-4xl.font-bold lang="zh-TW" = hanzi(lexeme.text)
+        = render("shared/speak", lexeme:)
+      - reading = zhuyin.present? ? @profile.pinyin_label : @profile.reading_label
+      - if reading.present?
+        .text-base.font-medium.text-muted-foreground class=(zhuyin.present? ? "pinyin" : nil) = reading
+      - taigi_reading = lexeme.data.dig("hokkien", "say") if lexeme.data.dig("hokkien", "reading") == "native"
+      - if taigi_reading.present?
+        .flex.flex-wrap.items-baseline.gap-x-2.rounded-lg.border.px-2.py-1 class="border-brand/40 bg-brand/5"
+          span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("words.taigi_say")
+          span.zhuyin.text-base.font-medium.text-brand lang="zh-TW" = taigi_reading["zhuyin"]
+          span.pinyin.text-sm.text-muted-foreground = taigi_reading["pinyin"]
+      - if @profile.show_flat_meaning? && @profile.meaning.present?
+        p.text-base = @profile.meaning
+      = render("shared/short_form", lexeme:)
+      - if @variants.present?
+        = render("shared/variant_forms", variants: @variants, current: @spelling)
 
   - hokkien = lexeme.data["hokkien"]
   - if hokkien.present?

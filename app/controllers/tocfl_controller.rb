@@ -20,9 +20,9 @@ class TocflController < ApplicationController
 
     @stat = Huayu::TocflReadiness.new.stat(@collection)
     ordered = @collection.lexemes.order(Arel.sql("collection_items.position"))
-    page, = paginate(ordered, per_page: PER_PAGE, total: @stat.total, page: marked_page(ordered, PER_PAGE))
+    page, = paginate(ordered, per_page: PER_PAGE, total: @stat.total)
+    @marked = marked_entries(ordered)
     @lexemes = page.to_a
-    @marked = marked_texts.to_set
-    load_progress(@lexemes)
+    load_progress(@lexemes + @marked)
   end
 end

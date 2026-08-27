@@ -36,17 +36,9 @@ RSpec.describe "TOCFL" do
     expect(response.body).to(include("照", "電"))
   end
 
-  it "rings the marked entry the badge linked here for" do
+  it "pins the marked entry above the list" do
     get("/tocfl/#{collection.id}?mark=%E9%9B%BB%E8%85%A6")
-    expect(response.body).to(include("ring-2 ring-brand"))
-    expect(response.body).to(include("id=\"mark\""))
-  end
-
-  it "keeps the mark while paging" do
-    stub_const("TocflController::PER_PAGE", 1)
-
-    get("/tocfl/#{collection.id}?mark=%E9%9B%BB%E8%85%A6")
+    expect(response.body).to(include(I18n.t("levels.marked")))
     expect(response.body).to(include("電腦"))
-    expect(response.body).to(include("mark=%E9%9B%BB%E8%85%A6&amp;page=1"))
   end
 end

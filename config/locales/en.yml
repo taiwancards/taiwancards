@@ -1541,6 +1541,7 @@ en:
       device: Progress lives in this browser, on this device.
   tocfl:
     approximate: "≈TOCFL %{n}"
+    approximate_hint_tbcl: "Not on the TOCFL list. Carried over from TBCL grade %{grade}: its words usually turn up at %{n}."
     badge: TOCFL %{n}
     novice: Novice %{n}
     approximate_hint: "Not on the TOCFL list. Read from the words it is built from: at %{n} you already know enough of them."
@@ -2343,6 +2344,7 @@ en:
     play: "%{syllable}, tone %{tone}"
     credit: "Audio: %{attribution}. Open Government Data Licence."
   levels:
+    marked: Marked
     download: Download this list (CSV)
     download_note: >-
       Free, no address asked. Every source and licence is named inside the file.

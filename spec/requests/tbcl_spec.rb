@@ -35,13 +35,7 @@ RSpec.describe "TBCL word lists" do
     expect(response).to(have_http_status(:not_found))
   end
 
-  it "rings the marked entry so the badge that linked here points at it" do
-    get("/tbcl/3?mark=%E5%AD%B8%E6%A0%A1")
-    expect(response.body).to(include("ring-2 ring-brand"))
-    expect(response.body).to(include("id=\"mark\""))
-  end
-
-  it "opens the page the marked entry sits on" do
+  it "pins the marked entries above the list so nothing has to be hunted for" do
     stub_const("TbclController::PER_PAGE", 1)
     create(
       :lexeme,
@@ -52,13 +46,27 @@ RSpec.describe "TBCL word lists" do
     )
 
     get("/tbcl/3?mark=%E5%AD%B8%E6%A0%A1")
+    expect(response.body).to(include(I18n.t("levels.marked")))
     expect(response.body).to(include("學校"))
-    expect(response.body).not_to(include("圖書館"))
   end
 
-  it "ignores a mark that names nothing on the list" do
+  it "keeps the mark on the pager so it survives paging" do
+    stub_const("TbclController::PER_PAGE", 1)
+    create(
+      :lexeme,
+      kind: :word,
+      text: "圖書館",
+      meanings: {"en" => "library"},
+      data: {"tbcl_grade" => "3", "freq_rank" => "900"}
+    )
+
+    get("/tbcl/3?mark=%E5%AD%B8%E6%A0%A1")
+    expect(response.body).to(include("mark=%E5%AD%B8%E6%A0%A1&amp;page=2"))
+  end
+
+  it "says nothing when the mark names nothing on the list" do
     get("/tbcl/3?mark=%E7%BD%95%E8%A6%8B")
     expect(response).to(have_http_status(:ok))
-    expect(response.body).not_to(include("ring-2 ring-brand"))
+    expect(response.body).not_to(include(I18n.t("levels.marked")))
   end
 end

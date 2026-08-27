@@ -5,6 +5,7 @@ module Lexemes
     HAN = /\p{Han}/
     COVERAGE = 0.75
     SPREAD = 2
+    TBCL_TO_TOCFL = [nil, 2, 3, 4, 5, 6, 7, 7].freeze
 
     Placement = Data.define(:index, :exact, :unknown)
     BLANK = Placement.new(index: nil, exact: false, unknown: 0)

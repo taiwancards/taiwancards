@@ -23,9 +23,9 @@ class TbclController < ApplicationController
 
     @stat = readiness.stat(@grade)
     ordered = readiness.scope(@grade).curriculum_order
-    page, = paginate(ordered, per_page: PER_PAGE, total: @stat.total, page: marked_page(ordered, PER_PAGE))
+    page, = paginate(ordered, per_page: PER_PAGE, total: @stat.total)
+    @marked = marked_entries(ordered)
     @lexemes = page.to_a
-    @marked = marked_texts.to_set
-    load_progress(@lexemes)
+    load_progress(@lexemes + @marked)
   end
 end

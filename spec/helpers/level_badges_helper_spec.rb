@@ -37,8 +37,8 @@ RSpec.describe LevelBadgesHelper do
       badges = helper.level_badges(lexeme, marks: true)
 
       expect(badges).to(include("TOCFL B1", "TBCL 2"))
-      expect(badges).to(include("/tocfl/#{collection.id}?mark=%E6%9C%89%E7%94%A8#mark"))
-      expect(badges).to(include("/tbcl/2?mark=%E6%9C%89%E7%94%A8#mark"))
+      expect(badges).to(include("/tocfl/#{collection.id}?mark=%E6%9C%89%E7%94%A8"))
+      expect(badges).to(include("/tbcl/2?mark=%E6%9C%89%E7%94%A8"))
     end
 
     it "names the novice levels the way the lists do" do
@@ -86,7 +86,7 @@ RSpec.describe LevelBadgesHelper do
 
       badges = helper.level_badges(sentence, profile:, marks: true)
 
-      expect(CGI.unescape(badges[/mark=[^&"#]+/])).to(eq("mark=#{%w[一 二 三 四 五 六].join(",")}"))
+      expect(CGI.unescape(badges[/mark=[^&"]+/])).to(eq("mark=#{%w[一 二 三 四 五 六].join(",")}"))
     end
   end
 end

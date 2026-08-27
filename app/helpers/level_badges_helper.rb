@@ -3,7 +3,6 @@
 module LevelBadgesHelper
   SCHEMES = %w[tocfl tbcl].freeze
   MARK_LIMIT = 6
-  MARK_ANCHOR = "mark"
 
   Placement = Data.define(:value, :exact)
 
@@ -23,8 +22,15 @@ module LevelBadgesHelper
     tag.span(
       t("#{scheme}.approximate", n: name),
       class: level_badge_classes(false, compact),
-      title: t("#{scheme}.approximate_hint", n: name)
+      title: approximate_level_hint(lexeme, scheme, name)
     )
+  end
+
+  def approximate_level_hint(lexeme, scheme, name)
+    grade = lexeme.data["tocfl_via"] if scheme == "tocfl"
+    return t("tocfl.approximate_hint_tbcl", n: name, grade:) if grade.present?
+
+    t("#{scheme}.approximate_hint", n: name)
   end
 
   def frequency_badge(profile, compact: true)
@@ -92,7 +98,7 @@ module LevelBadgesHelper
   end
 
   def level_list_path(scheme, value, mark)
-    options = mark.present? ? {mark:, anchor: MARK_ANCHOR} : {}
+    options = mark.present? ? {mark:} : {}
     return tbcl_level_path(id: value, **options) if scheme == "tbcl"
 
     collection = tocfl_collection_ids[value]

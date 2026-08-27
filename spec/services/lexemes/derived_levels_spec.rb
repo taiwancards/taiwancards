@@ -55,4 +55,27 @@ RSpec.describe Lexemes::DerivedLevels do
     expect(word.reload.data["tbcl"]).to(be_nil)
     expect(word.data["tbcl_exact"]).to(be(false))
   end
+
+  it "carries the TOCFL level over from the TBCL grade when the TOCFL lists say nothing" do
+    character("甲", tbcl: 2)
+    character("乙", tbcl: 2)
+    word = create(:lexeme, kind: :word, text: "甲乙", data: {"tbcl_grade" => "5"})
+
+    run
+
+    expect(word.reload.data["tocfl"]).to(eq(6))
+    expect(word.data["tocfl_exact"]).to(be(false))
+    expect(word.data["tocfl_via"]).to(eq(5))
+  end
+
+  it "prefers the TOCFL lists over the carried grade" do
+    character("甲", tocfl: "A1", tbcl: 5)
+    character("乙", tocfl: "A1", tbcl: 5)
+    word = create(:lexeme, kind: :word, text: "甲乙", data: {"tbcl_grade" => "5"})
+
+    run
+
+    expect(word.reload.data["tocfl"]).to(eq(3))
+    expect(word.data["tocfl_via"]).to(be_nil)
+  end
 end

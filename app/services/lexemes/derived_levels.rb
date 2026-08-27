@@ -25,6 +25,7 @@ module Lexemes
 
         seen += 1
         placed = levels(units, text)
+        carry_tocfl(data, placed)
         SCALES.each_key do |scale|
           graded[scale] += 1 if placed[scale]
           exact[scale] += 1 if placed["#{scale}_exact"]
@@ -45,6 +46,19 @@ module Lexemes
     end
 
     private
+
+    def carry_tocfl(data, placed)
+      placed["tocfl_via"] = nil
+      return if placed["tocfl"]
+
+      grade = data["tbcl_grade"].presence&.to_i || placed["tbcl"]
+      level = grade && LevelScale::TBCL_TO_TOCFL[grade]
+      return if level.nil?
+
+      placed["tocfl"] = level
+      placed["tocfl_exact"] = false
+      placed["tocfl_via"] = grade
+    end
 
     def levels(units, text)
       SCALES.each_key.with_object({}) do |scale, memo|

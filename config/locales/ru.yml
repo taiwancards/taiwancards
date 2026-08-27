@@ -1563,6 +1563,7 @@ ru:
       device: Прогресс хранится в этом браузере, на этом устройстве.
   tocfl:
     approximate: "≈TOCFL %{n}"
+    approximate_hint_tbcl: "В списки TOCFL не входит. Оценка перенесена со ступени TBCL %{grade}: её слова обычно вводят на уровне %{n}."
     badge: TOCFL %{n}
     novice: Novice %{n}
     approximate_hint: "В списки TOCFL не входит. Оценка по словам, из которых состоит: на уровне %{n} их уже знают."
@@ -2375,6 +2376,7 @@ ru:
     play: "%{syllable}, тон %{tone}"
     credit: "Звук: %{attribution}. Лицензия открытых государственных данных."
   levels:
+    marked: Отмечено
     download: Скачать список (CSV)
     download_note: >-
       Бесплатно и без почты. Все источники и лицензии перечислены внутри файла.
