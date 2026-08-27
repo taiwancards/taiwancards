@@ -36,7 +36,26 @@ module Huayu
       missing.length
     end
 
+    def drift? = orphans.any?
+
     private
+
+    ORPHANS = <<~SQL
+      SELECT DISTINCT c FROM (
+        SELECT regexp_split_to_table(text, '') AS c
+        FROM lexemes WHERE kind IN (:kinds)
+      ) used
+      WHERE c ~ '[一-鿿㐀-䶿𠀀-𯨟]'
+        AND NOT EXISTS (SELECT 1 FROM lexemes k WHERE k.kind = :character AND k.text = used.c)
+    SQL
+
+    def orphans
+      @orphans ||= Lexeme.connection.select_values(
+        Lexeme.sanitize_sql_array(
+          [ORPHANS, {kinds: [Lexeme.kinds[:word], Lexeme.kinds[:collocation]], character: Lexeme.kinds[:character]}]
+        )
+      )
+    end
 
     def characters_in_use
       trusted = Set.new

@@ -7,6 +7,7 @@ module Huayu
     MAX_WORD = 8
     MERGE_SPAN = MAX_WORD
     LOOKUP_LIMIT = 50_000
+    LOOKUP_SLICE = 10_000
     TOKEN_KINDS = %i[word collocation measure_word character].freeze
     KIND_PREFERENCE = %i[word collocation measure_word character].freeze
 
@@ -67,14 +68,21 @@ module Huayu
     end
 
     def segment(text, excluding: nil)
-      text = text.to_s.strip
-      return [] if text.blank?
+      segment_lines([text], excluding:).first || []
+    end
 
+    def segment_lines(texts, excluding: nil)
       words = known_words
       words = words - [excluding] if excluding && words.include?(excluding)
 
-      tokens = merge_longest([tokenize(text, words)], excluding:).first
-      tokens.reject { |kind, _| kind == :literal }.map(&:last)
+      batches = Array(texts).map do |text|
+        text = text.to_s.strip
+        text.blank? ? [] : tokenize(text, words)
+      end
+
+      merge_longest(batches, excluding:).map do |tokens|
+        tokens.reject { |kind, _| kind == :literal }.map(&:last)
+      end
     end
 
     private
@@ -276,11 +284,11 @@ module Huayu
 
     def dictionary_hits(candidates)
       @dictionary ||= {}
+      @dictionary = {} if @dictionary.size > LOOKUP_LIMIT
       missing = candidates.reject { |text| @dictionary.key?(text) }
-      if missing.any?
-        @dictionary = {} if @dictionary.size > LOOKUP_LIMIT
-        found = Lexeme.where(kind: TOKEN_KINDS, text: missing).distinct.pluck(:text).to_set
-        missing.each { |text| @dictionary[text] = found.include?(text) }
+      missing.each_slice(LOOKUP_SLICE) do |slice|
+        found = Lexeme.where(kind: TOKEN_KINDS, text: slice).distinct.pluck(:text).to_set
+        slice.each { |text| @dictionary[text] = found.include?(text) }
       end
 
       candidates.select { |text| @dictionary[text] }.to_set

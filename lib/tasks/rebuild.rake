@@ -187,9 +187,10 @@ namespace(:huayu) do
     touched = []
     seen = 0
 
-    Lexeme.where(kind: :sentence).find_in_batches(batch_size: 2000) do |batch|
-      batch.each do |sentence|
-        tokens = analyzer.segment(sentence.text)
+    Lexeme.where(kind: :sentence).select(:id, :text, :data).find_in_batches(batch_size: 2000) do |batch|
+      segmented = analyzer.segment_lines(batch.map(&:text))
+      batch.each_with_index do |sentence, index|
+        tokens = segmented[index]
         next if tokens.empty?
 
         seen += 1

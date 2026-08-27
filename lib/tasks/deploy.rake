@@ -268,6 +268,15 @@ namespace(:deploy) do
       Huayu::SentenceProfiler.remember_vocabulary!
       :ran
     },
+    "characters" => -> {
+      supplementer = Huayu::CharacterSupplementer.new
+      next :skipped unless supplementer.drift?
+
+      supplementer.call
+      Huayu::CharacterEnricher.new.call
+      Huayu::GlossOverrideEnricher.new.call
+      :ran
+    },
     "character_glosses" => -> {
       repair = Huayu::CharacterGlossRepair.new
       next :skipped unless repair.drift?
