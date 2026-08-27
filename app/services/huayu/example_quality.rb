@@ -59,6 +59,10 @@ module Huayu
     ]
       .freeze
 
+    SOLO = WEIGHTS.keys.index(:solo)
+
+    Context = Data.define(:text, :tally, :terms)
+
     extend MemoizedInstance
 
     class << self
@@ -70,37 +74,51 @@ module Huayu
     end
 
     def call(text:, segments:, target:, difficulty: 0, taiwan: 0, audio: false)
+      context = context(text:, segments:, difficulty:, taiwan:, audio:)
+      return 0 if context.nil?
+
+      score(context, target)
+    end
+
+    def context(text:, segments:, difficulty: 0, taiwan: 0, audio: false)
       han = text.scan(HAN).length
-      return 0 if han < MIN_HAN || han > MAX_HAN
+      return nil if han < MIN_HAN || han > MAX_HAN
 
       units = Array(segments)
-      hits = occurrences(text, units, target)
+      Context.new(text:, tally: units.tally, terms: terms(units:, han:, text:, difficulty:, taiwan:, audio:))
+    end
+
+    def score(context, target)
+      hits = occurrences(context, target)
       return 0 if hits.zero?
 
-      scored = features(units:, han:, hits:, text:, difficulty:, taiwan:, audio:)
-      total = WEIGHTS.sum { |name, weight| weight * scored.fetch(name) }
-      (total * SCALE).round.clamp(0, SCALE)
+      terms = context.terms.dup
+      terms[SOLO] = WEIGHTS.fetch(:solo) * solo_fit(hits)
+      (terms.sum * SCALE).round.clamp(0, SCALE)
     end
 
     private
 
-    def features(units:, han:, hits:, text:, difficulty:, taiwan:, audio:)
-      {
+    def terms(units:, han:, text:, difficulty:, taiwan:, audio:)
+      fixed = {
         common: common_share(units),
         length: length_fit(han),
         audio: audio ? 1.0 : 0.0,
         easy: 1.0 - (difficulty.to_i.clamp(0, SCALE) / SCALE.to_f),
         whole: text.match?(TERMINAL) ? 1.0 : 0.0,
         opening: OPENERS.include?(units.first) ? 0.0 : 1.0,
-        solo: solo_fit(hits),
+        solo: 0.0,
         taiwan: [taiwan.to_i / TAIWAN_CAP, 1.0].min
       }
+
+      WEIGHTS.map { |name, weight| weight * fixed.fetch(name) }
     end
 
-    def occurrences(text, units, target)
-      return units.count(target) if units.include?(target)
+    def occurrences(context, target)
+      hits = context.tally[target]
+      return hits if hits
 
-      text.scan(target).length
+      context.text.scan(target).length
     end
 
     def solo_fit(hits)

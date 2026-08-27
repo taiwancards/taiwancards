@@ -37,6 +37,11 @@ module Bulk
       written
     end
 
+    def insert(target:, columns:, rows:)
+      stream(target, columns.join(", "), rows)
+      rows.length
+    end
+
     private
 
     def apply(target, columns, rows, set, key)
@@ -55,9 +60,12 @@ module Bulk
     end
 
     def copy(columns, rows, key)
-      names = ([key] + columns.keys).join(", ")
+      stream(SCRATCH, ([key] + columns.keys).join(", "), rows)
+    end
+
+    def stream(target, names, rows)
       raw = connection.raw_connection
-      raw.copy_data("COPY #{SCRATCH} (#{names}) FROM STDIN") do
+      raw.copy_data("COPY #{target} (#{names}) FROM STDIN") do
         rows.each { |row| raw.put_copy_data("#{row.map { |value| encode(value) }.join("\t")}\n") }
       end
     end

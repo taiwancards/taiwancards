@@ -3,8 +3,11 @@
 module Huayu
   class SentenceWordLinker
     LIMIT = 50
-    PAGE = 5_000
+    PAGE = 1_000
+    FLUSH = 5_000
     SLACK = 2
+    COLUMNS = %w[sentence_id lexeme_id gdex].freeze
+    SCALE = ExampleQuality::SCALE
     MASK = (1 << 32) - 1
 
     def initialize(io: $stdout, limit: LIMIT, quality: ExampleQuality.instance)
@@ -52,26 +55,32 @@ module Huayu
 
     def collect(id, text, data, word_ids, best)
       segments = Array(data["segments"])
-      difficulty = data["difficulty"].to_i
-      taiwan = data["taiwan"].to_i
-      audio = data.key?("audio")
+      context = @quality.context(
+        text:,
+        segments:,
+        difficulty: data["difficulty"].to_i,
+        taiwan: data["taiwan"].to_i,
+        audio: data.key?("audio")
+      )
+      return if context.nil?
+
       units = segments.flat_map { |unit| word_ids.key?(unit) ? [unit] : unit.chars }.uniq
 
       units.each do |unit|
         lexeme_id = word_ids[unit]
         next if lexeme_id.nil?
 
-        gdex = @quality.call(text:, segments:, target: unit, difficulty:, taiwan:, audio:)
+        gdex = @quality.score(context, unit)
         next if gdex.zero?
 
         bucket = best[lexeme_id]
-        bucket << [id, gdex]
+        bucket << (((SCALE - gdex) << 32) | id)
         prune(bucket) if bucket.length > @limit * SLACK
       end
     end
 
     def prune(bucket)
-      bucket.sort_by! { |(id, gdex)| [-gdex, id] }
+      bucket.sort!
       bucket.slice!(@limit..)
     end
 
@@ -81,8 +90,8 @@ module Huayu
 
       best.each do |lexeme_id, bucket|
         prune(bucket)
-        bucket.each { |sentence_id, gdex| buffer << {sentence_id:, lexeme_id:, gdex:} }
-        next if buffer.length < PAGE
+        bucket.each { |packed| buffer << [packed & MASK, lexeme_id, SCALE - (packed >> 32)] }
+        next if buffer.length < FLUSH
 
         written += flush(buffer)
         buffer = []
@@ -94,8 +103,7 @@ module Huayu
     def flush(rows)
       return 0 if rows.empty?
 
-      SentenceWord.insert_all(rows, unique_by: :index_sentence_words_unique)
-      rows.length
+      Bulk.insert(target: "sentence_words", columns: COLUMNS, rows:)
     end
   end
 end

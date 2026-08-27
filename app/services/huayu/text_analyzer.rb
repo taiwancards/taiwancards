@@ -6,8 +6,6 @@ module Huayu
     ALNUM = /[A-Za-z0-9]/
     MAX_WORD = 8
     MERGE_SPAN = MAX_WORD
-    LOOKUP_LIMIT = 50_000
-    LOOKUP_SLICE = 10_000
     TOKEN_KINDS = %i[word collocation measure_word character].freeze
     KIND_PREFERENCE = %i[word collocation measure_word character].freeze
 
@@ -19,7 +17,12 @@ module Huayu
         @vocabulary[:zh_tw] ||= begin
           words = Lexeme.where(kind: %i[word collocation]).where("length(text) >= 2").pluck(:text).to_set
           words |= SegmentationVocabulary.words
-          {words: words, max: [words.map(&:length).max || 2, MAX_WORD].min, mixed: mixed_pattern(words)}
+          {
+            words: words,
+            max: [words.map(&:length).max || 2, MAX_WORD].min,
+            mixed: mixed_pattern(words),
+            merges: merge_words(words)
+          }
         end
       end
 
@@ -28,6 +31,16 @@ module Huayu
       end
 
       private
+
+      def merge_words(words)
+        bigrams = BigramFrequency.instance
+        Lexeme
+          .where(kind: TOKEN_KINDS)
+          .where("length(text) >= 2")
+          .pluck(:text)
+          .reject { |text| words.include?(text) && (!bigrams.available? || bigrams.knows?(text)) }
+          .to_set
+      end
 
       def mixed_pattern(words)
         specials = words.reject { |word| word.each_char.all? { |char| char.match?(HAN) } }
@@ -263,62 +276,18 @@ module Huayu
     end
 
     def merge_longest(batches, excluding: nil)
-      candidates = batches
-        .flat_map { |tokens| joins_in(tokens).keys }
-        .uniq
-        .reject { |text| text == excluding || settled?(text) }
-      return batches if candidates.empty?
-
-      known = dictionary_hits(candidates)
+      known = self.class.vocabulary[:merges]
       return batches if known.empty?
 
-      batches.map { |tokens| fold(tokens, known) }
+      batches.map { |tokens| fold(tokens, known, excluding) }
     end
 
-    def settled?(text)
-      return false unless known_words.include?(text)
-
-      bigrams = BigramFrequency.instance
-      !bigrams.available? || bigrams.knows?(text)
-    end
-
-    def dictionary_hits(candidates)
-      @dictionary ||= {}
-      @dictionary = {} if @dictionary.size > LOOKUP_LIMIT
-      missing = candidates.reject { |text| @dictionary.key?(text) }
-      missing.each_slice(LOOKUP_SLICE) do |slice|
-        found = Lexeme.where(kind: TOKEN_KINDS, text: slice).distinct.pluck(:text).to_set
-        slice.each { |text| @dictionary[text] = found.include?(text) }
-      end
-
-      candidates.select { |text| @dictionary[text] }.to_set
-    end
-
-    def joins_in(tokens)
-      spans = {}
-      tokens.each_index do |start|
-        next if tokens[start].first == :literal
-
-        text = +""
-        (start...[start + MERGE_SPAN, tokens.length].min).each do |stop|
-          break if tokens[stop].first == :literal
-
-          text += tokens[stop].last
-          break if text.length > MAX_WORD
-
-          spans[text] = [start, stop] if stop > start
-        end
-      end
-
-      spans
-    end
-
-    def fold(tokens, known)
+    def fold(tokens, known, excluding)
       out = []
       index = 0
 
       while index < tokens.length
-        span = longest_span(tokens, index, known)
+        span = longest_span(tokens, index, known, excluding)
         if span
           out << [:word, tokens[index..span].map(&:last).join]
           index = span + 1
@@ -331,7 +300,7 @@ module Huayu
       out
     end
 
-    def longest_span(tokens, start, known)
+    def longest_span(tokens, start, known, excluding)
       return nil if tokens[start].first == :literal
 
       text = +""
@@ -342,7 +311,7 @@ module Huayu
         text += tokens[stop].last
         break if text.length > MAX_WORD
 
-        best = stop if stop > start && known.include?(text)
+        best = stop if stop > start && text != excluding && known.include?(text)
       end
 
       best
