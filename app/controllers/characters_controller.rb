@@ -38,6 +38,8 @@ class CharactersController < ApplicationController
     @profile = Huayu::CharacterProfile.new(lexeme)
     @word = Lexeme.visible.where(kind: Lexeme::DICTIONARY_KINDS, text: @text).order(:kind).first
     @liangci = Liangci::Sidecar.new.call(lexeme)
+    @particle = Zhuci::Finder.call(@text)
+    @word = nil if @particle&.data&.dig("sole_sense") && @particle.text == @text
     @thesaurus = Lexemes::Thesaurus.new.call(lexeme)
   end
 

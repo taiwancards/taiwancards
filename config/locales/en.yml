@@ -360,6 +360,7 @@ en:
     cangjie_book: Cangjie
     sentences: Sentences
     liangci: Measure words 量詞
+    zhuci: Mood particles 語氣詞
     phrases: "Phrasebook"
     notices: Notice board
     everyday: Everyday life
@@ -888,6 +889,29 @@ en:
     antonyms: Antonyms
     related: Close in meaning
     collocates: Frequent neighbors
+  zhuci:
+    title: Mood particles 語氣詞
+    all: All
+    back: Mood particles
+    not_found: We have no article on this particle.
+    order_hint: "%{count} particles, commonest first. The count is how often each one closes a clause in our Taiwanese corpora."
+    corpus_count: "%{count} in the corpora"
+    from_grammar: The mood it carries
+    as_particle: As a mood particle
+    as_character: As a character
+    as_word: As a word
+    as_grammar: Grammar point
+    variants: Other spellings
+    examples: In real sentences
+    also_title: Where the rest lives
+    also_grammar_html: 嗎, 了 and 的 also close sentences, but they are grammar rather than mood — a question marker, a change of state, a focus frame. They have their own lessons in the grammar section.
+    also_elsewhere: 唄, 咯, 嘞 and 咩 are real particles, but of Beijing and Cantonese speech. You will read them in subtitles and hear them from mainland speakers; nobody in Taiwan says them, so they have no cards here.
+    families:
+      core: Everyday core
+      mood: Mood and warmth
+      taiwan: Taiwanese
+      limiting: '"That''s all"'
+      cluster: Clusters
   liangci:
     title: Measure words 量詞
     subtitle: Taiwanese Mandarin classifiers — what each one counts, which nouns it goes with, and how it looks in real sentences.
@@ -3000,6 +3024,12 @@ en:
     radicals_html: >-
       <p>The 214 Kangxi radicals — the building blocks every character is filed under. Tap a radical to
       see the characters that contain it.</p>
+    zhuci_html: >-
+      <p>The particles Taiwanese Mandarin hangs on the end of a sentence: 啦, 喔, 耶, 嘛, 齁 and the rest.
+      They add no dictionary meaning at all and everything about tone of voice — warmth, impatience,
+      a friendly warning, mock outrage. Cards are ordered by how often each particle actually closes a
+      clause in our Taiwanese corpora; open one for the full range of feeling it carries, with examples
+      translated so the mood survives the crossing.</p>
     liangci_html: >-
       <p>Taiwanese Mandarin classifiers (量詞) are the little words between a number and a noun: 一<b>本</b>書,
       三<b>隻</b>貓. Each entry shows what it counts, which nouns actually take it and how it looks in real

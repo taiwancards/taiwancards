@@ -81,6 +81,7 @@ module NavHelper
       [:keyboard, t("nav.cangjie_book"), cangjie_lessons_path],
       [:stats, t("nav.numbers"), practice_numbers_path],
       [:book, t("nav.grammar"), grammar_path],
+      [:speaker, t("nav.zhuci"), zhuci_path],
       [:characters, t("nav.variants"), variants_path],
       [:book, t("nav.names"), names_path]
     ]

@@ -39,6 +39,11 @@ class DictController < ApplicationController
 
   def show
     @text = params[:text]
+    @particle = Zhuci::Finder.call(@text)
+    if @particle&.data&.dig("sole_sense") && @particle.text == @text
+      return redirect_to(zhuci_entry_path(@particle.text))
+    end
+
     entry = find_entry(@text)
 
     if entry.nil?

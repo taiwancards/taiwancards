@@ -1,0 +1,38 @@
+- content_for(:title, t("zhuci.title"))
+- locale = I18n.locale.to_s
+
+.py-6.space-y-6
+  = render("shared/page_help", key: "zhuci", title: t("zhuci.title"))
+
+  .flex.flex-wrap.text-sm class="gap-1.5"
+    = link_to t("zhuci.all"), zhuci_path, class: "rounded-lg border px-3 py-1.5 #{@family ? "border-border hover:bg-muted" : "border-primary bg-primary/10 font-medium text-primary"}"
+    - ZhuciController::FAMILIES.each do |family|
+      - count = @counts[family].to_i
+      - next if count.zero?
+      = link_to zhuci_path(family:), class: "rounded-lg border px-3 py-1.5 #{@family == family ? "border-primary bg-primary/10 font-medium text-primary" : "border-border hover:bg-muted"}" do
+        = t("zhuci.families.#{family}")
+        span.ml-1.text-xs.text-muted-foreground = count
+
+  p.text-xs.text-muted-foreground = t("zhuci.order_hint", count: @total)
+
+  .grid.gap-3 class="sm:grid-cols-2"
+    - @entries.each do |entry|
+      - variants = Array(entry.data["variants"]).filter_map { |row| row["text"] }
+      = link_to zhuci_entry_path(entry.text), class: "block rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:border-primary/50 hover:bg-muted" do
+        .flex.flex-wrap.items-baseline.gap-2
+          span.text-3xl.font-semibold lang="zh-TW" = entry.text
+          - reading, reading_css = headline_reading(entry.readings)
+          span.text-sm.text-muted-foreground class=reading_css = reading
+          - if variants.any?
+            span.text-xs.text-muted-foreground lang="zh-TW" = "· #{variants.join("、")}"
+          span.ml-auto.shrink-0.rounded-full.border.border-border.text-xs.text-muted-foreground class="px-2 py-0.5"
+            = t("zhuci.families.#{entry.data["family"]}")
+        p.mt-2.text-sm.leading-relaxed = entry.meaning
+        - force = entry.data.dig("force", locale).presence
+        - if force
+          p.mt-1.text-xs.leading-relaxed.text-muted-foreground = force
+
+  section.space-y-2.rounded-xl.border.border-border.px-4.py-3
+    h2.text-sm.font-semibold = t("zhuci.also_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("zhuci.also_grammar_html")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("zhuci.also_elsewhere")

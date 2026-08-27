@@ -13,6 +13,7 @@ module Site
       /chengyu
       /liangci
       /liangci/game
+      /zhuci
       /radicals
       /tocfl
       /tbcl
@@ -183,10 +184,15 @@ module Site
         .order(:text)
         .pluck(:text)
         .map { |text| "/liangci/#{ERB::Util.url_encode(text)}" }
+      particles = Lexeme
+        .where(kind: :particle)
+        .order(:text)
+        .pluck(:text)
+        .map { |text| "/zhuci/#{ERB::Util.url_encode(text)}" }
       tocfl = Collection.tocfl.order(:id).pluck(:id).map { |id| "/tocfl/#{id}" }
       tbcl = Huayu::TbclReadiness::GRADES.map { |grade| "/tbcl/#{grade}" }
 
-      radicals + measures + tocfl + tbcl
+      radicals + measures + particles + tocfl + tbcl
     end
   end
 end

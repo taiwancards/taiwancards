@@ -39,6 +39,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/games_importer.rb app/services/lexemes/upserter.rb]
     },
     {
+      name: "particles",
+      task: "huayu:import_particles",
+      paths: %w[huayu/particles.json],
+      code: %w[app/services/huayu/particle_importer.rb]
+    },
+    {
       name: "naer_terms",
       task: "huayu:import_naer",
       paths: %w[huayu/naer_terms.json],

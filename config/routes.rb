@@ -135,6 +135,14 @@ Rails.application.routes.draw do
       to: to_localised.call { |params| "/liangci/#{ERB::Util.url_encode(params[:text])}" },
       constraints: {text: /[^\/]+/}
     )
+    get("zhuci", to: "zhuci#index", as: :zhuci)
+    get("zhuci/:text", to: "zhuci#show", as: :zhuci_entry, constraints: {text: /[^\/]+/})
+    get("particles", to: to_localised.call { "/zhuci" })
+    get(
+      "particles/:text",
+      to: to_localised.call { |params| "/zhuci/#{ERB::Util.url_encode(params[:text])}" },
+      constraints: {text: /[^\/]+/}
+    )
     get("everyday", to: "everyday#index", as: :everyday)
     get("phrases", to: "phrases#index", as: :phrases)
     get("notices", to: "notices#index", as: :notices)

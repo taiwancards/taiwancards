@@ -20,6 +20,7 @@ class GrammarController < ApplicationController
     raise ActiveRecord::RecordNotFound if @lesson.nil?
 
     @entries = helpers.grammar_entries_for([@lesson])
+    @particles = @lesson.heads.filter_map { |head| Zhuci::Finder.call(head) }.uniq
     @previous, @next = Huayu::GrammarLessons.neighbours(@lesson)
   end
 end

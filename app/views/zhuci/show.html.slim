@@ -1,0 +1,82 @@
+- content_for(:title, "#{@entry.text} · #{t("zhuci.title")}")
+- locale = I18n.locale.to_s
+- examples = Array(@entry.data["examples"]).select { |row| row.is_a?(Hash) && row["zh"].present? }
+- sentence_readings(examples.map { |row| row["zh"] }) if examples.any?
+
+.py-6.space-y-6
+  = link_to zhuci_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("zhuci.back")
+
+  header.space-y-3
+    .flex.items-center.gap-4
+      span.text-6xl.font-bold lang="zh-TW" = @entry.text
+      div
+        - reading, reading_css = headline_reading(@entry.readings)
+        .text-lg.font-medium class=reading_css = reading
+        .text-sm.text-muted-foreground = @entry.readings["pinyin"]
+    .flex.flex-wrap.gap-2.text-xs
+      span.rounded-full.font-medium.text-primary class="bg-primary/10 px-2.5 py-1"
+        = t("zhuci.families.#{@entry.data["family"]}")
+      - if @entry.data["corpus"].to_i.positive?
+        span.rounded-full.border.border-border.text-muted-foreground class="px-2.5 py-1"
+          = t("zhuci.corpus_count", count: @entry.data["corpus"].to_i)
+      - if @character
+        = link_to t("zhuci.as_character"), character_path(@entry.text), class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
+      - if @word
+        = link_to t("zhuci.as_word"), dict_entry_path(@entry.text), class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
+      - if @lesson
+        = link_to t("zhuci.as_grammar"), grammar_lesson_path(@lesson.slug), class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
+    p.text-base.leading-relaxed = @entry.meaning
+
+  - force = @entry.data.dig("force", locale).presence
+  - if force
+    p.rounded-xl.border.px-4.py-3.text-sm.leading-relaxed class="border-primary/30 bg-primary/5" = force
+
+  - body = Array(@entry.data.dig("body", locale))
+  - if body.any?
+    section.space-y-3.text-sm.leading-relaxed
+      - body.each do |paragraph|
+        p = paragraph
+
+  - variants = Array(@entry.data["variants"])
+  - if variants.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("zhuci.variants")
+      ul.space-y-2
+        - variants.each do |variant|
+          li.rounded-xl.border.border-border.bg-card.px-3.py-2
+            .flex.items-baseline.gap-2
+              span.text-xl.font-semibold lang="zh-TW" = variant["text"]
+              span.text-xs.text-muted-foreground = variant["zhuyin"]
+            p.mt-1.text-sm.leading-relaxed.text-muted-foreground = variant[locale].presence || variant["en"]
+
+  - if examples.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("zhuci.examples")
+      ul.space-y-3
+        - examples.each do |example|
+          li.space-y-1.rounded-xl.border.border-border.bg-card.px-4.py-3
+            p.text-lg.leading-relaxed lang="zh-TW" = example["zh"]
+            = reading_lines(example["zh"])
+            p.text-sm = example[locale].presence || example["en"]
+            - note = example["note_#{locale}"].presence || example["note_en"].presence
+            - if note
+              p.text-xs.leading-relaxed.text-muted-foreground = note
+
+  - warning = @entry.data.dig("warning", locale).presence
+  - if warning
+    .rounded-xl.border.border-amber-400.px-4.py-3.text-sm.leading-relaxed class="bg-amber-500/10" = warning
+
+  - previous, following = @neighbours
+  nav.flex.items-center.justify-between.gap-3.border-t.border-border.pt-4.text-sm
+    div
+      - if previous
+        = link_to zhuci_entry_path(previous.text), class: "text-muted-foreground hover:text-foreground" do
+          span ←
+          span.ml-1 lang="zh-TW" = previous.text
+    div
+      - if following
+        = link_to zhuci_entry_path(following.text), class: "text-muted-foreground hover:text-foreground" do
+          span.mr-1 lang="zh-TW" = following.text
+          span →

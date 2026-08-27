@@ -44,6 +44,14 @@
           div class=card
             = render("grammar/head", head: head, lesson: @lesson)
 
+  - if @particles.any?
+    .flex.flex-wrap.items-center.gap-2.text-sm
+      span.text-xs.text-muted-foreground = t("zhuci.from_grammar")
+      - @particles.each do |particle|
+        = link_to zhuci_entry_path(particle.text), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
+          span lang="zh-TW" = particle.text
+          span.text-xs = t("zhuci.as_particle")
+
   - if @lesson.excluded?
     .rounded-xl.border.border-red-500.px-4.py-3.text-sm.leading-relaxed class="bg-red-500/10"
       strong = t("grammar.not_taught")

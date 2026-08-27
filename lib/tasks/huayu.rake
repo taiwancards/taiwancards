@@ -291,6 +291,12 @@ namespace(:huayu) do
     puts("Taiwan everyday: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
   end
 
+  desc("Import the sentence-final mood particles")
+  task(import_particles: :environment) do
+    result = Huayu::ParticleImporter.new.call
+    puts("mood particles: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} dropped")
+  end
+
   desc("Import Taiwan medicine, anatomy and hospital vocabulary")
   task(import_medicine: :environment) do
     result = Huayu::MedicineImporter.new.call

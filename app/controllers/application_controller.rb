@@ -30,6 +30,8 @@ class ApplicationController < ActionController::Base
       sentence_path(lexeme)
     when "measure_word"
       liangci_entry_path(lexeme.text)
+    when "particle"
+      zhuci_entry_path(lexeme.text)
     else
       dict_entry_path(lexeme.text)
     end
