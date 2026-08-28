@@ -34,11 +34,20 @@ RSpec.describe Huayu::ChinaVocabularyPurge do
     expect(Lexeme.exists?(stray.id)).to(be(true))
   end
 
-  it "spares an entry someone is already studying" do
+  it "removes a studied entry together with its memories and reviews" do
     erhua = word("差點兒", level: "B1")
-    LexemeMemory.create!(lexeme: erhua, user: nil, facet: :recognition, activated_at: Time.current)
+    memory = LexemeMemory.create!(lexeme: erhua, user: nil, facet: :recognition, activated_at: Time.current)
+    LexemeReview.create!(
+      lexeme: erhua,
+      lexeme_memory: memory,
+      facet: :recognition,
+      rating: 3,
+      reviewed_at: Time.current
+    )
     result = described_class.new(io: StringIO.new).call
-    expect(Lexeme.exists?(erhua.id)).to(be(true))
+    expect(Lexeme.exists?(erhua.id)).to(be(false))
+    expect(LexemeMemory.exists?(memory.id)).to(be(false))
+    expect(LexemeReview.where(lexeme_id: erhua.id)).to(be_empty)
     expect(result[:studied]).to(eq(1))
   end
 

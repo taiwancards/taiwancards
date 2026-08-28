@@ -2,6 +2,7 @@
 
 class Lexeme < ApplicationRecord
   has_many :memories, class_name: "LexemeMemory", dependent: :destroy
+  has_many :pronunciation_attempts, dependent: :delete_all
   has_many :parent_links, class_name: "LexemeLink", foreign_key: :child_id, dependent: :destroy, inverse_of: :child
   has_many(
     :child_links,

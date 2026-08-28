@@ -12,15 +12,14 @@ module Huayu
     def call(dry_run: false)
       curriculum, untagged = candidates.partition { |_id, _text, tagged| tagged }
       studied = LexemeMemory.where(lexeme_id: curriculum.map(&:first)).distinct.pluck(:lexeme_id).to_set
-      removable = curriculum.reject { |id, _text, _tagged| studied.include?(id) }
 
-      report(removable, studied, untagged)
+      report(curriculum, studied, untagged)
       return {curriculum: curriculum.size, removed: 0, studied: studied.size, review: untagged.size} if dry_run
 
-      removable.map(&:first).each_slice(200) { |slice| Lexeme.where(id: slice).destroy_all }
+      curriculum.map(&:first).each_slice(200) { |slice| Lexeme.where(id: slice).destroy_all }
       ChinaGuard.reset!
 
-      {curriculum: curriculum.size, removed: removable.size, studied: studied.size, review: untagged.size}
+      {curriculum: curriculum.size, removed: curriculum.size, studied: studied.size, review: untagged.size}
     end
 
     private
@@ -41,7 +40,7 @@ module Huayu
       removable.map { |_id, text, _tagged| text }.each_slice(12) { |slice| @io.puts("  #{slice.join(" ")}") }
 
       if studied.any?
-        @io.puts("  kept, someone is studying them: #{Lexeme.where(id: studied).pluck(:text).join(" ")}")
+        @io.puts("  studied, removed with their memories: #{Lexeme.where(id: studied).pluck(:text).join(" ")}")
       end
 
       return if untagged.empty?
