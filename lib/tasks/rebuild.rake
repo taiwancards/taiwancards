@@ -276,6 +276,7 @@ namespace(:huayu) do
       ["huayu:import_taiwan_vocabulary", "Taiwanese vocabulary"],
       ["huayu:import_common_words", "common words outside official lists"],
       ["huayu:import_places", "districts and county seats of Taiwan"],
+      ["huayu:block_segmentation", "words that keep a card but never split text"],
       ["huayu:import_readings", "full 破音字 reading set"],
       ["huayu:import_senses", "senses and examples"],
       ["huayu:import_dictionary_collocations", "collocations from the MOE dictionary"],

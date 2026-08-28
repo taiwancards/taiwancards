@@ -9,6 +9,7 @@ namespace(:deploy) do
     huayu/medicine.json
     huayu/games.json
     huayu/song_vocabulary.json
+    huayu/no_segment.json
   ].freeze
 
   SEGMENTATION_SOURCES = (
@@ -98,6 +99,12 @@ namespace(:deploy) do
       task: "huayu:import_places",
       paths: %w[huayu/taiwan_places.json],
       code: %w[app/services/huayu/place_importer.rb]
+    },
+    {
+      name: "no_segment",
+      task: "huayu:block_segmentation",
+      paths: %w[huayu/no_segment.json],
+      code: %w[app/services/huayu/segmentation_blocks.rb]
     },
     {
       name: "song_vocabulary",

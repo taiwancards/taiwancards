@@ -23,6 +23,7 @@ module Huayu
             .pluck(:text)
             .to_set
           words |= SegmentationVocabulary.words
+          words -= blocked
           {
             words: words,
             max: [words.map(&:length).max || 2, MAX_WORD].min,
@@ -37,6 +38,10 @@ module Huayu
       end
 
       private
+
+      def blocked
+        SegmentationBlocks.words | Lexeme.where("data ? 'no_segment'").pluck(:text).to_set
+      end
 
       def merge_words(words)
         bigrams = BigramFrequency.instance

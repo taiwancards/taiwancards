@@ -309,6 +309,12 @@ namespace(:huayu) do
     puts("Taiwan games: #{result.imported} imported, #{result.skipped} skipped, #{result.dropped} unlisted")
   end
 
+  desc("Keep the listed words out of segmentation while they keep their dictionary card")
+  task(block_segmentation: :environment) do
+    result = Huayu::SegmentationBlocks.new.call
+    puts("segmentation blocks: #{result.blocked} blocked, #{result.released} released")
+  end
+
   desc("Import the everyday vocabulary that song lyrics rely on")
   task(import_song_vocabulary: :environment) do
     result = Huayu::SongVocabularyImporter.new.call

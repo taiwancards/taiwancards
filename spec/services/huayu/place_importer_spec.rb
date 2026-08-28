@@ -27,12 +27,4 @@ RSpec.describe Huayu::PlaceImporter do
 
     expect(Lexeme.find_by(kind: :word, text: "中正區").data["place"]).to(eq(%w[臺北市 基隆市]))
   end
-
-  it "keeps a name that doubles as an everyday phrase out of the segmenter" do
-    importer.call
-
-    expect(Lexeme.find_by(kind: :word, text: "新社區").data["no_segment"]).to(be(true))
-    expect(Huayu::TextAnalyzer.vocabulary[:words]).to(include("板橋區"))
-    expect(Huayu::TextAnalyzer.vocabulary[:words]).not_to(include("新社區"))
-  end
 end

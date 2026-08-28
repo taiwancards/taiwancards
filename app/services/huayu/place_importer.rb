@@ -29,9 +29,7 @@ module Huayu
           pos: "N",
           source: SOURCE
         )
-        patch = {"place" => Array(entry["belongs"])}
-        patch["no_segment"] = true if entry["segment"] == false
-        lexeme.update_column(:data, lexeme.data.merge(patch))
+        lexeme.update_column(:data, lexeme.data.merge("place" => Array(entry["belongs"])))
         imported += 1
       end
 
