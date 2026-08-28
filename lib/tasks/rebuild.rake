@@ -237,6 +237,12 @@ namespace(:huayu) do
     puts("common words: #{result.imported} added, #{result.skipped} skipped")
   end
 
+  desc("Import the districts and county seats of Taiwan")
+  task(import_places: :environment) do
+    result = Huayu::PlaceImporter.new.call
+    puts("places: #{result.imported} added, #{result.skipped} skipped")
+  end
+
   desc("Register the content sources and their licences")
   task(import_sources: :environment) do
     puts("sources: #{ContentSources::Importer.new.call}")
@@ -269,6 +275,7 @@ namespace(:huayu) do
       ["huayu:import_sources", "sources and licences"],
       ["huayu:import_taiwan_vocabulary", "Taiwanese vocabulary"],
       ["huayu:import_common_words", "common words outside official lists"],
+      ["huayu:import_places", "districts and county seats of Taiwan"],
       ["huayu:import_readings", "full 破音字 reading set"],
       ["huayu:import_senses", "senses and examples"],
       ["huayu:import_dictionary_collocations", "collocations from the MOE dictionary"],

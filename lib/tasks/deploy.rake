@@ -3,6 +3,7 @@
 namespace(:deploy) do
   DICTIONARY_SOURCES = %w[
     huayu/common_words.json
+    huayu/taiwan_places.json
     huayu/naer_terms.json
     huayu/taiwan_everyday.json
     huayu/medicine.json
@@ -91,6 +92,12 @@ namespace(:deploy) do
       task: "huayu:import_common_words",
       paths: %w[huayu/common_words.json],
       code: %w[app/services/huayu/common_words_importer.rb]
+    },
+    {
+      name: "places",
+      task: "huayu:import_places",
+      paths: %w[huayu/taiwan_places.json],
+      code: %w[app/services/huayu/place_importer.rb]
     },
     {
       name: "song_vocabulary",

@@ -7,6 +7,7 @@ module Huayu
     MAX_WORD = 8
     MERGE_SPAN = MAX_WORD
     TOKEN_KINDS = %i[word collocation measure_word character].freeze
+    SEGMENTABLE = "NOT (data ? 'no_segment')"
     KIND_PREFERENCE = %i[word collocation measure_word character].freeze
 
     Token = Data.define(:kind, :text, :lexeme, :chars)
@@ -15,7 +16,12 @@ module Huayu
       def vocabulary
         @vocabulary ||= {}
         @vocabulary[:zh_tw] ||= begin
-          words = Lexeme.where(kind: %i[word collocation]).where("length(text) >= 2").pluck(:text).to_set
+          words = Lexeme
+            .where(kind: %i[word collocation])
+            .where("length(text) >= 2")
+            .where(SEGMENTABLE)
+            .pluck(:text)
+            .to_set
           words |= SegmentationVocabulary.words
           {
             words: words,
@@ -37,6 +43,7 @@ module Huayu
         Lexeme
           .where(kind: TOKEN_KINDS)
           .where("length(text) >= 2")
+          .where(SEGMENTABLE)
           .pluck(:text)
           .reject { |text| words.include?(text) && (!bigrams.available? || bigrams.knows?(text)) }
           .to_set

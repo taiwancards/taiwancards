@@ -1,0 +1,35 @@
+[
+  {
+    "text": "板橋區",
+    "pinyin": "bǎn qiáo qū",
+    "zhuyin": "ㄅㄢˇ ㄑㄧㄠˊ ㄑㄩ",
+    "belongs": ["新北市"],
+    "en": "a district of New Taipei — the seat of the city government",
+    "ru": "район Нового Тайбэя — здесь городская управа"
+  },
+  {
+    "text": "中正區",
+    "pinyin": "zhōng zhèng qū",
+    "zhuyin": "ㄓㄨㄥ ㄓㄥˋ ㄑㄩ",
+    "belongs": ["臺北市", "基隆市"],
+    "en": "a district of Taipei and Keelung",
+    "ru": "район Тайбэя и Цзилуна"
+  },
+  {
+    "text": "新社區",
+    "pinyin": "xīn shè qū",
+    "zhuyin": "ㄒㄧㄣ ㄕㄜˋ ㄑㄩ",
+    "belongs": ["臺中市"],
+    "en": "a district of Taichung",
+    "ru": "район Тайчжуна",
+    "segment": false
+  },
+  {
+    "text": "",
+    "pinyin": "",
+    "zhuyin": "",
+    "belongs": [],
+    "en": "",
+    "ru": ""
+  }
+]
