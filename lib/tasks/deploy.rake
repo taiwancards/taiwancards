@@ -92,7 +92,7 @@ namespace(:deploy) do
       name: "common_words",
       task: "huayu:import_common_words",
       paths: %w[huayu/common_words.json],
-      code: %w[app/services/huayu/common_words_importer.rb]
+      code: %w[app/services/huayu/common_words_importer.rb app/services/lexemes/bulk_upserter.rb]
     },
     {
       name: "places",

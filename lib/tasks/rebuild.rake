@@ -234,7 +234,7 @@ namespace(:huayu) do
   desc("Import the everyday words no official list carries")
   task(import_common_words: :environment) do
     result = Huayu::CommonWordsImporter.new.call
-    puts("common words: #{result.imported} added, #{result.skipped} skipped")
+    puts("common words: #{result.imported} added, #{result.skipped} skipped, #{result.written} written")
   end
 
   desc("Import the districts and county seats of Taiwan")
