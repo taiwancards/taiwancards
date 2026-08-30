@@ -2,7 +2,7 @@
 
 .py-6.space-y-5
   header.flex.flex-wrap.items-center.justify-between.gap-3
-    h1.text-2xl.font-bold.tracking-tight = t("progress.title")
+    = render("shared/page_help", key: "progress", title: t("progress.title"))
     = link_to t("settings.title"), edit_settings_path, class: "text-sm text-primary hover:underline"
 
   = render "shared/tabs", tabs: progress_tabs

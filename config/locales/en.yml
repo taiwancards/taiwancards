@@ -392,6 +392,57 @@ en:
       practice: Sound and tone drills, pronunciation, handwriting, typing, Cangjie and mock exams.
       taiwan: Everyday vocabulary, the phrases people say, the Taipei metro and the calendar.
       settings: Your profile, statistics, display preferences and the help pages.
+    item_lede:
+      course: 'Sixty lessons from "hello" to B1 — dialogue, words, grammar, exercises.'
+      path: "Your roadmap: what to work through in order, and which step you are on."
+      desk: "The day's screen — how much is due, how much is new, and one button to the right place."
+      desks: "Your own decks from a text, a file, a song or a lesson, with groups and share links."
+      reader: "Paste any text and it is split into words, with zhuyin over what you do not know."
+      graded: "Levelled texts to read end to end without stopping at the dictionary."
+      placement: "An adaptive test that sets your starting level and marks what you already know."
+      plan: "Name a TOCFL level and a date, and the daily quota of new material is worked out."
+      triage: 'Swipe a batch of words into "known" and "to learn" without opening cards.'
+      textbook: 'Lesson summaries from the book, with a breakdown and a "lesson known" mark.'
+      textbook-phrases: "Phrase drills from the book — pattern substitutions, aloud and against the clock."
+      stories: "The reading room: whole texts with the same breakdown the reader gives."
+      exams: "Real TOCFL papers with the answer key, the PDF and the audio."
+      radicals: "The 214 Kangxi radicals — stroke count, meaning, and the words they turn up in."
+      characters: "Characters in full: readings, strokes, writing animation, etymology, words by reading."
+      dict: "Words and collocations: numbered senses, thesaurus, measure words, corpus examples."
+      sentences: "The sentence corpus, filtered by level, register and how exact the level is."
+      chengyu: "成語 idioms faceted by tone, type and difficulty band."
+      liangci: "Measure words: what they go with, live examples, and a game to fix them."
+      tbcl: "TBCL word lists across seven bands, with your progress highlighted."
+      tocfl: "TOCFL word lists by level, with your progress highlighted."
+      practice-zhuyin: "What a syllable is made of — initials, finals, tones, and the usual confusions."
+      syllables: "The full Mandarin syllable chart: which combinations actually exist."
+      tones: "Four tones and the neutral one, Taiwanese specifics, and the sandhi rules."
+      hanzi: "How a character is built: 六書, components, phonetic series, stroke order."
+      cangjie-lessons: "The Cangjie textbook — forty lessons, one per key, with drills and character lists."
+      practice-numbers: "Numbers, money, dates, Minguo years, and the traps around 零 and 兩."
+      grammar: "583 patterns by level, each with a breakdown, corpus examples and neighbouring topics."
+      zhuci: "語氣詞 particles: what 吧, 啊, 呢 and 嘛 do to a sentence."
+      variants: "Where Taiwan parts ways with China — readings, glyphs, words."
+      names: "How a Taiwanese name is built, from the national registration statistics."
+      practice-zhuyin-trainer: "Zhuyin by ear in groups: the next group waits until you know this one."
+      practice-drill: "Zhuyin against pinyin at speed, with weak symbols surfacing more often."
+      tones-drill: "Tones by ear on studio recordings, male and female voices alternating."
+      pronunciation: "Record from the microphone and see, syllable by syllable, where tone and sound drifted."
+      writing: "Write a character from memory with no prompt; the result feeds the writing facet."
+      practice-typing: "The Taiwanese zhuyin layout, until typing becomes muscle memory."
+      cangjie: "Cangjie input: break a character into components and type its code."
+      mock: "A mock TOCFL — plain, picture and audio formats, reproducible from a seed."
+      everyday: "Vocabulary by scene: food, drinks, transport, paperwork, weather, slang."
+      phrases: "158 patterns across 15 scenes, including the half you only need to understand."
+      notices: "The signs and announcements you meet on the street and in transport."
+      metro: "The Taipei metro map, every station with its meaning and reading."
+      calendar: "The lunar calendar, festivals, seasonal words and two date converters."
+      medicine: "How to make yourself understood at the pharmacy and the hospital."
+      games: "Board games in Taiwanese Mandarin — the terms, the rules, the table talk."
+      profile: "Locale, zhuyin position, mobile tabs, level, export and backup."
+      progress: "The summary, review history, memory strength by facet, and the leech list."
+      settings-edit: "Your own FSRS parameters — retention, maximum interval, learning steps."
+      help: "This page: a map of every section, plus chapters that walk you through the interface."
     tones_drill: Tones by ear
     profile: Profile
   phrase_drills:
@@ -2861,6 +2912,27 @@ en:
       out_of_range: Outside the covered range.
       bounds: Covers %{from} to %{to}. The table is taken from the Hong Kong Observatory's Gregorian-Lunar Calendar Conversion Table and every date in it was checked back against that source.
   page_help:
+    desk_html: >-
+      <p>Three counters at the top: <strong>on the desk</strong> is how many cards are in play at all,
+      <strong>due</strong> is how many came round today on the FSRS schedule, and <strong>new</strong> is
+      how much unseen material the app is willing to add on top today. The daily quota of new material
+      comes from your plan, or from settings when there is no plan.</p><p>The "road to TOCFL" strip shows
+      how much of each level's vocabulary is already closed; the circle with a percentage is the level you
+      are on now. The big button always leads to wherever it makes sense to carry on: to phonetics while
+      the sounds are still unsettled, and to the day's queue after that.</p>
+    progress_html: >-
+      <p><strong>Streak</strong> is how many days in a row had reviews. <strong>Retention</strong> is the
+      share of "good" or better among the cards FSRS considered ripe: if it sits well below the target in
+      settings, the intervals are too long.</p><p>States: <strong>unseen</strong> has never been shown,
+      <strong>learning</strong> is still in the learning steps, <strong>young</strong> has an interval
+      under three weeks, <strong>mature</strong> above it. <strong>Leeches</strong> are the ones you forget
+      again and again; relearning them by hand is cheaper than running them through the schedule.</p>
+    plan_html: >-
+      <p>Name a target TOCFL level and a date, and the app works out how much new material a day it takes
+      to close that level by then. The quota is recomputed daily from what is already learnt, so a missed
+      day does not break the plan — it just nudges the quota up.</p><p>When the quota comes out
+      unmanageable it is highlighted amber: the level will not close by that date, so either move the date
+      or aim a level lower.</p>
     cangjie_lessons_html: >-
       <p>Cangjie is the Taiwanese way of typing traditional characters by shape rather than by sound:
       a character is cut into visible pieces, and each piece is one Latin key. This textbook covers
@@ -3184,6 +3256,8 @@ en:
     next: Next
     done: Start
     guide:
+      jump: "Jump to a section"
+      roadmap_cta: "Open the roadmap"
       title: Full guide
       body: >-
         Every corner of the system: all the sections and all the pages. Tap any of them to open it from
@@ -3195,6 +3269,29 @@ en:
       replay_cta: Start the introduction
     page:
       title: Welcome to TaiwanCards
+      lede: "Taiwanese Mandarin: traditional characters, zhuyin, and the vocabulary the island actually speaks. Below — how the studying works and what is inside."
+      loop:
+        heading: How a day works
+        lede: >-
+          The core of the app is a single queue of cards. Everything else — the dictionary, the course, the
+          trainers, the text reader — feeds into it: any word from any section joins your study with one tap.
+        grades: "Four ratings — swipe, arrow key or button:"
+        honest: >-
+          Rate yourself honestly. An inflated rating does not speed anything up; it just pushes the card out
+          to the day you will already have forgotten it.
+        steps:
+          queue:
+            title: The day's stack
+            body: The app builds the batch for you — first what came due, then new material within the daily quota.
+          card:
+            title: Front and back
+            body: Look at the front, try to recall, tap to turn the card over, then rate yourself.
+          facets:
+            title: Six memories per word
+            body: "Recognition, production, reading, listening, tone and writing are counted apart: each has its own interval."
+          schedule:
+            title: Scheduled return
+            body: The rating goes into FSRS, and the card comes back exactly when you are about to forget it.
       inside:
         heading: What is inside
         lede: >-
@@ -3232,8 +3329,9 @@ en:
         words: "words: %{value}"
         sentences: "sentences: %{value}"
       prefs:
-        heading: First, set how things are shown to you
+        heading: How things are shown to you
         lede: Press right here — the page changes at once, and the choice follows you everywhere.
+        where: "The same buttons are always at hand: in the header on a computer, in the More menu and at the foot of the page on a phone."
         readings:
           title: Readings above the characters
           body: Cycles zhuyin → zhuyin with pinyin → neither. Pinyin never shows on its own.
@@ -3255,10 +3353,8 @@ en:
         cta: Next
     steps:
       overview:
-        title: The introduction has changed
-        body: >-
-          Instead of a walk through the menus there is now a single page: what the system holds, where to
-          start and where things live. Open it if you want to refresh the picture.
+        title: "Introduction"
+        body: "One page: what is inside, how the studying works, and where to start."
     chapters:
       dictionary:
         title: Dictionary and search
@@ -3274,6 +3370,15 @@ en:
             body: >-
               This switch in the header decides how much is shown: the main sense only, or collocations,
               thesaurus, etymology and every sense at once.
+          characters:
+            title: "The character in full"
+            body: "Readings, the Taiwanese stroke order, a writing animation, the component breakdown, the etymology, and every word where the character is read the same way. It joins your cards from here too."
+          sentences:
+            title: "Real sentences, not invented ones"
+            body: "The corpus is placed on the TOCFL and TBCL scales, and each sentence shows whether that level is exact or worked out with a margin. Register filters separate speech from writing."
+          search:
+            title: "It finds things any way you ask"
+            body: 'By characters, by pinyin with or without tones, by zhuyin, by a meaning in your own language — all mixed together. The "search in sentences" switch turns it into a concordance.'
       course:
         title: The textbook
         summary: One path from zero to B1, and how a lesson is built
@@ -3305,6 +3410,15 @@ en:
               Each word is asked separately for recognition, production, reading, listening, tone and
               writing. Knowing a word and being able to write it are different states with different
               intervals.
+          day:
+            title: "The day's screen"
+            body: "Three counters and the level bar: what came due, how much new material the app will add today, and how much of your current TOCFL level is already closed."
+          start:
+            title: "One button for everything"
+            body: "It always leads wherever it makes sense to carry on: to phonetics while the sounds are unsettled, to the day's queue after that. You never have to decide what to open."
+          mistakes:
+            title: "The mistake book"
+            body: "Words you have recently stumbled on gather here by themselves, along with leeches — the ones you forget again and again. Relearning those by hand beats running them through the schedule."
       taiwan:
         title: Life in Taiwan
         summary: The vocabulary tied to living here
@@ -3314,6 +3428,18 @@ en:
             body: >-
               Food, drinks, transport, paperwork, weather, slang. Each word is marked with where it is
               actually used and how it differs from China.
+          phrases:
+            title: "A phrasebook by scene"
+            body: "158 patterns across 15 situations, with slots to substitute into. Half the cards are marked as staff lines: those you need to understand, not to say."
+          notices:
+            title: "Signs and announcements"
+            body: "What hangs on doors, in the metro and in the lift. You read it rarely, but when you need it you need it at once."
+          metro:
+            title: "The metro as a dictionary"
+            body: "The Taipei metro map, where every station is an ordinary lexeme: reading, meaning, and a way into your cards."
+          calendar:
+            title: "The lunar calendar"
+            body: "The festivals of the year with their own vocabulary, plus two converters: Minguo years, and lunar dates into Gregorian."
       phonetics:
         title: Sounds and zhuyin
         summary: How the sounds work and where to drill them
@@ -3328,6 +3454,12 @@ en:
             body: >-
               The symbols come in groups and each group has its own button. It drills exactly that group
               rather than all thirty-seven, so you take on four symbols at a time.
+          tones:
+            title: "Tones on their own"
+            body: "The contours of the four tones and the neutral one, the Taiwanese specifics — the third tone stays low here — and the sandhi rules for 一 and 不. The ear drill starts from this page."
+          hanzi:
+            title: "How a character is built"
+            body: "六書, semantic components, phonetic series and stroke order. Reading this once is cheaper than memorising thousands of characters as pictures."
       trainers:
         title: The trainers
         summary: What you can drill with your hands and your voice
@@ -3337,6 +3469,15 @@ en:
             body: >-
               Alongside it sit handwriting, typing on a Taiwanese keyboard, Cangjie, the sound and tone
               drills and a mock TOCFL. All of it is open from the start, not unlocked as you go.
+          writing:
+            title: "Writing from memory"
+            body: "Recall the character from its meaning and reading, then write it stroke by stroke. Stroke order is checked and a wrong stroke bounces back; the result feeds the writing facet."
+          typing:
+            title: "Typing zhuyin"
+            body: "The very layout printed on keyboards in Taiwan. Without it you cannot write a message or a search query."
+          mock:
+            title: "A mock exam"
+            body: "Our own TOCFL practice papers — plain, picture and audio formats. They are built from a seed, so the same paper can be sat again."
       display:
         title: What to show
         summary: Four switches that change everything at once
@@ -3362,10 +3503,17 @@ en:
         summary: Your level, your statistics and your export
         steps:
           backup:
-            title: And you can take it all with you
-            body: >-
-              The Backups tab holds an export of your whole progress in one file. The data is yours and
-              it is not locked in here.
+            title: "Take it all with you"
+            body: "The whole of your progress exports as one file and imports back the same way, with a copy to Google Drive besides. The data is yours and it is not locked in."
+          stats:
+            title: "What progress shows you"
+            body: "The day streak, actual retention, cards broken down by state, and the review history. If retention sits well below your target, the intervals are too long."
+          level:
+            title: "Your level only steers recommendations"
+            body: "It decides what to offer you next. The dictionary, the corpus and search always show everything — the level hides nothing."
+          tabs:
+            title: "Four tabs of your own"
+            body: "The bottom bar on a phone is four pages of your choosing, from anywhere in the app. Put the ones you actually visit there."
   reader:
     panel_empty: Tap any word in the text — its card will appear here.
     show_translation: Show translation

@@ -1,38 +1,55 @@
 - content_for(:title) { t("intro.guide.title") }
 
-.py-6.space-y-5
-  div
+.py-6.space-y-6
+  header.space-y-3
     h1.text-2xl.font-bold.tracking-tight = t("intro.guide.title")
-    p.mt-2.max-w-2xl.leading-relaxed.text-muted-foreground = t("intro.guide.body")
+    p.max-w-2xl.leading-relaxed.text-muted-foreground = t("intro.guide.body")
 
-  section.space-y-5 data-tour="profile-guide"
+  nav.sticky.z-20.-mx-4.overflow-x-auto.border-b.border-border.px-4.pb-2 style="top: 3.5rem" class="pt-2 md:top-[6.5rem] bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75" aria-label=t("intro.guide.jump")
+    .flex.w-max.gap-1.5
+      - language_nav.each do |group|
+        = link_to "##{group[:id]}", class: "flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-border px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" do
+          = icon(group[:key], css: "size-4 shrink-0")
+          span = group[:label]
+
+  .space-y-5 data-tour="profile-guide"
     - language_nav.each do |group|
-      section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
-        header.flex.flex-wrap.items-start.justify-between.gap-3
-          .min-w-0
-            .flex.items-center.gap-2
-              = icon(group[:key], css: "size-4 shrink-0 text-muted-foreground")
-              h2.font-semibold = group[:label]
-            p.mt-1.text-xs.leading-relaxed.text-muted-foreground
-              = t("nav.group_lede.#{group[:id]}")
+      section.scroll-mt-32.rounded-2xl.border.border-border.bg-card.p-4.space-y-4 id=group[:id] class="sm:p-5"
+        header.space-y-2
+          .flex.items-center.gap-2
+            = icon(group[:key], css: "size-5 shrink-0 text-muted-foreground")
+            h2.text-lg.font-semibold = group[:label]
+          p.text-sm.leading-relaxed.text-muted-foreground = t("nav.group_lede.#{group[:id]}")
 
-          .flex.shrink-0.flex-wrap.items-center.gap-2
-            - guide_chapters_for(group).each do |chapter|
-              - done = current_user&.intro&.chapter_done?(chapter.id)
-              = button_to guide_chapter_label(chapter, done), intro_chapter_path(chapter.id),
-                class: class_names("rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-muted",
-                  done ? "border-border text-muted-foreground" : "border-brand text-brand")
+          - chapters = guide_chapters_for(group)
+          - if chapters.any?
+            .flex.flex-wrap.gap-2
+              - chapters.each do |chapter|
+                - done = current_user&.intro&.chapter_done?(chapter.id)
+                = button_to intro_chapter_path(chapter.id), form_class: "contents",
+                  class: class_names("flex min-h-11 items-center gap-2 rounded-xl border px-3 text-sm font-medium transition-colors hover:bg-muted",
+                    done ? "border-border text-muted-foreground" : "border-brand text-brand") do
+                  = icon(done ? :check : :help, css: "size-4 shrink-0")
+                  span = guide_chapter_label(chapter, done)
 
         ul.grid.gap-2 class="sm:grid-cols-2"
           - group[:items].each do |key, label, path|
-            li
-              = link_to path, class: "flex items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm hover:bg-muted" do
-                = icon(key, css: "size-4 shrink-0 text-muted-foreground")
-                span.min-w-0.flex-1.truncate = label
-                span.shrink-0.text-muted-foreground →
+            - lede = nav_item_lede(path)
+            li.contents
+              = link_to path, class: "flex min-h-11 gap-2.5 rounded-xl border border-border px-3 py-2.5 transition-colors hover:border-primary/60 hover:bg-muted" do
+                = icon(key, css: "mt-0.5 size-4 shrink-0 text-muted-foreground")
+                .min-w-0.flex-1
+                  .flex.items-baseline.gap-1.5
+                    span.text-sm.font-medium = label
+                    span.shrink-0.text-xs.text-muted-foreground →
+                  - if lede.present?
+                    p.mt-0.5.text-xs.leading-snug.text-muted-foreground = lede
 
-  section.rounded-2xl.border.border-border.p-5.space-y-2 class="bg-muted/40"
+  section.rounded-2xl.border.border-border.p-4.space-y-2 class="sm:p-5 bg-muted/40"
     h2.font-semibold = t("intro.guide.replay_title")
     p.text-sm.leading-relaxed.text-muted-foreground = t("intro.guide.replay_body")
-    = button_to t("intro.guide.replay_cta"), intro_start_path,
-      class: "inline-flex rounded-xl border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-muted"
+    .flex.flex-wrap.gap-2
+      = button_to t("intro.guide.replay_cta"), intro_start_path, form_class: "contents",
+        class: "inline-flex min-h-11 items-center rounded-xl border border-border bg-background px-4 text-sm font-medium hover:bg-muted"
+      = link_to t("intro.guide.roadmap_cta"), roadmap_path,
+        class: "inline-flex min-h-11 items-center rounded-xl border border-border bg-background px-4 text-sm font-medium hover:bg-muted"

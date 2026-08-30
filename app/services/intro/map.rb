@@ -24,6 +24,7 @@ module Intro
       def to_payload
         {
           id:,
+          path:,
           target:,
           action: advance,
           landsOn: lands_on,

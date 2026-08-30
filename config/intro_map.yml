@@ -20,6 +20,15 @@ chapters:
         advance: scroll
         only: desktop
         version: 1
+      - id: characters
+        path: /characters
+        version: 1
+      - id: sentences
+        path: /sentences
+        version: 1
+      - id: search
+        path: /search
+        version: 1
 
   - id: cards
     icon: decks
@@ -31,6 +40,19 @@ chapters:
         version: 1
       - id: facets
         path: /desks
+        version: 1
+      - id: day
+        path: /desk
+        target: road
+        advance: scroll
+        version: 1
+      - id: start
+        path: /desk
+        target: learn
+        advance: scroll
+        version: 1
+      - id: mistakes
+        path: /mistakes
         version: 1
 
   - id: course
@@ -55,6 +77,18 @@ chapters:
         target: everyday-domains
         advance: scroll
         version: 1
+      - id: phrases
+        path: /phrases
+        version: 1
+      - id: notices
+        path: /notices
+        version: 1
+      - id: metro
+        path: /metro
+        version: 1
+      - id: calendar
+        path: /calendar
+        version: 1
 
   - id: phonetics
     icon: speaker
@@ -69,12 +103,27 @@ chapters:
         target: practice-block-drill
         advance: scroll
         version: 1
+      - id: tones
+        path: /tones
+        version: 1
+      - id: hanzi
+        path: /hanzi
+        version: 1
 
   - id: trainers
     icon: pencil
     steps:
       - id: what_else
         path: /pronunciation
+        version: 1
+      - id: writing
+        path: /writing
+        version: 1
+      - id: typing
+        path: /practice/typing
+        version: 1
+      - id: mock
+        path: /mock
         version: 1
 
   - id: display
@@ -104,6 +153,21 @@ chapters:
   - id: profile
     icon: user
     steps:
-      - id: backup
+      - id: stats
         path: /progress
+        version: 1
+      - id: level
+        path: /profile/level
+        target: profile-level
+        advance: scroll
+        version: 1
+      - id: tabs
+        path: /profile/display
+        target: profile-tabs
+        advance: scroll
+        version: 1
+      - id: backup
+        path: /profile/backup
+        target: profile-backup
+        advance: scroll
         version: 1

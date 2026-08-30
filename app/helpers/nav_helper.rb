@@ -147,10 +147,14 @@ module NavHelper
     chosen.first(MOBILE_TAB_SLOTS).map { |path| [*catalog.fetch(path), path] }
   end
 
-  def nav_item_tour(path)
+  def nav_item_key(path)
     slug = Locales.strip(path.to_s).split("?").first.to_s.gsub(%r{\A/+|/+\z}, "").tr("/", "-")
-    "nav-item-#{slug.presence || "home"}"
+    slug.presence || "home"
   end
+
+  def nav_item_tour(path) = "nav-item-#{nav_item_key(path)}"
+
+  def nav_item_lede(path) = t("nav.item_lede.#{nav_item_key(path)}", default: nil)
 
   def nav_entry_active?(entry)
     if entry[:type] == :menu

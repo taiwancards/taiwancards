@@ -52,4 +52,7 @@
             = t("intro.next")
 
   = form_with url: intro_back_path, method: :post, class: "hidden", data: {intro_target: "backForm"} do
-  = form_with url: intro_next_path, method: :post, class: "hidden", data: {intro_target: "nextForm"} do
+  = form_with url: intro_next_path, method: :post, class: "hidden", data: {intro_target: "nextForm"} do |form|
+    = form.hidden_field :step, value: "", data: {intro_target: "stepField"}
+  = form_with url: intro_close_chapter_path, method: :delete, class: "hidden", data: {intro_target: "doneForm"} do |form|
+    = form.hidden_field :completed, value: "1"

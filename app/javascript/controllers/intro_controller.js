@@ -20,6 +20,8 @@ export default class extends Controller {
     "counter",
     "backForm",
     "nextForm",
+    "doneForm",
+    "stepField",
   ];
   static values = {
     steps: String,
@@ -119,7 +121,7 @@ export default class extends Controller {
       : this.counterValue;
     this.backTarget.classList.toggle(
       "hidden",
-      !this.walkable && this.counterValue.startsWith("1 /"),
+      this.walkable ? this.index === 0 : this.counterValue.startsWith("1 /"),
     );
 
     this.watcher?.disconnect();
@@ -163,8 +165,12 @@ export default class extends Controller {
   }
 
   next() {
-    if (this.index >= this.steps.length - 1)
-      return this.nextFormTarget.requestSubmit();
+    const following = this.steps[this.index + 1];
+    if (!following)
+      return this.walkable
+        ? this.doneFormTarget.requestSubmit()
+        : this.nextFormTarget.requestSubmit();
+    if (this.elsewhere(following)) return this.travel(following);
 
     this.index += 1;
     this.sync();
@@ -174,9 +180,21 @@ export default class extends Controller {
   back() {
     if (this.index === 0) return this.backFormTarget.requestSubmit();
 
+    const previous = this.steps[this.index - 1];
+    if (this.elsewhere(previous)) return this.travel(previous);
+
     this.index -= 1;
     this.sync();
     this.render();
+  }
+
+  elsewhere(step) {
+    return Boolean(step?.path) && step.path !== this.current?.path;
+  }
+
+  travel(step) {
+    this.stepFieldTarget.value = step.id;
+    this.nextFormTarget.requestSubmit();
   }
 
   sync() {
