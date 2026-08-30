@@ -1,4 +1,5 @@
 - content_for(:title, t("desks.title"))
+- wide_page
 
 .py-6.space-y-6
   header.flex.flex-wrap.items-start.justify-between.gap-3
@@ -20,10 +21,10 @@
           data-sortable-target="item" data-sortable-id=group.id ]
           .flex.flex-wrap.items-center.justify-between.gap-2
             .flex.min-w-0.items-center.gap-2
-              button.sortable-grip.shrink-0.rounded-md.p-1.text-muted-foreground[
+              button.sortable-grip.inline-flex.min-h-11.min-w-11.shrink-0.items-center.justify-center.rounded-md.text-muted-foreground[
                 type="button" aria-label=t("groups.reorder")
                 data-action="pointerdown->sortable#start pointermove->sortable#move pointerup->sortable#end pointercancel->sortable#end"
-                class="hover:bg-muted" ]
+                class="hover:bg-muted md:min-h-8 md:min-w-8" ]
                 = icon(:grip, css: "size-4")
               = link_to group_path(group), class: "min-w-0 truncate text-sm font-semibold hover:underline" do
                 = group.name
@@ -33,7 +34,7 @@
             p.rounded-lg.border.border-dashed.border-border.px-4.py-5.text-center.text-sm.text-muted-foreground
               = t("groups.empty")
           - else
-            .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3"
+            .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
               - decks.each do |desk|
                 = render("collections/deck_card", deck: desk)
 
@@ -41,7 +42,7 @@
     section.space-y-3
       h2.text-sm.font-semibold = @groups.any? ? t("desks.ungrouped") : t("desks.title")
       p.text-xs.text-muted-foreground = t("desks.reorder_hint")
-      .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3" data-controller="sortable" data-sortable-url-value=reorder_desks_path
+      .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" data-controller="sortable" data-sortable-url-value=reorder_desks_path
         - @ungrouped.each do |desk|
           = render("collections/deck_card", deck: desk, sortable: true)
 

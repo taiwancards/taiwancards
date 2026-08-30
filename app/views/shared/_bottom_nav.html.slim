@@ -7,7 +7,7 @@ nav.fixed.inset-x-0.bottom-0.z-40.border-t.border-border.md:hidden[
     - tabs.each do |key, label, path|
       - active = current_page?(path)
       = link_to path, aria: {current: (active ? "page" : nil)},
-        class: class_names("flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[11px] font-medium leading-tight transition-colors",
+        class: class_names("flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[11px] font-medium leading-tight transition-colors",
           active ? "text-primary" : "text-muted-foreground") do
-        = icon(key, css: "size-6", stroke: active ? 2 : 1.6)
-        span.w-full.truncate.text-center = label
+        = icon(key, css: "size-6 shrink-0", stroke: active ? 2 : 1.6)
+        span.w-full.truncate.text-center = nav_tab_label(path, label)

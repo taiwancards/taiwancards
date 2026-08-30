@@ -133,15 +133,6 @@ en:
     zh-TW: Taiwanese Mandarin
     ja: Japanese
     ro: Romanian
-  mobile_hint:
-    title: A phone works, but not for everything
-    body: >-
-      Honestly: I built this mainly for myself, and I study about ninety percent of the time on a laptop,
-      using the phone only to flip cards. So not much time went into fitting every section to every screen
-      size, and something may well look wrong on a phone — at your own risk. Cards, the dictionary and
-      reading the explanations are fine; the trainers, handwriting, pronunciation and text analysis expect
-      a computer. Real study belongs there.
-    dismiss: Understood
   names:
     title: How a Taiwanese name is built
     meta_description: >-
@@ -293,6 +284,59 @@ en:
       male: male
       female: female
   nav:
+    filter_placeholder: "Find a section"
+    filter_empty: "Nothing matched. Try another word."
+    tab:
+      desk: "Today"
+      desks: "Decks"
+      course: "Course"
+      path: "Start"
+      reader: "Read"
+      graded: "Graded"
+      placement: "Test"
+      plan: "Plan"
+      triage: "Sweep"
+      textbook: "Book"
+      textbook-phrases: "Drills"
+      stories: "Stories"
+      exams: "Papers"
+      radicals: "Radicals"
+      characters: "Hanzi"
+      dict: "Words"
+      sentences: "Sentences"
+      chengyu: "成語"
+      liangci: "量詞"
+      tbcl: "TBCL"
+      tocfl: "TOCFL"
+      practice-zhuyin: "Phonetics"
+      syllables: "Syllables"
+      tones: "Tones"
+      hanzi: "Structure"
+      cangjie-lessons: "Cangjie 5"
+      practice-numbers: "Numbers"
+      grammar: "Grammar"
+      zhuci: "語氣詞"
+      variants: "Variants"
+      names: "Names"
+      practice-zhuyin-trainer: "Zhuyin"
+      practice-drill: "Sounds"
+      tones-drill: "Tone ear"
+      pronunciation: "Voice"
+      writing: "Writing"
+      practice-typing: "Typing"
+      cangjie: "Cangjie"
+      mock: "Mock"
+      everyday: "Daily"
+      phrases: "Phrases"
+      notices: "Signs"
+      metro: "Metro"
+      calendar: "Calendar"
+      medicine: "Medicine"
+      games: "Games"
+      profile: "Profile"
+      progress: "Progress"
+      settings-edit: "Settings"
+      help: "Guide"
     mock: TOCFL simulator
     more: More
     radicals: Radicals
@@ -1358,6 +1402,8 @@ en:
     approximate_hint: "Not on the TBCL list. Read from the characters it is written with: at grade %{n} you already know enough of them."
     words_count: "%{count} in the dictionary"
   words:
+    filters: "Filters"
+    filters_none: "all levels"
     hokkien_source: "Taiwanese Hokkien:"
     taigi_native: "The characters are not read the Mandarin way: this is how the word is written in Taiwanese Hokkien, and that is the language it is spoken in. The approximate Mandarin sound is shown beside the headword."
     taigi_phonetic: "The characters were picked for their sound, not their meaning: read them with their ordinary Mandarin readings and the Taiwanese Hokkien word comes out. What the characters themselves mean does not matter."
@@ -3972,7 +4018,7 @@ en:
       heading: This may not be the app for you
       lede: Better to find out now than a month from now.
       cards: "You just want flashcards. This is a good deal more than that: a dictionary, a reader, pronunciation, handwriting, and one shared record of progress underneath all of it. For flashcards alone it is overkill."
-      course: "You want a course that takes you from zero to fluent. This is not a textbook: it does not teach grammar, and you will need to work through that elsewhere."
+      course: "You need a path beyond B1. The course takes you to B1 and stops there: above it you get the dictionary, the corpus, the exam lists and your own texts, but not a step-by-step course."
       china: "You are moving to China. Everything here is Taiwanese Mandarin: traditional characters, zhuyin, Taiwanese vocabulary. There is no Chinese variant, and simplified characters cannot be switched on."
       nudging: You want to be chased. There are no reminders, no streaks and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular.
       close: If none of that puts you off, pick an option above and let us begin.
@@ -3997,6 +4043,18 @@ en:
       after_body: "Once the groundwork is there, the app decides what to show you: level first, frequency within the level. Take the rest as you need it — the reader, pronunciation, handwriting, and your own decks built from any text."
       change: Change your starting level
       steps:
+        hanzi:
+          title: "How a character is built"
+          body: >-
+            Before learning characters by the handful it pays to see what they are made of: the radical
+            carries the meaning, the phonetic carries the sound, and the stroke order is the same for all
+            of them. After this page characters stop being pictures and become a system.
+        course:
+          title: "The course, first lessons"
+          body: >-
+            From here it is easier to follow lessons than random words. Each one is a dialogue from life in
+            Taipei, with its vocabulary and grammar underneath and exercises that check you; one button
+            turns the lesson into a deck. The step counts once you finish your first lesson.
         zhuyin_theory:
           title: How the sounds work
           body: >-
@@ -4033,9 +4091,6 @@ en:
         typing:
           title: Typing in zhuyin
           body: The very layout printed on keyboards in Taiwan. Without it you cannot write a message or a search query. The step counts once you have typed ten words correctly.
-        pinyin:
-          title: Pinyin alongside
-          body: "Worth having: it labels streets and stations, and it is what foreigners will use with you. But zhuyin is the primary system here, with pinyin second."
         first_cards:
           title: Your first characters and words
           body: "Characters start straight away rather than being put off: you begin with the most frequent ones. Twenty reviews and the step is done."

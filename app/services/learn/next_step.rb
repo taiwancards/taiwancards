@@ -4,7 +4,7 @@ module Learn
   class NextStep
     Step = Data.define(:kind, :reason)
 
-    PHONETIC_STEPS = %w[zhuyin drill typing].freeze
+    PHONETIC_STEPS = %w[zhuyin bridge drill typing].freeze
 
     def initialize(user)
       @user = user

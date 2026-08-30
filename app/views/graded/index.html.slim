@@ -1,4 +1,5 @@
 - content_for(:title, t("graded.title"))
+- wide_page
 
 .py-6.space-y-6
   header.space-y-2
@@ -11,7 +12,7 @@
   - if @tiers.empty?
     p.text-sm.text-muted-foreground = t("graded.empty")
   - else
-    .grid.gap-3 class="sm:grid-cols-2"
+    .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3"
       - @tiers.each do |tier|
         - texts = Graded::Library.texts(tier.id)
         = link_to graded_tier_path(tier: tier.id), class: "rounded-xl border border-border bg-card p-4 hover:bg-muted" do

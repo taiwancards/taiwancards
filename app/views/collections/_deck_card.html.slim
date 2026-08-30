@@ -6,13 +6,13 @@
   data-sortable-id=(sortable ? deck.id : nil) ]
   .flex.min-w-0.items-start.gap-2
     - if sortable
-      button.sortable-grip.shrink-0.rounded-md.p-1.text-muted-foreground[
+      button.sortable-grip.inline-flex.min-h-11.min-w-11.shrink-0.items-center.justify-center.rounded-md.text-muted-foreground[
         type="button" aria-label=t("desks.reorder")
         data-action="pointerdown->sortable#start pointermove->sortable#move pointerup->sortable#end pointercancel->sortable#end"
-        class="hover:bg-muted" ]
+        class="hover:bg-muted md:min-h-8 md:min-w-8" ]
         = icon(:grip, css: "size-4")
     .min-w-0.flex-1
-      = link_to my_desk_path(deck), class: "block truncate font-semibold hover:underline" do
+      = link_to my_desk_path(deck), class: "flex min-h-10 items-center truncate font-semibold hover:underline md:min-h-0" do
         = deck.name
       .text-xs.text-muted-foreground = t("desks.items_count", count: deck.items_count)
 

@@ -1,4 +1,5 @@
 - content_for(:title, t("zhuci.title"))
+- wide_page
 - locale = I18n.locale.to_s
 
 .py-6.space-y-6
@@ -15,7 +16,7 @@
 
   p.text-xs.text-muted-foreground = t("zhuci.order_hint", count: @total)
 
-  .grid.gap-3 class="sm:grid-cols-2"
+  .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3"
     - @entries.each do |entry|
       - variants = Array(entry.data["variants"]).filter_map { |row| row["text"] }
       = link_to zhuci_entry_path(entry.text), class: "block rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:border-primary/50 hover:bg-muted" do

@@ -7,7 +7,7 @@
       class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-base"
     .flex.flex-wrap.gap-1.text-xs
       - Search::Corpus::KINDS.each do |kind|
-        label.relative.inline-flex.cursor-pointer.items-center.rounded-md.border class=("px-2 py-1 #{corpus.kind?(kind) ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+        label.relative.inline-flex.cursor-pointer.items-center.rounded-md.border class=("min-h-11 px-2 md:min-h-8 #{corpus.kind?(kind) ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
           = check_box_tag("kinds[]", kind, corpus.kind?(kind), id: "kind_#{kind}", class: "sr-only")
           = t("search.kind.#{kind}")
 
@@ -19,7 +19,7 @@
       .flex.flex-wrap class="gap-1"
         - %w[ā á ǎ à ē é ě è ī í ǐ ì ō ó ǒ ò ū ú ǔ ù ǖ ǘ ǚ ǜ ü].each do |mark|
           button.rounded.border.border-border.bg-card.font-medium.leading-none[
-            type="button" class="px-1.5 py-1 text-sm hover:bg-muted"
+            type="button" class="inline-flex min-h-11 min-w-9 items-center justify-center px-1.5 text-sm hover:bg-muted md:min-h-8 md:min-w-8"
             data-keypad-symbol=mark data-action="keypad#insert" ]
             = mark
       p.text-2xs.text-muted-foreground = t("search.field_pinyin_hint")
@@ -40,16 +40,16 @@
               - symbol = key[:symbol] || key[:tone]
               - next if symbol.blank?
               button.rounded.border.border-border.leading-none[
-                type="button" lang="zh-TW" class="min-w-8 px-2 py-1.5 text-sm hover:bg-muted"
+                type="button" lang="zh-TW" class="inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-sm hover:bg-muted md:min-h-8 md:min-w-8"
                 data-keypad-symbol=symbol data-action="keypad#insert" ]
                 = symbol
         .flex.gap-1
           button.rounded.border.border-border.leading-none[
-            type="button" class="px-2 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+            type="button" class="inline-flex min-h-11 items-center px-3 text-xs text-muted-foreground hover:bg-muted md:min-h-8"
             data-action="keypad#backspace" ]
             = t("search.backspace")
           button.rounded.border.border-border.leading-none[
-            type="button" class="px-2 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+            type="button" class="inline-flex min-h-11 items-center px-3 text-xs text-muted-foreground hover:bg-muted md:min-h-8"
             data-action="keypad#clear" ]
             = t("search.clear_field")
       p.text-2xs.text-muted-foreground = t("search.field_zhuyin_hint")
@@ -68,10 +68,10 @@
           .flex.flex-1.gap-1.overflow-x-auto class="py-0.5"
             - config[:levels].each do |level|
               - selected = corpus.levels[scheme] == level
-              label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border class=("px-2 py-0.5 text-xs #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+              label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border class=("min-h-11 px-2 text-xs md:min-h-7 #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
                 = radio_button_tag("levels[#{scheme}]", level, selected, class: "sr-only")
                 = scheme_level_label(scheme, level)
-            label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border.border-border class="px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+            label.relative.inline-flex.shrink-0.cursor-pointer.items-center.whitespace-nowrap.rounded-md.border.border-border class="min-h-11 px-2 text-xs text-muted-foreground hover:bg-muted md:min-h-7"
               = radio_button_tag("levels[#{scheme}]", "", corpus.levels[scheme].nil?, class: "sr-only")
               = t("sentences.any_level")
 
@@ -90,7 +90,7 @@
       .flex.flex-1.flex-wrap.gap-1
         - corpus.available_registers.each do |register|
           - selected = corpus.registers.include?(register)
-          label.inline-flex.cursor-pointer.items-center.rounded-md.border class=("px-2 py-0.5 text-xs #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
+          label.inline-flex.cursor-pointer.items-center.rounded-md.border class=("min-h-11 px-2 text-xs md:min-h-7 #{selected ? "border-primary bg-primary/10 font-medium" : "border-border text-muted-foreground hover:bg-muted"}")
             = check_box_tag("registers[]", register, selected, id: "register_#{register}", class: "sr-only")
             = t("admin.sources.registers.#{register}")
 

@@ -11,7 +11,7 @@
       button.flex-1.rounded-md.text-xs.font-medium.transition-colors[
         type="button" data-action="search-pad#pick" data-mode=mode
         data-search-pad-target="tab" aria-pressed=(index.zero?).to_s
-        class="px-1 py-1 aria-pressed:bg-muted aria-pressed:text-foreground text-muted-foreground hover:bg-muted" ]
+        class="min-h-10 px-1 aria-pressed:bg-muted aria-pressed:text-foreground text-muted-foreground hover:bg-muted xl:min-h-8" ]
         span.mr-1 lang="zh-TW" = glyph
         = t("search.pad.#{mode}")
 
@@ -23,7 +23,7 @@
           - next if symbol.blank?
           button.min-w-0.rounded.border.border-border.leading-none[
             type="button" lang="zh-TW" data-action="search-pad#insert" data-symbol=symbol
-            class="h-7 flex-1 basis-0 text-xs hover:bg-muted" ]
+            class="h-10 flex-1 basis-0 text-xs hover:bg-muted xl:h-7" ]
             = symbol
 
   .hidden.pt-1.5 data-search-pad-target="pane" data-mode="pinyin"
@@ -32,7 +32,7 @@
         - row.each_with_index do |mark, column|
           button.min-w-0.rounded.border.leading-none[
             type="button" data-action="search-pad#insert" data-symbol=mark
-            class=class_names("h-7 flex-1 basis-0 text-xs hover:bg-muted", column.zero? ? "border-transparent bg-muted font-semibold" : "border-border") ]
+            class=class_names("h-10 flex-1 basis-0 text-xs hover:bg-muted xl:h-7", column.zero? ? "border-transparent bg-muted font-semibold" : "border-border") ]
             = mark
     p.mt-1.5.text-center.text-2xs.text-muted-foreground = t("search.pad.pinyin_hint")
 
@@ -51,16 +51,16 @@
           data-handwriting-target="status" data-loading=t("handwriting.loading") data-failed=t("handwriting.failed") ]
         .flex class="gap-0.5"
           button.rounded.border.border-border.text-2xs[
-            type="button" data-action="handwriting#undo" class="px-1.5 py-1 hover:bg-muted" ]
+            type="button" data-action="handwriting#undo" class="min-h-10 px-2 hover:bg-muted xl:min-h-7" ]
             = t("handwriting.undo")
           button.rounded.border.border-border.text-2xs[
-            type="button" data-action="handwriting#clear" class="px-1.5 py-1 hover:bg-muted" ]
+            type="button" data-action="handwriting#clear" class="min-h-10 px-2 hover:bg-muted xl:min-h-7" ]
             = t("handwriting.clear")
 
   .mt-1.5.flex.items-center.justify-between.gap-2.border-t.border-border class="pt-1.5"
     button.rounded.border.border-border.text-2xs.text-muted-foreground[
-      type="button" data-action="search-pad#backspace" class="px-2 py-1 hover:bg-muted" ]
+      type="button" data-action="search-pad#backspace" class="min-h-10 px-3 hover:bg-muted xl:min-h-7" ]
       = t("search.backspace")
     button.rounded.bg-primary.text-2xs.font-semibold.text-primary-foreground[
-      type="button" data-action="search-pad#close" class="px-2.5 py-1 hover:opacity-90" ]
+      type="button" data-action="search-pad#close" class="min-h-10 px-3 hover:opacity-90 xl:min-h-7" ]
       = t("search.pad.done")

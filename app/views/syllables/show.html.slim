@@ -1,5 +1,6 @@
 - content_for(:title) { t("syllables.title") }
 - content_for(:meta_description) { t("syllables.meta_description", clips: @clips) }
+- wide_page
 
 .py-6.space-y-6.pinyin-locked.zhuyin-locked data-controller="syllable-chart" data-syllable-chart-templates-value=@templates.to_json data-syllable-chart-voice-value=@voices.first
   header.space-y-2

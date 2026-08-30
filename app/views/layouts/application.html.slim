@@ -29,7 +29,7 @@ html lang=I18n.locale class=html_preference_classes
         = render "shared/flash"
       = yield
     - else
-      main.mx-auto.w-full.max-w-3xl.px-4 class="pb-24 md:pb-16"
+      main.mx-auto.w-full.px-4 class="#{page_width_class} pb-24 md:pb-16"
         = render "shared/flash"
         = yield
     - unless turbo_native_app?
@@ -38,5 +38,4 @@ html lang=I18n.locale class=html_preference_classes
       = render "shared/bottom_nav"
       - if authenticated? && !content_for?(:full_bleed)
         = render "shared/local_reset"
-        = render "shared/desktop_hint"
         = render "shared/intro_tour"

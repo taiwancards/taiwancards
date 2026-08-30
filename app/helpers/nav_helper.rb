@@ -156,6 +156,8 @@ module NavHelper
 
   def nav_item_lede(path) = t("nav.item_lede.#{nav_item_key(path)}", default: nil)
 
+  def nav_tab_label(path, fallback) = t("nav.tab.#{nav_item_key(path)}", default: fallback)
+
   def nav_entry_active?(entry)
     if entry[:type] == :menu
       entry[:items].any? { |_key, _label, path| current_page?(path) }

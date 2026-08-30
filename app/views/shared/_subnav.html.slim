@@ -1,5 +1,5 @@
 nav.sticky.z-30.hidden.border-b.border-border.md:block data-tour="nav" style="top: 3.5rem" class="bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70"
-  .mx-auto.flex.max-w-5xl.flex-wrap.items-stretch.justify-center.gap-0.px-2
+  .mx-auto.flex.flex-wrap.items-stretch.justify-center.gap-0.px-2 class=subnav_width_class
     - language_nav.each do |entry|
       - active = nav_entry_active?(entry)
       - if entry[:type] == :link

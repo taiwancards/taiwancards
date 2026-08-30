@@ -1,4 +1,5 @@
 - content_for(:title, @lesson.title(I18n.locale))
+- medium_page
 - content_for(:head) { structured_data(grammar_structured_data(@lesson)) }
 - seen = Set.new
 

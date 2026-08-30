@@ -1,31 +1,34 @@
 - content_for(:title, t("nav.more"))
-- item_classes = "flex min-h-11 items-center gap-2.5 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
+- wide_page
+- item_classes = "flex min-h-12 items-start gap-2.5 rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
 - settings_entries, group_entries = language_nav.partition { |entry| entry[:key] == :settings }
 
-.py-6.space-y-5
+.py-6.space-y-5 data-controller="filter"
   h1.text-2xl.font-bold.tracking-tight = t("nav.more")
+
+  .relative
+    span.pointer-events-none.absolute.inset-y-0.left-0.flex.items-center.pl-3.text-muted-foreground
+      = icon(:search, css: "size-4")
+    input.w-full.rounded-xl.border.border-border.bg-card.pl-9.pr-3.text-sm[
+      type="search" class="min-h-11" placeholder=t("nav.filter_placeholder") aria-label=t("nav.filter_placeholder")
+      autocomplete="off" data-filter-target="query" data-action="input->filter#run search->filter#run" ]
 
   .flex.min-h-12.items-center.justify-center.rounded-xl.border.border-border.bg-card.px-3.py-2
     = render "shared/script_prefs", inside_app: authenticated?, readings: true
 
-  - settings_entries.each do |entry|
-    section.space-y-2 data-tour=entry[:tour]
+  - (settings_entries + group_entries).each do |entry|
+    section.space-y-2 data-tour=entry[:tour] data-filter-target="section"
       h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
-      .grid class="grid-cols-2 gap-1.5 sm:grid-cols-3"
+      .grid class="gap-1.5 min-[420px]:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
         - entry[:items].each do |key, label, path|
-          = link_to path, data: {tour: nav_item_tour(path)}, class: item_classes do
-            = icon(key, css: "size-4 shrink-0 text-muted-foreground")
-            span.truncate = label
-        - if current_user&.admin?
-          = link_to admin_users_path, class: item_classes do
-            = icon(:settings, css: "size-4 shrink-0 text-muted-foreground")
-            span.truncate = t("admin.title")
+          = link_to path, data: {tour: nav_item_tour(path), filter_target: "item", filter_text: "#{label} #{nav_item_lede(path)}".downcase}, class: item_classes do
+            = icon(key, css: "mt-0.5 size-4 shrink-0 text-muted-foreground")
+            span.min-w-0.flex-1 class="[overflow-wrap:anywhere]" = label
+        - if entry[:key] == :settings && current_user&.admin?
+          = link_to admin_users_path, data: {filter_target: "item", filter_text: t("admin.title").downcase}, class: item_classes do
+            = icon(:settings, css: "mt-0.5 size-4 shrink-0 text-muted-foreground")
+            span.min-w-0.flex-1 class="[overflow-wrap:anywhere]" = t("admin.title")
 
-  - group_entries.each do |entry|
-    section.space-y-2 data-tour=entry[:tour]
-      h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
-      .grid class="grid-cols-2 gap-1.5 sm:grid-cols-3"
-        - entry[:items].each do |key, label, path|
-          = link_to path, data: {tour: nav_item_tour(path)}, class: item_classes do
-            = icon(key, css: "size-4 shrink-0 text-muted-foreground")
-            span.truncate = label
+  p.hidden.rounded-xl.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground[
+    data-filter-target="empty" ]
+    = t("nav.filter_empty")

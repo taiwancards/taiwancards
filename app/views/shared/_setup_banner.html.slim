@@ -2,9 +2,9 @@
 - return if tasks.empty?
 
 .border-b.border-amber-500 class="bg-amber-500/10"
-  .mx-auto.flex.w-full.max-w-3xl.flex-wrap.items-center.gap-2.px-4.text-xs class="py-1.5"
+  .mx-auto.flex.w-full.flex-wrap.items-center.gap-2.px-4.text-xs class="#{page_width_class} py-1.5"
     span.font-semibold = t("intro.setup.title")
-    - chip = "rounded-full border border-amber-500 px-2.5 py-0.5 font-medium text-amber-700 hover:bg-amber-500/20"
+    - chip = "inline-flex min-h-8 items-center rounded-full border border-amber-500 px-2.5 font-medium text-amber-700 hover:bg-amber-500/20"
     - tasks.each do |task|
       - if task[:post]
         = button_to task[:label], task[:path], form_class: "contents", class: chip

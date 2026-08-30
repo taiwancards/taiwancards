@@ -7,7 +7,7 @@
     nav.flex.gap-1.text-sm
       - %w[daily cram].each do |mode|
         = link_to t("study.modes.#{mode}"), study_path(mode: mode),
-          class: class_names("rounded-full px-3 py-1 font-medium",
+          class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8",
             @mode == mode ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
 
   #study-progress

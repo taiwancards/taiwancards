@@ -48,7 +48,7 @@ module LevelBadgesHelper
   end
 
   def level_badge_classes(exact, compact)
-    size = compact ? "relative rounded px-1.5" : "rounded-full px-2.5 py-1"
+    size = compact ? "relative inline-flex min-h-6 items-center rounded px-1.5" : "inline-flex min-h-11 items-center rounded-full px-2.5 md:min-h-8"
     tint = exact ? "bg-primary/10 text-primary hover:bg-primary/20" : "bg-muted text-muted-foreground"
 
     "whitespace-nowrap font-medium #{size} #{tint}"

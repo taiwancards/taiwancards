@@ -17,6 +17,15 @@ module WordsHelper
     STATE_DOTS.fetch(state, STATE_DOTS[:new])
   end
 
+  def dict_filter_summary(level:, school:, progress:, sort:)
+    parts = []
+    parts << t("plan.levels.#{level}", default: level) if level.present?
+    parts << t("words.grade", n: school) if school.present?
+    parts << t("words.progress.#{progress}", default: nil) if progress.present?
+    parts << t("words.sort.#{sort}") if sort.present? && sort != "level"
+    parts.compact_blank.presence&.join(" · ") || t("words.filters_none")
+  end
+
   def chengyu_tone_dot(tone)
     TONE_DOTS.fetch(tone.to_s, "bg-muted-foreground/30")
   end

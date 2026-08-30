@@ -1,4 +1,5 @@
 - content_for(:title, t("chengyu.title"))
+- wide_page
 
 .py-6.space-y-5
   header.space-y-1
@@ -17,16 +18,16 @@
   .text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("chengyu.filter_level")
   nav.flex.flex-wrap.gap-1.text-sm
     = link_to t("chengyu.grades.all"), base.call(grade: nil),
-      class: class_names("rounded-full px-3 py-1 font-medium", @grade.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+      class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @grade.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
     - (1..7).each do |grade|
       - count = @counts[:grade][grade.to_s].to_i
       - next if count.zero?
       = link_to base.call(grade: grade),
-        class: class_names("rounded-full px-3 py-1 font-medium", @grade == grade.to_s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted") do
+        class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @grade == grade.to_s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted") do
         = t("words.grade", n: grade)
         span.ml-1.text-xs.opacity-70 = count
     = link_to base.call(grade: "advanced"),
-      class: class_names("rounded-full px-3 py-1 font-medium", @grade == "advanced" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted") do
+      class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @grade == "advanced" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted") do
       = t("chengyu.grades.advanced")
       span.ml-1.text-xs.opacity-70 = @counts[:grade]["advanced"].to_i
 
@@ -34,7 +35,7 @@
     .text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("chengyu.filter_tone")
     nav.flex.flex-wrap.items-center.gap-1.text-sm
       = link_to t("chengyu.tones.all"), base.call(tone: nil),
-        class: class_names("rounded-full px-3 py-1 font-medium", @tone.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+        class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @tone.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
       - Huayu::ChengyuImporter::TONES.each do |tone|
         = link_to base.call(tone: tone),
           class: class_names("flex items-center gap-1.5 rounded-full px-3 py-1 font-medium",
@@ -46,20 +47,20 @@
     .text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("chengyu.filter_kind")
     nav.flex.flex-wrap.gap-1.text-sm
       = link_to t("chengyu.kinds.all"), base.call(kind: nil),
-        class: class_names("rounded-full px-3 py-1 font-medium", @kind.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+        class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @kind.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
       - Huayu::ChengyuImporter::KINDS.each do |kind|
         = link_to base.call(kind: kind),
-          class: class_names("rounded-full px-3 py-1 font-medium", @kind == kind ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted") do
+          class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @kind == kind ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted") do
           = t("chengyu.kinds.#{kind}")
           span.ml-1.text-xs.opacity-70 = @counts[:kind][kind].to_i
 
     .text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("chengyu.filter_band")
     nav.flex.flex-wrap.gap-1.text-sm
       = link_to t("chengyu.bands.all"), base.call(band: nil),
-        class: class_names("rounded-full px-3 py-1 font-medium", @band.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+        class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @band.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
       - ChengyuController::BANDS.each do |band|
         = link_to t("chengyu.bands.#{band}"), base.call(band: band),
-          class: class_names("rounded-full px-3 py-1 font-medium", @band == band ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+          class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @band == band ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
 
   p.text-sm.text-muted-foreground = t("chengyu.found", count: @total)
 

@@ -1,4 +1,7 @@
 - content_for(:title, t("onboarding.path.title"))
+- medium_page
+- steps = @path.steps
+- current = steps.find { |step| step[:state] == :current }
 
 .py-6.space-y-6
   header.space-y-2
@@ -11,38 +14,62 @@
         p.font-semibold = t("onboarding.path.done_heading")
         p.mt-1.text-sm.text-muted-foreground = t("onboarding.path.done_body")
       = link_to t("onboarding.path.done_cta"), desk_path,
-        class: "inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+        class: "inline-flex min-h-11 items-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+  - elsif current
+    .rounded-2xl.border.border-brand.p-4.space-y-3 class="sm:p-5 bg-brand-soft"
+      div
+        p.text-xs.font-medium.uppercase.tracking-wide.text-brand = t("onboarding.path.now")
+        p.mt-1.text-lg.font-bold.leading-snug = t("onboarding.path.steps.#{current[:key]}.title")
+        p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.path.steps.#{current[:key]}.body")
+        - if current[:progress].present?
+          p.mt-2.text-xs.tabular-nums.text-muted-foreground = t("onboarding.path.progress", done: current[:progress][:done], target: current[:progress][:target])
+      .flex.flex-wrap.items-center.gap-2
+        = link_to t("onboarding.path.open"), roadmap_link_for(current),
+          class: "inline-flex min-h-11 items-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+        = button_to t("onboarding.path.mark_done"), roadmap_step_path, params: {step: current[:key]}, form_class: "contents",
+          class: "inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
 
   section.space-y-3
-    p.text-sm.text-muted-foreground = t("onboarding.path.counter", done: @path.done_count, total: @path.total_count)
+    .flex.flex-wrap.items-center.justify-between.gap-2
+      p.text-sm.text-muted-foreground = t("onboarding.path.counter", done: @path.done_count, total: @path.total_count)
+      .h-1.min-w-32.flex-1.overflow-hidden.rounded-full.bg-muted
+        .h-full.rounded-full.bg-primary style="width: #{@path.total_count.zero? ? 0 : (100.0 * @path.done_count / @path.total_count).round}%"
 
-    ol.space-y-3
-      - @path.steps.each_with_index do |step, index|
-        li.rounded-2xl.border.p-5.space-y-2 class=roadmap_step_classes(step[:state])
-          .flex.flex-wrap.items-center.gap-2
-            span.inline-flex.size-6.shrink-0.items-center.justify-center.rounded-full.border.border-border.text-xs.font-semibold
-              = step[:state] == :done ? "✓" : index + 1
-            span.font-semibold = t("onboarding.path.steps.#{step[:key]}.title")
-            span.rounded-full.px-2.text-2xs.font-medium.uppercase.tracking-wide class="py-0.5 #{step[:theory] ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}"
-              = t("onboarding.path.kinds.#{step[:theory] ? "theory" : "practice"}")
-            - if step[:optional]
-              span.rounded-full.border.border-border.px-2.text-xs.text-muted-foreground class="py-0.5" = t("onboarding.path.optional")
-            - if step[:state] == :current
-              span.rounded-full.border.border-brand.px-2.text-xs.font-medium.text-brand class="py-0.5" = t("onboarding.path.now")
+    ol.space-y-2
+      - steps.each_with_index do |step, index|
+        - done = step[:state] == :done
+        - now = step[:state] == :current
+        li.rounded-2xl.border class=roadmap_step_classes(step[:state])
+          details.group
+            summary.flex.min-h-14.cursor-pointer.list-none.items-center.gap-3.px-4.py-3 class="[&::-webkit-details-marker]:hidden"
+              span.inline-flex.size-7.shrink-0.items-center.justify-center.rounded-full.border.border-border.text-xs.font-semibold class=(done ? "bg-primary text-primary-foreground border-primary" : nil)
+                = done ? "✓" : index + 1
+              span.min-w-0.flex-1
+                span.block.text-sm.font-semibold class=(done ? "text-muted-foreground" : nil) = t("onboarding.path.steps.#{step[:key]}.title")
+                span.mt-0.5.flex.flex-wrap.items-center class="gap-1.5"
+                  span.rounded-full.px-2.text-2xs.font-medium.uppercase.tracking-wide class="py-0.5 #{step[:theory] ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}"
+                    = t("onboarding.path.kinds.#{step[:theory] ? "theory" : "practice"}")
+                  - if step[:optional]
+                    span.rounded-full.border.border-border.px-2.text-2xs.text-muted-foreground class="py-0.5" = t("onboarding.path.optional")
+                  - if now
+                    span.rounded-full.border.border-brand.px-2.text-2xs.font-medium.text-brand class="py-0.5" = t("onboarding.path.now")
+              = icon(:chevron_down, css: "size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180")
 
-          p.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.path.steps.#{step[:key]}.body")
+            .space-y-3.border-t.border-border.px-4.py-3
+              p.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.path.steps.#{step[:key]}.body")
+              - if step[:progress].present?
+                p.text-xs.tabular-nums.text-muted-foreground = t("onboarding.path.progress", done: step[:progress][:done], target: step[:progress][:target])
+              .flex.flex-wrap.items-center.gap-2
+                = link_to t("onboarding.path.open"), roadmap_link_for(step),
+                  class: "inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-medium hover:bg-muted"
+                - if done
+                  = button_to t("onboarding.path.undo"), roadmap_step_path, params: {step: step[:key], undo: "1"}, form_class: "contents",
+                    class: "inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                - else
+                  = button_to t("onboarding.path.mark_done"), roadmap_step_path, params: {step: step[:key]}, form_class: "contents",
+                    class: "inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
 
-          - if step[:progress].present?
-            p.text-xs.text-muted-foreground = t("onboarding.path.progress", done: step[:progress][:done], target: step[:progress][:target])
-
-          .flex.flex-wrap.items-center.gap-2
-            = link_to t("onboarding.path.open"), roadmap_link_for(step), class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
-            - if step[:state] == :done
-              = button_to t("onboarding.path.undo"), roadmap_step_path, method: :post, params: {step: step[:key], undo: "1"}, class: "rounded-lg px-3 py-1.5 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
-            - else
-              = button_to t("onboarding.path.mark_done"), roadmap_step_path, method: :post, params: {step: step[:key]}, class: "rounded-lg px-3 py-1.5 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
-
-  section.rounded-2xl.border.border-border.bg-card.p-5.space-y-2
+  section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2 class="sm:p-5"
     h2.font-semibold = t("onboarding.path.after_heading")
     p.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.path.after_body")
-    = link_to t("onboarding.path.change"), onboarding_start_path(again: 1), class: "inline-flex text-sm underline underline-offset-2 text-muted-foreground hover:text-foreground"
+    = link_to t("onboarding.path.change"), onboarding_start_path(again: 1), class: "inline-flex min-h-11 items-center text-sm underline underline-offset-2 text-muted-foreground hover:text-foreground"

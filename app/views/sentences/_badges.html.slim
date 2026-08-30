@@ -5,4 +5,4 @@
     = level_badges(lexeme, profile:, marks:, compact: true)
   = frequency_badge(profile)
   - sources.filter_map(&:register).uniq.each do |register|
-    = link_to t("admin.sources.registers.#{register}"), sentences_path(registers: [register]), class: "relative whitespace-nowrap rounded bg-muted px-1.5 hover:bg-muted-foreground/20"
+    = link_to t("admin.sources.registers.#{register}"), sentences_path(registers: [register]), class: "relative inline-flex min-h-6 items-center whitespace-nowrap rounded bg-muted px-1.5 hover:bg-muted-foreground/20"

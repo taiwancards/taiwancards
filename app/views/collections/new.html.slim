@@ -7,7 +7,7 @@
   nav.flex.flex-wrap.gap-1.text-sm
     - CollectionsController::TABS.each do |tab|
       = link_to t("desks.tabs.#{tab}"), new_desk_path(tab: tab),
-        class: class_names("rounded-full px-3 py-1 font-medium", @tab == tab ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+        class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @tab == tab ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
 
   - case @tab
   - when "text"

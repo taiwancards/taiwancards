@@ -3,7 +3,6 @@ import { Controller } from "@hotwired/stimulus";
 const KEYS = [
   "hints.zhuyin",
   "hints.pinyin",
-  "desktop-hint.seen",
   "pron_prelisten",
   "graded.translations",
   "cangjie.progress",

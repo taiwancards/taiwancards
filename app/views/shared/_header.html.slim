@@ -1,7 +1,7 @@
 header.sticky.top-0.z-40.border-b.border-border
   .pointer-events-none.absolute.inset-0[
     aria-hidden="true" class="-z-10 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70" ]
-  .mx-auto.flex.h-14.w-full.max-w-3xl.items-center.gap-2.px-4
+  .mx-auto.flex.h-14.w-full.items-center.gap-2.px-4 class=page_width_class
     = link_to root_path, class: "flex shrink-0 items-center gap-2 text-lg tracking-tight" do
       = image_tag "/icon.svg?v=6", alt: "", width: 36, height: 36, class: "size-9 shrink-0"
       span.hidden class="sm:inline"
@@ -9,7 +9,7 @@ header.sticky.top-0.z-40.border-b.border-border
         span.font-normal.text-muted-foreground Cards
 
     - if authenticated?
-      .relative.min-w-0.flex-1[ data-tour="search" data-controller="search search-pad" data-search-url-value=search_path ]
+      .relative.min-w-0.flex-1[ class="max-w-2xl" data-tour="search" data-controller="search search-pad" data-search-url-value=search_path ]
         .relative
           span.pointer-events-none.absolute.inset-y-0.left-0.flex.items-center.text-muted-foreground class="pl-2.5"
             = icon(:search, css: "size-4")

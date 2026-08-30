@@ -58,11 +58,26 @@ RSpec.describe "Onboarding" do
 
   it "gives an absolute beginner a different track from someone switching off pinyin" do
     zero = Onboarding::Path::TRACKS.fetch("zero")
-    switching = Onboarding::Path::TRACKS.fetch("characters")
+    switching = Onboarding::Path::TRACKS.fetch("phonetics")
 
     expect(zero).to(include("zhuyin", "tones"))
-    expect(switching).to(include("bridge", "readings"))
+    expect(switching).to(include("bridge"))
+    expect(switching).not_to(include("zhuyin", "tones_theory"))
     expect(zero).not_to(eq(switching))
+  end
+
+  it "sends someone who already reads zhuyin and characters straight to the placement test" do
+    track = Onboarding::Path::TRACKS.fetch("characters")
+
+    expect(track.first).to(eq("placement"))
+    expect(track).to(include("readings"))
+    expect(track).not_to(include("bridge"))
+  end
+
+  it "puts the course on every track, whatever the starting point" do
+    Onboarding::Path::TRACKS.each_value do |track|
+      expect(track).to(include("course"))
+    end
   end
 
   it "puts the placement test first for an experienced learner" do

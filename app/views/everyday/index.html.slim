@@ -1,4 +1,5 @@
 - content_for(:title) { t("everyday.title") }
+- wide_page
 
 .py-6.space-y-6
   div
@@ -14,7 +15,7 @@
       - EverydayHelper::GROUPS.each do |group, domains|
         section.space-y-3 data-tour=("everyday-domains" if group == EverydayHelper::GROUPS.keys.first)
           h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("everyday.groups.#{group}")
-          .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+          .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
             - domains.each do |domain|
               - count = @counts[domain].to_i
               - next if count.zero?

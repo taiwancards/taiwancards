@@ -9,10 +9,10 @@
 
   nav.flex.flex-wrap.gap-1.text-sm
     = link_to t("reader.tabs.all"), reader_path,
-      class: class_names("rounded-full px-3 py-1 font-medium", @kind.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+      class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @kind.nil? ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
     - ReadingText::LIBRARY_KINDS.each do |kind|
       = link_to t("reader.tabs.#{kind}"), reader_path(kind:),
-        class: class_names("rounded-full px-3 py-1 font-medium", @kind == kind ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+        class: class_names("inline-flex min-h-11 items-center rounded-full px-3 font-medium md:min-h-8", @kind == kind ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
 
   - if @texts.empty?
     p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground

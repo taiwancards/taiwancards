@@ -22,7 +22,8 @@ module Onboarding
       Step.new(key: "bridge", auto: :zhuyin_trainer, optional: false, link: :zhuyin_training, kind: :practice),
       Step.new(key: "readings", auto: nil, optional: true, link: :variants, kind: :theory),
       Step.new(key: "typing", auto: :typing, optional: false, link: :practice_typing, kind: :practice),
-      Step.new(key: "pinyin", auto: nil, optional: true, link: :practice_zhuyin, kind: :theory),
+      Step.new(key: "hanzi", auto: :hanzi_theory, optional: false, link: :hanzi, kind: :theory),
+      Step.new(key: "course", auto: :course, optional: false, link: :course, kind: :practice),
       Step.new(key: "placement", auto: :placement, optional: false, link: :placement, kind: :practice),
       Step.new(key: "first_cards", auto: :reviews, optional: false, link: :study, kind: :practice),
       Step.new(key: "plan", auto: nil, optional: true, link: :study_plan, kind: :practice)
@@ -31,10 +32,10 @@ module Onboarding
       .freeze
 
     TRACKS = {
-      "zero" => %w[zhuyin_theory zhuyin drill tones_theory tones phrases first_cards plan],
-      "phonetics" => %w[zhuyin_theory zhuyin drill typing phrases first_cards plan],
-      "characters" => %w[bridge readings phrases first_cards plan],
-      "experienced" => %w[placement phrases first_cards plan]
+      "zero" => %w[zhuyin_theory zhuyin drill tones_theory tones typing hanzi phrases course first_cards plan],
+      "phonetics" => %w[zhuyin_theory bridge drill typing hanzi phrases course first_cards plan],
+      "characters" => %w[placement readings phrases course first_cards plan],
+      "experienced" => %w[placement plan course phrases first_cards]
     }.freeze
 
     DEFAULT_TRACK = "phonetics"
@@ -91,6 +92,8 @@ module Onboarding
         review_count >= FIRST_CARDS_TARGET
       when :placement
         placement_finished?
+      when :course
+        course_started?
       else
         user.practice_runs[step.auto.to_s].to_i.positive?
       end
@@ -110,6 +113,12 @@ module Onboarding
       return @placement_finished if defined?(@placement_finished)
 
       @placement_finished = PlacementTest.where(user_id: user.id).where.not(status: :in_progress).exists?
+    end
+
+    def course_started?
+      return @course_started if defined?(@course_started)
+
+      @course_started = CourseCompletion.owned_by(user).finished.exists?
     end
   end
 end

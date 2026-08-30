@@ -1,4 +1,5 @@
 - content_for(:title) { t("intro.guide.title") }
+- wide_page
 
 .py-6.space-y-6
   header.space-y-3
@@ -32,7 +33,7 @@
                   = icon(done ? :check : :help, css: "size-4 shrink-0")
                   span = guide_chapter_label(chapter, done)
 
-        ul.grid.gap-2 class="sm:grid-cols-2"
+        ul.grid.gap-2 class="sm:grid-cols-2 xl:grid-cols-3"
           - group[:items].each do |key, label, path|
             - lede = nav_item_lede(path)
             li.contents
