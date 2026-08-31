@@ -95,7 +95,17 @@ module Bulk
 
     def update_sql(target, columns, set, key)
       assignments = set || columns.keys.map { |name| "#{name} = #{SCRATCH}.#{name}" }.join(", ")
-      "UPDATE #{target} SET #{assignments} FROM #{SCRATCH} WHERE #{target}.#{key} = #{SCRATCH}.#{key}"
+      conditions = ["#{target}.#{key} = #{SCRATCH}.#{key}"]
+      conditions << changed(target, columns.keys) unless set
+
+      "UPDATE #{target} SET #{assignments} FROM #{SCRATCH} WHERE #{conditions.join(" AND ")}"
+    end
+
+    def changed(target, names)
+      stored = names.map { |name| "#{target}.#{name}" }.join(", ")
+      incoming = names.map { |name| "#{SCRATCH}.#{name}" }.join(", ")
+
+      "(#{stored}) IS DISTINCT FROM (#{incoming})"
     end
 
     def connection = ActiveRecord::Base.connection

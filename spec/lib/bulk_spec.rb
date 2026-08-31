@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Bulk do
   describe ".patch" do
-    it "writes every row it is given" do
+    it "writes the values it is given" do
       one = create(:lexeme, kind: :word, text: "測試", score: 0.0)
       two = create(:lexeme, kind: :word, text: "考試", score: 0.0)
 
@@ -56,6 +56,73 @@ RSpec.describe Bulk do
 
     it "writes nothing and asks the database nothing when there are no rows" do
       expect(described_class.patch(target: "lexemes", columns: {"score" => "float8"}, rows: [])).to(eq(0))
+    end
+
+    it "rewrites nothing when the value is already what it would write" do
+      lexeme = create(:lexeme, kind: :word, text: "重複", score: 4.0)
+
+      touched = described_class.patch(
+        target: "lexemes",
+        columns: {"score" => "float8"},
+        rows: [[lexeme.id, 4.0]]
+      )
+
+      expect(touched).to(eq(0))
+    end
+
+    it "counts only the rows that differ when a batch mixes both" do
+      same = create(:lexeme, kind: :word, text: "不動", score: 4.0)
+      moved = create(:lexeme, kind: :word, text: "有變", score: 4.0)
+
+      touched = described_class.patch(
+        target: "lexemes",
+        columns: {"score" => "float8"},
+        rows: [[same.id, 4.0], [moved.id, 9.5]]
+      )
+
+      expect(touched).to(eq(1))
+      expect(moved.reload.score).to(eq(9.5))
+      expect(same.reload.score).to(eq(4.0))
+    end
+
+    it "treats a null on one side as a difference and on both sides as none" do
+      filling = create(:lexeme, kind: :word, text: "填空", score: nil)
+      empty = create(:lexeme, kind: :word, text: "皆空", score: nil)
+
+      expect(
+        described_class.patch(target: "lexemes", columns: {"score" => "float8"}, rows: [[filling.id, 1.0]])
+      )
+        .to(eq(1))
+      expect(
+        described_class.patch(target: "lexemes", columns: {"score" => "float8"}, rows: [[empty.id, nil]])
+      )
+        .to(eq(0))
+    end
+
+    it "compares every column before deciding a row is unchanged" do
+      lexeme = create(:lexeme, kind: :word, text: "兩欄", score: 4.0, audio_url: "https://example.test/a.mp3")
+
+      touched = described_class.patch(
+        target: "lexemes",
+        columns: {"score" => "float8", "audio_url" => "varchar"},
+        rows: [[lexeme.id, 4.0, "https://example.test/b.mp3"]]
+      )
+
+      expect(touched).to(eq(1))
+      expect(lexeme.reload.audio_url).to(eq("https://example.test/b.mp3"))
+    end
+
+    it "still writes unconditionally when the caller supplies the assignment" do
+      lexeme = create(:lexeme, kind: :word, text: "自訂", data: {"difficulty" => 5})
+
+      touched = described_class.patch(
+        target: "lexemes",
+        columns: {"patch" => "jsonb"},
+        rows: [[lexeme.id, {"difficulty" => 5}]],
+        set: "data = lexemes.data || bulk_patch.patch"
+      )
+
+      expect(touched).to(eq(1))
     end
 
     it "leaves no scratch table behind" do
