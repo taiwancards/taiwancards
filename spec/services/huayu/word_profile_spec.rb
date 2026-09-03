@@ -52,7 +52,7 @@ RSpec.describe Huayu::WordProfile do
     I18n.with_locale(locale) { described_class.new(word).sentences.map(&:text) }
   end
 
-  it "leads with the examples translated into the interface language" do
+  it "leads with the examples translated into both languages" do
     expect(texts(:ru).first(2)).to(eq([both_easy.text, both_hard.text]))
   end
 
@@ -75,8 +75,8 @@ RSpec.describe Huayu::WordProfile do
       eq(
         [
           both_easy.text,
-          english_only.text,
           both_hard.text,
+          english_only.text,
           untranslated_easy.text,
           untranslated_hard.text
         ]

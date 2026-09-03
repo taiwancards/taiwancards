@@ -31,11 +31,17 @@
                       - else
                         = example.text
                       = reading_lines(example.text)
+                      - if example.lexeme && example.lexeme.meaning(I18n.locale).present?
+                        .text-xs.text-muted-foreground lang=I18n.locale = example.lexeme.meaning(I18n.locale)
               - if collocations.any?
                 .flex.flex-wrap class="gap-1.5"
                   - collocations.first(8).each do |example|
                     - if example.lexeme
                       = link_to example.text, lexeme_page_path(example.lexeme), class: "rounded bg-muted px-1.5 py-0.5 text-xs hover:bg-muted-foreground/20", lang: "zh-TW", title: example.lexeme.meaning(I18n.locale).presence
                     - else
-                      span.rounded.bg-muted.text-xs class="px-1.5 py-0.5" lang="zh-TW" = example.text
+                      - chip_gloss = Huayu::SenseCollocationGlosses.gloss(example.text)
+                      span.rounded.bg-muted.text-xs class="px-1.5 py-0.5"
+                        span lang="zh-TW" = example.text
+                        - if chip_gloss
+                          span.ml-1.text-muted-foreground = chip_gloss
     p.text-xs.text-muted-foreground = t("words.senses_source")

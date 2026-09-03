@@ -171,6 +171,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/sentence_meaning_filler.rb]
     },
     {
+      name: "example_links",
+      task: "huayu:link_examples",
+      paths: %w[huayu/sentence_glosses.jsonl huayu/sense_glosses.jsonl],
+      code: %w[app/services/huayu/example_linker.rb]
+    },
+    {
       name: "chengyu",
       task: "huayu:import_chengyu",
       paths: %w[huayu/moe_idioms.json huayu/chengyu.json],
