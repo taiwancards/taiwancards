@@ -24,7 +24,7 @@ module Huayu
         lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[kind], text:)
         created = lexeme.new_record?
 
-        if lexeme.readings["pinyin"].blank? && row["pinyin"].present?
+        if row["pinyin"].present? && replace_reading?(lexeme.readings["pinyin"], row["pinyin"])
           lexeme.readings = lexeme
             .readings
             .merge(
@@ -46,6 +46,16 @@ module Huayu
       end
 
       counts
+    end
+
+    private
+
+    def replace_reading?(current, fresh)
+      return true if current.blank?
+
+      plain = -> (value) { value.to_s.unicode_normalize(:nfd).gsub(/[^a-z]/i, "") }
+      truncated = plain.call(current)
+      truncated.present? && truncated != plain.call(fresh) && plain.call(fresh).start_with?(truncated)
     end
   end
 end

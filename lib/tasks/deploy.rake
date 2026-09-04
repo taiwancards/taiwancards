@@ -113,6 +113,12 @@ namespace(:deploy) do
       code: %w[app/services/huayu/song_vocabulary_importer.rb]
     },
     {
+      name: "school_levels",
+      task: "huayu:import_tbcl",
+      paths: %w[huayu/school_levels.json],
+      code: %w[app/services/huayu/school_level_importer.rb]
+    },
+    {
       name: "tocfl",
       task: "huayu:import_tocfl",
       paths: %w[huayu/tocfl.csv],
@@ -123,6 +129,12 @@ namespace(:deploy) do
       task: "huayu:compute_difficulty",
       paths: DICTIONARY_SOURCES + %w[huayu/moe_idioms.json],
       code: %w[app/services/lexemes/difficulty.rb]
+    },
+    {
+      name: "radicals",
+      task: "huayu:import_radicals",
+      paths: %w[huayu/kangxi_radicals.json],
+      code: %w[app/services/huayu/radical_importer.rb]
     },
     {
       name: "ru_glosses",

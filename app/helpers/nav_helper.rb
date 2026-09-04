@@ -67,6 +67,7 @@ module NavHelper
       [:sentences, t("nav.sentences"), sentences_path],
       [:book, t("nav.chengyu"), chengyu_path],
       [:words, t("nav.liangci"), liangci_path],
+      [:speaker, t("nav.zhuci"), zhuci_path],
       [:stats, t("nav.tbcl"), tbcl_levels_path],
       [:stats, t("nav.tocfl"), tocfl_levels_path]
     ]
@@ -81,7 +82,6 @@ module NavHelper
       [:keyboard, t("nav.cangjie_book"), cangjie_lessons_path],
       [:stats, t("nav.numbers"), practice_numbers_path],
       [:book, t("nav.grammar"), grammar_path],
-      [:speaker, t("nav.zhuci"), zhuci_path],
       [:characters, t("nav.variants"), variants_path],
       [:book, t("nav.names"), names_path]
     ]
