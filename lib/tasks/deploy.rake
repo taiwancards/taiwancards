@@ -12,6 +12,13 @@ namespace(:deploy) do
     huayu/no_segment.json
   ].freeze
 
+  CURATED_PAGE_SOURCES = %w[
+    huayu/taiwan_everyday.json
+    huayu/medicine.json
+    huayu/games.json
+    huayu/taiwan_places.json
+  ].freeze
+
   SEGMENTATION_SOURCES = (
     %w[
       huayu/bigram_frequency.json
@@ -139,13 +146,13 @@ namespace(:deploy) do
     {
       name: "ru_glosses",
       task: "huayu:enrich_ru",
-      paths: %w[huayu/ru_glosses.json],
-      code: %w[app/services/huayu/ru_enricher.rb]
+      paths: %w[huayu/ru_glosses.json] + CURATED_PAGE_SOURCES,
+      code: %w[app/services/huayu/ru_enricher.rb app/services/huayu/curated_glosses.rb]
     },
     {
       name: "gloss_overrides",
       task: "huayu:enrich_gloss_overrides",
-      paths: %w[huayu/gloss_overrides.json],
+      paths: %w[huayu/gloss_overrides.json] + CURATED_PAGE_SOURCES,
       code: %w[app/services/huayu/gloss_override_enricher.rb]
     },
     {
@@ -173,14 +180,14 @@ namespace(:deploy) do
     {
       name: "collocation_meanings",
       task: "huayu:fill_collocation_meanings",
-      paths: %w[huayu/collocation_glosses.jsonl],
-      code: %w[app/services/huayu/collocation_meaning_filler.rb]
+      paths: %w[huayu/collocation_glosses.jsonl] + CURATED_PAGE_SOURCES,
+      code: %w[app/services/huayu/collocation_meaning_filler.rb app/services/huayu/curated_glosses.rb]
     },
     {
       name: "sentence_meanings",
       task: "huayu:fill_sentence_meanings",
-      paths: %w[huayu/sentence_glosses.jsonl],
-      code: %w[app/services/huayu/sentence_meaning_filler.rb]
+      paths: %w[huayu/sentence_glosses.jsonl huayu/ru_glosses.json],
+      code: %w[app/services/huayu/sentence_meaning_filler.rb app/services/huayu/ru_enricher.rb]
     },
     {
       name: "example_links",

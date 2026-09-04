@@ -18,6 +18,38 @@ RSpec.describe "deploy:sync" do
     end
   end
 
+  it "re-asserts the gloss overrides whenever a page importer can have overwritten them" do
+    step = SYNC_STEPS.find { |candidate| candidate[:name] == "gloss_overrides" }
+
+    expect(step[:paths]).to(
+      include(*CURATED_PAGE_SOURCES),
+      "the page importers run earlier and overwrite meanings, so the overrides must go stale with them"
+    )
+  end
+
+  it "re-runs every step that reads a curated page file when one of them changes" do
+    %w[ru_glosses collocation_meanings].each do |name|
+      step = SYNC_STEPS.find { |candidate| candidate[:name] == name }
+
+      expect(step[:paths]).to(include(*CURATED_PAGE_SOURCES), "#{name} defers to the page files")
+      expect(step[:code]).to(include("app/services/huayu/curated_glosses.rb"), "#{name} reads them through it")
+    end
+  end
+
+  it "keeps the deploy list of curated pages the same as the one the services read" do
+    expect(CURATED_PAGE_SOURCES).to(match_array(Huayu::CuratedGlosses::PATHS))
+  end
+
+  it "re-asserts the sentence store when another writer of sentence meanings changes" do
+    step = SYNC_STEPS.find { |candidate| candidate[:name] == "sentence_meanings" }
+
+    expect(step[:code]).to(
+      include("app/services/huayu/ru_enricher.rb"),
+      "the Russian gloss dictionary shares keys with short sentences, so the store has to reclaim them"
+    )
+    expect(step[:paths]).to(include("huayu/ru_glosses.json"))
+  end
+
   it "names a task that exists for every step" do
     SYNC_STEPS.each do |step|
       expect(Rake::Task.task_defined?(step[:task])).to(be(true), "#{step[:name]} points at a missing #{step[:task]}")

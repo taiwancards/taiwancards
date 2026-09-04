@@ -39,6 +39,24 @@ RSpec.describe Huayu::RuEnricher do
     expect(lexeme.reload.meanings["ru"]).to(eq("пойти к врачу; принимать больных"))
   end
 
+  it "never rewrites a sentence, whose translation the sentence store owns" do
+    source = ContentSource.create!(
+      slug: "wiki",
+      name: "Wiki",
+      license_commercial: true,
+      enabled: true,
+      enabled_for_admins: true,
+      attribution: "Wiki."
+    )
+    sentence = Lexeme.new(kind: :sentence, text: "不得了！", meanings: {"ru" => "Ну и дела!"})
+    sentence.lexeme_content_sources.build(content_source: source)
+    sentence.save!
+
+    run({"不得了！" => "Это ужасно!"})
+
+    expect(sentence.reload.meanings["ru"]).to(eq("Ну и дела!"))
+  end
+
   it "still enriches the character of the same name, which no page owns" do
     character = create(:lexeme, kind: :character, text: "台", meanings: {"ru" => "старое"})
     page.write(JSON.generate([{"text" => "台", "ru" => "тай — единица счёта"}]))

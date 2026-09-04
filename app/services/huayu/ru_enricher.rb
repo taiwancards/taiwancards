@@ -4,6 +4,8 @@ module Huayu
   class RuEnricher
     PATH = AppData.path("huayu/ru_glosses.json")
 
+    OWNED_ELSEWHERE = %i[sentence].freeze
+
     def initialize(path: PATH, curated: CuratedGlosses.new)
       @path = Pathname(path)
       @curated = curated
@@ -17,7 +19,7 @@ module Huayu
 
       glosses.each_slice(500) do |slice|
         texts = slice.to_h
-        Lexeme.where(text: texts.keys).find_each do |lexeme|
+        Lexeme.where(text: texts.keys).where.not(kind: OWNED_ELSEWHERE).find_each do |lexeme|
           ru = texts[lexeme.text].to_s.strip
           next if ru.empty? || lexeme.meanings["ru"] == ru
           next if owned_by_a_page?(lexeme)
