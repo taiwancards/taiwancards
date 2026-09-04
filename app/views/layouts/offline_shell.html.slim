@@ -1,0 +1,55 @@
+doctype html
+html lang=I18n.locale class=html_preference_classes
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"
+    title = t("app.name")
+    meta name="turbo-prefetch" content="false"
+    meta name="apple-mobile-web-app-capable" content="yes"
+    meta name="mobile-web-app-capable" content="yes"
+    meta name="theme-color" content="#ffffff"
+    link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32"
+    link rel="icon" href="/icon.svg?v=6" type="image/svg+xml"
+    link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6"
+    link rel="manifest" href=pwa_manifest_path(locale: nil)
+    = stylesheet_link_tag :app
+    = javascript_importmap_tags
+
+  body.min-h-dvh.bg-background.text-foreground.antialiased data-controller="offline-boot"
+    header.sticky.top-0.z-40.border-b.border-border class="bg-background/95 backdrop-blur"
+      .mx-auto.flex.h-14.w-full.items-center.gap-2.px-4 class=page_width_class
+        = link_to offline_browse_path, class: "flex shrink-0 items-center gap-2 text-lg tracking-tight" do
+          = image_tag "/icon.svg?v=6", alt: "", width: 36, height: 36, class: "size-9 shrink-0"
+          span.hidden class="sm:inline"
+            span.font-bold Taiwan
+            span.font-normal.text-muted-foreground Cards
+
+        form.relative.min-w-0.flex-1[
+          class="max-w-2xl" action=offline_browse_path method="get"
+          data-controller="offline-jump" data-offline-jump-url-value=offline_browse_path ]
+          span.pointer-events-none.absolute.inset-y-0.left-0.flex.items-center.text-muted-foreground class="pl-2.5"
+            = icon(:search, css: "size-4")
+          input.w-full.rounded-full.border.border-border.bg-muted.pl-8.text-sm[
+            type="search" name="q" autocomplete="off" class="py-1.5 pr-3"
+            placeholder=t("offline.browse.placeholder") aria-label=t("offline.browse.placeholder")
+            data-action="input->offline-jump#jump" ]
+
+        = link_to offline_path, class: "inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted hover:text-foreground", title: t("offline.title"), aria: {label: t("offline.title")} do
+          = icon(:settings, css: "size-5")
+
+    nav.hidden.border-b.border-border.md:block
+      .mx-auto.flex.flex-wrap.items-stretch.justify-center.px-2 class=subnav_width_class
+        - offline_nav.each do |key, label, path|
+          = link_to path, class: "inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-muted-foreground hover:text-foreground" do
+            = icon(key, css: "size-4", stroke: 1.6)
+            span = label
+
+    main.mx-auto.w-full.px-4 class="#{page_width_class} pb-24 md:pb-10"
+      = yield
+
+    nav.fixed.inset-x-0.bottom-0.z-40.border-t.border-border.md:hidden class="bg-background/95 backdrop-blur pb-[env(safe-area-inset-bottom)]"
+      .mx-auto.flex.max-w-3xl.items-stretch
+        - offline_nav.first(4).each do |key, label, path|
+          = link_to path, class: "flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[11px] font-medium leading-tight text-muted-foreground" do
+            = icon(key, css: "size-6 shrink-0", stroke: 1.6)
+            span.w-full.truncate.text-center = label

@@ -1,0 +1,59 @@
+- content_for(:title) { t("offline.title") }
+
+.py-6.space-y-6[
+  data-controller="offline"
+  data-offline-base-value=Offline.base
+  data-offline-browse-value=offline_browse_path
+  data-offline-labels-value=offline_labels.to_json ]
+
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("offline.title")
+    p.text-sm.leading-relaxed.text-muted-foreground class="max-w-2xl" = t("offline.lede")
+
+  section.hidden.rounded-2xl.border.border-border.p-4.space-y-1 class="bg-muted/30" data-offline-target="absent"
+    p.font-medium = t("offline.absent.title")
+    p.text-sm.text-muted-foreground = t("offline.absent.body")
+
+  section.hidden.rounded-2xl.border.border-border.bg-card.p-5.space-y-3 data-offline-target="install"
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("offline.install_title")
+    p.text-sm.text-muted-foreground = t("offline.install_hint")
+    button.inline-flex.min-h-11.items-center.rounded-lg.bg-primary.px-4.text-sm.font-semibold.text-primary-foreground[
+      type="button" data-action="offline#install" data-offline-target="installButton"
+      class="hover:opacity-90 md:min-h-9" ]
+      = t("offline.install_action")
+
+  section.rounded-2xl.border.border-border.p-4.space-y-1 class="bg-muted/30"
+    p.text-sm.text-muted-foreground data-offline-target="storage"
+    p.text-xs.text-muted-foreground data-offline-target="persisted"
+
+  p.hidden.rounded-lg.border.border-border.px-3.py-2.text-sm.text-muted-foreground data-offline-target="unsupported"
+    = t("offline.unsupported")
+
+  p.hidden.rounded-lg.border.border-border.px-3.py-2.text-sm.text-muted-foreground data-offline-target="unavailable"
+
+  .space-y-6 data-offline-target="groups"
+
+  = link_to t("offline.action.browse"), offline_browse_path,
+    class: "inline-flex min-h-11 items-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted md:min-h-9"
+
+  template data-offline-target="groupTemplate"
+    section.space-y-3
+      .space-y-1
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground data-field="title"
+        p.text-sm.text-muted-foreground data-field="summary"
+      .divide-y.divide-border.rounded-2xl.border.border-border data-field="packs"
+
+  template data-offline-target="packTemplate"
+    .flex.flex-wrap.items-center.justify-between.gap-3.p-4
+      .min-w-0.space-y-1
+        p.font-medium data-field="title"
+        p.text-xs.text-muted-foreground
+          span data-field="size"
+          span.mx-1 ·
+          span data-field="state"
+      .flex.shrink-0.items-center.gap-2
+        button.hidden.min-h-11.items-center.rounded-lg.border.border-border.px-3.text-sm.font-medium[
+          type="button" data-field="remove" data-action="offline#remove" class="hover:bg-muted md:min-h-9" ]
+          = t("offline.action.remove")
+        button.inline-flex.min-h-11.items-center.rounded-lg.bg-primary.px-4.text-sm.font-semibold.text-primary-foreground[
+          type="button" data-field="get" data-action="offline#download" class="hover:opacity-90 md:min-h-9" ]

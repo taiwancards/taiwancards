@@ -2427,6 +2427,72 @@ en:
     licenses: Licenses & credits
     privacy: Privacy
     terms: Terms
+  offline:
+    title: Offline
+    lede: >-
+      Download a section and read it without a connection. Everything here is what the site shows
+      without an account: no cards, no progress, no audio.
+    install_title: Put it on your home screen
+    install_hint: >-
+      Installed, the app keeps what you downloaded for good. Left as a browser tab, Safari clears it
+      after a week without a visit.
+    install_action: Install
+    storage: "%{used} of %{quota} used"
+    persisted: Storage is protected from automatic cleanup.
+    unsupported: This browser cannot store pages offline.
+    megabyte: MB
+    unavailable: The packs are not published yet.
+    warn_large: "%{size} will be downloaded now. Continue?"
+    packs:
+      core: Basics
+      grammar: Grammar
+      graded: Graded reader
+      cangjie: Cangjie
+      taiwan: Taiwan
+      reference: Reference lists
+      chengyu: Idioms
+    groups:
+      core: Always needed
+      texts: Texts and lessons
+      reference: Reference
+      dictionary: Dictionary by level
+    summaries:
+      core: Menu, help, phonetics tables and the pages the rest link back to.
+      texts: Lessons and readers, whole sections at a time.
+      reference: Radicals, measure words, particles and the level lists.
+      dictionary: Entries, the characters behind them and the sentences pinned to that level.
+    state:
+      missing: Not downloaded
+      ready: Downloaded
+      stale: Update available
+      working: "%{done} of %{total}"
+    action:
+      download: Download
+      update: Update
+      remove: Remove
+      browse: Open what is downloaded
+    browse:
+      title: Downloaded
+      lede: Everything the downloaded packs hold. Search works without a connection.
+      placeholder: Character, zhuyin, pinyin or meaning
+      empty: Nothing downloaded yet.
+      none: Nothing matched.
+      count: "%{count} entries"
+      all: All
+      kind:
+        character: Characters
+        word: Words
+        phrase: Phrases
+        collocation: Collocations
+        sentence: Sentences
+        radical: Radicals
+        measure_word: Measure words
+        particle: Particles
+        grammar: Grammar
+        text: Texts
+    absent:
+      title: Not in your downloads
+      body: This page belongs to a pack you have not downloaded. It opens as usual once you are back online.
   syllables:
     title: Every Mandarin syllable, spoken
     meta_description: >-

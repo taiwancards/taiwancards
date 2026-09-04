@@ -32,11 +32,10 @@ module Textbook
       collection = collection_for(lesson)
       position = 0
       lesson.vocabulary.each do |entry|
-        lexeme = import_entry(lesson, entry)
-        next if lexeme.nil?
-
-        collection.add_lexeme(lexeme, position:)
-        position += 1
+        import_entry(lesson, entry).each do |lexeme|
+          collection.add_lexeme(lexeme, position:)
+          position += 1
+        end
       end
 
       collection.update!(items_count: collection.collection_items.count)
@@ -76,12 +75,14 @@ module Textbook
     end
 
     def import_entry(lesson, entry)
-      text = entry["traditional"].to_s
-      return if text.blank?
+      Spellings.of(entry["traditional"]).map { |text| import_spelling(lesson, entry, text) }
+    end
 
+    def import_spelling(lesson, entry, text)
       meanings = {"en" => entry["meaning"], "ru" => entry["meaning_ru"]}.compact_blank
       source = "Textbook #{lesson.label}"
       audio = lesson.audio_url(entry)
+      pinyin = settled_pinyin(entry)
 
       if entry["category"] == "Ph"
         lexeme = @upserter.phrase(text, meanings:, audio_url: audio, source:)
@@ -89,17 +90,22 @@ module Textbook
       else
         lexeme = @upserter.word(
           text,
-          readings: {"pinyin" => entry["pinyin"], "zhuyin" => Huayu::Zhuyin.from_pinyin(entry["pinyin"])},
+          readings: {"pinyin" => pinyin, "zhuyin" => Huayu::Zhuyin.from_pinyin(pinyin)}.compact_blank,
           meanings:,
           audio_url: audio,
           pos: entry["category"],
           source:
         )
         han = text.chars.select { |char| char.match?(HAN) }
-        @upserter.link(lexeme, characters_of(text, source), readings: character_readings(han, entry["pinyin"]))
+        @upserter.link(lexeme, characters_of(text, source), readings: character_readings(han, pinyin))
       end
 
       lexeme
+    end
+
+    def settled_pinyin(entry)
+      reading = entry["pinyin"].to_s
+      reading.include?("/") ? nil : reading.presence
     end
 
     def characters_of(text, source)

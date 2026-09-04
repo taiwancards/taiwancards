@@ -97,7 +97,7 @@ class User < ApplicationRecord
   DEV_LOGIN_OFF = "off"
 
   def self.signed_in_by_default?
-    Rails.env.development? && ENV["DEV_LOGIN"] != DEV_LOGIN_OFF && !Site.exporting?
+    Rails.env.development? && ENV["DEV_LOGIN"] != DEV_LOGIN_OFF && !Site.exporting? && !Offline.rendering?
   end
 
   def self.default_owner

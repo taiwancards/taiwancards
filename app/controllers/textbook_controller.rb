@@ -18,7 +18,10 @@ class TextbookController < ApplicationController
 
   def mark_known
     textbook_lesson = TextbookLesson.find_by!(book: params[:book], lesson: params[:lesson])
-    texts = textbook_lesson.words.filter_map { |entry| entry["traditional"].presence || entry["word"].presence }
+    texts = textbook_lesson.words.flat_map do |entry|
+      Textbook::Spellings.of(entry["traditional"].presence || entry["word"])
+    end
+
     lexemes = Lexeme
       .where(kind: %i[character word])
       .where(text: texts.uniq)

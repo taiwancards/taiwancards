@@ -866,3 +866,11 @@ abbr.glossary {
 .sortable-dragging .sortable-grip {
   cursor: grabbing;
 }
+
+.offline a[href$="/login"],
+.offline form[action*="/login"],
+.offline [data-controller~="hanzi-writer"],
+.offline [data-controller~="audio"],
+.offline [data-controller~="card-speech"] {
+  display: none !important;
+}

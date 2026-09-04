@@ -181,10 +181,24 @@ dist-plan:
 dist-runtime:
     bin/distribute runtime
 
-# Ship data to R2, then ask Render to roll it out
+# Everything the next deploy needs, in R2: runtime data, offline packs, assets
 [group('content')]
-ship: dist-runtime
+prep: dist-runtime offline dist-assets
+
+# Ask Render to build and roll out the current commit, without waiting for a push
+[group('deploy')]
+release:
     bin/rails deploy:release
+
+# Render the guest pages into the offline packs
+[group('content')]
+offline *packs:
+    bin/rails "offline:build[{{packs}}]"
+
+# Show what the built offline packs hold
+[group('content')]
+offline-list:
+    bin/rails offline:list
 
 # Cold archive to the private R2 bucket
 [group('content')]

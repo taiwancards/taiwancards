@@ -1,0 +1,35 @@
+- wide_page
+- content_for(:title) { t("offline.browse.title") }
+
+.py-6.space-y-5[
+  data-controller="offline-browse"
+  data-offline-browse-labels-value=offline_browse_labels.to_json ]
+
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("offline.browse.title")
+    p.text-sm.text-muted-foreground = t("offline.browse.lede")
+
+  .space-y-3
+    input.w-full.rounded-full.border.border-border.bg-muted.px-4.text-sm[
+      type="search" autocomplete="off" placeholder=t("offline.browse.placeholder")
+      aria-label=t("offline.browse.placeholder") class="py-2.5"
+      data-offline-browse-target="query" data-action="input->offline-browse#search" ]
+
+    .flex.flex-wrap.gap-1.5 data-offline-browse-target="kinds"
+
+  p.text-xs.text-muted-foreground data-offline-browse-target="count"
+
+  ul.divide-y.divide-border.rounded-2xl.border.border-border data-offline-browse-target="results"
+
+  p.text-sm.text-muted-foreground data-offline-browse-target="empty"
+
+  template data-offline-browse-target="rowTemplate"
+    li
+      a.flex.min-h-14.flex-wrap.items-center.gap-x-3.gap-y-1.px-4.py-3 class="hover:bg-muted"
+        span.text-lg.font-medium lang="zh-TW" data-field="text"
+        span.text-sm.text-muted-foreground data-field="reading"
+        span.min-w-0.flex-1.truncate.text-sm.text-muted-foreground data-field="gloss"
+
+  template data-offline-browse-target="chipTemplate"
+    button.inline-flex.min-h-11.items-center.rounded-full.border.border-border.px-3.text-sm[
+      type="button" data-action="offline-browse#filter" class="hover:bg-muted md:min-h-8" ]

@@ -62,6 +62,10 @@ module Taiwancards
             "access-control-allow-origin" => "*",
             "timing-allow-origin" => "*"
           }
+        ],
+        [
+          %r{\A/#{SharedAssets::PACKS}/#{SharedAssets::MANIFEST}\z},
+          {"cache-control" => SharedAssets::MANIFEST_CACHE_CONTROL}
         ]
       ]
     )

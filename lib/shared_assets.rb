@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 module SharedAssets
-  MOUNTS = %w[fonts json].freeze
+  MOUNTS = %w[fonts json packs].freeze
+  PACKS = "packs"
+  MANIFEST = "manifest.json"
+  MANIFEST_CACHE_CONTROL = "public, max-age=60"
 
   module_function
 

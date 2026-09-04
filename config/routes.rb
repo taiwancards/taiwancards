@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get("listening/clips/:id", to: "listening_clips#show", as: :listening_clip)
   get("tones/refill", to: "tones#refill", as: :tones_refill, defaults: {format: :json})
   get("manifest", to: "rails/pwa#manifest", as: :pwa_manifest, defaults: {format: :json})
+  get("sw.js", to: "offline#worker", as: :service_worker)
   get("sitemap", to: "sitemaps#index", as: :sitemap, defaults: {format: :xml})
   get(
     "sitemaps/:name",
@@ -67,6 +68,8 @@ Rails.application.routes.draw do
     get("privacy", to: "pages#privacy_policy")
     get("terms", to: "pages#terms_of_service")
     get("menu", to: "pages#menu")
+    get("offline", to: "offline#show", as: :offline)
+    get("offline/browse", to: "offline#browse", as: :offline_browse)
     get("intro", to: "intros#show", as: :intro)
     post("intro/start", to: "intros#start", as: :intro_start)
     delete("intro", to: "intros#pause", as: :intro_pause)

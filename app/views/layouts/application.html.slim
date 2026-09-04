@@ -18,7 +18,7 @@ html lang=I18n.locale class=html_preference_classes
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_importmap_tags
 
-  body.min-h-dvh.bg-background.text-foreground.antialiased
+  body.min-h-dvh.bg-background.text-foreground.antialiased data-controller="offline-boot"
     - if !turbo_native_app? && !content_for?(:full_bleed)
       = render "shared/header"
       = render "shared/impersonation_banner"

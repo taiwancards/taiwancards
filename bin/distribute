@@ -14,6 +14,7 @@ ARCHIVE_DIRS=(
 
 MEDIA_DIRS=(moe_audio moe_audio_words cns_voice)
 IMMUTABLE="public, max-age=31536000, immutable"
+MANIFEST_CACHE="public, max-age=60"
 
 UNPACKED_FROM_XZ=(dict_and_corpora/corpora/moedict/dict-revised.json)
 
@@ -122,6 +123,23 @@ do_assets() {
       --content-type application/json --cache-control "$IMMUTABLE" \
       --exclude '*' --include '*.json' \
       --no-progress ${DRY[@]+"${DRY[@]}"}
+  fi
+
+  if [ -d storage/packs ]; then
+    echo "   packs"
+    r2 sync storage/packs "s3://$R2_ASSETS_BUCKET/packs" \
+      --content-type application/json --cache-control "$IMMUTABLE" \
+      --exclude '*' --include '*.json' --exclude 'manifest.json' \
+      --no-progress ${DRY[@]+"${DRY[@]}"}
+
+    echo "   packs manifest"
+    [ ${#DRY[@]} -ne 0 ] || r2 cp storage/packs/manifest.json "s3://$R2_ASSETS_BUCKET/packs/manifest.json" \
+      --content-type application/json --cache-control "$MANIFEST_CACHE" --no-progress
+
+    echo "   packs cleanup"
+    r2 sync storage/packs "s3://$R2_ASSETS_BUCKET/packs" \
+      --exclude '*' --include '*.json' --exclude 'manifest.json' \
+      --delete --no-progress ${DRY[@]+"${DRY[@]}"}
   fi
 }
 

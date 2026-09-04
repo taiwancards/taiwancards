@@ -33,13 +33,17 @@ namespace(:deploy) do
       name: "textbook",
       task: "textbook:load",
       paths: %w[textbook],
-      code: %w[app/services/textbook/lexeme_importer.rb]
+      code: %w[app/services/textbook/lexeme_importer.rb app/services/textbook/spellings.rb]
     },
     {
       name: "textbook_lexemes",
       task: "textbook:import_lexemes",
       paths: %w[textbook],
-      code: %w[app/services/textbook/lexeme_importer.rb app/services/textbook/sentence_extractor.rb]
+      code: %w[
+        app/services/textbook/lexeme_importer.rb
+        app/services/textbook/sentence_extractor.rb
+        app/services/textbook/spellings.rb
+      ]
     },
     {
       name: "content_sources",
