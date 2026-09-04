@@ -4,8 +4,9 @@ module Huayu
   class RuEnricher
     PATH = AppData.path("huayu/ru_glosses.json")
 
-    def initialize(path: PATH)
+    def initialize(path: PATH, curated: CuratedGlosses.new)
       @path = Pathname(path)
+      @curated = curated
     end
 
     def call
@@ -19,6 +20,7 @@ module Huayu
         Lexeme.where(text: texts.keys).find_each do |lexeme|
           ru = texts[lexeme.text].to_s.strip
           next if ru.empty? || lexeme.meanings["ru"] == ru
+          next if owned_by_a_page?(lexeme)
 
           counts[lexeme.meanings["ru"].to_s.empty? ? :filled : :replaced] += 1
           lexeme.meanings = lexeme.meanings.merge("ru" => ru)
@@ -28,6 +30,12 @@ module Huayu
 
       counts[:glosses] = glosses.size
       counts
+    end
+
+    private
+
+    def owned_by_a_page?(lexeme)
+      Lexeme::DICTIONARY_KINDS.include?(lexeme.kind.to_sym) && @curated.owns?(lexeme.text, "ru")
     end
   end
 end

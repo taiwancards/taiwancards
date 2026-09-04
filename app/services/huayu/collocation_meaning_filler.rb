@@ -2,8 +2,11 @@
 
 module Huayu
   class CollocationMeaningFiller
-    def initialize(io: $stdout)
+    CURATED_PATHS = (CuratedGlosses::PATHS + [CuratedGlosses::OVERRIDE_PATH]).freeze
+
+    def initialize(io: $stdout, curated_paths: CURATED_PATHS)
       @io = io
+      @curated = CuratedGlosses.new(paths: curated_paths)
     end
 
     def call
@@ -28,11 +31,10 @@ module Huayu
 
         Lexeme.where(kind: :collocation, text: by_text.keys).find_each do |lexeme|
           entry = by_text[lexeme.text]
-          meanings = lexeme
-            .meanings
-            .merge(
-              {"en" => entry.en.presence, "ru" => entry.ru.presence}.compact
-            ) { |_key, old, fresh| old.to_s.strip.presence || fresh }
+          fresh = {"en" => entry.en.presence, "ru" => entry.ru.presence}
+            .compact
+            .except(*@curated.owned(lexeme.text))
+          meanings = lexeme.meanings.merge(fresh)
           next if meanings == lexeme.meanings
 
           lexeme.update_columns(meanings: meanings)
