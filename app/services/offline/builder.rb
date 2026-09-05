@@ -6,10 +6,10 @@ module Offline
     VERSION = 1
     REFUSAL_SHARE = 0.01
 
-    def initialize(root: Offline.root, io: $stdout, renderer: Renderer.new)
+    def initialize(root: Offline.root, io: $stdout, renderer: Renderer.new, workers: 1)
       @root = Pathname(root)
       @io = io
-      @renderer = renderer
+      @pool = Pool.new(workers:, renderer:)
     end
 
     def call(only: nil)
@@ -18,6 +18,7 @@ module Offline
 
       @root.mkpath
       manifest = existing_manifest
+      io.puts("offline: rendering with #{pool.workers} workers") if pool.parallel?
 
       Offline.while_rendering do
         wanted.each do |section|
@@ -29,11 +30,13 @@ module Offline
       report(manifest)
       sweep(manifest)
       manifest
+    ensure
+      pool.close
     end
 
     private
 
-    attr_reader :root, :io, :renderer
+    attr_reader :root, :io, :pool
 
     def build(section, previous)
       @refused = []
@@ -47,9 +50,8 @@ module Offline
 
       rendered = render_all(section, pages.paths)
       settle_refusals(section, pages.paths)
-      digest = Digest::SHA256.hexdigest(Marshal.dump(rendered))[0, 8]
 
-      record(section, pages, rendered, digest, stamp)
+      record(section, pages, rendered, stamp)
     end
 
     def render_all(section, paths)
@@ -60,20 +62,13 @@ module Offline
     end
 
     def render_locale(section, paths, locale)
-      done = 0
-      paths.each_with_object({}) do |path, acc|
-        fragment = render_one(path, locale)
-        acc["/#{locale}#{path}"] = fragment if fragment
-        done += 1
-        io.print("  #{section.id}: #{locale} #{done}/#{paths.size}\r") if (done % 25).zero?
+      fragments, refused = pool.render(paths, locale) do |done|
+        io.print("  #{section.id}: #{locale} #{done}/#{paths.size}\r")
       end
-    end
 
-    def render_one(path, locale)
-      Fragment.new(renderer.call(path, locale)).call
-    rescue Renderer::Refused => e
-      @refused << e.message
-      nil
+      @refused.concat(refused)
+
+      fragments.transform_keys { |path| "/#{locale}#{path}" }
     end
 
     def settle_refusals(section, paths)
@@ -88,26 +83,20 @@ module Offline
       raise "#{section.id}: #{@refused.size} of #{wanted} pages refused, too many to publish"
     end
 
-    def write_shells(section, digest)
-      return nil unless section.id == Sections::CORE
-
-      name = "shells-#{digest}.json"
-      root.join(name).write(JSON.generate(Shells.new.call))
-      name
-    end
-
-    def record(section, pages, rendered, digest, stamp)
+    def record(section, pages, rendered, stamp)
+      payloads = rendered.transform_values { |fragments| batches(fragments).map { |batch| JSON.generate(batch) } }
+      index = index_payload(section, pages.entries)
+      shells = shells_payload(section)
+      digest = digest_of(payloads, index, shells)
       chunks = {}
       bytes = {}
 
-      rendered.each do |locale, fragments|
-        written = write_chunks(section, digest, locale, fragments)
+      payloads.each do |locale, list|
+        written = write_chunks(section, digest, locale, list)
         chunks[locale] = written.map(&:first)
         bytes[locale] = written.sum(&:last)
       end
 
-      index = write_index(section, digest, pages.entries)
-      shells = write_shells(section, digest)
       io.puts("  #{section.id}: #{rendered.values.sum(&:size)} pages, #{human(bytes.values.sum)}      ")
 
       {
@@ -120,15 +109,30 @@ module Offline
         "pages" => rendered.values.first&.size.to_i,
         "chunks" => chunks,
         "bytes" => bytes,
-        "index" => index,
-        "shells" => shells
+        "index" => write_index(section, digest, index),
+        "shells" => write_shells(digest, shells)
       }
     end
 
-    def write_chunks(section, digest, locale, fragments)
-      batches(fragments).each_with_index.map do |batch, position|
+    def index_payload(section, entries)
+      return nil if entries.empty?
+
+      JSON.generate({"pack" => section.id, "rows" => entries.map(&:to_row)})
+    end
+
+    def shells_payload(section)
+      return nil unless section.id == Sections::CORE
+
+      JSON.generate(Shells.new.call)
+    end
+
+    def digest_of(payloads, index, shells)
+      Digest::SHA256.hexdigest([*payloads.values.flatten, index, shells].compact.join("\n"))[0, 8]
+    end
+
+    def write_chunks(section, digest, locale, payloads)
+      payloads.each_with_index.map do |payload, position|
         name = "#{section.id}-#{digest}.#{locale}.#{position}.json"
-        payload = JSON.generate(batch)
         root.join(name).write(payload)
         [name, payload.bytesize]
       end
@@ -153,11 +157,19 @@ module Offline
       groups.reject(&:empty?)
     end
 
-    def write_index(section, digest, entries)
-      return nil if entries.empty?
+    def write_index(section, digest, index)
+      return nil if index.nil?
 
       name = "#{section.id}-#{digest}.index.json"
-      root.join(name).write(JSON.generate({"pack" => section.id, "rows" => entries.map(&:to_row)}))
+      root.join(name).write(index)
+      name
+    end
+
+    def write_shells(digest, shells)
+      return nil if shells.nil?
+
+      name = "shells-#{digest}.json"
+      root.join(name).write(shells)
       name
     end
 

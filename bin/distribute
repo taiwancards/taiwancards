@@ -4,6 +4,11 @@ cd "$(dirname "$0")/.."
 . bin/_env.sh
 load_env
 
+SCRATCH="$(mktemp -d -t taiwancards-distribute)"
+trap 'rm -rf "$SCRATCH"' EXIT
+JOBS="$(sysctl -n hw.perflevel0.logicalcpu 2> /dev/null || nproc 2> /dev/null || echo 8)"
+CONCURRENCY=24
+
 ARCHIVE_DIRS=(
   dict_and_corpora
   media/pronunciation
@@ -45,23 +50,25 @@ need() {
   done
 }
 
-r2() {
+r2_env() {
   need R2_ENDPOINT R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY
+  [ -f "$SCRATCH/aws.ini" ] || printf '[default]\ns3 =\n    max_concurrent_requests = %s\n    max_queue_size = 10000\n' \
+    "$CONCURRENCY" > "$SCRATCH/aws.ini"
+  export AWS_CONFIG_FILE="$SCRATCH/aws.ini"
   export AWS_ACCESS_KEY_ID="$R2_ACCESS_KEY_ID"
   export AWS_SECRET_ACCESS_KEY="$R2_SECRET_ACCESS_KEY"
   export AWS_DEFAULT_REGION=auto
   export AWS_REQUEST_CHECKSUM_CALCULATION=when_required
   export AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
+}
+
+r2() {
+  r2_env
   aws s3 "$@" --endpoint-url "$R2_ENDPOINT"
 }
 
 r2api() {
-  need R2_ENDPOINT R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY
-  export AWS_ACCESS_KEY_ID="$R2_ACCESS_KEY_ID"
-  export AWS_SECRET_ACCESS_KEY="$R2_SECRET_ACCESS_KEY"
-  export AWS_DEFAULT_REGION=auto
-  export AWS_REQUEST_CHECKSUM_CALCULATION=when_required
-  export AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
+  r2_env
   aws s3api "$@" --endpoint-url "$R2_ENDPOINT"
 }
 
@@ -125,21 +132,65 @@ do_assets() {
       --no-progress ${DRY[@]+"${DRY[@]}"}
   fi
 
-  if [ -d storage/packs ]; then
+  if [ -f storage/packs/manifest.json ]; then
     echo "   packs"
-    r2 sync storage/packs "s3://$R2_ASSETS_BUCKET/packs" \
-      --content-type application/json --cache-control "$IMMUTABLE" \
-      --exclude '*' --include '*.json' --exclude 'manifest.json' \
-      --no-progress ${DRY[@]+"${DRY[@]}"}
+    do_packs
+  fi
+}
 
-    echo "   packs manifest"
-    [ ${#DRY[@]} -ne 0 ] || r2 cp storage/packs/manifest.json "s3://$R2_ASSETS_BUCKET/packs/manifest.json" \
-      --content-type application/json --cache-control "$MANIFEST_CACHE" --no-progress
+do_packs() {
+  local remote="$SCRATCH/remote" mine="$SCRATCH/mine" upload="$SCRATCH/upload" stale="$SCRATCH/stale"
+  local staging="$SCRATCH/staging" file name uploads stales kilobytes started
 
-    echo "   packs cleanup"
-    r2 sync storage/packs "s3://$R2_ASSETS_BUCKET/packs" \
-      --exclude '*' --include '*.json' --exclude 'manifest.json' \
-      --delete --no-progress ${DRY[@]+"${DRY[@]}"}
+  r2api list-objects-v2 --bucket "$R2_ASSETS_BUCKET" --prefix packs/ \
+    --query 'Contents[].[Key,Size]' --output text |
+    awk -F'\t' '$1 != "None" && $1 != "packs/manifest.json" { sub("^packs/", "", $1); print $1, $2 }' |
+    LC_ALL=C sort > "$remote"
+
+  for file in storage/packs/*.json; do
+    [ -f "$file" ] || continue
+    name="$(basename "$file")"
+    [ "$name" = manifest.json ] && continue
+    printf '%s %s\n' "$name" "$(wc -c < "$file" | tr -d ' ')"
+  done | LC_ALL=C sort > "$mine"
+
+  LC_ALL=C comm -23 <(cut -d' ' -f1 "$mine") <(cut -d' ' -f1 "$remote") > "$upload"
+  LC_ALL=C comm -12 "$mine" "$remote" | cut -d' ' -f1 >> "$upload"
+  LC_ALL=C sort -u -o "$upload" "$upload"
+  LC_ALL=C comm -13 <(cut -d' ' -f1 "$mine") <(cut -d' ' -f1 "$remote") > "$stale"
+  uploads="$(wc -l < "$upload" | tr -d ' ')"
+  stales="$(wc -l < "$stale" | tr -d ' ')"
+  echo "   packs: $(wc -l < "$mine" | tr -d ' ') local, $uploads to send, $stales stale in the bucket"
+
+  if [ "$uploads" -gt 0 ]; then
+    if [ ${#DRY[@]} -ne 0 ]; then
+      sed -n '1,5p' "$upload" | sed 's/^/     would send /'
+      [ "$uploads" -le 5 ] || echo "     ... and $((uploads - 5)) more"
+    else
+      started=$SECONDS
+      mkdir -p "$staging"
+      xargs -P "$JOBS" -I{} sh -c 'gzip -6 -n -c "storage/packs/$1" > "$2/$1"' _ {} "$staging" < "$upload"
+      kilobytes="$(du -sk "$staging" | cut -f1)"
+      r2 cp "$staging" "s3://$R2_ASSETS_BUCKET/packs" --recursive \
+        --content-type application/json --content-encoding gzip \
+        --cache-control "$IMMUTABLE" --only-show-errors
+      rm -rf "$staging"
+      echo "   packs: sent $uploads file(s), $((kilobytes / 1024)) MB gzip, $((SECONDS - started))s"
+    fi
+  fi
+
+  echo "   packs manifest"
+  [ ${#DRY[@]} -ne 0 ] || r2 cp storage/packs/manifest.json "s3://$R2_ASSETS_BUCKET/packs/manifest.json" \
+    --content-type application/json --cache-control "$MANIFEST_CACHE" --no-progress
+
+  [ "$stales" -gt 0 ] || return 0
+  echo "   packs cleanup"
+  if [ ${#DRY[@]} -ne 0 ]; then
+    sed 's/^/     would delete /' "$stale"
+  else
+    r2_env
+    sed "s|^|s3://$R2_ASSETS_BUCKET/packs/|" "$stale" |
+      xargs -P "$JOBS" -n 1 aws s3 rm --only-show-errors --endpoint-url "$R2_ENDPOINT"
   fi
 }
 

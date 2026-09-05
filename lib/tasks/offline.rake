@@ -4,7 +4,7 @@ namespace(:offline) do
   desc("Render the guest pages into storage/packs as downloadable offline packs")
   task(:build, [:only] => :environment) do |_task, args|
     only = [args[:only], *args.extras].compact_blank
-    Offline::Builder.new.call(only: only.presence)
+    Offline::Builder.new(workers: Offline::Pool.workers).call(only: only.presence)
   end
 
   desc("Show what the built packs hold")

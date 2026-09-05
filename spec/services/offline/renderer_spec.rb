@@ -22,6 +22,15 @@ RSpec.describe Offline::Renderer do
     expect { renderer.call("/hanzi", :en) }.to(raise_error(described_class::Refused, /answered with a session/))
   end
 
+  it "leaves the process able to query the database between requests" do
+    ActiveSupport::ExecutionContext.clear
+
+    Offline.while_rendering { renderer.call("/hanzi", :en) }
+
+    expect(ActiveSupport::ExecutionContext.to_h).to(be_a(Hash))
+    expect { Lexeme.maximum(:updated_at) }.not_to(raise_error)
+  end
+
   it "asks for the page in the locale it was given" do
     expect(renderer.call("/hanzi", :ru)).to(include("lang=\"ru\""))
   end

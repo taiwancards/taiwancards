@@ -83,6 +83,34 @@ RSpec.describe Offline::Builder do
     expect { build(only: ["nonsense"]) }.to(raise_error(/knows no section/))
   end
 
+  it "names the pack after the bytes it ships, however the strings were tagged" do
+    build
+    first = manifest.fetch("packs").first.fetch("digest")
+    binary = instance_double(Offline::Renderer)
+    allow(binary).to(receive(:call)) { |path, locale| page(path, locale).b }
+    other = Pathname(Dir.mktmpdir("offline-packs-binary"))
+
+    begin
+      described_class.new(root: other, io: StringIO.new, renderer: binary).call(only: ["core"])
+      second = JSON.parse(other.join(Offline::MANIFEST).read).fetch("packs").first.fetch("digest")
+    ensure
+      other.rmtree
+    end
+
+    expect(second).to(eq(first))
+  end
+
+  it "renders through worker processes when asked for more than one" do
+    stub_const("Offline::Pool::COMMAND", OfflineFakeWorker::COMMAND)
+
+    described_class.new(root: root, io: StringIO.new, renderer: renderer, workers: 2).call(only: ["core"])
+    name = manifest.fetch("packs").first.fetch("chunks").fetch("ru").first
+    chunk = JSON.parse(root.join(name).read)
+
+    expect(chunk.keys).to(all(start_with("/ru/")))
+    expect(chunk.values.map { |fragment| fragment["m"] }).to(all(start_with("ru:")))
+  end
+
   it "clears out files no pack refers to any more" do
     build
     stray = root.join("core-deadbeef.en.0.json")

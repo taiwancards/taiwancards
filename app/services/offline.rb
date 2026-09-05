@@ -24,6 +24,8 @@ module Offline
     Rails.application.eager_load!
     Rails.application.reloader.check = -> { false }
     ActionView::Base.annotate_rendered_view_with_filenames = false
+    ActiveSupport::ExecutionContext.nestable = true
+    ActiveSupport::ExecutionContext.push if Rails.application.executor.active?
     Thread.current[:offline_rendering] = true
     yield
   ensure
