@@ -28,6 +28,9 @@ const BROWSE_RULES = [
   ],
 ];
 
+const ROOT = new RegExp(`^/(?:${LOCALES.join("|")})?$`);
+const PREFIX = new RegExp(`^/(${LOCALES.join("|")})(?=/|$)`);
+
 const ASSET_PATHS = [
   /^\/assets\//,
   /^\/fonts\//,
@@ -120,7 +123,35 @@ async function page(request, url) {
 function localeOf(pathname) {
   const found = pathname.split("/")[1];
 
-  return LOCALES.includes(found) ? found : LOCALES[0];
+  return LOCALES.includes(found) ? found : null;
+}
+
+function relocate(pathname, locale) {
+  const bare = pathname.replace(PREFIX, "");
+
+  return `/${locale}${bare === "/" ? "" : bare}`;
+}
+
+async function storedLocale() {
+  try {
+    const cache = await caches.open(META);
+    const hit = await cache.match("/__meta/packs");
+    if (!hit) return null;
+
+    const state = await hit.json();
+    const pack = state.core || Object.values(state)[0];
+
+    return pack && LOCALES.includes(pack.locale) ? pack.locale : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function localesFor(pathname) {
+  const asked = localeOf(pathname);
+  const stored = await storedLocale();
+
+  return [...new Set([asked, stored, ...LOCALES].filter(Boolean))];
 }
 
 function normalise(pathname) {
@@ -135,22 +166,30 @@ async function fragmentFor(pathname) {
 }
 
 async function stale(url) {
-  const locale = localeOf(url.pathname);
   const path = normalise(url.pathname);
+  const locales = await localesFor(path);
+  const entry = ROOT.test(path);
 
-  const direct = await fragmentFor(path);
-  if (direct) return render(locale, direct, "");
+  for (const locale of locales) {
+    const target = relocate(path, locale);
+    const found = entry
+      ? await fragmentFor(`/${locale}/offline/browse`)
+      : await fragmentFor(target);
+    if (found) return render(locale, found, "");
 
-  const rule = BROWSE_RULES.find(([pattern]) => pattern.test(path));
+    const rule = BROWSE_RULES.find(([pattern]) => pattern.test(target));
+    if (!rule) continue;
 
-  if (rule) {
     const browse = await fragmentFor(`/${locale}/offline/browse`);
-    if (browse) return render(locale, browse, rule[1](path.match(rule[0])));
+    if (browse) return render(locale, browse, rule[1](target.match(rule[0])));
   }
 
-  const home = await fragmentFor(`/${locale}/offline`);
+  for (const locale of locales) {
+    const home = await fragmentFor(`/${locale}/offline`);
+    if (home) return render(locale, home, entry ? "" : "absent:1");
+  }
 
-  return home ? render(locale, home, "absent:1") : null;
+  return null;
 }
 
 async function shellFor(locale, width) {
