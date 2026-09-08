@@ -15,7 +15,7 @@ services:
   - type: web
     name: taiwancards-app
     runtime: ruby
-    plan: standard
+    plan: 0.5c-512mb
     region: singapore
     branch: main
     numInstances: 1
@@ -52,13 +52,19 @@ services:
       - key: RAILS_LOG_LEVEL
         value: info
       - key: WEB_CONCURRENCY
-        value: "2"
+        value: "0"
       - key: RAILS_MAX_THREADS
-        value: "5"
+        value: "2"
+      - key: WORKERS
+        value: "1"
       - key: MALLOC_ARENA_MAX
         value: "2"
       - key: RUBY_YJIT_ENABLE
         value: "1"
+      - key: RUBYOPT
+        value: "--yjit --yjit-mem-size=32"
+      - key: RUBY_GC_HEAP_GROWTH_FACTOR
+        value: "1.1"
       - key: MEDIA_BASE_URL
         value: https://audio.taiwancards.app
       - key: ASSETS_BASE_URL
@@ -76,6 +82,8 @@ services:
         value: https://taiwancards.app
       - key: APP_URL
         value: https://study.taiwancards.app
+      - key: SUPPORT_EMAIL
+        value: support@taiwancards.app
 
   - type: web
     name: taiwancards-site
