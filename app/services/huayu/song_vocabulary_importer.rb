@@ -52,15 +52,8 @@ module Huayu
         pos: entry["pos"].presence,
         source: SOURCE
       )
-      link_characters(lexeme)
+      @upserter.link_characters(lexeme)
       lexeme
-    end
-
-    def link_characters(lexeme)
-      children = lexeme.text.chars.filter_map { |char|
-        Lexeme.find_by(kind: Lexeme.kinds[:character], text: char)
-      }
-      @upserter.link(lexeme, children) if children.size == lexeme.text.chars.size
     end
   end
 end

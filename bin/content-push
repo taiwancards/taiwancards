@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+. bin/_env.sh
+. bin/_lib.sh
+load_env
+
+usage() {
+  cat << USAGE
+Compute the content sync on the local mirror and push the verified difference to production.
+
+  bin/content-push            refresh, sync, plan, ask, push, finish
+  bin/content-push --plan     stop after the plan, change nothing in production
+  bin/content-push --yes      skip the typed confirmation
+
+  CASCADE=yes                 also remove user rows that reference deleted lexemes
+  SKIP_DISTRIBUTE=1           do not upload data/ to the runtime bucket first
+  WORKERS=n                   forked workers for the heavy steps, default every core
+
+Needs MIRROR_DATABASE_URL and PROD_DATABASE_URL; see .env.dev.
+USAGE
+  exit 1
+}
+
+plan_only=""
+confirmed=""
+for arg in "$@"; do
+  case "$arg" in
+  --plan) plan_only=1 ;;
+  --yes) confirmed=1 ;;
+  *) usage ;;
+  esac
+done
+
+[ -n "${PROD_DATABASE_URL:-}" ] || die "PROD_DATABASE_URL is not set; see .env.dev"
+[ -n "${MIRROR_DATABASE_URL:-}" ] || die "MIRROR_DATABASE_URL is not set; see .env.dev"
+[ "$PROD_DATABASE_URL" != "$MIRROR_DATABASE_URL" ] || die "the mirror and production point at the same database"
+require_pushed_head
+
+export RAILS_ENV=production
+export SECRET_KEY_BASE="${SECRET_KEY_BASE:-content-push}"
+export PG_STATEMENT_TIMEOUT=0
+export PG_LOCK_TIMEOUT=10s
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+export WORKERS="${WORKERS:-$(sysctl -n hw.ncpu 2> /dev/null || nproc)}"
+
+started=$(date +%s)
+target=$(ruby -ruri -e 'u = URI(ENV.fetch("PROD_DATABASE_URL")); puts "#{u.host} #{u.path.delete_prefix("/")}"')
+printf "%sCONTENT PUSH%s → %s\n" "$B" "$R" "$target"
+
+rule
+printf "%sCHECKS%s\n" "$B" "$R"
+rule
+DATABASE_URL="$MIRROR_DATABASE_URL" bin/rails db:abort_if_pending_migrations
+ok "no pending migrations on the mirror"
+
+if [ -z "${SKIP_DISTRIBUTE:-}" ]; then
+  rule
+  printf "%sRUNTIME DATA%s\n" "$B" "$R"
+  rule
+  bin/distribute runtime
+fi
+
+rule
+printf "%sREFRESH%s\n" "$B" "$R"
+rule
+DATABASE_URL="$MIRROR_DATABASE_URL" bin/rails content:refresh
+
+rule
+printf "%sSYNC on the mirror, %s workers%s\n" "$B" "$WORKERS" "$R"
+rule
+DATABASE_URL="$MIRROR_DATABASE_URL" SYNC_SCOPE=content bin/rails deploy:sync
+
+rule
+printf "%sPLAN%s\n" "$B" "$R"
+rule
+DATABASE_URL="$MIRROR_DATABASE_URL" bin/rails content:plan
+
+if [ -n "$plan_only" ]; then
+  printf "\n%sPlan only. Production was not changed.%s\n" "$YELLOW" "$R"
+  exit 0
+fi
+
+if [ -z "$confirmed" ]; then
+  printf "\ntype push to apply this plan to %s: " "$target"
+  read -r answer
+  [ "$answer" = "push" ] || die "aborted"
+fi
+
+rule
+printf "%sPUSH%s\n" "$B" "$R"
+rule
+DATABASE_URL="$MIRROR_DATABASE_URL" bin/rails content:push
+
+rule
+printf "%sFINISH%s\n" "$B" "$R"
+rule
+DATABASE_URL="$PROD_DATABASE_URL" bin/rails content:finish
+
+elapsed=$(($(date +%s) - started))
+rule
+printf "%s%s DONE%s in %d:%02d\n" "$B" "$GREEN" "$R" $((elapsed / 60)) $((elapsed % 60))

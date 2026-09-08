@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "rake"
 
-RSpec.describe "deploy:sync admin_rights" do
-  before(:all) { Rails.application.load_tasks unless Rake::Task.task_defined?("deploy:sync") }
-
-  def settle = ALWAYS_STEPS.fetch("admin_rights").call
+RSpec.describe Deploy::SyncSteps, "admin_rights" do
+  def settle = described_class::ALWAYS.fetch("admin_rights").call
 
   it "grants the flag to the one Google account that should carry it" do
     owner = create(:user, :admin)

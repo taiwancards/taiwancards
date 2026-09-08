@@ -58,3 +58,12 @@ bar() {
 }
 
 size_of() { stat -f%z "$1" 2> /dev/null || stat -c%s "$1"; }
+
+require_pushed_head() {
+  local local_head remote_head
+  [ -z "$(git status --porcelain)" ] || die "working tree is dirty — commit and push first"
+  local_head=$(git rev-parse HEAD)
+  remote_head=$(git ls-remote origin -h refs/heads/main | cut -f1)
+  [ "$local_head" = "$remote_head" ] ||
+    die "HEAD $local_head is not origin/main $remote_head — push first so Render builds the code that ran this sync"
+}

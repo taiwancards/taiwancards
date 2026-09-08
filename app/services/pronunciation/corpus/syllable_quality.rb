@@ -4,20 +4,14 @@ require "json"
 
 module Pronunciation
   module Corpus
-    class SyllableQuality
+    class SyllableQuality < SplitAnalysis
+      DEFAULT_PART = "all"
       PATH = "syllable_quality.json"
       MIN_TOKENS = 3
       PROBES = 8
 
-      def initialize(part: "all", store: TemplateStore.instance, io: $stdout)
-        @part = part
-        @store = store
-        @io = io
-      end
-
       def call
-        keys = Tokens.keys(@part)
-        raise "no keys in the '#{@part}' split" if keys.empty?
+        keys = split_keys
 
         @io&.puts("Quality of #{keys.length} syllables")
         FanOut.map(keys, io: @io) { |chunk| measure(chunk) }.flatten(1).compact.sort_by { |row| -row["self"] }

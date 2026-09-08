@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Site
-  SUPPORT_EMAIL = "support@taiwancards.app"
-
   module_function
 
   def url = ENV["SITE_URL"].presence&.chomp("/")
+
+  def support_email = ENV["SUPPORT_EMAIL"].presence
 
   def published? = url.present? && !exporting?
 

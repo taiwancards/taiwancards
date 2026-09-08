@@ -13,7 +13,8 @@
     h2.text-lg.font-semibold = t("terms.contact.heading")
     p.text-sm.leading-6.text-muted-foreground
       = t("terms.contact.body")
-      =< mail_to Site::SUPPORT_EMAIL, Site::SUPPORT_EMAIL, class: link_class
+      - if Site.support_email
+        =< mail_to Site.support_email, Site.support_email, class: link_class
 
   section.space-y-2
     h2.text-lg.font-semibold = t("terms.related.heading")

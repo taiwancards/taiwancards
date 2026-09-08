@@ -2,7 +2,8 @@
 
 module Pronunciation
   module Corpus
-    class Ladder
+    class Ladder < SplitAnalysis
+      DEFAULT_PART = "test"
       RUNGS = [
         {id: "tw_exact", speakers: :taiwan, syllable: :same, tone: :same},
         {id: "cn_exact", speakers: :china, syllable: :same, tone: :same},
@@ -17,18 +18,10 @@ module Pronunciation
       PER_RUNG = 4
       SOURCES = {taiwan: Tokens::TAIWAN, china: Tokens::CHINA}.freeze
 
-      def initialize(part: "test", speakers: :fitting, store: TemplateStore.instance, io: $stdout)
-        @part = part
-        @speakers = speakers
-        @store = store
-        @io = io
-      end
-
       def speakers_for(source) = (source == Tokens::TAIWAN) ? @speakers : :all
 
       def call
-        keys = Tokens.keys(@part)
-        raise "no keys in the '#{@part}' split" if keys.empty?
+        keys = split_keys
 
         @io&.puts("Ladder over #{keys.length} syllables of the '#{@part}' split")
         chunks = FanOut.map(keys, io: @io) { |chunk| measure(chunk) }

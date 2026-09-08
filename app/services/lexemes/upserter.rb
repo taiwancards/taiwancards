@@ -23,6 +23,12 @@ module Lexemes
       end
     end
 
+    def link_characters(lexeme)
+      chars = lexeme.text.chars
+      characters = chars.filter_map { |char| Lexeme.find_by(kind: Lexeme.kinds[:character], text: char) }
+      link(lexeme, characters) if characters.size == chars.size
+    end
+
     private
 
     def upsert(kind, text, readings: {}, meanings: {}, audio_url: nil, data: {}, source: nil)

@@ -1,25 +1,13 @@
 #!/usr/bin/env bash
-set -o errexit
-set -o pipefail
+set -euo pipefail
 
 cd "$(dirname "$0")/.."
+. bin/_env.sh
+. bin/_lib.sh
+load_env
 
-if [ -z "${PROD_DATABASE_URL:-}" ]; then
-  echo "PROD_DATABASE_URL is required" >&2
-  exit 1
-fi
-
-if [ -n "$(git status --porcelain)" ]; then
-  echo "working tree is dirty — commit and push first" >&2
-  exit 1
-fi
-
-local_head=$(git rev-parse HEAD)
-remote_head=$(git ls-remote origin -h refs/heads/main | cut -f1)
-if [ "$local_head" != "$remote_head" ]; then
-  echo "HEAD $local_head is not origin/main $remote_head — push first so Render builds the code that ran this sync" >&2
-  exit 1
-fi
+[ -n "${PROD_DATABASE_URL:-}" ] || die "PROD_DATABASE_URL is not set; see .env.dev"
+require_pushed_head
 
 target=$(ruby -ruri -e 'u = URI(ENV.fetch("PROD_DATABASE_URL")); puts "#{u.host} #{u.path.delete_prefix("/")}"')
 echo "target: $target"
@@ -28,10 +16,7 @@ echo "note: if data/ changed, run bin/distribute runtime first so Render hydrate
 if [ "${1:-}" != "--yes" ]; then
   printf "type sync to run deploy:sync against this database: "
   read -r answer
-  if [ "$answer" != "sync" ]; then
-    echo "aborted"
-    exit 1
-  fi
+  [ "$answer" = "sync" ] || die "aborted"
 fi
 
 export RAILS_ENV=production

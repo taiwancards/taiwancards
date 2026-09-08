@@ -4,19 +4,12 @@ require "json"
 
 module Pronunciation
   module Corpus
-    class ReportCard
+    class ReportCard < SplitAnalysis
+      DEFAULT_PART = "test"
       SERIES = ContrastQuality::SERIES
 
-      def initialize(part: "test", speakers: :fitting, store: TemplateStore.instance, io: $stdout)
-        @part = part
-        @speakers = speakers
-        @store = store
-        @io = io
-      end
-
       def call
-        keys = Tokens.keys(@part)
-        raise "no keys in the '#{@part}' split" if keys.empty?
+        keys = split_keys
 
         @io&.puts("Report over #{keys.length} syllables of the '#{@part}' split, #{@speakers} voices")
         chunks = FanOut.map(keys, io: @io) { |chunk| measure(chunk) }

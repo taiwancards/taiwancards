@@ -4,7 +4,7 @@ require "json"
 
 module Pronunciation
   module Corpus
-    class AxisNormsBuilder
+    class AxisNormsBuilder < SplitAnalysis
       STEP = 0.01
       CAP = 40.0
 
@@ -25,15 +25,8 @@ module Pronunciation
 
       PARTS = %w[initial medial final tone].freeze
 
-      def initialize(part: "dev", store: TemplateStore.instance, io: $stdout)
-        @part = part
-        @store = store
-        @io = io
-      end
-
       def call
-        keys = Tokens.keys(@part)
-        raise "no keys in the '#{@part}' split" if keys.empty?
+        keys = split_keys
 
         @io&.puts("Axis scales over #{keys.length} syllables of the '#{@part}' split")
         chunks = FanOut.map(keys, io: @io) { |chunk| tally(chunk) }

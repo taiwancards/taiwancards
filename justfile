@@ -166,6 +166,30 @@ rebuild-db:
 rebuild-db-render:
     CONFIRM=yes bin/rebuild-db-render.sh
 
+# Create the local mirror of the Render content: dump, restore, migrate
+[group('content')]
+mirror-init: _require-db _require-mirror
+    #!/usr/bin/env bash
+    set -euo pipefail
+    name=$(ruby -ruri -e 'puts URI(ENV.fetch("MIRROR_DATABASE_URL")).path.delete_prefix("/")')
+    mkdir -p tmp
+    pg_dump "$PROD_DATABASE_URL" --format=custom --compress=6 --no-owner --no-privileges --file=tmp/mirror.dump
+    dropdb -h localhost -p {{ db_port }} --if-exists --force "$name"
+    createdb -h localhost -p {{ db_port }} "$name"
+    pg_restore --no-acl --no-owner --jobs=4 -h localhost -p {{ db_port }} -d "$name" tmp/mirror.dump
+    rm -f tmp/mirror.dump
+    RAILS_ENV=production SECRET_KEY_BASE=mirror DATABASE_URL="$MIRROR_DATABASE_URL" bin/rails db:migrate
+
+# Compute the content sync on the mirror and push the verified difference to Render
+[group('content')]
+push: _require-db _require-mirror
+    bin/content-push
+
+# Show what a content push would change on Render, changing nothing
+[group('content')]
+push-plan: _require-db _require-mirror
+    bin/content-push --plan
+
 # Push every bucket: archive, media, assets, runtime
 [group('content')]
 dist:
@@ -257,3 +281,7 @@ _require-server:
 [private]
 _require-db:
     @test -n "${PROD_DATABASE_URL:-}" || { echo "PROD_DATABASE_URL is not set — see .env.dev" >&2; exit 1; }
+
+[private]
+_require-mirror:
+    @test -n "${MIRROR_DATABASE_URL:-}" || { echo "MIRROR_DATABASE_URL is not set — see .env.dev" >&2; exit 1; }

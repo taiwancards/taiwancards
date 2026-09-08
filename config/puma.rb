@@ -22,5 +22,8 @@ if worker_count > 1
   before_worker_shutdown { ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base) }
   before_worker_boot { Process.warmup }
 else
-  after_booted { Process.warmup }
+  after_booted do
+    Content::Preload.new.call if defined?(Content::Preload)
+    Process.warmup
+  end
 end

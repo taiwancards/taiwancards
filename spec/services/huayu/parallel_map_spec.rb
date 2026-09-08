@@ -36,3 +36,27 @@ RSpec.describe Huayu::ParallelMap do
     expect(described_class.receive(reader)).to(eq([3, 6]))
   end
 end
+
+RSpec.describe Huayu::ParallelMap, "forking on macOS" do
+  def with_fork_safety(value)
+    key = described_class::FORK_SAFETY
+    previous = ENV[key]
+    value.nil? ? ENV.delete(key) : ENV[key] = value
+    yield
+  ensure
+    previous.nil? ? ENV.delete(key) : ENV[key] = previous
+  end
+
+  it "stays serial on darwin until the objc fork-safety switch is set" do
+    allow(described_class).to(receive(:darwin?).and_return(true))
+
+    with_fork_safety(nil) { expect(described_class.forkable?).to(be(false)) }
+    with_fork_safety("YES") { expect(described_class.forkable?).to(be(true)) }
+  end
+
+  it "forks freely elsewhere" do
+    allow(described_class).to(receive(:darwin?).and_return(false))
+
+    with_fork_safety(nil) { expect(described_class.forkable?).to(be(true)) }
+  end
+end

@@ -8,7 +8,11 @@ module Huayu
 
     def cores = [Install::Hardware.performance_cores, 1].max
 
-    def forkable? = Process.respond_to?(:fork) && !RUBY_PLATFORM.include?("darwin")
+    FORK_SAFETY = "OBJC_DISABLE_INITIALIZE_FORK_SAFETY"
+
+    def forkable? = Process.respond_to?(:fork) && (!darwin? || ENV[FORK_SAFETY] == "YES")
+
+    def darwin? = RUBY_PLATFORM.include?("darwin")
 
     def workers(requested = nil)
       value = (requested || ENV["WORKERS"]).to_i

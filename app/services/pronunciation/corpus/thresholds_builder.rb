@@ -4,7 +4,7 @@ require "json"
 
 module Pronunciation
   module Corpus
-    class ThresholdsBuilder
+    class ThresholdsBuilder < SplitAnalysis
       CELLS = %w[overall initial medial final tone].freeze
 
       CELL_DIMENSION = {"initial" => :initial, "medial" => :medial, "final" => :rime, "tone" => :tone}.freeze
@@ -12,16 +12,8 @@ module Pronunciation
       PER_KEY = 6
       RED_TOUCHES = 0.05
 
-      def initialize(part: "dev", speakers: :fitting, store: TemplateStore.instance, io: $stdout)
-        @part = part
-        @speakers = speakers
-        @store = store
-        @io = io
-      end
-
       def call
-        keys = Tokens.keys(@part)
-        raise "no keys in the '#{@part}' split" if keys.empty?
+        keys = split_keys
 
         @io&.puts("Thresholds over #{keys.length} syllables of the '#{@part}' split, #{@speakers} voices")
         chunks = FanOut.map(keys, io: @io) { |chunk| tally(chunk) }
