@@ -262,7 +262,7 @@ module Deploy
       connection.exec_params("SELECT pg_get_serial_sequence($1, 'id')", [table.name]).getvalue(0, 0)
     end
 
-    def row_digest(table) = "md5(ROW(#{list(compared(table))})::text)"
+    def row_digest(table) = "md5(jsonb_build_array(#{list(compared(table))})::text)"
 
     def join(table, left, right) = table.key.map { |name| "#{left}.#{name} = #{right}.#{name}" }.join(" AND ")
 
