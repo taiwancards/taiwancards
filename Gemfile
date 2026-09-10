@@ -12,6 +12,7 @@ gem "bootsnap", require: false
 gem "dsprb", ">= 2.0"
 gem "dtwrb", ">= 1.0"
 gem "importmap-rails"
+gem "json", ">= 3.0"
 gem "nokolexbor", require: false
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"

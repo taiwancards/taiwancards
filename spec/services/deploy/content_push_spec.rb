@@ -4,11 +4,15 @@ require "rails_helper"
 require "tmpdir"
 
 RSpec.describe Deploy::ContentPush do
-  SCHEMA = "content_push_spec"
-  WORD = 900_001
-  SENTENCE = 900_002
-  NEW_WORD = 900_003
-  USER = 900_001
+  def schema = "content_push_spec"
+
+  def word_id = 900_001
+
+  def sentence_id = 900_002
+
+  def new_word_id = 900_003
+
+  def user_id = 900_001
 
   def url(schema: nil)
     config = ActiveRecord::Base.connection_db_config.configuration_hash
@@ -17,11 +21,11 @@ RSpec.describe Deploy::ContentPush do
   end
 
   let(:prod) { Deploy::ContentDiff.connect(url).tap { |c| c.exec("SET client_min_messages = warning") } }
-  let(:mirror) { Deploy::ContentDiff.connect(url(schema: SCHEMA)) }
+  let(:mirror) { Deploy::ContentDiff.connect(url(schema: schema)) }
   let(:dir) { Dir.mktmpdir }
   let(:push) {
     described_class.new(
-      mirror_url: url(schema: SCHEMA),
+      mirror_url: url(schema: schema),
       prod_url: url,
       io: StringIO.new,
       snapshot: File.join(dir, "snapshot.json")
@@ -29,19 +33,19 @@ RSpec.describe Deploy::ContentPush do
   }
 
   before do
-    prod.exec("DROP SCHEMA IF EXISTS #{SCHEMA} CASCADE; CREATE SCHEMA #{SCHEMA}")
+    prod.exec("DROP SCHEMA IF EXISTS #{schema} CASCADE; CREATE SCHEMA #{schema}")
     (Deploy::ContentTables.names + %w[settings users]).each do |name|
-      prod.exec("CREATE TABLE #{SCHEMA}.#{name} (LIKE public.#{name} INCLUDING ALL)")
+      prod.exec("CREATE TABLE #{schema}.#{name} (LIKE public.#{name} INCLUDING ALL)")
     end
 
     prod.exec(
       <<~SQL
         INSERT INTO content_sources (id, name, slug, created_at, updated_at) VALUES (900001, 'Push spec', 'push-spec', now(), now());
         INSERT INTO lexemes (id, kind, text, score, created_at, updated_at) VALUES
-          (#{WORD}, 1, 'push-spec-word', 1.5, now(), now()),
-          (#{SENTENCE}, 2, 'push-spec-sentence', NULL, now(), now());
-        INSERT INTO sentence_profiles (lexeme_id, difficulty, created_at, updated_at) VALUES (#{SENTENCE}, 3, now(), now());
-        INSERT INTO sentence_words (sentence_id, lexeme_id, gdex) VALUES (#{SENTENCE}, #{WORD}, 7);
+          (#{word_id}, 1, 'push-spec-word', 1.5, now(), now()),
+          (#{sentence_id}, 2, 'push-spec-sentence', NULL, now(), now());
+        INSERT INTO sentence_profiles (lexeme_id, difficulty, created_at, updated_at) VALUES (#{sentence_id}, 3, now(), now());
+        INSERT INTO sentence_words (sentence_id, lexeme_id, gdex) VALUES (#{sentence_id}, #{word_id}, 7);
         INSERT INTO settings (data, created_at, updated_at)
           VALUES ('{"study_display": {"front": "prod"}, "sync_fingerprints": {"x": "1"}}', now(), now());
       SQL
@@ -51,14 +55,14 @@ RSpec.describe Deploy::ContentPush do
   after do
     prod.exec(
       <<~SQL
-        DELETE FROM lexeme_memories WHERE user_id = #{USER};
-        DELETE FROM users WHERE id = #{USER};
+        DELETE FROM lexeme_memories WHERE user_id = #{user_id};
+        DELETE FROM users WHERE id = #{user_id};
         DELETE FROM sentence_words WHERE lexeme_id >= 900000 OR sentence_id >= 900000;
         DELETE FROM sentence_profiles WHERE lexeme_id >= 900000;
         DELETE FROM lexemes WHERE id >= 900000;
         DELETE FROM content_sources WHERE id >= 900000;
         DELETE FROM settings;
-        DROP SCHEMA IF EXISTS #{SCHEMA} CASCADE;
+        DROP SCHEMA IF EXISTS #{schema} CASCADE;
       SQL
     )
     prod.close
@@ -89,18 +93,18 @@ RSpec.describe Deploy::ContentPush do
     push.refresh
     mirror.exec(
       <<~SQL
-        UPDATE lexemes SET score = 42 WHERE id = #{WORD};
-        INSERT INTO lexemes (id, kind, text, created_at, updated_at) VALUES (#{NEW_WORD}, 1, 'push-spec-new', now(), now());
-        DELETE FROM sentence_words WHERE sentence_id = #{SENTENCE};
+        UPDATE lexemes SET score = 42 WHERE id = #{word_id};
+        INSERT INTO lexemes (id, kind, text, created_at, updated_at) VALUES (#{new_word_id}, 1, 'push-spec-new', now(), now());
+        DELETE FROM sentence_words WHERE sentence_id = #{sentence_id};
       SQL
     )
 
     report = push.plan
     by_name = report.plans.to_h { |plan| [plan.table.name, plan] }
 
-    expect(by_name["lexemes"].updates).to(eq([[WORD]]))
-    expect(by_name["lexemes"].inserts).to(eq([[NEW_WORD]]))
-    expect(by_name["sentence_words"].deletes).to(eq([[SENTENCE, WORD]]))
+    expect(by_name["lexemes"].updates).to(eq([[word_id]]))
+    expect(by_name["lexemes"].inserts).to(eq([[new_word_id]]))
+    expect(by_name["sentence_words"].deletes).to(eq([[sentence_id, word_id]]))
     expect(report.cascade).to(be_empty)
   end
 
@@ -108,16 +112,16 @@ RSpec.describe Deploy::ContentPush do
     push.refresh
     mirror.exec(
       <<~SQL
-        UPDATE lexemes SET score = 42 WHERE id = #{WORD};
-        INSERT INTO lexemes (id, kind, text, created_at, updated_at) VALUES (#{NEW_WORD}, 1, 'push-spec-new', now(), now());
-        DELETE FROM sentence_words WHERE sentence_id = #{SENTENCE};
+        UPDATE lexemes SET score = 42 WHERE id = #{word_id};
+        INSERT INTO lexemes (id, kind, text, created_at, updated_at) VALUES (#{new_word_id}, 1, 'push-spec-new', now(), now());
+        DELETE FROM sentence_words WHERE sentence_id = #{sentence_id};
         UPDATE settings SET data = '{"study_display": {"front": "mirror"}, "sync_fingerprints": {"x": "2"}, "profile_vocabulary": "v2"}';
       SQL
     )
 
     push.push
 
-    expect(prod.exec("SELECT score FROM lexemes WHERE id = #{WORD}").getvalue(0, 0)).to(eq("42"))
+    expect(prod.exec("SELECT score FROM lexemes WHERE id = #{word_id}").getvalue(0, 0)).to(eq("42"))
     expect(count(prod, "lexemes")).to(eq(3))
     expect(count(prod, "sentence_words")).to(eq(0))
     expect(settings(prod)).to(
@@ -128,7 +132,7 @@ RSpec.describe Deploy::ContentPush do
 
   it "refuses when production changed after the snapshot" do
     push.refresh
-    prod.exec("UPDATE lexemes SET score = 9 WHERE id = #{WORD}")
+    prod.exec("UPDATE lexemes SET score = 9 WHERE id = #{word_id}")
 
     expect { push.plan }.to(raise_error(described_class::Refused, /production changed.*lexemes/))
   end
@@ -147,11 +151,11 @@ RSpec.describe Deploy::ContentPush do
     push.refresh
     prod.exec(
       <<~SQL
-        INSERT INTO users (id, email, password_digest, created_at, updated_at) VALUES (#{USER}, 'push-spec@example.test', 'x', now(), now());
-        INSERT INTO lexeme_memories (lexeme_id, user_id, created_at, updated_at) VALUES (#{WORD}, #{USER}, now(), now());
+        INSERT INTO users (id, email, password_digest, created_at, updated_at) VALUES (#{user_id}, 'push-spec@example.test', 'x', now(), now());
+        INSERT INTO lexeme_memories (lexeme_id, user_id, created_at, updated_at) VALUES (#{word_id}, #{user_id}, now(), now());
       SQL
     )
-    mirror.exec("DELETE FROM sentence_words WHERE lexeme_id = #{WORD}; DELETE FROM lexemes WHERE id = #{WORD}")
+    mirror.exec("DELETE FROM sentence_words WHERE lexeme_id = #{word_id}; DELETE FROM lexemes WHERE id = #{word_id}")
     flushed(mirror)
 
     expect { push.plan }.to(raise_error(described_class::Refused, /referenced by lexeme_memories/))
@@ -159,6 +163,6 @@ RSpec.describe Deploy::ContentPush do
     push.push(cascade: true)
 
     expect(count(prod, "lexeme_memories")).to(eq(0))
-    expect(prod.exec("SELECT count(*) FROM lexemes WHERE id = #{WORD}").getvalue(0, 0)).to(eq("0"))
+    expect(prod.exec("SELECT count(*) FROM lexemes WHERE id = #{word_id}").getvalue(0, 0)).to(eq("0"))
   end
 end

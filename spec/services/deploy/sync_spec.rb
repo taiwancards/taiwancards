@@ -44,7 +44,9 @@ RSpec.describe Deploy::Sync do
 
   it "records a failing step and carries on" do
     stub_const("Deploy::SyncSteps::ALWAYS", {"broken" => -> { raise ArgumentError, "boom" }, "probe" => -> { :ran }})
-    allow(described_class).to(receive(:warn))
+    expect_any_instance_of(described_class).to(
+      receive(:warn).with(/deploy:sync step broken failed: ArgumentError: boom/)
+    )
 
     report = described_class.new(scope: nil, io:).call
 

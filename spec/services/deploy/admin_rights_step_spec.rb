@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe Deploy::SyncSteps, "admin_rights" do
   def settle = described_class::ALWAYS.fetch("admin_rights").call
 
+  before { allow($stdout).to(receive(:puts)) }
+
   it "grants the flag to the one Google account that should carry it" do
     owner = create(:user, :admin)
     owner.update_columns(admin: false, restricted_content: false)
