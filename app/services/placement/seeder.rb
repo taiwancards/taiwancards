@@ -10,6 +10,9 @@ module Placement
     MIN_WINDOW_DAYS = 60
     MAX_WINDOW_DAYS = 240
     REVIEWS_PER_DAY = 40
+    BATCH = 5_000
+    UNIQUE_BY = %i[lexeme_id facet user_id].freeze
+    FACET_OVERRIDE = Arel.sql("lexemes.data -> 'facets'")
 
     def initialize(user, now: Time.current, rng: Random.new)
       @user = user
@@ -21,24 +24,11 @@ module Placement
       grade = grade.to_i
       return {seeded: 0, lexemes: 0} if grade < 1
 
-      lexemes = scope(grade).to_a
-      window = window_days(lexemes.size)
-      seeded = 0
+      candidates = scope(grade).pluck(:id, :kind, FACET_OVERRIDE)
+      rows = rows_for(candidates)
+      rows.each_slice(BATCH) { |slice| LexemeMemory.upsert_all(slice, unique_by: UNIQUE_BY) }
 
-      lexemes.each_with_index do |lexeme, index|
-        FACETS.each do |facet|
-          next unless applicable?(lexeme, facet)
-
-          memory = LexemeMemory.find_or_initialize_by(lexeme:, facet: LexemeMemory.facets[facet], user: @user)
-          next unless seedable?(memory)
-
-          memory.assign_attributes(seed_attributes(index, lexemes.size, window))
-          memory.save!
-          seeded += 1
-        end
-      end
-
-      {seeded:, lexemes: lexemes.size}
+      {seeded: rows.size, lexemes: candidates.size}
     end
 
     private
@@ -56,12 +46,27 @@ module Placement
         .curriculum_order
     end
 
-    def applicable?(lexeme, facet)
-      Lexemes::Facets.for(lexeme).include?(facet)
+    def rows_for(candidates)
+      window = window_days(candidates.size)
+      studied = studied_pairs
+
+      candidates.each_with_index.flat_map do |(lexeme_id, kind, override), index|
+        (Lexemes::Facets.declared(kind, override) & FACETS).filter_map do |facet|
+          next if studied.include?([lexeme_id, facet])
+
+          {lexeme_id:, facet:, user_id: @user.id, **seed_attributes(index, candidates.size, window)}
+        end
+      end
     end
 
-    def seedable?(memory)
-      memory.new_record? || (memory.state_unseen? && memory.reps.to_i.zero?)
+    def studied_pairs
+      LexemeMemory
+        .owned_by(@user)
+        .where(facet: FACETS)
+        .where
+        .not(state: :unseen, reps: 0)
+        .pluck(:lexeme_id, :facet)
+        .to_set
     end
 
     def window_days(total)

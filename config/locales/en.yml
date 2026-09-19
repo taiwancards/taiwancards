@@ -3344,6 +3344,7 @@ en:
     adjust_label: Adjust if this looks off
     apply: Mark everything below as known
     apply_hint: Words and characters at or below this level get a light memory — they come back occasionally instead of being taught as new. Anything you are already studying is left untouched.
+    applying: Marking…
     applied:
       zero: Nothing new to mark — your progress already covers this level.
       one: Marked 1 item as already known.

@@ -4,7 +4,6 @@ module Huayu
   class ClassifierExamples
     NUMERALS = "一二三四五六七八九十兩百千萬幾半這那每"
     SCAN_LIMIT = 800
-    PER_NOUN = 1
 
     Example = Data.define(:sentence, :noun, :prefix, :highlight, :suffix)
 
@@ -14,19 +13,19 @@ module Huayu
       nouns = Lexeme.visible.where(kind: %i[word character], text: pairs.map(&:last).uniq).index_by(&:text)
       return [] if nouns.empty?
 
-      wanted = pairs.select { |_classifier, noun| nouns.key?(noun) }
+      patterns = pairs.select { |_classifier, noun| nouns.key?(noun) }.uniq.to_h { |pair| [pair, pattern(*pair)] }
       hits = []
-      seen = Hash.new(0)
+      seen = Set.new
 
       candidates(nouns.values.map(&:id)).each do |id, text|
-        wanted.each do |classifier, noun|
-          next if seen[[classifier, noun]] >= PER_NOUN
+        patterns.each do |pair, regexp|
+          next if seen.include?(pair)
 
-          match = pattern(classifier, noun).match(text)
+          match = regexp.match(text)
           next if match.nil?
 
-          seen[[classifier, noun]] += 1
-          hits << [id, noun, match]
+          seen << pair
+          hits << [id, pair.last, match]
           break
         end
 

@@ -61,6 +61,46 @@ RSpec.describe Placement::Seeder do
     expect(second[:seeded]).to(eq(0))
   end
 
+  it "seeds a memory that was created but never reviewed" do
+    target = word("學校", {"tbcl_grade" => 1, "freq_rank" => 5})
+    memory = LexemeMemory.create!(lexeme: target, user:, facet: LexemeMemory.facets["recognition"])
+
+    result = described_class.new(user, now:).call(2)
+
+    expect(memory.reload.state).to(eq("review"))
+    expect(memory.reps).to(eq(1))
+    expect(result[:seeded]).to(eq(2))
+  end
+
+  it "honours a facet override that leaves reading out" do
+    target = word("謝謝", {"tbcl_grade" => 1, "freq_rank" => 5, "facets" => %w[recognition]})
+
+    described_class.new(user, now:).call(2)
+
+    expect(LexemeMemory.owned_by(user).where(lexeme: target).map(&:facet)).to(eq(["recognition"]))
+  end
+
+  it "keeps another user's memories out of the decision" do
+    target = word("學校", {"tbcl_grade" => 1, "freq_rank" => 5})
+    described_class.new(create(:user), now:).call(2)
+
+    result = described_class.new(user, now:).call(2)
+
+    expect(result[:seeded]).to(eq(2))
+    expect(LexemeMemory.where(lexeme: target).count).to(eq(4))
+  end
+
+  it "writes in a constant number of statements however many lexemes qualify" do
+    40.times { |i| word("詞#{i}", {"tbcl_grade" => 1, "freq_rank" => i + 1}) }
+
+    seeder = described_class.new(user, now:)
+
+    report = count_queries { seeder.call(2) }
+
+    expect(report).to(issue_at_most(3))
+    expect(LexemeMemory.owned_by(user).count).to(eq(80))
+  end
+
   it "leaves lexemes above the threshold alone" do
     word("艱澀", {"tocfl_level" => "C", "freq_rank" => 90_000})
 

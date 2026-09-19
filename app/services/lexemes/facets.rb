@@ -16,9 +16,12 @@ module Lexemes
 
     AUDIO_ONLY = %w[listening].freeze
 
+    def declared(kind, override = nil)
+      (Array(override) & LexemeMemory.facets.keys).presence || CONFIG[kind.to_s] || DEFAULT
+    end
+
     def for(lexeme)
-      override = Array(lexeme.data["facets"]) & LexemeMemory.facets.keys
-      base = override.presence || CONFIG[lexeme.kind] || DEFAULT
+      base = declared(lexeme.kind, lexeme.data["facets"])
       return base if (base & AUDIO_ONLY).empty?
       return base if voiced?(lexeme)
 
