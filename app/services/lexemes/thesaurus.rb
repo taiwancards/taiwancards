@@ -18,7 +18,8 @@ module Lexemes
 
     EMPTY = Result.new(groups: GROUPS.index_with { [] }, evidence: 0)
 
-    def initialize(frequency: Huayu::WordFrequency)
+    def initialize(user:, frequency: Huayu::WordFrequency)
+      @user = user
       @frequency = frequency
     end
 
@@ -43,7 +44,7 @@ module Lexemes
 
     def resolve(texts)
       Lexeme
-        .visible
+        .visible_to(@user)
         .where(kind: KINDS, text: texts)
         .to_a
         .group_by(&:text)

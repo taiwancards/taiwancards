@@ -31,14 +31,14 @@ RSpec.describe "Content licensing" do
     open = sentence!("開放的句子。", commercial)
     closed = sentence!("受限的句子。", non_commercial)
 
-    expect(Lexeme.visible.where(kind: :sentence).ids).to(eq([open.id]))
-    expect(Lexeme.visible.where(kind: :sentence).ids).not_to(include(closed.id))
+    expect(Lexeme.visible_to(nil).where(kind: :sentence).ids).to(eq([open.id]))
+    expect(Lexeme.visible_to(nil).where(kind: :sentence).ids).not_to(include(closed.id))
   end
 
   it "hides text from sources admitted for measurement only" do
     counted = sentence!("只做統計的句子。", statistics_only)
 
-    expect(Lexeme.visible.where(kind: :sentence).ids).not_to(include(counted.id))
+    expect(Lexeme.visible_to(nil).where(kind: :sentence).ids).not_to(include(counted.id))
   end
 
   it "gives an administrator no licence an anonymous reader lacks" do

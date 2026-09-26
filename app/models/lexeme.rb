@@ -75,23 +75,19 @@ class Lexeme < ApplicationRecord
     .squish
 
   scope(
-    :permitted_to,
+    :visible_to,
     -> (user) {
-      ids = Current.source_ids_for(user)
+      ids = ContentSource.visible_ids_for(user)
       list = ids.presence || [0]
       scope = where(Arel.sql(format(VISIBLE_SQL, list.map(&:to_i).join(","))))
       user&.restricted_access? ? scope : scope.where(restricted: false)
     }
   )
-  scope :permitted, -> { permitted_to(Current.user) }
 
-  scope(:visible_to, -> (user) { permitted_to(user) })
-  scope :visible, -> { visible_to(Current.user) }
-
-  def self.visibility_key(user = Current.user)
+  def self.visibility_key(user)
     [
       user&.restricted_access? ? "all" : "open",
-      Current.source_ids_for(user).sort.join("-")
+      ContentSource.visible_ids_for(user).sort.join("-")
     ].join(":")
   end
 

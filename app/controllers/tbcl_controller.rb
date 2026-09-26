@@ -11,14 +11,14 @@ class TbclController < ApplicationController
   PER_PAGE = 600
 
   def index
-    @levels = Huayu::TbclReadiness.new.levels
+    @levels = Huayu::TbclReadiness.new(user: current_user).levels
   end
 
   def show
     @grade = params[:id].to_i
     raise ActiveRecord::RecordNotFound unless Huayu::TbclReadiness::GRADES.include?(@grade)
 
-    readiness = Huayu::TbclReadiness.new
+    readiness = Huayu::TbclReadiness.new(user: current_user)
     return send_level_list(readiness.scope(@grade).curriculum_order, "TBCL #{@grade}") if request.format.csv?
 
     @stat = readiness.stat(@grade)

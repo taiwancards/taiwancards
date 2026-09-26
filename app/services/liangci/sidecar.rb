@@ -10,6 +10,10 @@ module Liangci
       end
     end
 
+    def initialize(user:)
+      @user = user
+    end
+
     def call(lexeme)
       rows = Array(lexeme.data["classifiers"])
       Result.new(
@@ -35,7 +39,7 @@ module Liangci
       return [] if rows.empty?
 
       pairs = rows.map { |row| [row["text"], lexeme.text] }
-      Huayu::ClassifierExamples.new.for_pairs(pairs, limit: EXAMPLE_LIMIT)
+      Huayu::ClassifierExamples.new(user: @user).for_pairs(pairs, limit: EXAMPLE_LIMIT)
     end
   end
 end

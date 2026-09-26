@@ -30,7 +30,7 @@ RSpec.describe Huayu::CharacterProfile do
     translated = example("離開二", gdex: 1, meanings: {"ru" => "уходить два"})
 
     I18n.with_locale(:ru) do
-      expect(described_class.new(character).phrases.map(&:id)).to(eq([translated.id, untranslated.id]))
+      expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq([translated.id, untranslated.id]))
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe Huayu::CharacterProfile do
     high = example("離開四", gdex: 40)
 
     I18n.with_locale(:ru) do
-      expect(described_class.new(character).phrases.map(&:id)).to(eq([high.id, low.id]))
+      expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq([high.id, low.id]))
     end
   end
 
@@ -48,11 +48,11 @@ RSpec.describe Huayu::CharacterProfile do
     english = example("離開六", gdex: 2, meanings: {"en" => "leave six"})
 
     I18n.with_locale(:ru) do
-      expect(described_class.new(character).phrases.map(&:id)).to(eq([russian.id, english.id]))
+      expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq([russian.id, english.id]))
     end
 
     I18n.with_locale(:en) do
-      expect(described_class.new(character).phrases.map(&:id)).to(eq([english.id, russian.id]))
+      expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq([english.id, russian.id]))
     end
   end
 end

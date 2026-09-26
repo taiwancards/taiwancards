@@ -13,7 +13,6 @@ class ReadingText < ApplicationRecord
 
   scope :unrestricted, -> { where(restricted: false) }
   scope :visible_to, -> (user) { user&.restricted_access? ? all : unrestricted }
-  scope :visible, -> { visible_to(Current.user) }
   scope :recent, -> { order(created_at: :desc) }
   scope :library, -> { where(kind: LIBRARY_KINDS) }
   scope :ordered, -> { order(:level_tag, :id) }

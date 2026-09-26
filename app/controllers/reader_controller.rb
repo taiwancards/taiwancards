@@ -34,7 +34,7 @@ class ReaderController < ApplicationController
     lexeme = Lexeme.find_by(id: numeric_id(params[:lexeme_id]))
     raise ActiveRecord::RecordNotFound if lexeme.nil?
 
-    Lexemes::Activator.new.call(lexeme)
+    Lexemes::Activator.new(user: current_user).call(lexeme)
     head(:no_content)
   end
 

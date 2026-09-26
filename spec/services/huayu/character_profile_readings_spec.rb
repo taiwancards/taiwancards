@@ -25,7 +25,7 @@ RSpec.describe Huayu::CharacterProfile do
     sense("bù", 0)
     sense("bú", 1)
 
-    groups = described_class.new(character).reading_groups
+    groups = described_class.new(character, user: nil).reading_groups
 
     expect(groups.map { |group| group.reading["pinyin"] }).to(eq(%w[bù bú]))
     expect(groups.map { |group| group.senses.size }).to(eq([1, 1]))
@@ -35,7 +35,7 @@ RSpec.describe Huayu::CharacterProfile do
     sense("bù", 0)
     literary = sense("fǒu", 1)
 
-    groups = described_class.new(character).reading_groups
+    groups = described_class.new(character, user: nil).reading_groups
     extra = groups.find { |group| group.reading&.fetch("pinyin") == "fǒu" }
 
     expect(extra).not_to(be_nil)
@@ -52,7 +52,7 @@ RSpec.describe Huayu::CharacterProfile do
     LexemeSense.create!(lexeme: only, reading: "qiě", position: 0, meanings: {"en" => "moreover"})
     LexemeSense.create!(lexeme: only, reading: "jū", position: 1, meanings: {"en" => "literary particle"})
 
-    groups = described_class.new(only).reading_groups
+    groups = described_class.new(only, user: nil).reading_groups
 
     expect(groups.sum { |group| group.senses.size }).to(eq(2))
   end

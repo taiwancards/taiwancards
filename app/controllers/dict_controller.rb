@@ -12,14 +12,14 @@ class DictController < ApplicationController
   KINDS = Lexeme::DICTIONARY_KINDS
 
   def index
-    @levels = Huayu::TocflReadiness.new.levels
+    @levels = Huayu::TocflReadiness.new(user: current_user).levels
     @level = params[:level].presence
     @school = params[:school].presence_in(%w[1 2 3 4 5 6 7])
     @progress = params[:progress].presence_in(%w[new learning known])
     @sort = params[:sort].presence_in(%w[level freq]) || "level"
     @q = params[:q].to_s.strip
 
-    scope = Lexeme.where(kind: KINDS).visible
+    scope = Lexeme.where(kind: KINDS).visible_to(current_user)
     scope = scope.where(id: level_lexeme_ids(@level)) if @level
     scope = scope.where("lexemes.data ->> 'tbcl_grade' = ?", @school) if @school
     if @q.present?
@@ -47,22 +47,22 @@ class DictController < ApplicationController
     entry = find_entry(@text)
 
     if entry.nil?
-      neighbor = Lexeme.visible.find_by(kind: %i[character radical], text: @text)
-      neighbor ||= Lexeme.visible.find_by(id: @text) if @text.match?(/\A\d+\z/)
+      neighbor = Lexeme.visible_to(current_user).find_by(kind: %i[character radical], text: @text)
+      neighbor ||= Lexeme.visible_to(current_user).find_by(id: @text) if @text.match?(/\A\d+\z/)
       return redirect_to(lexeme_page_path(neighbor)) if neighbor
 
       return render(:missing, status: :not_found)
     end
 
-    @variants = Huayu::VariantForms.new.call(entry)
+    @variants = Huayu::VariantForms.new(user: current_user).call(entry)
     @spelling = entry.text
     lexeme = @variants.first || entry
     twin = (@variants - [lexeme]).max_by { |row| row.senses.size }
 
-    @profile = Huayu::WordProfile.new(lexeme, twin:)
+    @profile = Huayu::WordProfile.new(lexeme, user: current_user, twin:)
     @sentence_profile = lexeme.sentence_profile
-    @liangci = Liangci::Sidecar.new.call(@profile.content)
-    @thesaurus = Lexemes::Thesaurus.new.call(@profile.content)
+    @liangci = Liangci::Sidecar.new(user: current_user).call(@profile.content)
+    @thesaurus = Lexemes::Thesaurus.new(user: current_user).call(@profile.content)
     @sketch = @profile.sketch
     @sketch_lexemes = resolve_collocates(@sketch)
     @revised = @profile.revised_senses(level: current_user&.level_grade)
@@ -70,7 +70,7 @@ class DictController < ApplicationController
 
   def activate
     lexeme = find_entry(params[:text]) || raise(ActiveRecord::RecordNotFound)
-    Lexemes::Activator.new.call(lexeme)
+    Lexemes::Activator.new(user: current_user).call(lexeme)
     redirect_to(lexeme_page_path(lexeme), notice: t("words.added"))
   end
 
@@ -80,7 +80,7 @@ class DictController < ApplicationController
     texts = sketch.relations.flat_map { |relation| relation.collocates.map(&:text) }.uniq
     return {} if texts.empty?
 
-    Lexeme.visible.where(kind: %i[word collocation character], text: texts).index_by(&:text)
+    Lexeme.visible_to(current_user).where(kind: %i[word collocation character], text: texts).index_by(&:text)
   end
 
   def content_key
@@ -90,11 +90,11 @@ class DictController < ApplicationController
   end
 
   def find_entry(text)
-    entry = Lexeme.visible.where(kind: KINDS, text: text).order(:kind).first
+    entry = Lexeme.visible_to(current_user).where(kind: KINDS, text: text).order(:kind).first
     return entry if entry || !text.to_s.match?(/[台臺]/)
 
     twin = text.include?("臺") ? text.tr("臺", "台") : text.tr("台", "臺")
-    Lexeme.visible.where(kind: KINDS, text: twin).order(:kind).first
+    Lexeme.visible_to(current_user).where(kind: KINDS, text: twin).order(:kind).first
   end
 
   def level_lexeme_ids(level)
@@ -103,7 +103,7 @@ class DictController < ApplicationController
   end
 
   def filter_progress(scope, progress)
-    owned = LexemeMemory.owned_by(Current.user)
+    owned = LexemeMemory.owned_by(current_user)
     case progress
     when "known"
       scope.where(id: owned.state_review.select(:lexeme_id))

@@ -19,7 +19,7 @@ module Paginated
   def counted(scope, content_key)
     return count_rows(scope) if content_key.nil?
 
-    ContentCache.fetch("count", content_key, Lexeme.visibility_key) { count_rows(scope) }
+    ContentCache.fetch("count", content_key, Lexeme.visibility_key(current_user)) { count_rows(scope) }
   end
 
   def count_rows(scope)

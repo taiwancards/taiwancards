@@ -7,7 +7,8 @@ module Stats
 
     Bucket = Struct.new(:key, :reviews, :entities, keyword_init: true)
 
-    def initialize(now: Time.current)
+    def initialize(user:, now: Time.current)
+      @user = user
       @now = now
     end
 
@@ -107,7 +108,7 @@ module Stats
         Arel.sql("count(*) FILTER (WHERE #{ActiveRecord::Base.sanitize_sql_array([clause, overview_binds])})")
       end
 
-      counted = Array(LexemeMemory.active.owned_by(Current.user).pick(*selects))
+      counted = Array(LexemeMemory.active.owned_by(@user).pick(*selects))
       OVERVIEW.keys.each_with_index.to_h { |key, index| [key, counted[index].to_i] }
     end
 
@@ -139,13 +140,13 @@ module Stats
 
     def memories_for(lexeme_ids)
       LexemeMemory
-        .owned_by(Current.user)
+        .owned_by(@user)
         .where(lexeme_id: lexeme_ids)
         .index_by { |memory| [memory.lexeme_id, memory.facet] }
     end
 
     def window(since, before)
-      scope = LexemeReview.owned_by(Current.user).joins(:lexeme)
+      scope = LexemeReview.owned_by(@user).joins(:lexeme)
       scope = scope.where("reviewed_at >= ?", since) if since
       scope = scope.where("reviewed_at < ?", before) if before
       scope

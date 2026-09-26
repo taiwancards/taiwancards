@@ -30,7 +30,7 @@ RSpec.describe Huayu::ClassifierExamples do
     sentence("我買了三本書。", book)
     sentence("他有兩本書。", book)
 
-    examples = described_class.new.for_pairs([%w[本 書]], limit: 12)
+    examples = described_class.new(user: nil).for_pairs([%w[本 書]], limit: 12)
 
     expect(examples.size).to(eq(1))
     expect(examples.first.highlight).to(match(/\A[三兩]本書\z/))
@@ -41,14 +41,14 @@ RSpec.describe Huayu::ClassifierExamples do
     book = noun("書")
     sentence("這本來是我的書。", book)
 
-    expect(described_class.new.for_pairs([%w[本 書]], limit: 12)).to(be_empty)
+    expect(described_class.new(user: nil).for_pairs([%w[本 書]], limit: 12)).to(be_empty)
   end
 
   it "compiles one pattern per pair however many sentences it scans" do
     book = noun("書")
     pen = noun("筆")
     30.times { |index| sentence("第#{index}句沒有量詞的書和筆。", book, pen) }
-    service = described_class.new
+    service = described_class.new(user: nil)
     allow(service).to(receive(:pattern).and_call_original)
 
     service.for_pairs([%w[本 書], %w[枝 筆]], limit: 12)

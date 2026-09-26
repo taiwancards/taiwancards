@@ -61,4 +61,20 @@ RSpec.describe "Reader" do
 
     expect { delete("/reader/#{text.id}") }.to(change(ReadingText, :count).by(-1))
   end
+
+  it "activates a tapped word for the signed-in user only" do
+    post("/reader/activate", params: {lexeme_id: word.id})
+
+    expect(response).to(have_http_status(:no_content))
+    expect(LexemeMemory.owned_by(@authenticated_user).where(lexeme: word).count).to(
+      eq(Lexemes::Facets.for(word).length)
+    )
+    expect(LexemeMemory.where(lexeme: word).where.not(user: @authenticated_user)).to(be_empty)
+  end
+
+  it "answers not found for a word that does not exist" do
+    post("/reader/activate", params: {lexeme_id: 0})
+
+    expect(response).to(have_http_status(:not_found))
+  end
 end

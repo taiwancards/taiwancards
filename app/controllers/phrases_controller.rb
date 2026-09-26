@@ -11,7 +11,7 @@ class PhrasesController < ApplicationController
     @role = params[:role].presence_in(ROLES)
     @patterns = Huayu::TaiwanPhrases.patterns(scene: @scene&.id, role: @role)
     @slots = slots_for(@patterns)
-    @lexicon = Phrases::Lexicon.new(@patterns).call
+    @lexicon = Phrases::Lexicon.new(@patterns, user: current_user).call
     @counts = Huayu::TaiwanPhrases.counts
     current_user&.record_practice_run!(:phrases)
   end

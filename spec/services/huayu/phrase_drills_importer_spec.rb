@@ -29,13 +29,8 @@ RSpec.describe Huayu::PhraseDrillsImporter do
     write([["我好餓。", "I'm hungry.", "Я голоден."]])
     described_class.new.call(file)
 
-    Current.set(user: create(:user)) do
-      expect(Lexeme.visible.where(kind: :phrase)).to(be_empty)
-    end
-
-    Current.set(user: create(:user, :admin, restricted_content: true)) do
-      expect(Lexeme.visible.where(kind: :phrase).count).to(eq(1))
-    end
+    expect(Lexeme.visible_to(create(:user)).where(kind: :phrase)).to(be_empty)
+    expect(Lexeme.visible_to(create(:user, :admin, restricted_content: true)).where(kind: :phrase).count).to(eq(1))
   end
 
   it "runs twice without duplicating and picks up corrected translations" do

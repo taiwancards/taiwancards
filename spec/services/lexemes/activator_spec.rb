@@ -75,11 +75,11 @@ RSpec.describe Lexemes::Activator do
 
     it "notices a source being switched off" do
       source = ContentSource.create!(license_commercial: true, slug: "s", name: "S", attribution: "a", enabled: true)
-      Current.source_ids_for(user)
+      ContentSource.visible_ids_for(user)
 
       source.update!(enabled: false)
 
-      expect(Current.source_ids_for(user)).not_to(include(source.id))
+      expect(ContentSource.visible_ids_for(user)).not_to(include(source.id))
     end
   end
 end

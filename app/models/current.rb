@@ -11,12 +11,4 @@ class Current < ActiveSupport::CurrentAttributes
   end
 
   def user_resolved? = user_resolved.present?
-
-  def source_ids_for(scoped_user)
-    self.visible_source_ids ||= {}
-    key = scoped_user&.id
-    return visible_source_ids[key] if visible_source_ids.key?(key)
-
-    visible_source_ids[key] = ContentSource.visible_to(scoped_user).pluck(:id)
-  end
 end

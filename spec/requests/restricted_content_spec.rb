@@ -5,38 +5,30 @@ require "rails_helper"
 RSpec.describe "Restricted content gating" do
   let!(:phrase) { create(:lexeme, kind: :phrase, text: "測試句子", restricted: true) }
 
-  it "excludes restricted lexemes from Lexeme.visible unless the user has access" do
-    Current.set(user: create(:user)) do
-      expect(Lexeme.visible).not_to(include(phrase))
-    end
-
-    Current.set(user: create(:user, restricted_content: true)) do
-      expect(Lexeme.visible).to(include(phrase))
-    end
+  it "excludes restricted lexemes from Lexeme.visible_to unless the user has access" do
+    expect(Lexeme.visible_to(create(:user))).not_to(include(phrase))
+    expect(Lexeme.visible_to(create(:user, restricted_content: true))).to(include(phrase))
   end
 
   it "honors an admin who has switched restricted content off for themselves" do
-    Current.set(user: create(:user, :admin, restricted_content: false)) do
-      expect(Lexeme.visible).not_to(include(phrase))
-      expect(Lexemes::Search.new.call("測試句子").map(&:lexeme)).not_to(include(phrase))
-    end
+    admin = create(:user, :admin, restricted_content: false)
+
+    expect(Lexeme.visible_to(admin)).not_to(include(phrase))
+    expect(Lexemes::Search.new(user: admin).call("測試句子").map(&:lexeme)).not_to(include(phrase))
   end
 
   it "never surfaces phrases in the top search, whatever the user's access" do
-    Current.set(user: create(:user)) do
-      expect(Lexemes::Search.new.call("測試句子").map(&:lexeme)).not_to(include(phrase))
-    end
+    reader = create(:user)
+    keeper = create(:user, restricted_content: true)
 
-    Current.set(user: create(:user, restricted_content: true)) do
-      expect(Lexemes::Search.new.call("測試句子").map(&:lexeme)).not_to(include(phrase))
-    end
+    expect(Lexemes::Search.new(user: reader).call("測試句子").map(&:lexeme)).not_to(include(phrase))
+    expect(Lexemes::Search.new(user: keeper).call("測試句子").map(&:lexeme)).not_to(include(phrase))
   end
 
   it "still finds words and characters" do
     word = create(:lexeme, kind: :word, text: "測試", meanings: {"en" => "test"})
-    Current.set(user: create(:user)) do
-      expect(Lexemes::Search.new.call("測試").map(&:lexeme)).to(include(word))
-    end
+
+    expect(Lexemes::Search.new(user: create(:user)).call("測試").map(&:lexeme)).to(include(word))
   end
 
   it "redirects a user without restricted access away from the Textbook section" do

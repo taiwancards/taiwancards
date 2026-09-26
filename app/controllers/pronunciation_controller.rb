@@ -11,7 +11,7 @@ class PronunciationController < ApplicationController
       return redirect_to(pronunciation_warmup_path, notice: t("pronunciation.warmup_first"))
     end
 
-    @collection = Collection.where(user_id: [nil, Current.user&.id]).find_by(id: params[:collection_id])
+    @collection = Collection.where(user_id: [nil, current_user&.id]).find_by(id: params[:collection_id])
     @drills = Pronunciation::Drills.instance
     @section = @drills.section(params[:section])
     @tonal = params[:section].blank? || !params[:section].to_s.start_with?("initials_", "vowel_")
@@ -28,7 +28,7 @@ class PronunciationController < ApplicationController
     @voice = voice_profile
     @risky = risky_syllables
     @sandhi = sandhi_syllables
-    @keeping = Current.user&.restricted_access?
+    @keeping = current_user&.restricted_access?
   end
 
   def health
@@ -48,23 +48,22 @@ class PronunciationController < ApplicationController
   end
 
   def grade
-    tonal = params[:tonal].to_s != "false"
-    voice = voice_profile
-    audio = recorded_bytes
-    result = Pronunciation::Admission.take do
-      Pronunciation::AcousticBackend
-        .new(tonal:, voice:)
-        .grade(audio: audio, text: params[:text], syllables: parse_expected, takes: params[:takes].to_i)
-    end
+    result = Pronunciation::GradeAttempt
+      .new(user: current_user, voice: voice_profile, tonal: params[:tonal].to_s != "false")
+      .call(
+        audio: recorded_bytes,
+        text: params[:text],
+        expected: parse_expected,
+        takes: params[:takes].to_i,
+        lexeme_id: params[:lexeme_id],
+        schedule: params[:schedule].to_s != "false",
+        content_type: params[:audio].try(:content_type)
+      )
 
     return render(json: {status: "busy"}, status: :too_many_requests) if result == :busy
     return render(json: {status: "offline"}, status: :service_unavailable) if result.nil?
     return render(json: result, status: :unprocessable_entity) if result["status"] == "retry"
 
-    lexeme = Lexeme.where(kind: %i[word character sentence]).find_by(id: params[:lexeme_id])
-    record_attempt(lexeme, result, schedule: params[:schedule].to_s != "false") if lexeme
-    keep_recording(audio, lexeme, result)
-    refine_voice(voice, result)
     render(json: result)
   end
 
@@ -73,19 +72,6 @@ class PronunciationController < ApplicationController
   def recorded_bytes
     audio = params[:audio]
     audio.respond_to?(:read) ? audio.read : audio.to_s
-  end
-
-  def keep_recording(audio, lexeme, result)
-    Pronunciation::Keeper.new(Current.user).keep(
-      audio: audio,
-      text: params[:text],
-      result: result,
-      expected: parse_expected,
-      lexeme: lexeme,
-      content_type: params[:audio].try(:content_type)
-    )
-  rescue StandardError => error
-    Rails.logger.warn("pronunciation recording not kept: #{error.class}")
   end
 
   def recording_limits
@@ -100,44 +86,10 @@ class PronunciationController < ApplicationController
     !voice_calibrated? && !session[:warmup_skipped]
   end
 
-  def refine_voice(voice, result)
-    return if voice.nil?
-
-    Array(result["syllables"]).each do |syllable|
-      curve = syllable.dig("contour", "curve")
-      next if curve.blank? || syllable["tone"].blank?
-
-      Pronunciation::Calibration.refine!(
-        voice,
-        f0_values: absolute_pitch(syllable),
-        tone: syllable["tone"],
-        score: syllable["overall"]
-      )
-    end
-  end
-
-  def absolute_pitch(syllable)
-    reference = syllable.dig("features", "f0_ref_hz")
-    return [] if reference.blank?
-
-    syllable.dig("contour", "curve").map { |semitones| reference * (2 ** (semitones / 12.0)) }
-  end
-
   def parse_expected
     JSON.parse(params[:expected].to_s)
   rescue JSON::ParserError
     []
-  end
-
-  def record_attempt(lexeme, result, schedule: true)
-    syllables = Array(result["syllables"])
-    Pronunciation::SkillRecorder.new(Current.user, lexeme).call(syllables, flow: result["flow"])
-    return if lexeme.sentence?
-    return unless schedule
-
-    ok = syllables.any? && syllables.all? { |s| s["level"] == "green" }
-    memory = Lexemes::Activator.new.activate(lexeme, :tone)
-    Lexemes::ReviewProcessor.new.call(memory, rating: ok ? "good" : "again")
   end
 
   def pronounceable
@@ -217,7 +169,7 @@ class PronunciationController < ApplicationController
   def build_queue
     ids = Pronunciation::Queue
       .new(
-        user: Current.user,
+        user: current_user,
         collection: @collection,
         drills: @drills
       )

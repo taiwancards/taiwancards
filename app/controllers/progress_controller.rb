@@ -10,7 +10,7 @@ class ProgressController < ApplicationController
 
   def history
     @range = params[:range].presence_in(RANGES) || "today"
-    history = Stats::History.new
+    history = Stats::History.new(user: current_user)
     @buckets = history.buckets
     @summary = history.summary(@range)
     @entries = history.entries(@range)

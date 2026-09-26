@@ -21,7 +21,7 @@ class CharactersController < ApplicationController
     page, = paginate(scope.frequency_order, per_page: PER_PAGE, content_key: content_key)
     @characters = page.to_a
     @studied_ids = LexemeMemory
-      .owned_by(Current.user)
+      .owned_by(current_user)
       .where(lexeme_id: @characters.map(&:id))
       .where
       .not(activated_at: nil)
@@ -35,12 +35,12 @@ class CharactersController < ApplicationController
     lexeme = Lexeme.find_by(kind: :character, text: @text)
     return render(:missing, status: :not_found) if lexeme.nil?
 
-    @profile = Huayu::CharacterProfile.new(lexeme)
-    @word = Lexeme.visible.where(kind: Lexeme::DICTIONARY_KINDS, text: @text).order(:kind).first
-    @liangci = Liangci::Sidecar.new.call(lexeme)
+    @profile = Huayu::CharacterProfile.new(lexeme, user: current_user)
+    @word = Lexeme.visible_to(current_user).where(kind: Lexeme::DICTIONARY_KINDS, text: @text).order(:kind).first
+    @liangci = Liangci::Sidecar.new(user: current_user).call(lexeme)
     @particle = Zhuci::Finder.call(@text)
     @word = nil if @particle&.data&.dig("sole_sense") && @particle.text == @text
-    @thesaurus = Lexemes::Thesaurus.new.call(lexeme)
+    @thesaurus = Lexemes::Thesaurus.new(user: current_user).call(lexeme)
   end
 
   def strokes

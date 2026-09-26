@@ -49,7 +49,7 @@ RSpec.describe Huayu::WordProfile do
   let!(:untranslated_hard) { example("朋友五", difficulty: 800, gdex: 10) }
 
   def texts(locale)
-    I18n.with_locale(locale) { described_class.new(word).sentences.map(&:text) }
+    I18n.with_locale(locale) { described_class.new(word, user: nil).sentences.map(&:text) }
   end
 
   it "leads with the examples translated into both languages" do

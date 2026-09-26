@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Lexemes::Thesaurus do
   let(:frequency) { class_double(Huayu::WordFrequency) }
-  let(:service) { described_class.new(frequency:) }
+  let(:service) { described_class.new(user: nil, frequency:) }
 
   def word(text, data = {})
     create(:lexeme, kind: :word, text:, data:, meanings: {"en" => text})

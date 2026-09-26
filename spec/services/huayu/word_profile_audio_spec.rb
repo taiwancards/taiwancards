@@ -37,14 +37,14 @@ RSpec.describe Huayu::WordProfile do
     example("我每天早上喝咖啡。", difficulty: 100, gdex: 900)
     with_audio = example("他在店裡喝咖啡。", difficulty: 300, gdex: 500, audio: true)
 
-    expect(described_class.new(word).sentences.first.text).to(eq(with_audio.text))
+    expect(described_class.new(word, user: nil).sentences.first.text).to(eq(with_audio.text))
   end
 
   it "still prefers translated sentences over untranslated ones with a clip" do
     translated = example("我喜歡喝咖啡。", difficulty: 500, gdex: 100)
     example("咖啡很好喝。", difficulty: 10, gdex: 999, meanings: {}, audio: true)
 
-    texts = described_class.new(word).sentences.map(&:text)
+    texts = described_class.new(word, user: nil).sentences.map(&:text)
     expect(texts.first).to(eq(translated.text))
   end
 
@@ -52,6 +52,6 @@ RSpec.describe Huayu::WordProfile do
     30.times { |n| example("我每天早上喝咖啡#{n}。", difficulty: 10, gdex: 999 - n) }
     buried = example("他在店裡喝咖啡。", difficulty: 900, gdex: 1, audio: true)
 
-    expect(described_class.new(word).sentences.map(&:text)).to(include(buried.text))
+    expect(described_class.new(word, user: nil).sentences.map(&:text)).to(include(buried.text))
   end
 end

@@ -4,8 +4,9 @@ module Huayu
   class WordProfile
     REDUNDANT_SOURCE = /\A(TBCL \d|TOCFL \S+|Textbook )/
 
-    def initialize(lexeme, twin: nil)
+    def initialize(lexeme, user:, twin: nil)
       @lexeme = lexeme
+      @user = user
       @twin = twin
     end
 
@@ -44,7 +45,7 @@ module Huayu
     end
 
     def memories
-      @memories ||= lexeme.memories.owned_by(Current.user).index_by(&:facet)
+      @memories ||= lexeme.memories.owned_by(@user).index_by(&:facet)
     end
 
     def studied?
@@ -58,7 +59,7 @@ module Huayu
     end
 
     def candidate_sentences
-      ExampleSentences.for(content, limit: SENTENCE_LIMIT)
+      ExampleSentences.for(content, user: @user, limit: SENTENCE_LIMIT)
     end
 
     COLLOCATION_LIMIT = 12
@@ -67,7 +68,7 @@ module Huayu
       @collocations ||= content
         .containers
         .where(kind: :collocation)
-        .visible
+        .visible_to(@user)
         .curriculum_order
         .limit(COLLOCATION_LIMIT)
         .to_a

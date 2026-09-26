@@ -22,12 +22,12 @@ class LiangciController < ApplicationController
 
     @nouns = nouns_for(@entry)
     @examples = examples_for(@entry, @nouns)
-    @character = Lexeme.visible.find_by(kind: %i[character radical], text: @entry.text)
-    @word = Lexeme.visible.where(kind: Lexeme::DICTIONARY_KINDS, text: @entry.text).order(:kind).first
+    @character = Lexeme.visible_to(current_user).find_by(kind: %i[character radical], text: @entry.text)
+    @word = Lexeme.visible_to(current_user).where(kind: Lexeme::DICTIONARY_KINDS, text: @entry.text).order(:kind).first
   end
 
   def game
-    @round = Liangci::GameRound.new(Current.user).call
+    @round = Liangci::GameRound.new(current_user).call
   end
 
   private
@@ -36,9 +36,9 @@ class LiangciController < ApplicationController
     texts = Array(entry.data["nouns"])
     return [] if texts.empty?
 
-    ids = ContentCache.fetch("liangci/nouns", entry.id, Lexeme.visibility_key) do
+    ids = ContentCache.fetch("liangci/nouns", entry.id, Lexeme.visibility_key(current_user)) do
       Lexeme
-        .visible
+        .visible_to(current_user)
         .where(kind: %i[word character collocation], text: texts)
         .order(Arel.sql("lexemes.score NULLS LAST"))
         .limit(NOUN_LIMIT * KINDS_PER_TEXT)
@@ -54,6 +54,6 @@ class LiangciController < ApplicationController
 
   def examples_for(entry, nouns)
     pairs = nouns.map { |noun| [entry.text, noun.text] }
-    Huayu::ClassifierExamples.new.for_pairs(pairs, limit: EXAMPLE_LIMIT)
+    Huayu::ClassifierExamples.new(user: current_user).for_pairs(pairs, limit: EXAMPLE_LIMIT)
   end
 end

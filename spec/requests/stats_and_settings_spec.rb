@@ -47,4 +47,20 @@ RSpec.describe "Stats and settings" do
     expect(rules.first["properties"]["context"]).to(eq("modal"))
     expect(rules.last["patterns"]).to(eq([".*"]))
   end
+
+  it "lets an administrator promote their settings to the installation defaults" do
+    sign_in(User.find_by!(google_email: User.owner_google_email))
+
+    patch("/settings", params: {setting: {daily_new_limit: "33"}, as_default: "1"})
+
+    expect(Setting.instance.daily_new_limit).to(eq(33))
+    expect(Study::Preferences.for(create(:user)).daily_new_limit).to(eq(33))
+  end
+
+  it "ignores the installation-default flag from everybody else" do
+    patch("/settings", params: {setting: {daily_new_limit: "33"}, as_default: "1"})
+
+    expect(Study::Preferences.for(current_user.reload).daily_new_limit).to(eq(33))
+    expect(Setting.instance.daily_new_limit).to(eq(Setting::DEFAULTS["daily_new_limit"]))
+  end
 end

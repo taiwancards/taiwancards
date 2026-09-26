@@ -41,7 +41,11 @@ class ContentSource < ApplicationRecord
   end
 
   def self.visible_ids_for(user)
-    visible_to(user).pluck(:id)
+    cache = Current.visible_source_ids ||= {}
+    key = user&.id
+    return cache[key] if cache.key?(key)
+
+    cache[key] = visible_to(user).pluck(:id)
   end
 
   def visible_to?(user)

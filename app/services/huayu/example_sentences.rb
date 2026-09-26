@@ -11,10 +11,10 @@ module Huayu
       "lexemes.id ASC"
 
     class << self
-      def for(lexeme, limit:, locale: I18n.locale)
+      def for(lexeme, user:, limit:, locale: I18n.locale)
         Lexeme
           .where(kind: :sentence)
-          .visible
+          .visible_to(user)
           .joins("JOIN sentence_words ON sentence_words.sentence_id = lexemes.id")
           .where(sentence_words: {lexeme_id: lexeme.id})
           .left_joins(:sentence_profile)

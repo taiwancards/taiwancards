@@ -22,6 +22,10 @@ module Huayu
     SQL
       .squish
 
+    def initialize(user:)
+      @user = user
+    end
+
     def levels
       build(Collection.where(kind: :tocfl).order(:position).to_a)
     end
@@ -46,12 +50,12 @@ module Huayu
     end
 
     def counts_for(ids)
-      return {} if ids.empty? || Current.user.nil?
+      return {} if ids.empty? || @user.nil?
 
       sql = ActiveRecord::Base.sanitize_sql_array(
         [
           COUNTS,
-          {collections: ids, user: Current.user&.id, review: LexemeMemory.states[:review]}
+          {collections: ids, user: @user.id, review: LexemeMemory.states[:review]}
         ]
       )
 

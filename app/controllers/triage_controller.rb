@@ -41,7 +41,7 @@ class TriageController < ApplicationController
       .select(:lexeme_id)
 
     Lexeme
-      .visible
+      .visible_to(current_user)
       .where(kind: @kind)
       .where
       .not(id: touched)

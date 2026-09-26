@@ -8,8 +8,9 @@ module Phrases
       def for(pattern) = Array(terms[pattern.id]).filter_map { |text| entries[text] }
     end
 
-    def initialize(patterns, analyzer: Huayu::TextAnalyzer.new)
+    def initialize(patterns, user:, analyzer: Huayu::TextAnalyzer.new)
       @patterns = Array(patterns)
+      @user = user
       @analyzer = analyzer
     end
 
@@ -27,7 +28,7 @@ module Phrases
     def resolve(texts)
       return {} if texts.empty?
 
-      Lexeme.visible.where(kind: KINDS, text: texts).index_by(&:text)
+      Lexeme.visible_to(@user).where(kind: KINDS, text: texts).index_by(&:text)
     end
   end
 end

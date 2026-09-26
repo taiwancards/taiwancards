@@ -10,9 +10,13 @@ module Huayu
       end
     end
 
+    def initialize(user:)
+      @user = user
+    end
+
     def levels
       totals = grouped(base)
-      owned = LexemeMemory.owned_by(Current.user)
+      owned = LexemeMemory.owned_by(@user)
       started = grouped(base.where(id: owned.active.select(:lexeme_id)))
       known = grouped(base.where(id: owned.state_review.select(:lexeme_id)))
 
@@ -32,7 +36,7 @@ module Huayu
     private
 
     def base
-      Lexeme.where(kind: Lexeme::DICTIONARY_KINDS).visible
+      Lexeme.where(kind: Lexeme::DICTIONARY_KINDS).visible_to(@user)
     end
 
     def grouped(relation)

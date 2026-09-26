@@ -144,4 +144,64 @@ RSpec.describe "Deck sharing" do
 
     expect(share.reload.accepted_count).to(eq(1))
   end
+
+  it "publishes a link for the owner's own deck" do
+    deck = deck_for(current_user, "Trip to Tainan", [school, book])
+
+    expect { post("/desks/#{deck.id}/share") }.to(change(DeckShare, :count).by(1))
+
+    share = DeckShare.last
+    expect(response).to(redirect_to(deck_share_path(share)))
+    expect(share).to(
+      have_attributes(user: current_user, kind: "deck", name: "Trip to Tainan", decks_count: 1, cards_count: 2)
+    )
+    expect(share.expires_at).to(be_within(1.minute).of(DeckShare::DEFAULT_TTL.from_now))
+    expect(share.token.length).to(be >= DeckShare::TOKEN_BYTES)
+  end
+
+  it "refuses to publish somebody else's deck" do
+    deck = deck_for(owner, "Trip to Tainan", [school])
+
+    expect { post("/desks/#{deck.id}/share") }.not_to(change(DeckShare, :count))
+
+    expect(response).to(redirect_to(desks_path))
+    expect(flash[:alert]).to(eq(I18n.t("shares.missing")))
+  end
+
+  it "publishes a whole group with the count of decks inside" do
+    first = deck_for(current_user, "Songs", [school])
+    second = deck_for(current_user, "News", [book])
+    group = CollectionGroup.create!(user: current_user, name: "Reading")
+    group.add_collections([first.id, second.id])
+
+    post("/groups/#{group.id}/share")
+
+    share = DeckShare.last
+    expect(share).to(have_attributes(kind: "group", name: "Reading", decks_count: 2, cards_count: 2))
+    expect(response).to(redirect_to(deck_share_path(share)))
+  end
+
+  it "lets the owner revoke a link, after which it stops serving" do
+    share = share_of(deck_for(current_user, "Trip to Tainan", [school]), current_user)
+
+    delete("/shares/#{share.token}")
+
+    expect(response).to(redirect_to(deck_shares_path))
+    expect(share.reload).to(be_revoked)
+    get("/s/#{share.token}")
+    expect(response).to(have_http_status(:not_found))
+  end
+
+  it "lists only the owner's live links" do
+    share_of(deck_for(current_user, "Still shared", [school]), current_user)
+    share_of(deck_for(current_user, "Taken back", [book]), current_user).revoke!
+    share_of(deck_for(owner, "Somebody else's", [school]), owner)
+
+    get("/shares")
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("Still shared"))
+    expect(response.body).not_to(include("Taken back"))
+    expect(response.body).not_to(include("Somebody else"))
+  end
 end

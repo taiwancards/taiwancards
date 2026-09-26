@@ -134,4 +134,33 @@ RSpec.describe "Dictionary" do
     get("/dict/#{CGI.escape("不存在的詞")}")
     expect(response).to(have_http_status(:not_found))
   end
+
+  describe "filters" do
+    let!(:known) { create(:lexeme, kind: :word, text: "知道", meanings: {"en" => "to know"}) }
+    let!(:fresh) { create(:lexeme, kind: :word, text: "陌生", meanings: {"en" => "unfamiliar"}) }
+
+    it "narrows the list to one TOCFL level" do
+      level = Collection.create!(kind: :tocfl, name: "TOCFL Band A · A1", level_tag: "A1", position: 2)
+      level.add_lexeme(known)
+
+      get("/dict", params: {level: "A1"})
+
+      expect(response).to(have_http_status(:ok))
+      expect(response.body).to(include("知道"))
+      expect(response.body).not_to(include("陌生"))
+    end
+
+    it "narrows the list to the signed-in user's own progress" do
+      Lexemes::Activator.new(user: current_user).call(known)
+      LexemeMemory.owned_by(current_user).where(lexeme: known).update_all(state: LexemeMemory.states[:review])
+
+      get("/dict", params: {progress: "known"})
+      expect(response.body).to(include("知道"))
+      expect(response.body).not_to(include("陌生"))
+
+      get("/dict", params: {progress: "new"})
+      expect(response.body).to(include("陌生"))
+      expect(response.body).not_to(include("知道"))
+    end
+  end
 end

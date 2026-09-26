@@ -84,4 +84,15 @@ RSpec.describe "Course" do
 
     expect(response).to(redirect_to(login_path))
   end
+
+  it "records a finished level test under its stage, capped at the number of questions" do
+    stage = Huayu::CourseLessons.stages.first
+
+    post("/course/exam/#{stage.slug}", params: {score: 9_999})
+
+    completion = CourseCompletion.find_by(user: current_user, slug: "exam:#{stage.slug}")
+    expect(completion.score).to(eq(stage.exam.size))
+    expect(completion.total).to(eq(stage.exam.size))
+    expect(response).to(redirect_to(course_exam_path(stage)))
+  end
 end

@@ -21,7 +21,7 @@ class WritingController < ApplicationController
     rating = params[:rating].to_s
     return head(:unprocessable_entity) if RATINGS.exclude?(rating)
 
-    memory = Lexemes::Activator.new.activate(lexeme, :writing)
+    memory = Lexemes::Activator.new(user: current_user).activate(lexeme, :writing)
     Lexemes::ReviewProcessor.new.call(
       memory,
       rating:,
@@ -34,7 +34,7 @@ class WritingController < ApplicationController
   private
 
   def load_scope
-    @collection = Collection.where(user_id: [nil, Current.user&.id]).find_by(id: params[:collection_id])
+    @collection = Collection.where(user_id: [nil, current_user&.id]).find_by(id: params[:collection_id])
   end
 
   def next_params(extra = {})
@@ -105,7 +105,7 @@ class WritingController < ApplicationController
 
   def mistake_lexeme_ids
     ids = LexemeReview
-      .owned_by(Current.user)
+      .owned_by(current_user)
       .where(facet: LexemeMemory.facets[:writing], rating: [1, 2])
       .where(reviewed_at: MISTAKE_WINDOW_DAYS.days.ago..)
       .order(Arel.sql("rating DESC"), reviewed_at: :desc)

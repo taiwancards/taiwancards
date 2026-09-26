@@ -42,4 +42,17 @@ RSpec.describe "Textbook" do
     in_locale(:ru) { get("/textbook/1/1") }
     expect(response.body).to(include("Ключевая грамматика").and(include("спасибо")))
   end
+
+  it "marks the lesson vocabulary as known for the signed-in user" do
+    me = Current.user
+    thanks = create(:lexeme, kind: :word, text: "謝謝")
+
+    post("/textbook/1/1/known")
+
+    expect(response).to(redirect_to(textbook_lesson_path(book: 1, lesson: 1)))
+    expect(flash[:notice]).to(eq(I18n.t("textbook.marked_known", count: 1)))
+    memories = LexemeMemory.owned_by(me).where(lexeme: thanks)
+    expect(memories.pluck(:facet)).to(contain_exactly("recognition", "reading"))
+    expect(memories).to(all(be_state_review))
+  end
 end

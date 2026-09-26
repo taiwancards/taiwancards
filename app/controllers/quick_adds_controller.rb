@@ -7,7 +7,7 @@ class QuickAddsController < ApplicationController
 
     desk = target_desk
     desk.add_lexeme(lexeme)
-    Lexemes::Activator.new.call(lexeme)
+    Lexemes::Activator.new(user: current_user).call(lexeme)
     desk.touch_used!
 
     redirect_back(

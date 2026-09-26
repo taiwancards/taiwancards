@@ -2,8 +2,9 @@
 
 module Huayu
   class CharacterProfile
-    def initialize(lexeme)
+    def initialize(lexeme, user:)
       @lexeme = lexeme
+      @user = user
     end
 
     attr_reader :lexeme
@@ -45,7 +46,7 @@ module Huayu
     TOP_WORDS_LIMIT = 10
 
     def top_words(limit = TOP_WORDS_LIMIT)
-      @top_words ||= lexeme.containing_words.visible.frequency_order.limit(limit).to_a
+      @top_words ||= lexeme.containing_words.visible_to(@user).frequency_order.limit(limit).to_a
     end
 
     def grouped_senses
@@ -71,11 +72,11 @@ module Huayu
     SENTENCE_LIMIT = 10
 
     def phrases
-      @phrases ||= ExampleSentences.for(lexeme, limit: SENTENCE_LIMIT)
+      @phrases ||= ExampleSentences.for(lexeme, user: @user, limit: SENTENCE_LIMIT)
     end
 
     def memories
-      @memories ||= lexeme.memories.owned_by(Current.user).index_by(&:facet)
+      @memories ||= lexeme.memories.owned_by(@user).index_by(&:facet)
     end
 
     def studied?

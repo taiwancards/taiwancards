@@ -178,4 +178,42 @@ RSpec.describe "Corpus search" do
       expect(response.body).not_to(include("<html"))
     end
   end
+
+  describe "the reading fields in sentence mode" do
+    def concordance_lines
+      Nokogiri::HTML5(response.body).css("mark").map { |node| node.parent.text.strip }
+    end
+
+    it "reaches the sentences through a word typed as pinyin or as zhuyin" do
+      {pinyin: "xue2xiao4", zhuyin: "ㄒㄩㄝˊㄒㄧㄠˋ"}.each do |field, value|
+        get("/search", params: {field => value, :sentences => "1"})
+
+        expect(response).to(have_http_status(:ok))
+        expect(concordance_lines).to(
+          contain_exactly("我們學校很大。", "學校有老師。"),
+          "expected #{field}=#{value} to reach the sentences"
+        )
+      end
+    end
+  end
+
+  describe "the register filter in dictionary mode" do
+    it "keeps only the entries whose dominant register was ticked" do
+      xuexiao.update!(data: xuexiao.data.merge("register_mix" => [0.8, 0.2]))
+      word(
+        "學生",
+        "xuéshēng",
+        "ㄒㄩㄝˊ ㄕㄥ",
+        score: 7,
+        meaning: "student",
+        data: {"register_mix" => [0.1, 0.9]}
+      )
+
+      get("/search", params: {q: "學", registers: ["literary"]})
+
+      expect(response).to(have_http_status(:ok))
+      expect(response.body).to(include("學生"))
+      expect(response.body).not_to(include("學校"))
+    end
+  end
 end

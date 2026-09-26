@@ -27,12 +27,16 @@ module Huayu
     SPELLINGS = 27
     LAST = Float::INFINITY
 
+    def initialize(user:)
+      @user = user
+    end
+
     def call(lexeme)
       texts = spellings(lexeme.text)
       return [] if texts.empty?
 
       rows = Lexeme
-        .visible
+        .visible_to(@user)
         .where(kind: Lexeme::DICTIONARY_KINDS, text: texts)
         .includes(:senses)
         .order(:kind)

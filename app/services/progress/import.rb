@@ -37,7 +37,7 @@ module Progress
         Array(json["placement_tests"]).each { |row| import_placement_test(row) }
       end
 
-      @counts
+      {memories: 0, reviews: 0, skipped: 0}.merge(@counts)
     end
 
     private

@@ -30,7 +30,7 @@ class ChengyuController < ApplicationController
   def base
     Lexeme
       .where(kind: Lexeme::DICTIONARY_KINDS)
-      .visible
+      .visible_to(current_user)
       .where("lexemes.data ->> 'chengyu' = 'true'")
   end
 
@@ -78,7 +78,7 @@ class ChengyuController < ApplicationController
   end
 
   def facets
-    ContentCache.fetch("chengyu/facets", Lexeme.visibility_key) do
+    ContentCache.fetch("chengyu/facets", Lexeme.visibility_key(current_user)) do
       {
         tone: base.group(Arel.sql("lexemes.data ->> 'chengyu_tone'")).count,
         kind: base.group(Arel.sql("lexemes.data ->> 'chengyu_kind'")).count,

@@ -34,7 +34,7 @@ module Liangci
     end
 
     def nouns
-      Lexeme.visible.where(kind: %i[word character]).where("data ? 'classifiers'")
+      Lexeme.visible_to(@user).where(kind: %i[word character]).where("data ? 'classifiers'")
     end
 
     def started_nouns

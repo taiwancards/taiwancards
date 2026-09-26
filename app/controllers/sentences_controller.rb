@@ -9,7 +9,7 @@ class SentencesController < ApplicationController
   PER_PAGE = Sentences::Browse::PER_PAGE
 
   def index
-    @browse = Sentences::Browse.new(user: Current.user, params: params)
+    @browse = Sentences::Browse.new(user: current_user, params: params)
     @result = @browse.call
   end
 
@@ -27,7 +27,7 @@ class SentencesController < ApplicationController
   private
 
   def locate(reference)
-    scope = Lexeme.where(kind: :sentence).visible
+    scope = Lexeme.where(kind: :sentence).visible_to(current_user)
 
     return scope.find_by(public_id: reference) if reference.match?(Lexeme::PUBLIC_ID_FORMAT)
     return scope.find_by(id: reference) if reference.match?(/\A\d+\z/)

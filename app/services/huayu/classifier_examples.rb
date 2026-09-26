@@ -7,10 +7,14 @@ module Huayu
 
     Example = Data.define(:sentence, :noun, :prefix, :highlight, :suffix)
 
+    def initialize(user:)
+      @user = user
+    end
+
     def for_pairs(pairs, limit:)
       return [] if pairs.empty?
 
-      nouns = Lexeme.visible.where(kind: %i[word character], text: pairs.map(&:last).uniq).index_by(&:text)
+      nouns = Lexeme.visible_to(@user).where(kind: %i[word character], text: pairs.map(&:last).uniq).index_by(&:text)
       return [] if nouns.empty?
 
       patterns = pairs.select { |_classifier, noun| nouns.key?(noun) }.uniq.to_h { |pair| [pair, pattern(*pair)] }
@@ -61,11 +65,11 @@ module Huayu
     end
 
     def candidates(noun_ids)
-      ContentCache.fetch("classifier/scan", Digest::SHA256.hexdigest(noun_ids.join(",")), Lexeme.visibility_key) do
+      ContentCache.fetch("classifier/scan", Digest::SHA256.hexdigest(noun_ids.join(",")), Lexeme.visibility_key(@user)) do
         ids = SentenceWord.where(lexeme_id: noun_ids).ranked.limit(SCAN_LIMIT).pluck(:sentence_id)
         next [] if ids.empty?
 
-        Lexeme.visible.where(id: ids).order(:score).pluck(:id, :text)
+        Lexeme.visible_to(@user).where(id: ids).order(:score).pluck(:id, :text)
       end
     end
   end

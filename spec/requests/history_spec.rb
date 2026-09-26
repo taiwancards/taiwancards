@@ -31,7 +31,7 @@ RSpec.describe "History" do
 
     get(progress_history_path)
 
-    history = Stats::History.new
+    history = Stats::History.new(user: @authenticated_user)
     expect(history.summary("today")[:total]).to(eq(1))
     expect(history.summary("yesterday")[:total]).to(eq(0))
   end
@@ -41,7 +41,7 @@ RSpec.describe "History" do
     review!(user: stranger, at: Time.zone.now - 10.minutes, stability: 400)
     review!(user: @authenticated_user, at: Time.zone.now - 5.minutes, stability: 1)
 
-    entries = Stats::History.new.entries("today")
+    entries = Stats::History.new(user: @authenticated_user).entries("today")
     facet = entries.first[:facets].first
 
     expect(entries.size).to(eq(1))
@@ -53,7 +53,7 @@ RSpec.describe "History" do
     stranger = create(:user)
     review!(user: stranger, at: Time.zone.now - 1.minute)
 
-    expect(Stats::History.new.summary("today")[:total]).to(eq(0))
+    expect(Stats::History.new(user: @authenticated_user).summary("today")[:total]).to(eq(0))
   end
 
   it "renders the page with the reviewed word" do

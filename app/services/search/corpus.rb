@@ -141,7 +141,7 @@ module Search
     end
 
     def searcher
-      @searcher ||= Lexemes::Search.new
+      @searcher ||= Lexemes::Search.new(user: @user)
     end
 
     def intersected

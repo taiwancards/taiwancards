@@ -42,7 +42,7 @@ class EverydayController < ApplicationController
   end
 
   def domain_counts
-    ContentCache.fetch("everyday/domains", Lexeme.visibility_key) { count_domains }
+    ContentCache.fetch("everyday/domains", Lexeme.visibility_key(current_user)) { count_domains }
   end
 
   def count_domains

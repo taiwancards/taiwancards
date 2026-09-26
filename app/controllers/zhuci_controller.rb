@@ -18,7 +18,7 @@ class ZhuciController < ApplicationController
     return redirect_to(zhuci_entry_path(@entry.text)) if @entry.nil? && (@entry = Zhuci::Finder.call(params[:text]))
     return render(:missing, status: :not_found) if @entry.nil?
 
-    @character = Lexeme.visible.find_by(kind: %i[character radical], text: @entry.text)
+    @character = Lexeme.visible_to(current_user).find_by(kind: %i[character radical], text: @entry.text)
     @word = word_beyond_particle(@entry)
     @lesson = Huayu::GrammarLessons.find(@entry.data["grammar"]) if @entry.data["grammar"].present?
     @neighbours = neighbours_of(@entry)
@@ -33,7 +33,7 @@ class ZhuciController < ApplicationController
   def word_beyond_particle(entry)
     return nil if entry.data["sole_sense"]
 
-    Lexeme.visible.where(kind: Lexeme::DICTIONARY_KINDS, text: entry.text).order(:kind).first
+    Lexeme.visible_to(current_user).where(kind: Lexeme::DICTIONARY_KINDS, text: entry.text).order(:kind).first
   end
 
   def neighbours_of(entry)

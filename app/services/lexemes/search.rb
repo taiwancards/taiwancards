@@ -27,6 +27,10 @@ module Lexemes
       include Enumerable
     end
 
+    def initialize(user: Current.user)
+      @user = user
+    end
+
     def call(query, limit: LIMIT, kinds: KINDS)
       parsed = Huayu::ReadingQuery.call(query)
       return Page.new(results: [], truncated: false) if parsed.raw.blank?
@@ -115,7 +119,7 @@ module Lexemes
     def bindings(parsed)
       {
         kinds: Lexeme.kinds.values_at(*kinds),
-        include_restricted: Current.user&.restricted_access? || false,
+        include_restricted: @user&.restricted_access? || false,
         raw: parsed.raw,
         prefix: "#{parsed.raw}%",
         contains: "%#{parsed.lower}%",

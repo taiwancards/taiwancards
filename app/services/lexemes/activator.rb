@@ -2,7 +2,8 @@
 
 module Lexemes
   class Activator
-    def initialize(now: Time.current)
+    def initialize(user: Current.user, now: Time.current)
+      @user = user
       @now = now
     end
 
@@ -30,7 +31,7 @@ module Lexemes
     end
 
     def activate(lexeme, facet)
-      memory = LexemeMemory.find_or_initialize_by(lexeme:, facet: LexemeMemory.facets[facet], user: Current.user)
+      memory = LexemeMemory.find_or_initialize_by(lexeme:, facet: LexemeMemory.facets[facet], user: @user)
       memory.activated_at ||= @now
       memory.save! if memory.changed?
       memory
@@ -42,7 +43,7 @@ module Lexemes
       return [] if wanted.empty?
 
       LexemeMemory
-        .owned_by(Current.user)
+        .owned_by(@user)
         .where(lexeme_id: wanted.map(&:first).uniq)
         .where
         .not(activated_at: nil)
@@ -57,7 +58,7 @@ module Lexemes
         {
           lexeme_id: lexeme_id,
           facet: facet,
-          user_id: Current.user&.id,
+          user_id: @user&.id,
           activated_at: @now,
           created_at: @now,
           updated_at: @now

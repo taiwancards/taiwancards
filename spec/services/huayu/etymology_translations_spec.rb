@@ -41,7 +41,7 @@ RSpec.describe Huayu::EtymologyTranslations do
         "etymology_i18n" => {"ru" => {"hint" => "рот", "text" => "Фоноидеограмма (形聲)."}}
       }
     )
-    profile = Huayu::CharacterProfile.new(lexeme)
+    profile = Huayu::CharacterProfile.new(lexeme, user: nil)
 
     I18n.with_locale(:ru) do
       expect(profile.etymology_hint).to(eq("рот"))
@@ -65,7 +65,7 @@ RSpec.describe Huayu::EtymologyTranslations do
     )
     write({"檯" => {"hint" => "деревянный помост"}})
     described_class.new(path:).call
-    profile = Huayu::CharacterProfile.new(lexeme.reload)
+    profile = Huayu::CharacterProfile.new(lexeme.reload, user: nil)
 
     I18n.with_locale(:ru) do
       expect(profile.etymology_hint).to(eq("flight of a dragon"))

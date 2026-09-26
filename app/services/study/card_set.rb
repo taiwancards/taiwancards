@@ -11,7 +11,8 @@ module Study
     SENTENCE_SHARE = 0.15
     RECOMMENDED_MODES = %w[daily today].freeze
 
-    def initialize(now: Time.current, settings: Study::Preferences.for)
+    def initialize(user: Current.user, now: Time.current, settings: Study::Preferences.for(user))
+      @user = user
       @now = now
       @settings = settings
       @facets = SWIPE_FACETS
@@ -54,7 +55,7 @@ module Study
     end
 
     def today_ids
-      plan = StudyPlan.find_by(user: Current.user)
+      plan = StudyPlan.find_by(user: @user)
       due = due_lexeme_ids
       quota = today_quota
       ration = @recommended ? ration_ids(quota, exclude: due) : []
@@ -85,7 +86,7 @@ module Study
     end
 
     def deal(lexeme_ids, facets = @facets)
-      Deal.new(user: Current.user, facets:).call(lexeme_ids)
+      Deal.new(user: @user, facets:).call(lexeme_ids)
     end
 
     private
@@ -122,7 +123,7 @@ module Study
     def unseen_lexeme_ids(exclude: [])
       scope = LexemeMemory
         .active
-        .owned_by(Current.user)
+        .owned_by(@user)
         .joins(:lexeme)
         .where(facet: facet_ints, state: LexemeMemory.states[:unseen])
         .order(
@@ -138,7 +139,7 @@ module Study
     end
 
     def mistake_ids
-      MistakeBook.new(Current.user, now: @now).lexeme_ids
+      MistakeBook.new(@user, now: @now).lexeme_ids
     end
 
     def cram_ids(size, collection)
@@ -150,14 +151,14 @@ module Study
     end
 
     def today_quota
-      plan = StudyPlan.find_by(user: Current.user)
+      plan = StudyPlan.find_by(user: @user)
       plan ? Study::PlanCalculator.new(plan).daily_new_quota : @settings.session_size.to_i
     end
 
     def due_lexeme_ids
       LexemeMemory
         .active
-        .owned_by(Current.user)
+        .owned_by(@user)
         .where(facet: facet_ints)
         .where
         .not(state: :unseen)
@@ -202,7 +203,7 @@ module Study
     def sentence_fresh_ids(count, exclude: [])
       return [] if count <= 0
 
-      known = LexemeMemory.owned_by(Current.user).state_review.select(:lexeme_id)
+      known = LexemeMemory.owned_by(@user).state_review.select(:lexeme_id)
       scope = Lexeme
         .where(kind: :sentence, restricted: false)
         .where("lexemes.data ? 'audio'")
@@ -263,16 +264,15 @@ module Study
     end
 
     def level_ceiling
-      user = Current.user
-      return nil unless user.respond_to?(:level_grade)
+      return nil unless @user.respond_to?(:level_grade)
 
-      user.level_grade + 1
+      @user.level_grade + 1
     end
 
     def studied_lexeme_ids
       @studied_lexeme_ids ||= LexemeMemory
         .active
-        .owned_by(Current.user)
+        .owned_by(@user)
         .where
         .not(state: :unseen)
         .distinct
@@ -280,20 +280,20 @@ module Study
     end
 
     def activated_lexeme_ids
-      @activated_lexeme_ids ||= LexemeMemory.active.owned_by(Current.user).distinct.pluck(:lexeme_id)
+      @activated_lexeme_ids ||= LexemeMemory.active.owned_by(@user).distinct.pluck(:lexeme_id)
     end
 
     def activate(ids)
       return if ids.blank?
 
-      Lexemes::Activator.new(now: @now).call_many(Lexeme.where(id: ids).to_a)
+      Lexemes::Activator.new(user: @user, now: @now).call_many(Lexeme.where(id: ids).to_a)
     end
 
     def activate_cards(ids)
       cards = deal(ids)
       return if cards.empty?
 
-      Lexemes::Activator.new(now: @now).activate_pairs(
+      Lexemes::Activator.new(user: @user, now: @now).activate_pairs(
         cards.map { |card| [card.lexeme_id, LexemeMemory.facets.fetch(card.facet)] }
       )
     end

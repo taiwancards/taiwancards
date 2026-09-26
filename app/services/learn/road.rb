@@ -40,7 +40,7 @@ module Learn
 
     def build
       stats = Huayu::TocflReadiness
-        .new
+        .new(user: @user)
         .levels
         .select { |stat| LEVELS.include?(stat.collection.level_tag) }
         .sort_by { |stat| LEVELS.index(stat.collection.level_tag) }
