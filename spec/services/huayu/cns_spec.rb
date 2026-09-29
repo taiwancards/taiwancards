@@ -32,7 +32,7 @@ RSpec.describe "CNS11643 reference data" do
       expect(described_class.for("ㄅㄚ")&.key).to(eq("ba"))
     end
 
-    it "normalises a trailing neutral mark to the leading Taiwan form" do
+    it "normalizes a trailing neutral mark to the leading Taiwan form" do
       expect(described_class.for("ㄉㄜ˙")&.key).to(eq("de5"))
     end
 

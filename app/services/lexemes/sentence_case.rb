@@ -12,8 +12,8 @@ module Lexemes
     end
 
     def call
-      fixed = LOCALES.sum { |locale| capitalise(locale) }
-      @io.puts("sentence translations capitalised: #{fixed}")
+      fixed = LOCALES.sum { |locale| capitalize(locale) }
+      @io.puts("sentence translations capitalized: #{fixed}")
       Result.new(fixed:)
     end
 
@@ -27,7 +27,7 @@ module Lexemes
       Lexeme.where(kind: :sentence).where("meanings ->> :locale ~ :lower", locale:, lower: LOWER)
     end
 
-    def capitalise(locale)
+    def capitalize(locale)
       Lexeme.connection.update(
         Lexeme.sanitize_sql_array(
           [

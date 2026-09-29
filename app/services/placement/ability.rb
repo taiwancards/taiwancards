@@ -37,8 +37,8 @@ module Placement
     private
 
     def posterior(responses, prior)
-      centre = self.class.difficulty_of(prior)
-      weights = points.to_h { |point| [point, Math.exp(-((point - centre) ** 2) / (2 * PRIOR_SIGMA ** 2))] }
+      center = self.class.difficulty_of(prior)
+      weights = points.to_h { |point| [point, Math.exp(-((point - center) ** 2) / (2 * PRIOR_SIGMA ** 2))] }
 
       Array(responses).each do |response|
         difficulty = response[:difficulty] || response["difficulty"]

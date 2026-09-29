@@ -15,7 +15,7 @@ module Licenses
       ["lexeme_links", "parent_id"]
     ].freeze
 
-    SCRATCH = "licence_purge"
+    SCRATCH = "license_purge"
 
     UNCOVERED = <<~SQL
       NOT EXISTS (

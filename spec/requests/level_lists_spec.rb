@@ -42,7 +42,7 @@ RSpec.describe "Level word lists", :no_auth do
     expect(response.body).to(include("hospital"))
   end
 
-  it "names every licence the file was built from, so the download can be reused honestly" do
+  it "names every license the file was built from, so the download can be reused honestly" do
     graded_word!
 
     get("/tbcl/2.csv")

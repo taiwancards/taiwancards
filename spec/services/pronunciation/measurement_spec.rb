@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "What the pronunciation analyser measures" do
+RSpec.describe "What the pronunciation analyzer measures" do
   let(:store) { instance_double(Pronunciation::TemplateStore) }
   let(:analyzer) { Pronunciation::Acoustic::Analyzer.new(store) }
 

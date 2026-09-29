@@ -217,20 +217,20 @@ module Pronunciation
 
       def relative_spread(sigma, length)
         values = Array.new(length) { |i| (sigma && sigma[i]).to_f }
-        centre = values.sum / values.length
-        return Array.new(length, 1.0) if centre <= 0.0
+        center = values.sum / values.length
+        return Array.new(length, 1.0) if center <= 0.0
 
         values.map do |v|
-          share = ((1.0 - CONTOUR_SPREAD_BLEND) + (CONTOUR_SPREAD_BLEND * (v / centre)))
+          share = ((1.0 - CONTOUR_SPREAD_BLEND) + (CONTOUR_SPREAD_BLEND * (v / center)))
           share.clamp(CONTOUR_SPREAD_RANGE.begin, CONTOUR_SPREAD_RANGE.end)
         end
       end
 
       def shape_of(curve, width = nil)
-        centre = curve.sum / curve.length
-        width ||= Math.sqrt(curve.sum { |v| (v - centre) ** 2 } / curve.length)
+        center = curve.sum / curve.length
+        width ||= Math.sqrt(curve.sum { |v| (v - center) ** 2 } / curve.length)
         width = CONTOUR_SD_FLOOR if width < CONTOUR_SD_FLOOR
-        [curve.map { |v| (v - centre) / width }, width]
+        [curve.map { |v| (v - center) / width }, width]
       end
 
       def spread(f, tpl, fields)

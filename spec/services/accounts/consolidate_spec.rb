@@ -76,7 +76,7 @@ RSpec.describe Accounts::Consolidate do
     expect(User.count).to(eq(1))
   end
 
-  it "leaves the owner able to sign in and be recognised as the admin" do
+  it "leaves the owner able to sign in and be recognized as the admin" do
     create(:user, :admin)
     described_class.new.call
 

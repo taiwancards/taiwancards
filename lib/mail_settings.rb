@@ -10,13 +10,15 @@ module MailSettings
   def smtp? = ENV["SMTP_ADDRESS"].present?
 
   def smtp
+    port = integer("SMTP_PORT", DEFAULT_PORT)
     {
       address: ENV["SMTP_ADDRESS"],
-      port: integer("SMTP_PORT", DEFAULT_PORT),
+      port:,
       user_name: ENV["SMTP_USERNAME"],
       password: ENV["SMTP_PASSWORD"],
       authentication: :plain,
-      enable_starttls_auto: true,
+      tls: port == 465,
+      enable_starttls_auto: port != 465,
       open_timeout: 10,
       read_timeout: 20
     }

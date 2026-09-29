@@ -124,7 +124,7 @@ namespace(:pronunciation) do
     Pronunciation::Corpus::VariabilityBuilder.new.write!
   end
 
-  desc("Score every syllable against its own rivals: how well we recognise it at all")
+  desc("Score every syllable against its own rivals: how well we recognize it at all")
   task(syllable_quality: :environment) do
     rows = Pronunciation::Corpus::SyllableQuality.new(part: ENV["SPLIT"].presence || "all").write!
     good = rows.count { |r| r["self"] >= 80 && r["top1"] >= 80 && r["margin"] >= 5 }
@@ -140,7 +140,7 @@ namespace(:pronunciation) do
     end
   end
 
-  desc("Build the drill sections from the syllables we actually recognise")
+  desc("Build the drill sections from the syllables we actually recognize")
   task(drills: :environment) do
     payload = Pronunciation::Corpus::DrillsBuilder.new.write!
     payload["sections"].each do |section|

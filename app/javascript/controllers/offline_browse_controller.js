@@ -98,7 +98,7 @@ export default class extends Controller {
   }
 
   matches() {
-    const needle = normalise(this.queryTarget.value.trim());
+    const needle = normalize(this.queryTarget.value.trim());
 
     return this.rows.filter((entry) => {
       if (this.kind && entry.row[6] !== this.kind) return false;
@@ -139,10 +139,10 @@ export default class extends Controller {
   }
 }
 
-function normalise(text) {
+function normalize(text) {
   return text.toLowerCase().normalize("NFD").replace(TONES, "");
 }
 
 function haystack(row) {
-  return normalise([row[0], row[1], row[2], row[3], row[4]].join(" "));
+  return normalize([row[0], row[1], row[2], row[3], row[4]].join(" "));
 }

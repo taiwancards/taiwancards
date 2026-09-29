@@ -25,7 +25,7 @@ RSpec.describe Pronunciation::Acoustic::Cepstra do
     expect(build[1]).to(eq([3.0, 4.0]))
   end
 
-  it "centres the rows on the mean of the range it was given" do
+  it "centers the rows on the mean of the range it was given" do
     cepstra = build.normalize(0..1)
 
     expect(cepstra[0]).to(eq([-1.0, -1.0]))

@@ -84,9 +84,9 @@ RSpec.describe Huayu::CourseLessons do
   end
 
   it "keeps a passage free of speaker labels" do
-    labelled = described_class.lessons.reject(&:dialogue?).select { |lesson| lesson.lines.any?(&:who) }
+    labeled = described_class.lessons.reject(&:dialogue?).select { |lesson| lesson.lines.any?(&:who) }
 
-    expect(labelled.map(&:slug)).to(be_empty)
+    expect(labeled.map(&:slug)).to(be_empty)
   end
 
   it "carries a pinyin reading beside every zhuyin one" do

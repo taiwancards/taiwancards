@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Customisable bottom tabs" do
+RSpec.describe "Customizable bottom tabs" do
   def bottom_nav
     response.body[%r{<nav[^>]*fixed[^>]*>.*?</nav>}m]
   end

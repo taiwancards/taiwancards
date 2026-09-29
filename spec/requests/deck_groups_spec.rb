@@ -25,9 +25,9 @@ RSpec.describe "Deck groups" do
   it "lets one deck sit in several groups at once" do
     shared = deck("Songs")
     post("/groups", params: {name: "Music", deck_ids: [shared.id]})
-    post("/groups", params: {name: "Favourites", deck_ids: [shared.id]})
+    post("/groups", params: {name: "Favorites", deck_ids: [shared.id]})
 
-    expect(shared.reload.groups.map(&:name)).to(contain_exactly("Music", "Favourites"))
+    expect(shared.reload.groups.map(&:name)).to(contain_exactly("Music", "Favorites"))
   end
 
   it "adds and removes decks without touching the decks themselves" do

@@ -72,7 +72,7 @@ RSpec.describe "bin/distribute" do
     expect(script.scan(/remote_sha "\$dest"/).length).to(eq(2))
   end
 
-  it "stamps what it sends so the next run can recognise it" do
+  it "stamps what it sends so the next run can recognize it" do
     expect(script.scan(/--metadata "sha256=\$digest"/).length).to(eq(2))
   end
 

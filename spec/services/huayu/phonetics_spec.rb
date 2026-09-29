@@ -7,7 +7,7 @@ RSpec.describe Huayu::Phonetics do
 
   after { described_class.reset! }
 
-  it "carries a localised anchor and note on every initial and final" do
+  it "carries a localized anchor and note on every initial and final" do
     (described_class.initials + described_class.finals).each do |row|
       expect(row["anchor"]).to(be_a(Hash), row["pinyin"])
       expect(row["anchor"].keys).to(match_array(%w[en ru]), row["pinyin"])

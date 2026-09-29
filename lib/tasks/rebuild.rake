@@ -26,8 +26,8 @@ namespace(:huayu) do
     Huayu::CollocationMeaningFiller.new.call
   end
 
-  desc("Audit: assert no sentence survives that a commercial licence does not cover, and remove any that does")
-  task(enforce_licences: :environment) do
+  desc("Audit: assert no sentence survives that a commercial license does not cover, and remove any that does")
+  task(enforce_licenses: :environment) do
     result = Licenses::Enforcer.new.call
     puts(format("  sentences left      : %d", result[:sentences_left]))
     puts(format("  source counts zeroed: %d", result[:sources_reset]))
@@ -243,7 +243,7 @@ namespace(:huayu) do
     puts("places: #{result.imported} added, #{result.skipped} skipped")
   end
 
-  desc("Register the content sources and their licences")
+  desc("Register the content sources and their licenses")
   task(import_sources: :environment) do
     puts("sources: #{ContentSources::Importer.new.call}")
   end
@@ -272,7 +272,7 @@ namespace(:huayu) do
     Content::Wipe.new(full: false).call
 
     steps = [
-      ["huayu:import_sources", "sources and licences"],
+      ["huayu:import_sources", "sources and licenses"],
       ["huayu:import_taiwan_vocabulary", "Taiwanese vocabulary"],
       ["huayu:import_common_words", "common words outside official lists"],
       ["huayu:import_places", "districts and county seats of Taiwan"],
@@ -364,7 +364,7 @@ namespace(:huayu) do
 
     ingest_steps = [
       ["db:seed", "settings and admin"],
-      ["huayu:import_sources", "sources and licences"],
+      ["huayu:import_sources", "sources and licenses"],
       ["huayu:build:open", "characters, words, levels, frequency, glosses"],
       ["textbook:load", "textbook lessons from dumps"],
       ["huayu:import_taiwan_vocabulary", "Taiwanese vocabulary from Wiktionary"],
@@ -398,8 +398,8 @@ namespace(:huayu) do
       ["huayu:reorder_senses", "senses follow the reading order"],
       ["huayu:normalize_readings", "reading separators"],
       ["huayu:rebuild_search", "search index"],
-      ["huayu:enforce_licences", "drop what no commercial licence covers"],
-      ["huayu:compact", "reclaim space after the licence purge"]
+      ["huayu:enforce_licenses", "drop what no commercial license covers"],
+      ["huayu:compact", "reclaim space after the license purge"]
     ]
 
     Install::SessionTuning.apply!

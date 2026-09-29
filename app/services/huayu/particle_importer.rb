@@ -62,14 +62,14 @@ module Huayu
         "sole_sense" => entry.fetch("sole_sense", false),
         "grammar" => entry["grammar"].presence,
         "variants" => entry["variants"].presence,
-        "force" => localised(entry, "force"),
-        "body" => localised(entry, "body"),
-        "warning" => localised(entry, "warning"),
+        "force" => localized(entry, "force"),
+        "body" => localized(entry, "body"),
+        "warning" => localized(entry, "warning"),
         "examples" => entry["examples"].presence
       }.compact
     end
 
-    def localised(entry, key)
+    def localized(entry, key)
       {"en" => entry["#{key}_en"], "ru" => entry["#{key}_ru"]}.compact_blank.presence
     end
   end

@@ -71,7 +71,7 @@ RSpec.describe Pronunciation::Keeper do
     expect(PronunciationRecording.count).to(be_zero)
   end
 
-  it "keeps nothing when the engine recognised no syllable" do
+  it "keeps nothing when the engine recognized no syllable" do
     described_class.new(owner).keep(audio: "bytes", text: "好", result: {"syllables" => []})
 
     expect(PronunciationRecording.count).to(be_zero)

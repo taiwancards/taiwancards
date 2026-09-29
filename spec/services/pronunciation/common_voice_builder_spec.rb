@@ -123,7 +123,7 @@ RSpec.describe Pronunciation::Corpus::CommonVoiceBuilder do
     expect(File.exist?(File.join(base, described_class::DIR, "audio", "one.wav"))).to(be(true))
   end
 
-  it "converts every clip to the sample rate the analyser expects" do
+  it "converts every clip to the sample rate the analyzer expects" do
     release([{"client_id" => "a", "path" => "one.wav", "sentence" => "你好", "accents" => "出生地：臺南市"}])
 
     described_class.new(archive: archive, base: base).build!

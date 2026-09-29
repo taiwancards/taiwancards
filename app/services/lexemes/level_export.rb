@@ -24,14 +24,14 @@ module Lexemes
 
     def preamble
       lines = [@title, "Exported from #{@origin}", ""].compact
-      lines << "Sources and licences:"
+      lines << "Sources and licenses:"
       sources.each do |source|
         lines << "  #{source.name_en.presence || source.name} — #{source.license_name} #{source.license_url}".rstrip
         lines << "    #{source.attribution}" if source.attribution.present?
       end
 
       lines << ""
-      lines << "Redistributed verbatim with attribution. Check each licence before reusing this file."
+      lines << "Redistributed verbatim with attribution. Check each license before reusing this file."
     end
 
     def sources

@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   prepend_around_action :switch_locale
-  before_action :redirect_to_localised_url
+  before_action :redirect_to_localized_url
   after_action :track_activity
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
@@ -72,10 +72,10 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to(target, **)
-    super(localised_target(target), **)
+    super(localized_target(target), **)
   end
 
-  def localised_target(target)
+  def localized_target(target)
     return target unless target.is_a?(String)
 
     path = target.delete_prefix(request.base_url)
@@ -90,7 +90,7 @@ class ApplicationController < ActionController::Base
 
   def default_url_options = {locale: I18n.locale}
 
-  def redirect_to_localised_url
+  def redirect_to_localized_url
     return if params[:locale].present?
     return unless Locales.addressable?(request)
 

@@ -311,7 +311,7 @@ export default class extends Controller {
   }
 
   requestStop() {
-    if (!this.analyser || !this.spoke) return this.stop();
+    if (!this.analyzer || !this.spoke) return this.stop();
 
     const now = performance.now();
     if (now - this.lastLoud < 150) {
@@ -448,10 +448,10 @@ export default class extends Controller {
     try {
       this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const source = this.audioCtx.createMediaStreamSource(this.stream);
-      this.analyser = this.audioCtx.createAnalyser();
-      this.analyser.fftSize = 1024;
-      source.connect(this.analyser);
-      this.buf = new Float32Array(this.analyser.fftSize);
+      this.analyzer = this.audioCtx.createAnalyser();
+      this.analyzer.fftSize = 1024;
+      source.connect(this.analyzer);
+      this.buf = new Float32Array(this.analyzer.fftSize);
       this.startedAt = performance.now();
       this.lastLoud = this.startedAt;
       this.spoke = false;
@@ -463,8 +463,8 @@ export default class extends Controller {
   }
 
   tick() {
-    if (!this.analyser) return;
-    this.analyser.getFloatTimeDomainData(this.buf);
+    if (!this.analyzer) return;
+    this.analyzer.getFloatTimeDomainData(this.buf);
     let sum = 0;
     for (let i = 0; i < this.buf.length; i++) sum += this.buf[i] * this.buf[i];
     const rms = Math.sqrt(sum / this.buf.length);
@@ -512,7 +512,7 @@ export default class extends Controller {
   teardownMeter() {
     clearInterval(this.meter);
     clearTimeout(this.maxTimer);
-    this.analyser = null;
+    this.analyzer = null;
     if (this.audioCtx) {
       this.audioCtx.close().catch(() => {});
       this.audioCtx = null;

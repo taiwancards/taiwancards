@@ -16,7 +16,7 @@ RSpec.describe News::PtsFetcher do
     expect(text.attribution).to(eq(I18n.t("reader.attribution_pts")))
   end
 
-  it "strips the HTML out of the summary and normalises simplified characters" do
+  it "strips the HTML out of the summary and normalizes simplified characters" do
     described_class.new.call(body: feed)
 
     text = ReadingText.find_by(source_url: "https://news.pts.org.tw/article/000001")

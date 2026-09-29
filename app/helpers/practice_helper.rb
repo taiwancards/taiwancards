@@ -4,7 +4,7 @@ module PracticeHelper
   PART_ONWARD = {"intro" => "initials", "initials" => "finals", "finals" => "tricky"}.freeze
 
   Bundle = Data.define(:key, :symbols, :rows) do
-    def practisable? = key != "compound"
+    def drillable? = key != "compound"
   end
 
   def phonetics_bundles(rows, group)

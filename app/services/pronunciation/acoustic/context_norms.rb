@@ -72,13 +72,13 @@ module Pronunciation
         curves[cell(tone, before, following)]
       end
 
-      def place(centre, tone, before, following)
-        return centre if centre.blank? || tone.to_i.zero?
+      def place(center, tone, before, following)
+        return center if center.blank? || tone.to_i.zero?
 
         moved = shift(tone, before, following)
-        return centre if moved.nil? || moved.length != centre.length
+        return center if moved.nil? || moved.length != center.length
 
-        centre.each_index.map { |i| centre[i] + moved[i] }
+        center.each_index.map { |i| center[i] + moved[i] }
       end
     end
   end

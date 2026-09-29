@@ -251,7 +251,7 @@ namespace(:moe) do
       index, done, skipped = transcode(rows, scope, work_dir.join("wav"), stage, prefix)
       puts("  #{done} converted, #{skipped} had no audio in the archive")
 
-      step("6/6 writing the index and the licence notice")
+      step("6/6 writing the index and the license notice")
       notice = work_dir.join(NOTICE)
       FileUtils.cp(notice, stage.join("notice.pdf")) if notice.exist?
       stage.join("ATTRIBUTION.txt").write(
@@ -261,7 +261,7 @@ namespace(:moe) do
           "版本編號: #{VERSION}",
           "CC BY-ND 3.0 TW  https://creativecommons.org/licenses/by-nd/3.0/tw/legalcode",
           "Files are redistributed unmodified. Playback is bounded to the headword by the application.",
-          "使用說明: notice.pdf (retained in full as the licence requires)"
+          "使用說明: notice.pdf (retained in full as the license requires)"
         ].join("\n") +
           "\n"
       )

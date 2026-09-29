@@ -51,7 +51,7 @@ RSpec.describe PronunciationRecording do
     expect(row.label_for(0)).to(be(false))
   end
 
-  it "leaves a longer word unlabelled when the native did not say which syllable was wrong" do
+  it "leaves a longer word unlabeled when the native did not say which syllable was wrong" do
     row = recording(two)
     row.rate!("rejected")
 

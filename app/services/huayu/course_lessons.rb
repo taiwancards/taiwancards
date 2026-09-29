@@ -8,10 +8,10 @@ module Huayu
 
     REGISTERS = %w[standard spoken written].freeze
 
-    Localised = LessonData::Localised
+    Localized = LessonData::Localized
 
     Line = Data.define(:who, :zh, :en, :ru, :zhuyin, :pinyin) do
-      include Localised
+      include Localized
 
       def translation(locale) = locale.to_s == "ru" ? ru : en
 
@@ -19,7 +19,7 @@ module Huayu
     end
 
     Word = Data.define(:zh, :zhuyin, :pinyin, :pos, :en, :ru, :register, :note) do
-      include Localised
+      include Localized
 
       def gloss(locale) = locale.to_s == "ru" ? ru : en
 
@@ -29,7 +29,7 @@ module Huayu
     end
 
     GrammarRef = Data.define(:slug, :note) do
-      include Localised
+      include Localized
 
       def lesson = GrammarLessons.find(slug)
 
@@ -37,13 +37,13 @@ module Huayu
     end
 
     Usage = Data.define(:street, :standard, :en, :ru) do
-      include Localised
+      include Localized
 
       def body(locale) = locale.to_s == "ru" ? ru : en
     end
 
     Exercise = Data.define(:kind, :zh, :gloss, :options, :answer, :chunks, :order, :pairs) do
-      include Localised
+      include Localized
 
       def prompt(locale) = pick(gloss, locale)
 
@@ -80,7 +80,7 @@ module Huayu
       :usage,
       :exercises
     ) do
-      include Localised
+      include Localized
 
       def to_param = slug
 
@@ -100,7 +100,7 @@ module Huayu
     end
 
     Stage = Data.define(:slug, :band, :order, :zh, :en, :ru, :exam) do
-      include Localised
+      include Localized
 
       def to_param = slug
 

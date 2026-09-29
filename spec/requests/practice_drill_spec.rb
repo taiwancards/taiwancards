@@ -114,7 +114,7 @@ RSpec.describe "Phonetics drill" do
     expect(hard_positions.max).to(be < plain_positions.min)
   end
 
-  it "recognises the syllables where pinyin spelling hides the real rime" do
+  it "recognizes the syllables where pinyin spelling hides the real rime" do
     seed_syllables!
     drill = Huayu::PhoneticsDrill.new(locale: :en)
 

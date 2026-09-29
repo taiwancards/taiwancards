@@ -27,19 +27,19 @@ RSpec.describe Pronunciation::Acoustic::ContextNorms do
   end
 
   it "bends the reference where a cell exists and leaves it alone where none does" do
-    centre = Array.new(Pronunciation::Acoustic::Features::TONE_POINTS, 0.0)
+    center = Array.new(Pronunciation::Acoustic::Features::TONE_POINTS, 0.0)
     known = described_class.curves.keys.first
     skip("no context norms available") if known.nil?
 
     tone, before, following = known.split(",").map(&:to_i)
 
-    expect(described_class.place(centre, tone, before, following)).not_to(eq(centre))
-    expect(described_class.place(centre, tone, 9, 9)).to(eq(centre))
+    expect(described_class.place(center, tone, before, following)).not_to(eq(center))
+    expect(described_class.place(center, tone, 9, 9)).to(eq(center))
   end
 
   it "leaves a contour alone when the tone is unknown" do
-    centre = [1.0, 2.0]
+    center = [1.0, 2.0]
 
-    expect(described_class.place(centre, 0, 1, 1)).to(eq(centre))
+    expect(described_class.place(center, 0, 1, 1)).to(eq(center))
   end
 end

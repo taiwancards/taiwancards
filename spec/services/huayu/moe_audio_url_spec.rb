@@ -75,7 +75,7 @@ RSpec.describe Huayu::MoeAudio do
       end
     end
 
-    it "carries the usage notice the MOE licence requires to stay reachable" do
+    it "carries the usage notice the MOE license requires to stay reachable" do
       %w[moe_audio moe_audio_words].each do |scope|
         expect(script).to(include("media/#{scope}/notice.pdf|media/#{scope}/notice.pdf"))
         expect(script).to(include("media/#{scope}/ATTRIBUTION.txt|media/#{scope}/ATTRIBUTION.txt"))

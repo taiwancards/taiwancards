@@ -41,9 +41,9 @@ RSpec.describe Pronunciation::Acoustic::Analyzer do
   it "still lets a wrong register push a matching contour down" do
     template = dynamic_template or skip("no template corpus available")
     right = reference_of(template)
-    centre = template.dig("f0_register", "median")
-    on_pitch = tone_axis(template, features_for(template, right, "f0_register" => centre))
-    off_pitch = tone_axis(template, features_for(template, right, "f0_register" => centre + 8.0))
+    center = template.dig("f0_register", "median")
+    on_pitch = tone_axis(template, features_for(template, right, "f0_register" => center))
+    off_pitch = tone_axis(template, features_for(template, right, "f0_register" => center + 8.0))
 
     expect(off_pitch["score"]).to(be < on_pitch["score"])
   end

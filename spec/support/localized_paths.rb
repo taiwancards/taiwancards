@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module LocalisedPaths
+module LocalizedPaths
   MACHINE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|s/|locale|zhuyin|
     sitemap|sitemaps|
     textbook/audio|listening/clips|export|tones/refill|n|unsubscribe|newsletter_images|
@@ -10,7 +10,7 @@ module LocalisedPaths
 
   %i[get post patch put delete head].each do |verb|
     define_method(verb) do |path, **options|
-      super(localise(path), **options)
+      super(localize(path), **options)
     end
   end
 
@@ -32,7 +32,7 @@ module LocalisedPaths
 
   private
 
-  def localise(path)
+  def localize(path)
     return path unless path.is_a?(String) && path.start_with?("/")
     return path if path.match?(MACHINE) || path.match?(STROKES)
     return path if path.match?(%r{\A/(?:#{Locales::ALL.join("|")})(?:/|\z|\?)})

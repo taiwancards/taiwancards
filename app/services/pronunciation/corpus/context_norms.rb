@@ -139,10 +139,10 @@ module Pronunciation
 
         template = @store.template(row["_key"], @store.norm_for(position: index, total: total)) ||
           @store.template(row["_key"])
-        centre = template&.dig("tone_contour", "center")
-        return nil if centre.nil? || centre.length != spoken.length
+        center = template&.dig("tone_contour", "center")
+        return nil if center.nil? || center.length != spoken.length
 
-        spoken.each_index.map { |i| (spoken[i] - centre[i]).round(4) }
+        spoken.each_index.map { |i| (spoken[i] - center[i]).round(4) }
       end
 
       def tone_of(key)

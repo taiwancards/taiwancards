@@ -108,7 +108,7 @@ RSpec.describe Pronunciation::Focus do
     expect(focus_for(create(:user)).summary).to(be_nil)
   end
 
-  it "summarises the whole practice history from the accumulators" do
+  it "summarizes the whole practice history from the accumulators" do
     practice("qi1", times: 10, initial: 45)
     practice("gao1", times: 5)
 

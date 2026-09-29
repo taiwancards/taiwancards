@@ -7,7 +7,7 @@ module Huayu
     Result = Data.define(:examined, :repaired) do
       def changed? = repaired.positive?
 
-      def to_s = "etymology text normalised: #{repaired} of #{examined}"
+      def to_s = "etymology text normalized: #{repaired} of #{examined}"
     end
 
     def call

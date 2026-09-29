@@ -222,10 +222,10 @@ module Pronunciation
     def place_vowels(rows)
       return if speaker_reference_hz
 
-      centre = Acoustic::Vowel.speaker_hz(rows.map { |row| row[:features] })
-      return if centre.nil?
+      center = Acoustic::Vowel.speaker_hz(rows.map { |row| row[:features] })
+      return if center.nil?
 
-      rows.each { |row| Acoustic::Vowel.place(row[:features], centre) }
+      rows.each { |row| Acoustic::Vowel.place(row[:features], center) }
     end
 
     TEMPO_FIELDS = %w[voiced_ms duration_ms].freeze

@@ -144,7 +144,7 @@ namespace(:huayu) do
       end
     end
 
-    puts("readings normalised: #{changed}")
+    puts("readings normalized: #{changed}")
   end
 
   desc("Rebuild the search_text index column on every lexeme (fast, idempotent)")

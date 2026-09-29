@@ -59,7 +59,7 @@ RSpec.describe Pronunciation::Acoustic::Weights do
     expect(described_class.count_rivals("ma", 1)["tone"]).to(eq(3))
   end
 
-  it "normalises shares to one" do
+  it "normalizes shares to one" do
     weights = described_class.for_syllable("gao", 1, %w[initial final tone])
     expect(described_class.shares(weights).values.sum).to(be_within(0.01).of(1.0))
   end

@@ -13,7 +13,7 @@ RSpec.describe Pronunciation::Corpus::SplitAnalysis do
     expect(Pronunciation::Corpus::SyllableQuality::DEFAULT_PART).to(eq("all"))
   end
 
-  it "refuses to analyse an empty split" do
+  it "refuses to analyze an empty split" do
     allow(Pronunciation::Corpus::Tokens).to(receive(:keys).with("dev").and_return([]))
 
     expect { Pronunciation::Corpus::AxisNormsBuilder.new(store:, io: nil).call }.to(

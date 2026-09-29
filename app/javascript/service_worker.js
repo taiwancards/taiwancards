@@ -154,19 +154,19 @@ async function localesFor(pathname) {
   return [...new Set([asked, stored, ...LOCALES].filter(Boolean))];
 }
 
-function normalise(pathname) {
+function normalize(pathname) {
   return pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
 }
 
 async function fragmentFor(pathname) {
   const cache = await caches.open(FRAGMENTS);
-  const hit = await cache.match(`/__frag${normalise(pathname)}`);
+  const hit = await cache.match(`/__frag${normalize(pathname)}`);
 
   return hit ? hit.json() : null;
 }
 
 async function stale(url) {
-  const path = normalise(url.pathname);
+  const path = normalize(url.pathname);
   const locales = await localesFor(path);
   const entry = ROOT.test(path);
 

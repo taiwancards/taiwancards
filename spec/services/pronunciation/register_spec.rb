@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Pronunciation::Acoustic::Register do
-  it "places each syllable against the pitch centre of the utterance" do
+  it "places each syllable against the pitch center of the utterance" do
     placed = described_class.from_utterance([200.0, 100.0, 100.0], [0.0, 0.0, 0.0])
 
     expect(placed[0]).to(be_within(0.01).of(12.0))

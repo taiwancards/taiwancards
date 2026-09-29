@@ -44,13 +44,13 @@ en:
         - A short note about what is new in the app is sent to your account's email address, once or twice a month at most. There are no reminders, no advertising and nothing from third parties.
         - Every letter has a one-click unsubscribe link, and you can also turn the letters off in your profile. Unsubscribing changes nothing else about your account.
         - "We record when each letter was sent to you, when you first followed one of its links back into the app and how many times you did, and when you unsubscribed. If a letter cannot be delivered, the mail server's error message is kept. Opens are not tracked: letters contain no tracking pixels, and their images are attached to the letter itself."
-        - Letters are handed to an email delivery provider, which receives your address and the letter only in order to deliver it.
+        - Letters are handed to Resend, an email delivery service, which receives your address and the letter only in order to deliver it.
     donation:
       heading: Donation button
       body: The help page carries an optional donation button supplied by Buy Me a Coffee. Opening that one page loads their script, so your browser contacts them and they see your IP address and user agent. No account data is sent, the button appears on no other page, and donating is never required.
     where:
       heading: Where data is held
-      body: The application and its database run on Render in Singapore. Traffic passes through Cloudflare, and audio files are served from Cloudflare R2. These providers process data only in order to host the service. If you use the Google Drive backup, that copy sits in your own Google account.
+      body: The application and its database run on Render in Singapore. Traffic passes through Cloudflare, audio files are served from Cloudflare R2, and newsletters are sent through Resend, a US company, from its servers in Japan. These providers process data only in order to host the service and deliver its mail. If you use the Google Drive backup, that copy sits in your own Google account.
     retention:
       heading: Retention and deletion
       body: Your data is kept while your account exists. Write to the address below to have the account and everything in it deleted; server logs age out on their own. Deleting your account here does not touch a backup file you created on your own Google Drive — that file is yours to delete.

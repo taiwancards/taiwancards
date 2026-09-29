@@ -2,7 +2,7 @@
 
 class SitemapsController < ApplicationController
   allow_unauthenticated_access
-  skip_before_action :redirect_to_localised_url, raise: false
+  skip_before_action :redirect_to_localized_url, raise: false
 
   def index
     render_xml(sitemap.index_xml)

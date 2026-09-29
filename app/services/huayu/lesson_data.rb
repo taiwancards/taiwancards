@@ -2,7 +2,7 @@
 
 module Huayu
   module LessonData
-    module Localised
+    module Localized
       def pick(source, locale)
         return nil if source.blank?
 
@@ -10,7 +10,7 @@ module Huayu
       end
     end
 
-    include Localised
+    include Localized
 
     def lessons = payload[:lessons]
     def available? = lessons.any?

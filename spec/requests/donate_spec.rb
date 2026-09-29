@@ -17,7 +17,7 @@ RSpec.describe "The donation button" do
     expect(response.body).not_to(include("buymeacoffee"))
   end
 
-  it "sits with the licences, where the project already explains itself" do
+  it "sits with the licenses, where the project already explains itself" do
     offer
     get(licenses_path)
 

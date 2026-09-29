@@ -92,7 +92,7 @@ module Site
 
       slice = paths_for(section)
       slice = slice[((page - 1) * CHUNK), CHUNK].to_a if page
-      slice.map { |path| localised(path) }
+      slice.map { |path| localized(path) }
     end
 
     def paths_for(section) = build(section)
@@ -121,7 +121,7 @@ module Site
       [match[1], match[2]&.to_i]
     end
 
-    def localised(path)
+    def localized(path)
       {
         loc: url(path, Locales::DEFAULT),
         alternates: Locales::ALL.map { |code| [code, url(path, code)] },

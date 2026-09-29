@@ -12,9 +12,9 @@ module Pronunciation
         usable = pitches.map(&:to_f).select { |hz| hz > MIN_HZ }
         return [] if usable.length < MIN_SYLLABLES
 
-        centre = DTW::Statistics.median(usable)
+        center = DTW::Statistics.median(usable)
         lift = average(expected)
-        pitches.map { |hz| (hz.to_f > MIN_HZ) ? (12.0 * Math.log2(hz.to_f / centre)) + lift : nil }
+        pitches.map { |hz| (hz.to_f > MIN_HZ) ? (12.0 * Math.log2(hz.to_f / center)) + lift : nil }
       end
 
       def average(values)

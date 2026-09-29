@@ -134,7 +134,7 @@ RSpec.describe Huayu::TextAnalyzer do
     end
   end
 
-  describe "lunar-date normalisation" do
+  describe "lunar-date normalization" do
     it "rebuilds month and day around a stolen 月初" do
       word!("月初")
       word!("七月")

@@ -749,8 +749,8 @@ module Pronunciation
         body = curve[(curve.length * BODY_SHARE.begin).floor...(curve.length * BODY_SHARE.end).ceil]
         return nil if tail.blank? || body.blank?
 
-        centre = body.sum / body.length
-        centre.abs < 1e-9 ? nil : (tail.sum / tail.length) / centre
+        center = body.sum / body.length
+        center.abs < 1e-9 ? nil : (tail.sum / tail.length) / center
       end
 
       def formants_reliable?(f1_ratio, f2_ratio)

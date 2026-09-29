@@ -39,7 +39,7 @@ RSpec.describe Offline::Builder do
     pack.fetch("chunks").each_value { |names| names.each { |name| expect(root.join(name)).to(exist) } }
   end
 
-  it "stores the fragments under their localised path" do
+  it "stores the fragments under their localized path" do
     build
     name = manifest.fetch("packs").first.fetch("chunks").fetch("en").first
     chunk = JSON.parse(root.join(name).read)

@@ -27,7 +27,7 @@ RSpec.describe "Content licensing" do
   let(:non_commercial) { source!("ted_talks", commercial: false) }
   let(:statistics_only) { source!("moj_law", commercial: true, statistics_only: true) }
 
-  it "hides text whose licence forbids commercial use, even when the source is enabled" do
+  it "hides text whose license forbids commercial use, even when the source is enabled" do
     open = sentence!("開放的句子。", commercial)
     closed = sentence!("受限的句子。", non_commercial)
 
@@ -41,7 +41,7 @@ RSpec.describe "Content licensing" do
     expect(Lexeme.visible_to(nil).where(kind: :sentence).ids).not_to(include(counted.id))
   end
 
-  it "gives an administrator no licence an anonymous reader lacks" do
+  it "gives an administrator no license an anonymous reader lacks" do
     sentence!("開放的句子。", commercial)
     sentence!("受限的句子。", non_commercial)
     admin = build(:user, :admin)

@@ -92,13 +92,13 @@ module Huayu
 
     def headline(senses, locale)
       senses
-        .filter_map { |sense| summarise(sense.meaning(locale)) }
+        .filter_map { |sense| summarize(sense.meaning(locale)) }
         .uniq
         .first(HEADLINE_SENSES)
         .join("; ")
     end
 
-    def summarise(value)
+    def summarize(value)
       text = value.to_s.strip
       return nil if text.match?(REGISTER)
 

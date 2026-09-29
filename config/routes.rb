@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   )
 
   scope("(:locale)", locale: /en|ru/) do
-    to_localised = lambda do |&suffix|
+    to_localized = lambda do |&suffix|
       redirect do |params, _request|
         code = Locales.known?(params[:locale]) ? params[:locale] : Locales::DEFAULT
         "/#{code}#{suffix.call(params)}"
@@ -142,27 +142,27 @@ Rails.application.routes.draw do
     get("sentences/:id", to: "sentences#show", as: :sentence, constraints: {id: /[0-9a-fA-F-]+/})
     get("chengyu", to: "chengyu#index", as: :chengyu)
 
-    entry_redirect = to_localised.call { |params| "/dict/#{ERB::Util.url_encode(params[:text])}" }
-    get("words", to: to_localised.call { "/dict" })
-    get("collocations", to: to_localised.call { "/dict" })
+    entry_redirect = to_localized.call { |params| "/dict/#{ERB::Util.url_encode(params[:text])}" }
+    get("words", to: to_localized.call { "/dict" })
+    get("collocations", to: to_localized.call { "/dict" })
     get("words/:text", to: entry_redirect, constraints: {text: /[^\/]+/})
     get("collocations/:text", to: entry_redirect, constraints: {text: /[^\/]+/})
     get("liangci", to: "liangci#index", as: :liangci)
     get("liangci/game", to: "liangci#game", as: :liangci_game)
     get("liangci/:text", to: "liangci#show", as: :liangci_entry, constraints: {text: /[^\/]+/})
-    get("measure-words", to: to_localised.call { "/liangci" })
-    get("measure-words/game", to: to_localised.call { "/liangci/game" })
+    get("measure-words", to: to_localized.call { "/liangci" })
+    get("measure-words/game", to: to_localized.call { "/liangci/game" })
     get(
       "measure-words/:text",
-      to: to_localised.call { |params| "/liangci/#{ERB::Util.url_encode(params[:text])}" },
+      to: to_localized.call { |params| "/liangci/#{ERB::Util.url_encode(params[:text])}" },
       constraints: {text: /[^\/]+/}
     )
     get("zhuci", to: "zhuci#index", as: :zhuci)
     get("zhuci/:text", to: "zhuci#show", as: :zhuci_entry, constraints: {text: /[^\/]+/})
-    get("particles", to: to_localised.call { "/zhuci" })
+    get("particles", to: to_localized.call { "/zhuci" })
     get(
       "particles/:text",
-      to: to_localised.call { |params| "/zhuci/#{ERB::Util.url_encode(params[:text])}" },
+      to: to_localized.call { |params| "/zhuci/#{ERB::Util.url_encode(params[:text])}" },
       constraints: {text: /[^\/]+/}
     )
     get("everyday", to: "everyday#index", as: :everyday)
@@ -331,10 +331,10 @@ Rails.application.routes.draw do
       get(":book/:lesson", to: "textbook#show", as: :textbook_lesson)
     end
 
-    get("zh-TW", to: to_localised.call { "/desk" })
+    get("zh-TW", to: to_localized.call { "/desk" })
     get(
       "zh-TW/*rest",
-      to: to_localised.call { |params|
+      to: to_localized.call { |params|
         "/#{params[:rest].split("/").map { |part| ERB::Util.url_encode(part) }.join("/")}"
       }
     )

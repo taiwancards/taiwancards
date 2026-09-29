@@ -23,12 +23,12 @@
     .rounded-xl.border.border-border.p-3.space-y-2 class="sm:p-4 bg-muted/30"
       p.text-sm.font-medium = t("intro.page.loop.grades")
       ul.grid.gap-2 class="sm:grid-cols-2"
-        - grades.each do |key, (text_colour, border_colour, arrow)|
+        - grades.each do |key, (text_color, border_color, arrow)|
           li.flex.items-start.gap-2.5
-            span.inline-flex.size-7.shrink-0.items-center.justify-center.rounded-lg.border-2.text-sm.font-bold class="#{border_colour} #{text_colour}"
+            span.inline-flex.size-7.shrink-0.items-center.justify-center.rounded-lg.border-2.text-sm.font-bold class="#{border_color} #{text_color}"
               = arrow
             p.min-w-0.text-xs.leading-relaxed
-              span.font-semibold class=text_colour = t("study.grade.#{key}")
+              span.font-semibold class=text_color = t("study.grade.#{key}")
               span.text-muted-foreground
                 = " — "
                 = t("study.grade_help.#{key}")
