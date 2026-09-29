@@ -49,7 +49,7 @@ module Newsletters
       case node.name
       when "a"
         node["href"] = @link.call(node["href"].to_s)
-        node["style"] = BUTTON if button?(node.parent)
+        node["style"] = BUTTON if alone?(node)
       when "img"
         place_image(node)
       when "div", "p"
@@ -70,11 +70,16 @@ module Newsletters
 
     def nested_block?(node) = node.css("div, p, ul, ol, figure, blockquote, h1, h2").any?
 
-    def button?(block)
-      return false unless block && %w[div p].include?(block.name)
-
-      parts = block.children.reject { |child| child.name == "br" || (child.text? && child.text.blank?) }
-      parts.one? && parts.first.name == "a" && parts.first.text.present?
+    def alone?(link)
+      link.text.present? && edge?(neighbor(link, :previous_sibling)) && edge?(neighbor(link, :next_sibling))
     end
+
+    def neighbor(node, direction)
+      node = node.public_send(direction)
+      node = node.public_send(direction) while node&.text? && node.text.blank?
+      node
+    end
+
+    def edge?(node) = node.nil? || node.name == "br" || STYLES.key?(node.name) && node.name != "a"
   end
 end

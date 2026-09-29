@@ -22,7 +22,7 @@ module Admin
     def edit
       @locale = params[:lang].presence_in(Newsletter::LOCALES) || Newsletter::LOCALES.last
       @recipients = Newsletter.recipients.group(:locale).count
-      @deliveries = @newsletter.deliveries.includes(:user).order(:id).to_a if @newsletter.sent?
+      @deliveries = @newsletter.deliveries.includes(:user).order(:id).to_a
       @stats = Newsletters::Stats.new([@newsletter]).for(@newsletter)
       @budget = Newsletters::Dispatch.budget
       @preview = preview_html(@locale)
