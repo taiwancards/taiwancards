@@ -7,7 +7,7 @@
     h1.text-2xl.font-bold.tracking-tight = t("privacy.title")
     p.text-muted-foreground = t("privacy.effective")
 
-  - %w[purpose stored never cookies].each do |key|
+  - %w[purpose stored never cookies emails].each do |key|
     = legal_section("privacy.#{key}")
 
   - if Donate.offered?

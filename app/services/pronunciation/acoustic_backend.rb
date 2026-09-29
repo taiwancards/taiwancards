@@ -45,11 +45,17 @@ module Pronunciation
       end
 
       overall = aggregate(graded)
+      sounds = mean(graded.map { |s| s["sounds"] })
+      tone = mean(graded.map { |s| tone_score(s) }) if @tonal
       {
         "takes" => heard.length,
         "syllables" => graded,
         "overall" => overall,
         "overall_level" => @verdict.level("overall", overall),
+        "sounds" => sounds,
+        "sounds_level" => sounds && @verdict.level("overall", sounds),
+        "tone" => tone,
+        "tone_level" => tone && @verdict.level("tone", tone),
         "flow" => flow(analysis, heard.first, expected),
         "read" => read(measured, overall),
         "legend" => legend,
@@ -272,6 +278,8 @@ module Pronunciation
       best = ranking.first&.fetch("key", nil) || (@tonal ? key : nil)
       evaluation = {"overall" => overall, "parts" => scored, "best_match" => best, "expected" => key}
       lead = analyzer.lead_in(features, template)
+      rival = rival_for(key, best, scored)
+      zhuyin = zhuyin_of(target, template)
 
       @verdict.for_syllable(evaluation, expected: key).merge(
         "char" => target["char"],
@@ -280,10 +288,12 @@ module Pronunciation
         "key" => key,
         "index" => index,
         "tone" => template["tone"],
-        "parts" => present_parts(scored, shares, zhuyin_of(target, template), template["tone"]),
+        "parts" => present_parts(scored, shares, zhuyin, template["tone"]),
+        "sounds" => sounds_score(scored, weights),
         "contour" => contour(scored),
         "advisories" => advisories(axes, lead),
-        "sounded_like" => confusion(key, best, scored),
+        "sounded_like" => rival && @coach.confusion(key, rival),
+        "slips" => rival ? Slips.between(key, zhuyin, rival, zhuyin_for_key(rival)) : [],
         "deviations" => analyzer.deviations(features, template),
         "codes" => axes.map { |a| a["code"] }.reject { |code| code.end_with?(".ok") },
         "features" => digest(features, scored),
@@ -341,7 +351,7 @@ module Pronunciation
       }
     end
 
-    def confusion(key, best, scored)
+    def rival_for(key, best, scored)
       return nil if best.blank? || best == key
 
       syllable, = Acoustic::Syllables.parse_key(key)
@@ -349,7 +359,24 @@ module Pronunciation
       return nil if rival == syllable && !weak_part?(scored, "tone")
       return nil if rival != syllable && PART_ORDER.excluding("tone").none? { |id| weak_part?(scored, id) }
 
-      @coach.confusion(key, best)
+      best
+    end
+
+    def zhuyin_for_key(key)
+      parsed = Acoustic::Syllables.parse_key(key)
+      parsed && Acoustic::Syllables.entry(*parsed)&.fetch("zhuyin", nil)
+    end
+
+    def sounds_score(scored, weights)
+      parts = scored.reject { |p| p["id"] == "tone" || p["score"].nil? }
+      total = parts.sum { |p| weights.fetch(p["id"], 0).to_f }
+      return nil unless total.positive?
+
+      (parts.sum { |p| p["score"] * weights.fetch(p["id"], 0).to_f } / total).round
+    end
+
+    def tone_score(syllable)
+      Array(syllable["parts"]).find { |p| p["id"] == "tone" && p["measured"] }&.fetch("score", nil)
     end
 
     def weak_part?(scored, id)
@@ -483,10 +510,12 @@ module Pronunciation
     end
 
     def aggregate(graded)
-      scored = graded.filter_map { |s| s["overall"] }
-      return nil if scored.empty?
+      mean(graded.map { |s| s["rejected"] ? 0 : s["overall"] })
+    end
 
-      (scored.sum.to_f / scored.length).round
+    def mean(values)
+      present = values.compact
+      present.empty? ? nil : (present.sum.to_f / present.length).round
     end
 
     def analyzer

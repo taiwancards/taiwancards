@@ -72,7 +72,7 @@ RSpec.describe Placement::Seeder do
     expect(result[:seeded]).to(eq(2))
   end
 
-  it "honours a facet override that leaves reading out" do
+  it "honors a facet override that leaves reading out" do
     target = word("謝謝", {"tbcl_grade" => 1, "freq_rank" => 5, "facets" => %w[recognition]})
 
     described_class.new(user, now:).call(2)

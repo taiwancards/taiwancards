@@ -97,6 +97,12 @@ class Lexeme < ApplicationRecord
     ATTRIBUTABLE_KINDS.include?(kind)
   end
 
+  PRONOUNCEABLE_KINDS = %w[word character].freeze
+
+  def pronounceable?
+    PRONOUNCEABLE_KINDS.include?(kind) && readings["pinyin"].present?
+  end
+
   LEVEL_INDEX_SQL = "lexemes.level_index"
   FREQ_RANK_SQL = "lexemes.freq_rank"
   MOE_INDEX_SQL = "lexemes.moe_index"

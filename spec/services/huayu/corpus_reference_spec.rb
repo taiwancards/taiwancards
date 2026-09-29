@@ -25,7 +25,7 @@ RSpec.describe "Corpus reference data" do
       expect(relation.collocates.map(&:score)).to(eq(relation.collocates.map(&:score).sort.reverse))
     end
 
-    it "honours the requested limit" do
+    it "honors the requested limit" do
       expect(described_class.for("喝", limit: 2).relations.map { |row| row.collocates.length }).to(all(be <= 2))
     end
 

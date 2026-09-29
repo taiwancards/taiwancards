@@ -23,7 +23,7 @@ RSpec.describe Offline::Worker do
     answer = worker.perform("ru", %w[/tones /hanzi])
 
     expect(answer.fetch("fragments").keys).to(eq(%w[/tones /hanzi]))
-    expect(answer.dig("fragments", "/hanzi")).to(eq({"t" => "/hanzi", "w" => "narrow", "m" => "<p>ru /hanzi</p>"}))
+    expect(answer.dig("fragments", "/hanzi")).to(eq({"t" => "/hanzi", "m" => "<p>ru /hanzi</p>"}))
     expect(answer.fetch("refused")).to(be_empty)
   end
 

@@ -19,6 +19,7 @@ export default class extends Controller {
     "form",
     "rating",
     "elapsed",
+    "take",
   ];
   static values = {
     gradeUrl: String,
@@ -49,6 +50,26 @@ export default class extends Controller {
     for (const key of ["autoTimer", "stopTimer"])
       if (this[key]) clearTimeout(this[key]);
     this.recorder?.release();
+    this.player?.pause();
+    this.dropTake();
+  }
+
+  keepTake(wav) {
+    this.dropTake();
+    this.takeUrl = URL.createObjectURL(wav);
+    if (this.hasTakeTarget) this.takeTarget.hidden = false;
+  }
+
+  dropTake() {
+    if (this.takeUrl) URL.revokeObjectURL(this.takeUrl);
+    this.takeUrl = null;
+  }
+
+  playTake() {
+    if (!this.takeUrl) return;
+    this.player?.pause();
+    this.player = new Audio(this.takeUrl);
+    this.player.play().catch(() => {});
   }
 
   async toggle() {
@@ -78,6 +99,7 @@ export default class extends Controller {
     const wav = await this.recorder.stop();
     if (!wav) return this.setStatus("");
 
+    this.keepTake(wav);
     this.setStatus(this.labelScoringValue);
     await this.grade(wav);
   }
@@ -86,6 +108,7 @@ export default class extends Controller {
     const form = new FormData();
     form.append("audio", wav, "utterance.wav");
     form.append("tonal", "true");
+    form.append("locale", document.documentElement.lang);
     form.append("expected", JSON.stringify(this.expectedValue));
     form.append("text", this.expectedValue.map((part) => part.char).join(""));
     form.append("lexeme_id", this.lexemeIdValue);
@@ -119,8 +142,11 @@ export default class extends Controller {
 
       element.className = `${element.dataset.base} ${LEVEL_CLASS[syllable.level] || "border-border"}`;
       const heard = element.querySelector("[data-heard]");
-      if (heard)
-        heard.textContent = syllable.heard || syllable.recognized || "";
+      if (heard) {
+        const slips = (syllable.slips || []).slice(0, 2);
+        heard.textContent = slips.map((slip) => slip.zhuyin).join(" ");
+        heard.title = syllable.sounded_like || "";
+      }
     });
 
     const overall = Math.round(

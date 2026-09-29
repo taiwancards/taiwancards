@@ -47,4 +47,9 @@ Rails.application.configure do
   config.hosts += ENV.fetch("APP_HOSTS", "").split(",").map(&:strip).reject(&:empty?)
   config.hosts << ENV["RENDER_EXTERNAL_HOSTNAME"] if ENV["RENDER_EXTERNAL_HOSTNAME"].present?
   config.host_authorization = {exclude: -> (request) { request.path == "/up" }}
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = MailSettings.smtp
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = MailSettings.url_options(ENV["APP_URL"])
 end

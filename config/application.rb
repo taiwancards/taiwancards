@@ -7,6 +7,7 @@ require "active_model/railtie"
 require "active_job/railtie"
 require "active_record/railtie"
 require "action_controller/railtie"
+require "action_mailer/railtie"
 require "action_view/railtie"
 
 Bundler.require(*Rails.groups)
@@ -14,12 +15,15 @@ Bundler.require(*Rails.groups)
 require_relative "../lib/font_assets"
 require_relative "../lib/shared_assets"
 require_relative "../lib/font_url_compiler"
+require_relative "../lib/mail_settings"
 
 module Taiwancards
   class Application < Rails::Application
     config.load_defaults 8.1
 
-    config.autoload_lib(ignore: %w[assets tasks font_assets.rb shared_assets.rb font_url_compiler.rb corpora])
+    config.autoload_lib(
+      ignore: %w[assets tasks font_assets.rb shared_assets.rb font_url_compiler.rb mail_settings.rb corpora]
+    )
 
     config.assets.compilers.unshift(["text/css", FontUrlCompiler])
 

@@ -3,7 +3,11 @@
 require "rails_helper"
 
 RSpec.describe "Responsive markup" do
-  VIEWS = Rails.root.glob("app/views/**/*.html.slim").freeze
+  VIEWS = Rails
+    .root
+    .glob("app/views/**/*.html.slim")
+    .reject { |path| path.dirname.basename.to_s.end_with?("_mailer") }
+    .freeze
   NARROWEST_PHONE = 320
 
   def lines_of(path) = path.read.lines.map(&:rstrip)

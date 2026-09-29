@@ -16,7 +16,7 @@
       data-measure-game-next-url-value=liangci_game_path
       data-measure-game-correct-value=@round[:correct] ]
       - by_dir = @round[:options].index_by { |option| option[:direction] }
-      .grid.gap-3 style="grid-template-columns: 1fr 1fr 1fr"
+      .grid.gap-3 style="grid-template-columns: repeat(3, minmax(0, 1fr))"
         div
         = render("option", option: by_dir["up"]) if by_dir["up"]
         div

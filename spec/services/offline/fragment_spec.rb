@@ -22,12 +22,6 @@ RSpec.describe Offline::Fragment do
     expect(fragment.fetch("t")).to(eq("Title & more"))
   end
 
-  it "reads the page width from the main element" do
-    expect(described_class.new(page("max-w-[88rem]")).call.fetch("w")).to(eq("wide"))
-    expect(described_class.new(page("max-w-5xl")).call.fetch("w")).to(eq("medium"))
-    expect(described_class.new(page("max-w-3xl")).call.fetch("w")).to(eq("narrow"))
-  end
-
   it "drops the content security nonce" do
     fragment = described_class.new(page("max-w-3xl", "<script nonce=\"abc\">x</script>")).call
 

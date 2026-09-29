@@ -16,7 +16,7 @@ en:
     policy_after: and its Limited Use requirements. Google account data is never used for advertising, never sold, and never shared beyond what is described here.
   privacy:
     title: Privacy Policy
-    effective: "Effective date: 2025-03-01"
+    effective: "Effective date: 2026-09-29"
     purpose:
       heading: What this app does
       body: TaiwanCards is a free, ad-free web app for learning Taiwanese Mandarin. It provides flashcards with spaced repetition, dictionary lookups, pronunciation practice and vocabulary lists. It is run by one independent developer, not by a company.
@@ -38,6 +38,13 @@ en:
     cookies:
       heading: Cookies
       body: "Two cookies are used, both strictly necessary: a signed session cookie that keeps you logged in, and a cookie remembering your interface language. There are no advertising or tracking cookies."
+    emails:
+      heading: Email
+      items:
+        - A short note about what is new in the app is sent to your account's email address, once or twice a month at most. There are no reminders, no advertising and nothing from third parties.
+        - Every letter has a one-click unsubscribe link, and you can also turn the letters off in your profile. Unsubscribing changes nothing else about your account.
+        - "We record when each letter was sent to you, when you first followed one of its links back into the app and how many times you did, and when you unsubscribed. If a letter cannot be delivered, the mail server's error message is kept. Opens are not tracked: letters contain no tracking pixels, and their images are attached to the letter itself."
+        - Letters are handed to an email delivery provider, which receives your address and the letter only in order to deliver it.
     donation:
       heading: Donation button
       body: The help page carries an optional donation button supplied by Buy Me a Coffee. Opening that one page loads their script, so your browser contacts them and they see your IP address and user agent. No account data is sent, the button appears on no other page, and donating is never required.
@@ -655,6 +662,133 @@ en:
     plan_title: Exam plan
     plan_hint_set: Target date %{date}.
     plan_hint_unset: Pick a level and a date — we'll pace you.
+  newsletters:
+    mail:
+      from_name: 丹丹 from TaiwanCards
+      why: You are getting this because you signed in to TaiwanCards with Google.
+      promise: We write once or twice a month at most, and only about what is new in the app. No ads, and your address is never sold or handed to anyone for advertising.
+      unsubscribe: Unsubscribe in one click
+      settings: Email settings
+      reply: Or just hit reply — we read every one.
+    unsubscribe:
+      title: Unsubscribing…
+      working: "Removing %{email} from the TaiwanCards newsletter…"
+      button: Unsubscribe
+      done_title: You're unsubscribed
+      done: "%{email} won't get any more TaiwanCards emails. Your account and progress stay as they are."
+      undo: Changed your mind? You can turn the emails back on in your profile.
+      invalid_title: This link does not work
+      invalid: It may have been cut off. You can also turn the emails off in your profile.
+      settings: Open your profile
+    profile:
+      label: News about the app by email
+      hint: Once or twice a month at most, only what is new. No ads.
+    admin:
+      title: Newsletters
+      lede: "Recipients: everyone who signed in with Google and has not unsubscribed, plus you, always. Now %{en} in English and %{ru} in Russian. Each gets the version in their interface language."
+      new: New newsletter
+      empty: No newsletters yet.
+      draft: Draft
+      sent_on: "Sent %{at}"
+      back: ← All newsletters
+      subject: Subject
+      subject_hint: Up to about 50 characters, concrete and specific. It decides whether the letter is opened.
+      preheader: Preview line
+      preheader_hint: The gray line inboxes show after the subject. One sentence that adds to it rather than repeating it.
+      body: Text
+      body_hint: One topic per letter, short paragraphs, 1–3 screenshots. Paste or drop a screenshot into the text; it is shrunk to 1200 px and travels inside the letter.
+      buttons: Buttons
+      buttons_hint: "Up to three. The first is the main one. Links to %{host} count clicks; other links are left alone."
+      button_label: Button text
+      save: Save
+      autosaved: Saved
+      autosave_failed: Not saved — check your connection
+      image_failed: The image could not be uploaded (PNG, JPEG or GIF, up to 1 MB after shrinking).
+      preview: "Preview · %{lang}"
+      preview_hint: exactly what the email template renders
+      saved: Saved.
+      deleted: Draft deleted.
+      locked: A sent newsletter can no longer be edited.
+      send_title: Sending
+      sample: "Send to me only (%{email}, %{lang})"
+      sample_sent: "Sent to %{email} only. Check how it looks in your mailbox."
+      failed: "Could not send: %{error}"
+      deliver: "Send to everyone (%{count})"
+      deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian)? It cannot be recalled."
+      resume: "Send the remaining %{count}"
+      resume_confirm: "Send the newsletter to the %{count} people who haven't received it yet?"
+      dispatched: Sending has started in the background. Refresh the page to follow it.
+      incomplete: Fill in the subject and the text in both languages first.
+      not_configured: Mail delivery is not configured (SMTP_ADDRESS and the rest are missing), so nothing can be sent yet.
+      send_hint: "%{en} recipients in English, %{ru} in Russian. Daily limit %{limit}; %{budget} left for the next 24 hours, the rest waits for “Send the remaining”."
+      delete: Delete draft
+      delete_confirm: Delete this draft?
+      stat_sent: "Sent %{sent} of %{total}"
+      stat_clicked: "Came to the app: %{count} (clicks: %{clicks})"
+      stat_unsubscribed: "Unsubscribed: %{count}"
+      stat_failed: "Failed: %{count}"
+      unsubscribed_title: "Unsubscribed (%{count})"
+      unsubscribed_none: Nobody has unsubscribed.
+      col_email: Email
+      col_locale: Lang
+      col_sent: Sent
+      col_clicked: Came to the app
+      col_unsubscribed: Unsubscribed
+      failed_short: error
+      waiting: waiting
+  imports:
+    lede: "Bring a word list over from another app. Only the words come across: meanings, examples and pinyin stay behind, because every card here uses our own checked Taiwanese data."
+    source_label: Where from
+    file_label: Export file
+    file_hint: ".txt, .tsv, .csv or .xml, up to 2 MB. The file is read once and not kept."
+    text_label: "…or paste the text"
+    text_placeholder: Paste the exported text here
+    name_label: Deck name
+    check: Check the words
+    pick_source: Choose which app the list comes from.
+    too_big: "The file is larger than %{limit} MB. Split it into smaller exports."
+    unreadable: "No words in Chinese characters were found. Make sure this is an export from the app you picked."
+    default_name: "From %{source}"
+    sources:
+      pleco:
+        name: Pleco
+        steps: "In Pleco open Flashcards → Import / Export → Export Cards. Choose the cards or a category and save as a text file (or XML). Upload that file here."
+      anki:
+        name: Anki
+        steps: "In Anki on a computer: File → Export → Notes in Plain Text (.txt), pick the deck and leave media unchecked. The column with characters is found automatically."
+      quizlet:
+        name: Quizlet
+        steps: "Open the set on quizlet.com → the ⋯ menu → Export → Copy text, then paste it below. Either side may hold the characters."
+    preview:
+      title: "Import from %{source}"
+      lede: "Checked against our Taiwanese dictionary. Nothing is saved until you create the deck."
+      ready: Will go in
+      converted: Changed to traditional
+      choices: Needs a choice
+      china: Used in China
+      missing: Not in the dictionary
+      duplicates: Repeats
+      skipped: Rows without characters
+      truncated: "The file has %{total} rows; only the first %{limit} were read."
+      capped: "A deck holds up to %{limit} words, so only the first %{limit} will go in. Split the list if you need the rest."
+      choices_lede: "One simplified spelling stands for more than one traditional word. Pick the one you meant."
+      skip_choice: Leave out
+      china_lede: "These are said differently in Taiwan. They are left out; check the Taiwanese word to add it instead."
+      taiwan_says: "Taiwan: %{words}"
+      no_taiwan_word: not in our dictionary yet
+      converted_lede: "Written in simplified characters; each had exactly one Taiwanese spelling in the dictionary."
+      missing_lede: "Not in our dictionary — usually a phrase, a name or a typo. These are left out."
+      duplicates_lede: The same word came up more than once; it goes in once.
+      list_title: "Words for the deck (%{count})"
+      covered: already studied or in a deck
+      skip_covered:
+        one: "Leave out %{count} word you already study or keep in another deck"
+        other: "Leave out %{count} words you already study or keep in another deck"
+      create: Create the deck
+      again: Choose another file
+    created:
+      one: "Deck created with %{count} word."
+      other: "Deck created with %{count} words."
   desks:
     panel_empty: Tap a word in the text to see it here.
     panel_include: Put in the deck
@@ -757,6 +891,7 @@ en:
     new_desk_option: New deck…
     tabs:
       text: Text or a list
+      import: Pleco, Anki, Quizlet
       song: A song
       photo: A photo
     song_hint: >-
@@ -778,8 +913,31 @@ en:
       data: Data
   stats:
     title: Statistics
-    streak: Day streak
+    lede: "What you know, which skills lag behind and what's coming up."
+    known_words: Words known
+    known_words_hint: at least one skill in long-term review
     retention: Retention (goal %{target})
+    retention_hint: last 30 days, cards in review
+    due_today: Due today
+    due_week:
+      one: "%{count} review in the next 7 days"
+      other: "%{count} reviews in the next 7 days"
+    mature_hint: skills held for three weeks or more
+    of: "%{known} / %{total}"
+    peak: "max %{count}"
+    coverage_tocfl: TOCFL levels
+    coverage_tbcl: TBCL bands
+    coverage_hint: dark is known, light is started
+    skills: Skills
+    skills_hint: known out of started, skill by skill
+    nothing_yet: Nothing started yet.
+    learned_by_week: Learned per week
+    learned_hint: words that first held for a day or more
+    forecast: Next 7 days
+    forecast_hint: reviews due each day; overdue ones count as today
+    reviews_hint: reviews done over the last two weeks
+    leeches_hint: words you keep forgetting; worth a fresh look
+    leeches_all: All mistakes →
     answer_time: Avg. answer
     mature: Mature
     reviews_by_day: Reviews per day
@@ -1402,6 +1560,7 @@ en:
     approximate_hint: "Not on the TBCL list. Read from the characters it is written with: at grade %{n} you already know enough of them."
     words_count: "%{count} in the dictionary"
   words:
+    pronounce: Pronounce
     filters: "Filters"
     filters_none: "all levels"
     hokkien_source: "Taiwanese Hokkien:"
@@ -2146,7 +2305,6 @@ en:
     forecast_lede: Each card is scheduled to come back just before you would forget it. That is why some days are heavier — the app is catching words at the right moment, not testing you at random.
     heatmap_title: Your last 12 weeks
     heatmap_lede: Each square is a day; darker means more reviews. Short daily sessions beat rare long ones — memory grows on the days you show up.
-    streak_label: days in a row
     retention_label: answered correctly (30 days)
     leeches_title: Stubborn words
     leeches_lede: These words keep slipping away after many tries. Give them extra attention — open the word, read its example sentences, practice the tone or writing — instead of just flipping the card again.
@@ -3620,7 +3778,7 @@ en:
             body: "The whole of your progress exports as one file and imports back the same way, with a copy to Google Drive besides. The data is yours and it is not locked in."
           stats:
             title: "What progress shows you"
-            body: "The day streak, actual retention, cards broken down by state, and the review history. If retention sits well below your target, the intervals are too long."
+            body: "How far you are into each TOCFL level and TBCL band, which skills lag behind, how many words you learn a week, what the next seven days hold and your actual retention. If retention sits well below your target, the intervals are too long."
           level:
             title: "Your level only steers recommendations"
             body: "It decides what to offer you next. The dictionary, the corpus and search always show everything — the level hides nothing."
@@ -4087,7 +4245,7 @@ en:
       cards: "You just want flashcards. This is a good deal more than that: a dictionary, a reader, pronunciation, handwriting, and one shared record of progress underneath all of it. For flashcards alone it is overkill."
       course: "You need a path beyond B1. The course takes you to B1 and stops there: above it you get the dictionary, the corpus, the exam lists and your own texts, but not a step-by-step course."
       china: "You are moving to China. Everything here is Taiwanese Mandarin: traditional characters, zhuyin, Taiwanese vocabulary. There is no Chinese variant, and simplified characters cannot be switched on."
-      nudging: You want to be chased. There are no reminders, no streaks and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular.
+      nudging: "You want to be chased. There are no reminders, no streaks and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular. The only email is a short note about what is new, once or twice a month at most, and one click stops it."
       close: If none of that puts you off, pick an option above and let us begin.
     path:
       done_cta: To the home screen and your cards →

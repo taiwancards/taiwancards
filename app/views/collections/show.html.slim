@@ -1,5 +1,4 @@
 - content_for(:title, @desk.name)
-- wide_page
 - all_facets = CollectionsController::FACETS
 - enabled = @desk.study_facets
 
@@ -50,7 +49,7 @@
     = form_with url: my_desk_bulk_items_path(@desk, page: @page), method: :delete, class: "space-y-3" do |form|
       .grid.gap-2 class="sm:grid-cols-2 xl:grid-cols-3"
         - @lexemes.each do |lexeme|
-          label.flex.cursor-pointer.items-center.gap-3.rounded-xl.border.border-border.bg-card.px-3.py-2 class="has-[:checked]:border-destructive/60"
+          label.flex.min-w-0.cursor-pointer.items-center.gap-3.rounded-xl.border.border-border.bg-card.px-3.py-2 class="has-[:checked]:border-destructive/60"
             = check_box_tag "lexeme_ids[]", lexeme.id, false, class: "size-4 shrink-0 rounded border-border"
             .min-w-0.flex-1
               .flex.min-w-0.items-baseline.gap-2

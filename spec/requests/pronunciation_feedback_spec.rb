@@ -94,6 +94,28 @@ RSpec.describe "Pronunciation feedback", :aggregate_failures do
     expect(initial).not_to(have_key("problem"))
   end
 
+  it "scores the sounds and the tone apart for the whole word" do
+    result = grade(key: "ma3", zhuyin: "ㄇㄚˇ", tone: 3)
+    syllable = result["syllables"].first
+    tone = syllable["parts"].find { |p| p["id"] == "tone" }
+
+    expect(result["sounds"]).to(eq(syllable["sounds"]))
+    expect(result["sounds"]).to(be_between(0, 100))
+    expect(result["tone"]).to(eq(tone["score"]))
+    expect(syllable["slips"]).to(be_an(Array))
+  end
+
+  it "leaves the tone out of the summary when the drill ignores it" do
+    result = Pronunciation::AcousticBackend.new(locale: :ru, tonal: false).grade(
+      audio: synthetic_wav,
+      text: "馬",
+      syllables: [{"char" => "馬", "pinyin" => "ma3", "tone" => 3, "key" => "ma3", "zhuyin" => "ㄇㄚˇ"}]
+    )
+
+    expect(result).not_to(have_key("tone"))
+    expect(result["sounds"]).to(be_present)
+  end
+
   it "carries the four-level legend so the colors can be explained in place" do
     legend = grade(key: "ma3", zhuyin: "ㄇㄚˇ", tone: 3)["legend"]
 

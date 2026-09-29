@@ -8,7 +8,7 @@ RSpec.describe "Stats and settings" do
   it "renders the progress summary" do
     get("/progress")
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include(I18n.t("stats.streak")))
+    expect(response.body).to(include(I18n.t("stats.known_words")))
   end
 
   it "clamps study settings to their permitted range" do

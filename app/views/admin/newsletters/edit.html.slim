@@ -1,0 +1,113 @@
+- content_for(:title) { @newsletter.title }
+- content_for(:head) { stylesheet_link_tag("trix") }
+- locked = @newsletter.sent?
+- locale = @locale
+- other = (Newsletter::LOCALES - [locale]).first
+- field = "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+- total = @recipients.values.sum
+
+.py-6.space-y-5
+  header.space-y-2
+    = link_to t("newsletters.admin.back"), admin_newsletters_path, class: "text-sm text-muted-foreground hover:text-foreground"
+    h1.text-2xl.font-bold.tracking-tight = @newsletter.title
+    = render "admin/nav"
+
+  - unless MailSettings.ready?
+    p.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700" = t("newsletters.admin.not_configured")
+
+  nav.flex.gap-1
+    - Newsletter::LOCALES.each do |code|
+      = link_to code.upcase, edit_admin_newsletter_path(@newsletter, lang: code), class: class_names("inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold md:min-h-8", code == locale ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted")
+
+  .grid.items-start.gap-6[
+    class="xl:grid-cols-2"
+    data-controller="newsletter-editor"
+    data-newsletter-editor-upload-url-value=admin_newsletter_images_path(@newsletter)
+    data-newsletter-editor-locked-value=locked.to_s
+    data-newsletter-editor-saved-label-value=t("newsletters.admin.autosaved")
+    data-newsletter-editor-failed-label-value=t("newsletters.admin.autosave_failed")
+    data-newsletter-editor-image-failed-label-value=t("newsletters.admin.image_failed") ]
+    = form_with model: @newsletter, url: admin_newsletter_path(@newsletter, lang: locale), method: :patch, data: {newsletter_editor_target: "form", action: "input->newsletter-editor#changed trix-change->newsletter-editor#changed"}, class: "min-w-0 space-y-4" do |form|
+      fieldset.min-w-0.space-y-4 disabled=locked
+        .space-y-1
+          = form.label "subject_#{locale}", t("newsletters.admin.subject"), class: "text-sm font-medium"
+          = form.text_field "subject_#{locale}", maxlength: 150, class: field
+          p.text-xs.text-muted-foreground = t("newsletters.admin.subject_hint")
+        .space-y-1
+          = form.label "preheader_#{locale}", t("newsletters.admin.preheader"), class: "text-sm font-medium"
+          = form.text_field "preheader_#{locale}", maxlength: 150, class: field
+          p.text-xs.text-muted-foreground = t("newsletters.admin.preheader_hint")
+        .space-y-1
+          span.text-sm.font-medium = t("newsletters.admin.body")
+          = form.hidden_field "body_#{locale}", id: "newsletter_body_input"
+          trix-editor.trix-content.block.min-h-80.rounded-lg.border.border-border.bg-card.px-3.py-2.text-sm[
+            input="newsletter_body_input" data-newsletter-editor-target="editor" ]
+          p.text-xs.text-muted-foreground = t("newsletters.admin.body_hint")
+        fieldset.min-w-0.space-y-2.rounded-xl.border.border-border.p-3
+          legend.px-1.text-sm.font-medium = t("newsletters.admin.buttons")
+          p.text-xs.text-muted-foreground = t("newsletters.admin.buttons_hint", host: Newsletters::Tracking.host)
+          - buttons = Array(@newsletter.buttons)
+          - Newsletter::MAX_BUTTONS.times do |index|
+            - button = buttons[index] || {}
+            .grid.gap-2 class="sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+              = text_field_tag "newsletter[buttons][#{index}][label_#{locale}]", button["label_#{locale}"], placeholder: t("newsletters.admin.button_label"), class: field
+              = text_field_tag "newsletter[buttons][#{index}][url]", button["url"], placeholder: "#{Newsletters::Tracking.base}/#{locale}/…", class: field
+              = hidden_field_tag "newsletter[buttons][#{index}][label_#{other}]", button["label_#{other}"]
+        .flex.flex-wrap.items-center.gap-3
+          = form.submit t("newsletters.admin.save"), class: "min-h-11 cursor-pointer rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted md:min-h-9"
+          span.text-xs.text-muted-foreground data-newsletter-editor-target="status"
+
+    aside.min-w-0.space-y-2 class="xl:sticky xl:top-20"
+      .flex.items-baseline.justify-between.gap-2
+        h2.text-sm.font-semibold = t("newsletters.admin.preview", lang: locale.upcase)
+        span.text-xs.text-muted-foreground = t("newsletters.admin.preview_hint")
+      iframe.block.w-full.rounded-xl.border.border-border.bg-white[
+        class="h-[75vh]" title=t("newsletters.admin.preview", lang: locale.upcase)
+        srcdoc=@preview data-newsletter-editor-target="frame" ]
+
+  section.space-y-3.rounded-2xl.border.border-border.bg-card.p-4
+    h2.text-sm.font-semibold = t("newsletters.admin.send_title")
+    .flex.flex-wrap.items-center.gap-2
+      = button_to t("newsletters.admin.sample", email: current_user.email, lang: locale.upcase), sample_admin_newsletter_path(@newsletter, lang: locale), form: {data: {turbo: false}}, class: "min-h-11 cursor-pointer rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted md:min-h-9"
+      - if locked
+        - if @stats.pending.positive?
+          = button_to t("newsletters.admin.resume", count: @stats.pending), deliver_admin_newsletter_path(@newsletter), form: {data: {turbo_confirm: t("newsletters.admin.resume_confirm", count: @stats.pending)}}, class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+      - elsif @newsletter.complete?
+        = button_to t("newsletters.admin.deliver", count: total), deliver_admin_newsletter_path(@newsletter), form: {data: {turbo_confirm: t("newsletters.admin.deliver_confirm", count: total, en: @recipients.fetch("en", 0), ru: @recipients.fetch("ru", 0))}}, class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+      - else
+        span.text-sm.text-muted-foreground = t("newsletters.admin.incomplete")
+      - unless locked
+        = button_to t("newsletters.admin.delete"), admin_newsletter_path(@newsletter), method: :delete, form: {data: {turbo_confirm: t("newsletters.admin.delete_confirm")}}, class: "min-h-11 cursor-pointer rounded-lg border border-red-500 px-4 text-sm font-medium text-red-600 hover:bg-red-500/10 md:min-h-9"
+    p.text-xs.text-muted-foreground = t("newsletters.admin.send_hint", en: @recipients.fetch("en", 0), ru: @recipients.fetch("ru", 0), budget: @budget, limit: MailSettings.daily_limit)
+
+  - if locked
+    section.space-y-3
+      .flex.flex-wrap.gap-x-6.gap-y-1.text-sm
+        span = t("newsletters.admin.stat_sent", sent: @stats.sent, total: @stats.recipients)
+        span = t("newsletters.admin.stat_clicked", count: @stats.clicked, clicks: @stats.clicks)
+        span = t("newsletters.admin.stat_unsubscribed", count: @stats.unsubscribed)
+        - if @stats.failed.positive?
+          span.text-red-600 = t("newsletters.admin.stat_failed", count: @stats.failed)
+      .overflow-x-auto.rounded-xl.border.border-border
+        table.w-full.text-sm
+          thead.bg-muted.text-left.text-xs.uppercase.tracking-wide.text-muted-foreground
+            tr
+              th.px-3.py-2 = t("newsletters.admin.col_email")
+              th.px-3.py-2 = t("newsletters.admin.col_locale")
+              th.px-3.py-2 = t("newsletters.admin.col_sent")
+              th.px-3.py-2 = t("newsletters.admin.col_clicked")
+              th.px-3.py-2 = t("newsletters.admin.col_unsubscribed")
+          tbody.divide-y.divide-border
+            - @deliveries.each do |delivery|
+              tr
+                td.px-3.py-2 = link_to delivery.user.email, admin_user_path(delivery.user), class: "underline underline-offset-2"
+                td.px-3.py-2.uppercase = delivery.locale
+                td.px-3.py-2.tabular-nums
+                  - if delivery.sent_at
+                    = l(delivery.sent_at, format: :short)
+                  - elsif delivery.error
+                    span.text-red-600 title=delivery.error = t("newsletters.admin.failed_short")
+                  - else
+                    span.text-muted-foreground = t("newsletters.admin.waiting")
+                td.px-3.py-2.tabular-nums = delivery.clicked_at ? "#{l(delivery.clicked_at, format: :short)} · #{delivery.clicks_count}" : "—"
+                td.px-3.py-2.tabular-nums = delivery.unsubscribed_at ? l(delivery.unsubscribed_at, format: :short) : "—"

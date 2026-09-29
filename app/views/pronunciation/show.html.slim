@@ -106,14 +106,33 @@
       .rounded-2xl.border.border-border.bg-card.px-4.py-4.text-center.shadow-sm.transition-colors[
         class="sm:px-6 sm:py-6"
         data-pronunciation-target="card" ]
+        .mb-4.flex.items-center.gap-4.border-b.border-border.pb-4.text-left hidden=true data-pronunciation-target="summary"
+          .relative.size-16.shrink-0
+            svg.size-16.-rotate-90 viewBox="0 0 36 36" aria-hidden="true"
+              circle.text-muted cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" stroke-width="3"
+              circle cx="18" cy="18" r="15.5" fill="none" stroke-width="3" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100" data-pronunciation-target="ring"
+            span.absolute.inset-0.flex.flex-col.items-center.justify-center.leading-none
+              span.text-xl.font-bold.tabular-nums data-pronunciation-target="overall"
+              span.text-3xs.text-muted-foreground = t("pron.ui.overall")
+          .min-w-0.flex-1.space-y-2
+            - meters = @tonal ? %w[sounds tone] : %w[sounds]
+            - meters.each do |kind|
+              .space-y-1 data-pronunciation-target="meter" data-kind=kind
+                .flex.items-baseline.justify-between.text-xs
+                  span.text-muted-foreground = t("pron.ui.#{kind}")
+                  span.font-semibold.tabular-nums data-role="value"
+                .h-1.5.overflow-hidden.rounded-full.bg-muted
+                  .h-full.rounded-full.transition-all.duration-700 style="width:0" data-role="bar"
         .font-semibold class=prompt_size(@lexeme.text) lang="zh-TW" = hanzi(@lexeme.text)
         - if @lexeme.meaning.present?
           .mt-1.line-clamp-1.text-xs.text-muted-foreground = @lexeme.meaning
         .mt-3.flex.flex-wrap.justify-center.gap-2
-          - @syllables.each do |syllable|
-            .relative.flex.min-w-16.flex-col.items-center.overflow-hidden.rounded-xl.border-2.border-border.px-2.transition-colors[
-              class="gap-0.5 py-1.5"
-              data-pronunciation-target="syllable" ]
+          - @syllables.each_with_index do |syllable, index|
+            button.relative.flex.min-w-16.flex-col.items-center.overflow-hidden.rounded-xl.border-2.border-border.px-2.transition-colors[
+              type="button" class="gap-0.5 py-1.5 disabled:cursor-default" disabled=true
+              title=t("pron.ui.open_syllable")
+              data-pronunciation-target="syllable" data-index=index
+              data-action="pronunciation#openSyllable" ]
               .pointer-events-none.absolute.inset-x-0.bottom-0.transition-all.duration-700 style="height:0" data-role="fill"
               .relative.flex.flex-col.items-center class="gap-0.5"
                 span.text-2xl.leading-none lang="zh-TW" = syllable["char"]
@@ -123,6 +142,7 @@
                   span.pinyin.text-2xs.leading-none.text-muted-foreground = syllable["pinyin"]
                 span.min-h-4.text-sm.font-bold.leading-none.tabular-nums data-role="score"
                 .flex.h-3.items-end.gap-px data-role="parts"
+                .flex.flex-col.items-center.empty:hidden class="gap-0.5" data-role="slips"
 
       - if @sandhi.any?
         p.rounded-lg.border.border-amber-500.px-3.py-2.text-xs.leading-snug class="bg-amber-500/10"
@@ -148,6 +168,18 @@
         .flex.items-center.justify-center.gap-1.5.text-2xs.text-muted-foreground data-pronunciation-target="cue"
         p.text-center.text-2xs.text-muted-foreground data-pronunciation-target="hint" = t("pronunciation.record_hint")
         .min-h-5.text-center.text-xs.text-muted-foreground data-pronunciation-target="status"
+        .flex.flex-wrap.items-center.justify-center.gap-2
+          button.inline-flex.min-h-11.items-center.gap-1.5.rounded-full.bg-foreground.px-4.text-sm.font-medium.text-background.transition-opacity[
+            type="button" hidden=true class="md:min-h-9 hover:opacity-90"
+            data-pronunciation-target="take" data-action="pronunciation#playTake" ]
+            = icon(:play, css: "size-4")
+            = t("pron.ui.your_take")
+          - if @audio
+            button.inline-flex.min-h-11.items-center.gap-1.5.rounded-full.border.border-border.px-4.text-sm.font-medium.transition-colors[
+              type="button" class="md:min-h-9 hover:bg-muted"
+              data-action="pronunciation#playModel" ]
+              = icon(:speaker, css: "size-4")
+              = t("pron.ui.model")
 
       .space-y-3 data-pronunciation-target="detail"
 

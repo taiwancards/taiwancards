@@ -1,0 +1,9 @@
+- top = series.map(&:last).max.to_i
+- peak = [top, 1].max
+.flex.h-28.items-end.gap-1
+  - series.each do |date, count|
+    .flex-1.rounded-t class=(count.zero? ? "bg-muted" : local_assigns.fetch(:color, "bg-primary")) style="height: #{count.zero? ? 3 : (count * 100.0 / peak).clamp(6, 100)}%" title="#{l(date, format: :short)}: #{count}"
+.mt-1.flex.justify-between.text-2xs.tabular-nums.text-muted-foreground
+  span = l(series.first.first, format: :short)
+  span = t("stats.peak", count: top) if top.positive?
+  span = l(series.last.first, format: :short)

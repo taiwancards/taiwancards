@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_many :collections, dependent: :destroy
   has_many :collection_groups, dependent: :delete_all
   has_many :deck_shares, dependent: :delete_all
+  has_many :newsletter_deliveries, dependent: :delete_all
   has_many :course_completions, dependent: :delete_all
   has_many :placement_tests, dependent: :destroy
   has_many :study_plans, dependent: :destroy
@@ -85,6 +86,17 @@ class User < ApplicationRecord
   def verified?
     email_verified_at.present?
   end
+
+  def newsletter? = newsletter_unsubscribed_at.nil?
+
+  alias_method :newsletter, :newsletter?
+
+  def newsletter=(value)
+    wanted = ActiveModel::Type::Boolean.new.cast(value)
+    self.newsletter_unsubscribed_at = wanted ? nil : (newsletter_unsubscribed_at || Time.current)
+  end
+
+  def unsubscribe!(at: Time.current) = update_columns(newsletter_unsubscribed_at: newsletter_unsubscribed_at || at)
 
   def display_name
     name.presence || email

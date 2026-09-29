@@ -1,0 +1,5 @@
+- if current_user && lexeme.pronounceable?
+  = link_to pronunciation_path(lexeme_id: lexeme.id),
+    class: "inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-medium hover:bg-muted md:min-h-8" do
+    = icon(:microphone, css: "size-4")
+    = t("words.pronounce")

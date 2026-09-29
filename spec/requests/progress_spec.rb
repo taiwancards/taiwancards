@@ -20,6 +20,23 @@ RSpec.describe "The progress section" do
     end
   end
 
+  it "keeps the data tab under the language prefix like its siblings" do
+    get(progress_path(locale: :ru))
+
+    expect(response.body).to(include("href=\"/ru/progress/data\""))
+
+    raw_get("/progress/data")
+
+    expect(response).to(redirect_to(%r{/(en|ru)/progress/data\z}))
+  end
+
+  it "shows what a learner can act on instead of a day streak" do
+    get(progress_path)
+
+    expect(response.body).to(include(I18n.t("stats.coverage_tocfl"), I18n.t("stats.skills"), I18n.t("stats.forecast")))
+    expect(response.body).not_to(include("Day streak"))
+  end
+
   it "counts what is stored about the user on the data tab" do
     lexeme = create(:lexeme, kind: :character, text: "水", meanings: {"en" => "water"})
     Lexemes::Activator.new.call(lexeme)

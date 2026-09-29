@@ -3,7 +3,7 @@
 module LocalisedPaths
   MACHINE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|s/|locale|zhuyin|
     sitemap|sitemaps|
-    textbook/audio|listening/clips|export|progress/data|tones/refill|
+    textbook/audio|listening/clips|export|tones/refill|n|unsubscribe|newsletter_images|
     pronunciation/(?:health|grade|thresholds|templates))(?:/|\.|\z|\?)}x
 
   STROKES = %r{\A/characters/[^/]+/strokes}

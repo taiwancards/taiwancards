@@ -39,7 +39,7 @@ module Locales
   end
 
   BARE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|locale|sitemap|sitemaps|
-    textbook/audio|listening/clips|export|progress/data|tones/refill|
+    textbook/audio|listening/clips|export|tones/refill|n|unsubscribe|newsletter_images|letter_opener|
     characters/[^/]+/strokes|
     pronunciation/(?:health|grade|thresholds|templates))(?:/|\.|\z|\?)}x
 

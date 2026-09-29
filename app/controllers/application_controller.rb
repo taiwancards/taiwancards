@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   include Voiced
   include PubliclyCacheable
 
-  allow_browser versions: :modern
+  allow_browser versions: :modern, unless: :any_browser?
 
   stale_when_importmap_changes
 
@@ -38,6 +38,8 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def any_browser? = false
 
   def numeric_id(value)
     value.to_s.match?(/\A\d+\z/) ? value : nil

@@ -48,21 +48,6 @@ RSpec.describe StatsReport do
     expect(report.reviews_by_day(days: 3).map(&:last)).to(eq([0, 1, 2]))
   end
 
-  it "computes the current streak" do
-    subject_memory = memory
-    review(subject_memory, reviewed_at: Time.current)
-    review(subject_memory, reviewed_at: 1.day.ago)
-    review(subject_memory, reviewed_at: 3.days.ago)
-
-    expect(report.streak).to(eq(2))
-  end
-
-  it "keeps the streak alive when today has no reviews yet" do
-    review(memory, reviewed_at: 1.day.ago)
-
-    expect(report.streak).to(eq(1))
-  end
-
   it "ignores another person's reviews" do
     stranger = create(:user)
     subject_memory = memory
@@ -76,7 +61,86 @@ RSpec.describe StatsReport do
       state_before: LexemeMemory.states["review"]
     )
 
-    expect(report.streak).to(eq(0))
+    expect(report.reviews_by_day(days: 1).map(&:last)).to(eq([0]))
+  end
+
+  it "counts a word as known once any of its skills reached review" do
+    lexeme = create(:lexeme)
+    LexemeMemory.create!(lexeme:, user:, facet: :recognition, activated_at: Time.current, state: :review)
+    LexemeMemory.create!(lexeme:, user:, facet: :tone, activated_at: Time.current, state: :review)
+    memory(state: :learning)
+
+    expect(report.words_known).to(eq(1))
+  end
+
+  it "reports every skill that has been started, with how much of it is in review" do
+    memory(state: :review)
+    memory(state: :learning)
+    memory(facet: :tone, state: :review)
+    memory(facet: :writing)
+
+    expect(report.facet_strength).to(
+      eq(
+        [
+          {facet: "recognition", active: 2, known: 1},
+          {facet: "tone", active: 1, known: 1}
+        ]
+      )
+    )
+  end
+
+  it "dates a learned word by the review that first sent it a day or more away" do
+    travel_to(Time.zone.local(2026, 9, 30, 12)) do
+      learned = memory
+      LexemeReview.create!(
+        lexeme_memory: learned,
+        lexeme: learned.lexeme,
+        user:,
+        reviewed_at: 1.day.ago,
+        rating: Fsrs::Scheduler::RATINGS.fetch(:good),
+        facet: 0,
+        state_before: LexemeMemory.states["learning"],
+        scheduled_days: 3.0
+      )
+      LexemeReview.create!(
+        lexeme_memory: learned,
+        lexeme: learned.lexeme,
+        user:,
+        reviewed_at: 10.days.ago,
+        rating: Fsrs::Scheduler::RATINGS.fetch(:good),
+        facet: 1,
+        state_before: LexemeMemory.states["learning"],
+        scheduled_days: 2.0
+      )
+      stepping = memory
+      LexemeReview.create!(
+        lexeme_memory: stepping,
+        lexeme: stepping.lexeme,
+        user:,
+        reviewed_at: 1.hour.ago,
+        rating: Fsrs::Scheduler::RATINGS.fetch(:good),
+        facet: 0,
+        state_before: LexemeMemory.states["learning"],
+        scheduled_days: 0.01
+      )
+
+      weeks = report.learned_by_week(weeks: 3)
+
+      expect(weeks.map(&:first)).to(eq([Date.new(2026, 9, 14), Date.new(2026, 9, 21), Date.new(2026, 9, 28)]))
+      expect(weeks.map(&:last)).to(eq([1, 0, 0]))
+    end
+  end
+
+  it "forecasts the week ahead and folds anything overdue into today" do
+    travel_to(Time.zone.local(2026, 9, 30, 12)) do
+      memory(state: :review, due_at: 3.days.ago)
+      memory(state: :review, due_at: 2.hours.from_now)
+      memory(state: :review, due_at: 2.days.from_now)
+      memory(state: :review, due_at: 30.days.from_now)
+      memory(due_at: 1.day.from_now)
+
+      expect(report.forecast(days: 3).map(&:last)).to(eq([2, 0, 1]))
+    end
   end
 
   it "breaks memories down by maturity" do
@@ -103,7 +167,6 @@ RSpec.describe StatsReport do
         review(subject_memory, reviewed_at: Time.zone.local(2025, 4, 15, 0, 10))
 
         expect(report.reviews_by_day(days: 2).last).to(eq([Date.new(2025, 4, 15), 1]))
-        expect(report.streak).to(eq(1))
       end
     end
   end

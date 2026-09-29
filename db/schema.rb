@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_04_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -325,6 +325,46 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_140000) do
     t.index(["tier", "kind"], name: "index_lexemes_on_tier_and_kind")
   end
 
+  create_table("newsletter_deliveries", force: :cascade) do |t|
+    t.bigint("newsletter_id", null: false)
+    t.bigint("user_id", null: false)
+    t.string("locale", null: false)
+    t.datetime("sent_at")
+    t.string("error")
+    t.datetime("clicked_at")
+    t.integer("clicks_count", default: 0, null: false)
+    t.datetime("unsubscribed_at")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["newsletter_id", "user_id"], name: "index_newsletter_deliveries_on_newsletter_and_user", unique: true)
+    t.index(["sent_at"], name: "index_newsletter_deliveries_on_sent_at")
+    t.index(["user_id"], name: "index_newsletter_deliveries_on_user_id")
+  end
+
+  create_table("newsletter_images", force: :cascade) do |t|
+    t.bigint("newsletter_id", null: false)
+    t.string("content_type", null: false)
+    t.string("filename", null: false)
+    t.binary("data", null: false)
+    t.integer("byte_size", null: false)
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["newsletter_id"], name: "index_newsletter_images_on_newsletter_id")
+  end
+
+  create_table("newsletters", force: :cascade) do |t|
+    t.string("subject_en", default: "", null: false)
+    t.string("subject_ru", default: "", null: false)
+    t.string("preheader_en", default: "", null: false)
+    t.string("preheader_ru", default: "", null: false)
+    t.text("body_en", default: "", null: false)
+    t.text("body_ru", default: "", null: false)
+    t.jsonb("buttons", default: [], null: false)
+    t.datetime("sent_at")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+  end
+
   create_table("placement_tests", force: :cascade) do |t|
     t.jsonb("asked", default: [], null: false)
     t.datetime("created_at", null: false)
@@ -556,6 +596,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_140000) do
     t.boolean("restricted_content", default: false, null: false)
     t.datetime("updated_at", null: false)
     t.integer("visits_count", default: 0, null: false)
+    t.datetime("newsletter_unsubscribed_at")
     t.index("lower((email)::text)", name: "index_users_on_lower_email", unique: true)
     t.index(["google_uid"], name: "index_users_on_google_uid", unique: true, where: "(google_uid IS NOT NULL)")
   end
@@ -597,6 +638,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_140000) do
   add_foreign_key("lexeme_reviews", "users")
   add_foreign_key("lexeme_senses", "content_sources")
   add_foreign_key("lexeme_senses", "lexemes")
+  add_foreign_key("newsletter_deliveries", "newsletters", on_delete: :cascade)
+  add_foreign_key("newsletter_deliveries", "users", on_delete: :cascade)
+  add_foreign_key("newsletter_images", "newsletters", on_delete: :cascade)
   add_foreign_key("placement_tests", "users")
   add_foreign_key("pronunciation_attempts", "lexemes")
   add_foreign_key("pronunciation_attempts", "users")

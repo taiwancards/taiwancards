@@ -8,7 +8,6 @@ class MistakesController < ApplicationController
     @book = Study::MistakeBook.new(current_user)
     @report = StatsReport.new(user: current_user)
     @by_day = @report.reviews_by_day(days: HEATMAP_DAYS)
-    @streak = @report.streak
     @retention = @report.actual_retention
     @leeches = @report.leeches.limit(LEECH_LIMIT)
   end

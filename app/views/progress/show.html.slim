@@ -1,55 +1,78 @@
-- wide_page
 - breakdown = @report.memory_breakdown
 - retention = @report.actual_retention
-- by_day = @report.reviews_by_day
-- max_count = [by_day.map(&:last).max, 1].max
+- forecast = @report.forecast
+- card = "space-y-3 rounded-2xl border border-border bg-card p-4"
+- heading = "text-sm font-semibold uppercase tracking-wide text-muted-foreground"
 
 = render layout: "progress/shell" do
-  .grid.grid-cols-2.gap-3.sm:grid-cols-4
-    .rounded-xl.border.bg-background.p-4.text-center.shadow
-      .text-2xl.font-bold = @report.streak
-      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.streak")
-    .rounded-xl.border.bg-background.p-4.text-center.shadow
-      .text-2xl.font-bold
-        - if retention
-          = number_to_percentage(retention * 100, precision: 1)
-        - else
-          | —
-      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground
-        = t("stats.retention", target: number_to_percentage(@settings.desired_retention * 100, precision: 0))
-    .rounded-xl.border.bg-background.p-4.text-center.shadow
-      .text-2xl.font-bold
-        - if @report.average_answer_ms
-          = "#{(@report.average_answer_ms / 1000.0).round(1)}s"
-        - else
-          | —
-      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.answer_time")
-    .rounded-xl.border.bg-background.p-4.text-center.shadow
-      .text-2xl.font-bold = breakdown[:mature]
-      .mt-1.text-xs.uppercase.tracking-wide.text-muted-foreground = t("stats.mature")
+  p.max-w-prose.text-sm.text-muted-foreground = t("stats.lede")
 
-  section
-    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("stats.reviews_by_day")
-    .mt-3.flex.h-32.items-end.gap-1
-      - by_day.each do |date, count|
-        .group.relative.flex-1.rounded-t.bg-primary style="height: #{count.zero? ? 2 : (count * 100.0 / max_count).clamp(4, 100)}%" title="#{l(date, format: :short)}: #{count}"
-    .mt-1.flex.justify-between.text-xs.text-muted-foreground
-      span = l(by_day.first.first, format: :short)
-      span = l(by_day.last.first, format: :short)
+  .grid.grid-cols-2.gap-3.lg:grid-cols-4
+    = render "progress/tile", value: number_with_delimiter(@report.words_known), label: t("stats.known_words"), hint: t("stats.known_words_hint")
+    = render "progress/tile", value: (retention ? number_to_percentage(retention * 100, precision: 1) : "—"), label: t("stats.retention", target: number_to_percentage(@settings.desired_retention * 100, precision: 0)), hint: t("stats.retention_hint")
+    = render "progress/tile", value: number_with_delimiter(forecast.first.last), label: t("stats.due_today"), hint: t("stats.due_week", count: forecast.sum(&:last)), tone: (forecast.first.last.positive? ? "text-amber-600" : nil)
+    = render "progress/tile", value: number_with_delimiter(breakdown[:mature]), label: t("stats.mature"), hint: t("stats.mature_hint")
 
-  section
-    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("stats.breakdown")
-    .mt-3.grid.grid-cols-2.gap-3.text-center.sm:grid-cols-4
-      - {unseen: "text-muted-foreground", learning: "text-amber-500", young: "text-sky-500", mature: "text-emerald-500"}.each do |key, color|
+  .grid.gap-4.lg:grid-cols-3
+    section class=card
+      div
+        h2 class=heading = t("stats.coverage_tocfl")
+        p.text-2xs.text-muted-foreground = t("stats.coverage_hint")
+      div
+        - @tocfl.each do |level|
+          = render "progress/bar", label: level.collection.name.delete_prefix("TOCFL "), known: level.known, started: level.started, total: level.total, href: tocfl_level_path(level.collection)
+    section class=card
+      div
+        h2 class=heading = t("stats.coverage_tbcl")
+        p.text-2xs.text-muted-foreground = t("stats.coverage_hint")
+      div
+        - @tbcl.each do |level|
+          = render "progress/bar", label: t("tbcl.grade", n: level.grade), known: level.known, started: level.started, total: level.total, href: tbcl_level_path(level.grade)
+    section class=card
+      div
+        h2 class=heading = t("stats.skills")
+        p.text-2xs.text-muted-foreground = t("stats.skills_hint")
+      - skills = @report.facet_strength
+      - if skills.empty?
+        p.text-sm.text-muted-foreground = t("stats.nothing_yet")
+      - else
         div
-          .text-xl.font-bold class=color = breakdown[key]
-          .text-xs.text-muted-foreground = t("stats.states.#{key}")
+          - skills.each do |skill|
+            = render "progress/bar", label: t("memories.#{skill[:facet]}"), known: skill[:known], total: skill[:active]
 
-  - if @report.leeches.any?
-    section
-      h2.text-sm.font-semibold.uppercase.tracking-wide.text-destructive = t("stats.leeches")
-      .mt-3.space-y-2
-        - @report.leeches.each do |lexeme|
-          .flex.items-center.gap-3.rounded-lg.border.border-border.bg-card.px-4.py-3
-            span.font-hanzi.text-xl lang="zh-TW" = lexeme.text
-            span.text-sm.text-muted-foreground = lexeme.meaning
+  .grid.gap-4.lg:grid-cols-3
+    section class=card
+      div
+        h2 class=heading = t("stats.learned_by_week")
+        p.text-2xs.text-muted-foreground = t("stats.learned_hint")
+      = render "progress/columns", series: @report.learned_by_week, color: "bg-emerald-500"
+    section class=card
+      div
+        h2 class=heading = t("stats.forecast")
+        p.text-2xs.text-muted-foreground = t("stats.forecast_hint")
+      = render "progress/columns", series: forecast, color: "bg-amber-500"
+    section class=card
+      div
+        h2 class=heading = t("stats.reviews_by_day")
+        p.text-2xs.text-muted-foreground = t("stats.reviews_hint")
+      = render "progress/columns", series: @report.reviews_by_day
+
+  .grid.gap-4.lg:grid-cols-2
+    section class=card
+      h2 class=heading = t("stats.breakdown")
+      .grid.grid-cols-2.gap-3.text-center.sm:grid-cols-4
+        - {unseen: "text-muted-foreground", learning: "text-amber-500", young: "text-sky-500", mature: "text-emerald-500"}.each do |key, color|
+          div
+            .text-xl.font-bold.tabular-nums class=color = number_with_delimiter(breakdown[key])
+            .text-xs.text-muted-foreground = t("stats.states.#{key}")
+    - if @leeches.any?
+      section class=card
+        div
+          h2.text-sm.font-semibold.uppercase.tracking-wide.text-destructive = t("stats.leeches")
+          p.text-2xs.text-muted-foreground = t("stats.leeches_hint")
+        .flex.flex-wrap.gap-2
+          - @leeches.each do |lexeme|
+            = link_to dict_entry_path(text: lexeme.text), class: "inline-flex items-baseline gap-2 rounded-lg border border-border px-3 py-1.5 hover:bg-muted", title: lexeme.meaning do
+              span.font-hanzi.text-lg lang="zh-TW" = lexeme.text
+              span.max-w-40.truncate.text-xs.text-muted-foreground = lexeme.meaning
+        = link_to t("stats.leeches_all"), mistakes_path, class: "inline-block text-xs text-primary hover:underline"

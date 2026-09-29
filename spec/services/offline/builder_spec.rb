@@ -45,7 +45,7 @@ RSpec.describe Offline::Builder do
     chunk = JSON.parse(root.join(name).read)
 
     expect(chunk.keys).to(all(start_with("/en/")))
-    expect(chunk.values.first.keys).to(match_array(%w[t w m]))
+    expect(chunk.values.first.keys).to(match_array(%w[t m]))
   end
 
   it "ships the offline shells with the core pack" do

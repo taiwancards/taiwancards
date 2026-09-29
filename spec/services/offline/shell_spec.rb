@@ -18,10 +18,6 @@ RSpec.describe Offline::Shell do
 
   subject(:shell) { described_class.new(html).call }
 
-  it "reports the width of the rendered layout" do
-    expect(shell.fetch("w")).to(eq("medium"))
-  end
-
   it "leaves a slot where the page content goes" do
     expect(shell.fetch("s")).to(include(described_class::MAIN_SLOT))
     expect(shell.fetch("s")).not_to(include("<p>page</p>"))

@@ -36,6 +36,12 @@ en:
       band: "speaker spread"
       semitones: "semitones"
     ui:
+      overall: "Overall"
+      sounds: "Sounds"
+      tone: "Tone"
+      your_take: "Your recording"
+      model: "Reference"
+      open_syllable: "Tap a syllable to see its breakdown"
       chart_hint: "The band is how living speakers actually produce this syllable: inside it nothing counts against you. Dashed is its middle, solid is you, red marks where you left the band."
       chart_range: "The scale is semitones from the middle of your voice, so it shows not only the shape of the tone but the height you took it at."
       parts_title: "What the score is made of"

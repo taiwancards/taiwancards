@@ -26,7 +26,7 @@ module Offline
     def call
       return nil if @html[Fragment::MAIN].nil?
 
-      {"w" => Fragment.new(@html).call.fetch("w"), "s" => template}
+      {"s" => template}
     end
 
     private

@@ -2,7 +2,7 @@
 
 module Offline
   class Shells
-    WIDTHS = ApplicationHelper::PAGE_WIDTHS.keys.freeze
+    KEY = "page"
 
     def call
       I18n.available_locales.to_h { |locale| [locale.to_s, for_locale(locale)] }
@@ -11,16 +11,13 @@ module Offline
     private
 
     def for_locale(locale)
-      I18n.with_locale(locale) do
-        WIDTHS.to_h { |width| [width, template(locale, width)] }
-      end
+      I18n.with_locale(locale) { {KEY => template(locale)} }
     end
 
-    def template(locale, width)
+    def template(locale)
       html = ApplicationController.render(
         template: "offline/shell",
         layout: "layouts/offline_shell",
-        assigns: {width: width},
         locale: locale
       )
 

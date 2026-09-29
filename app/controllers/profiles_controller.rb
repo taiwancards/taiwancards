@@ -106,6 +106,7 @@ class ProfilesController < ApplicationController
         :level,
         :password,
         :password_confirmation,
+        :newsletter,
         {mobile_tabs: []}
       ]
     )

@@ -1,0 +1,39 @@
+- content_for(:title) { t("newsletters.admin.title") }
+
+.py-6.space-y-5
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("newsletters.admin.title")
+    = render "admin/nav"
+    p.max-w-prose.text-sm.text-muted-foreground = t("newsletters.admin.lede", en: @recipients.fetch("en", 0), ru: @recipients.fetch("ru", 0))
+
+  = button_to t("newsletters.admin.new"), admin_newsletters_path, class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+
+  - if @newsletters.empty?
+    p.rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground = t("newsletters.admin.empty")
+  - else
+    .divide-y.divide-border.rounded-xl.border.border-border
+      - @newsletters.each do |newsletter|
+        - stats = @stats.for(newsletter)
+        = link_to edit_admin_newsletter_path(newsletter), class: "flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 p-3 hover:bg-muted/50" do
+          .min-w-0
+            .truncate.text-sm.font-medium = newsletter.title
+            .text-xs.text-muted-foreground
+              = newsletter.sent? ? t("newsletters.admin.sent_on", at: l(newsletter.sent_at, format: :short)) : t("newsletters.admin.draft")
+          - if newsletter.sent?
+            .flex.flex-wrap.gap-x-4.text-xs.tabular-nums.text-muted-foreground
+              span = t("newsletters.admin.stat_sent", sent: stats.sent, total: stats.recipients)
+              span = t("newsletters.admin.stat_clicked", count: stats.clicked, clicks: stats.clicks)
+              span = t("newsletters.admin.stat_unsubscribed", count: stats.unsubscribed)
+              - if stats.failed.positive?
+                span.text-red-600 = t("newsletters.admin.stat_failed", count: stats.failed)
+
+  section.space-y-2
+    h2.text-sm.font-semibold = t("newsletters.admin.unsubscribed_title", count: @unsubscribed.size)
+    - if @unsubscribed.empty?
+      p.text-sm.text-muted-foreground = t("newsletters.admin.unsubscribed_none")
+    - else
+      .divide-y.divide-border.rounded-xl.border.border-border
+        - @unsubscribed.each do |user|
+          .flex.flex-wrap.items-baseline.justify-between.gap-2.px-3.py-2.text-sm
+            = link_to user.email, admin_user_path(user), class: "truncate underline underline-offset-2"
+            span.text-xs.text-muted-foreground = l(user.newsletter_unsubscribed_at, format: :short)

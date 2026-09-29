@@ -1,6 +1,4 @@
 - content_for(:title, @entry.text)
-- wide_page
-
 .py-6.space-y-6
   = link_to liangci_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
     span ←
@@ -37,7 +35,7 @@
       .grid.gap-2 class="sm:grid-cols-2"
         - nouns.each do |noun|
           - path = noun.character? ? character_path(noun.text) : dict_entry_path(noun.text)
-          = link_to path, class: "flex items-baseline justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
+          = link_to path, class: "flex min-w-0 items-baseline justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
             .min-w-0
               .flex.items-baseline.gap-2
                 span.text-lg.font-semibold lang="zh-TW"

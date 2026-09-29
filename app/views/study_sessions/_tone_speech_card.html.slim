@@ -39,7 +39,7 @@
           .border-border data-card-speech-target="syllable" data-base=chip class=chip
             span.text-base.font-semibold lang="zh-TW" = part["zhuyin"]
             span.pinyin.text-2xs.text-muted-foreground = part["pinyin"]
-            span.text-2xs.text-muted-foreground data-heard=""
+            span.text-2xs.font-semibold.text-current data-heard="" lang="zh-TW"
 
       .flex.items-baseline.justify-center.gap-2
         span.text-3xl.font-bold data-card-speech-target="score"
@@ -51,6 +51,10 @@
       button.rounded-full.border.border-border.px-6.py-2.text-sm.font-medium[
         type="button" class="hover:bg-muted" data-card-speech-target="record" data-action="card-speech#toggle" ]
         = t("study.speech.record")
+      button.inline-flex.items-center.gap-1.5.rounded-full.border.border-border.px-4.py-2.text-sm.font-medium[
+        type="button" hidden=true class="hover:bg-muted" data-card-speech-target="take" data-action="card-speech#playTake" ]
+        = icon(:play, css: "size-4")
+        = t("pron.ui.your_take")
       button.rounded-full.bg-primary.px-6.py-2.text-sm.font-semibold.text-primary-foreground[
         type="button" hidden=true class="hover:opacity-90" data-card-speech-target="next" data-action="card-speech#advance" ]
         = t("study.speech.next")

@@ -2,7 +2,7 @@
 
 class CollectionsController < ApplicationController
   FACETS = LexemeMemory.facets.keys.freeze
-  TABS = %w[text song photo].freeze
+  TABS = %w[text import song photo].freeze
   PER_PAGE = 120
 
   before_action :set_desk, only: %i[show update destroy add_item add_cards remove_item remove_items]

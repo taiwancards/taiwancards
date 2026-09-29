@@ -41,6 +41,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "letter_opener_web"
   gem "slim_lint", require: false
   gem "web-console", require: false
 end

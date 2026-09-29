@@ -60,6 +60,7 @@
             = button_to t("words.add_study"), dict_activate_path(lexeme.text), data: {tour: "dict-add"},
               class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
             = render("shared/quick_add", lexeme:)
+            = render("shared/pronounce", lexeme:)
     .min-w-0 class="space-y-1.5"
       .flex.items-center.gap-3
         - zhuyin = lexeme.reading_set.first&.dig("zhuyin")

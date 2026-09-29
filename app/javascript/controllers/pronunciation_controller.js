@@ -110,6 +110,11 @@ export default class extends Controller {
     "detail",
     "cue",
     "hint",
+    "summary",
+    "ring",
+    "overall",
+    "meter",
+    "take",
   ];
   static values = {
     labelBusy: String,
@@ -170,6 +175,36 @@ export default class extends Controller {
   disconnect() {
     this.clearTimers();
     this.teardownMeter();
+    this.silence();
+    this.dropTake();
+  }
+
+  keepTake(blob) {
+    this.dropTake();
+    this.takeUrl = URL.createObjectURL(blob);
+    if (this.hasTakeTarget) this.takeTarget.hidden = false;
+  }
+
+  dropTake() {
+    if (this.takeUrl) URL.revokeObjectURL(this.takeUrl);
+    this.takeUrl = null;
+  }
+
+  playTake() {
+    if (!this.takeUrl) return;
+    this.silence();
+    this.player = new Audio(this.takeUrl);
+    this.player.play().catch(() => {});
+  }
+
+  playModel() {
+    this.silence();
+    this.playAudio();
+  }
+
+  silence() {
+    this.player?.pause();
+    this.player = null;
   }
 
   csrfToken() {
@@ -238,6 +273,7 @@ export default class extends Controller {
   playClip(clip) {
     return new Promise((resolve) => {
       const audio = new Audio(clip.url);
+      this.player = audio;
       let settled = false;
       const done = () => {
         if (settled) return;
@@ -493,11 +529,13 @@ export default class extends Controller {
       return;
     }
     this.setStatus(this.labelGradingValue);
+    const recorded = new Blob(this.chunks, {
+      type: this.recorder.mimeType || "audio/webm",
+    });
+    this.keepTake(recorded);
     let wav;
     try {
-      wav = await toWav(
-        new Blob(this.chunks, { type: this.recorder.mimeType || "audio/webm" }),
-      );
+      wav = await toWav(recorded);
     } catch {
       this.setStatus(this.labelErrorValue);
       return;
@@ -506,6 +544,7 @@ export default class extends Controller {
     const form = new FormData();
     form.append("audio", wav, "utterance.wav");
     form.append("tonal", this.tonalValue ? "true" : "false");
+    form.append("locale", document.documentElement.lang);
     form.append("expected", JSON.stringify(expected));
     form.append("takes", String(Math.max(this.takes, 1)));
     form.append("text", expected.map((s) => s.char).join(""));
@@ -622,9 +661,12 @@ export default class extends Controller {
     const fill = el.querySelector("[data-role=fill]");
     const score = el.querySelector("[data-role=score]");
     const parts = el.querySelector("[data-role=parts]");
+    const slips = el.querySelector("[data-role=slips]");
 
     el.style.borderColor = "";
     if (parts) parts.replaceChildren();
+    if (slips) slips.replaceChildren();
+    el.disabled = !syllable || syllable.unavailable === true;
     if (!syllable || syllable.overall == null) {
       if (fill) fill.style.height = "0";
       if (score) score.textContent = "";
@@ -643,6 +685,47 @@ export default class extends Controller {
       score.style.color = color;
     }
     if (parts) this.paintBars(parts, syllable.parts || []);
+    if (slips) this.paintSlips(slips, syllable, color);
+  }
+
+  paintSlips(container, syllable, color) {
+    const slips = (syllable.slips || []).slice(0, 2);
+    if (slips.length === 0 && syllable.level !== "green") {
+      const weak = this.weakestPart(syllable);
+      if (weak) slips.push(weak);
+    }
+    slips.forEach((slip) => {
+      const zhuyin = this.span(
+        slip.zhuyin,
+        "block whitespace-nowrap text-2xs font-semibold leading-none",
+        { lang: "zh-TW" },
+      );
+      zhuyin.style.color = color;
+      container.appendChild(zhuyin);
+      if (slip.pinyin)
+        container.appendChild(
+          this.span(
+            slip.pinyin,
+            "pinyin block whitespace-nowrap text-3xs leading-none text-muted-foreground",
+          ),
+        );
+    });
+  }
+
+  weakestPart(syllable) {
+    const part = (syllable.parts || [])
+      .filter(
+        (p) =>
+          p.score != null &&
+          p.zhuyin &&
+          p.id !== "timbre" &&
+          !["green", "none", "gray"].includes(p.level),
+      )
+      .sort((a, b) => a.score - b.score)[0];
+    if (!part) return null;
+
+    const pinyin = ["initial", "tone"].includes(part.id) ? part.pinyin : null;
+    return { zhuyin: part.zhuyin, pinyin };
   }
 
   paintBars(container, parts) {
@@ -669,18 +752,64 @@ export default class extends Controller {
       this.paint(el, result.syllables[i]),
     );
     this.lastResult = result;
+    this.renderSummary(result);
     this.renderDetails(result);
+  }
+
+  renderSummary(result) {
+    if (!this.hasSummaryTarget || result.overall == null) return;
+
+    this.summaryTarget.hidden = false;
+    const color = LEVELS[result.overall_level] || LEVELS.gray;
+    this.overallTarget.textContent = result.overall;
+    this.ringTarget.setAttribute(
+      "stroke-dasharray",
+      `${Math.max(0, Math.min(100, result.overall))} 100`,
+    );
+    this.ringTarget.style.stroke = color;
+
+    this.meterTargets.forEach((meter) => {
+      const kind = meter.dataset.kind;
+      const value = result[kind];
+      const bar = meter.querySelector("[data-role=bar]");
+      const label = meter.querySelector("[data-role=value]");
+      label.textContent = value == null ? "—" : value;
+      bar.style.width = `${value == null ? 0 : Math.max(2, value)}%`;
+      bar.style.backgroundColor =
+        LEVELS[result[`${kind}_level`]] || LEVELS.gray;
+    });
   }
 
   renderDetails(result) {
     if (!this.hasDetailTarget) return;
-    const cards = (result.syllables || [])
-      .filter(Boolean)
-      .map((s) => this.detailCard(s));
+    const syllables = result.syllables || [];
+    const cards = syllables.map((s, i) => s && this.detailCard(s, i));
+    const worst = this.worstIndex(syllables);
+    if (worst != null && cards[worst]) cards[worst].open = true;
     const summary = this.utteranceCard(result);
+    const shown = cards.filter(Boolean);
     this.detailTarget.replaceChildren(
-      ...(summary ? [summary, ...cards] : cards),
+      ...(summary ? [summary, ...shown] : shown),
     );
+  }
+
+  worstIndex(syllables) {
+    let worst = null;
+    syllables.forEach((s, i) => {
+      if (!s || s.overall == null || s.level === "green") return;
+      if (worst == null || s.overall < syllables[worst].overall) worst = i;
+    });
+    return worst;
+  }
+
+  openSyllable(event) {
+    const index = event.currentTarget.dataset.index;
+    const card = this.detailTarget?.querySelector(
+      `details[data-index="${index}"]`,
+    );
+    if (!card) return;
+    card.open = true;
+    card.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   utteranceCard(result) {
@@ -726,15 +855,24 @@ export default class extends Controller {
     return row;
   }
 
-  detailCard(syllable) {
-    const box = document.createElement("section");
-    box.className = "space-y-3 rounded-2xl border border-border bg-card p-4";
+  detailCard(syllable, index) {
+    const card = document.createElement("details");
+    card.className = "group rounded-2xl border border-border bg-card";
+    card.dataset.index = index;
 
-    box.appendChild(this.detailHeader(syllable));
+    const summary = document.createElement("summary");
+    summary.className =
+      "cursor-pointer list-none p-4 [&::-webkit-details-marker]:hidden";
+    summary.appendChild(this.detailHeader(syllable));
+    card.appendChild(summary);
+
+    const box = document.createElement("div");
+    box.className = "space-y-3 px-4 pb-4";
+    card.appendChild(box);
 
     if (syllable.unavailable) {
       box.appendChild(this.note(this.labelNoTemplateValue));
-      return box;
+      return card;
     }
 
     if (syllable.contour) box.appendChild(this.toneChart(syllable));
@@ -749,7 +887,7 @@ export default class extends Controller {
     );
     if (syllable.diagnostics) box.appendChild(this.diagnosticsBlock(syllable));
 
-    return box;
+    return card;
   }
 
   diagnosticsBlock(syllable) {
@@ -887,6 +1025,11 @@ export default class extends Controller {
 
     const left = document.createElement("div");
     left.className = "flex items-baseline gap-2";
+    const chevron = this.span(
+      "›",
+      "inline-block text-muted-foreground transition-transform group-open:rotate-90",
+    );
+    left.appendChild(chevron);
     left.appendChild(this.span(syllable.char, "text-2xl", { lang: "zh-TW" }));
     left.appendChild(this.span(syllable.zhuyin, "text-sm font-medium"));
     left.appendChild(

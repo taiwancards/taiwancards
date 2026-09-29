@@ -18,6 +18,7 @@
           p.text-xs.text-muted-foreground = t("characters.several_readings", count: @profile.readings.size)
         - if lexeme.meaning.present?
           p.text-base = lexeme.meaning
+        = render("shared/pronounce", lexeme:)
     .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-sm sm:justify-end"
       - if detailed?
         = score_badge(lexeme)

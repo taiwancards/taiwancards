@@ -14,7 +14,6 @@ Rails.application.routes.draw do
     constraints: {voice: /female|male/, key: /[a-z]{1,6}[1-5]?/}
   )
   get("configurations/:platform", to: "configurations#show", as: :path_configuration, defaults: {format: :json})
-  get("progress/data", to: "progress#data", as: :progress_data)
   get("export", to: "llm_exports#show", as: :llm_export, defaults: {format: :json})
   get("characters/:text/strokes", to: "characters#strokes", as: :character_strokes, constraints: {text: /[^\/]+/})
   get("pronunciation/health", to: "pronunciation#health", defaults: {format: :json})
@@ -28,6 +27,16 @@ Rails.application.routes.draw do
     constraints: {key: /[a-z]+[1-5]/}
   )
   get("listening/clips/:id", to: "listening_clips#show", as: :listening_clip)
+  get("n/:token", to: "newsletter_clicks#show", as: :newsletter_click, constraints: {token: /[^\/]+/})
+  get(
+    "unsubscribe/:token",
+    to: "newsletter_unsubscribes#show",
+    as: :newsletter_unsubscribe,
+    constraints: {token: /[^\/]+/}
+  )
+  post("unsubscribe/:token", to: "newsletter_unsubscribes#create", constraints: {token: /[^\/]+/})
+  get("newsletter_images/:id", to: "admin/newsletter_images#show", as: :newsletter_image, constraints: {id: /\d+/})
+  mount(LetterOpenerWeb::Engine, at: "/letter_opener") if Rails.env.development?
   get("tones/refill", to: "tones#refill", as: :tones_refill, defaults: {format: :json})
   get("manifest", to: "rails/pwa#manifest", as: :pwa_manifest, defaults: {format: :json})
   get("sw.js", to: "offline#worker", as: :service_worker)
@@ -84,6 +93,15 @@ Rails.application.routes.draw do
       resources(:content_sources, only: %i[index update])
 
       get("activity", to: "activity#index")
+      resources(:newsletters, only: %i[index create edit update destroy]) do
+        member do
+          post(:sample)
+          post(:deliver)
+        end
+
+        resources(:images, only: :create, controller: "newsletter_images")
+      end
+
       post("impersonate/:user_id", to: "impersonations#create", as: :impersonate)
       delete("impersonate", to: "impersonations#destroy", as: :stop_impersonating)
     end
@@ -109,6 +127,7 @@ Rails.application.routes.draw do
     get("mistakes", to: "mistakes#show", as: :mistakes)
     get("progress", to: "progress#show", as: :progress)
     get("progress/history", to: "progress#history", as: :progress_history)
+    get("progress/data", to: "progress#data", as: :progress_data)
     get("characters", to: "characters#index", as: :characters)
     get("characters/:text", to: "characters#show", as: :character, constraints: {text: /[^\/]+/})
     get("dict", to: "dict#index", as: :dict)
@@ -219,6 +238,8 @@ Rails.application.routes.draw do
     get("desks/new", to: "collections#new", as: :new_desk)
     post("desks/song", to: "collections#song", as: :desk_song)
     post("desks/preview", to: "collections#preview", as: :desk_preview)
+    post("desks/import", to: "deck_imports#preview", as: :desk_import_preview)
+    post("desks/import/deck", to: "deck_imports#create", as: :desk_import)
     post("desks/known", to: "collections#mark_known", as: :desk_mark_known)
     post("desks/reorder", to: "collections#reorder", as: :reorder_desks)
     post("desks", to: "collections#create")

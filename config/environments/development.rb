@@ -39,4 +39,9 @@ Rails.application.configure do
   config.action_view.annotate_rendered_view_with_filenames = true
 
   config.action_controller.raise_on_missing_callback_actions = true
+
+  config.action_mailer.delivery_method = MailSettings.smtp? ? :smtp : :letter_opener_web
+  config.action_mailer.smtp_settings = MailSettings.smtp
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = MailSettings.url_options(MailSettings.local_url)
 end

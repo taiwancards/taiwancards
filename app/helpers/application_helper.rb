@@ -3,24 +3,9 @@
 module ApplicationHelper
   LAUNCH_YEAR = 2024
 
-  PAGE_WIDTHS = {
-    "narrow" => "max-w-3xl",
-    "medium" => "max-w-5xl",
-    "wide" => "max-w-[88rem]"
-  }.freeze
+  PAGE_WIDTH = "max-w-7xl"
 
-  def wide_page = content_for(:page_width, "wide")
-
-  def medium_page = content_for(:page_width, "medium")
-
-  def page_width_class
-    PAGE_WIDTHS.fetch(content_for(:page_width).to_s.strip, PAGE_WIDTHS.fetch("narrow"))
-  end
-
-  def subnav_width_class
-    wide = PAGE_WIDTHS.fetch("wide")
-    page_width_class == wide ? wide : PAGE_WIDTHS.fetch("medium")
-  end
+  def page_width_class = PAGE_WIDTH
 
   def launch_year_range
     current = Time.current.year

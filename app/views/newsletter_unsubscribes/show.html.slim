@@ -1,0 +1,12 @@
+- content_for(:title, t("newsletters.unsubscribe.title"))
+
+.mx-auto.max-w-md.space-y-4.py-12.text-center
+  - if @delivery
+    h1.text-2xl.font-bold.tracking-tight = t("newsletters.unsubscribe.title")
+    p.text-sm.text-muted-foreground = t("newsletters.unsubscribe.working", email: @delivery.user.email)
+    = form_with url: newsletter_unsubscribe_path(token: params[:token], locale: I18n.locale), method: :post, data: {turbo: false, controller: "auto-submit"} do |form|
+      = form.submit t("newsletters.unsubscribe.button"), class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"
+  - else
+    h1.text-2xl.font-bold.tracking-tight = t("newsletters.unsubscribe.invalid_title")
+    p.text-sm.text-muted-foreground = t("newsletters.unsubscribe.invalid")
+    = link_to t("newsletters.unsubscribe.settings"), profile_path, class: "inline-flex min-h-11 items-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted"

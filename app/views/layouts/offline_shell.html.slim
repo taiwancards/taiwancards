@@ -38,7 +38,7 @@ html lang=I18n.locale class=html_preference_classes
           = icon(:settings, css: "size-5")
 
     nav.hidden.border-b.border-border.md:block
-      .mx-auto.flex.flex-wrap.items-stretch.justify-center.px-2 class=subnav_width_class
+      .mx-auto.flex.flex-wrap.items-stretch.justify-center.px-2 class=page_width_class
         - offline_nav.each do |key, label, path|
           = link_to path, class: "inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-muted-foreground hover:text-foreground" do
             = icon(key, css: "size-4", stroke: 1.6)

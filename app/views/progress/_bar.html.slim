@@ -1,0 +1,15 @@
+- total = [total.to_i, 1].max
+- known_pct = (known.to_i * 100.0 / total).clamp(0, 100)
+- started_pct = (local_assigns[:started].to_i * 100.0 / total).clamp(known_pct, 100)
+- row = capture do
+  .flex.items-baseline.justify-between.gap-3.text-sm
+    span.truncate = label
+    span.shrink-0.text-xs.tabular-nums.text-muted-foreground = t("stats.of", known: number_with_delimiter(known), total: number_with_delimiter(local_assigns[:total]))
+  .relative.mt-1.h-2.overflow-hidden.rounded-full.bg-muted
+    .absolute.inset-y-0.left-0.rounded-full class="bg-primary/25" style="width: #{started_pct}%"
+    .absolute.inset-y-0.left-0.rounded-full.bg-primary style="width: #{known_pct}%"
+- if local_assigns[:href]
+  = link_to href, class: "-mx-2 block rounded-lg px-2 py-1.5 hover:bg-muted/60" do
+    = row
+- else
+  .py-1.5 = row

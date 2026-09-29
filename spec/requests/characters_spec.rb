@@ -21,6 +21,16 @@ RSpec.describe "Characters" do
     )
   end
 
+  it "offers pronunciation practice from the character page" do
+    get(character_path(text: "長", locale: :en))
+    expect(response.body).to(include("/en/pronunciation?lexeme_id=#{zhang.id}"))
+  end
+
+  it "keeps the practice link off the page a guest sees", :no_auth do
+    get(character_path(text: "長", locale: :en))
+    expect(response.body).not_to(include("pronunciation?lexeme_id="))
+  end
+
   it "lists characters and filters by radical" do
     get("/characters")
     expect(response).to(have_http_status(:ok))

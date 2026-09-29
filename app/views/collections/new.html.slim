@@ -27,6 +27,9 @@
 
       = form.submit t("desks.preview"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
 
+  - when "import"
+    = render("collections/import_form")
+
   - when "song"
     p.text-sm.text-muted-foreground = t("desks.song_hint")
 

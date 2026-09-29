@@ -1,0 +1,41 @@
+- font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'PingFang TC','Noto Sans TC',sans-serif"
+doctype html
+html lang=@letter.locale
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width,initial-scale=1"
+    meta name="color-scheme" content="light"
+    meta name="supported-color-schemes" content="light"
+    title = @letter.subject
+  body style="margin:0;padding:0;background:#f4f4f2;"
+    - if @letter.preheader.present?
+      div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;font-size:1px;line-height:1px;"
+        = @letter.preheader
+        = "‌ " * 60
+    table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f2;"
+      tr
+        td align="center" style="padding:24px 12px;"
+          table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;"
+            tr
+              td style="padding:0 4px 14px;font-family:#{font};font-size:16px;color:#111111;"
+                strong Taiwan
+                span style="color:#737373;" Cards
+            tr
+              td style="background:#ffffff;border:1px solid #e7e5e4;border-radius:14px;padding:28px 28px 12px;font-family:#{font};font-size:16px;line-height:1.6;color:#{Newsletters::EmailHtml::TEXT};"
+                == @letter.html
+                - @letter.buttons.each_with_index do |button, index|
+                  table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 16px;"
+                    tr
+                      td style=(index.zero? ? "border-radius:10px;background:#111111;" : "border-radius:10px;border:1px solid #d4d4d4;")
+                        a href=button[:url] style="display:inline-block;padding:12px 20px;font-family:#{font};font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;#{index.zero? ? "color:#ffffff;" : "color:#111111;"}"
+                          = button[:label]
+            tr
+              td style="padding:18px 8px 0;font-family:#{font};font-size:12px;line-height:1.6;color:#{Newsletters::EmailHtml::MUTED};"
+                p style="margin:0 0 8px;" = t("newsletters.mail.why")
+                p style="margin:0 0 8px;" = t("newsletters.mail.promise")
+                p style="margin:0;"
+                  a href=@letter.unsubscribe_url style="color:#{Newsletters::EmailHtml::MUTED};text-decoration:underline;" = t("newsletters.mail.unsubscribe")
+                  = " · "
+                  a href=@letter.settings_url style="color:#{Newsletters::EmailHtml::MUTED};text-decoration:underline;" = t("newsletters.mail.settings")
+                  = " · "
+                  = t("newsletters.mail.reply")

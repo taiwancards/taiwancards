@@ -139,19 +139,19 @@ RSpec.describe "What the pronunciation analyser measures" do
     end
 
     it "keeps quiet about a rival tone when the tone itself scored green" do
-      expect(backend.send(:confusion, "gao1", "gao3", parts(tone: 96))).to(be_nil)
+      expect(backend.send(:rival_for, "gao1", "gao3", parts(tone: 96))).to(be_nil)
     end
 
     it "still names the rival tone when the tone really is off" do
-      expect(backend.send(:confusion, "gao1", "gao3", parts(tone: 30))).to(be_present)
+      expect(backend.send(:rival_for, "gao1", "gao3", parts(tone: 30))).to(be_present)
     end
 
     it "keeps quiet about a rival syllable when every sound scored green" do
-      expect(backend.send(:confusion, "gao1", "kao1", parts(tone: 40))).to(be_nil)
+      expect(backend.send(:rival_for, "gao1", "kao1", parts(tone: 40))).to(be_nil)
     end
 
     it "names the rival syllable when a sound is genuinely weak" do
-      expect(backend.send(:confusion, "gao1", "kao1", parts(tone: 96, initial: 30))).to(be_present)
+      expect(backend.send(:rival_for, "gao1", "kao1", parts(tone: 96, initial: 30))).to(be_present)
     end
   end
 

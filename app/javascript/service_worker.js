@@ -11,7 +11,7 @@ const CSS_SLOT = "§CSS§";
 const JS_SLOT = "§JS§";
 
 const LOCALES = ["en", "ru"];
-const WIDTHS = ["narrow", "medium", "wide"];
+const SHELL_KEYS = ["page", "narrow", "medium", "wide"];
 
 const BROWSE_RULES = [
   [/^\/(en|ru)\/dict\/?$/, () => "kind:word"],
@@ -192,10 +192,10 @@ async function stale(url) {
   return null;
 }
 
-async function shellFor(locale, width) {
+async function shellFor(locale) {
   const cache = await caches.open(SHELLS);
 
-  for (const wanted of [width, ...WIDTHS]) {
+  for (const wanted of SHELL_KEYS) {
     for (const language of [locale, ...LOCALES]) {
       const hit = await cache.match(`/__shell/${language}/${wanted}`);
       if (hit) return hit.text();
@@ -213,7 +213,7 @@ async function assetTags() {
 }
 
 async function render(locale, fragment, preset) {
-  const shell = await shellFor(locale, fragment.w);
+  const shell = await shellFor(locale);
   if (!shell) return null;
 
   const tags = await assetTags();

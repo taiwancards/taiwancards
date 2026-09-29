@@ -114,6 +114,27 @@
   body {
     @apply bg-background text-foreground;
   }
+  main p {
+    max-width: 75ch;
+  }
+  main p.text-center {
+    margin-inline: auto;
+  }
+  .trix-content h1 {
+    @apply my-2 text-lg font-bold;
+  }
+  .trix-content ul {
+    @apply list-disc pl-6;
+  }
+  .trix-content ol {
+    @apply list-decimal pl-6;
+  }
+  .trix-content blockquote {
+    @apply border-l-4 border-border pl-3 text-muted-foreground;
+  }
+  .trix-content a {
+    @apply text-primary underline;
+  }
 }
 
 @layer components {

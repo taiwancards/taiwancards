@@ -25,7 +25,7 @@ html lang=I18n.locale class=html_preference_classes
       - if authenticated?
         = render "shared/setup_banner"
     - if content_for?(:full_bleed)
-      .mx-auto.w-full.max-w-3xl.px-4
+      .mx-auto.w-full.px-4 class=page_width_class
         = render "shared/flash"
       = yield
     - else

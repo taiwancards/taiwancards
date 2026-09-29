@@ -84,6 +84,8 @@ services:
         value: https://study.taiwancards.app
       - key: SUPPORT_EMAIL
         value: support@taiwancards.app
+      - key: MAIL_FROM_ADDRESS
+        value: news@taiwancards.app
 
   - type: web
     name: taiwancards-site

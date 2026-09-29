@@ -1,0 +1,130 @@
+- source = t("imports.sources.#{@source}.name")
+- content_for(:title, t("imports.preview.title", source:))
+- result = @result
+- ready = result.ready.first(@limit)
+- covered = ready.count { |entry| result.covered_ids.include?(entry.lexeme.id) }
+- heading = "text-sm font-semibold"
+- card = "space-y-3 rounded-2xl border border-border bg-card p-4"
+- stats = [[:ready, result.ready.size, "text-emerald-600"], [:converted, result.converted.size, nil], [:choices, result.choices.size, "text-amber-600"], [:china, result.china.size, "text-amber-600"], [:missing, result.missing.size, nil], [:duplicates, result.duplicates.size, nil], [:skipped, @parsed.skipped, nil]]
+
+.py-6.space-y-5
+  header.space-y-1
+    h1.text-2xl.font-bold.tracking-tight = t("imports.preview.title", source:)
+    p.text-sm.text-muted-foreground = t("imports.preview.lede")
+
+  .grid.grid-cols-2.gap-3.sm:grid-cols-4.xl:grid-cols-7
+    - stats.each do |key, count, tone|
+      .rounded-2xl.border.border-border.bg-card.p-3
+        .text-2xl.font-bold.tabular-nums class=(count.positive? ? tone : "text-muted-foreground") = number_with_delimiter(count)
+        .text-xs.text-muted-foreground = t("imports.preview.#{key}")
+
+  - if @parsed.truncated
+    p.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700"
+      = t("imports.preview.truncated", total: number_with_delimiter(@parsed.total), limit: number_with_delimiter(Collections::Import::Parser::MAX_ROWS))
+  - if result.ready.size > @limit
+    p.rounded-lg.border.px-3.py-2.text-sm class="border-amber-400/60 text-amber-700"
+      = t("imports.preview.capped", limit: number_with_delimiter(@limit))
+
+  = form_with url: desk_import_path, method: :post, data: {turbo: false}, class: "space-y-5" do |form|
+    = hidden_field_tag :selection, Collections::Selection.pack(ready.map { |entry| entry.lexeme.id })
+
+    - if result.choices.any?
+      section class=card
+        div
+          h2 class=heading = t("imports.preview.choices")
+          p.text-xs.text-muted-foreground = t("imports.preview.choices_lede")
+        .grid.gap-3 class="lg:grid-cols-2"
+          - result.choices.each_with_index do |choice, index|
+            fieldset.min-w-0.space-y-2.rounded-xl.border.border-border.p-3
+              legend.px-1.text-sm
+                span.font-semibold lang="zh-TW" = choice.row.original
+                - if choice.row.pinyin
+                  span.pinyin.ml-2.text-xs.text-muted-foreground = choice.row.pinyin
+              .flex.flex-wrap.gap-2
+                - choice.options.each_with_index do |lexeme, position|
+                  label.flex.min-h-11.cursor-pointer.items-center.gap-2.rounded-lg.border.border-border.px-3.text-sm class="md:min-h-9 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                    = radio_button_tag "picks[#{index}]", lexeme.id, position.zero?, class: "size-4"
+                    span.text-base.font-semibold lang="zh-TW" = lexeme.text
+                    span.max-w-48.truncate.text-xs.text-muted-foreground = lexeme.meaning
+                label.flex.min-h-11.cursor-pointer.items-center.gap-2.rounded-lg.border.border-dashed.border-border.px-3.text-sm.text-muted-foreground class="md:min-h-9 has-[:checked]:border-primary"
+                  = radio_button_tag "picks[#{index}]", "", false, class: "size-4"
+                  = t("imports.preview.skip_choice")
+
+    - if result.china.any?
+      section class=card
+        div
+          h2 class=heading = t("imports.preview.china")
+          p.text-xs.text-muted-foreground = t("imports.preview.china_lede")
+        .grid.gap-2 class="sm:grid-cols-2 xl:grid-cols-3"
+          - result.china.each do |item|
+            .space-y-2.rounded-xl.border.border-border.p-3
+              .flex.flex-wrap.items-baseline.gap-2
+                span.text-base.font-semibold.line-through.decoration-amber-500 lang="zh-TW" = item.term
+                - if item.row.original != item.term
+                  span.text-xs.text-muted-foreground lang="zh-TW" = item.row.original
+              - known = item.taiwan.select { |option| option.is_a?(Lexeme) }
+              - if item.taiwan.any?
+                .flex.flex-wrap.gap-2
+                  - item.taiwan.each do |option|
+                    - if option.is_a?(Lexeme)
+                      label.flex.min-h-11.cursor-pointer.items-center.gap-2.rounded-lg.border.border-border.px-3.text-sm class="md:min-h-9 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                        = check_box_tag "swaps[]", option.id, false, id: "swap_#{item.row.line}_#{option.id}", class: "size-4"
+                        span.font-semibold lang="zh-TW" = option.text
+                        span.max-w-40.truncate.text-xs.text-muted-foreground = option.meaning
+                    - else
+                      span.inline-flex.min-h-9.items-center.rounded-lg.border.border-dashed.border-border.px-3.text-sm.text-muted-foreground title=t("imports.preview.no_taiwan_word")
+                        span lang="zh-TW" = option
+              - if known.empty?
+                p.text-2xs.text-muted-foreground = t("imports.preview.no_taiwan_word")
+
+    .grid.gap-4 class="lg:grid-cols-3"
+      - if result.converted.any?
+        details.rounded-2xl.border.border-border.bg-card.p-4
+          summary.cursor-pointer class=heading = "#{t("imports.preview.converted")} · #{result.converted.size}"
+          p.mt-2.text-xs.text-muted-foreground = t("imports.preview.converted_lede")
+          ul.mt-2.flex.flex-wrap.gap-2 lang="zh-TW"
+            - result.converted.each do |entry|
+              li.rounded-lg.bg-muted.px-2.py-1.text-sm
+                span.text-muted-foreground = entry.from
+                span.mx-1 →
+                span.font-semibold = entry.lexeme.text
+      - if result.missing.any?
+        details.rounded-2xl.border.border-border.bg-card.p-4
+          summary.cursor-pointer class=heading = "#{t("imports.preview.missing")} · #{result.missing.size}"
+          p.mt-2.text-xs.text-muted-foreground = t("imports.preview.missing_lede")
+          ul.mt-2.flex.flex-wrap.gap-2 lang="zh-TW"
+            - result.missing.each do |row|
+              li.rounded-lg.bg-muted.px-2.py-1.text-sm = row.original
+      - if result.duplicates.any?
+        details.rounded-2xl.border.border-border.bg-card.p-4
+          summary.cursor-pointer class=heading = "#{t("imports.preview.duplicates")} · #{result.duplicates.size}"
+          p.mt-2.text-xs.text-muted-foreground = t("imports.preview.duplicates_lede")
+          ul.mt-2.flex.flex-wrap.gap-2 lang="zh-TW"
+            - result.duplicates.each do |row|
+              li.rounded-lg.bg-muted.px-2.py-1.text-sm = row.original
+
+    details.rounded-2xl.border.border-border.bg-card.p-4
+      summary.cursor-pointer class=heading = t("imports.preview.list_title", count: number_with_delimiter(ready.size))
+      .mt-3.grid.gap-x-6.gap-y-1 class="sm:grid-cols-2 xl:grid-cols-3"
+        - ready.each do |entry|
+          .flex.min-w-0.items-baseline.gap-2.border-b.border-border.py-1.5
+            span.shrink-0.font-semibold lang="zh-TW" = entry.lexeme.text
+            span.min-w-0.flex-1.truncate.text-xs.text-muted-foreground = entry.lexeme.meaning
+            - if result.covered_ids.include?(entry.lexeme.id)
+              span.shrink-0.text-2xs.text-muted-foreground = t("imports.preview.covered")
+
+    section.max-w-3xl.space-y-4
+      .space-y-1
+        = form.label :name, t("imports.name_label"), class: "text-sm font-medium"
+        = form.text_field :name, value: @name, required: true, maxlength: 200, class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+
+      - if covered.positive?
+        label.flex.cursor-pointer.items-start.gap-2.text-sm
+          = check_box_tag :skip_covered, "1", true, class: "mt-0.5 size-4"
+          span = t("imports.preview.skip_covered", count: covered)
+
+      = render("shared/facet_picker", scope: "import")
+
+      .flex.flex-wrap.gap-2
+        = form.submit t("imports.preview.create"), class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+        = link_to t("imports.preview.again"), new_desk_path(tab: "import"), class: "inline-flex min-h-11 items-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted md:min-h-9"
