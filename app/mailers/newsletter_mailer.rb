@@ -3,7 +3,7 @@
 class NewsletterMailer < ActionMailer::Base
   layout false
 
-  def issue(delivery)
+  def issue(delivery, prefix: "")
     newsletter = delivery.newsletter
     I18n.with_locale(delivery.locale) do
       unsubscribe = newsletter_unsubscribe_url(
@@ -12,21 +12,11 @@ class NewsletterMailer < ActionMailer::Base
       )
       headers["List-Unsubscribe"] = "<#{unsubscribe}>"
       headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
-      compose(newsletter, delivery.user.email, link: -> (url) { tracked(delivery, url) }, unsubscribe:)
+      compose(newsletter, delivery.user.email, link: -> (url) { tracked(delivery, url) }, unsubscribe:, prefix:)
     end
   end
 
-  def sample(newsletter, email, locale)
-    I18n.with_locale(locale) do
-      compose(
-        newsletter,
-        email,
-        link: -> (url) { Newsletters::Tracking.absolute(url) },
-        unsubscribe: settings_url,
-        prefix: "[Test] "
-      )
-    end
-  end
+  def sample(delivery) = issue(delivery, prefix: "[Test] ")
 
   private
 

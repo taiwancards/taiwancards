@@ -67,14 +67,18 @@ RSpec.describe "Admin newsletters" do
     expect(response).to(redirect_to(root_path))
   end
 
-  it "sends a sample to the admin alone" do
+  it "sends a sample to the admin alone, touching nobody else and starting no send" do
     newsletter = complete_newsletter
+    create(:user, google_uid: "g-1", locale: "en")
+    create(:user, google_uid: "g-2", locale: "ru")
 
     expect { post(sample_admin_newsletter_path(newsletter, lang: "en")) }.to(
       change { ActionMailer::Base.deliveries.size }.by(1)
     )
     expect(ActionMailer::Base.deliveries.last.to).to(eq([admin.email]))
-    expect(newsletter.deliveries).to(be_empty)
+    expect(NewsletterDelivery.pluck(:user_id, :locale, :sent_at)).to(eq([[admin.id, "en", nil]]))
+    expect(NewsletterDispatchJob).not_to(have_been_enqueued)
+    expect(newsletter.reload).not_to(be_sent)
   end
 
   it "queues one letter per recipient and locks the text" do

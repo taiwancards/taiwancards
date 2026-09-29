@@ -48,7 +48,9 @@ module Admin
 
     def sample
       locale = params[:lang].presence_in(Newsletter::LOCALES) || "en"
-      NewsletterMailer.sample(@newsletter, current_user.email, locale).deliver_now
+      delivery = NewsletterDelivery.find_or_initialize_by(newsletter: @newsletter, user: current_user)
+      delivery.update!(locale:)
+      NewsletterMailer.sample(delivery).deliver_now
       redirect_to(
         edit_admin_newsletter_path(@newsletter, lang: locale),
         notice: t("newsletters.admin.sample_sent", email: current_user.email)

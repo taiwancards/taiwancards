@@ -22,6 +22,8 @@ module Newsletters
       "img" => "display:block;width:100%;max-width:#{IMAGE_WIDTH}px;height:auto;border:1px solid #e5e5e5;border-radius:8px;",
       "a" => "color:#{ACCENT};text-decoration:underline;"
     }.freeze
+    BUTTON = "display:inline-block;padding:12px 20px;background:#111111;color:#ffffff;font-size:15px;" \
+      "font-weight:600;text-decoration:none;border-radius:10px;"
 
     def initialize(html, image_src:, link:)
       @html = html.to_s
@@ -47,6 +49,7 @@ module Newsletters
       case node.name
       when "a"
         node["href"] = @link.call(node["href"].to_s)
+        node["style"] = BUTTON if button?(node.parent)
       when "img"
         place_image(node)
       when "div", "p"
@@ -66,5 +69,12 @@ module Newsletters
     end
 
     def nested_block?(node) = node.css("div, p, ul, ol, figure, blockquote, h1, h2").any?
+
+    def button?(block)
+      return false unless block && %w[div p].include?(block.name)
+
+      parts = block.children.reject { |child| child.name == "br" || (child.text? && child.text.blank?) }
+      parts.one? && parts.first.name == "a" && parts.first.text.present?
+    end
   end
 end

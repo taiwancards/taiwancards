@@ -698,7 +698,7 @@ en:
       body: Text
       body_hint: One topic per letter, short paragraphs, 1–3 screenshots. Paste or drop a screenshot into the text; it is shrunk to 1200 px and travels inside the letter.
       buttons: Buttons
-      buttons_hint: "Up to three. The first is the main one. Links to %{host} count clicks; other links are left alone."
+      buttons_hint: "Up to three, after the text. The first is the main one. A link that stands alone on its own line in the text becomes a button too. Links to %{host} count clicks; other links are left alone."
       button_label: Button text
       save: Save
       autosaved: Saved
@@ -711,7 +711,7 @@ en:
       locked: A sent newsletter can no longer be edited.
       send_title: Sending
       sample: "Send to me only (%{email}, %{lang})"
-      sample_sent: "Sent to %{email} only. Check how it looks in your mailbox."
+      sample_sent: "Sent to %{email} only. It is the real letter: its links count clicks and its unsubscribe link works."
       failed: "Could not send: %{error}"
       deliver: "Send to everyone (%{count})"
       deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian)? It cannot be recalled."

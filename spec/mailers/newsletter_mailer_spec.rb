@@ -46,12 +46,12 @@ RSpec.describe NewsletterMailer do
     expect(mail.html_part.body.decoded).to(include("cid:"))
   end
 
-  it "marks a sample as a test and tracks nothing" do
-    mail = described_class.sample(newsletter, "me@example.com", "ru")
+  it "builds a sample exactly like the real letter, marked as a test" do
+    mail = described_class.sample(delivery)
 
-    expect(mail.to).to(eq(["me@example.com"]))
+    expect(mail.to).to(eq([user.email]))
     expect(mail.subject).to(eq("[Test] Новости"))
-    expect(mail.html_part.body.decoded).not_to(include("/n/"))
-    expect(mail["List-Unsubscribe"]).to(be_nil)
+    expect(mail.html_part.body.decoded.scan(%r{http://www\.example\.com/n/}).size).to(eq(2))
+    expect(mail["List-Unsubscribe"].value).to(match(%r{/unsubscribe/}))
   end
 end

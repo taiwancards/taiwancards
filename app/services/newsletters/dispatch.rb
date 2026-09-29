@@ -28,7 +28,7 @@ module Newsletters
           updated_at: now
         }
       }
-      NewsletterDelivery.insert_all(rows, unique_by: UNIQUE) if rows.any?
+      NewsletterDelivery.upsert_all(rows, unique_by: UNIQUE, update_only: %i[locale]) if rows.any?
       @newsletter.update!(sent_at: now)
     end
   end

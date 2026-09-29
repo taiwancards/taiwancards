@@ -16,6 +16,14 @@ RSpec.describe Newsletters::EmailHtml do
     expect(html).not_to(include("height="))
   end
 
+  it "turns a link that stands alone on its line into a button and leaves other links as links" do
+    html = render("<div><a href=\"/ru/desk\">Open</a><br></div><div>See <a href=\"/ru/desk\">this</a></div>")
+
+    styles = html.scan(/<a href="tracked:\/ru\/desk" style="([^"]+)"/).flatten
+    expect(styles.first).to(include("background:#111111", "text-decoration:none"))
+    expect(styles.last).to(include("text-decoration:underline"))
+  end
+
   it "leaves out an image that is not attached rather than linking to the app" do
     expect(render("<div>x</div><img src=\"/newsletter_images/9\">")).not_to(include("<img"))
   end
