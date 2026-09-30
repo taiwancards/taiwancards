@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -224,6 +224,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
     t.float("stability_before")
     t.integer("state_before")
     t.bigint("user_id")
+    t.date("reviewed_on", null: false)
     t.index(["lexeme_id", "reviewed_at"], name: "index_lexeme_reviews_on_lexeme_id_and_reviewed_at")
     t.index(["lexeme_memory_id"], name: "index_lexeme_reviews_on_lexeme_memory_id")
     t.index(["session_id"], name: "index_lexeme_reviews_on_session_id")
@@ -597,6 +598,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
     t.datetime("updated_at", null: false)
     t.integer("visits_count", default: 0, null: false)
     t.datetime("newsletter_unsubscribed_at")
+    t.string("time_zone")
+    t.string("previous_time_zone")
     t.index("lower((email)::text)", name: "index_users_on_lower_email", unique: true)
     t.index(["google_uid"], name: "index_users_on_google_uid", unique: true, where: "(google_uid IS NOT NULL)")
   end

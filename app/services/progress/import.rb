@@ -105,6 +105,7 @@ module Progress
         facet: facet_int(row),
         rating: row["rating"],
         reviewed_at: row["reviewed_at"],
+        reviewed_on: row["reviewed_on"],
         elapsed_ms: row["elapsed_ms"],
         state_before: row["state_before"],
         stability_after: row["stability_after"],

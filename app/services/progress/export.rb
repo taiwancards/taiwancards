@@ -86,6 +86,7 @@ module Progress
           "facet" => review.facet,
           "rating" => review.rating,
           "reviewed_at" => review.reviewed_at.iso8601,
+          "reviewed_on" => review.reviewed_on.iso8601,
           "elapsed_ms" => review.elapsed_ms,
           "state_before" => review.state_before,
           "stability_after" => review.stability_after,

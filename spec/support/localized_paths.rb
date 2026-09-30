@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LocalizedPaths
-  MACHINE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|s/|locale|zhuyin|
+  MACHINE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|s/|locale|time_zone|zhuyin|
     sitemap|sitemaps|
     textbook/audio|listening/clips|export|tones/refill|n|unsubscribe|newsletter_images|
     pronunciation/(?:health|grade|thresholds|templates))(?:/|\.|\z|\?)}x

@@ -30,11 +30,18 @@ RSpec.describe "The progress section" do
     expect(response).to(redirect_to(%r{/(en|ru)/progress/data\z}))
   end
 
-  it "shows what a learner can act on instead of a day streak" do
+  it "shows what a learner can act on next to the day streak" do
     get(progress_path)
 
-    expect(response.body).to(include(I18n.t("stats.coverage_tocfl"), I18n.t("stats.skills"), I18n.t("stats.forecast")))
-    expect(response.body).not_to(include("Day streak"))
+    expect(response.body).to(
+      include(
+        I18n.t("stats.coverage_tocfl"),
+        I18n.t("stats.skills"),
+        I18n.t("stats.forecast"),
+        I18n.t("stats.streak"),
+        I18n.t("stats.streak_none")
+      )
+    )
   end
 
   it "counts what is stored about the user on the data tab" do

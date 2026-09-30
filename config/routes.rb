@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   )
 
   post("locale/:code", to: "locales#update", as: :locale, constraints: {code: /en|ru/})
+  put("time_zone", to: "time_zones#update", as: :time_zone)
 
   get(
     "textbook/audio/:name",

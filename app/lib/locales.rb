@@ -38,7 +38,7 @@ module Locales
     ALL.to_h { |code| [code, swap(url, code)] }
   end
 
-  BARE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|locale|sitemap|sitemaps|
+  BARE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|locale|time_zone|sitemap|sitemaps|
     textbook/audio|listening/clips|export|tones/refill|n|unsubscribe|newsletter_images|letter_opener|
     characters/[^/]+/strokes|
     pronunciation/(?:health|grade|thresholds|templates))(?:/|\.|\z|\?)}x

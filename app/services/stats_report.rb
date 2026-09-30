@@ -6,23 +6,35 @@ class StatsReport
   GRADUATING_STATES = %w[unseen learning].freeze
   MATURE_DAYS = 21.0
 
+  Streak = Data.define(:current, :since, :longest, :days, :today) do
+    alias_method :today?, :today
+  end
+
   def initialize(user: nil, now: Time.current)
     @user = user
     @now = now
   end
 
   def reviews_by_day(days: 14)
-    counts = language_reviews
-      .where(reviewed_at: (@now - (days - 1).days).beginning_of_day..)
-      .group(Arel.sql(local_date_sql))
-      .count
-      .transform_keys(&:to_date)
-    (0...days)
-      .map do |offset|
-        date = (@now - offset.days).to_date
-        [date, counts.fetch(date, 0)]
-      end
-      .reverse
+    ((today - (days - 1))..today).map { |date| [date, day_counts.fetch(date, 0)] }
+  end
+
+  def activity(weeks: 20)
+    ((today - (weeks - 1).weeks).beginning_of_week..today).map { |date| [date, day_counts.fetch(date, 0)] }
+  end
+
+  def streak
+    days = day_counts.keys.sort
+    runs = days.slice_when { |earlier, later| later != earlier + 1 }.to_a
+    current = runs.last if days.any? && days.last >= today - 1
+
+    Streak.new(
+      current: current.to_a.length,
+      since: current&.first,
+      longest: runs.map(&:length).max.to_i,
+      days: days.length,
+      today: day_counts.key?(today)
+    )
   end
 
   def actual_retention(days: 30)
@@ -88,7 +100,6 @@ class StatsReport
   end
 
   def forecast(days: 7)
-    today = @now.to_date
     counts = language_memories
       .where
       .not(state: :unseen)
@@ -109,6 +120,12 @@ class StatsReport
   end
 
   private
+
+  def today = @now.to_date
+
+  def day_counts
+    @day_counts ||= language_reviews.group(:reviewed_on).count
+  end
 
   def local_date_sql(column = "reviewed_at")
     "DATE(#{column} AT TIME ZONE 'UTC' AT TIME ZONE #{ActiveRecord::Base.connection.quote(Time.zone.tzinfo.name)})"

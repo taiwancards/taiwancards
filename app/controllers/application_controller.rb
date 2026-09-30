@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   prepend_around_action :switch_locale
+  around_action :switch_time_zone
   before_action :redirect_to_localized_url
   after_action :track_activity
 
@@ -69,6 +70,10 @@ class ApplicationController < ActionController::Base
 
   def switch_locale(&action)
     I18n.with_locale(Locales.resolve(url: params[:locale], stored: stored_locale, header: browser_locale), &action)
+  end
+
+  def switch_time_zone(&action)
+    Time.use_zone(current_user&.zone || Time.zone_default, &action)
   end
 
   def redirect_to(target, **)

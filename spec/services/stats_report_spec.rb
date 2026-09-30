@@ -170,4 +170,124 @@ RSpec.describe StatsReport do
       end
     end
   end
+
+  describe "the day streak" do
+    it "counts the run that reaches today and remembers the longest one" do
+      subject_memory = memory
+      [0, 1, 2, 5, 6, 7, 8, 9].each { |offset| review(subject_memory, reviewed_at: offset.days.ago) }
+
+      streak = report.streak
+
+      expect(streak).to(have_attributes(current: 3, longest: 5, days: 8, since: 2.days.ago.to_date))
+      expect(streak).to(be_today)
+    end
+
+    it "survives until the end of the next day" do
+      subject_memory = memory
+      [1, 2].each { |offset| review(subject_memory, reviewed_at: offset.days.ago) }
+
+      expect(report.streak).to(have_attributes(current: 2, today?: false))
+    end
+
+    it "is over once a whole day was missed" do
+      review(memory, reviewed_at: 2.days.ago)
+
+      expect(report.streak).to(have_attributes(current: 0, since: nil, longest: 1, days: 1))
+    end
+
+    it "is empty without reviews" do
+      expect(report.streak).to(have_attributes(current: 0, longest: 0, days: 0))
+    end
+
+    it "counts a day by the learner's own time zone" do
+      user.update!(time_zone: "America/Los_Angeles")
+      subject_memory = memory
+
+      Time.use_zone(user.zone) do
+        travel_to(Time.zone.local(2026, 9, 30, 21, 0)) do
+          review(subject_memory, reviewed_at: Time.zone.local(2026, 9, 29, 23, 30))
+          review(subject_memory, reviewed_at: Time.zone.local(2026, 9, 30, 20, 0))
+
+          expect(report.streak).to(have_attributes(current: 2, since: Date.new(2026, 9, 29), today?: true))
+        end
+      end
+    end
+
+    it "keeps the days already counted when the learner moves to another time zone" do
+      subject_memory = memory
+      review(subject_memory, reviewed_at: Time.utc(2026, 9, 27, 17, 0))
+      review(subject_memory, reviewed_at: Time.utc(2026, 9, 28, 17, 0))
+      user.move_to("Asia/Dubai")
+
+      Time.use_zone(user.zone) do
+        travel_to(Time.utc(2026, 9, 30, 18, 0)) do
+          review(subject_memory, reviewed_at: Time.current)
+
+          expect(report.streak).to(have_attributes(current: 3, since: Date.new(2026, 9, 28)))
+        end
+      end
+    end
+  end
+
+  describe "a move to another time zone" do
+    it "does not lose the day that was still running where the learner came from" do
+      user.update!(time_zone: "America/Los_Angeles")
+      subject_memory = memory
+      review(subject_memory, reviewed_at: Time.utc(2026, 9, 28, 15, 0))
+      user.move_to("Asia/Taipei")
+      landed = review(subject_memory, reviewed_at: Time.utc(2026, 9, 30, 1, 0))
+      later = review(subject_memory, reviewed_at: Time.utc(2026, 9, 30, 1, 5))
+      now = Time.utc(2026, 9, 30, 1, 5).in_time_zone(user.zone)
+
+      expect([landed, later].map(&:reviewed_on)).to(eq([Date.new(2026, 9, 29), Date.new(2026, 9, 30)]))
+      expect(described_class.new(user:, now:).streak.current).to(eq(3))
+    end
+
+    it "forgives nothing once the first review after the move is in" do
+      user.update!(time_zone: "America/Los_Angeles")
+      subject_memory = memory
+      user.move_to("Asia/Taipei")
+      review(subject_memory, reviewed_at: Time.utc(2026, 9, 28, 15, 0))
+      late = review(subject_memory, reviewed_at: Time.utc(2026, 9, 29, 16, 30))
+
+      expect(user.reload.previous_time_zone).to(be_nil)
+      expect(late.reviewed_on).to(eq(Date.new(2026, 9, 30)))
+    end
+
+    it "does not bridge a day that was missed in both zones" do
+      user.update!(time_zone: "America/Los_Angeles")
+      subject_memory = memory
+      review(subject_memory, reviewed_at: Time.utc(2026, 9, 27, 15, 0))
+      user.move_to("Asia/Taipei")
+      late = review(subject_memory, reviewed_at: Time.utc(2026, 9, 30, 1, 0))
+
+      expect(late.reviewed_on).to(eq(Date.new(2026, 9, 30)))
+    end
+
+    it "remembers Taiwan as the zone a learner comes from when none was known" do
+      user.move_to("Pacific/Auckland")
+
+      expect(user).to(have_attributes(time_zone: "Pacific/Auckland", previous_time_zone: "Asia/Taipei"))
+    end
+
+    it "asks nothing extra of the database for a learner who stays put" do
+      user.update!(time_zone: "America/Los_Angeles")
+      subject_memory = memory
+      lookups = []
+      callback = lambda { |*, payload| lookups << payload[:sql] if payload[:sql].start_with?("SELECT") }
+
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { review(subject_memory) }
+
+      expect(lookups.grep(/lexeme_reviews/)).to(be_empty)
+    end
+  end
+
+  it "lays the activity out in whole weeks that end today" do
+    review(memory, reviewed_at: Time.current)
+
+    activity = report.activity(weeks: 3)
+
+    expect(activity.first.first).to(eq(2.weeks.ago.to_date.beginning_of_week))
+    expect(activity.last).to(eq([Date.current, 1]))
+  end
 end

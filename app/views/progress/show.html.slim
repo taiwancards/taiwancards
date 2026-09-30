@@ -1,11 +1,46 @@
 - breakdown = @report.memory_breakdown
 - retention = @report.actual_retention
 - forecast = @report.forecast
+- streak = @report.streak
+- activity = @report.activity
+- peak = [activity.map(&:last).max, 1].max
 - card = "space-y-3 rounded-2xl border border-border bg-card p-4"
 - heading = "text-sm font-semibold uppercase tracking-wide text-muted-foreground"
 
 = render layout: "progress/shell" do
   p.max-w-prose.text-sm.text-muted-foreground = t("stats.lede")
+
+  section.flex.flex-wrap.items-center.gap-x-8.gap-y-4.rounded-2xl.border.border-border.bg-card.p-4
+    div
+      .flex.items-baseline.gap-2
+        span.text-4xl.font-bold.tabular-nums class=(streak.current.positive? ? "text-emerald-600" : nil) = number_with_delimiter(streak.current)
+        h2 class=heading = t("stats.streak")
+      p.mt-1.text-2xs.text-muted-foreground
+        - if streak.since
+          = t(streak.today? ? "stats.streak_today" : "stats.streak_pending", date: l(streak.since, format: :short))
+        - else
+          = t("stats.streak_none")
+    .flex.gap-6.text-sm
+      div
+        .text-xl.font-bold.tabular-nums = number_with_delimiter(streak.longest)
+        .text-xs.text-muted-foreground = t("stats.streak_longest")
+      div
+        .text-xl.font-bold.tabular-nums = number_with_delimiter(streak.days)
+        .text-xs.text-muted-foreground = t("stats.streak_days")
+    .min-w-0.flex-1.basis-64
+      .ml-auto.max-w-md
+        .grid.grid-flow-col.grid-rows-7.auto-cols-fr.gap-1
+          - activity.each do |date, count|
+            .aspect-square.rounded-sm class=activity_shade(count, peak) title="#{l(date, format: :short)}: #{count}"
+        .mt-1.5.flex.items-center.justify-between.gap-2.text-2xs.tabular-nums.text-muted-foreground
+          span = l(activity.first.first, format: :short)
+          span.flex.items-center.gap-1
+            = t("stats.activity_less")
+            - ProgressHelper::ACTIVITY_SHADES.each do |shade|
+              span.size-2.rounded-sm class=shade
+            = t("stats.activity_more")
+          span = l(activity.last.first, format: :short)
+        p.mt-1.text-2xs.text-muted-foreground = t("stats.streak_zone", zone: Time.zone.tzinfo.name.tr("_", " "))
 
   .grid.grid-cols-2.gap-3.lg:grid-cols-4
     = render "progress/tile", value: number_with_delimiter(@report.words_known), label: t("stats.known_words"), hint: t("stats.known_words_hint")

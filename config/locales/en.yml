@@ -914,6 +914,15 @@ en:
   stats:
     title: Statistics
     lede: "What you know, which skills lag behind and what's coming up."
+    streak: Day streak
+    streak_today: "in a row since %{date}, today included"
+    streak_pending: "in a row since %{date}; today has no reviews yet"
+    streak_none: no reviews today or yesterday
+    streak_longest: Longest streak
+    streak_days: Days with reviews
+    streak_zone: "reviews per day; a day follows your time zone, %{zone}"
+    activity_less: less
+    activity_more: more
     known_words: Words known
     known_words_hint: at least one skill in long-term review
     retention: Retention (goal %{target})
@@ -3192,7 +3201,9 @@ en:
       are on now. The big button always leads to wherever it makes sense to carry on: to phonetics while
       the sounds are still unsettled, and to the day's queue after that.</p>
     progress_html: >-
-      <p><strong>Streak</strong> is how many days in a row had reviews. <strong>Retention</strong> is the
+      <p><strong>Streak</strong> is how many days in a row had reviews. A day runs from midnight to midnight
+      in the time zone of your device; when you travel, the days already counted stay as they were.
+      <strong>Retention</strong> is the
       share of "good" or better among the cards FSRS considered ripe: if it sits well below the target in
       settings, the intervals are too long.</p><p>States: <strong>unseen</strong> has never been shown,
       <strong>learning</strong> is still in the learning steps, <strong>young</strong> has an interval
@@ -3912,7 +3923,7 @@ en:
       heading: What this is not
       items:
         game: >-
-          Not a game — no streaks, no XP, no badges, no leaderboards and no cartoon animal guilt-tripping
+          Not a game — no XP, no badges, no leaderboards and no cartoon animal guilt-tripping
           you into coming back tomorrow
         machine: >-
           No AI content — and there never will be. Every meaning, example and label has passed through
@@ -4246,7 +4257,7 @@ en:
       cards: "You just want flashcards. This is a good deal more than that: a dictionary, a reader, pronunciation, handwriting, and one shared record of progress underneath all of it. For flashcards alone it is overkill."
       course: "You need a path beyond B1. The course takes you to B1 and stops there: above it you get the dictionary, the corpus, the exam lists and your own texts, but not a step-by-step course."
       china: "You are moving to China. Everything here is Taiwanese Mandarin: traditional characters, zhuyin, Taiwanese vocabulary. There is no Chinese variant, and simplified characters cannot be switched on."
-      nudging: "You want to be chased. There are no reminders, no streaks and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular. The only email is a short note about what is new, once or twice a month at most, and one click stops it."
+      nudging: "You want to be chased. There are no reminders and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular. The only email is a short note about what is new, once or twice a month at most, and one click stops it."
       close: If none of that puts you off, pick an option above and let us begin.
     path:
       done_cta: To the home screen and your cards →

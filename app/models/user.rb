@@ -35,6 +35,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: {case_sensitive: false}, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :password, length: {minimum: 8}, allow_nil: true
   validates :locale, inclusion: {in: -> (_) { I18n.available_locales.map(&:to_s) }}
+  validates :time_zone, inclusion: {in: -> (_) { TZInfo::Timezone.all_identifiers }}, allow_nil: true
 
   generates_token_for :email_verification, expires_in: 2.days do
     email
@@ -54,6 +55,16 @@ class User < ApplicationRecord
     user.email_verified_at ||= Time.current
     user.save!
     user
+  end
+
+  def zone = time_zone && ActiveSupport::TimeZone[time_zone]
+
+  def previous_zone = previous_time_zone && ActiveSupport::TimeZone[previous_time_zone]
+
+  def move_to(zone)
+    return if zone == time_zone
+
+    update(time_zone: zone, previous_time_zone: time_zone || Time.zone_default.tzinfo.name)
   end
 
   def assign_google(auth)
