@@ -1,0 +1,14 @@
+- content_for(:title) { t("support.title") }
+
+.py-6
+  .mx-auto.max-w-xl.space-y-5
+    div
+      h1.text-2xl.font-bold.tracking-tight = t("support.title")
+      p.mt-1.text-muted-foreground = t("support.lede")
+    p.text-sm.leading-relaxed = t("support.body")
+    - if Donate.offered?
+      = link_to Donate.url, rel: "noopener", target: "_blank",
+        class: "inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90" do
+        span ☕
+        = t("support.button")
+      p.text-xs.text-muted-foreground = t("support.outside")

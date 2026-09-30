@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
-  allow_unauthenticated_access only: %i[licenses privacy_policy terms_of_service menu]
-  publicly_cacheable only: %i[menu]
+  allow_unauthenticated_access only: %i[licenses privacy_policy terms_of_service menu support]
+  publicly_cacheable only: %i[menu support]
   before_action :send_to_the_site, only: %i[licenses privacy_policy terms_of_service]
 
   def help
@@ -18,6 +18,9 @@ class PagesController < ApplicationController
   end
 
   def menu
+  end
+
+  def support
   end
 
   private

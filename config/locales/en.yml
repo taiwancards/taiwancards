@@ -47,7 +47,7 @@ en:
         - Letters are handed to Resend, an email delivery service, which receives your address and the letter only in order to deliver it.
     donation:
       heading: Donation button
-      body: The help page carries an optional donation button supplied by Buy Me a Coffee. Opening that one page loads their script, so your browser contacts them and they see your IP address and user agent. No account data is sent, the button appears on no other page, and donating is never required.
+      body: The "Support the site" page carries a plain link to Buy Me a Coffee, an outside service. Nothing is loaded from them until you follow the link, no account data is sent, and donating is never required.
     where:
       heading: Where data is held
       body: The application and its database run on Render in Singapore. Traffic passes through Cloudflare, audio files are served from Cloudflare R2, and newsletters are sent through Resend, a US company, from its servers in Japan. These providers process data only in order to host the service and deliver its mail. If you use the Google Drive backup, that copy sits in your own Google account.
@@ -2595,6 +2595,18 @@ en:
     licenses: Licenses & credits
     privacy: Privacy
     terms: Terms
+    support: Support the site
+  support:
+    title: Support the site
+    lede: TaiwanCards is free, ad-free and sells nothing — and that's how it's staying.
+    body: >-
+      The one thing it isn't free of is a server bill. The app and its database run around the clock, and
+      the more people study here, the bigger that bill gets. If the site has earned its keep with you and
+      you'd like to help, the button below is where it goes. It buys nothing and unlocks nothing — everyone
+      gets the same site either way — so if you close this page and never think of it again, no hard
+      feelings.
+    button: Feed the servers
+    outside: The button takes you to Buy Me a Coffee, a separate service, in a new tab.
   offline:
     title: Offline
     lede: >-
@@ -2708,11 +2720,6 @@ en:
     data_title: Reference data
     data_note: "Bodies whose published reference material the app builds on: level lists, stroke inventories, character standards, calendar tables and classification scales. These are factual lists rather than creative works, and are credited here rather than licensed. Where a body released its material under a named license, that license is stated."
     outro: All Mandarin content is Taiwan traditional characters, cross-checked against the Ministry of Education dictionaries. Names, brands and lesson texts remain the property of their respective owners.
-    donate_title: Support the project
-    donate_body: >-
-      The app is free and ad-free, and it will stay that way. If it has been useful, you can buy the
-      author a coffee. It changes nothing about access — everything is open to everyone alike.
-    donate_button: Buy a coffee
     items:
       moe_audio: Audio for characters and words. Recordings by Taiwan's Ministry of Education, data version 20260626. Files are served unmodified; the app only limits playback to the headword.
       cc_cedict: Community Chinese–English dictionary — readings, meanings and traditional/simplified pairs.
@@ -2781,10 +2788,6 @@ en:
         body: >-
           Edit your name, and export your whole progress to a file. After rebuilding the database you import
           it back and pick up exactly where you left off.
-    donate: >-
-      Nothing here is bought and a donation unlocks nothing — the app is exactly the same either way. If
-      you feel like chipping in toward the servers, the button is here. Walking past it is entirely fine.
-    donate_button: Chip in for the servers
   phrases:
     title: "Taiwan phrasebook"
     intro: "Patterns Taiwanese people actually say, with the half you have to understand: what the staff says back."

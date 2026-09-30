@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Donate
-  HOST = "https://www.buymeacoffee.com"
+  HOST = "https://buymeacoffee.com"
 
   module_function
 

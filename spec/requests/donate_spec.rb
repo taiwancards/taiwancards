@@ -11,24 +11,31 @@ RSpec.describe "The donation button" do
   before { offer(slug: nil) }
 
   it "stays out of sight until it is configured" do
-    get(licenses_path)
+    get(support_path)
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).not_to(include("buymeacoffee"))
+
+    get(root_path)
+
+    expect(response.body).not_to(include(support_path))
   end
 
-  it "sits with the licenses, where the project already explains itself" do
+  it "has a page of its own, reached from the footer" do
     offer
-    get(licenses_path)
+    get(progress_path)
 
-    expect(response.body).to(include("https://www.buymeacoffee.com/someone"))
-    expect(response.body).to(include(CGI.escapeHTML(I18n.t("licenses.donate_button"))))
-    expect(response.body.index("buymeacoffee")).to(be > response.body.index(CGI.escapeHTML(I18n.t("licenses.outro"))))
+    expect(response.body).to(include("href=\"#{support_path}\""))
+    expect(response.body).not_to(include("buymeacoffee"))
+
+    get(support_path)
+
+    expect(response.body).to(include("https://buymeacoffee.com/someone", CGI.escapeHTML(I18n.t("support.button"))))
   end
 
   it "is a plain link, so no outside script has to be let through the policy" do
     offer
-    get(licenses_path)
+    get(support_path)
 
     expect(response.body).not_to(include("bmc-button"))
     expect(response.headers["Content-Security-Policy"].to_s).not_to(include("buymeacoffee"))
@@ -36,34 +43,25 @@ RSpec.describe "The donation button" do
 
   it "opens in its own tab without handing the other site a referrer" do
     offer
-    get(licenses_path)
+    get(support_path)
 
     button = response.body[/<a[^>]*buymeacoffee[^>]*>/]
 
-    expect(button).to(include("rel=\"noopener\""))
-    expect(button).to(include("target=\"_blank\""))
+    expect(button).to(include("rel=\"noopener\"", "target=\"_blank\""))
   end
 
-  it "never reaches the landing page or any other screen", :no_auth do
+  it "is open to guests and never sits on the landing page or the licenses", :no_auth do
     offer
 
-    [root_path, login_path, privacy_path].each do |path|
+    get(support_path)
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("buymeacoffee"))
+
+    [root_path, login_path, licenses_path].each do |path|
       get(path)
 
       expect(response.body).not_to(include("buymeacoffee"))
     end
-  end
-
-  it "says in the privacy policy that the button talks to someone else", :no_auth do
-    offer
-    get(privacy_path)
-
-    expect(response.body).to(include("Buy Me a Coffee"))
-  end
-
-  it "keeps the privacy policy silent about it when the button is not offered", :no_auth do
-    get(privacy_path)
-
-    expect(response.body).not_to(include("Buy Me a Coffee"))
   end
 end

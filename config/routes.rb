@@ -75,6 +75,7 @@ Rails.application.routes.draw do
 
     get("help", to: "pages#help", as: :guide)
     get("licenses", to: "pages#licenses")
+    get("support", to: "pages#support")
     get("privacy", to: "pages#privacy_policy")
     get("terms", to: "pages#terms_of_service")
     get("menu", to: "pages#menu")
