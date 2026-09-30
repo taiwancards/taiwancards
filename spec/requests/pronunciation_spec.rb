@@ -25,6 +25,9 @@ RSpec.describe "Pronunciation" do
     expect(response.body).to(include("教堂"))
     expect(response.body).to(include("data-pronunciation-health-url-value=\"/pronunciation/health\""))
     expect(response.body).to(include("data-pronunciation-grade-url-value=\"/pronunciation/grade\""))
+    expect(response.body).to(include("data-pronunciation-label-queued-value=\"#{I18n.t("pronunciation.queued")}\""))
+    expect(response.body).to(include(I18n.t("pronunciation.another"), "advance=1"))
+    expect(response.body).not_to(include(I18n.t("pron.judge.title")))
   end
 
   it "renders one tile per syllable and no unparsed template" do

@@ -2,10 +2,17 @@
 
 module Pronunciation
   module SyllableIndex
+    KEY = "pron:syllable_index:audio"
+
     module_function
 
     def for
-      Rails.cache.fetch("pron:syllable_index", expires_in: 12.hours) { build }
+      Rails.cache.fetch(KEY, expires_in: 12.hours) { build }
+    end
+
+    def refresh
+      Rails.cache.delete(KEY)
+      self.for
     end
 
     def lookup(key)
@@ -13,7 +20,7 @@ module Pronunciation
     end
 
     def build
-      index = {}
+      best = {}
 
       Lexeme
         .where(kind: %i[word character])
@@ -23,10 +30,13 @@ module Pronunciation
           syllables = target(lexeme)
           next unless syllables.length == 1
 
-          SyllableKey.candidates(syllables.first).each { |key| index[key] ||= lexeme.id }
+          quality = Huayu::MoeAudio.quality(lexeme.text, zhuyin: lexeme.headline_zhuyin)
+          SyllableKey.candidates(syllables.first).each do |key|
+            best[key] = [quality, lexeme.id] if best[key].nil? || quality < best[key].first
+          end
         end
 
-      index
+      best.transform_values(&:last)
     end
 
     def target(lexeme)

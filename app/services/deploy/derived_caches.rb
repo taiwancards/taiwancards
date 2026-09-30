@@ -8,6 +8,7 @@ module Deploy
       ContentCache.clear
       Site::Counts.warm!
       Pronunciation::SyllableIndex.for
+      Pronunciation::Catalog.entries
     end
 
     def edge_configured? = Render::Cloudflare.configured?

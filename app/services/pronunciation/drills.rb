@@ -82,6 +82,8 @@ module Pronunciation
 
     def available? = sections.any?
 
+    def stamp = File.size?(File.join(@root, "drills.json")) || 0
+
     def sections = data["sections"] || []
 
     def section(id) = sections.find { |s| s["id"] == id }

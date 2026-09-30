@@ -166,6 +166,8 @@ class Lexeme < ApplicationRecord
     data["readings"].presence || [readings.presence].compact
   end
 
+  def headline_zhuyin = reading_set.filter_map { |reading| reading["zhuyin"].presence }.first
+
   def senses_for_main_reading
     main = readings["pinyin"].presence
     return senses.to_a if main.nil?

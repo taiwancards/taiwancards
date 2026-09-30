@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { SpeechRecorder } from "lib/speech_recorder";
+import { postGrade } from "lib/grade_request";
 
 const LEVEL_CLASS = {
   green: "border-emerald-500 text-emerald-600",
@@ -32,6 +33,8 @@ export default class extends Controller {
     labelRecord: String,
     labelListening: String,
     labelScoring: String,
+    labelQueued: String,
+    labelBusy: String,
     labelMicDenied: String,
     labelOffline: String,
     labelAttempts: String,
@@ -118,12 +121,11 @@ export default class extends Controller {
       const headers = {};
       const token = document.querySelector('meta[name="csrf-token"]')?.content;
       if (token) headers["X-CSRF-Token"] = token;
-      const response = await fetch(this.gradeUrlValue, {
-        method: "POST",
-        body: form,
-        headers,
-      });
+      const response = await postGrade(this.gradeUrlValue, form, headers, () =>
+        this.setStatus(this.labelQueuedValue),
+      );
       if (response.status === 503) return this.offline();
+      if (response.status === 429) return this.setStatus(this.labelBusyValue);
       if (!response.ok) return this.setStatus("");
 
       this.render(await response.json());

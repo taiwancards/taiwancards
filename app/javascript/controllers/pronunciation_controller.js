@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { toWav } from "lib/speech_recorder";
+import { postGrade } from "lib/grade_request";
 
 const PRELISTEN_KEY = "pron_prelisten";
 const SPEECH_RMS = 0.02;
@@ -118,6 +119,7 @@ export default class extends Controller {
   ];
   static values = {
     labelBusy: String,
+    labelQueued: String,
     labelNotRecognized: String,
     labelNotMeasured: String,
     labelNoPart: String,
@@ -553,11 +555,9 @@ export default class extends Controller {
       const headers = {};
       const token = this.csrfToken();
       if (token) headers["X-CSRF-Token"] = token;
-      const res = await fetch(this.gradeUrlValue, {
-        method: "POST",
-        body: form,
-        headers,
-      });
+      const res = await postGrade(this.gradeUrlValue, form, headers, () =>
+        this.setStatus(this.labelQueuedValue),
+      );
       if (!res.ok) {
         if (res.status === 503) return this.unavailable();
         if (res.status === 429) {

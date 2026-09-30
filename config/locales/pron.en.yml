@@ -220,8 +220,8 @@ en:
       ü: "Lips rounded as for 'oo', tongue placed as for 'ee'."
       empty: "A buzzing vowel with no symbol of its own: leave the tongue exactly where the consonant left it and keep voicing. Neither 'ee' nor 'uh'."
     judge:
-      title: "Rating set"
-      hint: "Listen and say whether you would accept this pronunciation from someone talking to you. The engine's score stays hidden until you decide — seeing it first would give the answer away."
+      title: "Pronunciation score calibration"
+      hint: "Your own recordings from pronunciation practice collect here; other people's recordings are never stored. A native speaker listens to each one and says whether they would accept that pronunciation from someone talking to them. Those answers set the thresholds for the green, yellow and red scores. The engine's score stays hidden until the decision is made — seeing it first would give the answer away."
       which: "What you rejected"
       accept: "Accept"
       reject: "Reject"

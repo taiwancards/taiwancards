@@ -5,7 +5,14 @@ module Huayu
     ATTRIBUTION = "中華民國教育部（Ministry of Education, R.O.C.）《國語辭典簡編本》"
     SOURCE_URL = "http://dict.concised.moe.edu.tw/"
 
-    Clip = Data.define(:scope, :id, :head_ms, :zhuyin, :pinyin)
+    Clip = Data.define(:scope, :id, :head_ms, :zhuyin, :pinyin, :floor_db) do
+      def initialize(scope:, id:, head_ms:, zhuyin:, pinyin:, floor_db: nil) = super
+    end
+
+    CLEAN_FLOOR_DB = -58
+    CLEAN = 0
+    AUDIBLE = 1
+    ABSENT = 2
 
     SCOPES = {"words" => "moe_audio_words", "chars" => "moe_audio"}.freeze
     CLIP_ID = /\A[0-9A-Z]{4,}\z/
@@ -27,7 +34,8 @@ module Huayu
             id: pick["id"],
             head_ms: pick["head_ms"],
             zhuyin: pick["zhuyin"],
-            pinyin: pick["pinyin"]
+            pinyin: pick["pinyin"],
+            floor_db: pick["floor_db"]
           )
         end
 
@@ -45,6 +53,15 @@ module Huayu
 
         []
       end
+
+      def quality(text, zhuyin: nil)
+        clip = self.for(text, zhuyin:)
+        return ABSENT if clip.nil?
+
+        clip.floor_db && clip.floor_db <= CLEAN_FLOOR_DB ? CLEAN : AUDIBLE
+      end
+
+      def stamp = SCOPES.keys.map { |scope| root(scope).join("index.json").size? || 0 }.join("-")
 
       def clip_path(scope, id)
         return nil unless SCOPES.key?(scope)

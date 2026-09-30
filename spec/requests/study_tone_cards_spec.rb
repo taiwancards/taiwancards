@@ -58,6 +58,7 @@ RSpec.describe "Tone cards" do
     expect(response.body).to(include(I18n.t("study.speech.next")))
     expect(response.body).to(include("data-card-speech-good-at-value=\"#{StudyHelper::SPEECH_GOOD_AT}\""))
     expect(response.body).to(include("card-speech#playTake"))
+    expect(response.body).to(include("data-card-speech-label-queued-value", "data-card-speech-label-busy-value"))
   end
 
   it "starts the recorder on its own after the configured delay" do

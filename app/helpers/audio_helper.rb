@@ -48,8 +48,8 @@ module AudioHelper
   end
 
   def primary_zhuyin(lexeme)
-    return nil unless lexeme.respond_to?(:reading_set)
+    return nil unless lexeme.respond_to?(:headline_zhuyin)
 
-    lexeme.reading_set.filter_map { |reading| reading["zhuyin"].presence }.first
+    lexeme.headline_zhuyin
   end
 end

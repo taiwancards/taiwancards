@@ -410,8 +410,8 @@ module Deploy
         :ran
       },
       "syllable_index" => -> {
-        Rails.cache.delete("pron:syllable_index")
-        Pronunciation::SyllableIndex.for
+        Pronunciation::SyllableIndex.refresh
+        Pronunciation::Catalog.refresh
         :ran
       },
       "prune_activity" => -> {

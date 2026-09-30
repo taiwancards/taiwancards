@@ -15,8 +15,12 @@ RSpec.describe Pronunciation::Queue do
     create(:lexeme, kind:, text:, readings: {"pinyin" => pinyin}, score:, data: {"freq_rank" => freq})
   end
 
-  def queue(drills:, collection: nil)
-    described_class.new(user:, collection:, drills:)
+  def clips(levels = {})
+    Class.new { define_method(:quality) { |text, zhuyin: nil| levels.fetch(text, Huayu::MoeAudio::ABSENT) } }.new
+  end
+
+  def queue(drills:, collection: nil, audio: clips, catalog: Pronunciation::Catalog.new(drills:, audio:))
+    described_class.new(user:, collection:, drills:, audio:, catalog:)
   end
 
   def practiced!(lexeme, key, overall: 96, level: "green")
@@ -42,6 +46,16 @@ RSpec.describe Pronunciation::Queue do
 
       expect(result).to(eq([good.id]))
       expect(result).not_to(include(risky.id))
+    end
+
+    it "reads the syllable index once, however many syllables are approved" do
+      word("巴", "bā", kind: :character, freq: 500)
+      word("怕", "pà", kind: :character, freq: 400)
+      allow(Pronunciation::SyllableIndex).to(receive(:for).and_call_original)
+
+      queue(drills: drills_allowing("ba1", "pa4")).ids
+
+      expect(Pronunciation::SyllableIndex).to(have_received(:for).once)
     end
 
     it "would rather show nothing than something it cannot grade" do
@@ -133,6 +147,66 @@ RSpec.describe Pronunciation::Queue do
       result = queue(drills: drills_allowing("ba1", "chang2", "jian4", "han3")).ids
 
       expect(result.index(easy.id)).to(be < result.index(hard.id))
+    end
+  end
+
+  describe "the reference recording" do
+    it "starts with words that have a clean one, then a noisy one, then none" do
+      done = word("巴巴", "bābā")
+      silent = word("常見", "chángjiàn", score: 1.0)
+      noisy = word("罕見", "hǎnjiàn", score: 2.0)
+      clean = word("看見", "kànjiàn", score: 900.0)
+      practiced!(done, "ba1")
+      audio = clips("看見" => Huayu::MoeAudio::CLEAN, "罕見" => Huayu::MoeAudio::AUDIBLE)
+
+      result = queue(drills: drills_allowing("ba1", "chang2", "han3", "kan4", "jian4"), audio:).ids
+
+      expect(result).to(eq([clean.id, noisy.id, silent.id]))
+    end
+  end
+
+  describe "the catalog of ready words" do
+    it "fills the queue from it without touching the dictionary, skipping what was already practiced" do
+      done = word("巴巴", "bābā")
+      practiced!(done, "ba1")
+      groups = Pronunciation::Queue::HARD.map(&:first)
+      entries = Array.new(40) { |i|
+        {id: 9000 + i, audio: Huayu::MoeAudio::CLEAN, features: [groups[i % groups.size], "s:k#{i}"]}
+      }
+      catalog = instance_double(
+        Pronunciation::Catalog,
+        entries: [{id: done.id, audio: 0, features: ["s:ba1"]}, *entries]
+      )
+
+      result = queue(drills: drills_allowing("ba1"), catalog:).ids
+
+      expect(result.size).to(eq(described_class::SIZE))
+      expect(result).to(all(be >= 9000))
+      expect(result.first(groups.size).map { |id| groups[(id - 9000) % groups.size] }).to(match_array(groups))
+    end
+  end
+
+  describe "hard sounds" do
+    it "walks through them instead of staying on the commonest one" do
+      done = word("巴巴", "bābā")
+      practiced!(done, "ba1")
+      retroflex = [%w[知識 zhīshì], %w[事實 shìshí], %w[指示 zhǐshì], %w[吃食 chīshí]].each_with_index.map { |
+          (text, pinyin),
+          i
+        |
+        word(text, pinyin, score: i + 1.0)
+      }
+      others = [%w[積極 jījí], %w[語句 yǔjù], %w[自私 zìsī], %w[本能 běnnéng]].each_with_index.map { |
+          (text, pinyin),
+          i
+        |
+        word(text, pinyin, score: i + 10.0)
+      }
+      keys = %w[ba1 zhi1 shi4 shi2 zhi3 chi1 ji1 ji2 yu3 ju4 zi4 si1 ben3 neng2]
+
+      result = queue(drills: drills_allowing(*keys)).ids
+
+      expect(result.first(5)).to(contain_exactly(retroflex.first.id, *others.map(&:id)))
     end
   end
 

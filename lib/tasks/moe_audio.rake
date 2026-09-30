@@ -335,6 +335,76 @@ namespace(:moe) do
       puts("\nre-upload only index.json for each scope")
     end
 
+    FLOOR_FRAME = 441
+    FLOOR_FRAMES = 4
+    FLOOR_TAIL_MS = 100
+    FLOOR_MIN_DB = -96
+
+    def floor_db(clip, head_ms)
+      limit = head_ms ? ["-t", format("%.3f", (head_ms + FLOOR_TAIL_MS) / 1000.0)] : []
+      raw, = Open3.capture2(
+        "ffmpeg", "-hide_banner", "-loglevel", "error", "-i", clip.to_s, *limit, "-ac", "1", "-ar", "22050", "-f", "s16le", "-"
+      )
+      levels = raw.unpack("s<*").each_slice(FLOOR_FRAME).filter_map do |frame|
+        next if frame.size < FLOOR_FRAME
+
+        power = frame.sum { |sample| sample * sample } / frame.size.to_f
+        10 * Math.log10([power, 1.0].max / (32_768.0**2))
+      end
+      return nil if levels.length < FLOOR_FRAMES
+
+      (levels.min(FLOOR_FRAMES).sum / FLOOR_FRAMES).round.clamp(FLOOR_MIN_DB, 0)
+    end
+
+    desc("Measure the background level of every clip in the media root and write it into the index (needs ffmpeg)")
+    task(noise: :environment) do
+      require "open3"
+      require "etc"
+
+      Huayu::MoeAudio::SCOPES.each do |name, dir|
+        root = AppData.media_path(dir)
+        file = root.join("index.json")
+        next puts("#{name}: no index at #{file}, skipping") unless file.exist?
+
+        data = JSON.parse(file.read)
+        pending = Queue.new
+        data["entries"].each_value { |readings| readings.each { |reading| pending << reading } }
+        total = pending.size
+        step("measuring #{total} clips for #{name}")
+
+        done = 0
+        mutex = Mutex.new
+        Array
+          .new(moe_workers) {
+            Thread.new do
+              while (reading = begin
+                  pending.pop(true)
+                rescue ThreadError
+                  nil
+                end)
+                clip = root.join("audio", "#{reading["id"]}.opus")
+                reading["floor_db"] = floor_db(clip, reading["head_ms"]) if clip.exist?
+                mutex.synchronize do
+                  done += 1
+                  puts("    #{done}/#{total} (#{(done * 100.0 / total).round}%)") if (done % (REPORT_EVERY * 8)).zero?
+                end
+              end
+            end
+          }
+          .each(&:join)
+
+        file.write(JSON.pretty_generate(data))
+        floors = data["entries"].values.flatten.filter_map { |reading| reading["floor_db"] }.sort
+        clean = floors.count { |floor| floor <= Huayu::MoeAudio::CLEAN_FLOOR_DB }
+        puts(
+          "  #{name}: #{floors.size} measured, median #{floors[floors.size / 2]} dB, " \
+            "p90 #{floors[(floors.size * 0.9).to_i]} dB, clean #{clean} (#{(clean * 100.0 / [floors.size, 1].max).round}%)"
+        )
+      end
+
+      puts("\nnext: bin/distribute runtime, then deploy")
+    end
+
     desc("Prepare MOE single-character audio (local, needs ffmpeg)")
     task(chars: :environment) { build_scope("chars") }
 

@@ -18,8 +18,8 @@ RSpec.describe Huayu::MoeAudio do
         "version" => "20260626",
         "entries" => {
           "把" => [
-            {"id" => "0015", "zhuyin" => "ㄅㄚˇ", "pinyin" => "bǎ", "head_ms" => 671},
-            {"id" => "0017", "zhuyin" => "ㄅㄚˋ", "pinyin" => "bà", "head_ms" => 497}
+            {"id" => "0015", "zhuyin" => "ㄅㄚˇ", "pinyin" => "bǎ", "head_ms" => 671, "floor_db" => -70},
+            {"id" => "0017", "zhuyin" => "ㄅㄚˋ", "pinyin" => "bà", "head_ms" => 497, "floor_db" => -50}
           ]
         }
       }.to_json
@@ -32,7 +32,13 @@ RSpec.describe Huayu::MoeAudio do
         "version" => "20260626",
         "entries" => {
           "謝謝" => [
-            {"id" => "123456789", "zhuyin" => "ㄒㄧㄝˋ　ㄒㄧㄝ˙", "pinyin" => "xièxie", "head_ms" => 900}
+            {
+              "id" => "123456789",
+              "zhuyin" => "ㄒㄧㄝˋ　ㄒㄧㄝ˙",
+              "pinyin" => "xièxie",
+              "head_ms" => 900,
+              "floor_db" => -90
+            }
           ]
         }
       }.to_json
@@ -81,6 +87,15 @@ RSpec.describe Huayu::MoeAudio do
 
   it "prefers the word set over splitting into characters" do
     expect(described_class.for("謝謝").scope).to(eq("words"))
+  end
+
+  it "ranks a headword by how clean its recordings are" do
+    expect(described_class.quality("謝謝")).to(eq(described_class::CLEAN))
+    expect(described_class.quality("把", zhuyin: "ㄅㄚˇ")).to(eq(described_class::CLEAN))
+    expect(described_class.quality("把", zhuyin: "ㄅㄚˋ")).to(eq(described_class::AUDIBLE))
+    expect(described_class.quality("把")).to(eq(described_class::ABSENT))
+    expect(described_class.quality("沒有")).to(eq(described_class::ABSENT))
+    expect(described_class.for("謝謝").floor_db).to(eq(-90))
   end
 
   it "returns nothing for an entry with no recording" do
