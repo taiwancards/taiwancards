@@ -15,7 +15,7 @@ services:
   - type: web
     name: taiwancards-app
     runtime: ruby
-    plan: 0.5c-512mb
+    plan: 1c-2g
     region: singapore
     branch: main
     numInstances: 1
