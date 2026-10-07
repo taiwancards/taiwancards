@@ -179,6 +179,7 @@ Disallow: /search
 Disallow: /*/sentences/
 Disallow: /*word=
 Disallow: /*page=
+Disallow: /*mark=
 Disallow: /*q=
 Disallow: /*/login
 Disallow: /*/logout

@@ -6,8 +6,11 @@ require "digest"
 module Deploy
   class ContentDiff
     BUCKET = 8192
+    APPLY_BATCH = 20_000
+    TEMP_BUFFERS = "256MB"
 
     SESSION = [
+      "SET temp_buffers = '#{TEMP_BUFFERS}'",
       "SET extra_float_digits = 3",
       "SET datestyle = 'ISO, YMD'",
       "SET timezone = 'UTC'",
@@ -97,19 +100,21 @@ module Deploy
     def apply(plan)
       table = plan.table
       deleted = delete(table, plan.deletes)
-      inserted, updated = upsert(table, plan.inserts + plan.updates)
+      inserted, updated = upsert(table, plan.updates + plan.inserts)
       {inserted:, updated:, deleted:}
     end
 
     def delete(table, keys)
       return 0 if keys.empty?
 
-      stage_keys(@target, table, keys)
-      deleted = @target
-        .exec("DELETE FROM #{table.name} t USING content_keys k WHERE #{join(table, "t", "k")}")
-        .cmd_tuples
-      @target.exec("DROP TABLE content_keys")
-      deleted
+      keys.each_slice(APPLY_BATCH).sum do |slice|
+        stage_keys(@target, table, slice)
+        deleted = @target
+          .exec("DELETE FROM #{table.name} t USING content_keys k WHERE #{join(table, "t", "k")}")
+          .cmd_tuples
+        @target.exec("DROP TABLE content_keys")
+        deleted
+      end
     end
 
     def verify!(table)
@@ -135,10 +140,26 @@ module Deploy
       return [0, 0] if keys.empty?
 
       names = list(columns(table))
+      stage_keys(@target, table, keys, name: "content_plan")
       @target.exec("CREATE TEMP TABLE content_patch AS SELECT #{names} FROM #{table.name} WITH NO DATA")
-      stream(table, keys)
-      updated = update(table)
-      inserted = @target
+      parked = []
+
+      counts = keys.each_slice(APPLY_BATCH).map do |slice|
+        @target.exec("TRUNCATE content_patch")
+        stream(table, slice)
+        updated = update(table, parked)
+        inserted = insert(table, names)
+        @target.exec("DELETE FROM content_plan k USING content_patch p WHERE #{join(table, "k", "p")}")
+        [inserted, updated]
+      end
+
+      @target.exec("DROP TABLE content_patch")
+      @target.exec("DROP TABLE content_plan")
+      counts.transpose.map(&:sum)
+    end
+
+    def insert(table, names)
+      @target
         .exec(
           <<~SQL
             INSERT INTO #{table.name} (#{names}) SELECT #{names} FROM content_patch p
@@ -147,8 +168,6 @@ module Deploy
             .squish
         )
         .cmd_tuples
-      @target.exec("DROP TABLE content_patch")
-      [inserted, updated]
     end
 
     def stream(table, keys)
@@ -167,13 +186,12 @@ module Deploy
       @source.exec("DROP TABLE content_keys")
     end
 
-    def update(table)
+    def update(table, parked)
       assignments = (columns(table) - table.key).map { |name| "#{name} = p.#{name}" }.join(", ")
       return 0 if assignments.empty?
 
       changed = "ROW(#{qualified(compared(table), "t")}) IS DISTINCT FROM ROW(#{qualified(compared(table), "p")})"
       sql = "UPDATE #{table.name} t SET #{assignments} FROM content_patch p WHERE #{join(table, "t", "p")} AND #{changed}"
-      parked = []
 
       begin
         @target.exec("SAVEPOINT content_update")
@@ -227,13 +245,13 @@ module Deploy
 
       if PARKING[type] != PARKING["text"]
         floor = @target
-          .exec("SELECT min(t.#{column}) FROM #{table.name} t JOIN content_patch p ON #{join(table, "t", "p")}")
+          .exec("SELECT min(t.#{column}) FROM #{table.name} t JOIN content_plan p ON #{join(table, "t", "p")}")
           .getvalue(0, 0)
         raise Mismatch, "#{table.name}: #{column} holds negative values, so it cannot be parked" if floor.to_i.negative?
       end
 
       @target.exec(
-        "UPDATE #{table.name} t SET #{column} = #{PARKING.fetch(type).call("t.#{column}")} FROM content_patch p WHERE #{join(table, "t", "p")}"
+        "UPDATE #{table.name} t SET #{column} = #{PARKING.fetch(type).call("t.#{column}")} FROM content_plan p WHERE #{join(table, "t", "p")}"
       )
     end
 
@@ -249,11 +267,11 @@ module Deploy
       end
     end
 
-    def stage_keys(connection, table, keys)
-      declarations = table.key.map { |name| "#{name} bigint" }.join(", ")
-      connection.exec("DROP TABLE IF EXISTS content_keys")
-      connection.exec("CREATE TEMP TABLE content_keys (#{declarations})")
-      connection.copy_data("COPY content_keys (#{list(table.key)}) FROM STDIN") do
+    def stage_keys(connection, table, keys, name: "content_keys")
+      declarations = table.key.map { |column| "#{column} bigint" }.join(", ")
+      connection.exec("DROP TABLE IF EXISTS #{name}")
+      connection.exec("CREATE TEMP TABLE #{name} (#{declarations})")
+      connection.copy_data("COPY #{name} (#{list(table.key)}) FROM STDIN") do
         keys.each { |key| connection.put_copy_data("#{key.join("\t")}\n") }
       end
     end

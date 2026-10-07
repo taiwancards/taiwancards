@@ -208,6 +208,49 @@ RSpec.describe Deploy::ContentDiff do
     )
   end
 
+  it "applies a plan in batches and still parks a swap whose two rows land in different batches" do
+    stub_const("Deploy::ContentDiff::APPLY_BATCH", 1)
+    seed(
+      source,
+      [
+        [1, 10, 100, 2, nil, "{}", "{}", "a"],
+        [2, 10, 101, 1, nil, "{}", "{}", "b"],
+        [3, 11, 100, 3, 0.5, "{}", "{}", "c"]
+      ]
+    )
+    seed(target, [[1, 10, 100, 1, nil, "{}", "{}", "a"], [2, 10, 101, 2, nil, "{}", "{}", "b"]])
+
+    plan = diff.plan(table)
+
+    target.transaction do
+      expect(diff.apply(plan)).to(eq(inserted: 1, updated: 2, deleted: 0))
+      diff.verify!(table)
+    end
+
+    expect(target.exec("SELECT id, slot FROM #{probe} ORDER BY id").values).to(eq([["1", "2"], ["2", "1"], ["3", "3"]]))
+  end
+
+  it "moves every updated row before inserting, so a new row may take a value an older row gives up" do
+    stub_const("Deploy::ContentDiff::APPLY_BATCH", 1)
+    seed(source, [[1, 10, 100, 9, nil, "{}", "{}", "a"], [2, 10, 101, 1, nil, "{}", "{}", "new"]])
+    seed(target, [[1, 10, 100, 1, nil, "{}", "{}", "a"]])
+
+    target.transaction do
+      expect(diff.apply(diff.plan(table))).to(eq(inserted: 1, updated: 1, deleted: 0))
+      diff.verify!(table)
+    end
+
+    expect(target.exec("SELECT id, slot FROM #{probe} ORDER BY id").values).to(eq([["1", "9"], ["2", "1"]]))
+  end
+
+  it "opens every connection with enough temporary buffers for read-ahead to leave room for TOAST" do
+    connection = described_class.connect(url)
+
+    expect(connection.exec("SHOW temp_buffers").getvalue(0, 0)).to(eq(described_class::TEMP_BUFFERS))
+  ensure
+    connection&.close
+  end
+
   it "refuses to park a column that already holds negative values" do
     seed(source, [[1, 10, 100, -1, nil, "{}", "{}", "a"], [2, 10, 101, -2, nil, "{}", "{}", "b"]])
     seed(target, [[1, 10, 100, -2, nil, "{}", "{}", "a"], [2, 10, 101, -1, nil, "{}", "{}", "b"]])
