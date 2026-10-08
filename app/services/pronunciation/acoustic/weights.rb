@@ -13,7 +13,7 @@ module Pronunciation
 
       PART_FEATURES = {
         "tone" => %w[tone_contour tone_range tone_slope f0_register],
-        "final" => %w[f1_over_f0 f2_over_f1 f2_end_over_f1 nasal_ratio_tail nasal_ratio_mid energy_tail_ratio],
+        "final" => %w[f1_over_f0 f2_over_f1 f2_end_over_f1 nasal_ratio_tail nasal_ratio_mid energy_tail_db],
         "initial" => %w[vot_ms vot_ratio fric_ms fric_centroid centroid_ratio],
         "medial" => %w[f2_over_f1],
         "timbre" => []

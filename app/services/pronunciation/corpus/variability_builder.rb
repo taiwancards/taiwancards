@@ -23,9 +23,11 @@ module Pronunciation
         rows = features
         registered = with_register(rows)
         by_key = registered.group_by { |row| row["_key"] }
-        model = StyleFactor
-          .new(store: @store)
-          .correct(Acoustic::Variability.estimate(by_key, min_speakers: MIN_SPEAKERS))
+        model = settled(
+          StyleFactor
+            .new(store: @store)
+            .correct(Acoustic::Variability.estimate(by_key, min_speakers: MIN_SPEAKERS))
+        )
 
         {
           "source" => "#{corpus_release}, speakers born in Taiwan",
@@ -44,6 +46,19 @@ module Pronunciation
       end
 
       private
+
+      def settled(model)
+        model
+          .filter_map do |field, value|
+            case value
+            when Numeric
+              [field, value] if value.finite?
+            when Array
+              [field, value] if value.all? { |item| item.is_a?(Numeric) && item.finite? }
+            end
+          end
+          .to_h
+      end
 
       def corpus_release
         manifest = File.join(@root, "manifest.json")
@@ -87,6 +102,8 @@ module Pronunciation
         return [] if signal.length < signal.sample_rate * MIN_AUDIO_S
 
         analysis = Acoustic::Features.analyze(signal.samples, signal.sample_rate)
+        return [] unless ClipGate.good?("_quality" => Acoustic::Quality.of(analysis))
+
         spans = Acoustic::Features.syllable_spans(analysis, item[:keys].length)
         return [] if spans.nil?
 
@@ -130,6 +147,8 @@ module Pronunciation
           row["f0_register"] = if base && base > MIN_HZ && row["f0_ref_hz"].to_f > MIN_HZ
             12.0 * Math.log2(row["f0_ref_hz"] / base)
           end
+
+          Acoustic::ToneMarks.stamp!(row)
         end
 
         rows

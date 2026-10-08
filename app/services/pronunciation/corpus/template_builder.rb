@@ -36,6 +36,8 @@ module Pronunciation
       def call
         FileUtils.mkdir_p(@out)
         built = FanOut.map(keys, io: @io) { |chunk| chunk.filter_map { |key| build(key) } }.flatten(1)
+        Acoustic::Shrink.apply!(built.map(&:last))
+        built = built.map { |key, template| [key, round(template)] }
         built.each { |key, template| File.write(File.join(@out, "#{key}.json"), JSON.generate(template)) }
         dropped = forget_stale(built.map(&:first))
         @io&.puts("  templates: #{built.length}#{", stale removed: #{dropped}" if dropped.positive?}")
@@ -95,7 +97,7 @@ module Pronunciation
         template["provenance"]["n_citation"] = used.count { |r| r["_n_syllables"] == 1 }
         template["provenance"]["n_available"] = rows.length
 
-        [key, round(template)]
+        [key, template]
       rescue StandardError
         nil
       end
@@ -106,10 +108,7 @@ module Pronunciation
         return [] if Acoustic::Syllables.parse_key(key).nil?
 
         rows = []
-        Tokens.each(key, @source, speakers: :fitting) do |row|
-          row["f0_register"] = SpeakerPitch.register(row["_speaker"], row["f0_ref_hz"])
-          rows << row
-        end
+        Tokens.each(key, @source, speakers: :fitting) { |row| rows << row if ClipGate.good?(row) }
 
         rows
       end

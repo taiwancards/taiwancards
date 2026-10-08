@@ -103,12 +103,27 @@ module Pronunciation
           "n_neg" => bad.values.sum,
           "green_keeps" => share_at_least(good, green),
           "green_admits" => bad.present? ? share_at_least(bad, green) : 0.0,
+          "auc" => bad.present? ? auc(good, bad) : nil,
           "red_touches" => (100.0 - share_at_least(good, red)).round(1)
         }
       end
 
       def youden(good, bad)
         (0..100).max_by { |threshold| share_at_least(good, threshold) - share_at_least(bad, threshold) }
+      end
+
+      def auc(good, bad)
+        total = good.values.sum.to_f * bad.values.sum
+        return nil unless total.positive?
+
+        seen = 0
+        wins = 0.0
+        (0..100).each do |score|
+          wins += good[score] * (seen + (bad[score] / 2.0))
+          seen += bad[score]
+        end
+
+        (wins / total).round(4)
       end
 
       def quantile(hist, q)

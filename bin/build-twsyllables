@@ -4,6 +4,7 @@
 import argparse
 import hashlib
 import json
+import math
 import re
 from datetime import UTC, datetime
 from pathlib import Path
@@ -27,6 +28,7 @@ TOKEN_RENAMES = {
     "_source": "source",
     "_n_syllables": "n_syllables",
     "_transcript": "transcript",
+    "_quality": "quality",
 }
 
 CALIBRATION = [
@@ -105,6 +107,15 @@ def templates(source):
     return rows
 
 
+MIN_HZ = 50.0
+
+
+def register(hz, base):
+    if not hz or not base or hz <= MIN_HZ or base <= MIN_HZ:
+        return None
+    return 12.0 * math.log2(hz / base)
+
+
 def over(value, base):
     if not value or not base or base <= 0:
         return None
@@ -133,6 +144,9 @@ def tokens(source):
             hz = pitch.get(out["speaker"]) or out.get("f0_ref_hz")
             out["f1_over_f0"] = over(out.get("f1_vowel"), hz)
             out["f1_onset_over_f0"] = over(out.get("f1_onset"), hz)
+            out["f0_register"] = register(
+                out.get("f0_ref_hz"), pitch.get(out["speaker"])
+            )
             rows.append(out)
     rows.sort(key=lambda row: (row["key"], row["clip"], row["syllable_index"]))
     return rows
@@ -196,11 +210,12 @@ def subfields(kind):
     return {field.name for field in kind} if pa.types.is_struct(kind) else set()
 
 
-def write_parquet(rows, path, schema_from, allow_new=False):
+def write_parquet(rows, path, schema_from, allow_new=False, dropped=()):
     table = pa.Table.from_pylist(rows)
     if schema_from and schema_from.exists():
         schema = pq.ParquetFile(schema_from).schema_arrow
-        missing = set(schema.names) - set(table.schema.names)
+        gone = {name for name in dropped if name not in table.schema.names}
+        missing = set(schema.names) - set(table.schema.names) - gone
         extra = set(table.schema.names) - set(schema.names)
         grown = []
         for field in schema:
@@ -208,8 +223,8 @@ def write_parquet(rows, path, schema_from, allow_new=False):
                 continue
             was = subfields(field.type)
             now = subfields(table.schema.field(field.name).type)
-            if was - now:
-                missing |= {f"{field.name}.{name}" for name in sorted(was - now)}
+            if was - now - gone:
+                missing |= {f"{field.name}.{name}" for name in sorted(was - now - gone)}
             if now - was:
                 grown.append(field.name)
         if missing or ((extra or grown) and not allow_new):
@@ -217,14 +232,17 @@ def write_parquet(rows, path, schema_from, allow_new=False):
                 f"{path.name}: schema drift, missing {sorted(missing)}, "
                 f"extra {sorted(extra)}, grown {sorted(grown)}"
             )
+        left = sorted(set(schema.names) & gone)
+        if left:
+            print(f"  {path.name:24s} dropped columns {left}")
         if extra:
             print(f"  {path.name:24s} new columns {sorted(extra)}")
         if grown:
             print(f"  {path.name:24s} widened {sorted(grown)}")
-        order = list(schema.names) + sorted(extra)
+        order = [name for name in schema.names if name not in gone] + sorted(extra)
         kept = pa.schema([table.schema.field(name) for name in order])
         for field in schema:
-            if field.name in grown:
+            if field.name in grown or field.name in gone:
                 continue
             kept = kept.set(kept.get_field_index(field.name), field)
         table = table.select(order).cast(kept)
@@ -240,10 +258,14 @@ def digest(path):
     return sha.hexdigest()
 
 
-def manifest(out, counts, version, previous):
+def manifest(out, counts, version, previous, source):
     payload = json.loads((previous / "MANIFEST.json").read_text()) if previous else {}
+    model = json.loads((source / "variability.json").read_text())
     payload["version"] = version
     payload["generated"] = datetime.now(UTC).date().isoformat()
+    payload["variability_source"] = model["source"]
+    payload["variability_n_speakers"] = model["n_speakers"]
+    payload["variability_n_tokens"] = model["n_tokens"]
     payload["files"] = {}
     for name in list(counts) + [f"calibration/{name}" for name in CALIBRATION]:
         path = out / name
@@ -263,6 +285,7 @@ def main():
     parser.add_argument("--previous", type=Path, default=None)
     parser.add_argument("--version", required=True)
     parser.add_argument("--allow-new-columns", action="store_true")
+    parser.add_argument("--dropped", nargs="*", default=[])
     args = parser.parse_args()
 
     out = args.out
@@ -290,12 +313,14 @@ def main():
             out / "templates.parquet",
             args.previous and args.previous / "templates.parquet",
             args.allow_new_columns,
+            args.dropped,
         ),
         "tokens.parquet": write_parquet(
             rows_of_tokens,
             out / "tokens.parquet",
             args.previous and args.previous / "tokens.parquet",
             args.allow_new_columns,
+            args.dropped,
         ),
         "variability.jsonl": jsonl(out / "variability.jsonl", variability(args.source)),
         "vot_norms.jsonl": jsonl(out / "vot_norms.jsonl", vot_norms(args.source)),
@@ -314,7 +339,7 @@ def main():
             continue
         (out / "calibration" / name).write_text(source.read_text().rstrip("\n") + "\n")
 
-    manifest(out, counts, args.version, args.previous)
+    manifest(out, counts, args.version, args.previous, args.source)
     for name, rows in counts.items():
         print(f"  {name:24s} {rows:>7d} rows")
 

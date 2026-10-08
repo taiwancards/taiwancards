@@ -9,7 +9,7 @@ RSpec.describe Pronunciation::Acoustic::Analyzer do
   def banded_template
     %w[ma4 ma2 ma1 ba4 de5 ban1 da4 na4]
       .filter_map { |key| store.template(key, "taiwan_word") }
-      .find { |template| template.dig("tone_contour", "low").present? }
+      .find { |template| template.dig("tone_contour", "low").present? && template["mark_mid"].present? }
   end
 
   def tone_axis(template, curve)
@@ -23,40 +23,32 @@ RSpec.describe Pronunciation::Acoustic::Analyzer do
     analyzer.score_axes(features, template, "taiwan_word").find { |axis| axis["id"] == "tone" }
   end
 
-  it "asks nothing of a point that sits anywhere inside the band" do
-    edge = [-1.5, 2.5]
-
-    expect(analyzer.outside(-1.5, edge)).to(eq(0.0))
-    expect(analyzer.outside(0.0, edge)).to(eq(0.0))
-    expect(analyzer.outside(2.5, edge)).to(eq(0.0))
-  end
-
-  it "charges a point only for how far past the band it went" do
-    edge = [-1.5, 2.5]
-
-    expect(analyzer.outside(-2.0, edge)).to(be_within(0.001).of(0.5))
-    expect(analyzer.outside(4.5, edge)).to(be_within(0.001).of(2.0))
-  end
-
-  it "scores a contour inside the band far above one well outside it" do
+  it "asks nothing of a contour that lands on the reference" do
     template = banded_template or skip("no banded template available")
-    tc = template["tone_contour"]
-    inside = tc["low"].each_index.map { |i| (tc["low"][i] + tc["high"][i]) / 2.0 }
-    outside = inside.map.with_index { |v, i| i.even? ? v + 6.0 : v - 6.0 }
+    axis = tone_axis(template, template.dig("tone_contour", "center"))
 
-    expect(tone_axis(template, inside)["score"] - tone_axis(template, outside)["score"]).to(be > 40)
+    expect(axis["z"]).to(be < 1.0)
+    expect(axis["code"]).to(eq("tone.ok"))
   end
 
-  it "charges only for the distance beyond the band" do
+  it "charges a contour more the further it drifts from the reference" do
     template = banded_template or skip("no banded template available")
-    tc = template["tone_contour"]
-    near = tc["high"].map { |v| v + 0.5 }
-    far = tc["high"].map { |v| v + 3.0 }
+    center = template.dig("tone_contour", "center")
+    near = tone_axis(template, center.map { |v| v * 0.8 })
+    far = tone_axis(template, center.map { |v| v * 0.2 })
 
-    expect(tone_axis(template, far)["z"]).to(be > tone_axis(template, near)["z"])
+    expect(far["z"]).to(be > near["z"])
   end
 
-  it "publishes the band so the learner can see it" do
+  it "scores a matching contour far above a zig-zag" do
+    template = banded_template or skip("no banded template available")
+    center = template.dig("tone_contour", "center")
+    broken = center.map.with_index { |v, i| i.even? ? v + 6.0 : v - 6.0 }
+
+    expect(tone_axis(template, center)["score"] - tone_axis(template, broken)["score"]).to(be > 40)
+  end
+
+  it "publishes a band so the learner can see what is being asked" do
     template = banded_template or skip("no banded template available")
     band = tone_axis(template, template.dig("tone_contour", "center")).dig("measured", "band")
 
@@ -64,7 +56,7 @@ RSpec.describe Pronunciation::Acoustic::Analyzer do
     expect(band).to(all(satisfy { |low, high| high > low }))
   end
 
-  it "keeps the band narrow where speakers agree and wide where they do not" do
+  it "keeps the observed band narrow where speakers agree and wide where they do not" do
     template = banded_template or skip("no banded template available")
     tc = template["tone_contour"]
     widths = tc["low"].each_index.map { |i| tc["high"][i] - tc["low"][i] }

@@ -522,7 +522,7 @@ module Pronunciation
         )
         return nil unless fine && Onset.plausible?(fine[:vot_ms], from_edge: edge)
 
-        fine.merge(clean: !edge)
+        fine.merge(clean: !fine[:truncated])
       end
 
       MAX_ONSET_MS = 300.0
@@ -668,6 +668,7 @@ module Pronunciation
         nucleus = nucleus_span(nasal_coda)
         f1v = span_median(f1, nucleus)
         f2v = span_median(f2, nucleus)
+        f3v = span_median(f3, nucleus)
         vowel_ok = formants_reliable?(scale && f1v && f1v / scale, scale && f2v && f2v / scale)
         f1_ratio = scale ? f1m / scale : nil
         f2_ratio = scale ? f2m / scale : nil
@@ -682,7 +683,10 @@ module Pronunciation
           "f2_over_f1" => over(f2v, f1v),
           "f2_onset_ratio" => over(f2_on, f1_on),
           "f2_end_over_f1" => over(f2_end, f1v),
-          "energy_tail_ratio" => tail_ratio(energy_curve),
+          "f3_over_f2" => over(f3v, f2v),
+          "f2_span_ratio" => f2_span_ratio(f2, scale),
+          "energy_peak_pos" => peak_position(energy_curve),
+          "energy_tail_db" => tail_drop_db(energy_curve),
           "formants_reliable" => vowel_ok,
           "f1_vowel" => f1v,
           "f2_vowel" => f2v,
@@ -742,15 +746,31 @@ module Pronunciation
         value / base
       end
 
-      def tail_ratio(curve)
+      MIN_F2_TRACK = 4
+
+      def f2_span_ratio(track, scale)
+        return nil if scale.nil? || scale <= 0.0
+
+        values = Array(track).select { |v| v.to_f > 0.0 }
+        return nil if values.length < MIN_F2_TRACK
+
+        (values.max - values.min) / scale
+      end
+
+      def peak_position(curve)
+        return nil if curve.nil? || curve.length < 8
+
+        curve.each_with_index.max_by { |value, _| value }[1].to_f / (curve.length - 1)
+      end
+
+      def tail_drop_db(curve)
         return nil if curve.nil? || curve.length < 8
 
         tail = curve[(curve.length * TAIL_SHARE).floor..]
         body = curve[(curve.length * BODY_SHARE.begin).floor...(curve.length * BODY_SHARE.end).ceil]
         return nil if tail.blank? || body.blank?
 
-        center = body.sum / body.length
-        center.abs < 1e-9 ? nil : (tail.sum / tail.length) / center
+        (tail.sum / tail.length) - (body.sum / body.length)
       end
 
       def formants_reliable?(f1_ratio, f2_ratio)

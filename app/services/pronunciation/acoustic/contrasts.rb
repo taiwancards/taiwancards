@@ -8,21 +8,34 @@ module Pronunciation
         vot_ratio
         fric_ms
         fric_centroid
+        fric_kurtosis
         centroid_ratio
         f1_ratio
         f2_ratio
         f2_end_ratio
-        f2_delta_ratio
+        f3_over_f2
+        f2_span_ratio
+        energy_peak_pos
         nasal_ratio_tail
         duration_ms
         voiced_ratio
         tone_range
         tone_slope
         f0_register
+        mark_onset
+        mark_q1
+        mark_mid
+        mark_q3
+        mark_end
+        mark_early
+        mark_late
+        mark_curve
+        mark_minpos
       ]
         .freeze
 
       MIN_DPRIME = 0.8
+      MARK_PREFIX = "mark_"
 
       module_function
 
@@ -32,15 +45,19 @@ module Pronunciation
         [stat["mad"].to_f, stat["sd"].to_f * 0.8].max
       end
 
+      def pooled(a, b)
+        sa = sigma_of(a)
+        sb = sigma_of(b)
+        Math.sqrt(((sa * sa) + (sb * sb)) / 2.0)
+      end
+
       def dprime(a, b)
         return nil unless a.is_a?(Hash) && b.is_a?(Hash) && a["median"] && b["median"]
 
-        sa = sigma_of(a)
-        sb = sigma_of(b)
-        pooled = Math.sqrt(((sa * sa) + (sb * sb)) / 2.0)
-        return nil if pooled < 1e-9
+        spread = pooled(a, b)
+        return nil if spread < 1e-9
 
-        (a["median"] - b["median"]).abs / pooled
+        (a["median"] - b["median"]).abs / spread
       end
 
       def tone_dprime(a, b)
@@ -70,6 +87,8 @@ module Pronunciation
             "direction" => (target_tpl[f]["median"] >= other_tpl[f]["median"]) ? 1 : -1
           }
         end
+
+        return out if out.keys.any? { |field| field.start_with?(MARK_PREFIX) }
 
         td = tone_dprime(target_tpl, other_tpl)
         out["tone_contour"] = {"d" => td.round(3), "direction" => 0} if td && td >= MIN_DPRIME

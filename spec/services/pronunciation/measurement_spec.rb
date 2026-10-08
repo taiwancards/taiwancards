@@ -40,6 +40,11 @@ RSpec.describe "What the pronunciation analyzer measures" do
           "tone_range" => {"median" => 7.5, "sigma" => 2.0},
           "tone_slope" => {"median" => -7.5, "sigma" => 2.5}
         )
+        .merge(
+          Pronunciation::Acoustic::ToneMarks
+            .of(Array.new(16) { |i| 4.0 - (0.5 * i) }, 0.0)
+            .to_h { |field, value| [field, {"median" => value, "mad" => 1.5, "sigma" => 1.5}] }
+        )
     end
 
     def curve(range)

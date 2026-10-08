@@ -90,7 +90,8 @@ module Pronunciation
         spans = segment(analysis, tokens)
         return [] if spans.nil?
 
-        wanted.filter_map { |token| row(analysis, spans, token, relative) }
+        quality = Acoustic::Quality.of(analysis)
+        wanted.filter_map { |token| row(analysis, spans, token, relative)&.merge("_quality" => quality) }
       rescue StandardError
         []
       end

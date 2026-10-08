@@ -65,6 +65,24 @@ namespace(:pronunciation) do
     Pronunciation::Corpus::CommonVoiceTokens.new(io: $stdout).write!
   end
 
+  desc("How many corpus recordings pass the audio quality gate, and why the rest fail")
+  task(clip_gate: :environment) do
+    rows = Pronunciation::Corpus::ClipReport.new(io: $stdout).call
+    width = rows.map { |row| row["source"].length }.max.to_i
+    puts(format("  %-#{width}s %8s %8s %s", "source", "tokens", "kept", "rejected by"))
+    rows.each do |row|
+      puts(
+        format(
+          "  %-#{width}s %8d %7.1f%%  %s",
+          row["source"],
+          row["n"],
+          row["kept_share"],
+          row["reasons"].map { |name, share| format("%s %.1f%%", name, share) }.join("  ")
+        )
+      )
+    end
+  end
+
   desc("Mark every Common Voice speaker as unheard, so VOICES=held_out reports on a stranger")
   task(speaker_split: :environment) do
     Pronunciation::Corpus::SpeakerSplit.new(io: $stdout).write!

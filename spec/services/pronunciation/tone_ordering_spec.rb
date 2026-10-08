@@ -34,11 +34,17 @@ RSpec.describe Pronunciation::Acoustic::Analyzer do
 
   it "keeps an exaggerated rise ahead of any fall" do
     template = rising_template or skip("no rising template available")
-    worst = tone(template, rise(24.0))["score"]
+    worst = tone(template, rise(12.0))["score"]
 
     [-3.0, -6.0, -12.0].each do |size|
       expect(worst).to(be > tone(template, rise(size))["score"])
     end
+  end
+
+  it "stops forgiving a rise that leaves the human range altogether" do
+    template = rising_template or skip("no rising template available")
+
+    expect(tone(template, rise(24.0))["score"]).to(be < tone(template, rise(12.0))["score"])
   end
 
   it "still prefers the rise the reference actually has to a bigger one" do

@@ -200,6 +200,7 @@ module Pronunciation
       rows.each_with_index do |row, index|
         row[:features]["f0_register"] ||= placed[index]
         row[:features]["n_register"] = heard
+        Acoustic::ToneMarks.stamp!(row[:features])
       end
     end
 

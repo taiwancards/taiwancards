@@ -8,12 +8,12 @@ module Pronunciation
       PATH = "drills.json"
       CRITERIA = "lists: self>=80, top1>=80%, margin>=5; pairs: both members self>=80, " \
         "the pair told apart >=70% on held-out corpus tokens, and the contrast told apart " \
-        ">=66% over 12662 syllables from speakers no template was built from, which sits in " \
-        "the gap between the nasal coda at 61.8% and the sibilant series at 70.2%; " \
+        ">=66% over 23411 minimal-pair decisions from speakers no template was built from, " \
+        "which sits in the gap between the nasal coda at 62.7% and the sibilant series at 73.5%; " \
         "the measured share is the section's decided field"
       DECIDABLE = 70.0
       FAMILY_FLOOR = 66.0
-      ON_A_STRANGER = {"aspiration" => 79.3, "sibilant" => 70.2, "coda" => 61.8}.freeze
+      ON_A_STRANGER = {"aspiration" => 77.9, "sibilant" => 73.5, "coda" => 62.7}.freeze
 
       GOOD_SELF = 80
       GOOD_TOP1 = 80.0

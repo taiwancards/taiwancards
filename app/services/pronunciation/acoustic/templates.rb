@@ -104,7 +104,7 @@ module Pronunciation
           "length" => mfcc_bary.length
         }
 
-        vot_rows = rows.select { |r| r["vot_reliable"] }
+        vot_rows = rows.select { |r| r["vot_ms"] }
         fmt_rows = rows.select { |r| Features.row_formants_reliable?(r) }
         fmt_rows = rows if fmt_rows.empty?
 
@@ -149,7 +149,9 @@ module Pronunciation
           "f3" => curve_stat(fmt_rows.map { |r| r["f3"] }),
           "f1_mid" => stat(fmt_rows.map { |r| r["f1_mid"] || Features.mid_of(r["f1"]) }),
           "f2_mid" => stat(fmt_rows.map { |r| r["f2_mid"] || Features.mid_of(r["f2"]) }),
-          "f3_mid" => stat(fmt_rows.map { |r| r["f3_mid"] || Features.mid_of(r["f3"]) }),
+          "f3_over_f2" => stat(fmt_rows.map { |r| r["f3_over_f2"] }),
+          "f2_span_ratio" => stat(fmt_rows.map { |r| r["f2_span_ratio"] }),
+          "energy_peak_pos" => stat(rows.map { |r| r["energy_peak_pos"] }),
           "f1_ratio" => stat(fmt_rows.map { |r| r["f1_ratio"] }),
           "f2_ratio" => stat(fmt_rows.map { |r| r["f2_ratio"] }),
           "f1_over_f0" => stat(fmt_rows.map { |r| r["f1_over_f0"] }),
@@ -157,7 +159,7 @@ module Pronunciation
           "f2_onset_ratio" => stat(fmt_rows.map { |r| r["f2_onset_ratio"] }),
           "f1_onset_over_f0" => stat(fmt_rows.map { |r| r["f1_onset_over_f0"] }),
           "f2_end_over_f1" => stat(fmt_rows.map { |r| r["f2_end_over_f1"] }),
-          "energy_tail_ratio" => stat(rows.map { |r| r["energy_tail_ratio"] }),
+          "energy_tail_db" => stat(rows.map { |r| r["energy_tail_db"] }),
           "nasal_ratio_mid" => stat(rows.map { |r| r["nasal_ratio_mid"] }),
           "f2_end_ratio" => stat(fmt_rows.map { |r| r["f2_end_ratio"] }),
           "f2_delta_ratio" => stat(fmt_rows.map { |r| r["f2_delta_ratio"] }),
@@ -171,7 +173,7 @@ module Pronunciation
           "fric_kurtosis" => stat(rows.map { |r| r["fric_kurtosis"] }),
           "nasal_ratio_tail" => stat(rows.map { |r| r["nasal_ratio_tail"] }),
           "nasal_antiformant" => stat(rows.map { |r| r["nasal_antiformant"] })
-        }
+        }.merge(ToneMarks::DERIVED.to_h { |field| [field, stat(rows.map { |r| r[field] })] })
 
         apply_variability!(tpl, variability) if variability
         tpl

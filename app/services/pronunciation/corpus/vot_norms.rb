@@ -43,7 +43,7 @@ module Pronunciation
           next if initial.nil? || initial.empty?
 
           Tokens.each(key, source) do |row|
-            out[initial] << row["vot_ms"] if row["vot_reliable"] && row["vot_ms"]
+            out[initial] << row["vot_ms"] if row["vot_ms"] && ClipGate.good?(row)
           end
         end
 

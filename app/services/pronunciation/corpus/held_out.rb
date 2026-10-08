@@ -13,7 +13,7 @@ module Pronunciation
 
       def citations(key)
         rows = []
-        Tokens.each(key) { |row| rows << row if row["_n_syllables"] == 1 }
+        Tokens.each(key) { |row| rows << row if row["_n_syllables"] == 1 && ClipGate.good?(row) }
         rows
       end
 

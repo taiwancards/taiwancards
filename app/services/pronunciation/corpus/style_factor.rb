@@ -27,15 +27,20 @@ module Pronunciation
 
         corrected.each_key do |field|
           value = corrected[field]
-          corrected[field] = value / (per_field[field] || median) if value.is_a?(Numeric)
+          corrected[field] = value / divisor_for(per_field, field, median) if value.is_a?(Numeric)
         end
 
         if corrected["tone_contour"].is_a?(Array)
-          divisor = per_field["tone_range"] || median
+          divisor = divisor_for(per_field, "tone_range", median)
           corrected["tone_contour"] = corrected["tone_contour"].map { |x| x / divisor }
         end
 
         corrected
+      end
+
+      def divisor_for(per_field, field, median)
+        value = per_field[field]
+        value.is_a?(Numeric) && value.positive? ? value : median
       end
 
       def build
@@ -59,7 +64,8 @@ module Pronunciation
           middle = DTW::Statistics.median(citation)
           next unless middle.positive?
 
-          per_field[field] = DTW::Statistics.median(connected) / middle
+          factor = DTW::Statistics.median(connected) / middle
+          per_field[field] = factor if factor.finite? && factor.positive?
         end
 
         @factors = {"per_field" => per_field, "median" => DTW::Statistics.median(per_field.values)}
