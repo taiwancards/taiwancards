@@ -9,7 +9,16 @@ module Pronunciation
   class Sync
     REMOTE_ROOT = "/var/data/pronunciation"
     DEFAULT_REGION = "singapore"
-    PAYLOAD = %w[templates thresholds.json inventory.json drills.json axis_norms.json].freeze
+    PAYLOAD = %w[
+      templates
+      thresholds.json
+      inventory.json
+      drills.json
+      axis_norms.json
+      context_norms.json
+      junction_norms.json
+    ]
+      .freeze
 
     STAGING = %r{(\A|/)[^/]+\.(old|prev|staging)(/|\z)}
 
