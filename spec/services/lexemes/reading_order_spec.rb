@@ -43,6 +43,27 @@ RSpec.describe Lexemes::ReadingOrder do
     expect(described_class.new(io: StringIO.new).drift?).to(be(false))
   end
 
+  it "leads 和 with the reading Taiwan speaks most, hàn" do
+    he = create(
+      :lexeme,
+      :character,
+      text: "和",
+      readings: {"pinyin" => "hé", "zhuyin" => "ㄏㄜˊ"},
+      data: {"readings" => [{"pinyin" => "hé", "zhuyin" => "ㄏㄜˊ"}, {"pinyin" => "hàn", "zhuyin" => "ㄏㄢˋ"}]}
+    )
+    single = create(:lexeme, kind: :word, text: "和", data: {"freq_rank" => 10})
+    LexemeLink.create!(parent: single, child: he, position: 1, reading: "hàn")
+    peace = create(:lexeme, kind: :word, text: "和平", data: {"freq_rank" => 500, "tocfl_level" => "A2"})
+    LexemeLink.create!(parent: peace, child: he, position: 1, reading: "hé")
+
+    run
+
+    he.reload
+    expect(he.readings["pinyin"]).to(eq("hàn"))
+    expect(he.data["readings"].map { |reading| reading["pinyin"] }).to(eq(%w[hàn hé]))
+    expect(described_class.new(io: StringIO.new).drift?).to(be(false))
+  end
+
   it "leaves a character alone when no graded vocabulary backs a change" do
     word("品質", "zhí", 300, nil)
     word("人質", "zhì", 8000, nil)

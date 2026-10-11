@@ -3,9 +3,6 @@
 module Huayu
   class SentenceReadings
     HAN = /\p{Han}/
-    NEUTRAL = "˙"
-    SPLITS = {"都會" => %w[都 會]}.freeze
-    PREFERRED = {"和" => ["ㄏㄢˋ", "hàn"]}.freeze
     Line = Data.define(:zhuyin, :pinyin)
 
     def initialize(analyzer: TextAnalyzer.new)
@@ -16,21 +13,12 @@ module Huayu
       texts = Array(sentences).map(&:to_s).uniq.reject(&:blank?)
       return {} if texts.empty?
 
-      chunks = texts.map { |text| resplit(@analyzer.segment(text)) }
+      chunks = texts.map { |text| SpokenReading.resplit(@analyzer.segment(text)) }
       preload(chunks.flatten)
       texts.zip(chunks).to_h { |text, tokens| [text, compose(tokens)] }
     end
 
     private
-
-    def resplit(tokens)
-      tokens.each_with_index.flat_map do |token, index|
-        parts = SPLITS[token]
-        next [token] if parts.nil? || tokens[index + 1]&.start_with?("區")
-
-        parts
-      end
-    end
 
     def compose(tokens)
       pairs = tokens.map { |token| reading_for(token) }
@@ -43,40 +31,38 @@ module Huayu
     def reading_for(token)
       return [token, token] unless token.match?(HAN)
 
-      PREFERRED[token] || read(entry_for(token)) || spell(token)
+      read(spoken(token)) || spell(token)
     end
 
-    def entry_for(token)
-      word = @words[token]
-      return word if token.length > 1
+    def spoken(text, standalone: true) = SpokenReading.pick(@lexemes.fetch(text, []), standalone:)
 
-      return word if word&.readings&.dig("zhuyin").to_s.start_with?(NEUTRAL)
-
-      @chars[token] || word
-    end
-
-    def read(entry)
-      zhuyin = entry&.readings&.dig("zhuyin")
+    def read(readings)
+      zhuyin = readings&.dig("zhuyin")
       return nil if zhuyin.blank?
 
-      [first_variant(zhuyin), first_variant(entry.readings["pinyin"].to_s)]
+      [first_variant(zhuyin), first_variant(readings["pinyin"].to_s)]
     end
 
     def first_variant(reading) = reading.split(" / ").first.to_s
 
     def spell(token)
-      pairs = token.chars.map { |char| read(entry_for(char)) }
+      pairs = SpokenReading
+        .pieces(token, -> (text) { SpokenReading.word?(@lexemes[text]) })
+        .map { |piece| read(spoken(piece, standalone: piece.length > 1)) }
       [
         pairs.map { |pair| pair&.first || "•" }.join(" "),
         pairs.map { |pair| pair&.last || "?" }.join
       ]
     end
 
+    def known?(text) = spoken(text).present?
+
     def preload(tokens)
       wanted = (tokens + tokens.flat_map(&:chars)).uniq.select { |text| text.match?(HAN) }
-      grouped = Lexeme.where(kind: %i[word character], text: wanted).group_by(&:kind)
-      @words = grouped.fetch("word", []).index_by(&:text)
-      @chars = grouped.fetch("character", []).index_by(&:text)
+      @lexemes = SpokenReading.lexemes_for(wanted)
+      unknown = tokens.uniq.select { |token| token.length > 1 && token.match?(HAN) && !known?(token) }
+      inside = unknown.flat_map { |token| SpokenReading.substrings(token) }.uniq - @lexemes.keys
+      @lexemes.merge!(SpokenReading.lexemes_for(inside)) if inside.any?
     end
   end
 end

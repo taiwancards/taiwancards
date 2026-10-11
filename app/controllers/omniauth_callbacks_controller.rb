@@ -33,9 +33,10 @@ class OmniauthCallbacksController < ApplicationController
 
   def failure
     return redirect_to(login_path, alert: t("auth.oauth_failed")) unless authenticated?
+    return redirect_to(origin_path, allow_other_host: false) unless params[:message] == "access_denied"
     return redirect_to(profile_backup_path, alert: t("auth.drive_declined")) if current_user.google_linked?
 
-    redirect_to(profile_path, alert: t("auth.oauth_failed"))
+    redirect_to(profile_path)
   end
 
   private
@@ -48,6 +49,11 @@ class OmniauthCallbacksController < ApplicationController
   end
 
   def signing_in? = request.env["omniauth.params"].to_h["intent"] == SIGN_IN
+
+  def origin_path
+    origin = params[:origin].to_s
+    own_path?(origin) ? origin : desk_path
+  end
 
   def welcome(user)
     Reminders::Dispatch.welcome(user)

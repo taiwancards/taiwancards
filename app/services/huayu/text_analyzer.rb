@@ -122,7 +122,9 @@ module Huayu
 
     MONTH_HEADS = %w[正 一 二 三 四 五 六 七 八 九 十 十一 十二].to_set.freeze
     DAY_TAILS = %w[一 二 三 四 五 六 七 八 九 十].to_set.freeze
-    TALLY_TAILS = %w[一 二 三 四 五 六 七 八 九 十 兩 幾 每 這 那 哪 第 半 多 數 整 首 末].to_set.freeze
+    TALLY_TAILS = %w[一 二 三 四 五 六 七 八 九 十 兩 幾 每 這 那 哪 第 半 多 數 整 首 末]
+      .to_set
+      .freeze
 
     def tokenize(text, words)
       pattern = self.class.vocabulary[:mixed]

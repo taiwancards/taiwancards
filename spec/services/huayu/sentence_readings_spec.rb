@@ -8,7 +8,16 @@ RSpec.describe Huayu::SentenceReadings do
   end
 
   before do
-    create(:lexeme, kind: :character, text: "和", readings: {"zhuyin" => "ㄏㄜˊ", "pinyin" => "hé"})
+    create(
+      :lexeme,
+      kind: :character,
+      text: "和",
+      readings: {"zhuyin" => "ㄏㄢˋ", "pinyin" => "hàn"},
+      data: {"readings" => [{"zhuyin" => "ㄏㄢˋ", "pinyin" => "hàn"}, {"zhuyin" => "ㄏㄜˊ", "pinyin" => "hé"}]}
+    )
+    create(:lexeme, kind: :word, text: "溫和", readings: {"zhuyin" => "ㄨㄣ ㄏㄜˊ", "pinyin" => "wēnhé"})
+    create(:lexeme, kind: :word, text: "氣候", readings: {"zhuyin" => "ㄑㄧˋ ㄏㄡˋ", "pinyin" => "qìhòu"})
+    create(:lexeme, kind: :character, text: "局", readings: {"zhuyin" => "ㄐㄩˊ", "pinyin" => "jú"})
     create(:lexeme, kind: :word, text: "和平", readings: {"zhuyin" => "ㄏㄜˊ ㄆㄧㄥˊ", "pinyin" => "hépíng"})
     create(
       :lexeme,
@@ -34,5 +43,14 @@ RSpec.describe Huayu::SentenceReadings do
   it "leaves 和 alone inside a word that has its own reading" do
     expect(reading("和平").pinyin).to(eq("hépíng"))
     expect(reading("暖和").pinyin).to(eq("nuǎnhuo"))
+  end
+
+  it "reads a phrase without its own entry through the words inside it, and a leftover 和 as in words" do
+    analyzer = instance_double(Huayu::TextAnalyzer)
+    allow(analyzer).to(receive(:segment)) { |text| [text] }
+    readings = described_class.new(analyzer:)
+
+    expect(readings.call(["氣候溫和"])["氣候溫和"].pinyin).to(eq("qìhòuwēnhé"))
+    expect(readings.call(["和局"])["和局"].pinyin).to(eq("héjú"))
   end
 end

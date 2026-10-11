@@ -27,6 +27,42 @@ RSpec.describe Huayu::WordClipBuilder do
     )
   end
 
+  describe "tone sandhi" do
+    let(:backend) { instance_double(Pronunciation::AcousticBackend) }
+    let(:judged) { described_class.new(words: [], out: Pathname(Dir.mktmpdir), log: StringIO.new, backend:) }
+    let(:rows) { Huayu::TextReading.rows("你好", "nǐ hǎo") }
+    let(:wav) { File.join(Dir.mktmpdir, "nihao.wav").tap { |path| File.write(path, "riff") } }
+
+    before { allow(judged).to(receive(:padded)) { |path| path } }
+
+    def heard(*tones)
+      syllables = tones.map { |score| {"level" => "green", "cells" => {"tone" => {"score" => score}}} }
+      {"overall" => 93, "syllables" => syllables}
+    end
+
+    def hearing(sandhi:, plain:)
+      allow(backend).to(receive(:grade)) { |syllables:, **| syllables.first["key"] == "ni2" ? sandhi : plain }
+    end
+
+    it "keeps a recording only when the shifted tone fits clearly better than the dictionary tone" do
+      hearing(sandhi: heard(97, 98), plain: heard(97, 98))
+      expect(judged.send(:grade, "你好", rows, wav, "你好", "cv-1.mp3")).to(be_nil)
+
+      hearing(sandhi: heard(94, 98), plain: heard(33, 98))
+      expect(judged.send(:grade, "你好", rows, wav, "你好", "cv-1.mp3")).to(
+        have_attributes(score: 93, sentence: "你好")
+      )
+    end
+
+    it "grades a word without sandhi once" do
+      plain = Huayu::TextReading.rows("謝謝", "xiè xie")
+      allow(backend).to(receive(:grade).and_return(heard(96, 95)))
+
+      expect(judged.send(:grade, "謝謝", plain, wav, "謝謝", "cv-2.mp3")).to(have_attributes(score: 93))
+      expect(backend).to(have_received(:grade).once)
+    end
+  end
+
   it "cuts a word inside a phrase exactly at its neighbors and pads only the free edges" do
     spans = [[0, 200], [210, 400], [410, 600], [610, 800]]
 

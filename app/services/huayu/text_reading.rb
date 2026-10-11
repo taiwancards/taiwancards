@@ -6,7 +6,7 @@ module Huayu
     ALTERNATIVES = "/"
 
     class << self
-      def rows(text, reading)
+      def rows(text, reading, words: nil)
         return [] if reading.blank?
 
         parts = Huayu::Zhuyin.syllabify(reading) || []
@@ -14,9 +14,43 @@ module Huayu
         return [] if parts.empty? || parts.length != chars.length
 
         base = parts.map { |part| Huayu::Zhuyin.tone(part["pinyin"]) }
-        surface = Huayu::ToneSandhi.surface_tones(chars: chars, base_tones: base)
+        surface = Huayu::ToneSandhi.surface_tones(
+          chars:,
+          base_tones: base,
+          phrase_starts: phrase_starts(text),
+          word_ends: word_ends(words, chars.length)
+        )
 
         parts.each_with_index.map { |part, index| row(part, chars[index], base[index], surface[index]) }
+      end
+
+      def phrase_starts(text)
+        count = 0
+        gap = false
+        text.to_s.each_char.with_object([]) do |char, starts|
+          next gap = count.positive? unless char.match?(HAN)
+
+          starts << count if gap
+          gap = false
+          count += 1
+        end
+      end
+
+      def word_ends(words, total)
+        count = 0
+        ends = Array(words).each_with_object([]) do |word, found|
+          size = word.to_s.scan(HAN).length
+          count += size
+          found << (count - 1) if size > 1
+        end
+
+        count == total ? ends : []
+      end
+
+      def unshifted(rows)
+        rows.map { |row|
+          row.merge("tone" => row["base_tone"], "key" => row["key"].sub(/\d\z/, row["base_tone"].to_s))
+        }
       end
 
       def headline(value)
@@ -39,12 +73,12 @@ module Huayu
       end
     end
 
-    def initialize(index: nil)
-      @index = index
+    def initialize(lexemes: {})
+      @lexemes = lexemes.dup
     end
 
     def spell(segments)
-      units = Array(segments)
+      units = SpokenReading.resplit(Array(segments))
       return nil if units.empty?
 
       spelled = units.map { |unit| unit_reading(unit) }
@@ -54,32 +88,37 @@ module Huayu
     private
 
     def unit_reading(unit)
-      direct = self.class.headline(reading_of(unit))
+      text = unit.to_s.scan(HAN).join
+      return nil if text.empty?
+
+      direct = reading_of(text, standalone: true)
       return direct if direct
 
-      letters = unit.to_s.scan(HAN).map { |char| settled_reading(char) }
-      letters.any?(&:nil?) || letters.empty? ? nil : letters.join(" ")
+      load(SpokenReading.substrings(text) + text.chars)
+      parts = SpokenReading.pieces(text, method(:known?)).map { |piece| settled_reading(piece) }
+      parts.any?(&:nil?) ? nil : parts.join(" ")
     end
 
-    def settled_reading(char)
-      reading = reading_of(char)
-      return nil if reading.is_a?(Array) && reading.length > 1
+    def settled_reading(piece)
+      reading = SpokenReading.pick(@lexemes[piece], standalone: piece.length > 1)&.dig("pinyin")
       return nil if reading.to_s.include?(ALTERNATIVES)
 
       self.class.headline(reading)
     end
 
-    def reading_of(text)
-      return @index[text] if @index
-
-      lexemes[text] ||= Lexeme
-        .where(kind: Huayu::TextAnalyzer::TOKEN_KINDS, text: text)
-        .order(:kind)
-        .first
-        &.readings
-        &.dig("pinyin")
+    def reading_of(text, standalone:)
+      load([text])
+      self.class.headline(SpokenReading.pick(@lexemes[text], standalone:)&.dig("pinyin"))
     end
 
-    def lexemes = @lexemes ||= {}
+    def known?(text) = SpokenReading.word?(@lexemes[text])
+
+    def load(texts)
+      missing = texts.reject { |text| @lexemes.key?(text) }
+      return if missing.empty?
+
+      found = SpokenReading.lexemes_for(missing)
+      missing.each { |text| @lexemes[text] = found.fetch(text, []) }
+    end
   end
 end

@@ -15,6 +15,7 @@
         - rows << [t("admin.joined"), l(@user.created_at, format: :short)]
         - rows << [t("admin.last_seen"), @user.last_seen_at ? l(@user.last_seen_at, format: :short) : t("admin.never")]
         - rows << [t("admin.visits_label"), @user.visits_count]
+        - rows << [t("admin.where"), whereabouts(@user).presence || t("admin.no_label")]
         - rows << [t("auth.interface_language"), @user.locale]
         - rows << ["Google", @user.google_email.presence || t("admin.no_label")]
         - rows << [t("admin.verified"), @user.verified? ? l(@user.email_verified_at, format: :short) : t("admin.no_label")]

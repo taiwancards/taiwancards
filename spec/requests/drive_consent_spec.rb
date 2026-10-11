@@ -85,6 +85,30 @@ RSpec.describe "Google Drive consent" do
     expect(flash[:alert]).to(eq(I18n.t("auth.drive_declined")))
   end
 
+  it "sends a signed-in learner quietly back when Google fails for any other reason" do
+    @authenticated_user.update!(google_uid: "drive-guid")
+
+    get("/auth/failure?message=oauth_failed&strategy=google_oauth2")
+    expect(response).to(redirect_to(desk_path))
+    expect(flash[:alert]).to(be_nil)
+
+    get("/auth/failure?message=timeout&origin=/en/profile/backup&strategy=google_oauth2")
+    expect(response).to(redirect_to("/en/profile/backup"))
+    expect(flash[:alert]).to(be_nil)
+
+    get("/auth/failure?message=oauth_failed&origin=https://evil.test/&strategy=google_oauth2")
+    expect(response).to(redirect_to(desk_path))
+  end
+
+  it "returns an unlinked learner who declined to the profile without a word" do
+    @authenticated_user.reload.update!(google_uid: nil)
+
+    get("/auth/failure?message=access_denied&strategy=google_oauth2")
+
+    expect(response).to(redirect_to(profile_path))
+    expect(flash[:alert]).to(be_nil)
+  end
+
   it "explains the Drive consent in both locales" do
     %i[en ru].each do |locale|
       expect(I18n.t("auth.drive_connect_hint", locale:)).to(be_present)

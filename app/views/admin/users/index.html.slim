@@ -28,6 +28,8 @@
           span = t("admin.joined_at", at: l(user.created_at, format: :short))
           span = user.last_seen_at ? t("admin.seen_at", at: l(user.last_seen_at, format: :short)) : t("admin.never")
           span = t("admin.visits", count: user.visits_count)
+          - if (place = whereabouts(user)).present?
+            span = place
           span = level_label(user.level)
           span = t("admin.cards", count: stats[:cards])
           span = t("admin.reviews_window", count: stats[:reviews], days: Admin::UserStats::WINDOW_DAYS)

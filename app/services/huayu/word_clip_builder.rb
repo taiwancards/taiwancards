@@ -11,6 +11,8 @@ module Huayu
     JOINT_FADE_MS = 40
     MIN_SCORE = 80
     GOOD_ENOUGH = 92
+    SANDHI_MARGIN = 5
+    GRADE_PAD_MS = 400
     CANDIDATES = 6
     WEAK_LEVELS = %w[red dark].freeze
     NOT_HAN = /\P{Han}/
@@ -20,7 +22,7 @@ module Huayu
     SOURCE = "Common Voice zh-TW (CC0-1.0), cut from Taiwan-born speakers' recordings"
 
     Source = Data.define(:text, :path, :lexeme)
-    Cut = Data.define(:word, :sentence, :score, :wav)
+    Cut = Data.define(:word, :sentence, :score, :wav, :source)
 
     def self.starter_words
       StarterTrack.lessons.flat_map(&:words).map(&:zh).uniq.select { |text|
@@ -47,7 +49,7 @@ module Huayu
         @words.each do |word|
           cut = best_cut(word)
           @log.puts(cut ? "#{word}: #{cut.score} from #{cut.sentence}" : "#{word}: no clean recording")
-          clips[word] = publish(cut) if cut
+          cut ? clips[word] = publish(cut) : clips.delete(word)
         end
       end
 
@@ -125,7 +127,7 @@ module Huayu
 
       last = start + word.length - 1
       clip = trim(wav, window(spans, start, last), joint: last < rows.size - 1)
-      grade(word, word_rows, clip, source.text)
+      grade(word, word_rows, clip, source.text, source.path)
     end
 
     def window(spans, first, last)
@@ -135,16 +137,32 @@ module Huayu
       [[from, 0].max, to]
     end
 
-    def grade(word, rows, wav, sentence)
-      result = @backend.grade(audio: File.binread(wav), text: word, syllables: rows, takes: 1)
+    def grade(word, rows, wav, sentence, source)
+      heard = padded(wav)
+      return nil if heard.nil?
+
+      result = @backend.grade(audio: File.binread(heard), text: word, syllables: rows, takes: 1)
       syllables = Array(result&.dig("syllables"))
       if syllables.size != rows.size || syllables.any? { |row| row.nil? || WEAK_LEVELS.include?(row["level"]) }
         return nil
       end
 
+      return nil unless sandhi_heard?(word, rows, heard, syllables)
+
       score = result["overall"].to_i
-      score >= MIN_SCORE ? Cut.new(word:, sentence:, score:, wav:) : nil
+      score >= MIN_SCORE ? Cut.new(word:, sentence:, score:, wav:, source:) : nil
     end
+
+    def sandhi_heard?(word, rows, wav, syllables)
+      shifted = rows.each_index.select { |index| rows[index]["tone"] != rows[index]["base_tone"] }
+      return true if shifted.empty?
+
+      plain = @backend.grade(audio: File.binread(wav), text: word, syllables: TextReading.unshifted(rows), takes: 1)
+      heard = Array(plain&.dig("syllables"))
+      shifted.all? { |index| tone_score(syllables[index]) >= tone_score(heard[index]) + SANDHI_MARGIN }
+    end
+
+    def tone_score(syllable) = syllable&.dig("cells", "tone", "score").to_i
 
     def convert(path)
       target = File.join(@tmp, "#{Digest::SHA1.hexdigest(path.to_s)}.wav")
@@ -162,8 +180,15 @@ module Huayu
       ffmpeg("-ss", (from / 1000.0).to_s, "-t", seconds.to_s, "-i", wav, "-af", filters, target) ? target : nil
     end
 
+    def padded(wav)
+      target = "#{wav.delete_suffix(".wav")}-padded.wav"
+      seconds = GRADE_PAD_MS / 1000.0
+      filters = "adelay=#{GRADE_PAD_MS}|#{GRADE_PAD_MS},apad=pad_dur=#{seconds}"
+      ffmpeg("-i", wav, "-af", filters, target) ? target : nil
+    end
+
     def publish(cut)
-      name = "#{Digest::SHA1.hexdigest("#{cut.word}:#{cut.sentence}")[0, 16]}.mp3"
+      name = "#{Digest::SHA1.hexdigest("#{cut.word}:#{cut.sentence}:#{File.basename(cut.source.to_s)}")[0, 16]}.mp3"
       audio = @out.join("audio")
       FileUtils.mkdir_p(audio)
       ffmpeg("-i", cut.wav, "-af", "loudnorm=I=-18:TP=-2", "-codec:a", "libmp3lame", "-q:a", "4", audio.join(name).to_s)

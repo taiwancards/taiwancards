@@ -68,7 +68,7 @@ RSpec.describe Huayu::ReadingRank do
     expect(described_class.new.order(zhi.reload).map { |r| r["zhuyin"] }).to(eq(%w[ㄓˋ ㄓˊ]))
   end
 
-  it "lifts a spoken function reading that has few compounds above the rare literary ones" do
+  it "leads 和 with the conjunction hàn, the reading Taiwan speaks most, then its compounds" do
     he = create(
       :lexeme,
       :character,
@@ -92,8 +92,7 @@ RSpec.describe Huayu::ReadingRank do
 
     ordered = described_class.new.order(he.reload).map { |r| r["zhuyin"] }
 
-    expect(ordered.first).to(eq("ㄏㄜˊ"))
-    expect(ordered.index("ㄏㄢˋ")).to(be < ordered.index("ㄏㄜˋ"))
+    expect(ordered).to(eq(%w[ㄏㄢˋ ㄏㄜˊ ㄏㄜˋ]))
   end
 
   it "makes a spoken reading the main one when the dictionary and speech agree it dominates" do

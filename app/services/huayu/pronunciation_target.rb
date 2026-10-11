@@ -7,7 +7,11 @@ module Huayu
     end
 
     def syllables
-      TextReading.rows(@lexeme.text, stored_reading.presence || assembled_reading)
+      TextReading.rows(
+        @lexeme.text,
+        stored_reading.presence || assembled_reading,
+        words: (segments if @lexeme.sentence?)
+      )
     end
 
     private
@@ -19,7 +23,7 @@ module Huayu
     def assembled_reading
       return nil unless @lexeme.sentence?
 
-      TextReading.new(index: readings_of(segments)).spell(segments)
+      TextReading.new(lexemes: lexemes_of(segments)).spell(segments)
     end
 
     def segments
@@ -29,12 +33,6 @@ module Huayu
       end
     end
 
-    def readings_of(units)
-      texts = (units + @lexeme.text.scan(TextReading::HAN)).uniq
-      Lexeme
-        .where(kind: Huayu::TextAnalyzer::TOKEN_KINDS, text: texts)
-        .order(:kind)
-        .each_with_object({}) { |lexeme, acc| acc[lexeme.text] ||= lexeme.readings["pinyin"] }
-    end
+    def lexemes_of(units) = SpokenReading.lexemes_for(units + @lexeme.text.scan(TextReading::HAN))
   end
 end

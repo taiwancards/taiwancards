@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_09_142931) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_11_160114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -670,6 +670,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_09_142931) do
     t.string("time_zone")
     t.string("previous_time_zone")
     t.datetime("reminders_off_at")
+    t.string("country")
     t.index("lower((email)::text)", name: "index_users_on_lower_email", unique: true)
     t.index(["google_uid"], name: "index_users_on_google_uid", unique: true, where: "(google_uid IS NOT NULL)")
   end

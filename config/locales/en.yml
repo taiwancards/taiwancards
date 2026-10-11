@@ -2934,6 +2934,7 @@ en:
     joined: Registered
     last_seen: Last seen
     visits_label: Visits
+    where: Where from
     verified: Email verified
     yes_label: "yes"
     no_label: "no"

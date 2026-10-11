@@ -176,12 +176,18 @@ class User < ApplicationRecord
 
   SEEN_THROTTLE = 15.minutes
   VISIT_GAP = 30.minutes
+  COUNTRY_CODE = /\A[A-Z]{2}\z/
+  UNKNOWN_COUNTRIES = %w[XX T1].freeze
 
-  def seen!(now = Time.current)
+  def seen!(now = Time.current, country: nil)
     return if last_seen_at && now - last_seen_at < SEEN_THROTTLE
 
     visit = last_seen_at.nil? || now - last_seen_at > VISIT_GAP ? 1 : 0
-    self.class.where(id: id).update_all(["last_seen_at = ?, visits_count = visits_count + ?", now, visit])
+    place = country.to_s.upcase
+    place = nil unless place.match?(COUNTRY_CODE) && UNKNOWN_COUNTRIES.exclude?(place)
+    self.class.where(id: id).update_all(
+      ["last_seen_at = ?, visits_count = visits_count + ?, country = COALESCE(?, country)", now, visit, place]
+    )
     UserDay.record(self, at: now)
   rescue => e
     Rails.logger.warn("presence tracking failed: #{e.class}: #{e.message}")

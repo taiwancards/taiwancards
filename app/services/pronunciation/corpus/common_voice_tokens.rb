@@ -30,12 +30,12 @@ module Pronunciation
         wanted = clips
         raise "no clips under #{DIR}" if wanted.empty?
 
-        reader = TextReading.new(index: readings(wanted))
+        reader = TextReading.new(lexemes: lexemes(wanted))
         tokens = Hash.new { |hash, key| hash[key] = [] }
         resolved = 0
 
         wanted.each do |clip|
-          rows = Huayu::TextReading.rows(clip[:text], reader.spell(clip[:segments]))
+          rows = Huayu::TextReading.rows(clip[:text], reader.spell(clip[:segments]), words: clip[:segments])
           next if rows.empty?
 
           resolved += 1
@@ -91,12 +91,9 @@ module Pronunciation
         end
       end
 
-      def readings(wanted)
-        texts = wanted.flat_map { |clip| clip[:segments] + clip[:text].scan(Huayu::TextReading::HAN) }.uniq
-        Lexeme
-          .where(kind: Huayu::TextAnalyzer::TOKEN_KINDS, text: texts)
-          .order(:kind)
-          .each_with_object({}) { |lexeme, acc| acc[lexeme.text] ||= lexeme.readings["pinyin"] }
+      def lexemes(wanted)
+        texts = wanted.flat_map { |clip| clip[:segments] + clip[:text].scan(Huayu::TextReading::HAN) }
+        Huayu::SpokenReading.lexemes_for(texts)
       end
     end
   end

@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
     return unless response.successful? || response.redirect?
     return unless request.format.html?
 
-    current_user&.seen!
+    current_user&.seen!(country: request.headers["CF-IPCountry"])
     ActivityEvent.record(
       user: current_user,
       controller: controller_path,

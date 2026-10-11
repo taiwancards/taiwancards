@@ -47,6 +47,25 @@ RSpec.describe "Admin insights" do
       expect(user.reload.visits_count).to(eq(7))
     end
 
+    it "remembers the country Cloudflare saw the visit from and shows it with the time zone" do
+      user = sign_in(create(:user))
+      user.update!(time_zone: "Asia/Saigon")
+
+      User.where(id: user.id).update_all(last_seen_at: 1.day.ago)
+      get("/dict", headers: {"CF-IPCountry" => "vn"})
+      expect(user.reload.country).to(eq("VN"))
+
+      User.where(id: user.id).update_all(last_seen_at: 1.day.ago)
+      get("/dict", headers: {"CF-IPCountry" => "XX"})
+      expect(user.reload.country).to(eq("VN"))
+
+      sign_in(admin)
+      get("/admin/users")
+      expect(response.body).to(include("🇻🇳 VN · Asia/Saigon"))
+      get(admin_user_path(user))
+      expect(response.body).to(include("🇻🇳 VN · Asia/Saigon"))
+    end
+
     it "leaves the impersonated account untouched" do
       sign_in(admin)
       member = create(:user)
