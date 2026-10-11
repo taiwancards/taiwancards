@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   include Authentication
   include Authorization
   include Voiced
+  include ReadOnlyImpersonation
   include PubliclyCacheable
 
   allow_browser versions: :modern, unless: :any_browser?

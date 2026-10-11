@@ -2961,8 +2961,9 @@ en:
     by_day: By day
     recent: Latest activity
     impersonate: View as
-    impersonating: You are now viewing the app as %{email}.
-    impersonating_banner: Viewing as %{email} — your admin session is untouched.
+    impersonating: You are now viewing the app as %{email}, read-only.
+    impersonation_read_only: Read-only view — this change was not saved.
+    impersonating_banner: Viewing as %{email}, read-only — nothing you do here changes their account.
     impersonation_stop: Back to my account
     impersonation_stopped: Back to your own account.
     impersonate_self: That is already your own account.

@@ -46,7 +46,7 @@
             = f.submit t("admin.save"), class: "shrink-0 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90 cursor-pointer"
 
           - if user != current_user
-            = button_to t("admin.impersonate"), admin_impersonate_path(user), form: {class: "shrink-0"}, class: "rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted"
+            = button_to t("admin.impersonate"), admin_impersonate_path(user), form: {class: "shrink-0", data: {turbo: false}}, class: "rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted"
             = button_to t("admin.delete"), admin_user_path(user), method: :delete, form: {class: "shrink-0", data: {turbo_confirm: t("admin.delete_confirm", email: user.email)}}, class: "rounded-md border border-red-500 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-500/10"
 
   = render("shared/pager", page: @page, pages: @pages, path: -> (n) { admin_users_path(sort: @sort, page: n) })
