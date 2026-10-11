@@ -21,6 +21,16 @@ RSpec.describe Study::CardSet do
 
       expect(lexeme_ids(tokens)).to(include(word.id))
     end
+
+    it "offers the next level first and leaves the learner's own level for later" do
+      user.update!(level: "2")
+      create(:lexeme, kind: :word, text: "早詞", data: {"tbcl_grade" => 1, "freq_rank" => 1})
+      upcoming = create(:lexeme, kind: :word, text: "新詞", data: {"tbcl_grade" => 3, "freq_rank" => 900})
+
+      tokens = described_class.new.build(mode: "daily", size: 1)
+
+      expect(lexeme_ids(tokens).uniq).to(eq([upcoming.id]))
+    end
   end
 
   describe "desk mode" do
@@ -57,6 +67,17 @@ RSpec.describe Study::CardSet do
       tokens = described_class.new.build(mode: "desk", collection: desk)
 
       expect(tokens.map { |token| token.split(":").last }.uniq).to(eq(%w[recognition tone writing]))
+    end
+
+    it "draws new cards only from the learner's own decks in decks mode" do
+      mine = create(:lexeme, kind: :word, text: "課本")
+      other = create(:lexeme, kind: :word, text: "詞語", data: {"freq_rank" => 1})
+      Collection.create!(kind: :manual, name: "Class", user:).add_lexeme(mine)
+      Collection.create!(kind: :manual, name: "Theirs", user: create(:user)).add_lexeme(other)
+
+      ids = lexeme_ids(described_class.new.build(mode: "decks")).uniq
+
+      expect(ids).to(eq([mine.id]))
     end
 
     it "keeps tone and handwriting out of the default daily session" do

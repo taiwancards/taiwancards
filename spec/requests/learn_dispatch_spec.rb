@@ -3,17 +3,35 @@
 require "rails_helper"
 
 RSpec.describe "Start dispatch" do
-  it "sends a complete beginner to the roadmap, not straight into a step" do
-    expect(desk_start_path).to(eq(roadmap_path))
+  def finish_track!
+    Huayu::StarterTrack.lessons.each do |lesson|
+      CourseCompletion.record(
+        user: @authenticated_user,
+        slug: "#{Learn::Starter::PREFIX}#{lesson.slug}",
+        score: 1,
+        total: 1
+      )
+    end
   end
 
-  it "keeps a beginner on the roadmap while steps remain" do
-    @authenticated_user.mark_path_step!("zhuyin")
-
-    expect(desk_start_path).to(eq(roadmap_path))
+  it "sends a complete beginner to the first lesson of the first-steps track" do
+    expect(desk_start_path).to(eq(starter_lesson_path(Huayu::StarterTrack.lessons.first)))
   end
 
-  it "goes to cards once the whole roadmap is behind the beginner" do
+  it "keeps a beginner on the track while lessons remain" do
+    first, second = Huayu::StarterTrack.lessons.first(2)
+    CourseCompletion.record(
+      user: @authenticated_user,
+      slug: "#{Learn::Starter::PREFIX}#{first.slug}",
+      score: 1,
+      total: 1
+    )
+
+    expect(desk_start_path).to(eq(starter_lesson_path(second)))
+  end
+
+  it "goes to cards once the track and the roadmap are behind the beginner" do
+    finish_track!
     Onboarding::Path.new(@authenticated_user).steps.each { |step| @authenticated_user.mark_path_step!(step[:key]) }
 
     expect(desk_start_path).to(eq(study_path(mode: "today")))
@@ -38,9 +56,9 @@ RSpec.describe "Start dispatch" do
     expect(@authenticated_user.reload.level).to(eq("zero"))
   end
 
-  it "still routes the phonetics level through the roadmap" do
-    @authenticated_user.update!(prefs: {"level" => "phonetics"})
+  it "puts someone switching from pinyin on the same track" do
+    @authenticated_user.update!(prefs: {"goal" => "guided", "level" => "phonetics"})
 
-    expect(desk_start_path).to(eq(roadmap_path))
+    expect(desk_start_path).to(eq(starter_lesson_path(Huayu::StarterTrack.lessons.first)))
   end
 end

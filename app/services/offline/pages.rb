@@ -31,7 +31,7 @@ module Offline
     end
 
     def call
-      return level if section.levelled?
+      return level if section.leveled?
 
       case section.id
       when "core"

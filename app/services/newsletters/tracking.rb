@@ -6,8 +6,6 @@ module Newsletters
 
     module_function
 
-    def token(delivery, url) = verifier.generate([delivery.id, url], purpose: PURPOSE)
-
     def read(token) = verifier.verified(token.to_s, purpose: PURPOSE)
 
     def verifier
@@ -33,6 +31,20 @@ module Newsletters
       return text if text.empty? || text.start_with?("mailto:") || base.nil?
 
       text.start_with?("/") ? "#{base}#{text}" : text
+    end
+
+    def site_host = Site.url && URI(Site.url).host
+
+    def path_of(url)
+      uri = URI(url)
+      [uri.path.presence || "/", uri.query && "?#{uri.query}", uri.fragment && "##{uri.fragment}"].join
+    end
+
+    def visitable?(url)
+      uri = URI(url.to_s)
+      uri.is_a?(URI::HTTP) && uri.host.present? && [host, site_host].compact.include?(uri.host)
+    rescue URI::InvalidURIError
+      false
     end
 
     def ours?(url, host = self.host())

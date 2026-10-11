@@ -158,6 +158,14 @@ RSpec.describe "What the pronunciation analyzer measures" do
     it "names the rival syllable when a sound is genuinely weak" do
       expect(backend.send(:rival_for, "gao1", "kao1", parts(tone: 96, initial: 30))).to(be_present)
     end
+
+    it "does not blame the initial when only the final was weak" do
+      expect(backend.send(:rival_for, "ni2", "li2", parts(tone: 96, final: 40))).to(be_nil)
+    end
+
+    it "does not blame an initial it never measured" do
+      expect(backend.send(:rival_for, "ni2", "li2", parts(tone: 96, initial: nil, final: 96))).to(be_nil)
+    end
   end
 
   describe "finding where the speech is" do

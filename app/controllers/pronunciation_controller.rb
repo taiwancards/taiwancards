@@ -6,11 +6,6 @@ class PronunciationController < ApplicationController
   QUEUE_SIZE = Pronunciation::Queue::SIZE
 
   def show
-    if warmup_needed?
-      remember_return_path(request.fullpath)
-      return redirect_to(pronunciation_warmup_path, notice: t("pronunciation.warmup_first"))
-    end
-
     @collection = Collection.where(user_id: [nil, current_user&.id]).find_by(id: params[:collection_id])
     @drills = Pronunciation::Drills.instance
     @section = @drills.section(params[:section])
@@ -78,12 +73,6 @@ class PronunciationController < ApplicationController
     auto = Setting.instance.pron_auto
     room = @syllables.length * Pronunciation::AcousticBackend::PER_SYLLABLE_MS
     room > auto[:max_ms] ? auto.merge(max_ms: room) : auto
-  end
-
-  def warmup_needed?
-    session[:warmup_skipped] = true if params[:anyway].present?
-
-    !voice_calibrated? && !session[:warmup_skipped]
   end
 
   def parse_expected

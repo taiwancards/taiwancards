@@ -68,4 +68,28 @@ RSpec.describe "The progress section" do
     expect(response.body).to(include(I18n.t("nav.progress")))
     expect(response.body).to(include("href=\"#{progress_path}\""))
   end
+
+  it "closes with this week's mistakes and a session to redrill them" do
+    user = @authenticated_user
+    word = create(:lexeme, kind: :word, text: "錯字")
+    memory = LexemeMemory.create!(user:, lexeme: word, facet: :recognition, state: :review, due_at: 1.day.from_now)
+    LexemeReview.create!(
+      user:,
+      lexeme: word,
+      lexeme_memory: memory,
+      facet: :recognition,
+      rating: Fsrs::Scheduler::RATINGS.fetch(:again),
+      reviewed_at: 1.hour.ago
+    )
+
+    get(progress_path)
+
+    expect(response.body).to(include("id=\"mistakes\"", "錯字", "/study?mode=mistakes", "Redrill 1 word"))
+  end
+
+  it "sends the old mistake notebook address to the progress page" do
+    get("/mistakes")
+
+    expect(response).to(redirect_to("/en/progress#mistakes"))
+  end
 end

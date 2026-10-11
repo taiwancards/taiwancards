@@ -51,9 +51,7 @@ RSpec.describe "Zhuyin trainer" do
     expect(@authenticated_user.reload.path_steps_done).to(include("zhuyin"))
   end
 
-  it "is reachable from the roadmap, which is where START puts a beginner" do
-    expect(desk_start_path).to(eq(roadmap_path))
-
+  it "is reachable from the roadmap" do
     get(roadmap_path)
     expect(response.body).to(include(zhuyin_training_path))
   end

@@ -50,7 +50,7 @@ RSpec.describe Huayu::CollocationMeaningFiller do
 
   it "leaves a locale that a curated page file owns" do
     lexeme = create(:lexeme, kind: :collocation, text: "貧血", meanings: {"en" => "anemia"})
-    write_store([{text: "貧血", en: "anaemia, low blood", ru: "малокровие"}])
+    write_store([{text: "貧血", en: "anemia, low blood count", ru: "малокровие"}])
     write_curated([{"text" => "貧血", "en" => "anemia"}])
 
     run(paths: [curated.to_s])

@@ -1,0 +1,63 @@
+- today = home.today
+- decks = home.decks
+- link = "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-2 hover:underline md:min-h-8"
+- source = "flex min-h-11 items-center gap-3 rounded-lg px-2 text-sm hover:bg-muted"
+
+.grid.gap-4.lg:grid-cols-3
+  .min-w-0.space-y-4.lg:col-span-2
+    - if decks.any?
+      = render("desks/action",
+        href: @start_path,
+        label: (today[:due].positive? ? t("desk.classes.review", count: today[:due]) : t("desk.classes.study")),
+        hint: t("desk.classes.hint"),
+        stats: [[today[:due], t("desk.due"), "text-amber-500"], [home.on_desk, t("desk.on_desk"), nil]])
+    - else
+      section.rounded-2xl.border.border-brand.p-4.sm:p-5.space-y-3 class="bg-brand-soft"
+        p.text-lg.font-bold = t("desk.classes.empty_title")
+        p.text-sm.leading-relaxed.text-muted-foreground = t("desk.classes.empty_body")
+        = link_to t("desk.classes.empty_cta"), new_desk_path, id: "desk-start",
+          class: "inline-flex min-h-11 items-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+
+    section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+      .flex.flex-wrap.items-baseline.justify-between.gap-2
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("desk.classes.decks_title")
+        = link_to t("desk.classes.decks_all", count: home.decks_count), desks_path, class: "text-xs text-primary underline-offset-2 hover:underline"
+      - if decks.empty?
+        p.py-4.text-center.text-sm.text-muted-foreground = t("desk.classes.decks_empty")
+      - else
+        ul.divide-y.divide-border
+          - decks.each do |deck|
+            li.flex.items-center.gap-3.py-2
+              = link_to my_desk_path(deck), class: "min-w-0 flex-1 rounded-lg py-1 hover:text-primary" do
+                span.block.truncate.text-sm.font-medium = deck.name
+                span.block.text-xs.text-muted-foreground
+                  = t("desk.classes.deck_size", count: deck.items_count)
+                  - if deck.last_used_at
+                    = " · #{t("desk.classes.deck_used", ago: time_ago_in_words(deck.last_used_at))}"
+              = link_to t("desks.study"), study_path(mode: "desk", collection_id: deck.id),
+                class: "inline-flex min-h-11 shrink-0 items-center rounded-lg border border-border px-3 text-sm font-medium hover:bg-muted md:min-h-8"
+
+  .min-w-0.space-y-4
+    - if (starter = home.starter_lesson)
+      = render("desks/starter", lesson: starter)
+
+    = render("shared/discovery", suggestion: @discovery)
+
+    section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+      h2.text-sm.font-semibold = t("desk.classes.add_title")
+      p.text-xs.leading-relaxed.text-muted-foreground = t("desk.classes.add_body")
+      nav.-mx-2
+        = link_to new_desk_path(tab: "text"), class: source do
+          = icon(:sentences, css: "size-4 shrink-0 text-muted-foreground")
+          = t("desk.classes.add_text")
+        = link_to new_desk_path(tab: "import"), class: source do
+          = icon(:upload, css: "size-4 shrink-0 text-muted-foreground")
+          = t("desk.classes.add_import")
+        = link_to new_desk_path(tab: "photo"), class: source do
+          = icon(:characters, css: "size-4 shrink-0 text-muted-foreground")
+          = t("desk.classes.add_photo")
+        = link_to triage_path, class: source do
+          = icon(:check, css: "size-4 shrink-0 text-muted-foreground")
+          = t("desk.classes.add_triage")
+
+    = render("desks/streak", home:)

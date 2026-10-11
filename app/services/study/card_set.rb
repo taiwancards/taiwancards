@@ -27,6 +27,7 @@ module Study
     def select(mode:, size: nil, collection: nil, offset: 0)
       @facets = swipe_facets_for(collection)
       @recommended = RECOMMENDED_MODES.include?(mode)
+      Study::Upkeep.new(@user, now: @now).refresh if @recommended && @user.is_a?(User)
       ids = case mode
       when "cram"
         cram_ids(size, collection)
@@ -34,6 +35,8 @@ module Study
         window_ids(collection, offset)
       when "desk"
         desk_ids(collection)
+      when "decks"
+        own_deck_ids
       when "today"
         today_ids
       when "mistakes"
@@ -77,6 +80,27 @@ module Study
         .order(:position)
         .limit(today_quota)
         .pluck(:lexeme_id)
+      activate(fresh)
+      (due + fresh).uniq
+    end
+
+    def own_deck_ids
+      due = due_lexeme_ids
+      quota = today_quota
+      fresh = CollectionItem
+        .joins(:collection)
+        .merge(Collection.desks_for(@user))
+        .where
+        .not(lexeme_id: studied_lexeme_ids + due)
+        .order(
+          Arel.sql("collections.last_used_at DESC NULLS LAST"),
+          "collections.position",
+          "collection_items.position"
+        )
+        .limit(quota * 4)
+        .pluck(:lexeme_id)
+        .uniq
+        .first(quota)
       activate(fresh)
       (due + fresh).uniq
     end
@@ -197,7 +221,7 @@ module Study
       scope = Lexeme.where(kind: :grammar).where.not(id: activated_lexeme_ids + exclude)
       ceiling = level_ceiling
       scope = scope.up_to_level(ceiling) if ceiling
-      scope.curriculum_order.limit(count).pluck(:id)
+      next_level_first(scope).curriculum_order.limit(count).pluck(:id)
     end
 
     def sentence_fresh_ids(count, exclude: [])
@@ -237,10 +261,7 @@ module Study
       return [] if count <= 0
 
       scope_ids = Study::PlanCalculator.new(plan).scope_lexeme_ids
-      Lexeme
-        .where(id: scope_ids)
-        .where
-        .not(id: activated_lexeme_ids)
+      next_level_first(Lexeme.where(id: scope_ids).where.not(id: activated_lexeme_ids))
         .curriculum_order
         .limit(count)
         .pluck(:id)
@@ -250,7 +271,7 @@ module Study
       scope = Lexeme.where(kind: %i[character word])
       ceiling = level_ceiling
       scope = scope.up_to_level(ceiling) if ceiling
-      ids = scope.curriculum_order.limit(limit).pluck(:id)
+      ids = next_level_first(scope).curriculum_order.limit(limit).pluck(:id)
       return ids if ids.size >= limit || ceiling.nil?
 
       ids +
@@ -267,6 +288,13 @@ module Study
       return nil unless @user.respond_to?(:level_grade)
 
       @user.level_grade + 1
+    end
+
+    def next_level_first(scope)
+      grade = level_ceiling.to_i - 1
+      return scope unless grade.positive?
+
+      scope.order(Arel.sql(Lexeme.sanitize_sql_array(["COALESCE(#{Lexeme::LEVEL_INDEX_SQL} <= ?, FALSE)", grade])))
     end
 
     def studied_lexeme_ids

@@ -44,19 +44,25 @@ module Pronunciation
     end
 
     def refine_voice(result)
-      return if @voice.nil?
+      voice = @voice || VoiceProfile.find_or_create_by!(user: @user)
 
       Array(result["syllables"]).each do |syllable|
-        curve = syllable.dig("contour", "curve")
-        next if curve.blank? || syllable["tone"].blank?
+        next if syllable.dig("contour", "curve").blank?
 
-        Calibration.refine!(
-          @voice,
-          f0_values: absolute_pitch(syllable),
-          tone: syllable["tone"],
-          score: syllable["overall"]
-        )
+        if syllable["tone"].present? && syllable["overall"].to_i >= Calibration::GOOD_ENOUGH_TO_LEARN_FROM
+          Calibration.refine!(
+            voice,
+            f0_values: absolute_pitch(syllable),
+            tone: syllable["tone"],
+            score: syllable["overall"]
+          )
+        else
+          Calibration.absorb!(voice, f0_values: absolute_pitch(syllable))
+        end
       end
+
+    rescue StandardError => error
+      Rails.logger.warn("voice profile not refined: #{error.class}")
     end
 
     def absolute_pitch(syllable)

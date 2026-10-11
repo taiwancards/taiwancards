@@ -1,4 +1,28 @@
 = render layout: "profiles/shell" do
+  section#goal.scroll-mt-28.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("goals.profile.title")
+    p.text-sm.text-muted-foreground = t("goals.profile.lede")
+    = render "shared/goal_options"
+
+    #level.scroll-mt-28.space-y-2.border-t.border-border.pt-4 data-controller="autosave level-change"
+      .flex.items-center.justify-between.gap-3
+        h3.text-sm.font-semibold = t("auth.level_field")
+        = render "profiles/saved_badge"
+      = form_with model: @user, url: profile_path, method: :patch, data: {action: "change->autosave#save change->level-change#show"} do |form|
+        = form.select :level,
+          User::LEVELS.map { |value| [level_label(value), value] },
+          {selected: @user.level},
+          class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm sm:max-w-md",
+          data: {level_change_target: "select"}
+      p.text-xs.leading-relaxed.text-muted-foreground
+        = t("auth.level_note")
+        = " "
+        = link_to t("auth.level_test"), placement_path, class: "font-medium text-primary hover:underline"
+        = "."
+      = render "shared/level_scale"
+      - level_change_notes(@user).each do |value, note|
+        p.hidden.rounded-lg.border.border-border.bg-muted.px-3.py-2.text-sm.leading-relaxed data-level-change-target="note" data-level=value = note
+
   section.rounded-2xl.border.border-border.bg-card.p-5.space-y-4 data-controller="autosave"
     .flex.items-center.justify-between.gap-3
       h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.account")
@@ -12,12 +36,8 @@
       label.block.space-y-1
         span.text-xs.font-medium.text-muted-foreground = t("auth.interface_language")
         = form.select :locale, locale_options, {}, class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-      - if @user.google_linked?
-        label.flex.cursor-pointer.items-start.gap-2.text-sm class="sm:col-span-2"
-          = form.check_box :newsletter, class: "mt-0.5 size-4"
-          span
-            span.block.font-medium = t("newsletters.profile.label")
-            span.block.text-xs.text-muted-foreground = t("newsletters.profile.hint")
+
+  = render "profiles/reminders"
 
   section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.security")

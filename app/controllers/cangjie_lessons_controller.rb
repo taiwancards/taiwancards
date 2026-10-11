@@ -14,6 +14,6 @@ class CangjieLessonsController < ApplicationController
     @lesson = Huayu::CangjieLessons.find(params[:id])
     raise ActiveRecord::RecordNotFound if @lesson.nil?
 
-    @previous, @next = Huayu::CangjieLessons.neighbours(@lesson)
+    @previous, @next = Huayu::CangjieLessons.neighbors(@lesson)
   end
 end

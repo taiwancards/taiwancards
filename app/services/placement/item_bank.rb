@@ -237,10 +237,10 @@ module Placement
         .presence
       return if rivals.nil?
 
-      neighbours = neighbouring_readings(grade, answer)
-      return if neighbours.length < CHOICES - 1
+      neighbors = neighboring_readings(grade, answer)
+      return if neighbors.length < CHOICES - 1
 
-      choices = ([answer] + neighbours.sample(CHOICES - 1, random: @rng)).shuffle(random: @rng)
+      choices = ([answer] + neighbors.sample(CHOICES - 1, random: @rng)).shuffle(random: @rng)
       clip = Huayu::CnsVoice.alternating(answer, @rng.rand(2))
 
       build(
@@ -254,7 +254,7 @@ module Placement
       )
     end
 
-    def neighbouring_readings(grade, answer)
+    def neighboring_readings(grade, answer)
       pool(grade, kinds: %i[character])
         .filter_map { |lexeme| lexeme.reading("zhuyin").presence }
         .uniq

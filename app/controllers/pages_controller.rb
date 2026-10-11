@@ -5,9 +5,6 @@ class PagesController < ApplicationController
   publicly_cacheable only: %i[menu support]
   before_action :send_to_the_site, only: %i[licenses privacy_policy terms_of_service]
 
-  def help
-  end
-
   def licenses
   end
 

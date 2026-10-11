@@ -19,7 +19,6 @@ RSpec.describe Offline::Pages do
     /pronunciation
     /writing
     /search
-    /help
     /mistakes
     /placement
     /plan

@@ -33,6 +33,7 @@ html lang=@letter.locale
               td style="padding:18px 8px 0;font-family:#{font};font-size:12px;line-height:1.6;color:#{Newsletters::EmailHtml::MUTED};"
                 p style="margin:0 0 8px;" = t("newsletters.mail.why")
                 p style="margin:0 0 8px;" = t("newsletters.mail.promise")
+                p style="margin:0 0 8px;" = t("mail_links.note")
                 p style="margin:0;"
                   a href=@letter.unsubscribe_url style="color:#{Newsletters::EmailHtml::MUTED};text-decoration:underline;" = t("newsletters.mail.unsubscribe")
                   = " · "

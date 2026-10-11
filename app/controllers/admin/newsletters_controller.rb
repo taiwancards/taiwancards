@@ -21,7 +21,8 @@ module Admin
 
     def edit
       @locale = params[:lang].presence_in(Newsletter::LOCALES) || Newsletter::LOCALES.last
-      @recipients = Newsletter.recipients.group(:locale).count
+      @recipients = @newsletter.audience_recipients.group(:locale).count
+      @subscribers = Newsletter.recipients.order(Arel.sql("last_seen_at DESC NULLS LAST")).to_a
       @deliveries = @newsletter.deliveries.includes(:user).order(:id).to_a
       @stats = Newsletters::Stats.new([@newsletter]).for(@newsletter)
       @budget = Newsletters::Dispatch.budget
@@ -30,8 +31,13 @@ module Admin
 
     def update
       @newsletter.update!(newsletter_params)
+      @recipients = @newsletter.audience_recipients.group(:locale).count
       respond_to do |format|
-        format.json { render(json: {html: preview_html(params[:lang].presence_in(Newsletter::LOCALES) || "en")}) }
+        format.json {
+          render(
+            json: {html: preview_html(params[:lang].presence_in(Newsletter::LOCALES) || "en"), **audience_labels}
+          )
+        }
         format.html {
           redirect_to(
             edit_admin_newsletter_path(@newsletter, lang: params[:lang]),
@@ -67,6 +73,10 @@ module Admin
         return redirect_to(edit_admin_newsletter_path(@newsletter), alert: t("newsletters.admin.incomplete"))
       end
 
+      unless @newsletter.audience_recipients.exists?
+        return redirect_to(edit_admin_newsletter_path(@newsletter), alert: t("newsletters.admin.no_recipients"))
+      end
+
       unless MailSettings.ready?
         return redirect_to(edit_admin_newsletter_path(@newsletter), alert: t("newsletters.admin.not_configured"))
       end
@@ -86,11 +96,28 @@ module Admin
     end
 
     def newsletter_params
-      permitted = params.expect(newsletter: [*FIELDS, buttons: [%i[label_en label_ru url]]])
+      permitted = params.expect(
+        newsletter: [
+          *FIELDS,
+          buttons: [%i[label_en label_ru url]],
+          audience: [:mode, levels: [], goals: [], user_ids: []]
+        ]
+      )
       buttons = permitted[:buttons]
       permitted[:buttons] = (buttons.respond_to?(:values) ? buttons.values : buttons).map(&:to_h) if buttons
       permitted
     end
+
+    def audience_labels
+      counts = {count: @recipients.values.sum, en: @recipients.fetch("en", 0), ru: @recipients.fetch("ru", 0)}
+      {
+        recipients: t("newsletters.admin.audience_count", **counts),
+        deliver: t("newsletters.admin.deliver", **counts),
+        confirm: t("newsletters.admin.deliver_confirm", **counts)
+      }
+    end
+
+    helper_method :audience_labels
 
     def preview_html(locale)
       I18n.with_locale(locale) do

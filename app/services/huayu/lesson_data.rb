@@ -16,7 +16,7 @@ module Huayu
     def available? = lessons.any?
     def find(param) = payload[:by_slug][param.to_s]
 
-    def neighbours(lesson, rows = lessons)
+    def neighbors(lesson, rows = lessons)
       position = rows.index(lesson)
       return [nil, nil] if position.nil?
 

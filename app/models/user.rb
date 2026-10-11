@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   include Preferenced
+  include ReminderSchedule
 
   DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file"
   DRIVE_CONSENT_SCOPE = "email,profile,#{DRIVE_SCOPE}"
@@ -12,6 +13,7 @@ class User < ApplicationRecord
   encrypts :google_access_token
 
   has_many :activity_events, dependent: :destroy
+  has_many :user_days, dependent: :delete_all
   has_many :pronunciation_attempts, dependent: :destroy
   has_many :pronunciation_recordings, dependent: :delete_all
   has_many :syllable_skills, dependent: :delete_all
@@ -22,6 +24,9 @@ class User < ApplicationRecord
   has_many :collection_groups, dependent: :delete_all
   has_many :deck_shares, dependent: :delete_all
   has_many :newsletter_deliveries, dependent: :delete_all
+  has_many :reminder_deliveries, dependent: :delete_all
+  has_many :mail_events, dependent: :nullify
+  has_many :mail_links, dependent: :delete_all
   has_many :course_completions, dependent: :delete_all
   has_many :placement_tests, dependent: :destroy
   has_many :study_plans, dependent: :destroy
@@ -30,7 +35,13 @@ class User < ApplicationRecord
   normalizes :email, with: -> (email) { email.to_s.strip.downcase }
   normalizes :google_email, with: -> (email) { email.to_s.strip.downcase.presence }
 
+  MAILING_COLUMNS = {"reminders" => "reminders_off_at", "newsletter" => "newsletter_unsubscribed_at"}.freeze
+
+  attr_accessor :mailing_source
+
   before_save :settle_admin
+  after_create_commit :log_mailing_signup
+  after_update_commit :log_mailing_changes
 
   validates :email, presence: true, uniqueness: {case_sensitive: false}, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :password, length: {minimum: 8}, allow_nil: true
@@ -107,7 +118,21 @@ class User < ApplicationRecord
     self.newsletter_unsubscribed_at = wanted ? nil : (newsletter_unsubscribed_at || Time.current)
   end
 
-  def unsubscribe!(at: Time.current) = update_columns(newsletter_unsubscribed_at: newsletter_unsubscribed_at || at)
+  def reminders? = reminders_off_at.nil?
+
+  alias_method :reminders, :reminders?
+
+  def reminders=(value)
+    wanted = ActiveModel::Type::Boolean.new.cast(value)
+    self.reminders_off_at = wanted ? nil : (reminders_off_at || Time.current)
+  end
+
+  def unsubscribe!(at: Time.current, source: "email_link")
+    return if newsletter_unsubscribed_at
+
+    self.mailing_source = source
+    update!(newsletter_unsubscribed_at: at)
+  end
 
   def display_name
     name.presence || email
@@ -129,8 +154,15 @@ class User < ApplicationRecord
     find_by(email: owner_email) || order(:id).first
   end
 
+  def default_owner?
+    return false unless self.class.signed_in_by_default?
+    return @default_owner if defined?(@default_owner)
+
+    @default_owner = self == self.class.default_owner
+  end
+
   def admin?
-    return true if self.class.signed_in_by_default?
+    return true if default_owner?
 
     owner = self.class.owner_google_email
     return false if owner.nil? || google_email.blank? || google_email != owner
@@ -150,6 +182,7 @@ class User < ApplicationRecord
 
     visit = last_seen_at.nil? || now - last_seen_at > VISIT_GAP ? 1 : 0
     self.class.where(id: id).update_all(["last_seen_at = ?, visits_count = visits_count + ?", now, visit])
+    UserDay.record(self, at: now)
   rescue => e
     Rails.logger.warn("presence tracking failed: #{e.class}: #{e.message}")
   end
@@ -157,9 +190,16 @@ class User < ApplicationRecord
   MAX_MOBILE_TABS = 4
   ZHUYIN_POSITIONS = %w[right over].freeze
   TEXT_DIRECTIONS = %w[horizontal vertical].freeze
+  GOALS = %w[tocfl classes guided].freeze
 
   preference :zhuyin_position, one_of: ZHUYIN_POSITIONS
   preference :text_direction, one_of: TEXT_DIRECTIONS
+  preference :goal, one_of: GOALS, allow_nil: true
+  preference :signup_from
+
+  def goal_chosen?
+    goal.present?
+  end
 
   def mobile_tabs
     Array(prefs["mobile_tabs"]).map(&:to_s)
@@ -174,30 +214,6 @@ class User < ApplicationRecord
   end
 
   MAX_MISSES = 99
-
-  def intro_seen_version
-    prefs["intro_version"].to_i
-  end
-
-  def intro_done?
-    prefs["intro_stage"].to_s == "done"
-  end
-
-  def intro_running?
-    prefs["intro_stage"].to_s == "running"
-  end
-
-  def intro_step
-    prefs["intro_step"].presence
-  end
-
-  def intro_chapters
-    Array(prefs["intro_chapters"]).map(&:to_s)
-  end
-
-  def intro
-    @intro ||= Intro::Progress.new(self)
-  end
 
   def phonetic_misses
     Hash(prefs["phonetic_misses"]).transform_values(&:to_i)
@@ -214,10 +230,12 @@ class User < ApplicationRecord
     zhuyin_position
     text_direction
     mobile_tabs
+    goal
+    signup_from
   ].freeze
 
   LEVELS = %w[zero phonetics 1 2 3 4 5 6 7].freeze
-  START_LEVELS = %w[zero phonetics characters experienced].freeze
+  START_LEVELS = %w[zero phonetics zhuyin characters experienced].freeze
   MAX_PATH_STEPS = 20
   MAX_PRACTICE_RUNS = 9999
 
@@ -238,12 +256,21 @@ class User < ApplicationRecord
     Integer(level, exception: false) || 0
   end
 
+  def beginner?
+    level_grade.zero? && %w[characters experienced].exclude?(start_level)
+  end
+
   def knows_phonetics?
     level != "zero"
   end
 
   def start_chosen?
     start_level.present?
+  end
+
+  def choose_start(level)
+    self.start_level = level
+    self.level = "phonetics" if start_level == "phonetics" && level_grade.zero?
   end
 
   def path_steps_done
@@ -280,5 +307,27 @@ class User < ApplicationRecord
 
   def settle_admin
     self.admin = admin?
+  end
+
+  def log_mailing_signup
+    MAILING_COLUMNS.each do |list, column|
+      MailEvent.log(self, list:, event: self[column] ? "unsubscribed" : "subscribed", source: "signup", at: created_at)
+    end
+  end
+
+  def log_mailing_changes
+    MAILING_COLUMNS.each do |list, column|
+      next unless saved_change_to_attribute?(column)
+
+      MailEvent.log(
+        self,
+        list:,
+        event: self[column] ? "unsubscribed" : "subscribed",
+        source: mailing_source || "profile"
+      )
+    end
+
+    log_reminder_schedule
+    self.mailing_source = nil
   end
 end

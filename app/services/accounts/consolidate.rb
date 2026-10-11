@@ -3,6 +3,7 @@
 module Accounts
   class Consolidate
     FIRST_ID = 1
+    LOGS = %w[mail_events].freeze
 
     Result = Data.define(:deleted, :kept, :renumbered, :attached, :next_id)
 
@@ -26,7 +27,7 @@ module Accounts
     private
 
     def owned_tables
-      @owned_tables ||= connection.tables.select do |table|
+      @owned_tables ||= (connection.tables - LOGS).select do |table|
         connection.columns(table).any? { |column| column.name == "user_id" }
       end
     end

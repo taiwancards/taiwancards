@@ -1,0 +1,94 @@
+- content_for(:title, t("starter.title", number: @lesson.number, title: @lesson.title_for(I18n.locale)))
+- random = Random.new(@lesson.number)
+- glosses = (@entries.map(&:first) + @pool).to_h { |word| [word.zh, word.gloss(I18n.locale)] }
+- crutch = @lesson.number <= StarterHelper::PINYIN_LESSONS
+- card = "space-y-5 rounded-3xl border border-border bg-card px-5 py-6 text-center shadow-sm sm:px-8 sm:py-8"
+- kicker = "text-xs font-medium uppercase tracking-wide text-brand"
+- primary = "inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-40 sm:w-auto sm:min-w-48"
+- option = "flex min-h-14 items-center justify-center rounded-2xl border-2 border-border bg-background px-3 py-2 transition-colors hover:border-primary/60"
+
+.mx-auto.max-w-xl.py-4.space-y-4[
+  data-controller="starter-lesson"
+  data-starter-lesson-right-value=t("starter.right")
+  data-starter-lesson-wrong-value=t("starter.wrong") ]
+
+  header.space-y-2
+    .flex.items-center.justify-between.gap-3
+      p.min-w-0.truncate.text-sm.font-semibold
+        = t("starter.title", number: @lesson.number, title: @lesson.title_for(I18n.locale))
+      = link_to desk_path, class: "inline-flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted md:size-9", aria: {label: t("starter.leave")}, title: t("starter.leave") do
+        span.text-xl aria-hidden="true" = "×"
+    .h-1.5.overflow-hidden.rounded-full.bg-muted
+      .h-full.rounded-full.bg-primary.transition-all style="width: 0%" data-starter-lesson-target="bar"
+
+  - @lesson.symbols.each do |symbol|
+    section class=card data-starter-lesson-target="step" hidden=true
+      p class=kicker = t("starter.new_symbol")
+      .text-8xl.font-semibold.leading-none lang="zh-TW" = symbol
+      - if (pinyin = starter_symbol_pinyin(symbol))
+        p.pinyin.text-lg.text-muted-foreground = pinyin
+      = render "starter_lessons/play", url: starter_symbol_clip(symbol)
+      button type="button" class=primary data-action="starter-lesson#next" = t("starter.next")
+
+  - @quiz.shuffle(random:).each do |symbol|
+    - choices = ([symbol] + (@symbols - [symbol]).sample(StarterLessonsController::OPTIONS - 1, random:)).shuffle(random:)
+    section class=card data-starter-lesson-target="step" hidden=true
+      p class=kicker = t("starter.which_symbol")
+      = render "starter_lessons/play", url: starter_symbol_clip(symbol), large: true
+      .grid.grid-cols-2.gap-3
+        - choices.each do |choice|
+          button.text-5xl type="button" lang="zh-TW" class=option data-action="starter-lesson#answer" data-group="symbols" data-subject=symbol data-correct=(choice == symbol).to_s
+            = choice
+      p.min-h-5.text-sm data-feedback=""
+
+  - if (capsule = @lesson.capsule_for(I18n.locale)).present?
+    section class=card data-starter-lesson-target="step" hidden=true
+      p class=kicker = t("starter.capsule")
+      p.text-left.text-base.leading-relaxed = capsule
+      button type="button" class=primary data-action="starter-lesson#next" = t("starter.got_it")
+
+  - @entries.each do |word, lexeme|
+    - audio = starter_audio(lexeme)
+    section class=card data-starter-lesson-target="step" hidden=true
+      p class=kicker = t("starter.new_word")
+      .text-6xl.font-semibold = zhuyin_ruby(lexeme.text, lexeme.headline_zhuyin)
+      - if crutch && (pinyin = lexeme.reading_set.first&.dig("pinyin"))
+        p.text-base.text-muted-foreground lang="zh-Latn" = pinyin
+      p.text-lg = word.gloss(I18n.locale)
+      - if (note = starter_tone_note(lexeme))
+        p.mx-auto.max-w-sm.text-sm.leading-relaxed.text-muted-foreground = note
+      - if audio
+        = render "starter_lessons/play", audio:
+      - if audio&.dig(:speakable)
+        = render "starter_lessons/speech", lexeme:, crutch:
+      button type="button" class=primary data-action="starter-lesson#next" = t("starter.next")
+
+  - @entries.shuffle(random:).each do |word, lexeme|
+    - others = (glosses.keys - [word.zh]).reject { |key| glosses[key] == glosses[word.zh] }.sample(StarterLessonsController::OPTIONS - 1, random:)
+    - audio = starter_audio(lexeme)
+    section class=card data-starter-lesson-target="step" hidden=true
+      p class=kicker = t("starter.which_meaning")
+      .text-5xl.font-semibold = zhuyin_ruby(lexeme.text, lexeme.headline_zhuyin)
+      - if audio
+        = render "starter_lessons/play", audio:
+      .grid.gap-2
+        - ([word.zh] + others).shuffle(random:).each do |key|
+          button.text-base type="button" class=option data-action="starter-lesson#answer" data-group="words" data-subject=lexeme.id data-correct=(key == word.zh).to_s
+            = glosses[key]
+      p.min-h-5.text-sm data-feedback=""
+
+  - if (phrase = @lesson.phrase)
+    section class=card data-starter-lesson-target="step" hidden=true
+      p class=kicker = t("starter.phrase")
+      .text-4xl.font-semibold.leading-relaxed = starter_phrase(phrase)
+      p.text-base.text-muted-foreground = phrase.translation(I18n.locale)
+      button type="button" class=primary data-action="starter-lesson#next" = t("starter.next")
+
+  section class=card data-starter-lesson-target="step" hidden=true
+    p class=kicker = t("starter.finish_kicker")
+    p.text-2xl.font-bold = t("starter.finish_title", count: @entries.size)
+    p.text-sm.text-muted-foreground = t("starter.finish_body")
+    = form_with url: starter_lesson_path(@lesson), method: :post, data: {turbo: false} do |form|
+      = hidden_field_tag :symbols, "{}", data: {starter_lesson_target: "symbols"}
+      = hidden_field_tag :words, "{}", data: {starter_lesson_target: "words"}
+      = form.submit t("starter.finish"), class: "#{primary} cursor-pointer"

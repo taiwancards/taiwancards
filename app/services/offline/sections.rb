@@ -3,7 +3,7 @@
 module Offline
   module Sections
     Section = Data.define(:id, :group, :level) do
-      def levelled? = level.present?
+      def leveled? = level.present?
 
       def title(locale) = I18n.t("offline.packs.#{id}", locale: locale, default: level.to_s)
 

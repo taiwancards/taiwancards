@@ -1,0 +1,28 @@
+- tones = {"sent" => "bg-muted text-muted-foreground", "failed" => "bg-destructive/15 text-destructive", "clicked" => "bg-brand-soft text-brand", "unsubscribed" => "bg-destructive/15 text-destructive", "subscribed" => "bg-brand-soft text-brand", "scheduled" => "bg-brand-soft text-brand", "paused" => "bg-destructive/15 text-destructive", "resumed" => "bg-brand-soft text-brand"}
+
+- if events.empty?
+  p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
+    = t("admin.mail.empty")
+- else
+  .divide-y.divide-border.rounded-xl.border.border-border
+    - events.each do |event|
+      .space-y-1.px-3.py-2.text-sm
+        .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1
+          span.shrink-0.text-xs.tabular-nums.text-muted-foreground = l(event.created_at, format: :long)
+          - if local_assigns[:account] != false
+            - if event.user
+              = link_to event.email, admin_user_path(event.user), class: "min-w-0 max-w-64 truncate font-medium underline underline-offset-2"
+            - else
+              span.min-w-0.max-w-64.truncate.font-medium.text-muted-foreground title=t("admin.mail.deleted") = event.email
+          span.shrink-0.rounded.px-1.5.text-xs.font-medium class=tones.fetch(event.event, tones["sent"]) = t("admin.mail.events.#{event.event}")
+          span.shrink-0.text-xs.text-muted-foreground = t("admin.mail.lists.#{event.list}")
+          - if event.letter.present?
+            span.min-w-0.truncate = event.list == "reminders" ? t("admin.mail.letters.#{event.letter}", default: event.letter) : event.letter
+          - if event.count.to_i.positive?
+            span.shrink-0.rounded.bg-muted.px-1.5.text-xs.tabular-nums = t("admin.mail.cards", count: event.count)
+          - if event.source.present?
+            span.shrink-0.text-xs.text-muted-foreground = t("admin.mail.sources.#{event.source}", default: event.source)
+          - if event.detail.present?
+            span.min-w-0.truncate.text-xs.text-muted-foreground class="basis-full sm:basis-auto" title=event.detail = mail_event_detail(event)
+        - if event.summary.present?
+          p.line-clamp-3.text-xs.leading-relaxed.text-muted-foreground title=event.summary = event.summary

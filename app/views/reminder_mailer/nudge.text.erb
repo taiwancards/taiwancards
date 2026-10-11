@@ -1,0 +1,5 @@
+<% if @delivery.count.positive? %><%= @delivery.count %> <% end %><%= t("#{@key}.title", **@vars) %>
+
+<% Array.wrap(t("#{@key}.body", **@vars)).each do |paragraph| %><%= paragraph %>
+
+<% end %>

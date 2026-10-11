@@ -1,0 +1,59 @@
+- content_for(:title) { t("admin.reminders.title") }
+- cell = "px-3 py-2 text-right tabular-nums"
+- share = -> (part, whole) { whole.to_i.zero? ? "—" : "#{part} · #{(part * 100.0 / whole).round}%" }
+- hours = -> (from, to) { from && to ? t("admin.reminders.after", hours: ((to - from) / 3600.0).round(1)) : "—" }
+
+.py-6.space-y-6
+  header.space-y-2
+    = render "admin/nav"
+    h1.text-2xl.font-bold.tracking-tight = t("admin.reminders.title")
+    p.max-w-3xl.text-sm.text-muted-foreground
+      = t("admin.reminders.lede", hour: Reminders::Schedule.default_hour, quiet: Reminders::Schedule.quiet_hours, stop: Reminders::Schedule.give_up_after, signup: Reminders::Schedule.signup_days.join(", "), away: Reminders::Schedule.away_days.join(", "), habit: Reminders::Schedule.dose[:habit_days], regular: Reminders::Schedule.dose[:regular_days], starter: Reminders::Schedule.dose[:starter], off: @opted_out)
+
+  section.flex.flex-wrap.items-center.justify-between.gap-3.rounded-xl.border.p-4 class=(@paused_at ? "border-destructive/40 bg-destructive/5" : "border-border")
+    .min-w-0.space-y-1
+      p.text-sm.font-semibold class=("text-destructive" if @paused_at)
+        = @paused_at ? t("admin.reminders.paused_since", date: l(@paused_at, format: :short)) : t("admin.reminders.running")
+      p.max-w-2xl.text-xs.leading-relaxed.text-muted-foreground = t("admin.reminders.pause_hint")
+    = form_with url: admin_reminders_path, method: :patch do |form|
+      = form.hidden_field :paused, value: @paused_at ? "0" : "1"
+      = form.submit @paused_at ? t("admin.reminders.resume") : t("admin.reminders.pause"), name: nil, class: "min-h-10 cursor-pointer rounded-lg px-4 text-sm font-semibold #{@paused_at ? "bg-primary text-primary-foreground hover:opacity-90" : "border border-destructive text-destructive hover:bg-destructive/10"}"
+
+  section.overflow-x-auto.rounded-xl.border.border-border
+    table.w-full.text-sm
+      thead.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground
+        tr
+          th.px-3.py-2.text-left = t("admin.reminders.trigger")
+          - %i[sent clicked returned click_hours failed].each do |key|
+            th class=cell = t("admin.reminders.columns.#{key}")
+      tbody.divide-y.divide-border
+        - if @triggers.empty?
+          tr
+            td.px-3.py-6.text-center.text-muted-foreground colspan=6 = t("admin.activity_empty")
+        - @triggers.each do |row|
+          tr
+            td.px-3.py-2 = row.trigger
+            td class=cell = row.sent
+            td class=cell = share.(row.clicked, row.sent)
+            td class=cell = share.(row.returned, row.sent)
+            td class=cell = row.click_hours ? row.click_hours.round(1) : "—"
+            td class=cell = row.failed
+
+  section.space-y-2
+    h2.text-sm.font-semibold = t("admin.reminders.recent")
+    .overflow-x-auto.rounded-xl.border.border-border
+      table.w-full.text-sm
+        thead.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground
+          tr
+            - %i[user trigger count sent clicked returned].each do |key|
+              th.px-3.py-2.text-left = t("admin.reminders.feed.#{key}")
+        tbody.divide-y.divide-border
+          - @deliveries.each do |delivery|
+            tr
+              td.max-w-56.truncate.px-3.py-2 = link_to delivery.user.display_name, admin_user_path(delivery.user), class: "hover:underline"
+              td.px-3.py-2 = delivery.trigger
+              td.px-3.py-2.tabular-nums = delivery.count
+              td.whitespace-nowrap.px-3.py-2
+                = delivery.sent_at ? l(delivery.sent_at, format: :short) : (delivery.error.presence || t("admin.reminders.pending"))
+              td.whitespace-nowrap.px-3.py-2 = hours.(delivery.sent_at, delivery.clicked_at)
+              td.px-3.py-2 = @returned.include?(delivery.id) ? "✓" : "—"

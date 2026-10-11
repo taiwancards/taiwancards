@@ -110,4 +110,16 @@
             = link_to dict_entry_path(text: lexeme.text), class: "inline-flex items-baseline gap-2 rounded-lg border border-border px-3 py-1.5 hover:bg-muted", title: lexeme.meaning do
               span.font-hanzi.text-lg lang="zh-TW" = lexeme.text
               span.max-w-40.truncate.text-xs.text-muted-foreground = lexeme.meaning
-        = link_to t("stats.leeches_all"), mistakes_path, class: "inline-block text-xs text-primary hover:underline"
+
+  section#mistakes.scroll-mt-28 class=card
+    .flex.flex-wrap.items-center.justify-between.gap-3
+      div
+        h2 class=heading = t("mistakes.title")
+        p.text-2xs.text-muted-foreground = @mistakes.any? ? t("mistakes.lede") : t("mistakes.empty")
+      - if @mistakes.any?
+        = link_to t("mistakes.study_button", count: @mistakes.count), study_path(mode: "mistakes"),
+          class: "inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+    - if @mistakes.any?
+      .flex.flex-wrap.gap-2
+        - @mistakes.lexemes.each do |lexeme|
+          = render("shared/word_chip", entry: lexeme)

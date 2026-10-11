@@ -15,7 +15,7 @@ RSpec.describe "Admin impersonation" do
     expect(response).to(redirect_to("/ru"))
 
     in_locale(:ru) { get("/desk") }
-    expect(response.body).to(include(I18n.t("nav.guide", locale: :ru)))
+    expect(response.body).to(include(I18n.t("nav.progress", locale: :ru)))
     expect(response.body).to(include("/ru/dict"))
     expect(response.body).to(include(I18n.t("admin.impersonation_stop", locale: :ru)))
   end

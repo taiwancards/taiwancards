@@ -4,7 +4,12 @@ const LEAD_IN_MS = 140;
 const STOP_GRACE_MS = 150;
 
 export default class extends Controller {
-  static values = { url: String, stopMs: Number, autoMs: Number };
+  static values = {
+    url: String,
+    sequence: Array,
+    stopMs: Number,
+    autoMs: Number,
+  };
 
   connect() {
     if (this.autoMsValue > 0)
@@ -21,9 +26,17 @@ export default class extends Controller {
     event?.stopPropagation();
 
     this.halt();
-    if (!this.urlValue) return;
+    this.queue = this.sequenceValue.length
+      ? [...this.sequenceValue]
+      : [this.urlValue].filter(Boolean);
+    this.load();
+  }
 
-    this.sound = new Audio(this.urlValue);
+  load() {
+    const url = this.queue?.shift();
+    if (!url) return;
+
+    this.sound = new Audio(url);
     this.sound.preload = "auto";
     this.sound.currentTime = 0;
 
@@ -41,7 +54,11 @@ export default class extends Controller {
   start() {
     if (!this.sound) return;
 
-    this.sound.addEventListener("ended", () => this.halt(), { once: true });
+    this.sound.addEventListener(
+      "ended",
+      () => (this.queue?.length ? this.load() : this.halt()),
+      { once: true },
+    );
     this.sound.play().catch(() => {});
 
     if (this.stopMsValue > 0) this.armStop(this.stopMsValue);

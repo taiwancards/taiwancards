@@ -13,6 +13,10 @@ class NewsletterDelivery < ApplicationRecord
 
   def self.claim(id) = pending.where(id:).update_all(sent_at: Time.current, error: nil) == 1
 
+  def subject = newsletter.subject(locale)
+
+  def summary = [subject.sub(/[.!?…]\z/, ""), Newsletters::PlainText.call(newsletter.body(locale))].join(". ")
+
   def record_click!
     self
       .class

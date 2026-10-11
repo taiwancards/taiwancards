@@ -159,9 +159,9 @@ fails if the committed output has drifted.
 | `app/services/huayu/`                              | zhuyin, tone sandhi, segmentation, level projection, importers |
 | `app/services/pronunciation/`                      | acoustic analysis, templates, thresholds, drills               |
 | `app/services/lexemes/`, `study/`                  | facets, activation, reviews, search, session building          |
-| `app/services/learn/`, `onboarding/`, `placement/` | what to show next, roadmap, placement test                     |
+| `app/services/learn/`, `onboarding/`, `placement/` | next step, first-steps track, roadmap, placement test          |
 | `app/services/phrases/`                            | phrasebook resolution against the dictionary                   |
-| `app/services/intro/`                              | the guided tour, driven by `config/intro_map.yml`              |
+| `app/services/reminders/`                          | trigger-based reminder email, `config/reminders.yml`           |
 | `app/services/deploy/`, `install/`                 | content transfer and local rebuild                             |
 | `app/models/`                                      | `Lexeme`, `LexemeMemory`, `LexemeReview`, `Collection`, `User` |
 | `lib/tasks/`                                       | rake orchestration for imports and deployment                  |
@@ -180,8 +180,8 @@ profiles and acoustic templates are output, not input. Sources are credited unde
 
 ## License
 
-No license granted for this source code; all rights reserved. The data
-repositories are separate and licensed per source, as recorded under `/licenses`.
+Source code: Apache License 2.0 (`LICENSE`, `NOTICE`). The data repositories are
+separate and licensed per source, as recorded under `/licenses`.
 
-Questions and license enquiries:
+Questions and license inquiries:
 [support@taiwancards.app](mailto:support@taiwancards.app)

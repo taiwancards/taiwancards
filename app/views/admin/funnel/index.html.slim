@@ -1,0 +1,46 @@
+- content_for(:title) { t("admin.funnel.title") }
+- cell = "px-3 py-2 text-right tabular-nums"
+- share = -> (part, whole) { whole.zero? ? "—" : "#{part} · #{(part * 100.0 / whole).round}%" }
+
+.py-6.space-y-6
+  header.space-y-2
+    = render "admin/nav"
+    h1.text-2xl.font-bold.tracking-tight = t("admin.funnel.title")
+    p.max-w-3xl.text-sm.text-muted-foreground = t("admin.funnel.lede", weeks: Admin::Funnel::WEEKS, reviews: Admin::Funnel::COMMITTED_REVIEWS)
+
+  section.overflow-x-auto.rounded-xl.border.border-border
+    table.w-full.text-sm
+      thead.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground
+        tr
+          th.px-3.py-2.text-left = t("admin.funnel.week")
+          - %i[size started studied committed day_one week_two month_two].each do |key|
+            th class=cell = t("admin.funnel.columns.#{key}")
+      tbody.divide-y.divide-border
+        - if @cohorts.empty?
+          tr
+            td.px-3.py-6.text-center.text-muted-foreground colspan=8 = t("admin.activity_empty")
+        - @cohorts.each do |cohort|
+          tr
+            td.whitespace-nowrap.px-3.py-2 = l(cohort.week, format: :short)
+            td class=cell = cohort.size
+            - %i[started studied committed].each do |key|
+              td class=cell = share.(cohort.public_send(key), cohort.size)
+            - {day_one: 1, week_two: 13, month_two: 59}.each do |key, offset|
+              td class=cell = cohort.mature?(offset) ? share.(cohort.public_send(key), cohort.size) : "…"
+
+  section.space-y-2
+    h2.text-sm.font-semibold = t("admin.funnel.sources")
+    p.text-xs.text-muted-foreground = t("admin.funnel.sources_lede")
+    .overflow-x-auto.rounded-xl.border.border-border
+      table.w-full.text-sm
+        thead.bg-muted.text-xs.uppercase.tracking-wide.text-muted-foreground
+          tr
+            th.px-3.py-2.text-left = t("admin.funnel.source")
+            th class=cell = t("admin.funnel.columns.size")
+            th class=cell = t("admin.funnel.columns.studied")
+        tbody.divide-y.divide-border
+          - @sources.each do |source|
+            tr
+              td.max-w-64.truncate.px-3.py-2 = source.path.presence || t("admin.funnel.direct")
+              td class=cell = source.signups
+              td class=cell = share.(source.studied, source.signups)

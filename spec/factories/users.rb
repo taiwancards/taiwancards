@@ -7,6 +7,11 @@ FactoryBot.define do
     password { "password12" }
     password_confirmation { "password12" }
     email_verified_at { Time.current }
+    prefs { {"goal" => "guided"} }
+
+    trait(:undecided) do
+      prefs { {} }
+    end
 
     trait(:admin) do
       email { User.owner_email || User.owner_google_email }

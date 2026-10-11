@@ -8,6 +8,7 @@ module Admin
 
     PER_PAGE = 30
     EVENTS_PER_PAGE = 50
+    MAIL_EVENTS = 20
     SORTS = {
       "seen" => "last_seen_at DESC NULLS LAST, id DESC",
       "joined" => "created_at DESC",
@@ -27,6 +28,7 @@ module Admin
       feed = @user.activity_events.recent
       events, = paginate(feed, per_page: EVENTS_PER_PAGE, total: @profile.counts[:events])
       @events = events.to_a
+      @mail_events = @user.mail_events.recent.limit(MAIL_EVENTS).to_a
     end
 
     def update

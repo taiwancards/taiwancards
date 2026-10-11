@@ -121,7 +121,7 @@ namespace(:pronunciation) do
     Pronunciation::TemplateStore.reset!
   end
 
-  desc("How connected speech bends a syllable away from its template: tone by neighbours, length by position")
+  desc("How connected speech bends a syllable away from its template: tone by neighbors, length by position")
   task(context_norms: :environment) do
     Pronunciation::Corpus::ContextNorms.new(io: $stdout).write!
   end

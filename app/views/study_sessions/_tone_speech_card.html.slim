@@ -1,5 +1,5 @@
 - auto = Study::Preferences.for(current_user).pron_auto
-- chip = "flex min-w-16 flex-col items-center gap-0.5 rounded-xl border-2 px-3 py-2"
+- chip = "flex min-w-16 flex-col items-center gap-0.5 rounded-xl border-2 bg-background px-3 py-2"
 
 .select-none[
   data-controller="card-speech"
@@ -8,6 +8,8 @@
   data-card-speech-expected-value=syllables.to_json
   data-card-speech-auto-ms-value=auto[:delay_ms]
   data-card-speech-max-ms-value=auto[:max_ms]
+  data-card-speech-silence-ms-value=auto[:silence_ms]
+  data-card-speech-label-silence-value=t("pronunciation.silence")
   data-card-speech-good-at-value=StudyHelper::SPEECH_GOOD_AT
   data-card-speech-hard-at-value=StudyHelper::SPEECH_HARD_AT
   data-card-speech-label-record-value=t("study.speech.record")
@@ -36,11 +38,11 @@
       - if lexeme.meaning.present?
         .text-sm.text-muted-foreground = lexeme.meaning
 
-      .flex.flex-wrap.justify-center.gap-2
+      .mx-auto.flex.w-fit.gap-1.rounded-2xl.bg-muted.p-1
         - syllables.each do |part|
           .border-border data-card-speech-target="syllable" data-base=chip class=chip
-            span.text-base.font-semibold lang="zh-TW" = part["zhuyin"]
-            span.pinyin.text-2xs.text-muted-foreground = part["pinyin"]
+            span.text-base.font-semibold lang="zh-TW" = spoken_zhuyin(part)
+            span.pinyin.text-2xs.text-muted-foreground = spoken_pinyin(part)
             span.text-2xs.font-semibold.text-current data-heard="" lang="zh-TW"
 
       .flex.items-baseline.justify-center.gap-2

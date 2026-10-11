@@ -21,6 +21,6 @@ class GrammarController < ApplicationController
 
     @entries = helpers.grammar_entries_for([@lesson])
     @particles = @lesson.heads.filter_map { |head| Zhuci::Finder.call(head) }.uniq
-    @previous, @next = Huayu::GrammarLessons.neighbours(@lesson)
+    @previous, @next = Huayu::GrammarLessons.neighbors(@lesson)
   end
 end

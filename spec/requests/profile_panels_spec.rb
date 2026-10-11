@@ -17,10 +17,32 @@ RSpec.describe "Profile panels" do
     expect(@authenticated_user.reload.level).to(eq("4"))
   end
 
-  it "returns to the tab the form was submitted from" do
-    patch("/profile", params: {tab: "level", user: {level: "4"}})
+  it "counts the words below a raised level as known, to be checked now and then" do
+    below = create(:lexeme, kind: :word, text: "學校", data: {"tbcl_grade" => 2, "freq_rank" => 900})
+    above = create(:lexeme, kind: :word, text: "研究", data: {"tbcl_grade" => 5, "freq_rank" => 9000})
 
-    expect(response).to(redirect_to(profile_level_path))
+    patch("/profile", params: {user: {level: "3"}})
+
+    memories = LexemeMemory.owned_by(@authenticated_user)
+    expect(memories.where(lexeme: below).pluck(:state).uniq).to(eq(["review"]))
+    expect(memories.where(lexeme: above)).to(be_empty)
+    expect(memories.minimum(:due_at)).to(be > 2.weeks.from_now - 1.hour)
+  end
+
+  it "hands back the next level's untouched words when the level goes down" do
+    middle = create(:lexeme, kind: :word, text: "研究", data: {"tbcl_grade" => 3, "freq_rank" => 900})
+    patch("/profile", params: {user: {level: "4"}})
+    expect(LexemeMemory.owned_by(@authenticated_user).where(lexeme: middle)).to(exist)
+
+    patch("/profile", params: {user: {level: "2"}})
+
+    expect(LexemeMemory.owned_by(@authenticated_user).where(lexeme: middle)).to(be_empty)
+  end
+
+  it "returns to the tab the form was submitted from" do
+    patch("/profile", params: {tab: "display", user: {level: "4"}})
+
+    expect(response).to(redirect_to(profile_display_path))
   end
 
   it "keeps the email out of the writable params" do

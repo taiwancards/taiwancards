@@ -1,0 +1,6 @@
+- content_for(:title, t("mail_links.unsubscribe.done_title"))
+
+.mx-auto.max-w-md.space-y-4.py-12.text-center
+  h1.text-2xl.font-bold.tracking-tight = t("mail_links.unsubscribe.done_title")
+  p.text-sm.text-muted-foreground = t("mail_links.unsubscribe.done", email: @link.user.email)
+  p.text-xs.text-muted-foreground = t("mail_links.unsubscribe.undo")

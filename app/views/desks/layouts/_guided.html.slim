@@ -1,0 +1,54 @@
+- today = home.today
+- current = home.road.current
+- source = "flex min-h-11 items-center gap-3 rounded-lg px-2 text-sm hover:bg-muted"
+
+.grid.gap-4.lg:grid-cols-3
+  .min-w-0.space-y-4.lg:col-span-2
+    - if (starter = home.starter_lesson)
+      = render("desks/starter", lesson: starter)
+    - else
+      = render("desks/guided_hero", home:)
+
+    = render("desks/action",
+      href: @start_path,
+      label: (today[:total].positive? ? t("desk.start_count", count: today[:total]) : t("desk.start")),
+      hint: desk_start_hint(@next_step),
+      stats: [[today[:due], t("desk.due"), "text-amber-500"], [today[:new], t("desk.unseen"), "text-emerald-500"], [home.on_desk, t("desk.on_desk"), nil]])
+
+    section.rounded-2xl.border.border-border.bg-card.p-4.space-y-1
+      .flex.flex-wrap.items-baseline.justify-between.gap-2
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("desk.guided.course_title")
+        span.text-xs.tabular-nums.text-muted-foreground = t("desk.guided.course_overall", percent: home.course.overall)
+      - home.course.slices.each do |slice|
+        = render "progress/bar", label: slice.stage.title(I18n.locale), known: slice.done, total: slice.lessons, href: course_path
+
+  .min-w-0.space-y-4
+    = render("shared/discovery", suggestion: @discovery)
+    section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+      h2.text-sm.font-semibold = t("desk.guided.practice_title")
+      p.text-xs.leading-relaxed.text-muted-foreground = t("desk.guided.practice_body")
+      nav.-mx-2
+        = link_to pronunciation_path, class: source do
+          = icon(:microphone, css: "size-4 shrink-0 text-muted-foreground")
+          = t("nav.pronunciation")
+        = link_to tones_drill_path, class: source do
+          = icon(:speaker, css: "size-4 shrink-0 text-muted-foreground")
+          = t("nav.tones_drill")
+        = link_to writing_path, class: source do
+          = icon(:pencil, css: "size-4 shrink-0 text-muted-foreground")
+          = t("nav.writing")
+        = link_to graded_path, class: source do
+          = icon(:book, css: "size-4 shrink-0 text-muted-foreground")
+          = t("desk.guided.graded")
+
+    - if current
+      section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+        .flex.items-baseline.justify-between.gap-3
+          h2.text-sm.font-semibold = t("desk.guided.level_title")
+          = link_to t("desk.levels.all"), tocfl_levels_path, class: "text-xs text-primary underline-offset-2 hover:underline"
+        .flex.items-baseline.justify-between.gap-3.text-sm
+          span = t("plan.levels.#{current.level_tag}")
+          span.font-bold.tabular-nums = "#{current.readiness}%"
+        .h-2.overflow-hidden.rounded-full.bg-muted
+          .h-full.rounded-full.bg-primary style="width: #{current.readiness}%"
+        p.text-xs.text-muted-foreground = t("desk.road.to_next", count: current.remaining, level: t("plan.levels.#{current.level_tag}"))

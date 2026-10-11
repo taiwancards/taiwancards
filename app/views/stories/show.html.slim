@@ -26,9 +26,9 @@
     p.text-xs.text-muted-foreground lang="zh-TW" = @text.attribution
 
   nav.flex.justify-between.gap-3.text-sm
-    - if @neighbours[:previous]
-      = link_to "← #{t("stories.previous")}", story_path(@neighbours[:previous]), class: "text-muted-foreground hover:text-foreground"
+    - if @neighbors[:previous]
+      = link_to "← #{t("stories.previous")}", story_path(@neighbors[:previous]), class: "text-muted-foreground hover:text-foreground"
     - else
       span
-    - if @neighbours[:next]
-      = link_to "#{t("stories.next")} →", story_path(@neighbours[:next]), class: "text-muted-foreground hover:text-foreground"
+    - if @neighbors[:next]
+      = link_to "#{t("stories.next")} →", story_path(@neighbors[:next]), class: "text-muted-foreground hover:text-foreground"

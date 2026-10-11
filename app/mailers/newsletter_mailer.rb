@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 class NewsletterMailer < ActionMailer::Base
+  include MailLinking
+
   layout false
 
   def issue(delivery, prefix: "")
     newsletter = delivery.newsletter
+    link_mail_to(user: delivery.user, list: "newsletter", letter: newsletter.subject(delivery.locale), delivery:)
     I18n.with_locale(delivery.locale) do
-      unsubscribe = newsletter_unsubscribe_url(
-        token: delivery.signed_id(purpose: :unsubscribe),
-        locale: delivery.locale
-      )
+      unsubscribe = unsubscribe_all_url
       headers["List-Unsubscribe"] = "<#{unsubscribe}>"
       headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
-      compose(newsletter, delivery.user.email, link: -> (url) { tracked(delivery, url) }, unsubscribe:, prefix:)
+      compose(newsletter, delivery.user.email, link: -> (url) { tracked(url) }, unsubscribe:, prefix:)
     end
   end
 
@@ -52,12 +52,13 @@ class NewsletterMailer < ActionMailer::Base
     -> (id) { (image = images[id]) && attachments[image.filename].url }
   end
 
-  def tracked(delivery, url)
+  def tracked(url)
     target = Newsletters::Tracking.absolute(url)
-    return target unless Newsletters::Tracking.ours?(target)
+    return open_url(Newsletters::Tracking.path_of(target)) if Newsletters::Tracking.ours?(target)
+    return visit_url(target) if Newsletters::Tracking.visitable?(target)
 
-    newsletter_click_url(token: Newsletters::Tracking.token(delivery, target), locale: nil)
+    target
   end
 
-  def settings_url = profile_url(locale: I18n.locale)
+  def settings_url = open_url(profile_url(locale: I18n.locale, anchor: "mail", only_path: true))
 end

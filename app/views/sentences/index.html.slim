@@ -8,7 +8,7 @@
   = form_with url: sentences_path, method: :get, class: "space-y-2 rounded-xl border border-border p-3",
     data: {controller: "filters", action: "change->filters#submit"} do
     - SentenceProfile::SCHEMES.each do |scheme, config|
-      .flex.items-center.gap-2 data-tour=("sentence-filters" if scheme == SentenceProfile::SCHEMES.keys.first)
+      .flex.items-center.gap-2
         .w-24.shrink-0.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground title=t("sentences.at_most_hint")
           = t("sentences.schemes.#{scheme}")
         .flex.flex-1.gap-1.overflow-x-auto class="py-0.5"

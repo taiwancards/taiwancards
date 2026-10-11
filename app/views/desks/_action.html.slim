@@ -1,0 +1,12 @@
+section.rounded-2xl.border.border-border.bg-card.p-4.sm:p-5
+  .flex.flex-col.gap-4.md:flex-row.md:items-center.md:justify-between
+    .flex.flex-wrap.gap-x-8.gap-y-3
+      - stats.each do |value, label, tone|
+        div
+          .text-3xl.font-bold.tabular-nums class=tone = number_with_delimiter(value)
+          .mt-0.5.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = label
+    = link_to href, id: "desk-start",
+      class: "flex min-h-14 w-full flex-col items-center justify-center rounded-xl bg-primary px-6 py-3 text-center text-primary-foreground shadow transition hover:opacity-90 active:scale-[0.99] md:w-auto md:min-w-72" do
+      span.text-lg.font-bold = label
+      - if local_assigns[:hint]
+        span.text-xs class="text-primary-foreground/80" = hint

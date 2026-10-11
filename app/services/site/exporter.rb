@@ -70,7 +70,7 @@ module Site
       html = strip_dynamic(html)
       html = collect_and_keep_assets(html)
       html = refuse_server_forms(html, path)
-      html = absolutise_links(html, locale)
+      html = absolutize_links(html, locale)
       html = canonicalise(html, locale, path)
       html.sub("</head>", "#{behavior}\n</head>")
     end
@@ -142,7 +142,7 @@ module Site
       end
     end
 
-    def absolutise_links(html, locale)
+    def absolutize_links(html, locale)
       html.gsub(/href="(\/[^"#][^"]*|\/)"/) do
         path = Regexp.last_match(1)
         bare = Locales.strip(path)
@@ -195,6 +195,11 @@ module Site
             root.classList.toggle(css, next === on);
             if (css === "font-kai" && next === on) warmKai();
           });
+
+          if (navigator.sendBeacon) {
+            var view = JSON.stringify({ path: location.pathname, referrer: document.referrer, site: true });
+            navigator.sendBeacon("#{app_url}/hit", new Blob([view], { type: "text/plain" }));
+          }
         })();
         </script>
       HTML

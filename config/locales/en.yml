@@ -16,7 +16,7 @@ en:
     policy_after: and its Limited Use requirements. Google account data is never used for advertising, never sold, and never shared beyond what is described here.
   privacy:
     title: Privacy Policy
-    effective: "Effective date: 2026-09-29"
+    effective: "Effective date: 2026-10-10"
     purpose:
       heading: What this app does
       body: TaiwanCards is a free, ad-free web app for learning Taiwanese Mandarin. It provides flashcards with spaced repetition, dictionary lookups, pronunciation practice and vocabulary lists. It is run by one independent developer, not by a company.
@@ -28,6 +28,7 @@ en:
         - "Your study data: decks, cards, review history, progress and practice settings."
         - Pronunciation attempts and the measurements derived from them.
         - Server logs of requests, kept for reliability and abuse prevention.
+        - "Aggregate page-view counts per day: the page, the referring site, the device type, the country and the interface language. They are counted by the app itself, without a cookie, without an IP address and without any link to an account."
     never:
       heading: What we do not do
       items:
@@ -41,7 +42,8 @@ en:
     emails:
       heading: Email
       items:
-        - A short note about what is new in the app is sent to your account's email address, once or twice a month at most. There are no reminders, no advertising and nothing from third parties.
+        - A short note about what is new in the app is sent to your account's email address, once or twice a month at most. There is no advertising and nothing from third parties.
+        - "Reminders about due cards: at most one a day, only when cards are waiting, at the hour you usually study. They are on by default and switch off in one click or in the profile, separately from the newsletter."
         - Every letter has a one-click unsubscribe link, and you can also turn the letters off in your profile. Unsubscribing changes nothing else about your account.
         - "We record when each letter was sent to you, when you first followed one of its links back into the app and how many times you did, and when you unsubscribed. If a letter cannot be delivered, the mail server's error message is kept. Opens are not tracked: letters contain no tracking pixels, and their images are attached to the letter itself."
         - Letters are handed to Resend, an email delivery service, which receives your address and the letter only in order to deliver it.
@@ -291,6 +293,7 @@ en:
       male: male
       female: female
   nav:
+    for_you: for you
     filter_placeholder: "Find a section"
     filter_empty: "Nothing matched. Try another word."
     tab:
@@ -343,7 +346,6 @@ en:
       profile: "Profile"
       progress: "Progress"
       settings-edit: "Settings"
-      help: "Guide"
     mock: TOCFL simulator
     more: More
     radicals: Radicals
@@ -353,7 +355,6 @@ en:
     group_sounds: Sounds
     progress: Progress
     settings: Settings
-    guide: Guide
     language: Language
     interface_language: >-
       The language of the interface and of everything in it. It switches more than buttons and menus: word
@@ -449,7 +450,7 @@ en:
       desk: "The day's screen — how much is due, how much is new, and one button to the right place."
       desks: "Your own decks from a text, a file, a song or a lesson, with groups and share links."
       reader: "Paste any text and it is split into words, with zhuyin over what you do not know."
-      graded: "Levelled texts to read end to end without stopping at the dictionary."
+      graded: "Leveled texts to read end to end without stopping at the dictionary."
       placement: "An adaptive test that sets your starting level and marks what you already know."
       plan: "Name a TOCFL level and a date, and the daily quota of new material is worked out."
       triage: 'Swipe a batch of words into "known" and "to learn" without opening cards.'
@@ -471,7 +472,7 @@ en:
       hanzi: "How a character is built: 六書, components, phonetic series, stroke order."
       cangjie-lessons: "The Cangjie textbook — forty lessons, one per key, with drills and character lists."
       practice-numbers: "Numbers, money, dates, Minguo years, and the traps around 零 and 兩."
-      grammar: "583 patterns by level, each with a breakdown, corpus examples and neighbouring topics."
+      grammar: "583 patterns by level, each with a breakdown, corpus examples and neighboring topics."
       zhuci: "語氣詞 particles: what 吧, 啊, 呢 and 嘛 do to a sentence."
       variants: "Where Taiwan parts ways with China — readings, glyphs, words."
       names: "How a Taiwanese name is built, from the national registration statistics."
@@ -493,7 +494,6 @@ en:
       profile: "Locale, zhuyin position, mobile tabs, level, export and backup."
       progress: "The summary, review history, memory strength by facet, and the leech list."
       settings-edit: "Your own FSRS parameters — retention, maximum interval, learning steps."
-      help: "This page: a map of every section, plus chapters that walk you through the interface."
     tones_drill: Tones by ear
     profile: Profile
   phrase_drills:
@@ -637,6 +637,7 @@ en:
     someone: Someone
   desk:
     next_step:
+      starter: "Right now: a first-steps lesson"
       zhuyin: "Right now: get to grips with the zhuyin sounds"
       drill: "Right now: drill recognizing the sounds"
       typing: "Right now: typing in zhuyin"
@@ -649,25 +650,328 @@ en:
       one: Learn (1 card)
       other: Learn (%{count} cards)
     road:
-      title: Road to TOCFL
-      set_goal: Set your exam date
-      exam_in:
-        one: "%{level} exam — 1 day left"
-        other: "%{level} exam — %{count} days left"
       to_next:
         one: 1 word to finish %{level}
         other: "%{count} words to finish %{level}"
-    mistakes_title: Mistake notebook
-    mistakes_hint: Words you missed lately, collected automatically.
-    plan_title: Exam plan
-    plan_hint_set: Target date %{date}.
-    plan_hint_unset: Pick a level and a date — we'll pace you.
+    goal_label: Mode
+    goal_change: change
+    streak_more: All progress
+    levels:
+      title: Readiness by TOCFL level
+      all: Level lists
+      target: goal
+    exam:
+      goal: "Goal: %{level} · %{date}"
+      days_left:
+        one: "%{count} day to the exam"
+        other: "%{count} days to the exam"
+      quota:
+        one: "New material: %{count} card a day"
+        other: "New material: %{count} cards a day"
+      no_plan_title: No exam date yet
+      no_plan_body: Name the level and the date, and we'll work out how much new material a day gets you there in time.
+      set_plan: Set level and date
+      readiness: "%{level} vocabulary"
+      edit_plan: Change the plan
+      mock_title: "%{level} mock test"
+      mock_body: A TOCFL-style sheet with marking. A fresh set of questions every time.
+      mock_start: Take the mock test
+      mock_formats: Pictures and audio
+      papers: Real TOCFL papers
+      grammar_title: "%{level} grammar"
+      grammar_body:
+        one: "%{count} pattern at this level, explained with examples."
+        other: "%{count} patterns at this level, explained with examples."
+      grammar_open: Open the level's grammar
+    classes:
+      review:
+        one: "Review (%{count})"
+        other: "Review (%{count})"
+      study: Study my decks
+      hint: Only words from your decks, not our order
+      empty_title: Start with a deck for your class
+      empty_body: Paste a word list or a text from class, photograph a textbook page, or import a deck from Pleco, Anki or Quizlet.
+      empty_cta: Create a deck
+      decks_title: My decks
+      decks_all:
+        one: "All decks (%{count})"
+        other: "All decks (%{count})"
+      decks_empty: No decks yet.
+      deck_size:
+        one: "%{count} word"
+        other: "%{count} words"
+      deck_used: "opened %{ago} ago"
+      add_title: Add words from class
+      add_body: Whatever you covered in class, turned into cards in a minute.
+      add_text: Paste a text or a list
+      add_import: Import from Pleco, Anki, Quizlet
+      add_photo: Photo of a page
+      add_triage: Mark what I already know
+    guided:
+      path_label: "Your path · %{done} of %{total} done"
+      path_all: The whole path
+      lesson_label: "Course · %{stage}"
+      lesson_title: "Lesson %{number}. %{title}"
+      stage_progress: "This stage: %{done} of %{total} lessons"
+      lesson_open: Open the lesson
+      course_all: All lessons
+      course_done_title: Course finished
+      course_done_body: Sixty lessons behind you. Next come graded reading and the day's cards.
+      course_done_cta: Graded reading
+      course_title: Course by stage
+      course_overall: "%{percent}% done"
+      practice_title: Trainers
+      practice_body: Ten minutes on sound and writing on top of the cards.
+      level_title: Your level
+      graded: Graded reading
+  discovery:
+    title: Also for you
+    kinds:
+      grammar: Grammar
+      graded: Reading
+      phrases: Phrases
+      pronunciation: Pronunciation
+    grammar:
+      body: A short lesson at %{level}, where your cards are now.
+    graded:
+      body: A short story within the words you already know.
+    phrases:
+      body: What people in Taiwan actually say in this situation.
+    pronunciation:
+      title: Say a few words aloud
+      body: A minute at the microphone shows how your tones land.
+  next_step:
+    starter:
+      title: First steps lesson
+      body: "Three to five minutes: zhuyin by ear and words for daily life in Taiwan."
+    zhuyin:
+      title: Learn the zhuyin sounds
+      body: Start with the sounds; everything after them goes faster.
+    drill:
+      title: Train zhuyin by ear
+      body: Fix the symbols by ear while they are fresh.
+    typing:
+      title: Type in zhuyin
+      body: Typing in zhuyin turns the symbols into muscle memory.
+    review:
+      title: Review due cards
+      body: These cards are at the point of being forgotten; a few minutes now saves relearning later.
+    study:
+      title: Today's cards
+      body: Due reviews first, then today's share of new words.
+    lesson:
+      title: Next course lesson
+      body: A short dialogue, its words and one grammar point, practiced right away.
+    graded:
+      title: Read a graded text
+      body: The course is done; whole texts at your level are the next step.
+    grammar:
+      title: Grammar of your level
+      body: Today's new words are in. One grammar pattern of the exam level is the best use of the next ten minutes.
+    decks:
+      title: Study my decks
+      body: Due reviews and new words from your own decks, nothing else.
+    practice:
+      title: Practice my latest deck
+      body: Everything in your decks is reviewed. Run through the latest deck again to keep it sharp.
+    add_words:
+      title: Add words from class
+      body: Paste the words of your last lesson, a text or a photo of the page, and they become cards.
+  starter:
+    title: "Lesson %{number} · %{title}"
+    deck: First words
+    leave: Leave the lesson
+    new_symbol: New symbol
+    which_symbol: Which symbol do you hear?
+    capsule: In two lines
+    got_it: Got it
+    new_word: New word
+    which_meaning: What does it mean?
+    phrase: A phrase for real life
+    next: Next
+    right: Right!
+    wrong: Not this one. Listen again.
+    tones:
+      first: "First tone: high and level, like a sung note."
+      second: "Second tone: rising, like a surprised “yeah?”"
+      third: "Third tone: low, the voice dips down."
+      fourth: "Fourth tone: a sharp fall, like a firm “No!”"
+      neutral: "Neutral tone: short and light."
+    tone_shift_third: "Two third tones in a row: the first one rises like a second tone. Say it in one breath: %{word}."
+    tone_shift: "The tone shifts inside this word. Say it in one breath: %{word}."
+    say_it: Say it aloud
+    say_hint: "Optional, but speaking it once fixes the word much better."
+    finish_kicker: Done
+    finish_title:
+      one: You know %{count} new word
+      other: You know %{count} new words
+    finish_body: "They go into your «First words» deck, and the app brings them back right before you would forget them."
+    finish: Finish the lesson
+    done_kicker: "Lesson %{done} of %{total}"
+    done_title: Lesson complete
+    done_body:
+      one: This word is now in your deck
+      other: These %{count} words are now in your deck
+    done_tomorrow: Tomorrow they come back as cards, for a minute or two.
+    next_lesson: "Next: %{title}"
+    track_done: All first lessons are done. The course continues from here.
+    to_course: Open the course
+    home: Back to home
+    hero_kicker: "First steps · lesson %{number} of %{total}"
+    hero_body: "Three to five minutes, no theory to read: sounds by ear, then words you can use today."
+    hero_start: Start the lesson
+  mail_links:
+    note: Links in this email open TaiwanCards already signed in to your account, so one click takes you to the right page. Please don't forward this email.
+    opening:
+      title: Opening TaiwanCards…
+      body: Signing you in and opening the right page.
+      button: Continue
+    inactive:
+      title: This link is no longer active
+      body: Sign in and the same page will open.
+      sign_in: Sign in
+    unsubscribe:
+      title: Unsubscribing…
+      working: "Unsubscribing %{email} from all TaiwanCards emails."
+      button: Unsubscribe from all emails
+      done_title: You're unsubscribed from all emails
+      done: "%{email} will get no more TaiwanCards reminders or news."
+      undo: Changed your mind? Turn emails back on in your profile.
+      invalid_title: Link not recognized
+      invalid: It may have been copied only in part. You can also unsubscribe in your profile.
+      settings: Open your profile
+  reminders:
+    profile:
+      title: Emails
+      label: Study reminders
+      hint: Separate from the newsletter. Turn them off here or with one link in any reminder.
+      when: When to remind me
+      auto:
+        title: Automatically
+        hint: "At your usual study time, and only when cards are waiting: after a break of 2, 7 and 21 days. Never more than one email a day, and we go quiet after three unanswered ones."
+      fixed:
+        title: On the days and time I choose
+        hint: "One email on each chosen day at that hour, with a set of cards worth doing. No other reminders. If you have already studied that day or nothing is waiting, there is no email."
+      days: Days
+      hour: Time
+      zone: "In your time zone: %{zone}."
+      no_days: No day is selected, so there will be no reminders.
+    mail:
+      why: You get this because reminders are on in your TaiwanCards profile. You can choose your own days and time, and then we will write only then.
+      "off": Unsubscribe from all emails
+      schedule: Choose days and time
+      settings: Email settings
+      welcome:
+        subject: Welcome to TaiwanCards
+        preheader: Dictionary, cards, grammar, reading and pronunciation — one system.
+        title: Welcome!
+        body:
+          - "TaiwanCards is everything for Taiwanese Mandarin in one place. The dictionary, cards, grammar, reading and pronunciation are built as one system rather than pieced together from different sources: a word from a lesson is the same dictionary entry, the same card and the same audio."
+          - So there's no need for a separate dictionary, Anki and a handful of trainers. Your progress builds up in one place, and reviews already know what you've learned.
+        features:
+          - title: Cards
+            text: Each word comes back just as you're about to forget it. Follow our method, prepare for TOCFL, or bring the words from your classes.
+          - title: Dictionary
+            text: Traditional characters, zhuyin and Taiwanese readings, native audio and examples from real texts.
+          - title: Pronunciation
+            text: Say a word out loud and get feedback on its tones and sounds.
+          - title: Grammar and reading
+            text: Grammar lessons, everyday phrases and texts graded by level — from your first words to advanced.
+        outro: The home page shows where to start today — usually just a few minutes.
+        button: Open TaiwanCards
+        why: You get this because you created a TaiwanCards account. It's the only welcome email — after this we'll write only when cards are waiting for review, and never more than once a day. You can choose your own reminder days and time in your profile.
+      first_cards:
+        subject: Your first session takes a few minutes
+        preheader: "The home page shows where to start: with the sounds, or straight with words at your level."
+        title: Ready for a few minutes?
+        body: "Your account is ready, and the first session is short. The home page shows where to start for you: with the sounds, or straight with words at your level."
+        button: Start the first session
+      due_cards:
+        subject:
+          one: "1 card for today — about a minute"
+          other: "%{count} cards for today — about %{minutes} min"
+        preheader: Reviewed on time, words stay with you much longer.
+        title:
+          one: card for today
+          other: cards for today
+        body: "These are the words due right now — about %{minutes} min. Reviewed on time, they stay in memory much longer."
+        button: Start reviewing
+      still_due:
+        subject: Your words are still here
+        preheader: "A short review — about %{minutes} min."
+        title:
+          one: card to get back into rhythm
+          other: cards to get back into rhythm
+        body: "A week off happens, and your progress is saved. We picked a small batch of the cards that matter most — about %{minutes} min. The rest will follow gradually."
+        button: Back to my words
+      last_call:
+        subject: Everything you've learned is saved
+        preheader: Last reminder — after this we won't bother you.
+        title:
+          one: card for an easy comeback
+          other: cards for an easy comeback
+        body:
+          - "Three weeks is a real break, but your words haven't gone anywhere. Start with a small batch — about %{minutes} min."
+          - This is the last reminder. We won't write again until you come back on your own.
+        button: Come back
+      scheduled:
+        subject:
+          one: "Your study time: %{count} card, about %{minutes} min"
+          other: "Your study time: %{count} cards, about %{minutes} min"
+        preheader: You picked this time yourself. One short set and today is done.
+        title:
+          one: card for today
+          other: cards for today
+        body: "You asked us to remind you at this time. This is the right amount for today, about %{minutes} min; the rest will follow over the next days."
+        button: Start studying
+        why: You get this because you chose reminder days and a time in your TaiwanCards profile. We send no other reminders.
+    session:
+      "on": If you don't come back tomorrow, we'll send one reminder.
+      fixed: "We'll remind you on your schedule: %{schedule}."
+      no_days: Your reminder schedule has no days selected.
+      settings: Settings
+      enable: Remind me tomorrow
+      enabled: "Done: we'll remind you tomorrow if you don't come back."
+  goals:
+    saved: "“%{goal}” mode is on. You can change it in your profile."
+    current: Current mode
+    profile:
+      title: Mode and level
+      lede: The mode sets the home page and the order of the Study menu; the level sets where new cards start. Switching never loses progress.
+    options:
+      tocfl:
+        title: Preparing for TOCFL
+        short: TOCFL
+        tagline: An exam and a date — we count the days and the daily load
+        body: You have an exam and a date. The home page counts the days, the daily quota and your readiness by level.
+        home:
+          - Countdown to the exam and the day's quota
+          - Readiness by level, Novice 1 to B1
+          - Mock test and grammar for your level
+      classes:
+        title: Bring your own words
+        short: Own words
+        tagline: Words from class or a textbook — instead of Anki
+        body: Words from class, a textbook or your own lists become cards — like Anki or Memrise, but with zhuyin, native audio and reviews timed for you. Our lesson order stays out of the way.
+        home:
+          - Reviews of your own decks
+          - Words from class — as text, a photo or an import
+          - This week's mistakes and your streak
+      guided:
+        title: Learn with our method
+        short: Our method
+        tagline: No system yet — we lead you step by step
+        body: No system of your own? We lead you step by step — sounds first, then course lessons and cards in the right order — and tell you what to do each day.
+        home:
+          - "Next step: phonetics or a course lesson"
+          - Today's cards on our plan
+          - Pronunciation, tone and writing trainers
   newsletters:
     mail:
       from_name: 丹丹 from TaiwanCards
       why: You are getting this because you signed in to TaiwanCards with Google.
       promise: We write once or twice a month at most, and only about what is new in the app. No ads, and your address is never sold or handed to anyone for advertising.
-      unsubscribe: Unsubscribe in one click
+      unsubscribe: Unsubscribe from all emails
       settings: Email settings
       reply: Or just hit reply — we read every one.
     unsubscribe:
@@ -713,14 +1017,28 @@ en:
       sample: "Send to me only (%{email}, %{lang})"
       sample_sent: "Sent to %{email} only. It is the real letter: its links count clicks and its unsubscribe link works."
       failed: "Could not send: %{error}"
-      deliver: "Send to everyone (%{count})"
+      deliver: "Send (%{count})"
       deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian)? It cannot be recalled."
+      no_recipients: Nobody matches the chosen recipients.
+      audience: Recipients
+      audience_modes:
+        all: All subscribers
+        filtered: By level and goal
+        picked: Hand-picked
+      audience_filter_hint: An empty row means everyone in it.
+      audience_levels: Level
+      audience_goals: Goal
+      audience_search: Find by email
+      audience_seen: "seen %{ago} ago"
+      audience_count:
+        one: "1 recipient: %{en} in English, %{ru} in Russian"
+        other: "%{count} recipients: %{en} in English, %{ru} in Russian"
       resume: "Send the remaining %{count}"
       resume_confirm: "Send the newsletter to the %{count} people who haven't received it yet?"
       dispatched: Sending has started in the background. Refresh the page to follow it.
       incomplete: Fill in the subject and the text in both languages first.
       not_configured: Mail delivery is not configured (SMTP_ADDRESS and the rest are missing), so nothing can be sent yet.
-      send_hint: "%{en} recipients in English, %{ru} in Russian. Daily limit %{limit}; %{budget} left for the next 24 hours, the rest waits for “Send the remaining”."
+      send_hint: "Daily limit %{limit}; %{budget} left for the next 24 hours, the rest waits for “Send the remaining”."
       delete: Delete draft
       delete_confirm: Delete this draft?
       stat_sent: "Sent %{sent} of %{total}"
@@ -946,7 +1264,6 @@ en:
     forecast_hint: reviews due each day; overdue ones count as today
     reviews_hint: reviews done over the last two weeks
     leeches_hint: words you keep forgetting; worth a fresh look
-    leeches_all: All mistakes →
     answer_time: Avg. answer
     mature: Mature
     reviews_by_day: Reviews per day
@@ -1246,13 +1563,15 @@ en:
     tabs:
       show: Account
       display: Display
-      level: Level
       guide: Guide
       backup: Backups
-    level_title: Level
-    level_field: Your level
+    level_field: The level you already have
     level_test: take the placement test
-    level_note: "It decides what gets suggested as new. Cards you have already started keep their progress —"
+    level_change:
+      up: "Progress on the words you've started is kept. “%{level}” and everything below now count as done: now and then we'll check only the hardest words of “%{level}”. New words and grammar start from the very beginning of “%{next}”."
+      down: "All your progress on higher-level words is kept, and cards you've started keep their reviews. But new words and grammar now come in order, from the very beginning of “%{next}” — it's best to learn level by level. No new words from higher levels for now; we'll get there naturally."
+      beyond: the rarest words beyond TBCL
+    level_note: "An exam you've passed, or roughly where you are. TOCFL A1, for example, means you already have A1: new words and grammar start with the easiest of A2. We'll check the hardest words of your level now and then, and more often if they start slipping or come slowly. Not sure? You can"
     levels:
       zero: Starting from scratch
       phonetics: I know pinyin and zhuyin
@@ -1753,7 +2072,7 @@ en:
       its lesson.
     empty: The Cangjie textbook isn't built yet.
     open_trainer: Open the keyboard trainer
-    trainer_cta: Practise on the Cangjie keyboard
+    trainer_cta: Practice on the Cangjie keyboard
     bank: Characters in this lesson
     index_title: Every character on this key
     index_lede: >-
@@ -1785,7 +2104,7 @@ en:
       title: Speed typing
       lede: >-
         The characters almost every sentence is made of: 的, 是, 在, 我, 不, 了 and friends. Type
-        each code as fast as you can — the trainer serves the most frequent, least practised
+        each code as fast as you can — the trainer serves the most frequent, least practiced
         characters and tracks your pace from round to round.
       mode_core: Most frequent
       mode_exam: Novice 1–2 and A1
@@ -1852,7 +2171,6 @@ en:
     grading: Grading…
     retry: Not quite — say it again…
     silence: I didn't catch any speech — start talking right after pressing record.
-    warmup_first: One minute of voice warm-up first — it makes every grade after it noticeably more accurate.
     unavailable: The reference recordings are not installed — there is nothing to grade against.
     mic_denied: No access to the microphone. Allow recording in your browser's site settings.
     mic_missing: No microphone found. Connect one and reload the page.
@@ -2085,7 +2403,7 @@ en:
         body: A syllable in its own right, found in 二, 兒 and 耳. Not the r-ending China tacks onto other words.
       compound:
         title: Compound finals
-        body: A medial plus a final. They need no drill of their own — they are built from symbols you have already practised.
+        body: A medial plus a final. They need no drill of their own — they are built from symbols you have already practiced.
     finals_lede: "Everything left in the syllable after the initial consonant: a vowel, a diphthong, or a vowel with a nasal. For compound finals the individual symbols are voiced — run together they do not sound like the two parts in sequence."
     why_title: Why this is not a detail
     why_body: "You can read pinyin without any preparation, and that is exactly what makes it dangerous: the letters drag your English reading along with them, and the error sets in silently. There is nothing behind a zhuyin symbol but the sound you teach it. That is precisely why Taiwan annotates readings with it."
@@ -2276,7 +2594,7 @@ en:
   grammar:
     for_form: Grammar points built on
     as_grammar_point: as a grammar point
-    practice_more: Practise numbers on their own
+    practice_more: Practice numbers on their own
     title: Grammar
     lede: Taiwan-standard grammar, point by point — the official TBCL syllabus plus the everyday foundations it leaves out, explained in plain language, with examples from our own corpus.
     level_label: Level %{level}
@@ -2299,34 +2617,18 @@ en:
     tip: "Tip: "
     examples: Examples
   mistakes:
-    title: Mistake notebook
-    lede: "Every word you miss lands here on its own — nothing to manage. Getting things wrong is a normal part of how memory works: each miss tells the app to bring that word back sooner."
-    list_title: Missed this week
-    list_lede: Tap a word to open its page, or run them all as one session.
-    empty: No mistakes in the last 7 days. Keep going — this page fills itself.
+    title: This week's mistakes
+    lede: Words you stumbled on in the last seven days. Tap a word to open its page, or run them all as one session.
+    empty: No mistakes in the last seven days.
     study_button:
       one: Redrill 1 word
       other: Redrill %{count} words
-    forecast_title: Review forecast
-    forecast:
-      today: today
-      tomorrow: tomorrow
-      week: this week
-    forecast_lede: Each card is scheduled to come back just before you would forget it. That is why some days are heavier — the app is catching words at the right moment, not testing you at random.
-    heatmap_title: Your last 12 weeks
-    heatmap_lede: Each square is a day; darker means more reviews. Short daily sessions beat rare long ones — memory grows on the days you show up.
-    retention_label: answered correctly (30 days)
-    leeches_title: Stubborn words
-    leeches_lede: These words keep slipping away after many tries. Give them extra attention — open the word, read its example sentences, practice the tone or writing — instead of just flipping the card again.
-    how_title: How this works
-    how_body_1: The app uses spaced repetition — each word comes back at growing intervals (a day, a few days, a week…). Answering just before you would forget it is exactly what makes memory stick.
-    how_body_2: When you miss a word, its interval shrinks and it returns sooner. Nothing is ever lost or failed for good — mistakes are the system doing its job.
   plan:
     title: TOCFL plan
     new_title: Plan your TOCFL
-    new_intro: Pick a level and a target date. We'll work out how much to learn and how much per day.
-    level: Target level
-    date: Target date
+    new_intro: "Pick the level you're going to sit and the exam date. This is your goal, not your current level — the level you already have goes in your profile. We'll work out how much to learn and how much per day."
+    level: Exam level — the one you'll sit
+    date: Exam date
     calculate: Save plan
     saved: Plan saved.
     none: No plan yet. Set a target level and date to get a daily study load.
@@ -2437,15 +2739,6 @@ en:
     quota_warning: Spacing works better in short daily sittings than in one long run. Carry on if you want to — nothing stops you.
     continue: "Carry on with the next %{count}"
     continue_anyway: Carry on anyway
-    up_next:
-      zhuyin: Work through zhuyin
-      zhuyin_body: Start with the sounds — everything after that goes faster.
-      drill: Open the zhuyin trainer
-      drill_body: Fix the symbols by ear while they are fresh.
-      typing: Learn to type
-      typing_body: Typing in zhuyin comes in useful every day.
-      ahead: Pull new material forward
-      ahead_body: Everything due is done. You can take the next words early.
     next_heading: What comes next
     play: Play
     grade_help:
@@ -2482,10 +2775,23 @@ en:
       daily: Daily deck
       cram: Learn new
       collection: Set
+      today: Today
+      desk: Deck
+      decks: My decks
+      redo: Again
+      mistakes: This week's mistakes
     all_again: All again
     all_easy: All easy
     next: Next
     done_title: All done for now
+    summary:
+      reviews: reviews today
+      new: new words
+      streak: day streak
+      tomorrow:
+        one: 1 card is waiting tomorrow.
+        other: "%{count} cards are waiting tomorrow."
+      tomorrow_none: Nothing is due tomorrow yet.
     done_body: Nothing left in this session. Come back later or switch mode.
     back_to_desk: Back to deck
     counts:
@@ -2498,6 +2804,113 @@ en:
     admin_denied: Admins only.
   admin:
     console: Admin
+    reminders:
+      title: Reminders
+      lede: "Sent at each learner's median study hour in their zone, %{hour}:00 without history; at least %{quiet} h apart; silent after %{stop} ignored letters until the next visit. Triggers: no reviews %{signup} day(s) after signup; due cards %{away} days away; a welcome letter right after signup. A letter offers the learner's usual day (median over the %{habit} days before their last session, rounded) if they studied on %{regular}+ of those days, otherwise %{starter} cards. Schedule: config/reminders.yml. Opted out: %{off}."
+      trigger: Trigger
+      columns:
+        sent: Sent
+        clicked: Clicked
+        returned: Back within 2 days
+        click_hours: Median hours to click
+        failed: Failed
+      recent: Latest letters
+      feed:
+        user: Learner
+        trigger: Trigger
+        count: Cards
+        sent: Sent
+        clicked: Clicked
+        returned: Came back
+      after: "after %{hours} h"
+      pending: queued
+      running: Automatic letters are on
+      paused_since: "Automatic letters have been stopped since %{date}"
+      pause_hint: "The switch stops welcome letters and every automatic reminder. Letters on a schedule the learners chose themselves and the manual newsletter keep going. Turning it back on sends nothing retroactively: at most one letter at the next milestone."
+      pause: Stop
+      resume: Turn on
+      paused: Automatic letters are stopped.
+      resumed: Automatic letters are on again.
+    mail:
+      title: Mail
+      lede: "The full log for every account: which letter went out and when, whether it failed, clicks on links in letters, and every unsubscribe or subscribe with where it came from. Kept forever; when an account is deleted its rows stay with the address."
+      account_title: Mail and subscriptions
+      full_log: Full log
+      for_account: "Log for"
+      subscribed_now: "%{list}: subscribed"
+      enabled: "on"
+      off_since: "off since %{date}"
+      deleted: account deleted
+      empty: No letters or subscription changes yet.
+      search: Account email
+      all_lists: All lists
+      all_events: All events
+      apply: Show
+      reset: Reset
+      cards:
+        one: "%{count} card"
+        other: "%{count} cards"
+      schedule_auto: automatic
+      schedule_none: no days selected
+      lists:
+        reminders: Reminders
+        newsletter: Newsletter
+      events:
+        sent: Sent
+        failed: Failed
+        clicked: Click
+        unsubscribed: Unsubscribed
+        subscribed: Subscribed
+        scheduled: Schedule
+        paused: Automation stopped
+        resumed: Automation on
+      sources:
+        admin: in the admin area
+        signup: at signup
+        profile: in profile
+        prompt: from the in-app prompt
+        email_link: via the link in a letter
+        one_click: via the mail client button
+        login: signed in by the link
+        session: already signed in
+        inactive: link no longer active
+        visit: went to the site
+      letters:
+        welcome: Welcome
+        first_cards: First cards
+        due_cards: Cards waiting (2 days)
+        still_due: Cards waiting (7 days)
+        last_call: Last reminder (21 days)
+        scheduled: On the learner's schedule
+    traffic:
+      title: Traffic
+      lede: "%{count} page views over %{days} days, counted in the browser: robots without JavaScript are not included. Paths starting with site: are the static site."
+      by_day: Views per day
+      sections: Sections
+      sources: Sources
+      paths: Pages
+      devices: Devices
+      countries: Countries
+      locales: Interface language
+      signups:
+        one: 1 signup
+        other: "%{count} signups"
+    funnel:
+      title: Funnel
+      lede: "Signup cohorts by ISO week of the first visit, last %{weeks} weeks, admins excluded. Committed: at least %{reviews} reviews on the first day. Return columns count any visit on day 1, days 7–13 and days 30–59; … marks a cohort too young to tell."
+      week: Week
+      columns:
+        size: Signups
+        started: Chose a start
+        studied: Reviewed day 0
+        committed: Committed day 0
+        day_one: Back day 1
+        week_two: Back week 2
+        month_two: Back month 2
+      sources: Signup source
+      sources_lede: The page a new account was on when it pressed Sign in, and how many of those ever reviewed a card.
+      source: Page
+      direct: Direct to sign-in
     activity: Activity
     activity_intro: "%{count} events over the last %{days} days. The log keeps %{retention} days."
     activity_empty: Nothing recorded yet.
@@ -2685,12 +3098,12 @@ en:
       female: Female
       male: Male
     play: "%{syllable}, tone %{tone}"
-    credit: "Audio: %{attribution}. Open Government Data Licence."
+    credit: "Audio: %{attribution}. Open Government Data License."
   levels:
     marked: Marked
     download: Download this list (CSV)
     download_note: >-
-      Free, no address asked. Every source and licence is named inside the file.
+      Free, no address asked. Every source and license is named inside the file.
   licenses:
     moe_notice: 使用說明 — the official usage notice, retained in full as the license requires
     title: Licenses & credits
@@ -2776,7 +3189,7 @@ en:
       writing:
         title: Writing & Lookup
         body: >-
-          Writing quizzes you to draw each character from its meaning and reading. Lookup recognises what
+          Writing quizzes you to draw each character from its meaning and reading. Lookup recognizes what
           you draw; Cangjie drills input codes.
       history:
         title: History & Stats
@@ -3196,13 +3609,14 @@ en:
       bounds: Covers %{from} to %{to}. The table is taken from the Hong Kong Observatory's Gregorian-Lunar Calendar Conversion Table and every date in it was checked back against that source.
   page_help:
     desk_html: >-
-      <p>Three counters at the top: <strong>on the desk</strong> is how many cards are in play at all,
-      <strong>due</strong> is how many came round today on the FSRS schedule, and <strong>new</strong> is
-      how much unseen material the app is willing to add on top today. The daily quota of new material
-      comes from your plan, or from settings when there is no plan.</p><p>The "road to TOCFL" strip shows
-      how much of each level's vocabulary is already closed; the circle with a percentage is the level you
-      are on now. The big button always leads to wherever it makes sense to carry on: to phonetics while
-      the sounds are still unsettled, and to the day's queue after that.</p>
+      <p>The home screen follows the mode you picked. <strong>TOCFL</strong> shows the countdown to the exam,
+      readiness by level, a mock test and the level's grammar. <strong>Classes</strong> shows reviews of your
+      own decks and a quick way to add words from class. <strong>Path</strong> shows the next step in phonetics
+      or the course, plus the day's cards. Switch modes in your profile or with the "change" link next to the
+      heading.</p><p>Counters: <strong>due</strong> is how many cards came round today on the FSRS schedule,
+      <strong>new</strong> is how much unseen material the app is willing to add on top (the quota comes from
+      your plan, or from settings without one), and <strong>on deck</strong> is how many cards are in play at
+      all. The big button always leads to wherever it makes sense to carry on.</p>
     progress_html: >-
       <p><strong>Streak</strong> is how many days in a row had reviews. A day runs from midnight to midnight
       in the time zone of your device; when you travel, the days already counted stay as they were.
@@ -3214,7 +3628,7 @@ en:
       again and again; relearning them by hand is cheaper than running them through the schedule.</p>
     plan_html: >-
       <p>Name a target TOCFL level and a date, and the app works out how much new material a day it takes
-      to close that level by then. The quota is recomputed daily from what is already learnt, so a missed
+      to close that level by then. The quota is recomputed daily from what is already learned, so a missed
       day does not break the plan — it just nudges the quota up.</p><p>When the quota comes out
       unmanageable it is highlighted amber: the level will not close by that date, so either move the date
       or aim a level lower.</p>
@@ -3527,279 +3941,9 @@ en:
       one: 1 item is marked as already known.
       other: "%{count} items are marked as already known."
     keyboard_hint: "Tip: the 1-4 keys work too."
-  intro:
-    label: Getting started
-    click_target: Tap the highlighted item to continue.
-    scroll_target: Look at the highlighted part, then tap Next.
-    skip: Skip
-    later: Later
-    setup:
-      title: "Still to do:"
-      tour: Take the tour
-      level: Set your level
-    dismiss: Got it
-    back: Back
-    next: Next
-    done: Start
-    guide:
-      jump: "Jump to a section"
-      roadmap_cta: "Open the roadmap"
-      title: Full guide
-      body: >-
-        Every corner of the system: all the sections and all the pages. Tap any of them to open it from
-        here, or run a chapter to be walked through that section with the interface highlighted.
-      launch_named: "Walk through: %{title}"
-      again_named: "Again: %{title}"
-      replay_title: Replay the introduction
-      replay_body: The same short walk through the essentials that you saw on your first day.
-      replay_cta: Start the introduction
-    page:
-      title: Welcome to TaiwanCards
-      lede: "Taiwanese Mandarin: traditional characters, zhuyin, and the vocabulary the island actually speaks. Below — how the studying works and what is inside."
-      loop:
-        heading: How a day works
-        lede: >-
-          The core of the app is a single queue of cards. Everything else — the dictionary, the course, the
-          trainers, the text reader — feeds into it: any word from any section joins your study with one tap.
-        grades: "Four ratings — swipe, arrow key or button:"
-        honest: >-
-          Rate yourself honestly. An inflated rating does not speed anything up; it just pushes the card out
-          to the day you will already have forgotten it.
-        steps:
-          queue:
-            title: The day's stack
-            body: The app builds the batch for you — first what came due, then new material within the daily quota.
-          card:
-            title: Front and back
-            body: Look at the front, try to recall, tap to turn the card over, then rate yourself.
-          facets:
-            title: Six memories per word
-            body: "Recognition, production, reading, listening, tone and writing are counted apart: each has its own interval."
-          schedule:
-            title: Scheduled return
-            body: The rating goes into FSRS, and the card comes back exactly when you are about to forget it.
-      inside:
-        heading: What is inside
-        lede: >-
-          Everything is wired together: a word from the textbook opens in the dictionary, goes from there
-          into a deck, and the deck joins your daily queue. Tap any card to look.
-      blocks:
-        course:
-          title: Textbook
-          body: "One path from nothing to TOCFL B1: dialogue, words, grammar, exercises — and a lesson into a deck in one tap."
-        dictionary:
-          title: Dictionary
-          body: Characters, words, sentences, idioms, measure words, radicals and level lists.
-        search:
-          title: Search
-          body: By characters, pinyin, zhuyin, or simply the meaning in your language.
-        decks:
-          title: Cards
-          body: A deck from a word list, a song or an article. You never type translations.
-        grammar:
-          title: Grammar
-          body: Patterns taken apart with examples, sorted by level.
-        trainers:
-          title: Trainers
-          body: Pronunciation from your microphone, handwriting, zhuyin and tones.
-        taiwan:
-          title: Taiwan
-          body: The island's vocabulary that textbooks skip, and where it parts from China.
-        reader:
-          title: Text reader
-          body: Paste any text — it splits into words, each one into the dictionary or a deck.
-      figures:
-        lessons: "lessons: %{value}"
-        stages: "stages: %{value}"
-        characters: "characters: %{value}"
-        words: "words: %{value}"
-        sentences: "sentences: %{value}"
-      prefs:
-        heading: How things are shown to you
-        lede: Press right here — the page changes at once, and the choice follows you everywhere.
-        where: "The same buttons are always at hand: in the header on a computer, in the More menu and at the foot of the page on a phone."
-        readings:
-          title: Readings above the characters
-          body: Cycles zhuyin → zhuyin with pinyin → neither. Pinyin never shows on its own.
-        font:
-          title: The shape of the characters
-          body: Kai draws the strokes the way a hand writes them. Otherwise a plain face.
-        china:
-          title: China's variant alongside
-          body: On shows the Chinese word beside the Taiwanese one. Off keeps Taiwan only.
-        detail:
-          title: How much a dictionary entry shows
-          body: 詳 gives everything down to origin and thesaurus. 簡 keeps readings, meanings and a dozen examples.
-      guide:
-        body: Every section and every page can be walked with hints laid over the interface —
-        cta: open the guide
-      finish:
-        body: Next we pick where you should start.
-        body_known: The rest is your studying. You can open this page again from the guide.
-        cta: Next
-    steps:
-      overview:
-        title: "Introduction"
-        body: "One page: what is inside, how the studying works, and where to start."
-    chapters:
-      dictionary:
-        title: Dictionary and search
-        summary: How to find anything and how to read an entry
-        steps:
-          entry:
-            title: This is what an entry looks like
-            body: >-
-              Readings first, then the senses numbered as the source dictionary numbers them, then
-              examples from the corpus. Anything here goes into study with one tap.
-          detail_level:
-            title: Brief or full
-            body: >-
-              This switch in the header decides how much is shown: the main sense only, or collocations,
-              thesaurus, etymology and every sense at once.
-          characters:
-            title: "The character in full"
-            body: "Readings, the Taiwanese stroke order, a writing animation, the component breakdown, the etymology, and every word where the character is read the same way. It joins your cards from here too."
-          sentences:
-            title: "Real sentences, not invented ones"
-            body: "The corpus is placed on the TOCFL and TBCL scales, and each sentence shows whether that level is exact or worked out with a margin. Register filters separate speech from writing."
-          search:
-            title: "It finds things any way you ask"
-            body: 'By characters, by pinyin with or without tones, by zhuyin, by a meaning in your own language — all mixed together. The "search in sentences" switch turns it into a concordance.'
-      course:
-        title: The textbook
-        summary: One path from zero to B1, and how a lesson is built
-        steps:
-          stages:
-            title: Five stages, sixty lessons
-            body: >-
-              Each stage carries a whole exam level and ends with a mock paper. Inside it the lessons run
-              in order: a dialogue from real life, the words and grammar under it, exercises that mark
-              themselves, and a button that turns the lesson into a deck.
-          band_progress:
-            title: How much of the level is done
-            body: >-
-              The bar stays at the top of every page in the section. It counts words and grammar covered
-              against what the level asks for; the details page adds your pace and the date you are on
-              course to finish by.
-      cards:
-        title: Cards and decks
-        summary: Where cards come from and how reviews work
-        steps:
-          new_deck:
-            title: Every deck starts here
-            body: >-
-              This button is on every page. A song, a text from class, a word list, an article — all of it
-              turns into a deck.
-          facets:
-            title: Six memories per word
-            body: >-
-              Each word is asked separately for recognition, production, reading, listening, tone and
-              writing. Knowing a word and being able to write it are different states with different
-              intervals.
-          day:
-            title: "The day's screen"
-            body: "Three counters and the level bar: what came due, how much new material the app will add today, and how much of your current TOCFL level is already closed."
-          start:
-            title: "One button for everything"
-            body: "It always leads wherever it makes sense to carry on: to phonetics while the sounds are unsettled, to the day's queue after that. You never have to decide what to open."
-          mistakes:
-            title: "The mistake book"
-            body: "Words you have recently stumbled on gather here by themselves, along with leeches — the ones you forget again and again. Relearning those by hand beats running them through the schedule."
-      taiwan:
-        title: Life in Taiwan
-        summary: The vocabulary tied to living here
-        steps:
-          domains:
-            title: Everything by situation
-            body: >-
-              Food, drinks, transport, paperwork, weather, slang. Each word is marked with where it is
-              actually used and how it differs from China.
-          phrases:
-            title: "A phrasebook by scene"
-            body: "158 patterns across 15 situations, with slots to substitute into. Half the cards are marked as staff lines: those you need to understand, not to say."
-          notices:
-            title: "Signs and announcements"
-            body: "What hangs on doors, in the metro and in the lift. You read it rarely, but when you need it you need it at once."
-          metro:
-            title: "The metro as a dictionary"
-            body: "The Taipei metro map, where every station is an ordinary lexeme: reading, meaning, and a way into your cards."
-          calendar:
-            title: "The lunar calendar"
-            body: "The festivals of the year with their own vocabulary, plus two converters: Minguo years, and lunar dates into Gregorian."
-      phonetics:
-        title: Sounds and zhuyin
-        summary: How the sounds work and where to drill them
-        steps:
-          parts:
-            title: Four parts
-            body: >-
-              An introduction, the initials, the finals, and everything that gets confused. Switch between
-              them here — the order is meant to be read straight through.
-          drill_block:
-            title: And drill it straight away
-            body: >-
-              The symbols come in groups and each group has its own button. It drills exactly that group
-              rather than all thirty-seven, so you take on four symbols at a time.
-          tones:
-            title: "Tones on their own"
-            body: "The contours of the four tones and the neutral one, the Taiwanese specifics — the third tone stays low here — and the sandhi rules for 一 and 不. The ear drill starts from this page."
-          hanzi:
-            title: "How a character is built"
-            body: "六書, semantic components, phonetic series and stroke order. Reading this once is cheaper than memorising thousands of characters as pictures."
-      trainers:
-        title: The trainers
-        summary: What you can drill with your hands and your voice
-        steps:
-          what_else:
-            title: And there is more
-            body: >-
-              Alongside it sit handwriting, typing on a Taiwanese keyboard, Cangjie, the sound and tone
-              drills and a mock TOCFL. All of it is open from the start, not unlocked as you go.
-          writing:
-            title: "Writing from memory"
-            body: "Recall the character from its meaning and reading, then write it stroke by stroke. Stroke order is checked and a wrong stroke bounces back; the result feeds the writing facet."
-          typing:
-            title: "Typing zhuyin"
-            body: "The very layout printed on keyboards in Taiwan. Without it you cannot write a message or a search query."
-          mock:
-            title: "A mock exam"
-            body: "Our own TOCFL practice papers — plain, picture and audio formats. They are built from a seed, so the same paper can be sat again."
-      display:
-        title: What to show
-        summary: Four switches that change everything at once
-        steps:
-          prefs:
-            title: These four buttons
-            body: >-
-              They control how text looks across the whole app. A tap applies everywhere immediately —
-              go ahead and try them now.
-          pinyin_toggle:
-            title: Readings above the characters
-            body: >-
-              Each tap moves it on: zhuyin alone, zhuyin with pinyin, nothing. Pinyin never comes without
-              zhuyin.
-          font_kai:
-            title: The calligraphic font
-            body: The shapes Taiwan teaches handwriting from. Tap it and look at the characters.
-          china_toggle:
-            title: Chinese equivalents
-            body: Turn it on if you want to see where China's standard parts ways with Taiwan.
-      profile:
-        title: Profile and progress
-        summary: Your level, your statistics and your export
-        steps:
-          backup:
-            title: "Take it all with you"
-            body: "The whole of your progress exports as one file and imports back the same way, with a copy to Google Drive besides. The data is yours and it is not locked in."
-          stats:
-            title: "What progress shows you"
-            body: "How far you are into each TOCFL level and TBCL band, which skills lag behind, how many words you learn a week, what the next seven days hold and your actual retention. If retention sits well below your target, the intervals are too long."
-          level:
-            title: "Your level only steers recommendations"
-            body: "It decides what to offer you next. The dictionary, the corpus and search always show everything — the level hides nothing."
-          tabs:
-            title: "Four tabs of your own"
-            body: "The bottom bar on a phone is four pages of your choosing, from anywhere in the app. Put the ones you actually visit there."
+  setup:
+    title: "Still to do:"
+    level: Set your level
   reader:
     panel_empty: Tap any word in the text — its card will appear here.
     show_translation: Show translation
@@ -3908,14 +4052,14 @@ en:
           Photograph a menu on the wall or a sign in the street, and the characters you could not read come
           back split into words, ready to become a deck
         speaking: >-
-          Not a recogniser answering yes or no — every syllable you say is scored for quality on nineteen
+          Not a recognizer answering yes or no — every syllable you say is scored for quality on nineteen
           acoustic properties, against the way Taiwan says it rather than the way China does
         everyday: >-
           The Taiwan no course teaches: ordering at a drink shop, the invoice lottery, renting a flat, the
           clinic, typhoon days
         corpus: >-
           Every example sentence is one somebody in Taiwan actually wrote, kept together with its source and
-          its licence
+          its license
         measured: >-
           Nothing here is guessed: how common a word is, how hard it is and which level it belongs to all
           come from counting a real Taiwanese corpus
@@ -3984,7 +4128,7 @@ en:
           title: Open to inspection
           body: >-
             The corpus tables, the syllable inventory and the libraries behind them are published as
-            datasets, and this application is open source. Every source and licence is on the credits page.
+            datasets, and this application is open source. Every source and license is on the credits page.
         linked:
           title: One place, wired together
           body: >-
@@ -4229,39 +4373,63 @@ en:
       by any of them. Mistakes are possible: no guarantees of accuracy, availability or fitness for any
       purpose. Use it as a study aid, and keep your own export of your progress.
   onboarding:
+    goal_question: How do you want to learn?
+    goal_hint: "This shapes your home page and menus. You can switch any time."
+    step: "Step %{step} of %{total}"
+    next: "Next"
+    back: "Back"
+    begin: Start
     title: Where to start
-    lede: One question, and the app shapes your first few weeks around the answer. You can change it whenever you like.
-    question: How much Mandarin do you already have?
+    lede: Two questions, and the app shapes your home screen and first weeks around the answers. You can change both whenever you like.
     pick_one: Pick one of the options.
-    levels:
+    level_question:
+      tocfl: "What level do you already have?"
+      guided: "What is your level?"
+      classes: "What is your level?"
+    level_hint:
+      tocfl: "Not the one you'll sit — you pick that in your exam plan."
+      guided: "New words start at the next level up."
+      classes: "Just for our information — feel free to skip."
+    scale:
+      guide: How do I tell my level?
       zero:
-        title: Absolute beginner
-        body: No characters, no tones, no phonetics — starting from nothing.
-        next: We start with the sounds, and characters follow almost immediately
+        title: From zero
+        short: "where most people start"
+        body: Before Novice 1 — never studied, or know a word or two. Most people start here.
+      hsk: "≈ HSK %{level}"
+      items: "≈ %{count} words and characters"
+      can:
+        "1": Greet people, introduce yourself, handle numbers, times and prices.
+        "2": Talk about yourself, family, food and shopping in short phrases.
+        "3": Get around day to day — transport, shops, cafés — and read simple notices.
+        "4": Talk about work, study and plans; follow slow speech and simple texts.
+        "5": Discuss familiar topics, read straightforward articles, follow most conversations.
+        "6": Talk freely, read the news, watch films with subtitles.
+        "7": Work and study in Mandarin, read complex and professional texts.
+      unknown:
+        test:
+          title: Not sure
+          chip: "take a test"
+          body: A short placement test shows where to start.
+        skip:
+          title: Skip
+          chip: "set it later"
+          body: You can set your level later in your profile.
+    known_question: Anything familiar already?
+    known:
+      zero:
+        title: Nothing
+        body: Starting from a blank page.
       phonetics:
-        title: I know pinyin and tones
-        body: I can read pinyin and hear tones, but zhuyin is new to me and I know few characters.
-        next: Straight to zhuyin — it is the system Taiwan actually uses
-      characters:
-        title: I know zhuyin and some characters
-        body: I read ㄅㄆㄇㄈ, recognize traditional characters and have some vocabulary.
-        next: A placement test to find where you are
-      experienced:
-        title: I already have a level
-        body: I read texts, know hundreds of words, and may be working toward TOCFL.
-        next: Placement test first, then a plan up to your exam date
+        title: Pinyin
+        body: I read pinyin, but zhuyin is new to me.
+      zhuyin:
+        title: Zhuyin
+        body: I read zhuyin, but know almost no words.
     limits:
       heading: What to expect, and what not to
       body: The app will explain how to read and how to write, show you zhuyin and pinyin, and decide what you study next. You can load any words and any texts into it, drill them, watch your progress, and sharpen your pronunciation, tones and vocabulary.
       gap: "But phonetics is best set up with a native teacher, and none of this replaces real classes. What you get here is tone and pronunciation checking — and no live conversation, no speaking with another person, and no listening comprehension: the app does not set out to do those. Treat it as a teacher's right hand rather than a substitute for one."
-    not_for:
-      heading: This may not be the app for you
-      lede: Better to find out now than a month from now.
-      cards: "You just want flashcards. This is a good deal more than that: a dictionary, a reader, pronunciation, handwriting, and one shared record of progress underneath all of it. For flashcards alone it is overkill."
-      course: "You need a path beyond B1. The course takes you to B1 and stops there: above it you get the dictionary, the corpus, the exam lists and your own texts, but not a step-by-step course."
-      china: "You are moving to China. Everything here is Taiwanese Mandarin: traditional characters, zhuyin, Taiwanese vocabulary. There is no Chinese variant, and simplified characters cannot be switched on."
-      nudging: "You want to be chased. There are no reminders and no leaderboards, and there never will be — the assumption is that you know why you are learning Taiwanese Mandarin in particular. The only email is a short note about what is new, once or twice a month at most, and one click stops it."
-      close: If none of that puts you off, pick an option above and let us begin.
     path:
       done_cta: To the home screen and your cards →
       back: "← Back to the step list"

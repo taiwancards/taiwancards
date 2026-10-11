@@ -22,7 +22,7 @@ class CourseController < ApplicationController
     @grammar = @lesson.grammar.filter_map { |ref| [ref, ref.lesson] if ref.lesson }
     @completion = progress.completions[@lesson.slug]
     @slice = progress.slice_for(@lesson.stage)
-    @previous, @next = Huayu::CourseLessons.neighbours(@lesson)
+    @previous, @next = Huayu::CourseLessons.neighbors(@lesson)
   end
 
   def progress_report

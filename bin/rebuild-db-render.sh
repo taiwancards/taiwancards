@@ -150,7 +150,7 @@ WARNINGS=$(grep -c "^pg_restore: warning" tmp/render-restore.log 2> /dev/null ||
 ok "restored in $(($(date +%s) - began))s"
 
 rule
-printf "%sFINALISE%s\n" "$B" "$R"
+printf "%sFINALIZE%s\n" "$B" "$R"
 rule
 
 printf "  %s→%s stamping the schema as production … " "$CYAN" "$R"

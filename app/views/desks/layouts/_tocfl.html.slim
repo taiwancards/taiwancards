@@ -1,0 +1,63 @@
+- plan = home.plan
+- target = home.target_milestone
+- level_name = t("plan.levels.#{home.target_level}")
+- today = home.today
+- link = "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-2 hover:underline md:min-h-8"
+
+.grid.gap-4.lg:grid-cols-3
+  .min-w-0.space-y-4.lg:col-span-2
+    - if (starter = home.starter_lesson)
+      = render("desks/starter", lesson: starter)
+
+    section.rounded-2xl.border.border-brand.p-4.sm:p-5.space-y-3 class="bg-brand-soft"
+      - if plan
+        .flex.flex-wrap.items-end.justify-between.gap-x-6.gap-y-2
+          div
+            p.text-xs.font-medium.uppercase.tracking-wide.text-brand = t("desk.exam.goal", level: level_name, date: l(plan.target_date, format: :long))
+            p.mt-1.text-3xl.font-bold.tabular-nums = t("desk.exam.days_left", count: home.road.days_left)
+          p.text-sm.text-muted-foreground = t("desk.exam.quota", count: today[:new])
+      - else
+        div
+          p.text-xs.font-medium.uppercase.tracking-wide.text-brand = t("desk.exam.no_plan_title")
+          p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("desk.exam.no_plan_body")
+        = link_to t("desk.exam.set_plan"), new_study_plan_path,
+          class: "inline-flex min-h-11 items-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      - if target
+        div
+          .flex.items-baseline.justify-between.gap-3.text-sm
+            span = t("desk.exam.readiness", level: t("plan.levels.#{target.level_tag}"))
+            span.font-bold.tabular-nums = "#{target.readiness}%"
+          .mt-1.h-2.overflow-hidden.rounded-full.bg-background
+            .h-full.rounded-full.bg-primary style="width: #{target.readiness}%"
+          - if target.remaining.positive?
+            p.mt-1.text-xs.text-muted-foreground = t("desk.road.to_next", count: target.remaining, level: t("plan.levels.#{target.level_tag}"))
+      - if plan
+        = link_to t("desk.exam.edit_plan"), study_plan_path, class: link
+
+    = render("desks/action",
+      href: @start_path,
+      label: (today[:total].positive? ? t("desk.start_count", count: today[:total]) : t("desk.start")),
+      hint: desk_start_hint(@next_step),
+      stats: [[today[:due], t("desk.due"), "text-amber-500"], [today[:new], t("desk.unseen"), "text-emerald-500"], [home.on_desk, t("desk.on_desk"), nil]])
+
+    = render("desks/levels", home:)
+
+  .min-w-0.space-y-4
+    = render("shared/discovery", suggestion: @discovery)
+    section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+      h2.text-sm.font-semibold = t("desk.exam.mock_title", level: level_name)
+      p.text-xs.leading-relaxed.text-muted-foreground = t("desk.exam.mock_body")
+      .flex.flex-wrap.items-center.gap-x-4.gap-y-1
+        - if home.mock_level
+          = link_to t("desk.exam.mock_start"), mock_exam_path(level: home.mock_level),
+            class: "inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+        = link_to t("desk.exam.mock_formats"), mock_exams_path, class: link
+      - if current_user.restricted_access?
+        = link_to t("desk.exam.papers"), exams_path, class: link
+
+    - if (grammar = home.grammar_level)
+      section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+        h2.text-sm.font-semibold = t("desk.exam.grammar_title", level: level_name)
+        p.text-xs.leading-relaxed.text-muted-foreground
+          = t("desk.exam.grammar_body", count: Huayu::GrammarLessons.levels.fetch(grammar, []).size)
+        = link_to t("desk.exam.grammar_open"), grammar_path(level: grammar), class: link

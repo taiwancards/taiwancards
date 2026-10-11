@@ -1,5 +1,7 @@
 const MIC_SETTLE_MS = 150;
 const CANONICAL_RATE = 22050;
+const SPEECH_RMS = 0.02;
+const METER_MS = 60;
 
 function audioContext() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -53,6 +55,7 @@ export class SpeechRecorder {
   async start() {
     if (this.recording) return true;
 
+    this.prime();
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (error) {
@@ -95,7 +98,52 @@ export class SpeechRecorder {
     });
   }
 
+  prime() {
+    if (this.meterContext) return;
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      this.meterContext = new Ctx();
+      this.meterContext.resume().catch(() => {});
+    } catch {
+      this.meterContext = null;
+    }
+  }
+
+  watch({ silenceMs, quietMs, onEnd }) {
+    if (!this.stream || !this.meterContext) return;
+    try {
+      const analyzer = this.meterContext.createAnalyser();
+      analyzer.fftSize = 1024;
+      this.meterContext.createMediaStreamSource(this.stream).connect(analyzer);
+      const samples = new Float32Array(analyzer.fftSize);
+      const startedAt = performance.now();
+      let lastLoud = 0;
+      this.meter = setInterval(() => {
+        analyzer.getFloatTimeDomainData(samples);
+        let sum = 0;
+        for (const sample of samples) sum += sample * sample;
+        const now = performance.now();
+        if (Math.sqrt(sum / samples.length) > SPEECH_RMS) lastLoud = now;
+        const spoke = lastLoud > 0;
+        if (spoke ? now - lastLoud > silenceMs : now - startedAt > quietMs) {
+          this.unwatch();
+          onEnd(spoke);
+        }
+      }, METER_MS);
+    } catch {
+      this.unwatch();
+    }
+  }
+
+  unwatch() {
+    clearInterval(this.meter);
+    this.meter = null;
+    this.meterContext?.close().catch(() => {});
+    this.meterContext = null;
+  }
+
   release() {
+    this.unwatch();
     this.stream?.getTracks().forEach((track) => track.stop());
     this.stream = null;
   }

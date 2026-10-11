@@ -1,0 +1,42 @@
+- content_for(:title) { t("admin.traffic.title") }
+- total = @traffic.total
+- signups = @traffic.signups
+
+.py-6.space-y-6
+  header.space-y-2
+    = render "admin/nav"
+    h1.text-2xl.font-bold.tracking-tight = t("admin.traffic.title")
+    p.max-w-3xl.text-sm.text-muted-foreground = t("admin.traffic.lede", count: number_with_delimiter(total), days: @days)
+
+  .flex.flex-wrap.items-center.gap-x-3.gap-y-1
+    span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("admin.window")
+    - Admin::Traffic::WINDOWS.each do |days|
+      = link_to t("admin.days", count: days), admin_traffic_path(days:), class: "text-sm #{@days == days ? "font-semibold" : "text-muted-foreground hover:text-foreground"}"
+
+  - by_day = @traffic.by_day
+  - if by_day.any?
+    - peak = [by_day.values.max, 1].max
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("admin.traffic.by_day")
+      .flex.h-24.items-end.gap-px
+        - by_day.each do |day, views|
+          .min-w-0.flex-1.rounded-t-sm.bg-primary title="#{l(day, format: :short)}: #{views}" style="height: #{(views * 100.0 / peak).round}%"
+
+  .grid.gap-4.md:grid-cols-2.xl:grid-cols-3
+    - {sections: @traffic.sections, sources: @traffic.sources, paths: @traffic.paths, devices: @traffic.devices, countries: @traffic.countries, locales: @traffic.locales}.each do |key, rows|
+      section.min-w-0.rounded-xl.border.border-border.p-4.space-y-2
+        h2.text-sm.font-semibold = t("admin.traffic.#{key}")
+        - if rows.empty?
+          p.text-sm.text-muted-foreground = t("admin.activity_empty")
+        ul.space-y-1
+          - top = rows.values.max.to_i
+          - rows.each do |label, views|
+            li.space-y-1
+              .flex.items-baseline.justify-between.gap-2.text-sm
+                span.min-w-0.truncate = label.presence || "—"
+                span.shrink-0.tabular-nums.text-muted-foreground
+                  = number_with_delimiter(views)
+                  - if key == :paths && (count = signups[label.to_s.delete_prefix(PageView::SITE)]).to_i.positive?
+                    = " · #{t("admin.traffic.signups", count:)}"
+              .h-1.w-full.overflow-hidden.rounded-full.bg-muted
+                .h-full.rounded-full.bg-primary style="width: #{top.zero? ? 0 : (views * 100.0 / top).round}%"

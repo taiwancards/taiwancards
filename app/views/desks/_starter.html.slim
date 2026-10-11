@@ -1,0 +1,12 @@
+section.space-y-4.rounded-2xl.border.border-brand.p-4.sm:p-5 class="bg-brand-soft"
+  div
+    p.text-xs.font-medium.uppercase.tracking-wide.text-brand = t("starter.hero_kicker", number: lesson.number, total: Huayu::StarterTrack.total)
+    p.mt-1.text-lg.font-bold.leading-snug = lesson.title_for(I18n.locale)
+    p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("starter.hero_body")
+  .flex.flex-wrap.items-center.gap-2
+    - lesson.symbols.each do |symbol|
+      span.inline-flex.size-11.items-center.justify-center.rounded-xl.border.border-border.bg-background.text-2xl lang="zh-TW" = symbol
+    - lesson.words.first(3).each do |word|
+      span.inline-flex.h-11.items-center.rounded-xl.border.border-border.bg-background.px-3.text-xl lang="zh-TW" = word.zh
+  = link_to t("starter.hero_start"), starter_lesson_path(lesson), id: "starter-start",
+    class: "inline-flex min-h-12 items-center justify-center rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground hover:opacity-90"

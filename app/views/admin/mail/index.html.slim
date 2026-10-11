@@ -1,0 +1,41 @@
+- content_for(:title) { t("admin.mail.title") }
+- filters = {user_id: @user&.id, list: @list, event: @event, q: @query.presence}.compact
+- field = "min-h-10 rounded-lg border border-border bg-card px-3 text-sm"
+
+.py-6.space-y-6
+  header.space-y-2
+    = render "admin/nav"
+    h1.text-2xl.font-bold.tracking-tight = t("admin.mail.title")
+    p.max-w-3xl.text-sm.text-muted-foreground = t("admin.mail.lede")
+    - if @paused_at
+      p.text-sm.font-medium.text-destructive
+        = link_to t("admin.reminders.paused_since", date: l(@paused_at, format: :short)), admin_reminders_path, class: "underline underline-offset-2"
+
+  .grid.gap-3 class="grid-cols-2 sm:grid-cols-5"
+    - User::MAILING_COLUMNS.each_key do |list|
+      .rounded-xl.border.border-border.p-3
+        .text-xs.text-muted-foreground = t("admin.mail.subscribed_now", list: t("admin.mail.lists.#{list}"))
+        .text-lg.font-semibold.tabular-nums = @subscribed[list]
+    - MailEvent::EVENTS.each do |event|
+      = link_to admin_mail_path(filters.merge(event:)), class: "rounded-xl border border-border p-3 hover:bg-muted #{"bg-muted" if @event == event}"
+        .text-xs.text-muted-foreground = t("admin.mail.events.#{event}")
+        .text-lg.font-semibold.tabular-nums = @totals.fetch(event, 0)
+
+  = form_with url: admin_mail_path, method: :get, class: "flex flex-wrap items-end gap-2" do
+    - if @user
+      = hidden_field_tag :user_id, @user.id
+    = search_field_tag :q, @query, placeholder: t("admin.mail.search"), class: "#{field} min-w-0 flex-1 basis-56"
+    = select_tag :list, options_for_select(MailEvent::LISTS.map { |list| [t("admin.mail.lists.#{list}"), list] }, @list), include_blank: t("admin.mail.all_lists"), class: field
+    = select_tag :event, options_for_select(MailEvent::EVENTS.map { |event| [t("admin.mail.events.#{event}"), event] }, @event), include_blank: t("admin.mail.all_events"), class: field
+    = submit_tag t("admin.mail.apply"), name: nil, class: "min-h-10 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"
+    - if filters.any?
+      = link_to t("admin.mail.reset"), admin_mail_path, class: "min-h-10 content-center px-2 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+
+  - if @user
+    p.text-sm
+      = t("admin.mail.for_account")
+      =< link_to @user.email, admin_user_path(@user), class: "font-medium underline underline-offset-2"
+
+  section.space-y-2
+    = render "admin/mail/events", events: @events
+    = render("shared/pager", page: @page, pages: @pages, path: -> (n) { admin_mail_path(filters.merge(page: n)) })

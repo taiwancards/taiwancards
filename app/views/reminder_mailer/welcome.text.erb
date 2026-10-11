@@ -1,0 +1,8 @@
+<%= t("#{@key}.title") %>
+
+<% t("#{@key}.body").each do |paragraph| %><%= paragraph %>
+
+<% end %><% t("#{@key}.features").each do |feature| %>— <%= feature[:title] %>. <%= feature[:text] %>
+<% end %>
+<%= t("#{@key}.outro") %>
+

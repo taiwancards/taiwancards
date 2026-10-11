@@ -1,0 +1,12 @@
+details.group.text-xs.leading-relaxed.text-muted-foreground
+  summary.cursor-pointer.font-medium.text-primary.hover:underline = t("onboarding.scale.guide")
+  ul.mt-2.space-y-1.5
+    li
+      span.font-semibold.text-foreground = t("onboarding.scale.zero.title")
+      = " — "
+      = t("onboarding.scale.zero.body")
+    - level_scale.each do |step|
+      li
+        span.font-semibold.text-foreground = "TOCFL #{step.band}"
+        = " · #{level_scale_meta(step)} — "
+        = t("onboarding.scale.can.#{step.grade}")

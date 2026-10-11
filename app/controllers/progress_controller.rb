@@ -10,6 +10,7 @@ class ProgressController < ApplicationController
     @tocfl = Huayu::TocflReadiness.new(user: current_user).levels
     @tbcl = Huayu::TbclReadiness.new(user: current_user).levels
     @leeches = @report.leeches.limit(LEECH_LIMIT).to_a
+    @mistakes = Study::MistakeBook.new(current_user)
   end
 
   def history

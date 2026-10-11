@@ -1,0 +1,20 @@
+- report = StatsReport.new(user: current_user)
+- streak = report.streak
+- tomorrow = report.forecast(days: 2).last.last
+
+.space-y-3
+  .flex.justify-center.gap-6
+    - [[daily.reviews_today, t("study.summary.reviews"), nil], [daily.new_today, t("study.summary.new"), "text-emerald-600"], [streak.current, t("study.summary.streak"), (streak.current.positive? ? "text-amber-500" : nil)]].each do |value, label, tone|
+      div
+        .text-2xl.font-bold.tabular-nums class=tone = number_with_delimiter(value)
+        .text-2xs.font-medium.uppercase.tracking-wide.text-muted-foreground = label
+  p.text-sm.text-muted-foreground
+    = tomorrow.positive? ? t("study.summary.tomorrow", count: tomorrow) : t("study.summary.tomorrow_none")
+  - if current_user.reminders?
+    p.text-xs.text-muted-foreground
+      = reminder_session_note(current_user)
+      = " · "
+      = link_to t("reminders.session.settings"), profile_path, class: "underline underline-offset-2 hover:text-foreground"
+  - else
+    = button_to t("reminders.session.enable"), reminders_enable_path, form_class: "contents",
+      class: "inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-sm font-medium hover:bg-muted md:min-h-9"

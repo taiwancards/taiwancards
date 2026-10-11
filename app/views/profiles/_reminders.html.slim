@@ -1,0 +1,47 @@
+- schedule = @user.reminder_schedule
+- zone = @user.zone || Time.zone_default
+- chip = "flex min-h-11 cursor-pointer items-center justify-center rounded-lg border border-border bg-card text-sm font-medium has-[:checked]:border-primary has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-primary"
+
+section#mail.scroll-mt-28.rounded-2xl.border.border-border.bg-card.p-5.space-y-4 data-controller="autosave"
+  .flex.items-center.justify-between.gap-3
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("reminders.profile.title")
+    = render "profiles/saved_badge"
+
+  = form_with model: @user, url: profile_path, method: :patch, class: "group space-y-4", data: {action: "change->autosave#save"} do |form|
+    - if @user.google_linked?
+      label.flex.cursor-pointer.items-start.gap-2.text-sm
+        = form.check_box :newsletter, class: "mt-0.5 size-4"
+        span
+          span.block.font-medium = t("newsletters.profile.label")
+          span.block.text-xs.text-muted-foreground = t("newsletters.profile.hint")
+    label.flex.cursor-pointer.items-start.gap-2.text-sm
+      = form.check_box :reminders, id: "reminders-on", class: "mt-0.5 size-4"
+      span
+        span.block.font-medium = t("reminders.profile.label")
+        span.block.text-xs.text-muted-foreground = t("reminders.profile.hint")
+
+    fieldset#reminders.scroll-mt-28.space-y-2.transition-opacity class="group-has-[#reminders-on:not(:checked)]:opacity-50"
+      legend.mb-2.text-xs.font-medium.text-muted-foreground = t("reminders.profile.when")
+      - ReminderSchedule::MODES.each do |mode|
+        label class="flex cursor-pointer items-start gap-3 rounded-xl border border-border p-3 has-[:checked]:border-primary has-[:checked]:bg-brand-soft"
+          = radio_button_tag "user[reminder_schedule][mode]", mode, schedule[:mode] == mode, id: "reminder-#{mode}", class: "mt-0.5 size-4 shrink-0"
+          span.min-w-0
+            span.block.text-sm.font-medium = t("reminders.profile.#{mode}.title")
+            span.block.text-xs.leading-relaxed.text-muted-foreground = t("reminders.profile.#{mode}.hint")
+
+      .hidden.space-y-3.rounded-xl.border.border-border.p-3 class="group-has-[#reminder-fixed:checked]:block"
+        = hidden_field_tag "user[reminder_schedule][days][]", "", id: nil
+        div
+          p.mb-1.5.text-xs.font-medium.text-muted-foreground = t("reminders.profile.days")
+          div class="grid grid-cols-3 gap-1 min-[360px]:grid-cols-7 sm:max-w-md"
+            - ReminderSchedule::WEEKDAYS.each do |day|
+              label class=chip
+                = check_box_tag "user[reminder_schedule][days][]", day, schedule[:days].include?(day), id: "reminder-day-#{day}", class: "reminder-day sr-only"
+                = reminder_day_name(day)
+          p.mt-1.5.text-xs.text-destructive class="group-has-[.reminder-day:checked]:hidden" = t("reminders.profile.no_days")
+        label.block.space-y-1
+          span.block.text-xs.font-medium.text-muted-foreground = t("reminders.profile.hour")
+          = select_tag "user[reminder_schedule][hour]",
+            options_for_select(ReminderSchedule::HOURS.map { |hour| [reminder_hour_label(hour), hour] }, schedule[:hour]),
+            class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm sm:max-w-40"
+        p.text-xs.text-muted-foreground = t("reminders.profile.zone", zone: "#{zone.tzinfo.name} (UTC#{zone.formatted_offset})")

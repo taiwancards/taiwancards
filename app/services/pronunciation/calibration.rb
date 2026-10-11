@@ -119,6 +119,14 @@ module Pronunciation
       {ok: true, summary: profile.summary}
     end
 
+    def absorb!(profile, f0_values:)
+      return profile if profile.calibrated? || f0_values.blank?
+
+      profile.observe_f0!(Array(f0_values).map { |hz| profile.octave_corrected(hz) })
+      profile.save!
+      profile
+    end
+
     def refine!(profile, f0_values:, tone:, score:, threshold: GOOD_ENOUGH_TO_LEARN_FROM)
       return profile if score.to_i < threshold || tone.blank?
 

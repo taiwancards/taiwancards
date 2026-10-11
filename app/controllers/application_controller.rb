@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   include Returning
   include Authentication
   include Authorization
-  include Introduced
   include Voiced
   include PubliclyCacheable
 

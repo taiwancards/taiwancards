@@ -74,7 +74,7 @@ module Huayu
         super || lessons.find { |lesson| lesson.heads.include?(value) || lesson.pattern == value }
       end
 
-      def neighbours(lesson) = super(lesson, taught)
+      def neighbors(lesson) = super(lesson, taught)
 
       def search(query, limit: 6)
         needle = query.to_s.strip.downcase

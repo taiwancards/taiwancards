@@ -63,6 +63,22 @@ module Pronunciation
       }.compact
     end
 
+    def syllable_spans(audio:, syllables:)
+      return nil unless @store.available?
+
+      samples, rate = decode(audio)
+      return nil if samples.blank?
+
+      analysis = Acoustic::Features.analyze(samples, rate)
+      expected = syllables.each_with_index.map { |target, index| resolve(target, index, syllables.length) }
+      spans = segment(analysis, expected.length, expected.map { |row| row[:template] })
+      return nil if spans.is_a?(String)
+
+      spans.map { |low, high|
+        [(low * Acoustic::Features::HOP_MS).round, ((high + 1) * Acoustic::Features::HOP_MS).round]
+      }
+    end
+
     private
 
     def failure(reason)
@@ -189,7 +205,7 @@ module Pronunciation
       rows = measured.reject { |row| row[:absent] }
       place_vowels(rows)
       align_timbre(rows)
-      place_neighbours(rows)
+      place_neighbors(rows)
       placed = Acoustic::Register.from_utterance(
         rows.map { |row| row[:features]["f0_ref_hz"] },
         rows.map { |row| row[:template].dig("f0_register", "median") }
@@ -210,7 +226,7 @@ module Pronunciation
       )
     end
 
-    def place_neighbours(rows)
+    def place_neighbors(rows)
       tones = rows.map { |row| row[:template]&.fetch("tone", nil).to_i }
       onsets = rows.map { |row| row[:template]&.dig("structure", "initial") }
       rows.each_with_index do |row, index|
@@ -358,9 +374,13 @@ module Pronunciation
       syllable, = Acoustic::Syllables.parse_key(key)
       rival, = Acoustic::Syllables.parse_key(best)
       return nil if rival == syllable && !weak_part?(scored, "tone")
-      return nil if rival != syllable && PART_ORDER.excluding("tone").none? { |id| weak_part?(scored, id) }
+      return nil if rival != syllable && sound_parts_between(key, best).none? { |id| weak_part?(scored, id) }
 
       best
+    end
+
+    def spelled_zhuyin(key)
+      zhuyin_for_key(key) || Huayu::Zhuyin.from_pinyin(Acoustic::Syllables.parse_key(key.to_s)&.first.to_s)
     end
 
     def zhuyin_for_key(key)
@@ -382,7 +402,13 @@ module Pronunciation
 
     def weak_part?(scored, id)
       part = scored.find { |p| p["id"] == id }
-      part.present? && @verdict.level(id, part["score"]) != "green"
+      part.present? && !part["score"].nil? && @verdict.level(id, part["score"]) != "green"
+    end
+
+    def sound_parts_between(key, rival)
+      slips = Slips.between(key, spelled_zhuyin(key), rival, spelled_zhuyin(rival)).map { |slip| slip["part"] }
+      ids = slips.excluding("tone")
+      ids.include?("final") || ids.include?("medial") ? ids | %w[medial final] : ids
     end
 
     PART_ORDER = %w[initial medial final tone].freeze

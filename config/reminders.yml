@@ -1,0 +1,17 @@
+shared:
+  default_hour: 19
+  quiet_hours: 20
+  give_up_after: 3
+  history_days: 60
+  seconds_per_card: 8
+  dose:
+    habit_days: 30
+    regular_days: 8
+    starter: 20
+    steps: [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 100, 120, 150, 200]
+  triggers:
+    first_cards:
+      days_after_signup: [1]
+    due_cards:
+      days_away: [2, 7, 21]
+      names: [due_cards, still_due, last_call]

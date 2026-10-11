@@ -39,3 +39,9 @@ Rails.application.configure do
   config.content_security_policy_nonce_directives = %w[script-src]
   config.content_security_policy_report_only = ENV["CSP_REPORT_ONLY"].present?
 end
+
+if Rails.env.development?
+  Rails.application.config.to_prepare do
+    LetterOpenerWeb::ApplicationController.content_security_policy(false)
+  end
+end

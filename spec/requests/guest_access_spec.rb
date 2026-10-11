@@ -54,8 +54,6 @@ RSpec.describe "Guest access", :no_auth do
     /progress
     /progress/history
     /profile
-    /help
-    /mistakes
   ]
     .freeze
 

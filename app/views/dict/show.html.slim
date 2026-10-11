@@ -57,7 +57,7 @@
             = source_badge(source)
         - if current_user
           .flex.shrink-0.items-center.gap-2
-            = button_to t("words.add_study"), dict_activate_path(lexeme.text), data: {tour: "dict-add"},
+            = button_to t("words.add_study"), dict_activate_path(lexeme.text),
               class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
             = render("shared/quick_add", lexeme:)
             = render("shared/pronounce", lexeme:)

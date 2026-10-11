@@ -12,6 +12,23 @@ RSpec.describe Newsletter do
     expect(described_class.recipients).to(contain_exactly(reader, owner))
   end
 
+  it "narrows the recipients to chosen levels and goals, or to people picked by hand" do
+    beginner = create(:user, google_uid: "g-1", prefs: {"goal" => "guided"})
+    examinee = create(:user, google_uid: "g-2", prefs: {"goal" => "tocfl", "level" => "3"})
+    student = create(:user, google_uid: "g-3", prefs: {"goal" => "classes", "level" => "3"})
+    newsletter = described_class.create!
+
+    newsletter.update!(audience: {"mode" => "filtered", "levels" => ["3", ""], "goals" => ["tocfl"]})
+    expect(newsletter.audience_recipients).to(contain_exactly(examinee))
+
+    newsletter.update!(audience: {"mode" => "filtered", "levels" => ["zero"], "goals" => []})
+    expect(newsletter.audience_recipients).to(contain_exactly(beginner))
+
+    newsletter.update!(audience: {"mode" => "picked", "user_ids" => [student.id.to_s, ""]})
+    expect(newsletter.reload.audience).to(include("user_ids" => [student.id]))
+    expect(newsletter.audience_recipients).to(contain_exactly(student))
+  end
+
   it "is ready to send only with a subject and text in both languages" do
     newsletter = described_class.create!(subject_en: "News", body_en: "<div>Hi</div>", subject_ru: "Новости")
 

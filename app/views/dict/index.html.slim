@@ -75,7 +75,7 @@
     .grid.gap-2 class="sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       - @entries.each_with_index do |entry, position|
         - state = @known_ids.include?(entry.id) ? :known : (@started_ids.include?(entry.id) ? :learning : :new)
-        .flex.min-w-0.items-stretch.gap-1 data-tour=("dict-entry" if position.zero?)
+        .flex.min-w-0.items-stretch.gap-1
           = link_to dict_entry_path(entry.text), class: "flex min-w-0 flex-1 items-center justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition-colors hover:border-primary/50 hover:bg-muted" do
             .min-w-0
               .flex.items-baseline.gap-2

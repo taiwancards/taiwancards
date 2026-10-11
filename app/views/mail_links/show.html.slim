@@ -1,0 +1,7 @@
+- content_for(:title, t("mail_links.opening.title"))
+
+.mx-auto.max-w-md.space-y-4.py-12.text-center
+  h1.text-2xl.font-bold.tracking-tight = t("mail_links.opening.title")
+  p.text-sm.text-muted-foreground = t("mail_links.opening.body")
+  = form_with url: mail_link_path(token: params[:token], locale: nil), method: :post, data: {turbo: false, controller: "auto-submit"} do |form|
+    = form.submit t("mail_links.opening.button"), class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"

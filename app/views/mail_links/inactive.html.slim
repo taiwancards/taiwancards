@@ -1,0 +1,6 @@
+- content_for(:title, t("mail_links.inactive.title"))
+
+.mx-auto.max-w-md.space-y-4.py-12.text-center
+  h1.text-2xl.font-bold.tracking-tight = t("mail_links.inactive.title")
+  p.text-sm.text-muted-foreground = t("mail_links.inactive.body")
+  = link_to t("mail_links.inactive.sign_in"), login_path, class: "inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"

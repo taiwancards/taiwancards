@@ -6,7 +6,9 @@ RSpec.describe "Responsive markup" do
   VIEWS = Rails
     .root
     .glob("app/views/**/*.html.slim")
-    .reject { |path| path.dirname.basename.to_s.end_with?("_mailer") }
+    .reject { |path|
+      [path.dirname.basename.to_s, path.basename.to_s.split(".").first].any? { |name| name.end_with?("_mailer") }
+    }
     .freeze
   NARROWEST_PHONE = 320
 

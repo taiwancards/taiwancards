@@ -1,0 +1,12 @@
+- audio = local_assigns[:audio] || {url: local_assigns[:url]}
+- size = local_assigns[:large] ? "size-20" : "size-14"
+button.mx-auto.flex.items-center.justify-center.rounded-full.bg-brand-soft.text-brand.transition-colors[
+  type="button" class="#{size} hover:bg-brand hover:text-white"
+  aria-label=t("audio.play") title=t("audio.play")
+  data-controller="audio"
+  data-audio-url-value=audio[:url]
+  data-audio-sequence-value=Array(audio[:sequence]).to_json
+  data-audio-stop-ms-value=audio[:stop_ms]
+  data-action="audio#play" ]
+  svg class=(local_assigns[:large] ? "size-9" : "size-6") fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+    path d="M8 5v14l11-7z"

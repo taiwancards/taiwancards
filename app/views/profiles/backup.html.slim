@@ -1,7 +1,7 @@
 = render layout: "profiles/shell" do
   section.rounded-2xl.border.border-border.bg-card.p-5.space-y-4
     div
-      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground data-tour="profile-backup" = t("auth.progress")
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.progress")
       p.mt-1.text-sm.text-muted-foreground = t("auth.progress_counts", memories: @memory_count, reviews: @review_count)
 
     .flex.flex-wrap.items-center.gap-3

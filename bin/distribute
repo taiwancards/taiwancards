@@ -17,7 +17,7 @@ ARCHIVE_DIRS=(
   data/corpora
 )
 
-MEDIA_DIRS=(moe_audio moe_audio_words cns_voice)
+MEDIA_DIRS=(moe_audio moe_audio_words cns_voice word_clips)
 IMMUTABLE="public, max-age=31536000, immutable"
 MANIFEST_CACHE="public, max-age=60"
 
@@ -196,7 +196,7 @@ do_packs() {
 
 media_type() {
   case "$1" in
-  cns_voice) echo audio/mpeg ;;
+  cns_voice | word_clips) echo audio/mpeg ;;
   *) echo audio/ogg ;;
   esac
 }
@@ -246,6 +246,7 @@ RUNTIME_FILES=(
   "media/moe_audio_words/notice.pdf|media/moe_audio_words/notice.pdf"
   "media/moe_audio_words/ATTRIBUTION.txt|media/moe_audio_words/ATTRIBUTION.txt"
   "media/listening/manifest.json|media/listening/manifest.json"
+  "media/word_clips/manifest.json|media/word_clips/manifest.json"
 )
 
 do_runtime() {

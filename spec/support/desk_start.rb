@@ -3,7 +3,7 @@
 module DeskStart
   def desk_start_path
     get("/desk")
-    Nokogiri::HTML(response.body).at_css("[data-tour=\"learn\"]")&.[]("href")
+    Nokogiri::HTML(response.body).at_css("#desk-start")&.[]("href")
   end
 end
 

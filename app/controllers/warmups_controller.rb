@@ -4,7 +4,7 @@ class WarmupsController < ApplicationController
   def show
     @prompts = prompts_with_audio
     @profile = profile
-    @done_url = take_return_path || pronunciation_path
+    @done_url = take_return_path || referring_path || pronunciation_path
   end
 
   def create

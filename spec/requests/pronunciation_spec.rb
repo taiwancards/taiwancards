@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Pronunciation" do
   let(:headers) do
     {
-      "Host" => "rusty-undefaulting-marilou.ngrok-free.app",
+      "Host" => "www.example.com",
       "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
     }
   end
@@ -70,42 +70,17 @@ RSpec.describe "Pronunciation" do
     expect(response.body.scan(/data-drill-groups-target="group"/).length).to(eq(tabs))
   end
 
-  it "sends a voice without a profile to the warm-up first" do
+  it "opens straight away and offers the warm-up as an option until the voice is known" do
     create(:lexeme, kind: :word, text: "高", readings: {"pinyin" => "gāo"})
 
     get("/pronunciation", headers:)
-    expect(response).to(redirect_to(pronunciation_warmup_path))
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include(I18n.t("pron.ui.warmup_title"), I18n.t("pron.ui.warming")))
 
     warm_up!
 
     get("/pronunciation", headers:)
-    expect(response).to(have_http_status(:ok))
     expect(response.body).not_to(include(I18n.t("pron.ui.warmup_title")))
-  end
-
-  it "still asks for the warm-up when the profile was only started, never finished" do
-    VoiceProfile.create!(user: @authenticated_user)
-
-    get("/pronunciation", headers:)
-
-    expect(response).to(redirect_to(pronunciation_warmup_path))
-  end
-
-  it "hands the warm-up the page it interrupted" do
-    get("/pronunciation", params: {section: "initials_stops"}, headers:)
-    get("/pronunciation/warmup", headers:)
-
-    expect(response.body).to(include(CGI.escapeHTML("/pronunciation?section=initials_stops")))
-  end
-
-  it "lets a person who insists carry on without one" do
-    create(:lexeme, kind: :word, text: "高", readings: {"pinyin" => "gāo"})
-
-    get("/pronunciation", params: {anyway: 1}, headers:)
-    expect(response).to(have_http_status(:ok))
-
-    get("/pronunciation", headers:)
-    expect(response).to(have_http_status(:ok))
   end
 
   it "never lets a browser walk in here on its own" do

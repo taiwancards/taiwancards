@@ -2,6 +2,8 @@ import { Controller } from "@hotwired/stimulus";
 import { SpeechRecorder } from "lib/speech_recorder";
 import { postGrade } from "lib/grade_request";
 
+const QUIET_MS = 5000;
+
 const LEVEL_CLASS = {
   green: "border-emerald-500 text-emerald-600",
   amber: "border-amber-500 text-amber-600",
@@ -28,6 +30,7 @@ export default class extends Controller {
     expected: Array,
     autoMs: Number,
     maxMs: Number,
+    silenceMs: { type: Number, default: 900 },
     goodAt: Number,
     hardAt: Number,
     labelRecord: String,
@@ -37,6 +40,7 @@ export default class extends Controller {
     labelBusy: String,
     labelMicDenied: String,
     labelOffline: String,
+    labelSilence: String,
     labelAttempts: String,
   };
 
@@ -92,14 +96,21 @@ export default class extends Controller {
       () => this.finishRecording(),
       this.maxMsValue || 6000,
     );
+    this.recorder.watch({
+      silenceMs: this.silenceMsValue,
+      quietMs: Math.min(QUIET_MS, this.maxMsValue || QUIET_MS),
+      onEnd: (spoke) => this.finishRecording(spoke),
+    });
   }
 
-  async finishRecording() {
+  async finishRecording(spoke = true) {
+    if (!this.recorder.recording) return;
     if (this.stopTimer) clearTimeout(this.stopTimer);
     this.recordTarget.textContent = this.labelRecordValue;
     this.recordTarget.classList.remove("bg-red-500", "text-white");
 
     const wav = await this.recorder.stop();
+    if (!spoke) return this.setStatus(this.labelSilenceValue);
     if (!wav) return this.setStatus("");
 
     this.keepTake(wav);

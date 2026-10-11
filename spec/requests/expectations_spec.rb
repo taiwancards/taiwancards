@@ -9,7 +9,7 @@ RSpec.describe "Stated limits" do
     expect(response.body).to(include(I18n.t("onboarding.limits.heading")))
     expect(response.body).to(include(CGI.escapeHTML(I18n.t("onboarding.limits.gap"))))
     expect(response.body.index(I18n.t("onboarding.limits.heading")))
-      .to(be < response.body.index(I18n.t("onboarding.question")))
+      .to(be < response.body.index(I18n.t("onboarding.goal_question")))
   end
 
   it "names what the app does not do, in both locales", :aggregate_failures do

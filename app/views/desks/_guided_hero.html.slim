@@ -1,0 +1,37 @@
+- step = home.path_step
+- lesson = home.resume_lesson
+- primary = "inline-flex min-h-11 items-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+- link = "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-2 hover:underline md:min-h-8"
+
+section.rounded-2xl.border.border-brand.p-4.sm:p-5.space-y-3 class="bg-brand-soft"
+  - if step
+    div
+      p.text-xs.font-medium.uppercase.tracking-wide.text-brand
+        = t("desk.guided.path_label", done: home.path.done_count, total: home.path.total_count)
+      p.mt-1.text-lg.font-bold.leading-snug = t("onboarding.path.steps.#{step[:key]}.title")
+      p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("onboarding.path.steps.#{step[:key]}.body")
+    .flex.flex-wrap.items-center.gap-x-4.gap-y-2
+      = link_to t("onboarding.path.open"), roadmap_link_for(step), class: primary
+      = link_to t("desk.guided.path_all"), roadmap_path, class: link
+  - elsif lesson
+    - slice = home.resume_slice
+    div
+      p.text-xs.font-medium.uppercase.tracking-wide.text-brand
+        = t("desk.guided.lesson_label", stage: Huayu::CourseLessons.stage(lesson.stage)&.title(I18n.locale))
+      p.mt-1.text-lg.font-bold.leading-snug
+        = t("desk.guided.lesson_title", number: lesson.number, title: lesson.title_for(I18n.locale))
+      - if (goal = lesson.goal_for(I18n.locale)).present?
+        p.mt-1.text-sm.leading-relaxed.text-muted-foreground = goal
+    - if slice
+      div
+        .h-2.overflow-hidden.rounded-full.bg-background
+          .h-full.rounded-full.bg-primary style="width: #{slice.percent}%"
+        p.mt-1.text-xs.tabular-nums.text-muted-foreground = t("desk.guided.stage_progress", done: slice.done, total: slice.lessons)
+    .flex.flex-wrap.items-center.gap-x-4.gap-y-2
+      = link_to t("desk.guided.lesson_open"), course_lesson_path(lesson), class: primary
+      = link_to t("desk.guided.course_all"), course_path, class: link
+  - else
+    div
+      p.text-lg.font-bold = t("desk.guided.course_done_title")
+      p.mt-1.text-sm.leading-relaxed.text-muted-foreground = t("desk.guided.course_done_body")
+    = link_to t("desk.guided.course_done_cta"), graded_path, class: primary

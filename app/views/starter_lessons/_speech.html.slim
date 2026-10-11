@@ -1,0 +1,35 @@
+- syllables = Huayu::PronunciationTarget.new(lexeme).syllables
+- return if syllables.empty?
+- chip = "flex min-w-14 flex-col items-center gap-0.5 rounded-xl border-2 border-border bg-background px-2.5 py-1.5"
+
+.space-y-3.rounded-2xl.border.border-dashed.border-border.p-4[
+  data-controller="card-speech"
+  data-card-speech-grade-url-value=pronunciation_grade_path(locale: nil)
+  data-card-speech-lexeme-id-value=lexeme.id
+  data-card-speech-expected-value=syllables.to_json
+  data-card-speech-auto-ms-value=0
+  data-card-speech-max-ms-value=Setting.instance.pron_auto[:max_ms]
+  data-card-speech-silence-ms-value=Setting.instance.pron_auto[:silence_ms]
+  data-card-speech-label-silence-value=t("pronunciation.silence")
+  data-card-speech-label-record-value=t("starter.say_it")
+  data-card-speech-label-listening-value=t("study.speech.listening")
+  data-card-speech-label-scoring-value=t("study.speech.scoring")
+  data-card-speech-label-queued-value=t("pronunciation.queued")
+  data-card-speech-label-busy-value=t("pronunciation.busy")
+  data-card-speech-label-mic-denied-value=t("study.speech.mic_denied")
+  data-card-speech-label-offline-value=t("study.speech.offline")
+  data-card-speech-label-attempts-value=t("study.speech.attempts") ]
+  .mx-auto.flex.w-fit.gap-1.rounded-2xl.bg-muted.p-1 lang="zh-TW"
+    - syllables.each do |part|
+      div data-card-speech-target="syllable" data-base=chip class=chip
+        span.text-xl.font-semibold = part["char"]
+        span.text-sm.font-semibold = spoken_zhuyin(part)
+        - if local_assigns[:crutch]
+          span.text-2xs.text-muted-foreground lang="zh-Latn" = spoken_pinyin(part)
+        span.text-2xs.font-semibold.text-current data-heard=""
+  .flex.items-center.justify-center.gap-3
+    button.inline-flex.min-h-11.items-center.gap-2.rounded-full.border.border-border.px-5.text-sm.font-medium[
+      type="button" class="hover:bg-muted" data-card-speech-target="record" data-action="card-speech#toggle" ]
+      = t("starter.say_it")
+    span.text-2xl.font-bold.tabular-nums data-card-speech-target="score"
+  p.min-h-5.text-xs.text-muted-foreground data-card-speech-target="status" = t("starter.say_hint")

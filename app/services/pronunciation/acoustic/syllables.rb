@@ -63,7 +63,7 @@ module Pronunciation
 
           @by_syllable.each_value(&:sort!)
           @structure_cache = {}
-          @neighbour_cache = {}
+          @neighbor_cache = {}
           @inventory
         end
 
@@ -106,12 +106,12 @@ module Pronunciation
 
         def confusion_set(syllable, tone)
           load! unless @loaded
-          @neighbour_cache ||= {}
+          @neighbor_cache ||= {}
           keys = []
 
           tones_for(syllable).each { |t| keys << key_for(syllable, t) unless t == tone }
 
-          nb = (@neighbour_cache[syllable] ||= Phonology.neighbors(syllable, all_syllables))
+          nb = (@neighbor_cache[syllable] ||= Phonology.neighbors(syllable, all_syllables))
           nb.each do |other|
             other_tones = tones_for(other)
             if other_tones.include?(tone)

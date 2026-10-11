@@ -1,0 +1,22 @@
+- target = home.target_milestone
+
+section.rounded-2xl.border.border-border.bg-card.p-4.space-y-2
+  .flex.flex-wrap.items-baseline.justify-between.gap-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("desk.levels.title")
+    = link_to t("desk.levels.all"), tocfl_levels_path, class: "text-xs text-primary underline-offset-2 hover:underline"
+  ol
+    - home.road.milestones.each do |milestone|
+      - aim = milestone == target
+      li
+        = link_to tocfl_level_path(milestone.collection_id), class: class_names("-mx-2 block rounded-lg px-2 py-2 hover:bg-muted/60", "bg-brand-soft" => aim) do
+          .flex.items-baseline.justify-between.gap-3.text-sm
+            span.flex.min-w-0.items-center.gap-2
+              - if milestone.done?
+                = icon(:check, css: "size-4 shrink-0 text-primary")
+              span.truncate class=(aim ? "font-semibold" : nil) = t("plan.levels.#{milestone.level_tag}")
+              - if aim
+                span.shrink-0.rounded-full.border.border-brand.px-2.text-2xs.font-medium.text-brand class="py-0.5" = t("desk.levels.target")
+            span.shrink-0.text-xs.tabular-nums.text-muted-foreground
+              = t("stats.of", known: number_with_delimiter(milestone.known), total: number_with_delimiter(milestone.total))
+          .mt-1.h-2.overflow-hidden.rounded-full.bg-muted
+            .h-full.rounded-full class=(milestone.done? ? "bg-emerald-500" : "bg-primary") style="width: #{milestone.readiness}%"

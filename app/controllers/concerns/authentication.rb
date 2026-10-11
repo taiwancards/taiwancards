@@ -3,6 +3,8 @@
 module Authentication
   extend ActiveSupport::Concern
 
+  DEV_GUEST = :dev_guest
+
   included do
     before_action :require_authentication
     helper_method :authenticated?, :current_user, :true_user, :impersonating?
@@ -26,7 +28,7 @@ module Authentication
     id = cookies.signed[:user_id]
     @true_user = id.present? ? User.find_by(id: id) : nil
     forget_deleted_account if id.present? && @true_user.nil?
-    @true_user ||= User.default_owner
+    @true_user ||= User.default_owner if request.local? && cookies[DEV_GUEST].blank?
   end
 
   def forget_deleted_account
@@ -63,6 +65,7 @@ module Authentication
 
   def start_new_session_for(user)
     Current.user = user
+    cookies.delete(DEV_GUEST)
     cookies.signed.permanent[:user_id] = {value: user.id, httponly: true, same_site: :lax}
   end
 
@@ -70,5 +73,6 @@ module Authentication
     Current.user = nil
     session.delete(:impersonated_user_id)
     cookies.delete(:user_id)
+    cookies[DEV_GUEST] = "1" if User.signed_in_by_default?
   end
 end

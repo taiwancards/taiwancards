@@ -39,18 +39,16 @@ RSpec.describe "Coming back after the account was deleted" do
     expect(fresh).to(be_present)
     expect(fresh.id).not_to(eq(victim.id))
     expect(flash[:notice]).to(eq(I18n.t("auth.signed_up")))
-    expect(response).to(redirect_to(onboarding_start_path))
+    expect(response).to(redirect_to(desk_path))
   end
 
-  it "starts that account with an empty history, not a finished tour", :no_auth do
+  it "starts that account with an empty history", :no_auth do
     create(:user, google_uid: "returner", google_email: "returner@example.com").destroy!
 
     google_as("returner@example.com", "returner")
     fresh = User.find_by(google_uid: "returner")
 
-    expect(fresh.prefs.keys.grep(/intro|path_steps|practice_runs/)).to(be_empty)
-    expect(fresh.intro).to(be_pending)
-    expect(fresh.intro).not_to(be_required)
+    expect(fresh.prefs.keys.grep(/path_steps|practice_runs|goal/)).to(be_empty)
     expect(fresh.lexeme_memories).to(be_empty)
   end
 

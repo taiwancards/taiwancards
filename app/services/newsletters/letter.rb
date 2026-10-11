@@ -30,6 +30,8 @@ module Newsletters
         "—",
         I18n.t("newsletters.mail.why"),
         I18n.t("newsletters.mail.promise"),
+        I18n.t("mail_links.note"),
+        "#{I18n.t("newsletters.mail.settings")}: #{settings_url}",
         "#{I18n.t("newsletters.mail.unsubscribe")}: #{unsubscribe_url}"
       ].compact.join("\n\n")
     end

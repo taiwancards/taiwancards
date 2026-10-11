@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_09_142931) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -326,6 +326,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
     t.index(["tier", "kind"], name: "index_lexemes_on_tier_and_kind")
   end
 
+  create_table("mail_events", force: :cascade) do |t|
+    t.bigint("user_id")
+    t.string("email", null: false)
+    t.string("list", null: false)
+    t.string("event", null: false)
+    t.string("letter", default: "", null: false)
+    t.string("source", default: "", null: false)
+    t.string("detail", default: "", null: false)
+    t.integer("count")
+    t.text("summary", default: "", null: false)
+    t.datetime("created_at", null: false)
+    t.index(["created_at"], name: "index_mail_events_on_created_at")
+    t.index(["user_id", "created_at"], name: "index_mail_events_on_user_id_and_created_at")
+  end
+
+  create_table("mail_links", force: :cascade) do |t|
+    t.bigint("user_id", null: false)
+    t.string("token_digest", null: false)
+    t.string("kind", null: false)
+    t.string("list", null: false)
+    t.string("letter", default: "", null: false)
+    t.string("target", default: "", null: false)
+    t.string("delivery_type")
+    t.bigint("delivery_id")
+    t.integer("clicks_count", default: 0, null: false)
+    t.datetime("used_at")
+    t.datetime("created_at", null: false)
+    t.index(["delivery_type", "delivery_id"], name: "index_mail_links_on_delivery_type_and_delivery_id")
+    t.index(["token_digest"], name: "index_mail_links_on_token_digest", unique: true)
+    t.index(["user_id"], name: "index_mail_links_on_user_id")
+  end
+
   create_table("newsletter_deliveries", force: :cascade) do |t|
     t.bigint("newsletter_id", null: false)
     t.bigint("user_id", null: false)
@@ -364,6 +396,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
     t.datetime("sent_at")
     t.datetime("created_at", null: false)
     t.datetime("updated_at", null: false)
+    t.jsonb("audience", default: {}, null: false)
+  end
+
+  create_table("page_views", force: :cascade) do |t|
+    t.date("day", null: false)
+    t.string("path", null: false)
+    t.string("locale", default: "", null: false)
+    t.string("source", default: "", null: false)
+    t.string("device", default: "", null: false)
+    t.string("country", default: "", null: false)
+    t.integer("views", default: 0, null: false)
+    t.index(
+      ["day", "path", "locale", "source", "device", "country"],
+      name: "index_page_views_on_dimensions",
+      unique: true
+    )
   end
 
   create_table("placement_tests", force: :cascade) do |t|
@@ -454,6 +502,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
     t.datetime("updated_at", null: false)
     t.index(["content_source_id", "text"], name: "index_register_samples_unique", unique: true)
     t.index(["text"], name: "index_register_samples_on_text")
+  end
+
+  create_table("reminder_deliveries", force: :cascade) do |t|
+    t.bigint("user_id", null: false)
+    t.string("trigger", null: false)
+    t.integer("count", default: 0, null: false)
+    t.string("path", null: false)
+    t.string("locale", null: false)
+    t.datetime("sent_at")
+    t.datetime("clicked_at")
+    t.string("error")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["created_at"], name: "index_reminder_deliveries_on_created_at")
+    t.index(["user_id", "created_at"], name: "index_reminder_deliveries_on_user_id_and_created_at")
   end
 
   create_table("sense_examples", force: :cascade) do |t|
@@ -578,6 +641,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
     t.index(["book", "lesson"], name: "index_textbook_lessons_on_book_and_lesson", unique: true)
   end
 
+  create_table("user_days", primary_key: ["user_id", "day"], force: :cascade) do |t|
+    t.bigint("user_id", null: false)
+    t.date("day", null: false)
+    t.index(["day"], name: "index_user_days_on_day")
+  end
+
   create_table("users", force: :cascade) do |t|
     t.boolean("admin", default: false, null: false)
     t.datetime("created_at", null: false)
@@ -600,6 +669,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
     t.datetime("newsletter_unsubscribed_at")
     t.string("time_zone")
     t.string("previous_time_zone")
+    t.datetime("reminders_off_at")
     t.index("lower((email)::text)", name: "index_users_on_lower_email", unique: true)
     t.index(["google_uid"], name: "index_users_on_google_uid", unique: true, where: "(google_uid IS NOT NULL)")
   end
@@ -641,6 +711,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
   add_foreign_key("lexeme_reviews", "users")
   add_foreign_key("lexeme_senses", "content_sources")
   add_foreign_key("lexeme_senses", "lexemes")
+  add_foreign_key("mail_events", "users", on_update: :cascade, on_delete: :nullify)
+  add_foreign_key("mail_links", "users", on_update: :cascade, on_delete: :cascade)
   add_foreign_key("newsletter_deliveries", "newsletters", on_delete: :cascade)
   add_foreign_key("newsletter_deliveries", "users", on_delete: :cascade)
   add_foreign_key("newsletter_images", "newsletters", on_delete: :cascade)
@@ -653,6 +725,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
   add_foreign_key("reading_texts", "content_sources")
   add_foreign_key("reading_texts", "users")
   add_foreign_key("register_samples", "content_sources", on_delete: :cascade)
+  add_foreign_key("reminder_deliveries", "users", on_delete: :cascade)
   add_foreign_key("sense_examples", "content_sources")
   add_foreign_key("sense_examples", "lexeme_senses")
   add_foreign_key("sense_examples", "lexemes")
@@ -661,5 +734,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
   add_foreign_key("sentence_words", "lexemes", on_delete: :cascade)
   add_foreign_key("study_plans", "users")
   add_foreign_key("syllable_skills", "users")
+  add_foreign_key("user_days", "users", on_delete: :cascade)
   add_foreign_key("voice_profiles", "users")
 end

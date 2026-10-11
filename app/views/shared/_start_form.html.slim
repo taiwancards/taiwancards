@@ -1,0 +1,81 @@
+- ask_level = !current_user.start_chosen?
+- optional = Onboarding::Start::OPTIONAL_FOR
+- choice = "cursor-pointer rounded-xl border border-border bg-card transition-colors hover:border-primary/60 has-[:checked]:border-primary has-[:checked]:bg-brand-soft has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-primary"
+- primary = "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+- secondary = "inline-flex min-h-11 cursor-pointer items-center rounded-xl px-3 text-sm font-medium text-muted-foreground hover:text-foreground"
+
+div data-controller="start-form" data-start-form-optional-value=optional.to_json data-start-form-ask-value=ask_level.to_s
+  .flex.min-h-9.items-center.justify-between.gap-3
+    p.text-xs.font-medium.uppercase.tracking-wide.text-brand[
+      data-start-form-target="counter" data-template=t("onboarding.step", step: "%{step}", total: "%{total}")
+      hidden=!ask_level ]
+    - if local_assigns[:language]
+      = render "shared/language_choice"
+
+  = form_with url: onboarding_start_path, method: :post, class: "mt-2" do
+    section.space-y-3.sm:space-y-4 data-start-form-target="step" data-step="goal"
+      div
+        h2#goal-picker-title.text-lg.font-bold.leading-snug.sm:text-xl = t("onboarding.goal_question")
+        p.mt-1.text-sm.text-muted-foreground = t("onboarding.goal_hint")
+      .grid.gap-2
+        - User::GOALS.each do |goal|
+          label class="#{choice} flex items-center gap-3 p-3.5"
+            = radio_button_tag "goal", goal, current_user.goal == goal, required: true, class: "sr-only",
+              data: {start_form_target: "goal", action: "change->start-form#sync click->start-form#pick"}
+            span.grid.size-10.shrink-0.place-items-center.rounded-full.bg-muted
+              = icon(goal_icon(goal), css: "size-5 text-primary")
+            span.min-w-0
+              span.block.font-semibold.leading-snug = t("goals.options.#{goal}.title")
+              span.block.text-sm.leading-snug.text-muted-foreground = t("goals.options.#{goal}.tagline")
+      .flex.items-center.justify-end.gap-3.pt-1
+        - if ask_level
+          button type="button" class=primary disabled=current_user.goal.blank? data-start-form-target="next" data-action="start-form#forward"
+            = t("onboarding.next")
+        - else
+          = submit_tag t("onboarding.begin"), class: primary
+
+    - if ask_level
+      section.space-y-3.sm:space-y-4 hidden=true data-start-form-target="step" data-step="level"
+        div
+          - User::GOALS.each do |goal|
+            h2.text-lg.font-bold.leading-snug.sm:text-xl data-start-form-target="variant" data-goal=goal hidden=true = t("onboarding.level_question.#{goal}")
+            p.mt-1.text-sm.text-muted-foreground data-start-form-target="variant" data-goal=goal hidden=true = t("onboarding.level_hint.#{goal}")
+
+        div class="grid grid-cols-3 gap-1.5 min-[360px]:grid-cols-4 sm:gap-2"
+          label class="#{choice} col-span-full flex items-center justify-between gap-3 px-3.5 py-2.5"
+            = radio_button_tag "level", Onboarding::Start::ZERO, true, class: "sr-only", data: {start_form_target: "level", action: "start-form#sync"}
+            span.font-semibold = t("onboarding.scale.zero.title")
+            span.text-xs.text-muted-foreground = t("onboarding.scale.zero.short")
+          - level_scale.each do |step|
+            label class="#{choice} flex flex-col items-center px-1 py-2 text-center sm:px-3"
+              = radio_button_tag "level", step.grade, false, class: "sr-only", data: {start_form_target: "level", action: "start-form#sync"}
+              span.text-sm.font-semibold.leading-tight.sm:text-base = step.band
+              span.text-2xs.text-muted-foreground.sm:text-xs = t("onboarding.scale.hsk", level: step.hsk)
+          label class="#{choice} flex flex-col items-center px-1 py-2 text-center sm:px-3"
+            = radio_button_tag "level", Onboarding::Start::UNKNOWN, false, class: "sr-only", data: {start_form_target: "level", action: "start-form#sync"}
+            - User::GOALS.each do |goal|
+              - kind = optional.include?(goal) ? "skip" : "test"
+              span.text-sm.font-semibold.leading-tight.sm:text-base data-start-form-target="variant" data-goal=goal hidden=true = t("onboarding.scale.unknown.#{kind}.title")
+              span.text-2xs.text-muted-foreground.sm:text-xs data-start-form-target="variant" data-goal=goal hidden=true = t("onboarding.scale.unknown.#{kind}.chip")
+
+        .min-h-16.rounded-xl.bg-muted.px-3.5.py-3.text-sm.leading-snug
+          div data-start-form-target="detail" data-level=Onboarding::Start::ZERO
+            div data-start-form-target="known"
+              p.mb-2.font-medium = t("onboarding.known_question")
+              .grid.grid-cols-3.gap-1.5
+                - Onboarding::Start::KNOWN.each_with_index do |known, index|
+                  label class="inline-flex min-h-9 cursor-pointer items-center justify-center rounded-full border border-border bg-card px-3 text-sm has-[:checked]:border-primary has-[:checked]:bg-brand-soft has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-primary"
+                    = radio_button_tag "known", known, index.zero?, class: "sr-only"
+                    = t("onboarding.known.#{known}.title")
+            p.text-muted-foreground data-start-form-target="plain" = t("onboarding.scale.zero.body")
+          - level_scale.each do |step|
+            div hidden=true data-start-form-target="detail" data-level=step.grade
+              p.font-medium = "TOCFL #{step.band} · TBCL #{step.grade} · #{t("onboarding.scale.items", count: step.items)}"
+              p.mt-0.5.text-muted-foreground = t("onboarding.scale.can.#{step.grade}")
+          div hidden=true data-start-form-target="detail" data-level=Onboarding::Start::UNKNOWN
+            - User::GOALS.each do |goal|
+              p.text-muted-foreground data-start-form-target="variant" data-goal=goal hidden=true = t("onboarding.scale.unknown.#{optional.include?(goal) ? "skip" : "test"}.body")
+
+        .flex.items-center.justify-between.gap-3.pt-1
+          button type="button" class=secondary data-action="start-form#back" = "← #{t("onboarding.back")}"
+          = submit_tag t("onboarding.begin"), class: primary

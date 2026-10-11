@@ -8,13 +8,28 @@ RSpec.describe "Customizable bottom tabs" do
   end
 
   it "falls back to sensible defaults when the user has not chosen" do
-    sign_in(create(:user))
+    sign_in(create(:user, :undecided))
 
     get("/desk")
 
     expect(bottom_nav).to(include(desk_path, desks_path, pronunciation_path))
     expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS))
     expect(response.body).to(include("href=\"#{menu_path}\""))
+  end
+
+  it "picks the default tabs for the study mode" do
+    {
+      "tocfl" => [mock_exams_path, grammar_path],
+      "classes" => [desks_path, reader_path],
+      "guided" => [course_path, graded_path]
+    }.each do |goal, paths|
+      sign_in(create(:user, prefs: {"goal" => goal}))
+
+      get("/desk")
+
+      expect(bottom_nav).to(include(desk_path, *paths))
+      expect(bottom_nav.scan(/<a /).size).to(eq(NavHelper::MOBILE_TAB_SLOTS))
+    end
   end
 
   it "honors the tabs the user picked" do

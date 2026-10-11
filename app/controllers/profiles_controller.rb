@@ -10,6 +10,7 @@ class ProfilesController < ApplicationController
   end
 
   def level
+    redirect_to(profile_path(anchor: "level"), status: :moved_permanently)
   end
 
   def backup
@@ -19,8 +20,10 @@ class ProfilesController < ApplicationController
 
   def update
     tab = params[:tab].presence_in(ProfilesHelper::TABS) || "show"
+    grade = current_user.level_grade
 
     if current_user.update(profile_params)
+      reseat_known_words(from: grade)
       return head(:no_content) if params[:inline].present?
 
       redirect_to(helpers.profile_tab_path(tab), notice: t("auth.profile_saved"))
@@ -92,6 +95,11 @@ class ProfilesController < ApplicationController
 
   private
 
+  def reseat_known_words(from:)
+    grade = current_user.level_grade
+    Placement::Seeder.new(current_user).reseat(grade) if grade != from
+  end
+
   def set_user
     @user = current_user
   end
@@ -107,7 +115,9 @@ class ProfilesController < ApplicationController
         :password,
         :password_confirmation,
         :newsletter,
-        {mobile_tabs: []}
+        :reminders,
+        {mobile_tabs: []},
+        {reminder_schedule: [:mode, :hour, {days: []}]}
       ]
     )
     permitted.delete(:password) if permitted[:password].blank?

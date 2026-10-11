@@ -43,7 +43,7 @@ namespace(:lang) do
       end
     end
 
-    desc("zh-TW: download every external file including scraped Textbook audio (skips files already present)")
+    desc("zh-TW: download every external file, including the owner-only textbook audio (skips files already present)")
     task(fetch: :environment) do
       Rake::Task["lang:zh_tw:fetch_open"].invoke
       Rake::Task["textbook:download_audio"].invoke

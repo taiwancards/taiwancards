@@ -174,7 +174,7 @@ module Offline
     end
 
     def titles(section)
-      return I18n.available_locales.to_h { |locale| [locale.to_s, level_title(section)] } if section.levelled?
+      return I18n.available_locales.to_h { |locale| [locale.to_s, level_title(section)] } if section.leveled?
 
       I18n.available_locales.to_h { |locale| [locale.to_s, section.title(locale)] }
     end

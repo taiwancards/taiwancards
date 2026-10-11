@@ -172,7 +172,9 @@ class VoiceProfile < ApplicationRecord
 
   PLAUSIBLE_F3 = (2000.0..4100.0)
 
-  def calibrated? = calibrated_at.present? && PLAUSIBLE_F3.cover?(f3_ref.to_f)
+  def calibrated? = warmed_up? || f0_median.present?
+
+  def warmed_up? = calibrated_at.present? && PLAUSIBLE_F3.cover?(f3_ref.to_f)
 
   def tone_calibrated? = tone_span_semitones.present?
 

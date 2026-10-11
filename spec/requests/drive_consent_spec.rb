@@ -14,7 +14,7 @@ RSpec.describe "Google Drive consent" do
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
       provider: "google_oauth2",
       uid: "drive-guid",
-      info: {email: "learner@gmail.com", name: "Den"},
+      info: {email: "learner@example.com", name: "Learner"},
       credentials: {token: "access-token", refresh_token: "refresh-token", expires_at: 2.hours.from_now.to_i, scope:}
     )
   end

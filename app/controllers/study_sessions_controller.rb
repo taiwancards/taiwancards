@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StudySessionsController < ApplicationController
-  MODES = %w[cram daily collection desk today redo mistakes].freeze
+  MODES = %w[cram daily collection desk decks today redo mistakes].freeze
   RATINGS = %w[again hard good easy].freeze
 
   def show
@@ -61,7 +61,7 @@ class StudySessionsController < ApplicationController
 
     Lexemes::ReviewProcessor.new.call(
       memory,
-      rating:,
+      rating: Study::Upkeep.new(Current.user).rating_for(memory, rating, elapsed_ms),
       elapsed_ms: elapsed_ms.presence&.to_i,
       session_id: session_id.presence
     )

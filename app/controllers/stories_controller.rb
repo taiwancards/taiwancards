@@ -15,7 +15,7 @@ class StoriesController < ApplicationController
     lines = @text.lines
     @lines = lines.zip(analyzer.analyze_lines(lines), @text.translations(I18n.locale))
     @known_ids = known_lexeme_ids(@lines)
-    @neighbours = neighbours
+    @neighbors = neighbors
   end
 
   private
@@ -24,7 +24,7 @@ class StoriesController < ApplicationController
     @analyzer ||= Huayu::TextAnalyzer.new(locale: I18n.locale)
   end
 
-  def neighbours
+  def neighbors
     ordered = ReadingText.where(kind: :story).ordered.pluck(:id)
     index = ordered.index(@text.id)
     {previous: index&.positive? ? ordered[index - 1] : nil, next: index && ordered[index + 1]}

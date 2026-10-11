@@ -50,21 +50,39 @@ RSpec.describe "Pronunciation voice refinement" do
     )
   end
 
-  it "leaves calibration alone for an account without a voice profile" do
-    expect(Pronunciation::Calibration).not_to(receive(:refine!))
+  it "starts a voice profile silently and learns the register from every voiced syllable" do
+    syllable = {
+      "level" => "amber",
+      "overall" => 40,
+      "tone" => 3,
+      "contour" => {"curve" => Array.new(30, 0.0)},
+      "features" => {"f0_ref_hz" => 120.0}
+    }
+
+    expect { 7.times { grade_with([syllable]) } }.to(change(VoiceProfile, :count).by(1))
+
+    voice = VoiceProfile.find_by(user: @authenticated_user)
+    expect(voice).to(be_calibrated)
+    expect(voice.f0_median).to(be_within(VoiceProfile::BIN_WIDTH).of(120))
+    expect(voice.f0_by_tone).to(be_empty)
+  end
+
+  it "stops absorbing untrusted syllables once the register is known" do
+    voice = warm_up!
+    frames = voice.n_calibration_frames
 
     grade_with(
       [
         {
-          "level" => "green",
-          "overall" => 90,
-          "tone" => 2,
+          "level" => "amber",
+          "overall" => 40,
+          "tone" => 3,
           "contour" => {"curve" => [0.0]},
-          "features" => {"f0_ref_hz" => 100.0}
+          "features" => {"f0_ref_hz" => 120.0}
         }
       ]
     )
 
-    expect(response).to(have_http_status(:ok))
+    expect(voice.reload.n_calibration_frames).to(eq(frames))
   end
 end

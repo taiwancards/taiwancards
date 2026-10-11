@@ -1,0 +1,8 @@
+<%= yield %>
+<%= t("#{@key}.button", **@vars) %>: <%= @click_url %>
+
+<%= t("#{@key}.why", default: t("reminders.mail.why")) %>
+<%= t("mail_links.note") %>
+<%= t("reminders.mail.schedule") %>: <%= @schedule_url %>
+<%= t("reminders.mail.settings") %>: <%= @settings_url %>
+<%= t("reminders.mail.off") %>: <%= @off_url %>

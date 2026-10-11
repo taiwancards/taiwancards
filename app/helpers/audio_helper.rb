@@ -6,9 +6,9 @@ module AudioHelper
     return sentence_audio(lexeme) if lexeme.sentence?
 
     clip = Huayu::MoeAudio.for(lexeme.text, zhuyin: primary_zhuyin(lexeme))
-    return nil if clip.nil?
+    return {url: clip_url(clip), stop_ms: clip.head_ms, source: "moe"} if clip
 
-    {url: clip_url(clip), stop_ms: clip.head_ms, source: "moe"}
+    word_audio(lexeme)
   end
 
   def moe_clip_for(lexeme, zhuyin)
@@ -35,6 +35,11 @@ module AudioHelper
   end
 
   private
+
+  def word_audio(lexeme)
+    clip = Huayu::WordClips.for_text(lexeme.text)
+    clip && {url: Huayu::WordClips.clip_url(clip), stop_ms: 0, source: "common_voice"}
+  end
 
   def sentence_audio(lexeme)
     clip = Huayu::ListeningClips.for_text(lexeme.text)

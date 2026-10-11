@@ -9,7 +9,7 @@ header.sticky.top-0.z-40.border-b.border-border
         span.font-normal.text-muted-foreground Cards
 
     - if authenticated?
-      .relative.min-w-0.flex-1[ class="max-w-2xl" data-tour="search" data-controller="search search-pad" data-search-url-value=search_path ]
+      .relative.min-w-0.flex-1[ class="max-w-2xl" data-controller="search search-pad" data-search-url-value=search_path ]
         .relative
           span.pointer-events-none.absolute.inset-y-0.left-0.flex.items-center.text-muted-foreground class="pl-2.5"
             = icon(:search, css: "size-4")
@@ -35,7 +35,7 @@ header.sticky.top-0.z-40.border-b.border-border
 
     .flex.shrink-0.items-center.gap-2
       - if authenticated?
-        = link_to new_desk_path, data: {tour: "new-desk"}, class: "inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-opacity hover:opacity-90", title: t("desks.new"), aria: {label: t("desks.new")} do
+        = link_to new_desk_path, class: "inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-opacity hover:opacity-90", title: t("desks.new"), aria: {label: t("desks.new")} do
           = icon(:plus, css: "size-5", stroke: 2.2)
       - else
         = link_to t("auth.login"), login_path, class: "inline-flex shrink-0 items-center rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
@@ -47,7 +47,7 @@ header.sticky.top-0.z-40.border-b.border-border
         = link_to admin_users_path, class: "hidden size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:inline-flex", title: t("admin.console"), aria: {label: t("admin.console")} do
           = icon(:settings, css: "size-5")
 
-      = link_to menu_path, data: {tour: "nav-more"}, class: "inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden", title: t("nav.more"), aria: {label: t("nav.more")} do
+      = link_to menu_path, class: "inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden", title: t("nav.more"), aria: {label: t("nav.more")} do
         = icon(:grip, css: "size-5")
 
 = render "shared/subnav"

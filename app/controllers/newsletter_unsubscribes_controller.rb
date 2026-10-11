@@ -14,7 +14,7 @@ class NewsletterUnsubscribesController < ApplicationController
     return render(:show, status: :not_found) if @delivery.nil?
 
     now = Time.current
-    @delivery.user.unsubscribe!(at: now)
+    @delivery.user.unsubscribe!(at: now, source: MailEvent.source_for(params))
     @delivery.update_columns(unsubscribed_at: @delivery.unsubscribed_at || now)
     render(:done)
   end

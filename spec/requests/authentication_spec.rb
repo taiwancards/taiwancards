@@ -13,7 +13,7 @@ RSpec.describe "Authentication and progress portability" do
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
       provider: "google_oauth2",
       uid: "sign-in-uid",
-      info: {email: "returning@gmail.com", name: "Den"},
+      info: {email: "returning@example.com", name: "Learner"},
       credentials: {token: "t", refresh_token: "r", expires_at: 2.hours.from_now.to_i}
     )
 

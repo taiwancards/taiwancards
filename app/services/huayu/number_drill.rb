@@ -73,7 +73,7 @@ module Huayu
           id: "myriad:#{value}",
           prompt: grouped(value),
           answer: Numerals.spell(value),
-          distractors: magnitude_neighbours(value).map { |n| Numerals.spell(n) },
+          distractors: magnitude_neighbors(value).map { |n| Numerals.spell(n) },
           answer_lang: "zh-TW",
           note: value.to_s
         )
@@ -88,7 +88,7 @@ module Huayu
           prompt: Numerals.spell(value),
           prompt_lang: "zh-TW",
           answer: grouped(value),
-          distractors: magnitude_neighbours(value).map { |n| grouped(n) }
+          distractors: magnitude_neighbors(value).map { |n| grouped(n) }
         )
       }
     end
@@ -130,7 +130,7 @@ module Huayu
       candidates.uniq.reject { |c| c == correct || c.blank? }.first(CHOICES - 1)
     end
 
-    def magnitude_neighbours(value)
+    def magnitude_neighbors(value)
       [value * 10, value / 10, value * 100]
         .filter_map { |n|
           next if n.zero? || n > Numerals::MAX

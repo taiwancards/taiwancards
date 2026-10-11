@@ -9,6 +9,7 @@ class NewsletterClicksController < ApplicationController
     return redirect_to(root_path) if delivery.nil? || !Newsletters::Tracking.ours?(url.to_s, request.host)
 
     delivery.record_click!
+    MailEvent.log(delivery.user, list: "newsletter", event: "clicked", letter: delivery.subject, detail: url)
     redirect_to(url, allow_other_host: false)
   end
 

@@ -101,12 +101,16 @@
       "note": "Raw SQL is built from enum integers, column names and constants defined in this codebase; every user-supplied value goes through sanitize_sql_array or a bind."
     },
     {
-      "fingerprint": "a02d7236cc4044fe0224b0dd0800f9ea40e4896e95b91a102fdbb8bb0a334b03",
-      "note": "The clip id is matched against an anchored allowlist regex with no dot or slash, and the resolved path is checked to sit under the audio directory before it reaches the filesystem."
+      "fingerprint": "8bfb6476d7ba4817aab1a0c13ba25759638da79da19791723349545986a4f83f",
+      "note": "The collection comes from a fixed folder allowlist, the clip id is matched against an anchored regex with no dot or slash, and the resolved path is checked to sit under that folder before it reaches the filesystem."
     },
     {
       "fingerprint": "83b3a1f88212e12b0771cbdde13f4944db143247585e11bd20ab11680b2837e6",
       "note": "Offline corpus-build helper that never runs on the server. The Marshal payload is read from a pipe written by a child process this same script forked moments earlier, so the data source is the process itself, never user input."
+    },
+    {
+      "fingerprint": "ea21387c7e207a7433562d81f861160efe1d424e60e90504b5f04139168d7e5c",
+      "note": "The target is never taken from the request: the token only selects a mail_links row the mailer wrote when the letter was sent, and Newsletters::Tracking.visitable? admits only http(s) URLs whose host is the app or the static site, falling back to root_path otherwise."
     }
   ],
   "brakeman_version": "8.0.6"

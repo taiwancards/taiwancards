@@ -19,6 +19,12 @@ RSpec.describe User do
       expect(person.admin?).to(be(true))
     end
 
+    it "keeps every other account an ordinary member" do
+      other = described_class.create!(email: "visitor@example.com", password: "password123")
+
+      expect(other.admin?).to(be(false))
+    end
+
     it "steps aside while the static site is being exported" do
       Site.while_exporting do
         expect(described_class.default_owner).to(be_nil)

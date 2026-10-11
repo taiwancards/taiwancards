@@ -1,0 +1,21 @@
+- content_for(:title, t("starter.done_title"))
+- primary = "inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground transition hover:opacity-90 sm:w-auto sm:min-w-48"
+
+.mx-auto.max-w-xl.py-6.space-y-5
+  section.space-y-5.rounded-3xl.border.border-brand.px-5.py-6.text-center.sm:px-8 class="bg-brand-soft"
+    p.text-xs.font-medium.uppercase.tracking-wide.text-brand = t("starter.done_kicker", done: @starter.done_count, total: Huayu::StarterTrack.total)
+    p.text-2xl.font-bold = t("starter.done_title")
+    - if @learned.any?
+      p.text-sm.text-muted-foreground = t("starter.done_body", count: @learned.size)
+      .flex.flex-wrap.justify-center.gap-2
+        - @learned.each do |lexeme|
+          span.rounded-xl.border.border-border.bg-background.px-3.py-2.text-2xl = zhuyin_ruby(lexeme.text, lexeme.headline_zhuyin)
+    p.text-sm.text-muted-foreground = t("starter.done_tomorrow")
+
+  .flex.flex-col.items-center.gap-3
+    - if @next
+      = link_to t("starter.next_lesson", title: @next.title_for(I18n.locale)), starter_lesson_path(@next), class: primary
+    - else
+      p.text-center.text-sm = t("starter.track_done")
+      = link_to t("starter.to_course"), course_path, class: primary
+    = link_to t("starter.home"), desk_path, class: "inline-flex min-h-11 items-center text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"

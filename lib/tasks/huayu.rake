@@ -38,6 +38,12 @@ namespace(:huayu) do
     pp(Huayu::ReadingStories.new.call)
   end
 
+  desc("Cut natural recordings of words without a MOE clip out of Common Voice phrases (offline; WORDS=你好,謝謝)")
+  task(word_clips: :environment) do
+    words = ENV["WORDS"].to_s.split(",").map(&:strip).reject(&:empty?).presence || Huayu::WordClipBuilder.starter_words
+    puts("#{Huayu::WordClipBuilder.new(words:).call} word clips in #{AppData.media_path("word_clips")}")
+  end
+
   desc("Mark the sentences that have a listening clip, from the listening manifest (idempotent, offline)")
   task(mark_voiced: :environment) do
     pp(Huayu::VoicedSentences.new.call)
@@ -108,7 +114,7 @@ namespace(:huayu) do
     pp(Lexemes::KindMerge.new.call)
   end
 
-  desc("Import the thesaurus: dictionary synonyms and antonyms, corpus neighbours (idempotent)")
+  desc("Import the thesaurus: dictionary synonyms and antonyms, corpus neighbors (idempotent)")
   task(import_thesaurus: :environment) do
     pp(Huayu::ThesaurusImporter.new.call)
   end
@@ -197,7 +203,7 @@ namespace(:huayu) do
     outside.first(10).each_slice(10) { |slice| puts("\nrightly outside Taiwan usage:\n  #{slice.join(" ")}") }
     return if missing.empty?
 
-    puts("\ncurriculum words the segmenter cannot favour:")
+    puts("\ncurriculum words the segmenter cannot favor:")
     missing.first(40).each_slice(10) { |slice| puts("  #{slice.join(" ")}") }
   end
 
@@ -216,7 +222,7 @@ namespace(:huayu) do
 
   namespace(:build) do
     desc(
-      "Build/refresh ALL freely-licensed open data (idempotent, downloads if missing). No Textbook, no scraped audio."
+      "Build or refresh every openly licensed dataset (idempotent; downloads what is missing). Excludes the owner-only textbook layer."
     )
     task(open: :environment) do
       started = RakeProgress.clock
@@ -251,7 +257,7 @@ namespace(:huayu) do
       RakeProgress.finish("huayu:build:open", started)
     end
 
-    desc("Add the restricted (license-violating) Textbook lessons, vocabulary and scraped audio on top (idempotent)")
+    desc("Add the owner-only textbook layer: lessons, vocabulary and audio (idempotent; requires the private data repository)")
     task(restricted: :environment) do
       started = RakeProgress.clock
       steps = [

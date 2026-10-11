@@ -64,6 +64,15 @@ class Setting < ApplicationRecord
     update!(data: data.merge("study_display" => study_display.merge(config)))
   end
 
+  def reminders_paused_at = data["reminders_paused_at"].presence&.then { |at| Time.zone.parse(at) }
+
+  def reminders_paused? = data["reminders_paused_at"].present?
+
+  def pause_reminders!(paused)
+    kept = data["reminders_paused_at"] || Time.current.iso8601
+    update!(data: paused ? data.merge("reminders_paused_at" => kept) : data.except("reminders_paused_at"))
+  end
+
   after_commit :expire_cache
 
   private

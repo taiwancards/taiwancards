@@ -326,11 +326,13 @@ export default class extends Controller {
 
   async start() {
     if (this.recording) return;
+    this.primeMeter();
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (error) {
       this.setStatus(this.micProblem(error));
       this.clearTimers();
+      this.teardownMeter();
       return;
     }
     this.chunks = [];
@@ -445,10 +447,23 @@ export default class extends Controller {
     this.recordTarget.classList.remove("bg-red-500", "text-white");
   }
 
+  primeMeter() {
+    try {
+      this.audioCtx ||= new (
+        window.AudioContext || window.webkitAudioContext
+      )();
+      this.audioCtx.resume().catch(() => {});
+    } catch {
+      this.audioCtx = null;
+    }
+  }
+
   startMeter() {
     this.meterRan = false;
     try {
-      this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      this.audioCtx ||= new (
+        window.AudioContext || window.webkitAudioContext
+      )();
       const source = this.audioCtx.createMediaStreamSource(this.stream);
       this.analyzer = this.audioCtx.createAnalyser();
       this.analyzer.fftSize = 1024;

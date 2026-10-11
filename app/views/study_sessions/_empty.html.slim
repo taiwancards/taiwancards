@@ -11,6 +11,9 @@
       p.text-lg.font-medium = t("study.done_title")
       p.mt-1.text-sm.text-muted-foreground = t("study.done_body")
 
+  - if current_user && @daily&.reviews_today&.positive?
+    = render("study_sessions/day_summary", daily: @daily)
+
   - if @run&.more?
     = link_to t("study.continue", count: Study::CardSet::SITTING_CAP),
       study_path(mode: @mode, collection_id: @run.collection_id, offset: @run.next_offset),
@@ -19,12 +22,15 @@
     = link_to t("study.continue_anyway"), study_path(mode: @mode),
       class: "inline-flex rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
 
-  - if (nudge = study_next_suggestion)
+  - if current_user && (step = Learn::NextStep.new(current_user).call)
     .rounded-2xl.border.border-border.bg-card.p-4.space-y-2
       p.text-sm.font-medium = t("study.next_heading")
-      p.text-sm.text-muted-foreground = nudge[:body]
-      = link_to nudge[:label], nudge[:path],
-        class: "inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      p.text-sm.text-muted-foreground = next_step_body(step)
+      = link_to next_step_title(step), next_step_path(step),
+        class: "inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+
+  - if current_user && (found = Learn::Discovery.new(current_user).call(except: step&.kind))
+    = render("shared/discovery", suggestion: found)
 
   = link_to t("study.back_to_desk"), desk_path,
     class: "inline-block text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"

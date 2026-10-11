@@ -21,7 +21,7 @@ RSpec.describe Offline::Sections do
     expect(described_class.find("grammar").group).to(eq("texts"))
   end
 
-  it "names the levelled packs after their level" do
+  it "names the leveled packs after their level" do
     expect(described_class.find("tocfl-a1").level).to(eq("A1"))
   end
 end

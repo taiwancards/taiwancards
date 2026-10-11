@@ -31,7 +31,7 @@ module Pronunciation
         @split = nil
         @held_out_speakers = nil
         @available = nil
-        @neighbours = nil
+        @neighbors = nil
       end
 
       def wanted?(row, speakers)
@@ -76,37 +76,37 @@ module Pronunciation
 
       def enrich(row)
         row["onset_after"] = following(row)
-        row["tone_before"] = neighbour_tone(row, -1)
-        row["tone_after"] = neighbour_tone(row, 1)
+        row["tone_before"] = neighbor_tone(row, -1)
+        row["tone_after"] = neighbor_tone(row, 1)
         row["f0_register"] = SpeakerPitch.register(row["_speaker"], row["f0_ref_hz"])
         Acoustic::ToneMarks.stamp!(row)
         Acoustic::Vowel.place(row, SpeakerPitch.reference[row["_speaker"]])
       end
 
-      def neighbour_tone(row, step)
+      def neighbor_tone(row, step)
         return Acoustic::ContextNorms::EDGE if row["_n_syllables"].to_i < 2
 
         index = row["_index"].to_i + step
         return Acoustic::ContextNorms::EDGE if index.negative?
 
-        key = neighbours.dig(row["_file"], index)
+        key = neighbors.dig(row["_file"], index)
         key.nil? ? Acoustic::ContextNorms::EDGE : Acoustic::Syllables.parse_key(key)&.last.to_i
       end
 
       def following(row)
         return nil if row["_n_syllables"].to_i < 2
 
-        key = neighbours.dig(row["_file"], row["_index"].to_i + 1) or return nil
+        key = neighbors.dig(row["_file"], row["_index"].to_i + 1) or return nil
         syllable, = Acoustic::Syllables.parse_key(key)
         syllable && Acoustic::Phonology.analyze(syllable)[:initial]
       end
 
-      def neighbours(source = TAIWAN)
-        @neighbours ||= {}
-        @neighbours[source] ||= build_neighbours(source)
+      def neighbors(source = TAIWAN)
+        @neighbors ||= {}
+        @neighbors[source] ||= build_neighbors(source)
       end
 
-      def build_neighbours(source)
+      def build_neighbors(source)
         found = Hash.new { |hash, file| hash[file] = {} }
         available(source).each do |key|
           path = File.join(root(source), "#{key}.jsonl")

@@ -21,7 +21,21 @@ class NewsletterDispatchJob < ApplicationJob
 
   def deliver(delivery)
     NewsletterMailer.issue(delivery).deliver_now
+    log(delivery, "sent")
   rescue StandardError => error
-    delivery.update_columns(sent_at: nil, error: "#{error.class}: #{error.message}".first(250))
+    message = "#{error.class}: #{error.message}".first(250)
+    delivery.update_columns(sent_at: nil, error: message)
+    log(delivery, "failed", detail: message)
+  end
+
+  def log(delivery, event, detail: "")
+    MailEvent.log(
+      delivery.user,
+      list: "newsletter",
+      event:,
+      letter: delivery.subject,
+      detail:,
+      summary: delivery.summary
+    )
   end
 end

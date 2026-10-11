@@ -21,7 +21,7 @@ class ZhuciController < ApplicationController
     @character = Lexeme.visible_to(current_user).find_by(kind: %i[character radical], text: @entry.text)
     @word = word_beyond_particle(@entry)
     @lesson = Huayu::GrammarLessons.find(@entry.data["grammar"]) if @entry.data["grammar"].present?
-    @neighbours = neighbours_of(@entry)
+    @neighbors = neighbors_of(@entry)
   end
 
   private
@@ -36,7 +36,7 @@ class ZhuciController < ApplicationController
     Lexeme.visible_to(current_user).where(kind: Lexeme::DICTIONARY_KINDS, text: entry.text).order(:kind).first
   end
 
-  def neighbours_of(entry)
+  def neighbors_of(entry)
     all = ordered
     index = all.index(entry)
     return [nil, nil] if index.nil?

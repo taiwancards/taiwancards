@@ -16,13 +16,15 @@
     = render "shared/script_prefs", inside_app: authenticated?, readings: true
 
   - (settings_entries + group_entries).each do |entry|
-    section.space-y-2 data-tour=entry[:tour] data-filter-target="section"
+    section.space-y-2 data-filter-target="section"
       h2.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = entry[:label]
       .grid class="gap-1.5 min-[420px]:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
         - entry[:items].each do |key, label, path|
-          = link_to path, data: {tour: nav_item_tour(path), filter_target: "item", filter_text: "#{label} #{nav_item_lede(path)}".downcase}, class: item_classes do
+          = link_to path, data: {filter_target: "item", filter_text: "#{label} #{nav_item_lede(path)}".downcase}, class: item_classes do
             = icon(key, css: "mt-0.5 size-4 shrink-0 text-muted-foreground")
             span.min-w-0.flex-1 class="[overflow-wrap:anywhere]" = label
+            - if recommended?(path)
+              = render "shared/for_you"
         - if entry[:key] == :settings && current_user&.admin?
           = link_to admin_users_path, data: {filter_target: "item", filter_text: t("admin.title").downcase}, class: item_classes do
             = icon(:settings, css: "mt-0.5 size-4 shrink-0 text-muted-foreground")

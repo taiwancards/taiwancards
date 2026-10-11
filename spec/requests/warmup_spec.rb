@@ -43,9 +43,11 @@ RSpec.describe "Voice warm-up" do
     expect(tone["audio_stop"]).to(be_present)
   end
 
-  it "goes back to the page that asked for the warm-up once it is done" do
-    get("/pronunciation", params: {section: "initials_stops"})
-    get("/pronunciation/warmup")
+  it "goes back to the page it was opened from once it is done" do
+    get(
+      "/pronunciation/warmup",
+      headers: {"HTTP_REFERER" => "http://www.example.com/en/pronunciation?section=initials_stops"}
+    )
 
     expect(response.body).to(include(CGI.escapeHTML("/pronunciation?section=initials_stops")))
   end

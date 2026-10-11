@@ -13,6 +13,7 @@
     label.block.space-y-1
       span.text-sm.font-medium = t("plan.level")
       = form.select :target_level, StudyPlan::LEVELS.map { |level| [t("plan.levels.#{level}"), level] }, {}, class: input
+    = render "shared/level_scale"
     label.block.space-y-1
       span.text-sm.font-medium = t("plan.date")
       = form.date_field :target_date, class: input

@@ -9,8 +9,8 @@ module Huayu
     DAMP_THRESHOLD = 400.0
     MIN_WEIGHT = 0.15
 
-    UNLEVELLED_FLOOR = 0.45
-    UNLEVELLED_CEILING = 0.95
+    UNLEVELED_FLOOR = 0.45
+    UNLEVELED_CEILING = 0.95
 
     def initialize
       @analyzer = TextAnalyzer.new
@@ -61,10 +61,10 @@ module Huayu
 
     def frequency_score(text)
       per_million = @frequency.per_million(text)
-      return UNLEVELLED_CEILING if per_million.zero?
+      return UNLEVELED_CEILING if per_million.zero?
 
       position = 1.0 - ([Math.log10(per_million + 1) / 3.0, 1.0].min)
-      UNLEVELLED_FLOOR + ((UNLEVELLED_CEILING - UNLEVELLED_FLOOR) * position)
+      UNLEVELED_FLOOR + ((UNLEVELED_CEILING - UNLEVELED_FLOOR) * position)
     end
 
     LEVELS = {"Novice1" => 1, "Novice2" => 2, "A1" => 3, "A2" => 4, "B1" => 5, "B2" => 6, "C" => 7}.freeze

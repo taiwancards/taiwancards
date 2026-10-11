@@ -24,7 +24,7 @@ RSpec.describe Pronunciation::Acoustic::ContextNorms do
     expect(described_class.coda_factor(nil)).to(be_nil)
   end
 
-  it "tells a vowel-initial neighbour apart from having no neighbour" do
+  it "tells a vowel-initial neighbor apart from having no neighbor" do
     skip("no coda norms available") if described_class.coda_factor("").nil?
 
     expect(described_class.coda_factor("")).not_to(be_nil)

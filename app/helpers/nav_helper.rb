@@ -6,19 +6,12 @@ module NavHelper
   end
 
   GROUPS = [
-    {id: "learn", key: :study, tour: "nav-learn", items: :learn_items, chapters: %w[course cards], signed_in: true},
-    {id: "dictionary", key: :characters, tour: "nav-dictionary", items: :dictionary_items, chapters: %w[dictionary]},
-    {id: "language", key: :book, tour: "nav-language", items: :language_items, chapters: %w[phonetics]},
-    {id: "practice", key: :pencil, tour: "nav-practice", items: :practice_items, chapters: %w[trainers]},
-    {id: "taiwan", key: :desk, tour: "nav-taiwan", items: :taiwan_items, chapters: %w[taiwan]},
-    {
-      id: "settings",
-      key: :settings,
-      tour: "nav-settings",
-      items: :settings_items,
-      chapters: %w[profile display],
-      signed_in: true
-    }
+    {id: "learn", key: :study, items: :learn_items, signed_in: true},
+    {id: "dictionary", key: :characters, items: :dictionary_items},
+    {id: "language", key: :book, items: :language_items},
+    {id: "practice", key: :pencil, items: :practice_items},
+    {id: "taiwan", key: :desk, items: :taiwan_items},
+    {id: "settings", key: :settings, items: :settings_items, signed_in: true}
   ].freeze
 
   def taiwan_nav
@@ -30,25 +23,36 @@ module NavHelper
         id: group[:id],
         key: group[:key],
         label: t("nav.group_#{group[:id]}"),
-        items: send(group[:items]),
-        chapters: group[:chapters],
-        tour: group[:tour]
+        items: send(group[:items])
       }
     end
   end
 
+  LEARN_ORDER = {
+    nil => %i[course roadmap today decks reader graded placement plan triage],
+    "tocfl" => %i[today plan mock placement course decks graded reader triage roadmap],
+    "classes" => %i[today decks triage reader graded course placement plan roadmap],
+    "guided" => %i[today course roadmap graded reader decks placement plan triage]
+  }.freeze
+
+  def learn_catalog
+    {
+      course: [:book, t("nav.course"), course_path],
+      roadmap: [:study, t("nav.roadmap"), roadmap_path],
+      today: [:desk, t("nav.today"), desk_path],
+      decks: [:decks, t("nav.my_desks"), desks_path],
+      reader: [:book, t("nav.reader"), reader_path],
+      graded: [:book, t("nav.graded"), graded_path],
+      placement: [:stats, t("nav.placement"), placement_path],
+      plan: [:stats, t("nav.plan"), study_plan_path],
+      triage: [:study, t("nav.triage"), triage_path],
+      mock: [:stats, t("nav.mock"), mock_exams_path]
+    }
+  end
+
   def learn_items
-    items = [
-      [:book, t("nav.course"), course_path],
-      [:study, t("nav.roadmap"), roadmap_path],
-      [:desk, t("nav.today"), desk_path],
-      [:decks, t("nav.my_desks"), desks_path],
-      [:book, t("nav.reader"), reader_path],
-      [:book, t("nav.graded"), graded_path],
-      [:stats, t("nav.placement"), placement_path],
-      [:stats, t("nav.plan"), study_plan_path],
-      [:study, t("nav.triage"), triage_path]
-    ]
+    catalog = learn_catalog
+    items = LEARN_ORDER.fetch(current_user&.goal, LEARN_ORDER[nil]).map { |key| catalog.fetch(key) }
     if current_user&.restricted_access?
       items << [:book, t("nav.textbook"), textbook_path]
       items << [:sentences, t("nav.phrase_drills"), textbook_phrases_path]
@@ -116,10 +120,33 @@ module NavHelper
     [
       [:user, t("nav.profile"), profile_path],
       [:stats, t("nav.progress"), progress_path],
-      [:settings, t("nav.settings"), edit_settings_path],
-      [:help, t("nav.guide"), guide_path]
+      [:settings, t("nav.settings"), edit_settings_path]
     ]
   end
+
+  def recommended_paths
+    return @recommended_paths if defined?(@recommended_paths)
+
+    @recommended_paths = case current_user&.goal
+    when "tocfl"
+      [study_plan_path, mock_exams_path, grammar_path]
+    when "classes"
+      [desks_path, triage_path, dict_path]
+    when "guided"
+      current_user.level_grade.zero? ? [zhuyin_training_path, course_path, pronunciation_path] : [
+        course_path,
+        graded_path,
+        pronunciation_path
+      ]
+    else
+      []
+    end
+      .to_set
+  end
+
+  def recommended?(path) = recommended_paths.include?(path)
+
+  def recommended_group?(entry) = entry[:items].any? { |_key, _label, path| recommended?(path) }
 
   MOBILE_TAB_SLOTS = 4
 
@@ -136,7 +163,16 @@ module NavHelper
   def default_mobile_tabs
     return [characters_path, dict_path, sentences_path, everyday_path] if current_user.nil?
 
-    [desk_path, desks_path, reader_path, pronunciation_path]
+    case current_user.goal
+    when "tocfl"
+      [desk_path, mock_exams_path, grammar_path, dict_path]
+    when "classes"
+      [desk_path, desks_path, dict_path, reader_path]
+    when "guided"
+      [desk_path, course_path, graded_path, pronunciation_path]
+    else
+      [desk_path, desks_path, reader_path, pronunciation_path]
+    end
   end
 
   def mobile_tabs
@@ -151,8 +187,6 @@ module NavHelper
     slug = Locales.strip(path.to_s).split("?").first.to_s.gsub(%r{\A/+|/+\z}, "").tr("/", "-")
     slug.presence || "home"
   end
-
-  def nav_item_tour(path) = "nav-item-#{nav_item_key(path)}"
 
   def nav_item_lede(path) = t("nav.item_lede.#{nav_item_key(path)}", default: nil)
 

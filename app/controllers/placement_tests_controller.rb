@@ -35,7 +35,7 @@ class PlacementTestsController < ApplicationController
     return redirect_to(placement_path) unless @test&.status_finished?
 
     grade = (params[:grade].presence&.to_i || @test.result_grade.to_i).clamp(0, Placement::Ability::MAX_GRADE)
-    result = Placement::Seeder.new(current_user).call(grade)
+    result = Placement::Seeder.new(current_user).reseat(grade)
     adopt(grade)
     @test.update!(status: :applied, result_grade: grade, seeded_count: result[:seeded])
 

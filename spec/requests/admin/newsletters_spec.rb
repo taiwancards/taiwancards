@@ -95,6 +95,27 @@ RSpec.describe "Admin newsletters" do
     expect(newsletter.reload.subject_ru).to(eq("Новости"))
   end
 
+  it "sends only to the hand-picked people and refuses when nobody is picked" do
+    newsletter = complete_newsletter
+    chosen = create(:user, google_uid: "g-1", locale: "en")
+    create(:user, google_uid: "g-2", locale: "en")
+
+    patch(
+      admin_newsletter_path(newsletter, format: :json),
+      params: {newsletter: {audience: {mode: "picked", user_ids: [""]}}}
+    )
+    expect(response.parsed_body["deliver"]).to(include("0"))
+    post(deliver_admin_newsletter_path(newsletter))
+    expect(newsletter.reload).not_to(be_sent)
+
+    patch(
+      admin_newsletter_path(newsletter, format: :json),
+      params: {newsletter: {audience: {mode: "picked", user_ids: [chosen.id]}}}
+    )
+    post(deliver_admin_newsletter_path(newsletter))
+    expect(newsletter.deliveries.pluck(:user_id)).to(eq([chosen.id]))
+  end
+
   it "refuses to send before both languages are written" do
     newsletter = Newsletter.create!(subject_ru: "Новости", body_ru: "<div>Привет</div>")
 

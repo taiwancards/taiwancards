@@ -19,7 +19,7 @@ module Newsletters
 
     def enroll
       now = Time.current
-      rows = Newsletter.recipients.pluck(:id, :locale).map { |id, locale|
+      rows = @newsletter.audience_recipients.pluck(:id, :locale).map { |id, locale|
         {
           newsletter_id: @newsletter.id,
           user_id: id,

@@ -116,9 +116,9 @@ RSpec.describe Huayu::CangjieLessons do
     expect(levels["A1"].size).to(eq(100))
   end
 
-  it "finds a lesson by slug and walks to its neighbours" do
+  it "finds a lesson by slug and walks to its neighbors" do
     lesson = described_class.find("a")
-    previous, following = described_class.neighbours(lesson)
+    previous, following = described_class.neighbors(lesson)
 
     expect(lesson.letter).to(eq("日"))
     expect(previous.slug).to(eq("count"))

@@ -85,6 +85,18 @@
 
   section.space-y-2
     .flex.flex-wrap.items-baseline.justify-between.gap-2
+      h2.text-sm.font-semibold = t("admin.mail.account_title")
+      = link_to t("admin.mail.full_log"), admin_mail_path(user_id: @user.id), class: "text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+    .flex.flex-wrap.gap-x-6.gap-y-1.text-sm
+      - User::MAILING_COLUMNS.each do |list, column|
+        - off = @user[column]
+        span
+          span.text-muted-foreground = "#{t("admin.mail.lists.#{list}")}: "
+          span class=(off ? "font-medium text-destructive" : "font-medium") = off ? t("admin.mail.off_since", date: l(off, format: :short)) : t("admin.mail.enabled")
+    = render "admin/mail/events", events: @mail_events, account: false
+
+  section.space-y-2
+    .flex.flex-wrap.items-baseline.justify-between.gap-2
       h2.text-sm.font-semibold = t("admin.recent")
       = link_to t("admin.activity"), admin_activity_path(user_id: @user.id), class: "text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
     - if @events.empty?

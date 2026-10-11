@@ -1,21 +1,15 @@
 # frozen_string_literal: true
 
 class OnboardingController < ApplicationController
-  PLACEMENT_LEVELS = %w[characters experienced].freeze
-
   def show
-    redirect_to(roadmap_path) if current_user.start_chosen? && !params.key?(:again)
   end
 
   def create
-    level = params[:start_level].to_s.presence_in(User::START_LEVELS)
-    return redirect_to(onboarding_start_path, alert: t("onboarding.pick_one")) if level.nil?
+    start = Onboarding::Start.new(current_user, goal: params[:goal], level: params[:level], known: params[:known])
+    return redirect_to(origin || onboarding_start_path, alert: t("onboarding.pick_one")) unless start.valid?
 
-    current_user.start_level = level
-    current_user.level = "phonetics" if level == "phonetics"
-    current_user.save!
-
-    redirect_to(PLACEMENT_LEVELS.include?(level) ? placement_path : roadmap_path)
+    start.call
+    redirect_to(after_start_path(start))
   end
 
   def path
@@ -34,4 +28,24 @@ class OnboardingController < ApplicationController
 
     redirect_to(roadmap_path)
   end
+
+  private
+
+  def after_start_path(start)
+    return origin if origin && !home?(origin)
+    return placement_path if start.placement?
+
+    desk_path
+  end
+
+  def origin
+    return @origin if defined?(@origin)
+
+    back = referring_path
+    @origin = back && !Locales.strip(back).start_with?(Locales.strip(onboarding_start_path)) ? back : nil
+  end
+
+  def home?(path) = [root_path, desk_path].map { |home| Locales.strip(home) }.include?(
+    Locales.strip(path.split("?").first)
+  )
 end

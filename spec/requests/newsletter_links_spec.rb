@@ -2,13 +2,17 @@
 
 require "rails_helper"
 
-RSpec.describe "Links in a newsletter", :no_auth do
+RSpec.describe "Links in newsletters sent before one-time links", :no_auth do
   let(:reader) { create(:user, google_uid: "g-1", locale: "ru") }
   let(:newsletter) { Newsletter.create!(subject_ru: "Новости", body_ru: "<div>x</div>") }
   let(:delivery) { NewsletterDelivery.create!(newsletter:, user: reader, locale: "ru", sent_at: Time.current) }
 
+  def legacy_click(url) = Newsletters::Tracking
+    .verifier
+    .generate([delivery.id, url], purpose: Newsletters::Tracking::PURPOSE)
+
   it "counts a click and lands the reader in the app" do
-    token = Newsletters::Tracking.token(delivery, "http://www.example.com/ru/pronunciation")
+    token = legacy_click("http://www.example.com/ru/pronunciation")
 
     2.times { raw_get("/n/#{token}") }
 
@@ -17,7 +21,7 @@ RSpec.describe "Links in a newsletter", :no_auth do
   end
 
   it "never redirects anywhere else, even with a valid signature" do
-    token = Newsletters::Tracking.token(delivery, "https://evil.test/")
+    token = legacy_click("https://evil.test/")
 
     raw_get("/n/#{token}")
 
@@ -61,5 +65,19 @@ RSpec.describe "Links in a newsletter", :no_auth do
     raw_get("/unsubscribe/broken")
 
     expect(response).to(have_http_status(:not_found))
+  end
+
+  it "puts one-time links into a new newsletter: the app, the static site and the way out" do
+    newsletter.update!(
+      body_ru: "<div><a href=\"/ru/course\">Курс</a> <a href=\"https://elsewhere.test/x\">Чужой</a></div>"
+    )
+
+    html = NewsletterMailer.issue(delivery).html_part.body.to_s
+
+    expect(html).to(include("/l/", "/u/", "https://elsewhere.test/x"))
+    expect(html).not_to(include("href=\"http://www.example.com/ru/course\""))
+    expect(MailLink.where(user: reader).pluck(:kind, :target)).to(
+      include(["open", "/ru/course"], ["open", "/ru/profile#mail"], ["unsubscribe", ""])
+    )
   end
 end

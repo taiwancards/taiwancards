@@ -1,0 +1,42 @@
+- font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'PingFang TC','Noto Sans TC',sans-serif"
+- muted = Newsletters::EmailHtml::MUTED
+doctype html
+html lang=I18n.locale
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width,initial-scale=1"
+    meta name="color-scheme" content="light"
+    meta name="supported-color-schemes" content="light"
+    title = @subject
+  body style="margin:0;padding:0;background:#f4f4f2;"
+    div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;font-size:1px;line-height:1px;"
+      = t("#{@key}.preheader", **@vars)
+      = "‌ " * 60
+    table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f2;"
+      tr
+        td align="center" style="padding:24px 12px;"
+          table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;"
+            tr
+              td style="padding:0 4px 14px;font-family:#{font};font-size:16px;color:#111111;"
+                strong Taiwan
+                span style="color:#737373;" Cards
+            tr
+              td style="background:#ffffff;border:1px solid #e7e5e4;border-radius:14px;padding:28px;font-family:#{font};font-size:16px;line-height:1.6;color:#{Newsletters::EmailHtml::TEXT};"
+                == yield
+                table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:22px;"
+                  tr
+                    td style="border-radius:10px;background:#111111;"
+                      a href=@click_url style="display:inline-block;padding:13px 22px;font-family:#{font};font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:10px;"
+                        = t("#{@key}.button", **@vars)
+            tr
+              td style="padding:18px 8px 0;font-family:#{font};font-size:12px;line-height:1.6;color:#{muted};"
+                p style="margin:0 0 8px;" = t("#{@key}.why", default: t("reminders.mail.why"))
+                p style="margin:0 0 8px;" = t("mail_links.note")
+                p style="margin:0;"
+                  a href=@off_url style="color:#{muted};text-decoration:underline;" = t("reminders.mail.off")
+                  = " · "
+                  a href=@schedule_url style="color:#{muted};text-decoration:underline;" = t("reminders.mail.schedule")
+                  = " · "
+                  a href=@settings_url style="color:#{muted};text-decoration:underline;" = t("reminders.mail.settings")
+                  = " · "
+                  = t("newsletters.mail.reply")

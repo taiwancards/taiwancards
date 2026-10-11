@@ -123,9 +123,9 @@ RSpec.describe Huayu::CourseLessons do
     expect(kinds["passage"]).to(be >= 10)
   end
 
-  it "finds a lesson by slug and knows its neighbours" do
+  it "finds a lesson by slug and knows its neighbors" do
     lesson = described_class.lessons[1]
-    previous, following = described_class.neighbours(lesson)
+    previous, following = described_class.neighbors(lesson)
 
     expect(described_class.find(lesson.slug)).to(eq(lesson))
     expect(previous).to(eq(described_class.lessons.first))

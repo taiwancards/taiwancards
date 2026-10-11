@@ -1,0 +1,13 @@
+- streak = home.streak
+- activity = home.activity
+- peak = [activity.map(&:last).max, 1].max
+
+section.rounded-2xl.border.border-border.bg-card.p-4.space-y-3
+  .flex.items-baseline.justify-between.gap-3
+    div
+      span.text-2xl.font-bold.tabular-nums class=(streak.current.positive? ? "text-emerald-600" : nil) = number_with_delimiter(streak.current)
+      span.ml-2.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("stats.streak")
+    = link_to t("desk.streak_more"), progress_path, class: "text-xs text-primary underline-offset-2 hover:underline"
+  .grid.w-fit.grid-flow-col.grid-rows-7.gap-1
+    - activity.each do |date, count|
+      .size-3.5.rounded-sm class=activity_shade(count, peak) title="#{l(date, format: :short)}: #{count}"

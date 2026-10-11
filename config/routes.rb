@@ -26,8 +26,15 @@ Rails.application.routes.draw do
     defaults: {format: :json},
     constraints: {key: /[a-z]+[1-5]/}
   )
-  get("listening/clips/:id", to: "listening_clips#show", as: :listening_clip)
+  get("listening/clips/:id", to: "media_clips#show", defaults: {collection: "listening"}, as: :listening_clip)
+  get("word_clips/:id", to: "media_clips#show", defaults: {collection: "words"}, as: :word_clip)
   get("n/:token", to: "newsletter_clicks#show", as: :newsletter_click, constraints: {token: /[^\/]+/})
+  get("l/:token", to: "mail_links#show", as: :mail_link, constraints: {token: /[^\/]+/})
+  post("l/:token", to: "mail_links#create", constraints: {token: /[^\/]+/})
+  get("u/:token", to: "mail_unsubscribes#show", as: :mail_unsubscribe, constraints: {token: /[^\/]+/})
+  post("u/:token", to: "mail_unsubscribes#create", constraints: {token: /[^\/]+/})
+  post("reminders/run", to: "reminders#run", as: :reminders_run)
+  post("hit", to: "page_views#create", as: :page_view)
   get(
     "unsubscribe/:token",
     to: "newsletter_unsubscribes#show",
@@ -73,7 +80,6 @@ Rails.application.routes.draw do
     get("login", to: "sessions#new")
     delete("logout", to: "sessions#destroy")
 
-    get("help", to: "pages#help", as: :guide)
     get("licenses", to: "pages#licenses")
     get("support", to: "pages#support")
     get("privacy", to: "pages#privacy_policy")
@@ -81,13 +87,6 @@ Rails.application.routes.draw do
     get("menu", to: "pages#menu")
     get("offline", to: "offline#show", as: :offline)
     get("offline/browse", to: "offline#browse", as: :offline_browse)
-    get("intro", to: "intros#show", as: :intro)
-    post("intro/start", to: "intros#start", as: :intro_start)
-    delete("intro", to: "intros#pause", as: :intro_pause)
-    post("intro/next", to: "intros#advance", as: :intro_next)
-    post("intro/back", to: "intros#rewind", as: :intro_back)
-    post("intro/chapter/:id", to: "intros#chapter", as: :intro_chapter)
-    delete("intro/chapter", to: "intros#close_chapter", as: :intro_close_chapter)
     post("prefs/detail", to: "detail_prefs#update", as: :detail_pref)
 
     namespace(:admin) do
@@ -95,6 +94,11 @@ Rails.application.routes.draw do
       resources(:content_sources, only: %i[index update])
 
       get("activity", to: "activity#index")
+      get("funnel", to: "funnel#index")
+      get("reminders", to: "reminders#index")
+      patch("reminders", to: "reminders#update")
+      get("mail", to: "mail#index")
+      get("traffic", to: "traffic#index")
       resources(:newsletters, only: %i[index create edit update destroy]) do
         member do
           post(:sample)
@@ -121,12 +125,14 @@ Rails.application.routes.draw do
     delete("profile/account", to: "profiles#destroy", as: :profile_account)
 
     resource(:settings, only: %i[edit update destroy])
+    patch("goal", to: "goals#update", as: :goal)
+    post("reminders", to: "reminders#enable", as: :reminders_enable)
 
     get("desk", to: "desks#show", as: :desk)
     get("study", to: "study_sessions#show", as: :study)
     post("study/review", to: "study_sessions#review", as: :study_review)
     get("search", to: "search#index", as: :search)
-    get("mistakes", to: "mistakes#show", as: :mistakes)
+    get("mistakes", to: to_localized.call { "/progress#mistakes" })
     get("progress", to: "progress#show", as: :progress)
     get("progress/history", to: "progress#history", as: :progress_history)
     get("progress/data", to: "progress#data", as: :progress_data)
@@ -203,20 +209,20 @@ Rails.application.routes.draw do
     get("cangjie/lessons", to: "cangjie_lessons#index", as: :cangjie_lessons)
     get("cangjie/lessons/:id", to: "cangjie_lessons#show", as: :cangjie_lesson)
     get("pronunciation", to: "pronunciation#show", as: :pronunciation)
-    get("pronunciation/judge", to: "pronunciation_judgements#index", as: :pronunciation_judgements)
+    get("pronunciation/judge", to: "pronunciation_judgments#index", as: :pronunciation_judgments)
     get(
       "pronunciation/judge/:id/audio",
-      to: "pronunciation_judgements#audio",
-      as: :pronunciation_judgement_audio,
+      to: "pronunciation_judgments#audio",
+      as: :pronunciation_judgment_audio,
       constraints: {id: /\d+/}
     )
     patch(
       "pronunciation/judge/:id",
-      to: "pronunciation_judgements#update",
-      as: :pronunciation_judgement,
+      to: "pronunciation_judgments#update",
+      as: :pronunciation_judgment,
       constraints: {id: /\d+/}
     )
-    delete("pronunciation/judge/:id", to: "pronunciation_judgements#destroy", constraints: {id: /\d+/})
+    delete("pronunciation/judge/:id", to: "pronunciation_judgments#destroy", constraints: {id: /\d+/})
     get("pronunciation/warmup", to: "warmups#show", as: :pronunciation_warmup)
     post("pronunciation/warmup", to: "warmups#create", defaults: {format: :json})
     delete("pronunciation/warmup", to: "warmups#destroy")
@@ -298,6 +304,12 @@ Rails.application.routes.draw do
       get(":slug/paper", to: "exams#paper", as: :exam_paper)
       get(":slug/transcript", to: "exams#transcript", as: :exam_transcript)
       get(":slug/audio", to: "exams#clip", as: :exam_clip)
+    end
+
+    scope("starter", constraints: {slug: /[a-z0-9-]+/}) do
+      get(":slug", to: "starter_lessons#show", as: :starter_lesson)
+      post(":slug", to: "starter_lessons#complete")
+      get(":slug/done", to: "starter_lessons#done", as: :starter_lesson_done)
     end
 
     scope("course", constraints: {slug: /[a-z0-9-]+/, stage: /[a-z0-9]+/}) do

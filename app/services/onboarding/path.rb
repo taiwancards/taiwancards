@@ -34,6 +34,7 @@ module Onboarding
     TRACKS = {
       "zero" => %w[zhuyin_theory zhuyin drill tones_theory tones typing hanzi phrases course first_cards plan],
       "phonetics" => %w[zhuyin_theory bridge drill typing hanzi phrases course first_cards plan],
+      "zhuyin" => %w[drill tones_theory tones typing hanzi phrases course first_cards plan],
       "characters" => %w[placement readings phrases course first_cards plan],
       "experienced" => %w[placement plan course phrases first_cards]
     }.freeze
