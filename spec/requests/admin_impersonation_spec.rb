@@ -23,6 +23,17 @@ RSpec.describe "Admin impersonation" do
     expect(response.body).to(include("content=\"no-cache\" name=\"turbo-cache-control\""))
   end
 
+  it "shows the member over a remote connection too" do
+    remote = {"REMOTE_ADDR" => "203.0.113.7"}
+    sign_in(admin)
+
+    post(admin_impersonate_path(member), env: remote)
+    in_locale(:ru) { get("/desk", env: remote) }
+
+    expect(response.body).to(include("<strong class=\"font-semibold\">#{member.email}</strong>"))
+    expect(response.body).not_to(include(admin.email))
+  end
+
   it "keeps the admin session underneath and can be stopped" do
     sign_in(admin)
     post(admin_impersonate_path(member))
