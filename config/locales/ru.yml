@@ -3033,9 +3033,9 @@ ru:
     by_day: По дням
     recent: Последние действия
     impersonate: Войти как
-    impersonating: Теперь вы видите приложение глазами %{email}, только чтение.
+    impersonating: "Открыт аккаунт %{email} в режиме просмотра."
     impersonation_read_only: Режим просмотра — изменение не сохранено.
-    impersonating_banner: Просмотр от лица %{email}, только чтение — ничего из сделанного здесь не изменит аккаунт пользователя.
+    impersonating_banner_html: "Аккаунт %{email} · режим просмотра, ничего из сделанного здесь его не изменит."
     impersonation_stop: Вернуться в свой аккаунт
     impersonation_stopped: Вы снова в своём аккаунте.
     impersonate_self: Это и так ваш аккаунт.

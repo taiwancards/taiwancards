@@ -18,6 +18,8 @@ RSpec.describe "Admin impersonation" do
     expect(response.body).to(include(I18n.t("nav.progress", locale: :ru)))
     expect(response.body).to(include("/ru/dict"))
     expect(response.body).to(include(I18n.t("admin.impersonation_stop", locale: :ru)))
+    expect(response.body).to(include("<strong class=\"font-semibold\">#{member.email}</strong>"))
+    expect(response.body).not_to(include(admin.email))
     expect(response.body).to(include("content=\"no-cache\" name=\"turbo-cache-control\""))
   end
 

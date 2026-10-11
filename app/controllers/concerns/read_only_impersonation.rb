@@ -19,12 +19,24 @@ module ReadOnlyImpersonation
 
   def keep_impersonation_read_only
     return yield unless impersonating?
+
+    trace_impersonation("before")
     return refuse_impersonated_change unless harmless_request?
 
     ActiveRecord::Base.transaction do
       yield
       raise ActiveRecord::Rollback
     end
+
+  ensure
+    trace_impersonation("after") if impersonating?
+  end
+
+  def trace_impersonation(stage)
+    Rails.logger.info(
+      "impersonation #{stage}: true_user=#{true_user&.id} session=#{session[:impersonated_user_id].inspect} " \
+        "impersonated=#{impersonated_user&.id} current=#{Current.user&.id} resolved=#{Current.user_resolved?.inspect}"
+    )
   end
 
   def harmless_request?
