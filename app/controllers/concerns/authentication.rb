@@ -51,9 +51,27 @@ module Authentication
   end
 
   def current_user
-    return Current.user if Current.user_resolved?
+    if Current.user_resolved?
+      trace_identity("cached")
+      return Current.user
+    end
 
     Current.user = impersonated_user || true_user
+    trace_identity("resolved")
+    Current.user
+  end
+
+  def trace_identity(stage)
+    return if @identity_traced
+
+    @identity_traced = true
+    return unless true_user&.admin?
+
+    Rails.logger.info(
+      "identity #{stage}: pid=#{Process.pid} thread=#{Thread.current.object_id} current=#{Current.user&.id} " \
+        "impersonated=#{impersonated_user&.id} session=#{session[:impersonated_user_id].inspect} " \
+        "action=#{controller_path}##{action_name}"
+    )
   end
 
   def require_authentication
