@@ -166,6 +166,24 @@ RSpec.describe Huayu::TextAnalyzer do
 
       expect(segment("好兄弟們")).to(eq(%w[好兄弟 們]))
     end
+
+    it "rebuilds 首都 when 都是 steals its tail" do
+      word!("首都")
+      word!("都是")
+      described_class.reset_vocabulary!
+
+      expect(segment("首都是姆巴巴內")).to(start_with("首都", "是"))
+      expect(segment("希臘首都是雅典")).to(include("首都"))
+    end
+
+    it "leaves 首 alone after a tally" do
+      word!("首都")
+      word!("都是")
+      described_class.reset_vocabulary!
+
+      expect(segment("每首都是經典")).not_to(include("首都"))
+      expect(segment("這兩首都是主題曲")).not_to(include("首都"))
+    end
   end
 
   describe "the merge pass" do
