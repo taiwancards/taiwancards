@@ -56,6 +56,7 @@ namespace(:textbook) do
       )
       existing = path.exist? ? JSON.parse(path.read) : {}
       ru_meanings = (existing["vocabulary"] || []).to_h { |entry| [entry["name"], entry["meaning_ru"]] }
+      variants = (existing["vocabulary"] || []).to_h { |entry| [entry["name"], entry["variants"]] }.compact
       payload = {
         book: attributes[:book],
         lesson: attributes[:lesson],
@@ -65,7 +66,9 @@ namespace(:textbook) do
         summary_html_en: attributes[:summary_html],
         summary_html_ru: existing["summary_html_ru"],
         vocabulary: attributes[:vocabulary].map { |entry|
-          entry.merge("meaning_ru" => ru_meanings[entry["name"]])
+          entry
+            .merge("meaning_ru" => ru_meanings[entry["name"]])
+            .merge(variants.slice(entry["name"]).transform_keys { "variants" })
         }
       }
       path.write(JSON.pretty_generate(payload))

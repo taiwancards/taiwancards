@@ -3,6 +3,7 @@
 module Textbook
   class LexemeImporter
     HAN = /\p{Han}/
+    ASIDE = /[()（）=＝]/
 
     def initialize(progress: nil)
       @progress = progress || -> (*) { }
@@ -75,7 +76,9 @@ module Textbook
     end
 
     def import_entry(lesson, entry)
-      Spellings.of(entry["traditional"]).map { |text| import_spelling(lesson, entry, text) }
+      Spellings.of(entry["traditional"]).map do |text|
+        import_spelling(lesson, entry.merge(entry.dig("variants", text) || {}), text)
+      end
     end
 
     def import_spelling(lesson, entry, text)
@@ -83,6 +86,7 @@ module Textbook
       source = "Textbook #{lesson.label}"
       audio = lesson.audio_url(entry)
       pinyin = settled_pinyin(entry)
+      spoken = pinyin&.gsub(ASIDE, " ")&.squish
 
       if entry["category"] == "Ph"
         lexeme = @upserter.phrase(text, meanings:, audio_url: audio, source:)
@@ -90,14 +94,14 @@ module Textbook
       else
         lexeme = @upserter.word(
           text,
-          readings: {"pinyin" => pinyin, "zhuyin" => Huayu::Zhuyin.from_pinyin(pinyin)}.compact_blank,
+          readings: {"pinyin" => pinyin, "zhuyin" => Huayu::Zhuyin.from_pinyin(spoken)}.compact_blank,
           meanings:,
           audio_url: audio,
           pos: entry["category"],
           source:
         )
         han = text.chars.select { |char| char.match?(HAN) }
-        @upserter.link(lexeme, characters_of(text, source), readings: character_readings(han, pinyin))
+        @upserter.link(lexeme, characters_of(text, source), readings: character_readings(han, spoken))
       end
 
       lexeme
@@ -105,7 +109,10 @@ module Textbook
 
     def settled_pinyin(entry)
       reading = entry["pinyin"].to_s
-      reading.include?("/") ? nil : reading.presence
+      return reading.presence unless reading.include?("/")
+      return nil if entry["traditional"].to_s.include?("/")
+
+      reading.split("/").first.strip.presence
     end
 
     def characters_of(text, source)

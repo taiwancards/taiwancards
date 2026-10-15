@@ -4,15 +4,19 @@ module ZhuyinHelper
   TONES = %w[ˊ ˇ ˋ ˪ ˫].freeze
   CHECKED = %w[ㆴ ㆵ ㆶ ㆷ].freeze
   NEUTRAL = "˙"
+  HAN = /\p{Han}/
 
   def zhuyin_ruby(text, zhuyin, css: nil, context: :entry)
     chars = text.to_s.chars
     syllables = zhuyin.to_s.split(/[[:space:]]+/).reject(&:empty?)
+    readable = chars.map { |char| syllables.size == chars.size || char.match?(HAN) }
 
-    return tag.span(text, lang: "zh-TW", class: css) unless syllables.size == chars.size
+    aligned = syllables.size == readable.count(true) && (syllables.any? || chars.empty?)
+    return tag.span(text, lang: "zh-TW", class: css) unless aligned
 
+    queue = syllables.dup
     tag.span(lang: "zh-TW", class: class_names("zy-run", zhuyin_run_class(context), css)) do
-      safe_join(chars.zip(syllables).map { |char, syllable| zhuyin_ruby_pair(char, syllable) })
+      safe_join(chars.zip(readable).map { |char, read| read ? zhuyin_ruby_pair(char, queue.shift) : char })
     end
   end
 

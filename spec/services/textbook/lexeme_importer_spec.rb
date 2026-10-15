@@ -88,6 +88,68 @@ RSpec.describe Textbook::LexemeImporter do
     expect(collection.lexemes.pluck(:text)).to(contain_exactly("電腦", "請", "問", "請問"))
   end
 
+  context("with readings the textbook writes loosely") do
+    before do
+      TextbookLesson.create!(
+        book: 6,
+        lesson: 8,
+        title_en: "Variants",
+        vocabulary: [
+          {
+            "name" => "v1",
+            "traditional" => "那邊",
+            "pinyin" => "nàbiān / nèibiān",
+            "meaning" => "over there",
+            "category" => "N"
+          },
+          {
+            "name" => "v2",
+            "traditional" => "（台）斤",
+            "pinyin" => "(Tái) jīn",
+            "meaning" => "catty",
+            "category" => "M"
+          },
+          {
+            "name" => "v3",
+            "traditional" => "有/無福消受",
+            "pinyin" => "yǒu/wúfú xiāoshòu",
+            "meaning" => "be fortunate enough to enjoy, not have the fortune of enjoying",
+            "category" => "Id",
+            "variants" => {
+              "有福消受" => {"pinyin" => "yǒufú xiāoshòu", "meaning" => "to be lucky enough to enjoy"},
+              "無福消受" => {"pinyin" => "wúfú xiāoshòu", "meaning" => "not lucky enough to enjoy"}
+            }
+          }
+        ]
+      )
+    end
+
+    it "takes the first of two spoken readings" do
+      described_class.new.call
+
+      expect(Lexeme.find_by!(text: "那邊").readings).to(
+        eq({"pinyin" => "nàbiān", "zhuyin" => "ㄋㄚˋ ㄅㄧㄢ"})
+      )
+    end
+
+    it "reads through brackets for the zhuyin" do
+      described_class.new.call
+
+      expect(Lexeme.find_by!(text: "（台）斤").reading("zhuyin")).to(eq("ㄊㄞˊ ㄐㄧㄣ"))
+    end
+
+    it "gives each slashed spelling its own reading and meaning" do
+      described_class.new.call
+
+      lucky = Lexeme.find_by!(text: "有福消受")
+      unlucky = Lexeme.find_by!(text: "無福消受")
+      expect(lucky.reading("zhuyin")).to(eq("ㄧㄡˇ ㄈㄨˊ ㄒㄧㄠ ㄕㄡˋ"))
+      expect(unlucky.reading("zhuyin")).to(eq("ㄨˊ ㄈㄨˊ ㄒㄧㄠ ㄕㄡˋ"))
+      expect(lucky.meanings["en"]).to(eq("to be lucky enough to enjoy"))
+      expect(unlucky.meanings["en"]).to(eq("not lucky enough to enjoy"))
+    end
+  end
+
   context("with a character that has more than one reading") do
     before do
       TextbookLesson.create!(
