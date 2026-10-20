@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_11_160114) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_20_021741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -150,6 +150,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_160114) do
     t.datetime("updated_at", null: false)
     t.index(["token"], name: "index_deck_shares_on_token", unique: true)
     t.index(["user_id", "created_at"], name: "index_deck_shares_on_user_id_and_created_at")
+  end
+
+  create_table("graded_completions", force: :cascade) do |t|
+    t.bigint("user_id", null: false)
+    t.string("text_id", null: false)
+    t.integer("score")
+    t.integer("total")
+    t.datetime("completed_at", null: false)
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["user_id", "text_id"], name: "index_graded_completions_on_user_id_and_text_id", unique: true)
   end
 
   create_table("lexeme_content_sources", force: :cascade) do |t|
@@ -701,6 +712,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_160114) do
   add_foreign_key("collections", "users")
   add_foreign_key("course_completions", "users", on_delete: :cascade)
   add_foreign_key("deck_shares", "users", on_delete: :cascade)
+  add_foreign_key("graded_completions", "users", on_delete: :cascade)
   add_foreign_key("lexeme_content_sources", "content_sources")
   add_foreign_key("lexeme_content_sources", "lexemes")
   add_foreign_key("lexeme_links", "lexemes", column: "child_id")

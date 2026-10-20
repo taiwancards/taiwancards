@@ -1,27 +1,35 @@
 - content_for(:title, "#{@text.title(I18n.locale)} · #{t("graded.tiers.#{@tier.id}")}")
 
-.py-6.space-y-5 data-controller="graded-reader"
+.py-6.space-y-5 data-controller="layers"
   header.space-y-2
     = link_to graded_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
       = t("graded.back")
     h1.text-2xl.font-bold.tracking-tight lang="zh-TW" = @text.zh
     p.text-sm.text-muted-foreground = @text.title(I18n.locale)
 
-  .flex.flex-wrap.items-center.gap-2
+  nav.-mx-4.flex.items-center.gap-2.overflow-x-auto.px-4.pb-1[
+    data-controller="ribbon" aria-label=t("graded.texts_in_tier") class="[scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0" ]
     - @texts.each do |text|
-      = link_to text.zh, graded_text_path(tier: @tier.id, id: text.id), lang: "zh-TW",
-        class: "rounded-lg border px-2.5 py-1 text-sm #{text.id == @text.id ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted"}"
+      = link_to graded_text_path(tier: @tier.id, id: text.id), lang: "zh-TW",
+        aria: {current: (text.id == @text.id ? "page" : nil)},
+        class: "inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border px-2.5 py-1 text-sm md:min-h-8 #{text.id == @text.id ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted"}" do
+        - if @shelf&.read?(text)
+          = icon(:check, css: "size-3.5 text-emerald-600", stroke: 2.2)
+        = text.zh
 
   .flex.flex-wrap.items-center.justify-between.gap-3
     .flex.flex-wrap.gap-2.text-xs.text-muted-foreground
       span.rounded-lg.border.border-border.px-2.py-1 = t("graded.tiers.#{@tier.id}")
       span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.coverage", percent: (@cover.rate * 100).round(1))
       span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.size", lines: @text.sentences, chars: @text.length)
+      - if (completion = @shelf&.completion(@text))
+        span.inline-flex.items-center.gap-1.rounded-lg.border.border-emerald-500.px-2.py-1.text-emerald-700 class="bg-emerald-500/10 dark:text-emerald-400"
+          = icon(:check, css: "size-3.5", stroke: 2.2)
+          = graded_read_label(completion)
     .flex.shrink-0.items-center.gap-2
-      - pill = "rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted"
-      button[ type="button" class=pill aria-pressed="false"
-        data-action="graded-reader#toggle" data-graded-reader-target="button" ]
-        = t("graded.show_translation")
+      - if @text.lines.any? { |line| line.grammar.any? }
+        = render("shared/layer_button", layer: "grammar")
+      = render("shared/layer_button", layer: "translation")
 
   .grid.items-start.gap-4[
     class="lg:grid-cols-[minmax(0,1fr)_18rem]"
@@ -31,12 +39,13 @@
       - @text.lines.each do |line|
         - reading = @readings[line.zh]
         .space-y-1
-          p.graded-line.text-2xl.leading-loose lang="zh-TW" = render("notices/line", text: line.zh, tokens: @tokens[line.zh], ruby: false)
+          p.text-2xl.leading-loose lang="zh-TW" = render("notices/line", text: line.zh, tokens: @tokens[line.zh], ruby: false)
           - if reading&.zhuyin.present?
             .zy-line lang="zh-TW" = reading.zhuyin
           - if reading&.pinyin.present?
             .py-line lang="zh-Latn" = reading.pinyin
-          p.graded-gloss.text-sm.leading-relaxed.text-muted-foreground = line.name(I18n.locale)
+          p.layer-translation.text-sm.leading-relaxed.text-muted-foreground = line.name(I18n.locale)
+          = render("shared/grammar_chips", lessons: line.grammar_lessons)
 
     aside.hidden.rounded-xl.border.border-border.bg-card.p-4[
       class="lg:sticky lg:top-20 lg:block" data-analyzer-target="panel" ]
@@ -55,3 +64,9 @@
           = link_to dict_entry_path(text: note.zh), class: "rounded-lg border border-border px-2.5 py-1.5 text-sm hover:bg-muted" do
             span.font-medium lang="zh-TW" = note.zh
             span.ml-2.text-xs.text-muted-foreground = note.name(I18n.locale)
+
+  - if @quiz.exercises.any?
+    = render("course/exercises", exercises: @quiz.exercises, heading: t("graded.quiz"),
+      score_form: (graded_finish_form if @shelf))
+
+  = render("graded/finish", text: @text, following: @following, shelf: @shelf)

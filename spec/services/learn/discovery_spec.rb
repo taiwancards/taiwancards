@@ -28,11 +28,20 @@ RSpec.describe Learn::Discovery do
     expect(grammar.subject).not_to(eq(first))
   end
 
+  it "points reading at the first unread text of the learner's tier" do
+    first, second = Graded::Library.texts("chars300").first(2)
+    GradedCompletion.record(user:, text_id: first.id)
+
+    reading = described_class.new(user, now:).options.find { |option| option.kind == "graded" }
+
+    expect(reading.subject).to(eq(second))
+  end
+
   it "keeps grammar and reading away from a learner still on the first steps" do
     beginner = create(:user, prefs: {"goal" => "guided", "start_level" => "zero"})
     allow(Learn::Starter).to(receive(:new).and_return(instance_double(Learn::Starter, active?: true)))
 
-    expect(described_class.new(beginner, now:).options.map(&:kind)).to(eq(%w[phrases pronunciation]))
+    expect(described_class.new(beginner, now:).options.map(&:kind)).to(eq(%w[phrases culture pronunciation]))
   end
 
   it "rotates toward sections the learner has not touched this week" do
@@ -51,6 +60,14 @@ RSpec.describe Learn::Discovery do
       action: "show",
       verb: "GET",
       path: "/grammar/x",
+      created_at: now - 1.day
+    )
+    ActivityEvent.create!(
+      user:,
+      controller: "culture",
+      action: "index",
+      verb: "GET",
+      path: "/culture",
       created_at: now - 1.day
     )
 

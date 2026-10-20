@@ -2,7 +2,7 @@
 
 module Learn
   class Discovery
-    KINDS = %w[grammar graded phrases pronunciation].freeze
+    KINDS = %w[grammar graded phrases culture pronunciation].freeze
     KNOWN_SHARE = 80
     READER_WORDS = 100
     FRESH_DAYS = 7
@@ -49,16 +49,11 @@ module Learn
     end
 
     def graded_suggestion
-      return nil if known_words < READER_WORDS
+      return nil if @user.level_grade.zero? && known_words < READER_WORDS
 
-      tier = Graded::Levels
-        .all
-        .select { |entry| entry.size <= known_words && Graded::Library.texts(entry.id).any? }
-        .last
-      return nil if tier.nil?
-
-      text = Graded::Library.texts(tier.id).find { |entry| seen_paths.exclude?("/graded/#{tier.id}/#{entry.id}") }
-      text && Suggestion.new(kind: "graded", subject: text, level: tier.size)
+      shelf = Graded::Shelf.new(@user)
+      text = shelf.next_text
+      text && Suggestion.new(kind: "graded", subject: text, level: Graded::Levels.find(text.tier)&.size)
     end
 
     def phrases_suggestion
@@ -66,6 +61,13 @@ module Learn
       return nil if scenes.empty?
 
       Suggestion.new(kind: "phrases", subject: scenes[(@now.to_date.cweek + @user.id) % scenes.size], level: nil)
+    end
+
+    def culture_suggestion
+      notes = Huayu::CourseLessons.lessons.select(&:culture?)
+      return nil if notes.empty?
+
+      Suggestion.new(kind: "culture", subject: notes[(@now.to_date.cweek + @user.id) % notes.size], level: nil)
     end
 
     def pronunciation_suggestion

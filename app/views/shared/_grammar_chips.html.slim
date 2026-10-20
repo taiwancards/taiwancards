@@ -1,0 +1,10 @@
+- lessons = local_assigns.fetch(:lessons)
+- layered = local_assigns.fetch(:layered, true)
+
+- if lessons.any?
+  div class=(layered ? "layer-grammar flex-wrap gap-1.5 pt-1" : "flex flex-wrap gap-1.5")
+    - lessons.each do |lesson|
+      = link_to grammar_lesson_path(lesson), class: "inline-flex min-h-8 items-center gap-1.5 rounded-full border border-primary/30 px-2.5 py-0.5 text-xs transition-colors hover:bg-primary/10" do
+        - label, gist = grammar_chip(lesson)
+        span.font-medium.text-primary = label
+        span.text-muted-foreground = gist

@@ -1,0 +1,16 @@
+- note = local_assigns.fetch(:note)
+
+.space-y-1.rounded-lg.border-l-2.border-primary.px-3.py-2.text-sm class="bg-muted/50" data-course-task-target="note" hidden=true
+  - if note.grammar
+    = link_to grammar_lesson_path(note.grammar), class: "inline-flex min-h-11 items-center gap-1 text-xs font-medium text-primary hover:underline md:min-h-0" do
+      span = t("course.why_grammar")
+      span.text-muted-foreground = "· #{note.grammar.title(I18n.locale)}"
+  - elsif note.zh
+    p.flex.flex-wrap.items-baseline.gap-x-2
+      span.text-base.font-semibold lang="zh-TW" = note.zh
+      - if note.reading.present?
+        span.text-xs.text-muted-foreground = note.reading
+  - if note.body.present?
+    p.leading-relaxed = note.body
+  - if note.detail.present?
+    p.text-xs.leading-relaxed.text-muted-foreground = note.detail

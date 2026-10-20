@@ -50,7 +50,13 @@ module Graded
       issues << "missing title" if text.zh.blank? || text.titles["en"].blank? || text.titles["ru"].blank?
       issues.concat(translations(text))
       issues.concat(script(text))
+      issues.concat(grammar(text))
       issues
+    end
+
+    def grammar(text)
+      unknown = text.lines.flat_map(&:grammar).uniq.reject { |slug| Huayu::GrammarLessons.find(slug)&.slug == slug }
+      unknown.any? ? ["unknown grammar #{unknown.join(" ")}"] : []
     end
 
     def translations(text)

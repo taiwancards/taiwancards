@@ -30,6 +30,19 @@ RSpec.describe Huayu::CourseLessons do
     expect(missing).to(be_empty)
   end
 
+  it "tags a line only with grammar its own lesson teaches, two points at most" do
+    strays = described_class.lessons.flat_map do |lesson|
+      lesson.lines.flat_map(&:grammar).reject { |slug| lesson.grammar_ref(slug) }.map { |slug|
+        "#{lesson.slug}: #{slug}"
+      }
+    end
+
+    crowded = described_class.lessons.flat_map(&:lines).select { |line| line.grammar.size > 2 }
+
+    expect(strays).to(eq([]))
+    expect(crowded).to(eq([]))
+  end
+
   it "gives each lesson a text, words, a culture note and tasks" do
     described_class.lessons.each do |lesson|
       expect(lesson.lines.size).to(be >= 5, "#{lesson.slug} has too few lines")

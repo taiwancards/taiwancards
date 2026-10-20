@@ -22,7 +22,7 @@ module Offline
       /cangjie
     ].freeze
 
-    TAIWAN_PATHS = %w[/everyday /phrases /notices /calendar /medicine /games /metro].freeze
+    TAIWAN_PATHS = %w[/everyday /phrases /notices /calendar /medicine /culture /games /metro].freeze
 
     SENTENCE_LIMIT = 8_000
 

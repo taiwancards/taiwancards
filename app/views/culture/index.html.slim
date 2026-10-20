@@ -1,0 +1,35 @@
+- content_for(:title, t("culture.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("culture.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("culture.lede")
+
+  - if @stages.empty?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("culture.empty")
+  - else
+    nav.flex.flex-wrap.gap-2 aria-label=t("culture.stages")
+      - @stages.each do |stage|
+        = link_to "##{stage.slug}", class: "inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border px-3 text-sm hover:bg-muted md:min-h-8" do
+          span.font-medium = stage.band.to_s.delete_prefix("TOCFL ")
+          span.text-xs.text-muted-foreground.tabular-nums = @notes[stage.slug].size
+
+    - @stages.each do |stage|
+      section.space-y-3.scroll-mt-28 id=stage.slug
+        .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1
+          h2.text-lg.font-semibold = stage.title(I18n.locale)
+          span.text-xs.text-muted-foreground = stage.band
+        .grid.gap-3 class="md:grid-cols-2"
+          - @notes[stage.slug].each do |lesson|
+            - note = lesson.culture_for(I18n.locale)
+            article.min-w-0.scroll-mt-28.space-y-2.rounded-xl.border.border-border.bg-card.p-4 id=lesson.slug
+              h3.text-base.font-semibold.leading-snug = note["title"]
+              p.text-sm.leading-relaxed = note["body"]
+              - lesson_label = capture do
+                span.tabular-nums = t("culture.from_lesson", number: lesson.number)
+                span.text-muted-foreground lang="zh-TW" = " · #{lesson.zh_title}"
+              - if current_user
+                = link_to course_lesson_path(lesson), class: "inline-flex min-h-11 items-center gap-0.5 text-xs font-medium text-primary hover:underline md:min-h-0" do
+                  = lesson_label
+              - else
+                p.text-xs.text-muted-foreground = lesson_label

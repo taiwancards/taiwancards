@@ -33,6 +33,16 @@ module GrammarHelper
     def meaning(locale) = entry&.meaning(locale).presence
   end
 
+  CHIP_LENGTH = 48
+
+  def grammar_chip(lesson, locale = I18n.locale)
+    title = lesson.title(locale).to_s
+    label, gist = title.split(" — ", 2)
+    return [lesson.head, title.truncate(CHIP_LENGTH, separator: " ")] if gist.blank?
+
+    [label, gist.truncate(CHIP_LENGTH, separator: " ")]
+  end
+
   def grammar_syllabus(lesson)
     return nil if lesson.supplementary?
 

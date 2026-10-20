@@ -29,4 +29,11 @@ RSpec.describe Graded::Audit do
       expect(larger.items.first(smaller.size)).to(eq(smaller.items))
     end
   end
+
+  it "flags a grammar tag that names no lesson" do
+    line = Graded::Library::Line.new(zh: "我", names: {}, grammar: %w[shi no-such-point])
+    text = Graded::Library::Text.new(id: "x", tier: "chars150", topic: "", titles: {}, lines: [line], notes: [])
+
+    expect(described_class.new.send(:grammar, text)).to(eq(["unknown grammar no-such-point"]))
+  end
 end

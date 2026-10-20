@@ -22,6 +22,7 @@ class SentencesController < ApplicationController
 
     @breakdown = Sentences::Breakdown.new(@sentence).call
     @profile = @sentence.sentence_profile
+    @grammar = Huayu::GrammarLessons.for_sentence(@sentence)
   end
 
   private

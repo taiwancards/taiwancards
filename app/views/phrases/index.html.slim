@@ -20,6 +20,14 @@
     - if @scene
       p.max-w-2xl.text-sm.text-muted-foreground = @scene.name(I18n.locale)
 
+    - if @dialogue
+      = link_to phrase_dialogue_path(scene: @scene.id),
+        class: "flex min-h-11 items-center justify-between gap-3 rounded-xl border border-primary/40 bg-primary/5 p-4 transition-colors hover:bg-primary/10" do
+        span.min-w-0
+          span.block.text-sm.font-semibold = t("phrases.dialogue.open")
+          span.mt-0.5.block.text-xs.leading-relaxed.text-muted-foreground = t("phrases.dialogue.open_hint")
+        span.shrink-0.text-lg.text-primary aria-hidden="true" →
+
     .space-y-3
       - @patterns.each do |pattern|
         = render("phrases/pattern", pattern:, entries: @lexicon.for(pattern))

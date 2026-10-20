@@ -226,12 +226,17 @@
     opacity: 0.25;
   }
 
-  .graded-gloss {
+  .layer-translation,
+  .layer-grammar {
     display: none;
   }
 
-  .graded-open .graded-gloss {
+  .show-translation .layer-translation {
     display: block;
+  }
+
+  .show-grammar .layer-grammar {
+    display: flex;
   }
 
   .exam-sign {

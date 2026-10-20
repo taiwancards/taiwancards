@@ -1,0 +1,8 @@
+- reading = local_assigns[:reading]
+
+p class=local_assigns.fetch(:size) lang="zh-TW" = local_assigns.fetch(:zh)
+- if reading&.zhuyin.present?
+  .zy-line lang="zh-TW" = reading.zhuyin
+- if reading&.pinyin.present?
+  .py-line lang="zh-Latn" = reading.pinyin
+p.layer-translation.text-sm.text-muted-foreground = local_assigns.fetch(:gloss)

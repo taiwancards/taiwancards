@@ -80,4 +80,40 @@ RSpec.describe Huayu::TaiwanPhrases do
     expect(pattern.avoid["wrong"]).to(eq("不客氣"))
     expect(pattern.avoid["use"]).to(eq("不會"))
   end
+
+  describe "scene dialogues" do
+    let(:dialogues) { described_class.scenes.map { |scene| described_class.dialogue(scene.id) } }
+
+    it "plays one dialogue in every scene" do
+      expect(dialogues).to(all(be_present))
+    end
+
+    it "offers three replies with exactly one right one, and explains every wrong one in both languages" do
+      dialogues.flat_map(&:steps).select(&:choice?).each do |step|
+        expect(step.choices.size).to(eq(3))
+        expect(step.choices.count(&:correct?)).to(eq(1))
+        step.choices.reject(&:correct?).each do |choice|
+          expect([choice.why_for(:en), choice.why_for(:ru)]).to(all(be_present), choice.zh)
+        end
+      end
+    end
+
+    it "translates every line and gives every step something to show" do
+      dialogues.each do |dialogue|
+        expect([dialogue.title(:ru), dialogue.setting(:ru), dialogue.partner.name(:ru)]).to(all(be_present))
+        dialogue.steps.each do |step|
+          expect(step.says || step.goal).to(be_present)
+          lines = [step.says, *step.choices].compact
+          expect(lines.flat_map { |line| [line.name(:en), line.name(:ru)] }).to(all(be_present))
+        end
+      end
+    end
+
+    it "keeps China wording out of the Russian side" do
+      russian = dialogues.flat_map { |dialogue|
+        dialogue.steps.flat_map { |step| [step.says&.name(:ru), step.goal_for(:ru)] }
+      }
+      expect(russian.compact.grep(/на Тайване|китайск|материк/)).to(eq([]))
+    end
+  end
 end

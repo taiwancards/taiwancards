@@ -79,7 +79,7 @@
         p.mt-1.text-sm.leading-relaxed = @lesson.culture_for(I18n.locale)["body"]
 
   - if @lesson.exercises.any?
-    = render("course/exercises", exercises: @lesson.exercises, url: course_lesson_done_path(@lesson))
+    = render("course/exercises", exercises: @lesson.exercises, url: course_lesson_done_path(@lesson), explainer: @explainer)
 
   nav.flex.justify-between.gap-3.text-sm
     - if @previous

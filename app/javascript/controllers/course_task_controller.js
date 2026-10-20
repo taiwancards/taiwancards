@@ -4,7 +4,15 @@ const RIGHT = ["border-emerald-500", "bg-emerald-500/10"];
 const WRONG = ["border-red-500", "bg-red-500/10"];
 
 export default class extends Controller {
-  static targets = ["option", "feedback", "chunk", "tray", "left", "right"];
+  static targets = [
+    "option",
+    "feedback",
+    "chunk",
+    "tray",
+    "left",
+    "right",
+    "note",
+  ];
   static values = {
     kind: String,
     answer: Number,
@@ -110,6 +118,7 @@ export default class extends Controller {
         correct ? "text-emerald-600" : "text-red-500",
       );
     }
+    if (this.hasNoteTarget) this.noteTarget.hidden = false;
     this.dispatch("done", { detail: { correct } });
   }
 }

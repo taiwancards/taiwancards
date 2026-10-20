@@ -20,7 +20,7 @@
     span<> = t("course.exam_disclaimer")
     = link_to t("course.exam_disclaimer_link"), mock_exams_path, class: "underline"
 
-  = render("course/exercises", exercises: @stage.exam, url: course_exam_done_path(@stage), heading: t("course.exam_tasks"))
+  = render("course/exercises", exercises: @stage.exam, url: course_exam_done_path(@stage), heading: t("course.exam_tasks"), explainer: @explainer)
 
   nav.text-sm
     = link_to t("course.details"), course_progress_path, class: "text-muted-foreground hover:text-foreground"

@@ -20,6 +20,7 @@ export default class extends Controller {
     if (this.hasTallyTarget) {
       this.tallyTarget.textContent = `${this.correct} / ${this.totalValue}`;
     }
-    if (this.hasScoreTarget) this.scoreTarget.value = this.correct;
+    if (this.hasScoreTarget)
+      this.scoreTarget.value = this.answered ? this.correct : "";
   }
 }

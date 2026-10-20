@@ -12,6 +12,7 @@ class WritingController < ApplicationController
     @target = @lexeme && Huayu::WritingTarget.new(@lexeme)
     @chars = @target ? @target.chars : []
     @advance_url = writing_path(next_params(advance: 1))
+    @first_time = @lexeme.present? && first_time?(@lexeme)
   end
 
   def grade
@@ -32,6 +33,10 @@ class WritingController < ApplicationController
   end
 
   private
+
+  def first_time?(lexeme)
+    !LexemeMemory.owned_by(current_user).exists?(lexeme:, facet: LexemeMemory.facets[:writing])
+  end
 
   def load_scope
     @collection = Collection.where(user_id: [nil, current_user&.id]).find_by(id: params[:collection_id])

@@ -1,22 +1,22 @@
-- translated = lines.any? { |_line, _tokens, translation, _speaker| translation.present? }
+- translated = lines.any? { |_line, _tokens, translation| translation.present? }
+- annotated = lines.any? { |_line, _tokens, _translation, _speaker, grammar| grammar.present? }
 - readings = sentence_readings(lines.map(&:first).compact_blank) if show_pinyin?
 
 .space-y-3[
-  data-controller="analyzer translations" data-analyzer-activate-url-value=reader_activate_path
+  data-controller="analyzer layers" data-analyzer-activate-url-value=reader_activate_path
   data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
 
-  - if translated
-    .flex.justify-end
-      button.rounded-lg.border.border-border.px-3.py-1.text-xs.font-medium.text-muted-foreground[
-        type="button" data-action="translations#toggle" data-translations-target="button"
-        data-show-label=t("reader.show_translation") data-hide-label=t("reader.hide_translation")
-        class="hover:bg-muted hover:text-foreground" ]
-        = t("reader.show_translation")
+  - if translated || annotated
+    .flex.justify-end.gap-2
+      - if annotated
+        = render("shared/layer_button", layer: "grammar")
+      - if translated
+        = render("shared/layer_button", layer: "translation")
 
   .grid.items-start.gap-4 class="lg:grid-cols-[minmax(0,1fr)_17rem]"
     .rounded-2xl.border.border-border.bg-card.p-5
       .space-y-3 class=text_flow_class
-        - lines.each do |line, tokens, translation, speaker|
+        - lines.each do |line, tokens, translation, speaker, grammar|
           - next if line.blank?
           p.text-2xl lang="zh-TW"
             - if speaker.present?
@@ -42,9 +42,9 @@
           - if show_pinyin? && (reading = readings&.dig(line)) && reading.pinyin.present?
             .py-line lang="zh-Latn" = reading.pinyin
           - if translation.present?
-            p.hidden.text-sm.leading-relaxed.text-muted-foreground[
-              lang=I18n.locale data-translations-target="line" ]
-              = translation
+            p.layer-translation.text-sm.leading-relaxed.text-muted-foreground lang=I18n.locale = translation
+          - if grammar.present?
+            = render("shared/grammar_chips", lessons: grammar)
 
     aside.hidden.rounded-xl.border.border-border.bg-card.p-4[
       class="lg:sticky lg:top-40 lg:block" data-analyzer-target="panel" ]

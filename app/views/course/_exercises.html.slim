@@ -1,6 +1,8 @@
 - exercises = local_assigns.fetch(:exercises)
-- url = local_assigns.fetch(:url)
+- url = local_assigns[:url]
 - heading = local_assigns.fetch(:heading, t("course.exercises"))
+- explainer = local_assigns[:explainer]
+- score_form = local_assigns[:score_form]
 - option_classes = "w-full rounded-lg border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
 
 section.space-y-3 data-controller="course-quiz" data-course-quiz-total-value=exercises.size
@@ -56,8 +58,13 @@ section.space-y-3 data-controller="course-quiz" data-course-quiz-total-value=exe
                 span lang=option_lang = exercise.option_text(option, I18n.locale)
 
         p.text-sm data-course-task-target="feedback"
+        - if (note = explainer&.call(exercise, I18n.locale))
+          = render("course/task_note", note:)
 
-  = form_with url: url, method: :post, class: "flex flex-wrap items-center gap-3" do |form|
-    = form.hidden_field :score, value: 0, data: {course_quiz_target: "score"}
-    = form.submit t("course.save_progress"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
-    span.text-xs.text-muted-foreground = t("course.save_hint")
+  - if url
+    = form_with url: url, method: :post, class: "flex flex-wrap items-center gap-3" do |form|
+      = form.hidden_field :score, value: 0, data: {course_quiz_target: "score"}
+      = form.submit t("course.save_progress"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+      span.text-xs.text-muted-foreground = t("course.save_hint")
+  - elsif score_form
+    input type="hidden" name="score" value="" form=score_form data-course-quiz-target="score"

@@ -23,6 +23,7 @@ class CourseController < ApplicationController
     @completion = progress.completions[@lesson.slug]
     @slice = progress.slice_for(@lesson.stage)
     @previous, @next = Huayu::CourseLessons.neighbors(@lesson)
+    @explainer = Huayu::CourseExplainer.new([@lesson])
   end
 
   def progress_report
@@ -37,6 +38,7 @@ class CourseController < ApplicationController
     @slice = progress.slice_for(@stage.slug)
     @completion = progress.completions[exam_slug]
     @lessons = Huayu::CourseLessons.by_stage[@stage.slug].to_a
+    @explainer = Huayu::CourseExplainer.new(@lessons)
   end
 
   def complete
@@ -107,12 +109,13 @@ class CourseController < ApplicationController
   def annotated_lines
     tokens = Huayu::TextAnalyzer.new(locale: I18n.locale).analyze_lines(@lesson.lines.map(&:zh))
     @lesson.lines.each_with_index.map do |line, index|
-      [line.zh, tokens[index] || [], line.translation(I18n.locale), line.who]
+      grammar = line.grammar.filter_map { |slug| Huayu::GrammarLessons.find(slug) }
+      [line.zh, tokens[index] || [], line.translation(I18n.locale), line.who, grammar]
     end
   end
 
   def known_lexeme_ids(lines)
-    ids = lines.flat_map { |_line, tokens, _translation, _who| tokens.filter_map { |token| token.lexeme&.id } }.uniq
+    ids = lines.flat_map { |_line, tokens| tokens.filter_map { |token| token.lexeme&.id } }.uniq
     return Set.new if ids.empty?
 
     LexemeMemory.owned_by(current_user).active.where(lexeme_id: ids).pluck(:lexeme_id).to_set

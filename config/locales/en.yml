@@ -342,6 +342,7 @@ en:
       metro: "Metro"
       calendar: "Calendar"
       medicine: "Medicine"
+      culture: "Culture"
       games: "Games"
       profile: "Profile"
       progress: "Progress"
@@ -421,6 +422,7 @@ en:
     metro: Taipei metro
     calendar: Festivals & calendar
     medicine: Medicine & hospitals
+    culture: Taiwan culture notes
     games: Board games
     sounds_drill: Zhuyin ↔ pinyin
     group_learn: My study
@@ -490,6 +492,7 @@ en:
       metro: "The Taipei metro map, every station with its meaning and reading."
       calendar: "The lunar calendar, festivals, seasonal words and two date converters."
       medicine: "How to make yourself understood at the pharmacy and the hospital."
+      culture: "Short notes on how life in Taiwan works, from shift rosters to receipts and festivals."
       games: "Board games in Taiwanese Mandarin — the terms, the rules, the table talk."
       profile: "Locale, zhuyin position, mobile tabs, level, export and backup."
       progress: "The summary, review history, memory strength by facet, and the leech list."
@@ -539,6 +542,7 @@ en:
     no_summary: No summary for this lesson.
     play_audio: Play audio
   course:
+    why_grammar: Grammar
     title: Course
     lede: "A lesson-by-lesson path from your first hello to TOCFL Band B. Every lesson has a text from real life in Taipei and New Taipei, the words behind it, the grammar it runs on, a note on what people say on the street versus what the exam wants, and drills that mark themselves."
     empty: The course has not been loaded yet.
@@ -730,6 +734,7 @@ en:
       grammar: Grammar
       graded: Reading
       phrases: Phrases
+      culture: Culture
       pronunciation: Pronunciation
     grammar:
       body: A short lesson at %{level}, where your cards are now.
@@ -737,6 +742,8 @@ en:
       body: A short story within the words you already know.
     phrases:
       body: What people in Taiwan actually say in this situation.
+    culture:
+      body: Two minutes on how something in daily life in Taiwan really works.
     pronunciation:
       title: Say a few words aloud
       body: A minute at the microphone shows how your tones land.
@@ -1793,6 +1800,7 @@ en:
       hint: That address looks like a typo. The dictionary covers the core of Taiwanese Mandarin — check the spelling and try again.
       home: Go home
   sentences:
+    in_grammar: In the grammar lessons
     back: Back to sentences
     browse: Browse sentences
     missing_title: No such sentence
@@ -2515,6 +2523,9 @@ en:
       "3": 3rd · dipping ˇ
       "4": 4th · falling ˋ
       "5": neutral ·
+  layers:
+    translation: Translation
+    grammar: Grammar
   graded:
     title: Graded TW Reader
     lede: Short stories written for a fixed vocabulary ceiling. Everything above the ceiling is footnoted, so you can read a whole text without a dictionary.
@@ -2524,10 +2535,24 @@ en:
     tier_hint: "%{count} texts"
     coverage: "%{percent}% inside the tier"
     size: "%{lines} sentences · %{chars} characters"
-    show_translation: Translation
     notes: Above the tier
     notes_hint: These items are outside this tier's ceiling. Tap one to open the dictionary.
     panel_empty: Tap any word in the text — its card will appear here.
+    quiz: Check yourself
+    texts_in_tier: Texts at this level
+    read: Read
+    read_with_score: "Read · %{score}/%{total}"
+    up_next: Up next
+    shelf_done: That was the last text in the reader.
+    sign_in: Sign in
+    sign_in_hint_html: "%{link} to keep track of what you have read."
+    done_next: Done, next text
+    done: Mark as read
+    next: Next text
+    saved: Marked as read.
+    continue: Continue reading
+    your_level: Your level
+    tier_progress: "%{read} of %{total} read"
     tiers:
       chars150: First 150 characters
       chars300: First 300 characters
@@ -2667,6 +2692,15 @@ en:
     shaky: Written, with a few misses
     revealed: Revealed — study it
     hint: Draw each character in the right stroke order. Green when a character is complete.
+    stages:
+      label: Learning a new character
+      watch: Watch
+      trace: Trace
+      recall: From memory
+      replay: Play again
+      to_trace: Now trace it
+      watch_note: A new character. Watch the stroke order first, then trace it over the outline.
+      trace_note: Trace over the grey outline, stroke by stroke. A hint appears after one miss, and nothing here counts yet.
   handwriting:
     title: Handwriting
     subtitle: Draw a traditional character stroke by stroke — it's recognized offline and linked to the dictionary.
@@ -3204,6 +3238,19 @@ en:
           Edit your name, and export your whole progress to a file. After rebuilding the database you import
           it back and pick up exactly where you left off.
   phrases:
+    dialogue:
+      kicker: Play the scene
+      open: Play the scene
+      open_hint: A short exchange where you pick what to say, and learn why.
+      hint: Pick what you would say. Each choice explains itself.
+      goal: "Your turn:"
+      choose: What do you say?
+      you: You
+      next: Continue
+      score: "%{right} of %{total} right the first time"
+      done: Every choice in the scene is explained, so a second run goes faster.
+      again: Play again
+      back: Phrases of this scene
     title: "Taiwan phrasebook"
     intro: "Patterns Taiwanese people actually say, with the half you have to understand: what the staff says back."
     empty: No phrases here yet.
@@ -3494,6 +3541,12 @@ en:
       one: 1 station
       other: "%{count} stations"
     attribution: Map drawn from open station coordinates — OpenStreetMap contributors, and station data published by Taipei Rapid Transit Corporation under Taiwan's Open Government Data License. Positions are real; hollow circles are interchanges. Branch lines are drawn as separate segments, so a gap in a color is a branch, not missing track.
+  culture:
+    title: Taiwan culture notes
+    lede: Sixty short notes from the course about how everyday life in Taiwan actually works. Each one belongs to a lesson, and the lessons go from first words to B1.
+    stages: Course stages
+    empty: No notes yet.
+    from_lesson: "Lesson %{number}"
   medicine:
     title: Medicine and hospitals
     hint: Tap any label on the pictures to see how the word is read.
@@ -3948,8 +4001,6 @@ en:
     level: Set your level
   reader:
     panel_empty: Tap any word in the text — its card will appear here.
-    show_translation: Show translation
-    hide_translation: Hide translation
     title: Reader
     new_text: Paste a text
     new_hint: >-

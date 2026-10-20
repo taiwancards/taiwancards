@@ -26,6 +26,25 @@ RSpec.describe "Course" do
     expect(response.body).to(include("/grammar/#{lesson.grammar.first.slug}"))
   end
 
+  it "tags the lesson text with its own grammar points" do
+    tagged = Huayu::CourseLessons.lessons.find { |entry| entry.lines.any? { |line| line.grammar.any? } }
+
+    get("/course/#{tagged.slug}")
+
+    expect(response.body).to(include("data-layer=\"grammar\""))
+    expect(Nokogiri::HTML(response.body).css(".layer-grammar a").map { |link| link["href"] }).to(
+      include("/en/grammar/#{tagged.lines.flat_map(&:grammar).first}")
+    )
+  end
+
+  it "keeps an explanation hidden behind every task it can explain" do
+    get("/course/#{lesson.slug}")
+
+    notes = Nokogiri::HTML(response.body).css("[data-course-task-target='note']")
+    expect(notes).not_to(be_empty)
+    expect(notes).to(all(satisfy { |note| note.key?("hidden") }))
+  end
+
   it "shows the Russian side on the Russian page" do
     get("/ru/course/#{lesson.slug}")
 

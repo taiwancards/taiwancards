@@ -30,6 +30,7 @@ module Site
       /phrases
       /notices
       /medicine
+      /culture
       /games
       /calendar
       /metro

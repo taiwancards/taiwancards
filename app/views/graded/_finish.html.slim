@@ -1,0 +1,27 @@
+- text = local_assigns.fetch(:text)
+- following = local_assigns.fetch(:following)
+- shelf = local_assigns.fetch(:shelf)
+- next_path = following ? graded_text_path(tier: following.tier, id: following.id) : graded_path
+
+section.flex.flex-col.gap-3.rounded-xl.border.border-border.bg-card.p-4 class="sm:flex-row sm:items-center sm:justify-between"
+  .min-w-0.space-y-0.5
+    - if following
+      p.text-xs.text-muted-foreground = t("graded.up_next")
+      p.truncate.text-sm.font-medium
+        span lang="zh-TW" = following.zh
+        span.text-muted-foreground = " · #{following.title(I18n.locale)}"
+    - else
+      p.text-sm.font-medium = t("graded.shelf_done")
+    - if shelf.nil?
+      p.text-xs.text-muted-foreground
+        = t("graded.sign_in_hint_html", link: link_to(t("graded.sign_in"), login_path, class: "font-medium text-primary underline underline-offset-2"))
+
+  - if shelf
+    = form_with url: graded_text_done_path(tier: text.tier, id: text.id), method: :post, id: graded_finish_form, class: "shrink-0" do
+      button.inline-flex.min-h-11.w-full.items-center.justify-center.gap-2.rounded-lg.bg-primary.px-4.text-sm.font-semibold.text-primary-foreground.transition-opacity[
+        type="submit" class="hover:opacity-90 sm:w-auto" ]
+        = icon(:check, css: "size-4", stroke: 2.2)
+        = following ? t("graded.done_next") : t("graded.done")
+  - else
+    = link_to next_path, class: "inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted" do
+      = following ? t("graded.next") : t("graded.back")

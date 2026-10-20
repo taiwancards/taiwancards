@@ -13,7 +13,16 @@ class PhrasesController < ApplicationController
     @slots = slots_for(@patterns)
     @lexicon = Phrases::Lexicon.new(@patterns, user: current_user).call
     @counts = Huayu::TaiwanPhrases.counts
+    @dialogue = Huayu::TaiwanPhrases.dialogue(@scene&.id)
     current_user&.record_practice_run!(:phrases)
+  end
+
+  def dialogue
+    @scene = Huayu::TaiwanPhrases.scene(params[:scene])
+    @dialogue = Huayu::TaiwanPhrases.dialogue(params[:scene])
+    return redirect_to(phrases_path) if @scene.nil? || @dialogue.nil?
+
+    @readings = Huayu::SentenceReadings.new(analyzer: Huayu::TextAnalyzer.new).call(@dialogue.chinese)
   end
 
   private

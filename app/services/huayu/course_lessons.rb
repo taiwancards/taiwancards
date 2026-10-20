@@ -10,7 +10,7 @@ module Huayu
 
     Localized = LessonData::Localized
 
-    Line = Data.define(:who, :zh, :en, :ru, :zhuyin, :pinyin) do
+    Line = Data.define(:who, :zh, :en, :ru, :zhuyin, :pinyin, :grammar) do
       include Localized
 
       def translation(locale) = locale.to_s == "ru" ? ru : en
@@ -51,6 +51,8 @@ module Huayu
         option.is_a?(Hash) ? pick(option, locale) : option
       end
 
+      def right_option = Array(options)[answer.to_i]
+
       def payload(locale)
         {
           kind: kind,
@@ -90,11 +92,15 @@ module Huayu
 
       def culture_for(locale) = pick(culture, locale)
 
+      def culture? = culture.values.any? { |note| note.is_a?(Hash) && note["title"].present? && note["body"].present? }
+
       def dialogue? = kind == "dialogue"
 
       def body = lines.map(&:zh).join("\n")
 
       def words = vocabulary.map(&:zh)
+
+      def grammar_ref(slug) = grammar.find { |ref| ref.slug == slug }
 
       def exercise_payload(locale) = exercises.map { |exercise| exercise.payload(locale) }
     end
@@ -178,7 +184,8 @@ module Huayu
             en: line["en"],
             ru: line["ru"],
             zhuyin: line["zhuyin"],
-            pinyin: line["pinyin"]
+            pinyin: line["pinyin"],
+            grammar: Array(line["grammar"]).freeze
           )
         end
       end

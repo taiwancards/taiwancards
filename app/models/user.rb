@@ -28,6 +28,7 @@ class User < ApplicationRecord
   has_many :mail_events, dependent: :nullify
   has_many :mail_links, dependent: :delete_all
   has_many :course_completions, dependent: :delete_all
+  has_many :graded_completions, dependent: :delete_all
   has_many :placement_tests, dependent: :destroy
   has_many :study_plans, dependent: :destroy
   has_one :voice_profile, dependent: :destroy

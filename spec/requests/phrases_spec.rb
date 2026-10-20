@@ -62,4 +62,33 @@ RSpec.describe "Phrases" do
     expect { get(phrases_path) }
       .to(change { @authenticated_user.reload.practice_runs["phrases"].to_i }.from(0).to(1))
   end
+
+  describe "playing a scene" do
+    let(:dialogue) { Huayu::TaiwanPhrases.dialogue("store") }
+
+    it "links the scene to its dialogue" do
+      get(phrases_path(scene: "store"))
+
+      expect(response.body).to(include(phrase_dialogue_path(scene: "store")))
+    end
+
+    it "lays out every step with its readings, hiding all but the first", :no_auth do
+      get(phrase_dialogue_path(scene: "store"))
+
+      page = Nokogiri::HTML(response.body)
+      steps = page.css("[data-dialogue-target='step']")
+      expect(steps.size).to(eq(dialogue.steps.size))
+      expect(steps.first["hidden"]).to(be_nil)
+      expect(steps.drop(1)).to(all(satisfy { |step| step.key?("hidden") }))
+      expect(page.css("[data-dialogue-target='choice']").size).to(eq(dialogue.steps.sum { |step| step.choices.size }))
+      expect(page.css(".zy-line")).not_to(be_empty)
+      expect(response.headers["Cache-Control"]).to(include("public"))
+    end
+
+    it "sends an unknown scene back to the phrasebook" do
+      get(phrase_dialogue_path(scene: "nowhere"))
+
+      expect(response).to(redirect_to(phrases_path))
+    end
+  end
 end

@@ -1,0 +1,72 @@
+- content_for(:title, "#{@dialogue.title(I18n.locale)} · #{t("phrases.title")}")
+- partner = @dialogue.partner
+
+.mx-auto.max-w-2xl.space-y-5.py-6[
+  data-controller="layers dialogue"
+  data-dialogue-score-value=t("phrases.dialogue.score", right: "%{right}", total: "%{total}") ]
+
+  = link_to phrases_path(scene: @scene.id), class: "inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-foreground md:min-h-0" do
+    span aria-hidden="true" ←
+    span lang="zh-TW" = @scene.zh
+    span = "· #{@scene.name(I18n.locale)}"
+
+  header.space-y-2
+    p.text-xs.font-medium.uppercase.tracking-wide.text-primary = t("phrases.dialogue.kicker")
+    h1.text-2xl.font-bold.tracking-tight = @dialogue.title(I18n.locale)
+    p.text-sm.leading-relaxed.text-muted-foreground = @dialogue.setting(I18n.locale)
+
+  .flex.items-center.justify-between.gap-3
+    p.text-xs.text-muted-foreground = t("phrases.dialogue.hint")
+    = render("shared/layer_button", layer: "translation")
+
+  ol.space-y-4
+    - @dialogue.steps.each_with_index do |step, index|
+      li.space-y-3 data-dialogue-target="step" data-choice=step.choice?.to_s hidden=index.positive?
+        - if step.says
+          .flex.items-start.gap-2
+            span.flex.size-9.shrink-0.items-center.justify-center.rounded-full.bg-muted.text-sm.font-medium[
+              lang="zh-TW" title=partner.name(I18n.locale) aria-hidden="true" ]
+              = partner.zh.first
+            .min-w-0.space-y-1.rounded-2xl.rounded-tl-sm.bg-muted.px-4.py-2 class="max-w-[85%]"
+              p.text-2xs.text-muted-foreground
+                span lang="zh-TW" = partner.zh
+                span = " · #{partner.name(I18n.locale)}"
+              = render("phrases/dialogue_line", zh: step.says.zh, reading: @readings[step.says.zh], gloss: step.says.name(I18n.locale), size: "text-xl")
+
+        - if (goal = step.goal_for(I18n.locale))
+          p.rounded-xl.border.border-dashed.border-border.px-4.py-3.text-sm
+            span.font-medium = t("phrases.dialogue.goal")
+            = " #{goal}"
+
+        - if step.choice?
+          .space-y-2 role="group" aria-label=t("phrases.dialogue.choose")
+            p.text-xs.font-medium.text-muted-foreground = t("phrases.dialogue.choose")
+            - step.choices.each_with_index do |choice, slot|
+              button.block.w-full.min-h-11.space-y-0.5.rounded-xl.border.border-border.bg-card.px-4.py-2.text-left.transition-colors[
+                type="button" data-dialogue-target="choice" data-slot=slot data-correct=choice.correct?.to_s
+                data-action="dialogue#choose" class="hover:bg-muted" ]
+                = render("phrases/dialogue_line", zh: choice.zh, reading: @readings[choice.zh], gloss: choice.name(I18n.locale), size: "text-lg")
+            - step.choices.each_with_index do |choice, slot|
+              - explanation = choice.correct? ? choice.note_for(I18n.locale) : choice.why_for(I18n.locale)
+              - if explanation.present?
+                p.rounded-lg.border-l-2.px-3.py-2.text-sm.leading-relaxed[
+                  data-dialogue-target="explanation" data-slot=slot hidden=true
+                  class=(choice.correct? ? "border-emerald-500 bg-emerald-500/10" : "border-amber-500 bg-amber-500/10") ]
+                  = explanation
+            - right = step.choices.find(&:correct?)
+            .flex.justify-end data-dialogue-target="reply" hidden=true
+              .min-w-0.space-y-1.rounded-2xl.rounded-tr-sm.bg-primary.px-4.py-2.text-primary-foreground class="max-w-[85%]"
+                p.text-2xs.opacity-80 = t("phrases.dialogue.you")
+                p.text-xl lang="zh-TW" = right.zh
+                p.layer-translation.text-sm.opacity-90 = right.name(I18n.locale)
+            .flex.justify-end data-dialogue-target="next" hidden=true
+              button.inline-flex.min-h-11.items-center.rounded-lg.bg-primary.px-5.text-sm.font-semibold.text-primary-foreground[
+                type="button" data-action="dialogue#next" class="hover:opacity-90" ]
+                = t("phrases.dialogue.next")
+
+  section.space-y-3.rounded-xl.border.border-border.bg-card.p-4.text-center data-dialogue-target="summary" hidden=true
+    p.text-lg.font-semibold data-dialogue-target="result"
+    p.text-sm.text-muted-foreground = t("phrases.dialogue.done")
+    .flex.flex-wrap.justify-center.gap-2
+      = link_to t("phrases.dialogue.again"), phrase_dialogue_path(scene: @scene.id), class: "inline-flex min-h-11 items-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted"
+      = link_to t("phrases.dialogue.back"), phrases_path(scene: @scene.id), class: "inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"

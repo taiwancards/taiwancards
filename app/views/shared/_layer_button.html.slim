@@ -1,0 +1,6 @@
+- layer = local_assigns.fetch(:layer)
+
+button.inline-flex.min-h-11.items-center.rounded-lg.border.border-border.px-3.text-xs.font-medium.text-muted-foreground.transition-colors[
+  type="button" aria-pressed="false" data-layers-target="button" data-layer=layer
+  data-action="layers#toggle" class="md:min-h-8 hover:bg-muted" ]
+  = t("layers.#{layer}")

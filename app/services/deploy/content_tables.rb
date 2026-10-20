@@ -50,6 +50,7 @@ module Deploy
       collection_groups
       collection_group_items
       course_completions
+      graded_completions
       deck_shares
     ]
       .freeze

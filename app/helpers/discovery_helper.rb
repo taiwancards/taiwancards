@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 module DiscoveryHelper
-  DISCOVERY_ICONS = {"grammar" => :book, "graded" => :book, "phrases" => :sentences, "pronunciation" => :microphone}.freeze
+  DISCOVERY_ICONS = {
+    "grammar" => :book,
+    "graded" => :book,
+    "phrases" => :sentences,
+    "culture" => :book,
+    "pronunciation" => :microphone
+  }.freeze
 
   def discovery_icon(suggestion) = DISCOVERY_ICONS.fetch(suggestion.kind)
 
@@ -13,6 +19,8 @@ module DiscoveryHelper
       graded_text_path(tier: suggestion.subject.tier, id: suggestion.subject.id)
     when "phrases"
       phrases_path(scene: suggestion.subject.id)
+    when "culture"
+      culture_path(anchor: suggestion.subject.slug)
     else
       pronunciation_path
     end
@@ -27,6 +35,8 @@ module DiscoveryHelper
       "#{subject.titles["zh"]} · #{subject.titles[I18n.locale.to_s] || subject.titles["en"]}"
     when "phrases"
       "#{subject.zh} · #{subject.name(I18n.locale)}"
+    when "culture"
+      subject.culture_for(I18n.locale)["title"]
     else
       t("discovery.pronunciation.title")
     end
@@ -40,6 +50,8 @@ module DiscoveryHelper
       t("discovery.graded.body")
     when "phrases"
       t("discovery.phrases.body")
+    when "culture"
+      t("discovery.culture.body")
     else
       t("discovery.pronunciation.body")
     end

@@ -8,8 +8,10 @@ module Graded
       def name(locale) = names[locale.to_s].presence || names["en"]
     end
 
-    Line = Data.define(:zh, :names) do
+    Line = Data.define(:zh, :names, :grammar) do
       def name(locale) = names[locale.to_s].presence || names["en"]
+
+      def grammar_lessons = grammar.filter_map { |slug| Huayu::GrammarLessons.find(slug) }
     end
 
     Text = Data.define(:id, :tier, :topic, :titles, :lines, :notes) do
@@ -35,6 +37,12 @@ module Graded
 
       def all = Levels.ids.flat_map { |id| texts(id) }
 
+      def following(text)
+        shelf = all
+        position = shelf.index(text)
+        position && shelf[position + 1]
+      end
+
       def reset! = @payload = nil
 
       private
@@ -50,13 +58,17 @@ module Graded
         JSON.parse(path.read).fetch("texts", []).map { |raw| build(tier, raw) }
       end
 
+      def build_line(raw)
+        Line.new(zh: raw.fetch("zh"), names: raw.slice("en", "ru"), grammar: Array(raw["grammar"]).freeze)
+      end
+
       def build(tier, raw)
         Text.new(
           id: raw.fetch("id"),
           tier: tier,
           topic: raw["topic"].to_s,
           titles: raw.fetch("title", {}),
-          lines: raw.fetch("lines", []).map { |line| Line.new(zh: line.fetch("zh"), names: line.slice("en", "ru")) },
+          lines: raw.fetch("lines", []).map { |line| build_line(line) },
           notes: raw.fetch("notes", []).map { |note| Note.new(zh: note.fetch("zh"), names: note.slice("en", "ru")) }
         )
       end

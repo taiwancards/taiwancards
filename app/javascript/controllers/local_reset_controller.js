@@ -8,9 +8,16 @@ const KEYS = [
   "cangjie.progress",
 ];
 
+const PREFIXES = ["layers."];
+
 export default class extends Controller {
   connect() {
-    KEYS.forEach((key) => localStorage.removeItem(key));
+    try {
+      KEYS.forEach((key) => localStorage.removeItem(key));
+      Object.keys(localStorage)
+        .filter((key) => PREFIXES.some((prefix) => key.startsWith(prefix)))
+        .forEach((key) => localStorage.removeItem(key));
+    } catch {}
     this.element.remove();
   }
 }

@@ -25,6 +25,11 @@
   - if detailed?
     = render("shared/register_mix", lexeme: @sentence)
 
+  - if @grammar.any?
+    section.space-y-2
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("sentences.in_grammar")
+      = render("shared/grammar_chips", lessons: @grammar, layered: false)
+
   section.space-y-2
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("sentences.by_word")
     .flex.flex-wrap.gap-2

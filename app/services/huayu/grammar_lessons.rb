@@ -83,6 +83,11 @@ module Huayu
         lessons.select { |lesson| matches?(lesson, needle) }.first(limit)
       end
 
+      def for_sentence(sentence)
+        index = payload[:by_sentence]
+        (index[sentence.public_id.to_s] + index[sentence.text.to_s]).uniq
+      end
+
       def for_form(text)
         form = text.to_s
         return [] if form.empty?
@@ -95,6 +100,14 @@ module Huayu
       def form_index(taught)
         taught.each_with_object(Hash.new { |memo, key| memo[key] = [] }) do |lesson, index|
           lesson.head.to_s.scan(/\p{Han}+/).uniq.each { |form| index[form] << lesson }
+        end
+      end
+
+      def sentence_index(taught)
+        taught.each_with_object(Hash.new { |memo, key| memo[key] = [] }) do |lesson, index|
+          lesson.examples.each do |example|
+            [example.sentence, example.zh].compact_blank.each { |key| index[key] |= [lesson] }
+          end
         end
       end
 
@@ -141,7 +154,8 @@ module Huayu
           taught: taught,
           levels: taught.group_by(&:level).freeze,
           by_slug: slug_index(lessons).merge(lessons.index_by { |lesson| lesson.id.to_s }).freeze,
-          by_form: form_index(taught).freeze
+          by_form: form_index(taught).freeze,
+          by_sentence: sentence_index(taught).tap { |index| index.default = [].freeze }.freeze
         }
       end
     end

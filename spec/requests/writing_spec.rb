@@ -16,6 +16,25 @@ RSpec.describe "Writing trainer" do
     expect(response.body).to(include("data-controller=\"writing-quiz\""))
   end
 
+  it "walks a new character through watch, trace and recall" do
+    lexeme = create(:lexeme, kind: :character, text: "學")
+
+    get("/writing", params: {lexeme_id: lexeme.id})
+
+    expect(response.body).to(include("data-writing-quiz-stage-value=\"watch\""))
+    expect(response.body).to(include("data-stage=\"trace\""))
+  end
+
+  it "goes straight to recall for a character already practised" do
+    lexeme = create(:lexeme, kind: :character, text: "學")
+    Lexemes::Activator.new(user: current_user).activate(lexeme, :writing)
+
+    get("/writing", params: {lexeme_id: lexeme.id})
+
+    expect(response.body).to(include("data-writing-quiz-stage-value=\"recall\""))
+    expect(response.body).not_to(include("data-stage=\"trace\""))
+  end
+
   it "says so when nothing in the queue can be written" do
     allow(Huayu::StrokeData).to(receive(:has?).and_return(false))
     create(:lexeme, kind: :character, text: "學")

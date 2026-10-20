@@ -8,7 +8,7 @@ RSpec.describe Reminders::Planner do
 
   def visit!(user, day) = UserDay.insert_all([{user_id: user.id, day:}])
 
-  def review!(user, at:, due_at: 1.day.ago)
+  def review!(user, at:, due_at: at + 1.day)
     word = create(:lexeme, kind: :word, text: "詞#{SecureRandom.hex(3)}")
     memory = LexemeMemory.create!(user:, lexeme: word, facet: :recognition, state: :review, due_at:, activated_at: at)
     LexemeReview.create!(user:, lexeme: word, lexeme_memory: memory, facet: :recognition, rating: 3, reviewed_at: at)
