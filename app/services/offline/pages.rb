@@ -61,9 +61,27 @@ module Offline
 
     def grammar
       lessons = Huayu::GrammarLessons.all
+      pairs = Huayu::WordPairs.lessons
       Result.new(
-        paths: [grammar_path, *lessons.map { |lesson| grammar_lesson_path(id: lesson.to_param) }],
-        entries: lessons.map { |lesson| lesson_entry(lesson) }
+        paths: [
+          grammar_path,
+          *lessons.map { |lesson| grammar_lesson_path(id: lesson.to_param) },
+          word_pairs_path,
+          *pairs.map { |pair| word_pair_path(id: pair.to_param) }
+        ],
+        entries: lessons.map { |lesson| lesson_entry(lesson) } + pairs.map { |pair| pair_entry(pair) }
+      )
+    end
+
+    def pair_entry(pair)
+      Entry.new(
+        text: pair.title,
+        zhuyin: "",
+        pinyin: "",
+        en: pair.gist(:en).to_s,
+        ru: pair.gist(:ru).to_s,
+        path: word_pair_path(id: pair.to_param),
+        kind: "grammar"
       )
     end
 

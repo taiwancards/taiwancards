@@ -23,6 +23,11 @@ module Huayu
         index[text]
       end
 
+      def by_clip(clip)
+        rows = payload
+        (@by_clip ||= rows.index_by(&:clip))[clip]
+      end
+
       def pool(max_level:)
         payload.select { |row| row.level <= max_level }
       end
@@ -45,6 +50,7 @@ module Huayu
         remove_instance_variable(:@payload) if defined?(@payload)
         @manifest = nil
         @index = nil
+        @by_clip = nil
       end
 
       private
@@ -55,6 +61,7 @@ module Huayu
 
         @manifest = manifest
         @index = nil
+        @by_clip = nil
         @payload = build(manifest).freeze
       end
 

@@ -18,6 +18,7 @@ module Site
       /tocfl
       /tbcl
       /grammar
+      /pairs
       /hanzi
       /cangjie
       /cangjie/lessons
@@ -25,6 +26,7 @@ module Site
       /syllables
       /practice/zhuyin
       /practice/numbers
+      /practice/dictation
       /handwriting
       /everyday
       /phrases
@@ -149,7 +151,9 @@ module Site
       end
     end
 
-    def optional_pages = (Huayu::TaiwanNames.available? ? ["/names"] : []) + cangjie_paths
+    def optional_pages = (Huayu::TaiwanNames.available? ? ["/names"] : []) + cangjie_paths + pair_paths
+
+    def pair_paths = Huayu::WordPairs.lessons.map { |pair| "/pairs/#{pair.slug}" }
 
     def cangjie_paths
       Huayu::CangjieLessons.all.map { |lesson| "/cangjie/lessons/#{lesson.slug}" }

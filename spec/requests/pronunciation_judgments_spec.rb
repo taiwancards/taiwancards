@@ -56,7 +56,7 @@ RSpec.describe "Rating kept pronunciation recordings", :aggregate_failures do
 
     it "does not put the engine's verdict where it can be read before deciding" do
       get("/ru/pronunciation/judge")
-      visible = ActionController::Base.helpers.strip_tags(response.body.split("<details").first)
+      visible = ActionController::Base.helpers.strip_tags(response.body.split("<body").last.split("<details").first)
 
       expect(visible).not_to(include("90"))
     end

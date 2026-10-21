@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { applyAudioRate } from "lib/audio_rate";
 
 export default class extends Controller {
   static values = { templates: Object, voice: String };
@@ -31,6 +32,7 @@ export default class extends Controller {
 
     this.halt();
     this.sound = new Audio(template.replace("%s", key));
+    applyAudioRate(this.sound);
     this.sound.play().catch(() => {});
   }
 

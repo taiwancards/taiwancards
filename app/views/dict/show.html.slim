@@ -28,6 +28,10 @@
           = link_to target, class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
             span lang="zh-TW" 語法
             span = t("grammar.as_grammar_point")
+        - Huayu::WordPairs.for_word(lexeme.text).each do |pair|
+          = link_to word_pair_path(pair), class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
+            span lang="zh-TW" = pair.title
+            span = t("word_pairs.as_pair")
         - if lexeme.data["chengyu"]
           = link_to chengyu_path, class: "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary hover:bg-primary/20" do
             span lang="zh-TW" 成語

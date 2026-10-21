@@ -1,0 +1,77 @@
+- content_for(:title) { t("dictation.title") }
+- items = @items.map { |item| item.to_h.merge(hint: t("dictation.size", count: item.size)) }
+- pill = "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-sm font-medium transition-colors md:min-h-8 md:min-w-8"
+- action_button = "inline-flex min-h-11 items-center justify-center rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-muted md:min-h-9"
+
+.py-6.space-y-6[
+  data-controller="dictation"
+  data-dictation-items-value=items.to_json
+  data-dictation-keys-value=Huayu::ZhuyinKeyboard::KEYS.to_json ]
+
+  div
+    = render("shared/page_help", key: "dictation", title: t("dictation.title"))
+
+  nav.flex.flex-wrap.items-center.gap-2 aria-label=t("dictation.level")
+    span.text-xs.font-medium.text-muted-foreground = t("dictation.level")
+    .inline-flex.flex-wrap.rounded-full.border.border-border.p-1
+      - Dictation::Round::LEVELS.each do |level|
+        = link_to level, practice_dictation_path(level:),
+          aria: {current: (level == @level ? "page" : nil)},
+          class: class_names(pill, level == @level ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground")
+
+  - if @items.empty?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("dictation.empty")
+  - else
+    section.space-y-4.rounded-2xl.border.border-border.bg-card.p-4 class="sm:p-6"
+      .flex.items-center.justify-between.gap-3.text-xs.text-muted-foreground
+        span.tabular-nums data-dictation-target="progress"
+        span data-dictation-target="size"
+
+      .flex.items-center.justify-center.gap-3
+        button.inline-flex.size-20.items-center.justify-center.rounded-full.border.border-border.text-muted-foreground.transition-colors[
+          type="button" data-controller="audio" data-audio-url-value=@items.first.url
+          data-action="click->audio#play" data-dictation-target="player"
+          aria-label=t("dictation.play") class="hover:bg-muted hover:text-foreground" ]
+          = icon(:speaker, css: "size-9")
+        = render("shared/prefs/audio_rate", class: "inline-flex size-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground")
+
+      = form_with url: practice_dictation_path, method: :post, class: "space-y-3",
+        data: {dictation_target: "form", action: "submit->dictation#guard"} do |form|
+        = hidden_field_tag :clip, @items.first.clip, id: nil, data: {dictation_target: "clip"}
+        = hidden_field_tag :last, nil, id: nil, data: {dictation_target: "last"}
+        label.sr-only for="dictation_answer" = t("dictation.answer")
+        input#dictation_answer.w-full.rounded-xl.border.border-border.bg-background.px-4.py-3.text-2xl[
+          class="placeholder:font-sans placeholder:text-base" type="text" name="answer" lang="zh-TW" autocomplete="off" autocorrect="off" autocapitalize="off"
+          spellcheck="false" enterkeyhint="done" placeholder=t("dictation.placeholder")
+          data-dictation-target="answer" data-action="keydown->dictation#type" ]
+        .flex.flex-wrap.items-center.gap-2
+          button.inline-flex.min-h-11.items-center.justify-center.rounded-lg.bg-primary.px-4.text-sm.font-semibold.text-primary-foreground[
+            type="submit" data-dictation-target="check" class="hover:opacity-90 md:min-h-9" ]
+            = t("dictation.check")
+          button[ type="button" class=action_button data-dictation-target="next" data-action="dictation#next" hidden=true ]
+            = t("dictation.next")
+          button[ type="button" class=action_button data-action="dictation#hint" ]
+            = t("dictation.show_translation")
+          button[ type="button" class=action_button lang="zh-TW" aria-pressed="false"
+            title=t("dictation.keyboard_hint") data-dictation-target="keyboardToggle" data-action="dictation#toggleKeyboard" ]
+            | ㄅㄆㄇ
+
+      p.text-sm.text-muted-foreground data-dictation-target="translation" hidden=true
+
+      #dictation_result data-dictation-target="result" aria-live="polite"
+
+      .space-y-3.rounded-xl.border.border-border.p-4.text-center data-dictation-target="summary" hidden=true
+        p.mx-auto.text-sm.text-muted-foreground = t("dictation.average")
+        p.mx-auto.text-4xl.font-bold.tabular-nums data-dictation-target="average"
+        = link_to t("dictation.again"), practice_dictation_path(level: @level), class: "inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+
+    .sticky.z-20.-mx-4.border-t.border-border.bg-background.pb-2.pt-2[
+      class="px-1 sm:px-4 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] md:static md:mx-0 md:border-0 md:bg-transparent md:p-0"
+      data-dictation-target="keyboard" hidden=true ]
+      = render("practice/zhuyin_keyboard", controller: "dictation", layout: @layout)
+
+  section.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("dictation.how_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("dictation.how_body")
+
+  = render("shared/roadmap_return")

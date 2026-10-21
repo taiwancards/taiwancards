@@ -352,6 +352,7 @@ en:
     radicals: Radicals
     today: Today
     typing: Zhuyin typing trainer
+    dictation: Dictation
     group_taiwan: Taiwan
     group_sounds: Sounds
     progress: Progress
@@ -366,6 +367,10 @@ en:
       Character face. On: kaishu, the calligraphic face that shows strokes the way a hand writes them. Off:
       a plain sans. On by default.
     readings_toggle: Zhuyin and pinyin
+    audio_rate_toggle: Audio speed
+    audio_rate_hint: >-
+      Playback speed, in three steps: normal, ¾ and ½. Slowing stretches the sound without changing its pitch, so the tones
+      stay where they are. It applies to every listen button until you change it.
     detail_toggle: How much a dictionary page shows
     detail_hint: >-
       How much a dictionary page shows. 詳 — everything we hold: rarity score, register mix, memory cards,
@@ -373,7 +378,7 @@ en:
       synonyms and antonyms, stroke practice, a handful of sentences. Starts at 簡 until you are past TOCFL
       Novice, then at 詳; after that it stays wherever you put it.
     script_setup_hint: >-
-      How the language is shown: face, pinyin, the Chinese word, how much a dictionary page shows — and the
+      How the language is shown: face, pinyin, audio speed, the Chinese word, how much a dictionary page shows — and the
       language you read the site in.
     china_toggle: Show the Chinese word
     china_hint: >-
@@ -408,6 +413,7 @@ en:
     tbcl: TBCL word lists
     grammar: Grammar
     chengyu: Idioms 成語
+    word_pairs: Confusable words
     dict: Words & phrases
     cangjie: Cangjie trainer
     cangjie_book: Cangjie
@@ -2048,6 +2054,58 @@ en:
       more: More syllables
       leave: Leave
       empty: The drill needs audio — it appears once the recordings are installed on the server.
+  dictation:
+    title: Dictation
+    level: Level
+    size:
+      one: "%{count} character"
+      other: "%{count} characters"
+    play: Listen
+    answer: What you heard
+    placeholder: Characters, pinyin or zhuyin
+    check: Check
+    next: Next
+    show_translation: Translation
+    keyboard_hint: Zhuyin on screen. Your own keyboard gives zhuyin with the same keys too.
+    average: Average for the round
+    again: Ten more
+    empty: No recordings at this level yet.
+    you_wrote: "You wrote:"
+    open_sentence: Study the sentence →
+    extra: Extra
+    marks:
+      exact: Right
+      no_tone: No tone
+      wrong_tone: Wrong tone
+      sound: Other character
+      missed: Missed
+    how_title: How it is scored
+    how_body: >-
+      Every syllable of the sentence is worth one point. The right character, or the syllable with the
+      right tone, earns the full point; a syllable without a tone earns three quarters, and one with the
+      wrong tone earns half. Another character with the same sound also earns half: your ear got it, the
+      slip was in the writing. A tone counts whether you write the dictionary form or the one you hear in
+      speech, so 你好 may be nǐ hǎo or ní hǎo. Write however suits you, even mixed: characters, pinyin
+      with tone marks or numbers, zhuyin. Extra syllables lower the score.
+  word_pairs:
+    title: Confusable words
+    lede: >-
+      Words nearly every learner of Mandarin mixes up: 會 and 能, 不 and 沒, 再 and 又. Each set has a short
+      rule, examples, the usual mistakes and exercises that explain every answer.
+    empty: No word sets loaded yet.
+    levels: Levels
+    level_title: Level %{level}
+    level_hint:
+      a1: the first months
+      a2: once you get by in simple sentences
+      b1: when you want to say it precisely
+    rule: The point
+    uses: Which one when
+    mistakes: Common mistakes
+    wrong: Wrong
+    right: Right
+    exercises: Exercises
+    as_pair: easily confused
   typing:
     modes:
       pinyin: From pinyin
@@ -2341,6 +2399,7 @@ en:
     runs:
       drill: runs of the sound drill
       typing: runs of zhuyin typing
+      dictation: dictation rounds
       open: Open →
     parts_nav: Sections of this page
     parts:
@@ -2509,6 +2568,8 @@ en:
       mismatch_more_body: "A pinyin reader is constantly making silent corrections: here o is really u, here a vowel is missing, here i is not a vowel at all, here u is really ü. Every one of those corrections is a place where a wrong pronunciation can set, and usually the learner never notices, because the spelling looks perfectly reasonable. Zhuyin asks for none of them: what is written is what is said."
     tones_title: Tones & sounds
     tones_card: Say syllables aloud and get tone-by-tone feedback until they're right.
+    dictation_title: Dictation
+    dictation_card: A native speaker's recording — write it down in characters, pinyin or zhuyin.
     progress_title: Practice progress
     progress_card: How your tones and sounds are coming along.
     progress_intro: Built from your speaking attempts — where your tones and sounds are strong, and what to work on.
@@ -3663,6 +3724,19 @@ en:
       out_of_range: Outside the covered range.
       bounds: Covers %{from} to %{to}. The table is taken from the Hong Kong Observatory's Gregorian-Lunar Calendar Conversion Table and every date in it was checked back against that source.
   page_help:
+    word_pairs_html: >-
+      <p>Pairs and trios of words that are easy to confuse because English uses one word for both: “can”
+      for 會, 能 and 可以, “not” for 不 and 沒, “again” for 再 and 又. First the rule, then examples for
+      each word, then the mistakes people make most.</p><p>The exercises at the bottom save nothing: answer,
+      and you see straight away why that is the right word. Dictionary pages of these words link to their
+      set.</p>
+    dictation_html: >-
+      <p>Listen to a real recording and write down what you hear. The voices are native speakers from
+      Taiwan, and the sentences are sorted by word level: 1 is the easiest.</p><p>Listen as often as you
+      need. If it is too fast, slow it down with the button next to it. Translation gives away the meaning
+      when you cannot make it out at all.</p><p>You can type zhuyin right here: switch on ㄅㄆㄇ and press
+      the keys of the Taiwanese layout or the buttons on screen. Tones are 6, 3, 4 and 7; the first tone is
+      left unmarked.</p>
     desk_html: >-
       <p>The home screen follows the mode you picked. <strong>TOCFL</strong> shows the countdown to the exam,
       readiness by level, a mock test and the level's grammar. <strong>Classes</strong> shows reviews of your

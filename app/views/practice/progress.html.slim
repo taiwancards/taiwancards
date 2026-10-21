@@ -9,7 +9,7 @@
     h2.text-lg.font-semibold = t("practice.drill_progress_title")
     p.text-sm.text-muted-foreground = t("practice.drill_progress_hint")
     .grid.gap-3 class="sm:grid-cols-2"
-      - {drill: practice_drill_path, typing: practice_typing_path}.each do |key, path|
+      - {drill: practice_drill_path, typing: practice_typing_path, dictation: practice_dictation_path}.each do |key, path|
         .rounded-xl.border.border-border.p-4
           .text-2xl.font-bold = @runs[key.to_s].to_i
           .mt-1.text-xs.text-muted-foreground = t("practice.runs.#{key}")

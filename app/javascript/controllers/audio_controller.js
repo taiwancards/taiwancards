@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { applyAudioRate } from "lib/audio_rate";
 
 const LEAD_IN_MS = 140;
 const STOP_GRACE_MS = 150;
@@ -39,6 +40,7 @@ export default class extends Controller {
     this.sound = new Audio(url);
     this.sound.preload = "auto";
     this.sound.currentTime = 0;
+    this.rate = applyAudioRate(this.sound);
 
     if (this.sound.readyState >= 3) return this.leadIn();
 
@@ -72,7 +74,10 @@ export default class extends Controller {
     };
     this.sound.addEventListener("timeupdate", this.watcher);
 
-    this.timer = setTimeout(() => this.halt(), stopMs + STOP_GRACE_MS);
+    this.timer = setTimeout(
+      () => this.halt(),
+      stopMs / (this.rate || 1) + STOP_GRACE_MS,
+    );
   }
 
   halt() {

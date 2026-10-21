@@ -86,6 +86,7 @@ module NavHelper
       [:keyboard, t("nav.cangjie_book"), cangjie_lessons_path],
       [:stats, t("nav.numbers"), practice_numbers_path],
       [:book, t("nav.grammar"), grammar_path],
+      [:book, t("nav.word_pairs"), word_pairs_path],
       [:characters, t("nav.variants"), variants_path],
       [:book, t("nav.names"), names_path]
     ]
@@ -99,6 +100,7 @@ module NavHelper
       [:stats, t("nav.pronunciation"), pronunciation_path],
       [:pencil, t("nav.writing"), writing_path],
       [:keyboard, t("nav.typing"), practice_typing_path],
+      [:speaker, t("nav.dictation"), practice_dictation_path],
       [:keyboard, t("nav.cangjie"), cangjie_path],
       [:stats, t("nav.mock"), mock_exams_path]
     ]

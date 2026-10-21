@@ -1,0 +1,71 @@
+- content_for(:title, "#{@pair.title} — #{t("word_pairs.title")}")
+- locale = I18n.locale
+- examples = @pair.uses.flat_map(&:examples).map(&:zh)
+- sentence_readings(examples)
+
+.py-6.space-y-8
+  nav.text-sm
+    = link_to "← #{t("word_pairs.title")}", word_pairs_path, class: "inline-flex min-h-11 items-center text-muted-foreground hover:text-foreground md:min-h-0"
+
+  header.space-y-3
+    .flex.flex-wrap.items-center.gap-3
+      h1.text-3xl.font-bold.tracking-tight lang="zh-TW" = @pair.title
+      span.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground = @pair.level
+    p.text-base.text-muted-foreground = @pair.gist(locale)
+
+  .grid.gap-3 class=pair_columns(@pair.words.size)
+    - @pair.words.each do |word|
+      = link_to dict_entry_path(text: word.zh), class: "flex min-w-0 items-start gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted" do
+        span.shrink-0.text-3xl.font-semibold = zhuyin_ruby(word.zh, word.zhuyin, context: :entry)
+        span.min-w-0.space-y-0.5
+          span.block.text-xs.text-muted-foreground.py-line lang="zh-Latn" = word.pinyin
+          span.block.text-sm.leading-snug = word.gloss(locale)
+
+  section.max-w-3xl.space-y-2
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("word_pairs.rule")
+    p.text-base.leading-relaxed = @pair.rule(locale)
+
+  section.space-y-4
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("word_pairs.uses")
+    .grid.gap-3 class=pair_columns(@pair.uses.size, wide: true)
+      - @pair.uses.each do |use|
+        article.min-w-0.space-y-3.rounded-xl.border.border-border.p-4
+          .flex.items-baseline.gap-2
+            span.text-2xl.font-semibold lang="zh-TW" = use.word
+            span.text-sm.text-muted-foreground = use.note(locale)
+          ul.space-y-3
+            - use.examples.each do |example|
+              li.space-y-0.5
+                p.text-lg lang="zh-TW" = example.zh
+                .text-xs.text-muted-foreground = reading_lines(example.zh)
+                p.text-sm = example.translation(locale)
+
+  - if @pair.mistakes.any?
+    section.space-y-3
+      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("word_pairs.mistakes")
+      ul.space-y-3
+        - @pair.mistakes.each do |mistake|
+          li.space-y-2.rounded-xl.border.border-border.p-4
+            .grid.gap-2 class="sm:grid-cols-2"
+              p.flex.items-baseline.gap-2
+                span.shrink-0.text-sm.font-semibold.text-red-600 aria-label=t("word_pairs.wrong") ✗
+                span.text-lg.text-muted-foreground.line-through lang="zh-TW" = mistake.wrong
+              p.flex.items-baseline.gap-2
+                span.shrink-0.text-sm.font-semibold.text-emerald-600 aria-label=t("word_pairs.right") ✓
+                span.text-lg lang="zh-TW" = mistake.right
+            p.text-sm.leading-relaxed.text-muted-foreground = mistake.note(locale)
+
+  = render("course/exercises", exercises: @pair.exercises, heading: t("word_pairs.exercises"),
+    explainer: ->(exercise, at) { @pair.explain(exercise, at) })
+
+  nav.flex.flex-wrap.items-center.justify-between.gap-3.border-t.border-border.pt-4.text-sm
+    - if @previous
+      = link_to word_pair_path(@previous), class: "inline-flex min-h-11 items-center gap-1 text-muted-foreground hover:text-foreground md:min-h-0" do
+        span ←
+        span lang="zh-TW" = @previous.title
+    - else
+      span
+    - if @next
+      = link_to word_pair_path(@next), class: "inline-flex min-h-11 items-center gap-1 text-muted-foreground hover:text-foreground md:min-h-0" do
+        span lang="zh-TW" = @next.title
+        span →

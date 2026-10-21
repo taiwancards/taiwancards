@@ -1,0 +1,26 @@
+- content_for(:title, t("word_pairs.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    = render("shared/page_help", key: "word_pairs", title: t("word_pairs.title"))
+    p.max-w-2xl.text-sm.leading-relaxed.text-muted-foreground = t("word_pairs.lede")
+
+  - if @levels.empty?
+    p.rounded-xl.border.border-border.p-4.text-sm.text-muted-foreground = t("word_pairs.empty")
+  - else
+    nav.flex.flex-wrap.gap-2 aria-label=t("word_pairs.levels")
+      - @levels.each do |level, pairs|
+        = link_to "##{level.downcase}", class: "inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border px-3 text-sm hover:bg-muted md:min-h-8" do
+          span.font-medium = level
+          span.text-xs.text-muted-foreground.tabular-nums = pairs.size
+
+    - @levels.each do |level, pairs|
+      section.space-y-3.scroll-mt-28 id=level.downcase
+        .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1
+          h2.text-lg.font-semibold = t("word_pairs.level_title", level:)
+          span.text-xs.text-muted-foreground = t("word_pairs.level_hint.#{level.downcase}")
+        .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+          - pairs.each do |pair|
+            = link_to word_pair_path(pair), class: "block min-w-0 space-y-1 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted" do
+              p.text-xl.font-semibold lang="zh-TW" = pair.title
+              p.text-sm.text-muted-foreground = pair.gist(I18n.locale)
