@@ -79,6 +79,11 @@ namespace(:huayu) do
     pp(Huayu::RuEnricher.new.call)
   end
 
+  desc("Apply the Vietnamese glosses of the dictionary and its senses from vi_glosses.json")
+  task(enrich_vi: :environment) do
+    pp(Huayu::ViGlossEnricher.new.call)
+  end
+
   desc("Backfill missing English + Russian glosses from the curated gloss_overrides.json (non-destructive)")
   task(enrich_gloss_overrides: :environment) do
     pp(Huayu::GlossOverrideEnricher.new.call)

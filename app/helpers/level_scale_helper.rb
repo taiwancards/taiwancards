@@ -18,9 +18,15 @@ module LevelScaleHelper
   def level_scale_meta(step)
     [
       "TBCL #{step.grade}",
-      t("onboarding.scale.hsk", level: step.hsk),
+      level_scale_hsk(step),
       t("onboarding.scale.items", count: step.items)
-    ].join(" · ")
+    ].compact.join(" · ")
+  end
+
+  def level_scale_equivalent(step) = level_scale_hsk(step) || "TBCL #{step.grade}"
+
+  def level_scale_hsk(step)
+    t("onboarding.scale.hsk", level: step.hsk) if Locales.compares_china?
   end
 
   private

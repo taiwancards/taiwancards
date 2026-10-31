@@ -22,7 +22,7 @@ CI.run do
     "RAILS_ENV=test bin/rails db:drop db:create db:schema:load db:abort_if_pending_migrations"
   )
   step("Database: every foreign key is indexed", "bin/rails db:health")
-  step("Locales: en and ru agree", "bin/rails i18n:check")
+  step("Locales: en, ru and vi agree", "bin/rails i18n:check")
 
   step("Boot: eager load the way production does", "#{AS_PRODUCTION} bin/rails zeitwerk:check")
   step(

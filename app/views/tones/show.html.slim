@@ -25,13 +25,15 @@
 
     .rounded-2xl.border.border-dashed.p-5.space-y-3 class="border-rose-500/45 bg-rose-500/[0.06]"
       .flex.flex-wrap.items-baseline.gap-2
-        h3.text-base.font-semibold class="text-rose-700/85" = t("tones.chart.beijing")
-        span.text-xs class="text-rose-700/70" = t("tones.chart.beijing_note")
-      .grid.gap-3 class="grid-cols-2 sm:grid-cols-4"
-        - %w[t1 t2 t3 t4].each do |key|
+        h3.text-base.font-semibold class="text-rose-700/85" = t("tones.chart.reference")
+        span.text-xs class="text-rose-700/70" = t("tones.chart.reference_note")
+      - reference = tone_reference
+      - contours = ToneChartHelper::CONTOURS.fetch(reference)
+      .grid.gap-3 class=(contours.size > 4 ? "grid-cols-3 sm:grid-cols-6" : "grid-cols-2 sm:grid-cols-4")
+        - contours.each do |key, contour|
           .rounded-xl.border.p-3.text-center class="border-rose-500/35 opacity-85 text-rose-600/85"
-            = tone_chart("beijing", key)
-            code.mt-1.inline-block.rounded.px-1.font-mono class="text-[0.8em] bg-rose-500/10" = ToneChartHelper::CONTOURS["beijing"][key][:label]
+            = tone_chart(reference, key)
+            code.mt-1.inline-block.rounded.px-1.font-mono class="text-[0.8em] bg-rose-500/10" = contour[:label]
 
     p.text-xs.text-muted-foreground = t("tones.chart.scale")
 

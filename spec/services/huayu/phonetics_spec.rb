@@ -10,10 +10,11 @@ RSpec.describe Huayu::Phonetics do
   it "carries a localized anchor and note on every initial and final" do
     (described_class.initials + described_class.finals).each do |row|
       expect(row["anchor"]).to(be_a(Hash), row["pinyin"])
-      expect(row["anchor"].keys).to(match_array(%w[en ru]), row["pinyin"])
-      expect(row["anchor"]["ru"]).to(be_present, row["pinyin"])
+      expect(row["anchor"].keys).to(match_array(Locales::ALL), row["pinyin"])
+      expect(row["anchor"].values).to(all(be_present), row["pinyin"])
       expect(row["note"]).to(be_a(Hash), row["pinyin"])
-      expect(row["note"].keys).to(match_array(%w[en ru]), row["pinyin"])
+      expect(row["note"].keys).to(match_array(Locales::ALL), row["pinyin"])
+      expect(row["vi"]).to(be_present, row["pinyin"])
     end
   end
 
@@ -24,6 +25,7 @@ RSpec.describe Huayu::Phonetics do
       expect(row).to(be_present, pinyin)
       expect(row["ru"]).to(match(/придых/), pinyin)
       expect(row["en"]).to(match(/aspirat/i), pinyin)
+      expect(row["vi"]).to(match(/bật hơi/), pinyin)
     end
   end
 

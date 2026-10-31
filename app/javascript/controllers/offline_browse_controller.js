@@ -133,7 +133,7 @@ export default class extends Controller {
     link.querySelector('[data-field="reading"]').textContent =
       row[1] || row[2] || "";
     link.querySelector('[data-field="gloss"]').textContent =
-      this.labelsValue.locale === "ru" ? row[4] : row[3];
+      { ru: row[4], vi: row[7] }[this.labelsValue.locale] || row[3];
 
     return node;
   }

@@ -10,8 +10,8 @@
       span.zhuyin.text-brand lang="zh-TW" = capital["zhuyin"]
     - if capital["pinyin"].present?
       span.pinyin.text-muted-foreground = capital["pinyin"]
-    - if capital.dig("meaning", I18n.locale.to_s).present?
-      span.text-muted-foreground = capital.dig("meaning", I18n.locale.to_s)
+    - if (capital_meaning = Locales.pick(capital["meaning"])).present?
+      span.text-muted-foreground = capital_meaning
 
 - if abbr.present? || full.present?
   .flex.flex-wrap.items-baseline.gap-x-2.gap-y-1
@@ -32,6 +32,6 @@
       - else
         span class=css
           = body
-    - note = (abbr && abbr.dig("note", I18n.locale.to_s)) || (full && full.dig("note", I18n.locale.to_s))
+    - note = Locales.pick(abbr&.dig("note")) || Locales.pick(full&.dig("note"))
     - if note.present?
       span.text-xs.text-muted-foreground = note

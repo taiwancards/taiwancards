@@ -62,6 +62,7 @@ module Offline
     end
 
     def render_locale(section, paths, locale)
+      paths = paths.select { |path| Locales.serves?(path, locale) }
       fragments, refused = pool.render(paths, locale) do |done|
         io.print("  #{section.id}: #{locale} #{done}/#{paths.size}\r")
       end

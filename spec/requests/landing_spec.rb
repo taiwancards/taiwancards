@@ -45,6 +45,12 @@ RSpec.describe "Landing page" do
     end
   end
 
+  it "keeps every outside variety and exam off the Vietnamese landing", :no_auth do
+    get("/vi")
+
+    expect(response.body).not_to(include("HSK", "Trung Quốc", "giản thể"))
+  end
+
   it "offers the visitor the other language as a plain link, needing no session", :no_auth do
     get("/en")
 

@@ -74,7 +74,7 @@ module Huayu
 
     def readings(entry) = {"pinyin" => entry["pinyin"], "zhuyin" => zhuyin_for(entry)}
 
-    def meanings(entry) = {"en" => entry["en"], "ru" => entry["ru"]}
+    def meanings(entry) = Locales::ALL.to_h { |code| [code, entry[code]] }
 
     def guarded?(text)
       existing = Lexeme.where(kind: Lexeme::DICTIONARY_KINDS, text:).order(:kind).first
@@ -109,12 +109,12 @@ module Huayu
       }
     end
 
-    def note(entry) = {"en" => entry["note_en"], "ru" => entry["note_ru"]}.compact_blank.presence
+    def note(entry) = Locales::ALL.to_h { |code| [code, entry["note_#{code}"]] }.compact_blank.presence
 
     def examples(entry)
       rows = entry["examples"].presence || [entry["example"]].compact
       rows
-        .filter_map { |row| row.slice("zh", "en", "ru").compact_blank.presence if row.is_a?(Hash) }
+        .filter_map { |row| row.slice("zh", *Locales::ALL).compact_blank.presence if row.is_a?(Hash) }
         .presence
     end
 

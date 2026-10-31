@@ -3,6 +3,12 @@
 require "rails_helper"
 
 RSpec.describe "Regional variants" do
+  it "sends a Vietnamese reader to the Taiwan character page instead of a comparison", :no_auth do
+    get("/vi/variants")
+
+    expect(response).to(redirect_to("/vi/hanzi"))
+  end
+
   it "shows the reading differences by default" do
     sign_in(create(:user))
 

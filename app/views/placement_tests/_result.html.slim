@@ -26,7 +26,7 @@ section.space-y-4
             span.text-muted-foreground = t("placement.axes.#{axis}")
             span.font-medium = t("placement.result_level", grade:, band: placement_band(grade))
 
-  - if test.intake_result.simplified?
+  - if test.intake_result.simplified? && Locales.compares_china?
     .rounded-xl.border.p-4.space-y-2 class="border-amber-500/40 bg-amber-500/5"
       p.text-sm.font-medium = t("placement.china.title")
       p.text-sm.text-muted-foreground = t("placement.china.body")

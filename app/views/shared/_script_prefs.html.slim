@@ -13,7 +13,8 @@
     = render "shared/prefs/audio_rate", class: button_classes
 
   - if inside_app
-    = render "shared/prefs/china", class: wide_classes
+    - if Locales.compares_china?
+      = render "shared/prefs/china", class: wide_classes
     = render "shared/prefs/detail", class: wide_classes
 
   - if language

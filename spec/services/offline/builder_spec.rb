@@ -48,6 +48,13 @@ RSpec.describe Offline::Builder do
     expect(chunk.values.first.keys).to(match_array(%w[t m]))
   end
 
+  it "leaves China comparisons out of the Taiwan-only locales" do
+    build
+
+    expect(renderer).to(have_received(:call).with("/variants", "en"))
+    expect(renderer).not_to(have_received(:call).with("/variants", "vi"))
+  end
+
   it "ships the offline shells with the core pack" do
     build
     shells = JSON.parse(root.join(manifest.fetch("packs").first.fetch("shells")).read)

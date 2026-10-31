@@ -4,40 +4,72 @@
     <loc>https://taiwancards.app/en/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
   </url>
   <url>
     <loc>https://taiwancards.app/ru/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/vi/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
   </url>
   <url>
     <loc>https://taiwancards.app/en/licenses</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
   </url>
   <url>
     <loc>https://taiwancards.app/ru/licenses</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/vi/licenses</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
   </url>
   <url>
     <loc>https://taiwancards.app/en/privacy</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
   </url>
   <url>
     <loc>https://taiwancards.app/ru/privacy</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/vi/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
   </url>
   <url>
     <loc>https://taiwancards.app/en/terms</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
   </url>
   <url>
     <loc>https://taiwancards.app/ru/terms</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/vi/terms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
   </url>
 </urlset>

@@ -153,8 +153,10 @@ class Lexeme < ApplicationRecord
     readings[system.to_s]
   end
 
+  def note(locale = I18n.locale) = Locales.pick(data["note"], locale)
+
   def meaning(locale = I18n.locale)
-    value = meanings[locale.to_s].presence || meanings.values.find(&:present?)
+    value = meanings[locale.to_s].presence || meanings[Locales::DEFAULT].presence || meanings.values.find(&:present?)
     value.is_a?(Array) ? value.join("; ") : value
   end
 

@@ -10,18 +10,24 @@ module Huayu
 
     Localized = LessonData::Localized
 
-    Line = Data.define(:who, :zh, :en, :ru, :zhuyin, :pinyin, :grammar) do
-      include Localized
+    module Translated
+      def translated(locale) = Locales.pick({"en" => en, "ru" => ru, "vi" => vi}, locale)
+    end
 
-      def translation(locale) = locale.to_s == "ru" ? ru : en
+    Line = Data.define(:who, :zh, :en, :ru, :vi, :zhuyin, :pinyin, :grammar) do
+      include Localized
+      include Translated
+
+      def translation(locale) = translated(locale)
 
       def syllables = zhuyin.to_s.split(/[[:space:]]+/).reject(&:empty?)
     end
 
-    Word = Data.define(:zh, :zhuyin, :pinyin, :pos, :en, :ru, :register, :note) do
+    Word = Data.define(:zh, :zhuyin, :pinyin, :pos, :en, :ru, :vi, :register, :note) do
       include Localized
+      include Translated
 
-      def gloss(locale) = locale.to_s == "ru" ? ru : en
+      def gloss(locale) = translated(locale)
 
       def note_for(locale) = pick(note, locale)
 
@@ -36,10 +42,11 @@ module Huayu
       def note_for(locale) = pick(note, locale)
     end
 
-    Usage = Data.define(:street, :standard, :en, :ru) do
+    Usage = Data.define(:street, :standard, :en, :ru, :vi) do
       include Localized
+      include Translated
 
-      def body(locale) = locale.to_s == "ru" ? ru : en
+      def body(locale) = translated(locale)
     end
 
     Exercise = Data.define(:kind, :zh, :gloss, :options, :answer, :chunks, :order, :pairs) do
@@ -105,16 +112,20 @@ module Huayu
       def exercise_payload(locale) = exercises.map { |exercise| exercise.payload(locale) }
     end
 
-    Stage = Data.define(:slug, :band, :order, :zh, :en, :ru, :exam) do
+    Stage = Data.define(:slug, :band, :order, :zh, :en, :ru, :vi, :exam) do
       include Localized
 
       def to_param = slug
 
-      def title(locale) = pick(locale.to_s == "ru" ? ru : en, "title") || slug
+      def title(locale) = text(locale, "title") || slug
 
-      def body(locale)
-        source = locale.to_s == "ru" ? ru : en
-        source["body"]
+      def body(locale) = text(locale, "body")
+
+      private
+
+      def text(locale, key)
+        source = {"en" => en, "ru" => ru, "vi" => vi}.transform_values { |row| row[key] }
+        pick(source, locale)
       end
     end
 
@@ -147,6 +158,7 @@ module Huayu
               zh: row["zh"],
               en: row["en"] || {},
               ru: row["ru"] || {},
+              vi: row["vi"] || {},
               exam: build_exercises(row, "exam")
             )
           end
@@ -183,6 +195,7 @@ module Huayu
             zh: line["zh"],
             en: line["en"],
             ru: line["ru"],
+            vi: line["vi"],
             zhuyin: line["zhuyin"],
             pinyin: line["pinyin"],
             grammar: Array(line["grammar"]).freeze
@@ -199,6 +212,7 @@ module Huayu
             pos: word["pos"],
             en: word["en"],
             ru: word["ru"],
+            vi: word["vi"],
             register: word["register"] || "standard",
             note: word["note"]
           )
@@ -211,7 +225,13 @@ module Huayu
 
       def build_usage(row)
         Array(row["usage"]).map do |entry|
-          Usage.new(street: entry["street"], standard: entry["standard"], en: entry["en"], ru: entry["ru"])
+          Usage.new(
+            street: entry["street"],
+            standard: entry["standard"],
+            en: entry["en"],
+            ru: entry["ru"],
+            vi: entry["vi"]
+          )
         end
       end
 

@@ -136,6 +136,7 @@ en:
   locales:
     en: English
     ru: Русский
+    vi: Tiếng Việt
   app:
     name: TaiwanCards
   languages:
@@ -1964,10 +1965,10 @@ en:
     practice_cta: Open the tone drill →
     chart:
       taipei: Taipei
-      beijing: Beijing
+      reference: Beijing
       aria: "%{tone}: pitch contour"
       taipei_note: How the tones sound in Taiwan. There are several differences from the norm in China; they are listed below.
-      beijing_note: The norm in China, for comparison. The figures are the conventional prescriptive notation.
+      reference_note: The norm in China, for comparison. The figures are the conventional prescriptive notation.
       scale: "Five notional pitch steps, low to high. Read each line left to right: where it starts and where it goes. No figures are given for Taipei on purpose — there is no settled prescriptive notation for the Taiwanese realisation, and inventing one is not something I will do."
     hacks_title: What actually helps
     hacks:

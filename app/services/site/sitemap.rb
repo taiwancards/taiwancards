@@ -127,10 +127,12 @@ module Site
     def localized(path)
       {
         loc: url(path, Locales::DEFAULT),
-        alternates: Locales::ALL.map { |code| [code, url(path, code)] },
+        alternates: locales_for(path).map { |code| [code, url(path, code)] },
         default: url(path, Locales::DEFAULT)
       }
     end
+
+    def locales_for(path) = Locales::ALL.select { |code| Locales.serves?(path, code) }
 
     def url(path, code) = "#{@origin}/#{code}#{path == "/" ? "" : path}"
 

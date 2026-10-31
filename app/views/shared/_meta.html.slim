@@ -19,7 +19,7 @@ meta property="og:title" content=t("meta.share_title")
 meta property="og:description" content=t("meta.share_description")
 meta property="og:type" content="website"
 meta property="og:url" content=canonical
-meta property="og:locale" content=(I18n.locale.to_s == "ru" ? "ru_RU" : "en_US")
+meta property="og:locale" content=Locales::OPEN_GRAPH.fetch(I18n.locale.to_s)
 meta property="og:image" content=share_image
 meta property="og:image:width" content="1200"
 meta property="og:image:height" content="630"

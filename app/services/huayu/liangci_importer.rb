@@ -28,11 +28,11 @@ module Huayu
       text = row["traditional"]
       lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[:measure_word], text:)
       lexeme.readings = {"pinyin" => row["pinyin"], "zhuyin" => row["zhuyin"]}.compact_blank
-      lexeme.meanings = {"en" => row["meaning_en"], "ru" => row["meaning_ru"]}.compact_blank
+      lexeme.meanings = Locales::ALL.to_h { |code| [code, row["meaning_#{code}"]] }.compact_blank
       lexeme.data = lexeme.data.merge(
         {
           "category" => row["category"],
-          "notes" => {"en" => row["notes_en"], "ru" => row["notes_ru"]}.compact_blank.presence,
+          "notes" => Locales::ALL.to_h { |code| [code, row["notes_#{code}"]] }.compact_blank.presence,
           "moe_gloss" => row["moe_gloss"].presence,
           "tocfl_pos" => row["tocfl_pos"].presence,
           "usage" => @pairs.dig(text, "usage").to_i

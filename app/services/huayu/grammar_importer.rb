@@ -38,8 +38,7 @@ module Huayu
     def import(lesson)
       lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[:grammar], text: key_for(lesson))
       lexeme.meanings = lexeme.meanings.merge(
-        "en" => lesson.title(:en),
-        "ru" => lesson.title(:ru)
+        {"en" => lesson.title(:en), "ru" => lesson.title(:ru), "vi" => lesson.vi["title"]}.compact_blank
       )
       lexeme.data = lexeme.data.merge(
         "tbcl_grade" => lesson.level,

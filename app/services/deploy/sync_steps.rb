@@ -214,6 +214,13 @@ module Deploy
         code: %w[app/services/huayu/collocation_meaning_filler.rb app/services/huayu/curated_glosses.rb]
       ),
       Step.new(
+        name: "vi_glosses",
+        task: "huayu:enrich_vi",
+        paths: %w[huayu/vi_glosses.json huayu/sense_glosses.jsonl huayu/collocation_glosses.jsonl] +
+          CURATED_PAGE_SOURCES,
+        code: %w[app/services/huayu/vi_gloss_enricher.rb app/services/huayu/curated_glosses.rb]
+      ),
+      Step.new(
         name: "sentence_meanings",
         task: "huayu:fill_sentence_meanings",
         paths: %w[huayu/sentence_glosses.jsonl huayu/ru_glosses.json],

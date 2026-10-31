@@ -3,6 +3,7 @@
 - is_items = %w[taiwan decks dictionary writing reading photo speaking everyday corpus measured memory]
 - is_soon = %w[photo]
 - isnt_items = %w[game machine decks china words course teacher hsk simplified ads tracking]
+- isnt_items -= %w[china hsk simplified] unless Locales.compares_china?
 - quality_items = %w[audio sources human written]
 - tool_icons = {study: :decks, speaking: :speaker, writing: :pencil, zhuyin: :characters, tones: :study, typing: :desk, reader: :book, everyday: :sentences, placement: :help, plan: :stats}
 - bring_icons = {menu: :characters, textbook: :decks, song: :speaker, feed: :book}

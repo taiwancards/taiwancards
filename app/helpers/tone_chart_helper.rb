@@ -13,22 +13,35 @@ module ToneChartHelper
       "t2" => {points: [[0, 3], [1, 5]], label: "35"},
       "t3" => {points: [[0, 2], [0.45, 1], [1, 3.6]], label: "214"},
       "t4" => {points: [[0, 5], [1, 1]], label: "51"}
+    }.freeze,
+    "hanoi" => {
+      "ngang" => {points: [[0, 3], [1, 3]], label: "ngang 33"},
+      "huyen" => {points: [[0, 2.2], [1, 1]], label: "huyền 21"},
+      "sac" => {points: [[0, 3], [1, 5]], label: "sắc 35"},
+      "hoi" => {points: [[0, 3], [0.6, 1.2], [1, 2]], label: "hỏi 312"},
+      "nga" => {points: [[0, 3], [0.45, 2.5], [0.55, 3.6], [1, 5]], label: "ngã 3ˀ5"},
+      "nang" => {points: [[0, 2.2], [0.55, 1]], label: "nặng 21ˀ"}
     }.freeze
   }.freeze
+
+  REFERENCE = {"vi" => "hanoi"}.freeze
 
   WIDTH = 88
   HEIGHT = 96
   PAD_X = 14
   PAD_Y = 12
 
+  def tone_reference = REFERENCE.fetch(I18n.locale.to_s, "beijing")
+
   def tone_chart(variant, tone)
     contour = CONTOURS.fetch(variant).fetch(tone)
+    name = variant == "hanoi" ? contour[:label] : t("tones.tones.#{tone}.name")
 
     tag.svg(
       viewBox: "0 0 #{WIDTH} #{HEIGHT}",
       role: "img",
       class: "h-24 w-22",
-      "aria-label": t("tones.chart.aria", tone: t("tones.tones.#{tone}.name"))
+      "aria-label": t("tones.chart.aria", tone: name)
     ) do
       safe_join([tone_staff, tone_path(contour[:points]), tone_dot(contour[:points].last)])
     end

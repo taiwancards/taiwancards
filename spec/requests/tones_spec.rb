@@ -25,7 +25,19 @@ RSpec.describe "Tones" do
     get("/tones")
 
     expect(response.body.index(I18n.t("tones.chart.taipei")))
-      .to(be < response.body.index(I18n.t("tones.chart.beijing")))
+      .to(be < response.body.index(I18n.t("tones.chart.reference")))
+  end
+
+  it "compares with the six Hanoi tones instead of Beijing for Vietnamese readers" do
+    get("/vi/tones")
+
+    ToneChartHelper::CONTOURS["hanoi"].each_value do |contour|
+      expect(response.body).to(include(contour[:label]))
+    end
+
+    ToneChartHelper::CONTOURS["beijing"].each_value do |contour|
+      expect(response.body).not_to(include(">#{contour[:label]}<"))
+    end
   end
 
   it "quotes prescriptive figures for Beijing but invents none for Taipei" do
@@ -134,9 +146,9 @@ RSpec.describe "Tones" do
     expect(response.body.index("border-emerald-500/70")).to(be < response.body.index("border-rose-500/45"))
   end
 
-  it "never calls the Beijing pronunciation wrong in words" do
-    %i[en ru].each do |locale|
-      text = I18n.t("tones.chart.beijing_note", locale:)
+  it "never calls the reference pronunciation wrong in words" do
+    %i[en ru vi].each do |locale|
+      text = I18n.t("tones.chart.reference_note", locale:)
       expect(text).not_to(match(/неверн|ошиб|wrong|incorrect|error/i))
     end
   end

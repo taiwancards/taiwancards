@@ -13,6 +13,7 @@ RSpec.describe Huayu::GrammarImporter do
       formula: {"en" => "#{pattern} formula"},
       en: {"title" => "#{slug} in English", "body" => "body", "tip" => "tip"},
       ru: {"title" => "#{slug} по-русски", "body" => "тело", "tip" => "подсказка"},
+      vi: {"title" => "#{slug} bằng tiếng Việt", "body" => "thân bài", "tip" => "mẹo"},
       examples: [],
       excluded:,
       supplementary:,

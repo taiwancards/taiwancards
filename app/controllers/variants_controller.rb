@@ -4,6 +4,8 @@ class VariantsController < ApplicationController
   allow_unauthenticated_access
   publicly_cacheable
   def show
+    return redirect_to(hanzi_path) unless Locales.compares_china?
+
     @sections = VariantsHelper::SECTIONS
     @section = params[:section].presence_in(@sections) || @sections.first
   end

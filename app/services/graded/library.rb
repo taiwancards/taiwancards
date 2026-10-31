@@ -59,7 +59,7 @@ module Graded
       end
 
       def build_line(raw)
-        Line.new(zh: raw.fetch("zh"), names: raw.slice("en", "ru"), grammar: Array(raw["grammar"]).freeze)
+        Line.new(zh: raw.fetch("zh"), names: raw.slice(*Locales::ALL), grammar: Array(raw["grammar"]).freeze)
       end
 
       def build(tier, raw)
@@ -69,7 +69,7 @@ module Graded
           topic: raw["topic"].to_s,
           titles: raw.fetch("title", {}),
           lines: raw.fetch("lines", []).map { |line| build_line(line) },
-          notes: raw.fetch("notes", []).map { |note| Note.new(zh: note.fetch("zh"), names: note.slice("en", "ru")) }
+          notes: raw.fetch("notes", []).map { |note| Note.new(zh: note.fetch("zh"), names: note.slice(*Locales::ALL)) }
         )
       end
     end

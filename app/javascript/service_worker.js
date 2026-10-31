@@ -10,26 +10,27 @@ const MAIN_SLOT = "§MAIN§";
 const CSS_SLOT = "§CSS§";
 const JS_SLOT = "§JS§";
 
-const LOCALES = ["en", "ru"];
+const LOCALES = ["en", "ru", "vi"];
+const LANG = LOCALES.join("|");
 const SHELL_KEYS = ["page", "narrow", "medium", "wide"];
 
 const BROWSE_RULES = [
-  [/^\/(en|ru)\/dict\/?$/, () => "kind:word"],
-  [/^\/(en|ru)\/characters\/?$/, () => "kind:character"],
-  [/^\/(en|ru)\/sentences\/?$/, () => "kind:sentence"],
-  [/^\/(en|ru)\/radicals\/?$/, () => "kind:radical"],
-  [/^\/(en|ru)\/liangci\/?$/, () => "kind:measure_word"],
-  [/^\/(en|ru)\/zhuci\/?$/, () => "kind:particle"],
-  [/^\/(en|ru)\/chengyu\/?$/, () => "pack:chengyu"],
-  [/^\/(en|ru)\/search\/?$/, () => "kind:"],
+  [new RegExp(`^/(${LANG})/dict/?$`), () => "kind:word"],
+  [new RegExp(`^/(${LANG})/characters/?$`), () => "kind:character"],
+  [new RegExp(`^/(${LANG})/sentences/?$`), () => "kind:sentence"],
+  [new RegExp(`^/(${LANG})/radicals/?$`), () => "kind:radical"],
+  [new RegExp(`^/(${LANG})/liangci/?$`), () => "kind:measure_word"],
+  [new RegExp(`^/(${LANG})/zhuci/?$`), () => "kind:particle"],
+  [new RegExp(`^/(${LANG})/chengyu/?$`), () => "pack:chengyu"],
+  [new RegExp(`^/(${LANG})/search/?$`), () => "kind:"],
   [
-    /^\/(en|ru)\/tocfl\/([A-Za-z0-9]+)$/,
+    new RegExp(`^/(${LANG})/tocfl/([A-Za-z0-9]+)$`),
     (match) => `pack:tocfl-${match[2].toLowerCase()}`,
   ],
 ];
 
-const ROOT = new RegExp(`^/(?:${LOCALES.join("|")})?$`);
-const PREFIX = new RegExp(`^/(${LOCALES.join("|")})(?=/|$)`);
+const ROOT = new RegExp(`^/(?:${LANG})?$`);
+const PREFIX = new RegExp(`^/(${LANG})(?=/|$)`);
 
 const ASSET_PATHS = [
   /^\/assets\//,
@@ -41,7 +42,7 @@ const ASSET_PATHS = [
   /^\/manifest$/,
 ];
 
-const NEVER = [/^\/auth\//, /^\/(en|ru)\/login$/, /^\/up$/];
+const NEVER = [/^\/auth\//, new RegExp(`^/(${LANG})/login$`), /^\/up$/];
 
 const PACKS = /\/packs\//;
 

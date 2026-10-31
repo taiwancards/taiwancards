@@ -56,7 +56,7 @@ Rails.application.routes.draw do
     constraints: {name: /[a-z]+(?:-\d+)?/}
   )
 
-  post("locale/:code", to: "locales#update", as: :locale, constraints: {code: /en|ru/})
+  post("locale/:code", to: "locales#update", as: :locale, constraints: {code: Locales::PATTERN})
   put("time_zone", to: "time_zones#update", as: :time_zone)
 
   get(
@@ -67,7 +67,7 @@ Rails.application.routes.draw do
     format: false
   )
 
-  scope("(:locale)", locale: /en|ru/) do
+  scope("(:locale)", locale: Locales::PATTERN) do
     to_localized = lambda do |&suffix|
       redirect do |params, _request|
         code = Locales.known?(params[:locale]) ? params[:locale] : Locales::DEFAULT

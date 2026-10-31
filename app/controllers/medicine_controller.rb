@@ -39,7 +39,7 @@ class MedicineController < ApplicationController
       zhuyin: lexeme.readings["zhuyin"],
       pinyin: lexeme.readings["pinyin"],
       meaning: lexeme.meaning(I18n.locale),
-      note: lexeme.data.dig("note", I18n.locale.to_s),
+      note: lexeme.note,
       pairLabel: (t("medicine.#{med["folk"] ? "folk_label" : "formal_label"}") if pair_text),
       pairText: pair_text,
       pairReading: pair && (pair.readings["zhuyin"] || pair.readings["pinyin"]),

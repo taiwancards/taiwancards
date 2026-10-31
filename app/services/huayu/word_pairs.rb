@@ -103,29 +103,29 @@ module Huayu
           zh: row["zh"],
           pinyin: row["pinyin"],
           zhuyin: Zhuyin.from_pinyin(row["pinyin"]),
-          glosses: row.slice("en", "ru").freeze
+          glosses: row.slice(*Locales::ALL).freeze
         )
       end
 
       def use_from(row)
         Use.new(
           word: row["word"],
-          notes: row.slice("en", "ru").freeze,
+          notes: row.slice(*Locales::ALL).freeze,
           examples: Array(row["examples"])
-            .map { |example| Example.new(zh: example["zh"], translations: example.slice("en", "ru").freeze) }
+            .map { |example| Example.new(zh: example["zh"], translations: example.slice(*Locales::ALL).freeze) }
             .freeze
         )
       end
 
       def mistake_from(row)
-        Mistake.new(wrong: row["wrong"], right: row["right"], notes: row.slice("en", "ru").freeze)
+        Mistake.new(wrong: row["wrong"], right: row["right"], notes: row.slice(*Locales::ALL).freeze)
       end
 
       def exercise_from(row)
         CourseLessons::Exercise.new(
           kind: "cloze",
           zh: row["zh"],
-          gloss: row.slice("en", "ru").freeze,
+          gloss: row.slice(*Locales::ALL).freeze,
           options: Array(row["options"]).freeze,
           answer: row["answer"].to_i,
           chunks: [],

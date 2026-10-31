@@ -115,7 +115,7 @@ module ZhuyinHelper
   def show_pinyin? = readings_mode == "pinyin"
 
   def show_china?
-    cookies[CHINA_COOKIE].to_s == "1"
+    Locales.compares_china? && cookies[CHINA_COOKIE].to_s == "1"
   end
 
   private

@@ -52,6 +52,13 @@ RSpec.describe "Course" do
     expect(response.body).not_to(include(lesson.goal_for(:en)))
   end
 
+  it "shows the Vietnamese side, line by line, on the Vietnamese page" do
+    get("/vi/course/#{lesson.slug}")
+
+    expect(response.body).to(include(lesson.goal_for(:vi), CGI.escapeHTML(lesson.lines.first.translation(:vi))))
+    expect(response.body).not_to(include(lesson.goal_for(:en)))
+  end
+
   it "records a finished lesson and shows it on the index" do
     post("/course/#{lesson.slug}/done", params: {score: 7})
 

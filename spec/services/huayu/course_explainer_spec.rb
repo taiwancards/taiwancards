@@ -12,6 +12,7 @@ RSpec.describe Huayu::CourseExplainer do
         pos: "n.",
         en: "evening",
         ru: "вечер",
+        vi: "buổi tối",
         register: "standard",
         note: {"en" => "After dark, until bedtime.", "ru" => "От темноты до сна."}
       )
@@ -32,7 +33,8 @@ RSpec.describe Huayu::CourseExplainer do
         street: "禮拜六",
         standard: "星期六",
         en: "Say 禮拜 in speech.",
-        ru: "В речи — 禮拜."
+        ru: "В речи — 禮拜.",
+        vi: "Khi nói dùng 禮拜."
       )
     ]
   }
@@ -43,6 +45,7 @@ RSpec.describe Huayu::CourseExplainer do
         zh: "你禮拜六有空嗎？",
         en: "Free on Saturday?",
         ru: "В субботу свободен?",
+        vi: "Thứ Bảy rảnh không?",
         zhuyin: nil,
         pinyin: nil,
         grammar: ["weekdays"]

@@ -3,11 +3,7 @@
 module Huayu
   module LessonData
     module Localized
-      def pick(source, locale)
-        return nil if source.blank?
-
-        source[locale.to_s].presence || source["en"]
-      end
+      def pick(source, locale) = Locales.pick(source, locale)
     end
 
     include Localized

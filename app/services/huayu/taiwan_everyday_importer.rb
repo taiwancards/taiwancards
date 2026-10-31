@@ -118,7 +118,7 @@ module Huayu
         "text" => text,
         "pinyin" => pinyin,
         "zhuyin" => (Zhuyin.from_pinyin(pinyin) if pinyin),
-        "meaning" => {"en" => entry["capital_en"], "ru" => entry["capital_ru"]}.compact_blank.presence
+        "meaning" => Locales::ALL.to_h { |code| [code, entry["capital_#{code}"]] }.compact_blank.presence
       }.compact
     end
 
@@ -131,10 +131,7 @@ module Huayu
         "text" => text,
         "pinyin" => pinyin,
         "zhuyin" => (Zhuyin.from_pinyin(pinyin) if pinyin),
-        "note" => {
-          "en" => entry["#{prefix}_note_en"],
-          "ru" => entry["#{prefix}_note_ru"]
-        }.compact_blank.presence
+        "note" => Locales::ALL.to_h { |code| [code, entry["#{prefix}_note_#{code}"]] }.compact_blank.presence
       }.compact
     end
   end

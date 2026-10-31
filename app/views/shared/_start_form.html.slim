@@ -50,7 +50,7 @@ div data-controller="start-form" data-start-form-optional-value=optional.to_json
             label class="#{choice} flex flex-col items-center px-1 py-2 text-center sm:px-3"
               = radio_button_tag "level", step.grade, false, class: "sr-only", data: {start_form_target: "level", action: "start-form#sync"}
               span.text-sm.font-semibold.leading-tight.sm:text-base = step.band
-              span.text-2xs.text-muted-foreground.sm:text-xs = t("onboarding.scale.hsk", level: step.hsk)
+              span.text-2xs.text-muted-foreground.sm:text-xs = level_scale_equivalent(step)
           label class="#{choice} flex flex-col items-center px-1 py-2 text-center sm:px-3"
             = radio_button_tag "level", Onboarding::Start::UNKNOWN, false, class: "sr-only", data: {start_form_target: "level", action: "start-form#sync"}
             - User::GOALS.each do |goal|

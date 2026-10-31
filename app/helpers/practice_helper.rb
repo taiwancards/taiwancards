@@ -110,17 +110,9 @@ module PracticeHelper
     )
   end
 
-  def phon_localized(source)
-    return "" if source.blank?
+  def phon_localized(source) = Locales.pick(source).to_s
 
-    (I18n.locale == :ru ? source["ru"] : source["en"]).presence || source["en"].to_s
-  end
-
-  def phon_example_gloss(example)
-    return "" if example.blank?
-
-    (I18n.locale == :ru ? example["ru"] : example["en"]).presence || example["en"]
-  end
+  def phon_example_gloss(example) = Locales.pick(example).to_s
 
   def accuracy_pct(correct, total)
     return nil if total.to_i.zero?

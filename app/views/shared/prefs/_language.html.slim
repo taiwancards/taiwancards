@@ -1,15 +1,22 @@
-- other = I18n.locale.to_s == "ru" ? :en : :ru
-- mark = capture do
-  span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
-    class="size-6 text-[10px] leading-none" ]
-    = I18n.locale.to_s.upcase
+- item_classes = "flex min-h-11 w-full items-center justify-between gap-3 rounded-md px-3 text-left text-sm hover:bg-muted md:min-h-9"
 
-- if authenticated?
-  = button_to locale_path(other, locale: nil), method: :post,
-    form: {class: "contents"}, class: local_assigns.fetch(:class),
-    title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
-    = mark
-- else
-  = link_to Locales.swap(request.fullpath, other), class: local_assigns.fetch(:class),
-    title: t("nav.interface_language"), aria: {label: t("nav.interface_language")} do
-    = mark
+.relative.inline-flex data-controller="menu"
+  button[ type="button" class=local_assigns.fetch(:class) data-action="menu#toggle"
+    title=t("nav.interface_language") aria-label=t("nav.interface_language") aria-haspopup="menu" ]
+    span.flex.items-center.justify-center.rounded-full.border.border-current.font-semibold[
+      class="size-6 text-[10px] leading-none" ]
+      = I18n.locale.to_s.upcase
+
+  .absolute.right-0.top-full.z-50.hidden.mt-1.w-44.rounded-xl.border.border-border.bg-background.p-1.text-foreground.shadow-xl[
+    data-menu-target="panel" role="menu" aria-label=t("nav.interface_language") ]
+    - I18n.available_locales.each do |code|
+      - label = t("locales.#{code}", locale: code)
+      - if code == I18n.locale
+        span class="#{item_classes} font-semibold" lang=code role="menuitem" aria-current="true"
+          = label
+          span.text-primary aria-hidden="true" ✓
+      - elsif authenticated?
+        = button_to label, locale_path(code, locale: nil), method: :post, form: {class: "block"},
+          class: item_classes, lang: code, role: "menuitem"
+      - else
+        = link_to label, Locales.swap(request.fullpath, code), class: item_classes, lang: code, role: "menuitem"

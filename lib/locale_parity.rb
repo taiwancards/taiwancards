@@ -2,7 +2,7 @@
 
 class LocaleParity
   PLURAL_KEYS = %w[zero one two few many other].to_set
-  PAIRS = [%w[en.yml ru.yml], %w[pron.en.yml pron.ru.yml]].freeze
+  PAIRS = [%w[en.yml ru.yml], %w[en.yml vi.yml], %w[pron.en.yml pron.ru.yml], %w[pron.en.yml pron.vi.yml]].freeze
 
   def initialize(root: Rails.root.join("config/locales"), pairs: PAIRS)
     @root = Pathname(root)

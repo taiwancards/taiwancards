@@ -103,7 +103,7 @@
       - when "phonetic"
         p.leading-relaxed.text-muted-foreground = t("words.taigi_phonetic")
 
-  - everyday_note = lexeme.data.dig("note", I18n.locale.to_s).presence
+  - everyday_note = lexeme.note.presence
   - if everyday_note
     p.rounded-xl.border.border-border.p-3.text-sm.leading-relaxed = everyday_note
 

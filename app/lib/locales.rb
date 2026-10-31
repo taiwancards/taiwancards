@@ -1,13 +1,27 @@
 # frozen_string_literal: true
 
 module Locales
-  ALL = %w[en ru].freeze
+  ALL = %w[en ru vi].freeze
   DEFAULT = "en"
+  PATTERN = Regexp.union(ALL)
+  OPEN_GRAPH = {"en" => "en_US", "ru" => "ru_RU", "vi" => "vi_VN"}.freeze
   SEGMENT = /\A(#{ALL.join("|")})\z/
+  TAIWAN_ONLY = %w[vi].freeze
+  CHINA_COMPARISONS = %w[/variants].freeze
 
   module_function
 
   def known?(code) = ALL.include?(code.to_s)
+
+  def compares_china?(locale = I18n.locale) = !TAIWAN_ONLY.include?(locale.to_s)
+
+  def serves?(path, locale) = compares_china?(locale) || !CHINA_COMPARISONS.include?(path)
+
+  def pick(source, locale = I18n.locale)
+    return nil if source.blank?
+
+    source[locale.to_s].presence || source[DEFAULT]
+  end
 
   def resolve(url:, stored: nil, header: nil)
     return url.to_s if known?(url)

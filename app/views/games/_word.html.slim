@@ -1,7 +1,7 @@
 - lexeme = local_assigns.fetch(:lexeme)
 - audio = audio_for(lexeme)
 - data = lexeme.data
-- note = data.dig("note", I18n.locale.to_s)
+- note = Locales.pick(data["note"])
 - marks = []
 - marks << [t("everyday.tier_core"), "bg-brand"] if data.dig("game", "tier").to_i == 1
 - marks << [t("everyday.taiwan_marked"), "bg-emerald-500"] if data["taiwan_only"]
@@ -17,7 +17,7 @@
     p.leading-snug class="text-[12px]" = lexeme.meaning
     - if note.present?
       p.leading-snug.text-muted-foreground class="text-[11px]" = note
-    - if data["china"].present?
+    - if data["china"].present? && Locales.compares_china?
       span.china-note.leading-snug.text-muted-foreground class="text-[10px]"
         => t("everyday.china_says")
         span lang="zh-TW" = data["china"]

@@ -22,6 +22,14 @@ RSpec.describe "Sitemap", :no_auth do
     expect(response.body).to(include("hreflang=\"x-default\" href=\"http://www.example.com/en/dict\""))
   end
 
+  it "leaves the Vietnamese edition out of the comparison with other varieties" do
+    get("/sitemaps/pages.xml")
+
+    expect(response.body).to(include("hreflang=\"ru\" href=\"http://www.example.com/ru/variants\""))
+    expect(response.body).not_to(include("http://www.example.com/vi/variants"))
+    expect(response.body).to(include("hreflang=\"vi\" href=\"http://www.example.com/vi/dict\""))
+  end
+
   it "carries an entry for a character that has a reading and skips one that has nothing" do
     create(:lexeme, kind: :character, text: "水", readings: {"zhuyin" => "ㄕㄨㄟˇ"})
     create(:lexeme, kind: :character, text: "㐀")

@@ -24,7 +24,7 @@
         span lang="zh-TW" = pair_text
         - if pair
           span.ml-1 lang="zh-TW" = pair.readings["zhuyin"] || pair.readings["pinyin"]
-    - if data["china"].present?
+    - if data["china"].present? && Locales.compares_china?
       span.china-note.leading-snug.text-muted-foreground class="text-[10px]"
         => t("everyday.china_says")
         span lang="zh-TW" = data["china"]

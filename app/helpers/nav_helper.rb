@@ -87,9 +87,9 @@ module NavHelper
       [:stats, t("nav.numbers"), practice_numbers_path],
       [:book, t("nav.grammar"), grammar_path],
       [:book, t("nav.word_pairs"), word_pairs_path],
-      [:characters, t("nav.variants"), variants_path],
+      ([:characters, t("nav.variants"), variants_path] if Locales.compares_china?),
       [:book, t("nav.names"), names_path]
-    ]
+    ].compact
   end
 
   def practice_items

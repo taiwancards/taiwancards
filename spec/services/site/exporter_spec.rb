@@ -28,7 +28,7 @@ RSpec.describe Site::Exporter do
 
   def page(*parts) = root.join(*parts).read
 
-  it "writes every page in both languages, and keeps the old addresses alive" do
+  it "writes every page in every language, and keeps the old addresses alive" do
     expect(root.glob("**/index.html").map { |file| file.relative_path_from(root).to_s }).to(
       contain_exactly(
         "index.html",
@@ -40,6 +40,10 @@ RSpec.describe Site::Exporter do
         "ru/licenses/index.html",
         "ru/privacy/index.html",
         "ru/terms/index.html",
+        "vi/index.html",
+        "vi/licenses/index.html",
+        "vi/privacy/index.html",
+        "vi/terms/index.html",
         "licenses/index.html",
         "privacy/index.html",
         "terms/index.html"
@@ -50,6 +54,7 @@ RSpec.describe Site::Exporter do
   it "renders each locale in its own language" do
     expect(page("en", "index.html")).to(match(/<html[^>]*lang="en"/))
     expect(page("ru", "index.html")).to(match(/<html[^>]*lang="ru"/))
+    expect(page("vi", "index.html")).to(match(/<html[^>]*lang="vi"/))
   end
 
   it "keeps nothing that only a Rails request can satisfy" do

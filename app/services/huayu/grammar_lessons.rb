@@ -6,8 +6,8 @@ module Huayu
 
     DATA = JsonData.new("huayu/grammar_lessons.json", default: [], watch: true)
 
-    Example = Data.define(:zh, :en, :ru, :zhuyin, :pinyin, :sentence, :segments) do
-      def translation(locale) = locale.to_s == "ru" ? ru : en
+    Example = Data.define(:zh, :en, :ru, :vi, :zhuyin, :pinyin, :sentence, :segments) do
+      def translation(locale) = (Locales.known?(locale) && public_send(locale.to_s)).presence || en
 
       def annotated? = zhuyin.present?
 
@@ -23,6 +23,7 @@ module Huayu
       :formula,
       :en,
       :ru,
+      :vi,
       :examples,
       :excluded,
       :supplementary,
@@ -57,8 +58,8 @@ module Huayu
       private
 
       def text_for(locale, key)
-        source = locale.to_s == "ru" ? ru : en
-        source[key]
+        source = Locales.known?(locale) ? public_send(locale.to_s) : en
+        source[key].presence || en[key]
       end
     end
 
@@ -116,7 +117,7 @@ module Huayu
         return true if lesson.heads.any? { |head| head.include?(needle) }
         return true if lesson.formula.values.any? { |text| text.to_s.downcase.include?(needle) }
 
-        [lesson.en, lesson.ru].any? { |source| source["title"].to_s.downcase.include?(needle) }
+        [lesson.en, lesson.ru, lesson.vi].any? { |source| source["title"].to_s.downcase.include?(needle) }
       end
 
       def build(rows)
@@ -131,11 +132,13 @@ module Huayu
               formula: row["formula"] || {},
               en: row["en"] || {},
               ru: row["ru"] || {},
+              vi: row["vi"] || {},
               examples: Array(row["examples"]).map do |example|
                 Example.new(
                   zh: example["zh"],
                   en: example["en"],
                   ru: example["ru"],
+                  vi: example["vi"],
                   zhuyin: example["zhuyin"],
                   pinyin: example["pinyin"],
                   sentence: example["sentence"],

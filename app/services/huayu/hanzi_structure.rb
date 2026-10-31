@@ -30,27 +30,21 @@ module Huayu
         text(row, locale)
       end
 
-      def text(row, locale = I18n.locale)
-        return nil if row.nil?
+      def text(row, locale = I18n.locale) = Locales.pick(row, locale)
 
-        (locale.to_s == "ru" ? row["ru"] : row["en"]).presence || row["en"]
-      end
+      def name(row, locale = I18n.locale) = localized(row, "name", locale)
 
-      def name(row, locale = I18n.locale)
-        return nil if row.nil?
-
-        (locale.to_s == "ru" ? row["ru_name"] : row["en_name"]).presence
-      end
-
-      def note_for(row, locale = I18n.locale)
-        return nil if row.nil?
-
-        (locale.to_s == "ru" ? row["ru_note"] : row["en_note"]).presence
-      end
+      def note_for(row, locale = I18n.locale) = localized(row, "note", locale)
 
       def reset! = DATA.reset!
 
       private
+
+      def localized(row, field, locale)
+        return nil if row.nil?
+
+        row["#{locale}_#{field}"].presence || row["#{Locales::DEFAULT}_#{field}"].presence
+      end
 
       def raw = DATA.value
     end

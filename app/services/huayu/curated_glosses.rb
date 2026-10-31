@@ -2,7 +2,7 @@
 
 module Huayu
   class CuratedGlosses
-    LOCALES = %w[en ru].freeze
+    LOCALES = Locales::ALL
 
     PATHS = %w[
       huayu/taiwan_everyday.json
