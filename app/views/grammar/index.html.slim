@@ -28,5 +28,5 @@
                 span = line
             .min-w-0.flex-1.space-y-1
               .text-sm.font-semibold.leading-snug class="line-clamp-2" = lesson.title(I18n.locale)
-              .text-xs.leading-snug.text-muted-foreground class="line-clamp-2" lang="zh-TW"
-                = lesson.formula_for(I18n.locale)
+              .text-xs.leading-snug.text-muted-foreground class="line-clamp-2"
+                = mark_script(lesson.formula_for(I18n.locale))

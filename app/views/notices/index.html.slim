@@ -27,12 +27,12 @@
               - if notice.doc
                 div lang="zh-TW" = notice.doc
           h2.notice-title
-            span.notice-label lang="zh-TW" = t("notices.subject")
+            span.notice-label lang=I18n.locale = t("notices.subject")
             span lang="zh-TW" = render("notices/line", text: notice.zh, tokens: @tokens[notice.zh])
           p.text-sm.text-muted-foreground = notice.name(I18n.locale)
 
         - unless notice.steps?
-          .notice-label.pt-1 lang="zh-TW" = t("notices.explanation")
+          .notice-label.pt-1 lang=I18n.locale = t("notices.explanation")
 
         ol.notice-items class=(notice.steps? ? "notice-steps" : nil)
           - notice.items.each do |item|

@@ -173,6 +173,10 @@
     font-synthesis-weight: none;
   }
 
+  [lang]:not(:lang(zh)) {
+    font-family: var(--font-sans);
+  }
+
   .no-pinyin .pinyin:not(.pinyin-locked):not(.pinyin-locked *) {
     display: none;
   }

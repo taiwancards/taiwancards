@@ -42,7 +42,7 @@
         .rounded-2xl.border.border-border.bg-card.p-4
           .flex.flex-wrap.items-baseline.gap-2
             span.font-semibold = t("tones.tones.#{key}.name")
-            span.text-lg lang="zh-TW" = t("tones.tones.#{key}.zhuyin")
+            span.text-lg lang=(key == "t1" ? I18n.locale : "zh-TW") = t("tones.tones.#{key}.zhuyin")
           p.mt-2.text-sm.leading-relaxed.text-muted-foreground = t("tones.tones.#{key}.note")
 
     .rounded-2xl.border.border-dashed.border-border.p-5.space-y-2

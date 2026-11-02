@@ -35,6 +35,14 @@ RSpec.describe "Grammar pages" do
     expect(response.body).to(include("ㄕ"))
   end
 
+  it "keeps a Vietnamese formula out of the Chinese face and marks only its characters" do
+    get("/vi/grammar/de-possessive")
+
+    chinese = Nokogiri::HTML5(response.body).css("[lang='zh-TW']").map(&:text).join
+    expect(chinese).not_to(match(/[ăâđêôơưĂÂĐÊÔƠƯ\u1EA0-\u1EF9]/))
+    expect(response.body).to(include("người sở hữu + <span lang=\"zh-TW\">的</span> + vật"))
+  end
+
   it "no longer credits the source list at the foot of the page" do
     get("/grammar/shi")
     expect(response.body).not_to(include("Taiwan Benchmarks for the Chinese Language"))

@@ -26,6 +26,14 @@ RSpec.describe "Notices", :no_auth do
     expect(response.body).to(include("Subject:"))
   end
 
+  it "sets the localized labels in the interface language, not in the notice's Chinese face" do
+    get("/vi/notices")
+
+    labels = Nokogiri::HTML5(response.body).css(".notice-label")
+    expect(labels).not_to(be_empty)
+    expect(labels.map { |label| label["lang"] }.uniq).to(eq(["vi"]))
+  end
+
   it "narrows the board to one category" do
     get("/en/notices", params: {category: "health"})
 

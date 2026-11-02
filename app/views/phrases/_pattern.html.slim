@@ -10,7 +10,7 @@ article.rounded-2xl.border.border-border.p-4.space-y-2 class=("bg-muted/30" if p
       - pattern.parts.each do |literal, name|
         = literal
         - if name
-          span.rounded.px-1.text-primary class="bg-primary/10" = phrase_slot_label(name)
+          span.rounded.px-1.text-primary class="bg-primary/10" lang=I18n.locale = phrase_slot_label(name)
     span.pinyin.text-sm.text-muted-foreground = pattern.pinyin
 
   - if pattern.zhuyin.present?

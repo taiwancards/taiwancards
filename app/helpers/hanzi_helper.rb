@@ -121,7 +121,8 @@ module HanziHelper
           tag.span(
             label,
             class: "mx-1 inline-flex items-center rounded-md bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground align-middle",
-            title: label
+            title: label,
+            lang: I18n.locale
           )
         elsif char == skip || !char.match?(HAN)
           char == "？" || char == "?" ? "".html_safe : char
