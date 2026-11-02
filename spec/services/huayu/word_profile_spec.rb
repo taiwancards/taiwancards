@@ -84,6 +84,18 @@ RSpec.describe Huayu::WordProfile do
     )
   end
 
+  it "puts the examples translated into the interface language above every other" do
+    vietnamese = example(
+      "朋友六",
+      difficulty: 950,
+      gdex: 0,
+      meanings: {"en" => "friend six", "vi" => "người bạn thứ sáu"}
+    )
+
+    expect(texts(:vi).first).to(eq(vietnamese.text))
+    expect(texts(:ru).first).to(eq(both_easy.text))
+  end
+
   it "prefers a translated example over an untranslated one of higher example quality" do
     expect(texts(:ru).index(both_hard.text)).to(be < texts(:ru).index(untranslated_easy.text))
   end

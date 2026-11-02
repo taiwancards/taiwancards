@@ -10,6 +10,7 @@ RSpec.describe "Dictation" do
       clip: "voice-1.mp3",
       en: "I don't know either.",
       ru: "Я тоже не знаю.",
+      vi: "Tôi cũng không biết.",
       emoji: nil,
       emoji_word: nil,
       emoji_category: nil

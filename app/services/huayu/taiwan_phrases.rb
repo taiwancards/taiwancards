@@ -139,17 +139,17 @@ module Huayu
           zh: row["zh"],
           domain: row["domain"],
           position: row["position"].to_i,
-          names: row.slice("en", "ru").freeze
+          names: row.slice(*Locales::ALL).freeze
         )
       end
 
       def slot_from(row)
         Slot.new(
           id: row["id"],
-          names: row.slice("en", "ru").freeze,
+          names: row.slice(*Locales::ALL).freeze,
           options: Array(row["options"])
             .map { |option|
-              Option.new(text: option["text"], pinyin: option["pinyin"], names: option.slice("en", "ru").freeze)
+              Option.new(text: option["text"], pinyin: option["pinyin"], names: option.slice(*Locales::ALL).freeze)
             }
             .freeze
         )
@@ -167,8 +167,8 @@ module Huayu
           links: Array(row["links"]).freeze,
           replies: Array(row["replies"]).freeze,
           avoid: row["avoid"]&.freeze,
-          names: row.slice("en", "ru").freeze,
-          notes: {"en" => row["note_en"], "ru" => row["note_ru"]}.compact.freeze
+          names: row.slice(*Locales::ALL).freeze,
+          notes: Locales::ALL.to_h { |code| [code, row["note_#{code}"]] }.compact.freeze
         )
       end
 
@@ -193,14 +193,14 @@ module Huayu
       def choice_from(row)
         Choice.new(
           zh: row["zh"],
-          names: row.slice("en", "ru").freeze,
+          names: row.slice(*Locales::ALL).freeze,
           correct: row["correct"] == true,
           why: Hash(row["why"]).freeze,
           note: Hash(row["note"]).freeze
         )
       end
 
-      def line_from(row) = Line.new(zh: row["zh"], names: row.slice("en", "ru").freeze)
+      def line_from(row) = Line.new(zh: row["zh"], names: row.slice(*Locales::ALL).freeze)
 
       SPOKEN = /[^\p{Latin}\p{Mn}' ]+/
 

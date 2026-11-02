@@ -10,6 +10,7 @@ RSpec.describe MockExam::Pictures do
       clip: "#{word}.mp3",
       en: "en #{text}",
       ru: "ru #{text}",
+      vi: "vi #{text}",
       emoji:,
       emoji_word: word,
       emoji_category: category

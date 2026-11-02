@@ -30,7 +30,7 @@ export default class extends Controller {
 
   connect() {
     this.ready = false;
-    this.russian = String(document.documentElement.lang || "").startsWith("ru");
+    this.locale = String(document.documentElement.lang || "").slice(0, 2);
     this.copy = this.readCopy();
     this.load();
   }
@@ -57,8 +57,8 @@ export default class extends Controller {
   }
 
   gloss(character) {
-    const russian = this.russian ? character.ru : null;
-    return russian || character.en || "";
+    const local = this.locale === "en" ? null : character[this.locale];
+    return local || character.en || "";
   }
 
   syllables(text) {

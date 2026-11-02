@@ -53,6 +53,17 @@ RSpec.describe Huayu::NoticeImporter do
     expect(again.retired).to(eq(0))
   end
 
+  it "reports drift when a stored translation no longer matches the file" do
+    run
+    zh = Huayu::TaiwanNotices.all.first.items.first.zh
+    sentence = Lexeme.find_by(kind: :sentence, text: zh)
+    sentence.update!(meanings: sentence.meanings.merge("vi" => "bản dịch cũ"))
+
+    expect(described_class.new).to(be_drift)
+    expect(run.updated).to(eq(1))
+    expect(described_class.new).not_to(be_drift)
+  end
+
   it "retires a line that the file no longer carries" do
     run
     orphan = Lexeme.new(kind: :sentence, text: "這是一則過期的公告。", data: {"notice" => true})

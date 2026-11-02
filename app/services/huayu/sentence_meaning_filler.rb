@@ -28,7 +28,7 @@ module Huayu
 
         Lexeme.where(kind: :sentence, text: by_text.keys).find_each do |lexeme|
           entry = by_text[lexeme.text]
-          meanings = {"en" => entry.en, "ru" => entry.ru}.compact_blank
+          meanings = {"en" => entry.en, "ru" => entry.ru, "vi" => entry.vi}.compact_blank
           next if lexeme.meanings == meanings
 
           lexeme.update_columns(meanings: meanings, updated_at: Time.current)

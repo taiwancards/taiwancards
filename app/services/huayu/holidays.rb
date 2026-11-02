@@ -4,10 +4,8 @@ module Huayu
   class Holidays
     DATA = JsonData.new("huayu/holidays.json", default: {"holidays" => [], "sources" => []})
 
-    Word = Data.define(:traditional, :pinyin, :zhuyin, :gloss_en, :gloss_ru) do
-      def gloss(locale = I18n.locale)
-        (locale.to_s == "ru" ? gloss_ru : gloss_en).presence || gloss_en
-      end
+    Word = Data.define(:traditional, :pinyin, :zhuyin, :glosses) do
+      def gloss(locale = I18n.locale) = Locales.pick(glosses, locale)
     end
 
     Entry = Data.define(
@@ -16,26 +14,17 @@ module Huayu
       :pinyin,
       :aka,
       :rule,
-      :rule_en,
-      :rule_ru,
+      :rules,
       :public_holiday,
-      :summary_en,
-      :summary_ru,
-      :food_en,
-      :food_ru,
+      :summaries,
+      :foods,
       :words
     ) do
-      def summary(locale = I18n.locale)
-        (locale.to_s == "ru" ? summary_ru : summary_en).presence || summary_en
-      end
+      def summary(locale = I18n.locale) = Locales.pick(summaries, locale)
 
-      def food(locale = I18n.locale)
-        (locale.to_s == "ru" ? food_ru : food_en).presence || food_en
-      end
+      def food(locale = I18n.locale) = Locales.pick(foods, locale)
 
-      def rule_text(locale = I18n.locale)
-        (locale.to_s == "ru" ? rule_ru : rule_en).presence || rule_en
-      end
+      def rule_text(locale = I18n.locale) = Locales.pick(rules, locale)
 
       def lunar?
         rule["type"] == "lunar"
@@ -76,20 +65,16 @@ module Huayu
             pinyin: row["pinyin"],
             aka: Array(row["aka"]),
             rule: row["rule"],
-            rule_en: row["rule_en"],
-            rule_ru: row["rule_ru"],
+            rules: localized(row, "rule"),
             public_holiday: row["public_holiday"],
-            summary_en: row["summary_en"],
-            summary_ru: row["summary_ru"],
-            food_en: row["food_en"],
-            food_ru: row["food_ru"],
+            summaries: localized(row, "summary"),
+            foods: localized(row, "food"),
             words: Array(row["words"]).map do |w|
               Word.new(
                 traditional: w["traditional"],
                 pinyin: w["pinyin"],
                 zhuyin: w["zhuyin"],
-                gloss_en: w["gloss_en"],
-                gloss_ru: w["gloss_ru"]
+                glosses: localized(w, "gloss")
               )
             end
           )
@@ -121,6 +106,8 @@ module Huayu
       private
 
       def raw = DATA.value
+
+      def localized(row, field) = Locales::ALL.to_h { |code| [code, row["#{field}_#{code}"]] }
     end
   end
 end

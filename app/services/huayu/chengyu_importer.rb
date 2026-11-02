@@ -89,19 +89,15 @@ module Huayu
         "chengyu" => true,
         "chengyu_kind" => lexeme.data["chengyu_kind"].presence || "colloquial",
         "chengyu_tone" => TONES.include?(row["tone"]) ? row["tone"] : "neutral",
-        "chengyu_note" => {"en" => row["note_en"], "ru" => row["note_ru"]}.compact_blank.presence,
-        "chengyu_origin" => {"en" => row["origin_en"], "ru" => row["origin_ru"]}.compact_blank.presence,
-        "chengyu_example" => {
-          "zh" => row["example_zh"],
-          "en" => row["example_en"],
-          "ru" => row["example_ru"]
-        }.compact_blank.presence
+        "chengyu_note" => localized(row, "note_").presence,
+        "chengyu_origin" => localized(row, "origin_").presence,
+        "chengyu_example" => {"zh" => row["example_zh"]}.merge(localized(row, "example_")).compact_blank.presence
       }.compact
     end
 
-    def curated_meanings(row)
-      {"en" => row["en"], "ru" => row["ru"]}.compact_blank
-    end
+    def curated_meanings(row) = localized(row, "")
+
+    def localized(row, prefix) = Locales::ALL.to_h { |code| [code, row["#{prefix}#{code}"]] }.compact_blank
 
     def existing_index(texts)
       index = {}

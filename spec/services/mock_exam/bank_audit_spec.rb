@@ -9,6 +9,20 @@ RSpec.describe MockExam::BankAudit do
     expect(issues.map(&:to_s)).to(eq([]))
   end
 
+  it "translates every reading item up to B1 into Vietnamese" do
+    untranslated = %w[Novice1 Novice2 A1 A2 B1].flat_map do |level|
+      MockExam::Bank.blocks(level).flat_map do |block|
+        missing = block.names["vi"].blank? ? [block.id] : []
+        missing +
+          block.questions.filter_map { |question|
+            block.id if question.names["en"].present? && question.names["vi"].blank?
+          }
+      end
+    end
+
+    expect(untranslated).to(eq([]))
+  end
+
   it "carries fifty questions for every level" do
     counts = MockExam::Bank::LEVELS.index_with { |level| MockExam::Bank.questions(level) }
 

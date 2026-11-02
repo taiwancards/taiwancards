@@ -257,6 +257,12 @@ module Deploy
         code: %w[app/services/huayu/liangci_importer.rb]
       ),
       Step.new(
+        name: "authored_sentences",
+        task: "huayu:sync_authored_sentences",
+        paths: %w[huayu/authored_sentences.json content_sources.json],
+        code: %w[app/services/huayu/authored_sentence_importer.rb app/services/huayu/curated_sentence_importer.rb]
+      ),
+      Step.new(
         name: "segmentation",
         task: "huayu:resegment",
         paths: SEGMENTATION_SOURCES,

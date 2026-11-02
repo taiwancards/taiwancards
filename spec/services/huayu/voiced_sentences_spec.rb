@@ -29,6 +29,7 @@ RSpec.describe Huayu::VoicedSentences do
       clip: "#{text}.mp3",
       en: "en",
       ru: nil,
+      vi: nil,
       emoji: nil,
       emoji_word: nil,
       emoji_category: nil

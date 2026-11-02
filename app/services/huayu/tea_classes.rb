@@ -4,14 +4,10 @@ module Huayu
   class TeaClasses
     DATA = JsonData.new("huayu/tea_classes.json", default: {"classes" => [], "scale" => [], "notes" => []})
 
-    Row = Data.define(:text, :pinyin, :oxidation, :roast, :ru_name, :en_name, :ru, :en) do
-      def name(locale = I18n.locale)
-        (locale.to_s == "ru" ? ru_name : en_name).presence
-      end
+    Row = Data.define(:text, :pinyin, :oxidation, :roast, :names, :bodies) do
+      def name(locale = I18n.locale) = names[locale.to_s].presence
 
-      def body(locale = I18n.locale)
-        (locale.to_s == "ru" ? ru : en).presence || en
-      end
+      def body(locale = I18n.locale) = Locales.pick(bodies, locale)
     end
 
     class << self
@@ -25,14 +21,14 @@ module Huayu
 
       def notes
         @notes ||= Array(raw["notes"]).to_h do |row|
-          [row["key"], {"ru" => row["ru"], "en" => row["en"]}]
+          [row["key"], row.slice(*Locales::ALL)]
         end
       end
 
       def note(key, locale = I18n.locale)
         row = notes[key.to_s] or return nil
 
-        (locale.to_s == "ru" ? row["ru"] : row["en"]).presence || row["en"]
+        Locales.pick(row, locale)
       end
 
       def any?
@@ -55,10 +51,8 @@ module Huayu
             pinyin: row["pinyin"],
             oxidation: row["oxidation"],
             roast: row["roast"],
-            ru_name: row["ru_name"],
-            en_name: row["en_name"],
-            ru: row["ru"],
-            en: row["en"]
+            names: Locales::ALL.to_h { |code| [code, row["#{code}_name"]] },
+            bodies: row.slice(*Locales::ALL)
           )
         end
       end

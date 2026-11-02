@@ -63,7 +63,7 @@ module MockExam
           clip: row.clip,
           options: options,
           answer: options.index(row.emoji),
-          meanings: {"en" => row.en, "ru" => row.ru}
+          meanings: {"en" => row.en, "ru" => row.ru, "vi" => row.vi}
         }
       end
 
@@ -84,7 +84,7 @@ module MockExam
           clip: row.clip,
           options: options,
           answer: options.index(row.text),
-          meanings: {"en" => row.en, "ru" => row.ru}
+          meanings: {"en" => row.en, "ru" => row.ru, "vi" => row.vi}
         }
       end
     end

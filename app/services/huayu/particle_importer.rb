@@ -47,7 +47,7 @@ module Huayu
     def upsert(entry)
       lexeme = Lexeme.find_or_initialize_by(kind: Lexeme.kinds[:particle], text: entry["text"])
       lexeme.readings = {"pinyin" => entry["pinyin"], "zhuyin" => entry["zhuyin"]}.compact_blank
-      lexeme.meanings = {"en" => entry["summary_en"], "ru" => entry["summary_ru"]}.compact_blank
+      lexeme.meanings = localized(entry, "summary") || {}
       lexeme.data = lexeme.data.except(*OWNED).merge(metadata(entry))
       lexeme.add_source(SOURCE)
       lexeme.save! if lexeme.changed?
@@ -70,7 +70,7 @@ module Huayu
     end
 
     def localized(entry, key)
-      {"en" => entry["#{key}_en"], "ru" => entry["#{key}_ru"]}.compact_blank.presence
+      Locales::ALL.to_h { |code| [code, entry["#{key}_#{code}"]] }.compact_blank.presence
     end
   end
 end

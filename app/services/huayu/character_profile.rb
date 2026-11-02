@@ -72,7 +72,17 @@ module Huayu
     SENTENCE_LIMIT = 10
 
     def phrases
-      @phrases ||= ExampleSentences.for(lexeme, user: @user, limit: SENTENCE_LIMIT)
+      @phrases ||= begin
+        own = ExampleSentences.for(lexeme, user: @user, limit: SENTENCE_LIMIT)
+        own.empty? && standard_form ? ExampleSentences.for(standard_form, user: @user, limit: SENTENCE_LIMIT) : own
+      end
+    end
+
+    def standard_form
+      return @standard_form if defined?(@standard_form)
+
+      lead = VariantForms::FORMS.fetch(lexeme.text, [lexeme.text]).first
+      @standard_form = lead == lexeme.text ? nil : Lexeme.visible_to(@user).find_by(kind: :character, text: lead)
     end
 
     def memories

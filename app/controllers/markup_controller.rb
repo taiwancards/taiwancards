@@ -20,9 +20,10 @@ class MarkupController < ApplicationController
   def update
     sentence = sentences.find_by(id: numeric_id(params[:id])) || raise(ActiveRecord::RecordNotFound)
     following = markup_next_path(sentence)
-    meanings = {"en" => params[:en].to_s.strip, "ru" => params[:ru].to_s.strip}.reject { |_, value| value.empty? }
+    edited = {"en" => params[:en].to_s.strip, "ru" => params[:ru].to_s.strip}.reject { |_, value| value.empty? }
+    meanings = sentence.meanings.slice("vi").merge(edited)
     sentence.update!(meanings: meanings)
-    Huayu::SentenceGlossStore.put(sentence.text, en: meanings["en"], ru: meanings["ru"])
+    Huayu::SentenceGlossStore.put(sentence.text, en: meanings["en"], ru: meanings["ru"], vi: meanings["vi"])
     redirect_to(following)
   end
 

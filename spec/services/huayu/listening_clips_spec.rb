@@ -12,6 +12,7 @@ RSpec.describe Huayu::ListeningClips do
           "clip" => "a.mp3",
           "en" => "I go to school.",
           "ru" => "Я иду в школу.",
+          "vi" => "Tôi đi học.",
           "emoji" => "🏫",
           "emoji_word" => "學校",
           "emoji_category" => "place"
@@ -48,7 +49,9 @@ RSpec.describe Huayu::ListeningClips do
     expect(row.clip).to(eq("a.mp3"))
     expect(row.emoji?).to(be(true))
     expect(row.translation(:ru)).to(eq("Я иду в школу."))
+    expect(row.translation(:vi)).to(eq("Tôi đi học."))
     expect(described_class.for_text("他喝咖啡。").translation(:ru)).to(eq("He drinks coffee."))
+    expect(described_class.for_text("他喝咖啡。").translation(:vi)).to(eq("He drinks coffee."))
   end
 
   it "filters pools by level" do

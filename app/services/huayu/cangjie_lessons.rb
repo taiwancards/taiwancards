@@ -14,8 +14,8 @@ module Huayu
       def lede_for(locale) = CangjieLessons.text(lede, locale)
     end
 
-    Group = Data.define(:id, :zh, :keys, :ru, :en) do
-      def name(locale) = (locale.to_s == "ru" ? ru : en).presence || en
+    Group = Data.define(:id, :zh, :keys, :names) do
+      def name(locale) = Locales.pick(names, locale)
     end
 
     class << self
@@ -40,7 +40,7 @@ module Huayu
         {
           stages: Array(raw["stages"]).freeze,
           groups: Array(raw["groups"])
-            .map { |row| Group.new(**row.symbolize_keys.slice(:id, :zh, :keys, :ru, :en)) }
+            .map { |row| Group.new(id: row["id"], zh: row["zh"], keys: row["keys"], names: row.slice(*Locales::ALL)) }
             .freeze,
           core: Array(raw["core"]).freeze,
           exam: Array(raw["exam"]).freeze,

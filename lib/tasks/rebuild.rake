@@ -248,6 +248,20 @@ namespace(:huayu) do
     puts("sources: #{ContentSources::Importer.new.call}")
   end
 
+  desc("Store the example sentences written for TaiwanCards")
+  task(import_authored_sentences: :environment) do
+    Huayu::AuthoredSentenceImporter.new(io: $stdout).call
+  end
+
+  desc("Store the written example sentences and link them to their words when they changed")
+  task(sync_authored_sentences: :environment) do
+    result = Huayu::AuthoredSentenceImporter.new(io: $stdout).call
+    next if (result.imported + result.updated + result.retired).zero?
+
+    Huayu::SentenceProfiler.new(scope: Huayu::SentenceProfiler.stale).call
+    Huayu::SentenceWordLinker.new.call
+  end
+
   desc("Rebuild derived content, keeping characters, words and user progress")
   task(refresh: :environment) do
     unless ENV["CONFIRM"] == "yes"
@@ -287,6 +301,7 @@ namespace(:huayu) do
       ["huayu:import_etymology", "etymology"],
       ["huayu:import_china_markers", "China vocabulary markers"],
       ["huayu:import_sentences", "sentences"],
+      ["huayu:import_authored_sentences", "example sentences written for TaiwanCards"],
       ["huayu:dedupe_template_sentences", "collapse template families"],
       ["huayu:supplement_characters", "supplement character inventory"],
       ["huayu:link_components", "word→character links"],
@@ -377,6 +392,7 @@ namespace(:huayu) do
       ["huayu:import_etymology", "etymology"],
       ["huayu:import_china_markers", "China vocabulary markers"],
       ["huayu:import_sentences", "sentences from every corpus"],
+      ["huayu:import_authored_sentences", "example sentences written for TaiwanCards"],
       ["huayu:dedupe_template_sentences", "collapse template families"],
       ["huayu:supplement_characters", "supplement character inventory"]
     ]

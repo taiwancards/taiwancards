@@ -25,7 +25,7 @@ module Huayu
         lexeme = @upserter.word(
           text,
           readings: {"pinyin" => entry["pinyin"], "zhuyin" => entry["zhuyin"]}.compact_blank,
-          meanings: {"en" => entry["en"], "ru" => entry["ru"]}.compact_blank,
+          meanings: entry.slice(*Locales::ALL).compact_blank,
           pos: "N",
           source: SOURCE
         )

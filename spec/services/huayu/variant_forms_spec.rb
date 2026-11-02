@@ -37,6 +37,18 @@ RSpec.describe Huayu::VariantForms do
     expect(described_class.new(user: nil).call(plain).map(&:text)).to(eq(%w[櫃檯 櫃台 櫃臺]))
   end
 
+  it "pairs a whole-word variant and puts the Taiwan spelling first" do
+    plain = word("手表", "wristwatch")
+    word("手錶", "wristwatch")
+
+    expect(described_class.new(user: nil).call(plain).map(&:text)).to(eq(%w[手錶 手表]))
+  end
+
+  it "keeps a whole-word pair from touching other words with the same characters" do
+    expect(described_class.new(user: nil).spellings("黑板")).to(be_empty)
+    expect(described_class.new(user: nil).spellings("表面")).to(be_empty)
+  end
+
   it "keeps a word whose only spelling we hold out of the list" do
     lonely = word("臺北", "Taipei")
 

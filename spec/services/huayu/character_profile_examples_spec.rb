@@ -55,4 +55,16 @@ RSpec.describe Huayu::CharacterProfile do
       expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq([english.id, russian.id]))
     end
   end
+
+  it "borrows the standard form's examples for a variant character that has none" do
+    standard = Lexeme.create!(kind: :character, text: "裡", meanings: {"en" => "inside"})
+    variant = Lexeme.create!(kind: :character, text: "裏", meanings: {"en" => "inside"})
+    sentence = Lexeme.new(kind: :sentence, text: "屋子裡很暖和")
+    sentence.lexeme_content_sources.build(content_source: source)
+    sentence.save!
+    SentenceWord.create!(sentence:, lexeme: standard, gdex: 10)
+
+    expect(described_class.new(variant, user: nil).phrases.map(&:id)).to(eq([sentence.id]))
+    expect(described_class.new(character, user: nil).phrases).to(be_empty)
+  end
 end

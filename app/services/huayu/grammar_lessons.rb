@@ -38,7 +38,7 @@ module Huayu
       def exclusion_reason(locale)
         return nil if excluded.blank?
 
-        excluded[locale.to_s == "ru" ? "reason_ru" : "reason_en"]
+        excluded["reason_#{locale}"].presence || excluded["reason_en"]
       end
 
       def title(locale) = text_for(locale, "title")

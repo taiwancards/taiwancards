@@ -56,7 +56,7 @@ RSpec.describe "Festivals and the lunar calendar" do
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include(I18n.t("calendar.title", locale: :ru)))
-    expect(response.body).to(include(Huayu::Holidays.all.first.summary_ru))
+    expect(response.body).to(include(Huayu::Holidays.all.first.summary(:ru)))
   end
 
   it "translates every festival and word into both locales" do
@@ -121,11 +121,9 @@ RSpec.describe Huayu::Holidays do
     described_class.all.each do |entry|
       expect(entry.rule["type"]).to(be_in(%w[lunar gregorian solar_term]))
       expect(entry.words.size).to(be_between(5, 10))
-      expect(entry.summary_en).to(be_present)
-      expect(entry.summary_ru).to(be_present)
+      expect(entry.summaries.values_at(*Locales::ALL)).to(all(be_present))
       entry.words.each do |word|
-        expect(word.gloss_en).to(be_present)
-        expect(word.gloss_ru).to(be_present)
+        expect(word.glosses.values_at(*Locales::ALL)).to(all(be_present))
       end
     end
   end

@@ -56,6 +56,7 @@ RSpec.describe "Mock exams" do
         clip: "a.mp3",
         en: "I go to school.",
         ru: nil,
+        vi: nil,
         emoji: "🏫",
         emoji_word: "學校",
         emoji_category: "place"
@@ -66,6 +67,7 @@ RSpec.describe "Mock exams" do
         clip: "b.mp3",
         en: "He is at the bank.",
         ru: nil,
+        vi: nil,
         emoji: "🏦",
         emoji_word: "銀行",
         emoji_category: "place"
@@ -76,6 +78,7 @@ RSpec.describe "Mock exams" do
         clip: "c.mp3",
         en: "I am waiting for you at the station.",
         ru: nil,
+        vi: nil,
         emoji: "🚉",
         emoji_word: "車站",
         emoji_category: "place"

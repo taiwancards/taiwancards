@@ -23,20 +23,24 @@ RSpec.describe "mood particle data" do
     expect(spellings.tally.select { |_, count| count > 1 }).to(be_empty)
   end
 
-  it "writes both languages for the summary, the force and the body" do
+  it "writes every language for the summary, the force and the body" do
     incomplete = entries.reject { |entry|
-      %w[summary_en summary_ru force_en force_ru].all? { |field| entry[field].to_s.present? } &&
-        entry["body_en"].present? &&
-        entry["body_ru"].present?
+      Locales::ALL.all? { |code|
+        entry["summary_#{code}"].to_s.present? && entry["force_#{code}"].to_s.present? && entry["body_#{code}"].present?
+      }
     }
 
     expect(incomplete.map { |entry| entry["text"] }).to(be_empty)
   end
 
-  it "translates and annotates every example in both languages" do
+  it "translates and annotates every example in every language" do
     thin = entries.flat_map { |entry|
       Array(entry["examples"]).filter_map { |row|
-        "#{entry["text"]}: #{row["zh"]}" unless %w[zh en ru note_en note_ru].all? { |field| row[field].to_s.present? }
+        unless ["zh", *Locales::ALL, *Locales::ALL.map { |code| "note_#{code}" }].all? { |field|
+            row[field].to_s.present?
+          }
+          "#{entry["text"]}: #{row["zh"]}"
+        end
       }
     }
 

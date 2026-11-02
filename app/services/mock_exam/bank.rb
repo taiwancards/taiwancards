@@ -68,7 +68,7 @@ module MockExam
           level: level,
           format: raw.fetch("format"),
           text: raw["zh"].to_s,
-          names: raw.slice("en", "ru"),
+          names: raw.slice("en", "ru", "vi"),
           sign: raw["sign"] && sign(raw["sign"]),
           questions: raw.fetch("questions", []).each_with_index.map { |question, index| question(question, index) }
         )
@@ -89,8 +89,8 @@ module MockExam
           ask: raw["ask"].to_s,
           options: raw.fetch("options"),
           answer: raw.fetch("answer").to_i,
-          names: raw.slice("en", "ru"),
-          notes: {"en" => raw["why_en"], "ru" => raw["why_ru"]}.compact_blank
+          names: raw.slice("en", "ru", "vi"),
+          notes: {"en" => raw["why_en"], "ru" => raw["why_ru"], "vi" => raw["why_vi"]}.compact_blank
         )
       end
     end

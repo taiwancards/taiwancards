@@ -22,8 +22,16 @@ module Huayu
       %w[脣 唇]
     ].freeze
 
+    WORDS = [
+      %w[手錶 手表],
+      %w[老闆 老板],
+      %w[老闆娘 老板娘]
+    ].freeze
+
     FORMS = GROUPS.flat_map { |group| group.map { |char| [char, group] } }.to_h.freeze
     RANKS = GROUPS.flat_map { |group| group.each_with_index.map { |char, index| [char, index] } }.to_h.freeze
+    WORD_FORMS = WORDS.flat_map { |group| group.map { |text| [text, group] } }.to_h.freeze
+    WORD_RANKS = WORDS.flat_map { |group| group.each_with_index.map { |text, index| [text, index] } }.to_h.freeze
     SPELLINGS = 27
     LAST = Float::INFINITY
 
@@ -45,13 +53,7 @@ module Huayu
     end
 
     def spellings(text)
-      chars = text.to_s.each_char.to_a
-      return [] if chars.length < 2 || chars.none? { |char| FORMS.key?(char) }
-
-      options = chars.map { |char| FORMS[char] || [char] }
-      return [] if options.reduce(1) { |carry, forms| carry * forms.length } > SPELLINGS
-
-      options.first.product(*options.drop(1)).map(&:join)
+      WORD_FORMS.fetch(text.to_s) { glyph_spellings(text.to_s) }
     end
 
     def taiwan?(text) = text.to_s.match?(TAIWAN)
@@ -62,10 +64,21 @@ module Huayu
       [glyphs(lexeme.text), -lexeme.senses.size, lexeme.freq_rank || LAST, lexeme.text]
     end
 
+    def glyph_spellings(text)
+      chars = text.each_char.to_a
+      return [] if chars.length < 2 || chars.none? { |char| FORMS.key?(char) }
+
+      options = chars.map { |char| FORMS[char] || [char] }
+      return [] if options.reduce(1) { |carry, forms| carry * forms.length } > SPELLINGS
+
+      options.first.product(*options.drop(1)).map(&:join)
+    end
+
     def glyphs(text)
       tai = taiwan?(text) ? TAIWAN_TAI : PLAIN_TAI
 
-      text.each_char.sum { |char| TAI.include?(char) ? tai.index(char) : RANKS.fetch(char, 0) }
+      WORD_RANKS.fetch(text, 0) +
+        text.each_char.sum { |char| TAI.include?(char) ? tai.index(char) : RANKS.fetch(char, 0) }
     end
   end
 end

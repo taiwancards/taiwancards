@@ -30,6 +30,7 @@ module Huayu
       :strokes,
       :en,
       :ru,
+      :vi,
       :fields,
       :cohorts,
       :lean
@@ -40,7 +41,7 @@ module Huayu
 
       def per_mille(cohort) = cohorts[cohort].to_f
 
-      def meaning(locale) = locale.to_s == "ru" ? (ru || en) : en
+      def meaning(locale) = {"ru" => ru, "vi" => vi}[locale.to_s] || en
 
       def leans = first == second ? "any" : (first > second ? "first" : "second")
 
@@ -87,6 +88,7 @@ module Huayu
             strokes: row["strokes"],
             en: row["en"],
             ru: row["ru"],
+            vi: row["vi"],
             fields: Array(row["fields"]),
             cohorts: (row["cohorts"] || {}),
             lean: row["lean"]
@@ -133,6 +135,7 @@ module Huayu
               "strokes",
               "en",
               "ru",
+              "vi",
               "fields",
               "lean",
               "cohorts"

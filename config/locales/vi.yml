@@ -6,7 +6,7 @@ vi:
     heading: Đăng nhập bằng Google và dữ liệu của bạn
     body: Đăng nhập bằng Google chỉ là một cách tùy chọn để tạo tài khoản. Bạn có thể đăng ký bằng địa chỉ email và mật khẩu thông thường; khi đó ứng dụng không yêu cầu bất kỳ dữ liệu nào từ Google.
     signin: Khi bạn đăng nhập bằng Google, TaiwanCards nhận địa chỉ email và tên trong hồ sơ của bạn. Thông tin này dùng để tạo tài khoản và gắn tiến độ học của bạn vào đó.
-    drive: Nếu bạn bấm riêng nút «Sao lưu vào Google Drive», ứng dụng sẽ tạo một tệp duy nhất trên Drive của bạn chứa bản sao lưu tiến độ học, và chỉ có thể đọc và ghi đè đúng tệp đó.
+    drive: Nếu bạn bấm riêng nút “Sao lưu vào Google Drive”, ứng dụng sẽ tạo một tệp duy nhất trên Drive của bạn chứa bản sao lưu tiến độ học, và chỉ có thể đọc và ghi đè đúng tệp đó.
     limits: "Quyền truy cập giới hạn trong phạm vi drive.file: ứng dụng chỉ chạm tới các tệp do chính nó tạo ra. TaiwanCards không thể xem hay mở bất kỳ tệp nào khác trên Drive của bạn. Không có sao lưu tự động — chỉ khi bạn bấm nút."
     privacy: Chính sách quyền riêng tư
     terms: Điều khoản sử dụng
@@ -44,11 +44,11 @@ vi:
         - Một thư ngắn về những gì mới trong ứng dụng được gửi tới email tài khoản của bạn, nhiều nhất một hoặc hai lần mỗi tháng. Không có quảng cáo và không có gì từ bên thứ ba.
         - "Nhắc ôn thẻ đến hạn: nhiều nhất một thư mỗi ngày, chỉ khi có thẻ đang chờ, vào giờ bạn thường học. Tính năng này bật sẵn và có thể tắt bằng một cú bấm hoặc trong hồ sơ, tách biệt với bản tin."
         - Mỗi thư đều có liên kết hủy đăng ký bằng một cú bấm, và bạn cũng có thể tắt thư trong hồ sơ. Hủy đăng ký không thay đổi gì khác trong tài khoản của bạn.
-        - "Chúng tôi ghi lại thời điểm mỗi thư được gửi cho bạn, lần đầu bạn theo một liên kết trong thư quay lại ứng dụng và bạn đã làm vậy bao nhiêu lần, cũng như thời điểm bạn hủy đăng ký. Nếu thư không gửi được, chúng tôi giữ lại thông báo lỗi của máy chủ thư. Việc mở thư không bị theo dõi: thư không chứa điểm ảnh theo dõi, hình ảnh được đính kèm ngay trong thư."
+        - "Chúng tôi ghi lại thời điểm mỗi thư được gửi cho bạn, lần đầu bạn bấm một liên kết trong thư để quay lại ứng dụng và bạn đã làm vậy bao nhiêu lần, cũng như thời điểm bạn hủy đăng ký. Nếu thư không gửi được, chúng tôi giữ lại thông báo lỗi của máy chủ thư. Việc mở thư không bị theo dõi: thư không chứa điểm ảnh theo dõi, hình ảnh được đính kèm ngay trong thư."
         - Thư được chuyển cho Resend, một dịch vụ gửi email; dịch vụ này nhận địa chỉ của bạn và nội dung thư chỉ để chuyển thư đi.
     donation:
       heading: Nút ủng hộ
-      body: Trang «Ủng hộ trang web» có một liên kết đơn giản tới Buy Me a Coffee, một dịch vụ bên ngoài. Không có gì được tải từ dịch vụ đó cho tới khi bạn bấm vào liên kết, không có dữ liệu tài khoản nào được gửi đi, và việc ủng hộ không bao giờ là bắt buộc.
+      body: Trang “Ủng hộ trang web” có một liên kết đơn giản tới Buy Me a Coffee, một dịch vụ bên ngoài. Không có gì được tải từ dịch vụ đó cho tới khi bạn bấm vào liên kết, không có dữ liệu tài khoản nào được gửi đi, và việc ủng hộ không bao giờ là bắt buộc.
     where:
       heading: Dữ liệu được lưu ở đâu
       body: Ứng dụng và cơ sở dữ liệu chạy trên Render tại Singapore. Lưu lượng đi qua Cloudflare, tệp âm thanh được phục vụ từ Cloudflare R2, còn bản tin được gửi qua Resend, một công ty Mỹ, từ máy chủ đặt tại Nhật Bản. Các nhà cung cấp này chỉ xử lý dữ liệu để vận hành dịch vụ và gửi thư. Nếu bạn dùng tính năng sao lưu vào Google Drive, bản sao đó nằm trong chính tài khoản Google của bạn.
@@ -99,7 +99,7 @@ vi:
       body: Mã nguồn ứng dụng và văn bản gốc thuộc về tác giả. Từ điển, kho ngữ liệu, âm thanh và phông chữ đến từ bên thứ ba và được sử dụng theo giấy phép riêng của chúng, mỗi giấy phép đều được nêu trên trang giấy phép. Không điều khoản nào ở đây trao cho bạn quyền đối với tài liệu của bên thứ ba vượt quá các giấy phép đó.
     availability:
       heading: Tính sẵn sàng
-      body: Dịch vụ được cung cấp «theo hiện trạng» và «khi sẵn có», không có bất kỳ bảo đảm nào về hoạt động liên tục, cũng không bảo đảm dữ liệu ngôn ngữ hoàn toàn không có lỗi. Đây là công cụ hỗ trợ học tập, không phải nguồn chuẩn mực về ngôn ngữ.
+      body: Dịch vụ được cung cấp “theo hiện trạng” và “khi sẵn có”, không có bất kỳ bảo đảm nào về hoạt động liên tục, cũng không bảo đảm dữ liệu ngôn ngữ hoàn toàn không có lỗi. Đây là công cụ hỗ trợ học tập, không phải nguồn chuẩn mực về ngôn ngữ.
     suspension:
       heading: Tạm ngừng
       body: Tài khoản vi phạm các điều khoản này hoặc gây nguy hại cho dịch vụ có thể bị tạm ngừng hoặc xóa.
@@ -173,7 +173,7 @@ vi:
       two_characters: Hai chữ
       one_character: Một chữ
       qualities: Tên nên nói gì về bạn
-      qualities_note: Một hoặc hai ý. Chọn ba ý thì số tên phù hợp đã giảm đi rất nhiều.
+      qualities_note: Một hoặc hai ý. Chọn ba ý thì số tên phù hợp sẽ giảm đi rất nhiều.
       strokes: Cách viết
       rarity: Mức độ phổ biến
       any: Không quan trọng
@@ -206,14 +206,13 @@ vi:
       why:
         meaning_two: "Tên nói hai điều cùng lúc — %{first}, %{second}."
         meaning_one: Cả hai chữ cùng hướng về một ý — %{first} — khiến cái tên trọn vẹn.
-        meaning_single: "Ý nghĩa nằm ở %{text} — %{first}; chữ còn lại có mặt vì âm thanh."
+        meaning_single: "Ý nghĩa nằm ở %{text} — %{first}; chữ còn lại được chọn vì cách đọc."
         meaning_solo: "Chỉ một chữ, và chữ đó nói về %{first}: tên riêng ngắn ít gặp hơn ở Đài Loan, nên dễ được nhớ."
         meaning_plain: >-
           Những chữ này không được nhặt ra từ từ điển: người Đài Loan đọc một cái tên như thế này như một
           sắc thái hơn là một câu có nghĩa.
         sound_common: >-
-          Giai điệu %{tones} là một trong những dạng bình thường nhất của tên người Đài Loan, đọc lên trôi
-          chảy không vấp.
+          Giai điệu %{tones} là một trong những dạng phổ biến nhất của tên người Đài Loan, đọc lên trôi chảy không vấp.
         sound_rare: >-
           Mẫu thanh %{tones} không phổ biến, nên cái tên nghe có nét riêng mà vẫn dễ đọc.
         sound_repeat: Hai thanh giống nhau liền nhau là dạng người Đài Loan tránh — đọc liền nghe phẳng.
@@ -239,8 +238,7 @@ vi:
       young: Sinh năm 1980–1994
       recent: Sinh từ năm 1995 trở đi
     cohort_note: >-
-      Sắp xếp theo mức phổ biến của chữ trong thế hệ đó, tính trên một nghìn người. Cách đặt tên thay đổi
-      nhanh: trong ba mươi chữ thứ hai phổ biến nhất, chỉ có hai chữ chung giữa nhóm già nhất và nhóm trẻ nhất.
+      Sắp xếp theo mức phổ biến của chữ trong thế hệ đó, tính trên một nghìn người. Cách đặt tên thay đổi nhanh: trong ba mươi chữ phổ biến nhất ở vị trí thứ hai của tên, nhóm già nhất và nhóm trẻ nhất chỉ có chung hai chữ.
     filters:
       all: Tất cả
     positions:
@@ -328,7 +326,7 @@ vi:
       practice-zhuyin-trainer: "Chú âm"
       practice-drill: "Âm"
       tones-drill: "Nghe thanh"
-      pronunciation: "Giọng"
+      pronunciation: "Phát âm"
       writing: "Viết"
       practice-typing: "Gõ chữ"
       cangjie: "Thương Hiệt"
@@ -361,8 +359,7 @@ vi:
       hiện bằng tiếng Anh.
     hanzi_font_toggle: Kiểu chữ Hán
     hanzi_font_hint: >-
-      Kiểu chữ Hán. Bật: "chữ khải (楷書), kiểu chữ thư pháp thể hiện nét như khi viết tay. Tắt: kiểu chữ không"
-      chân đơn giản. Mặc định là bật.
+      Kiểu chữ Hán. Bật: chữ khải (楷書), kiểu chữ thư pháp thể hiện nét như khi viết tay. Tắt: kiểu chữ không chân đơn giản. Mặc định là bật.
     readings_toggle: Chú âm và bính âm
     audio_rate_toggle: Tốc độ âm thanh
     audio_rate_hint: >-
@@ -418,11 +415,11 @@ vi:
     liangci: Lượng từ 量詞
     zhuci: Trợ từ ngữ khí 語氣詞
     phrases: "Sổ tay mẫu câu"
-    notices: Bảng thông báo
+    notices: Biển báo và thông báo
     everyday: Đời sống hằng ngày
     variants: Khác biệt từ vựng
     names: Tên người Đài Loan
-    metro: Tàu điện ngầm Đài Bắc
+    metro: Tàu điện Đài Bắc
     calendar: Lễ tết và lịch
     medicine: Thuốc men và bệnh viện
     culture: Ghi chú văn hóa Đài Loan
@@ -450,16 +447,16 @@ vi:
       taiwan: Từ vựng đời thường, những câu người ta hay nói, tàu điện Đài Bắc và lịch.
       settings: Hồ sơ, thống kê, tùy chọn hiển thị và trang trợ giúp.
     item_lede:
-      course: "Sáu mươi bài, từ «xin chào» đến B1 — hội thoại, từ vựng, ngữ pháp, bài tập."
+      course: "Sáu mươi bài, từ “xin chào” đến B1 — hội thoại, từ vựng, ngữ pháp, bài tập."
       path: "Lộ trình của bạn: học gì theo thứ tự nào, và bạn đang ở bước nào."
-      desk: "Màn hình của ngày — bao nhiêu thẻ đến hạn, bao nhiêu thẻ mới, và một nút đưa bạn tới đúng chỗ."
+      desk: "Tổng quan hôm nay — bao nhiêu thẻ đến hạn, bao nhiêu thẻ mới, và một nút đưa bạn tới đúng chỗ."
       desks: "Bộ thẻ riêng từ văn bản, tệp, bài hát hay bài học, có nhóm và liên kết chia sẻ."
       reader: "Dán bất kỳ văn bản nào, văn bản sẽ được tách thành từ, có chú âm trên những chữ bạn chưa biết."
       graded: "Truyện theo cấp độ, đọc từ đầu đến cuối mà không phải dừng lại tra từ điển."
       placement: "Bài kiểm tra thích ứng xác định trình độ khởi đầu và đánh dấu những gì bạn đã biết."
       plan: "Chọn cấp TOCFL và ngày thi, hệ thống sẽ tính lượng bài mới mỗi ngày."
-      triage: "Vuốt nhanh một loạt từ vào «đã biết» và «cần học» mà không cần mở thẻ."
-      textbook: "Tóm tắt từng bài trong giáo trình, có phân tích và dấu «đã thuộc bài»."
+      triage: "Vuốt nhanh một loạt từ vào “đã biết” và “cần học” mà không cần mở thẻ."
+      textbook: "Tóm tắt từng bài trong giáo trình, có phân tích và dấu “đã thuộc bài”."
       textbook-phrases: "Luyện mẫu câu từ giáo trình — thay thế theo mẫu, đọc to và tính giờ."
       stories: "Phòng đọc: văn bản trọn vẹn với cùng kiểu phân tích như công cụ đọc."
       exams: "Đề thi TOCFL thật kèm đáp án, tệp PDF và âm thanh."
@@ -482,15 +479,15 @@ vi:
       variants: "Chỗ Đài Loan khác các nơi khác — cách đọc, tự dạng, từ vựng."
       names: "Tên người Đài Loan được cấu tạo thế nào, theo số liệu hộ tịch quốc gia."
       practice-zhuyin-trainer: "Nghe chú âm theo nhóm: nhóm tiếp theo chỉ mở khi bạn đã nắm nhóm này."
-      practice-drill: "Chú âm đối chiếu bính âm theo tốc độ, ký hiệu yếu sẽ xuất hiện nhiều hơn."
+      practice-drill: "Chú âm đối chiếu bính âm theo tốc độ, ký hiệu bạn còn yếu sẽ xuất hiện nhiều hơn."
       tones-drill: "Nghe thanh điệu qua bản thu phòng thu, giọng nam và giọng nữ xen kẽ."
-      pronunciation: "Thu âm qua micrô và xem, từng âm tiết, thanh điệu và âm bị lệch ở đâu."
+      pronunciation: "Thu âm qua micrô và xem thanh điệu và âm bị lệch ở đâu trong từng âm tiết."
       writing: "Viết chữ từ trí nhớ, không có gợi ý; kết quả được tính vào kỹ năng viết."
       practice-typing: "Bàn phím chú âm kiểu Đài Loan, luyện cho tới khi gõ thành phản xạ."
       cangjie: "Gõ Thương Hiệt: tách chữ thành bộ phận và gõ mã của chữ."
       mock: "Thi thử TOCFL — dạng thường, dạng tranh và dạng nghe, tái tạo được từ một mã khởi tạo."
       everyday: "Từ vựng theo tình huống: ăn uống, đồ uống, đi lại, giấy tờ, thời tiết, tiếng lóng."
-      phrases: "158 mẫu câu trong 15 tình huống, kể cả nửa số mẫu bạn chỉ cần nghe hiểu."
+      phrases: "158 mẫu câu trong 15 tình huống, kèm nửa còn lại bạn chỉ cần nghe hiểu."
       notices: "Biển báo và thông báo bạn gặp trên phố và trên phương tiện giao thông."
       metro: "Bản đồ tàu điện Đài Bắc, mỗi ga kèm ý nghĩa và cách đọc."
       calendar: "Âm lịch, lễ tết, từ vựng theo mùa và hai công cụ đổi ngày."
@@ -713,7 +710,7 @@ vi:
       course_title: Khóa học theo giai đoạn
       course_overall: "Đã xong %{percent}%"
       practice_title: Luyện tập
-      practice_body: Mười phút luyện âm và luyện viết, thêm vào phần thẻ.
+      practice_body: Mười phút luyện âm và luyện viết, bên cạnh phần thẻ.
       level_title: Trình độ của bạn
       graded: Đọc theo cấp độ
   discovery:
@@ -799,7 +796,7 @@ vi:
     finish_kicker: Xong
     finish_title:
       other: Bạn đã biết %{count} từ mới
-    finish_body: "Các từ này được đưa vào bộ thẻ «Những từ đầu tiên», và ứng dụng sẽ đưa chúng trở lại ngay trước khi bạn kịp quên."
+    finish_body: "Các từ này được đưa vào bộ thẻ “Những từ đầu tiên”, và ứng dụng sẽ đưa chúng trở lại ngay trước khi bạn kịp quên."
     finish: Kết thúc bài học
     done_kicker: "Bài %{done}/%{total}"
     done_title: Đã xong bài học
@@ -867,7 +864,7 @@ vi:
           - title: Từ điển
             text: Chữ phồn thể, chú âm và cách đọc của Đài Loan, âm thanh do người bản ngữ đọc và ví dụ từ văn bản thật.
           - title: Phát âm
-            text: Đọc to một từ và nhận nhận xét về thanh điệu và âm của bạn.
+            text: Đọc to một từ và nhận phản hồi về thanh điệu và âm của bạn.
           - title: Ngữ pháp và đọc
             text: Bài ngữ pháp, câu nói thường ngày và văn bản phân theo cấp độ — từ những từ đầu tiên đến trình độ cao.
         outro: Trang chủ cho biết hôm nay nên bắt đầu từ đâu — thường chỉ mất vài phút.
@@ -920,7 +917,7 @@ vi:
       enable: Nhắc tôi vào ngày mai
       enabled: "Xong: nếu ngày mai bạn không quay lại, chúng tôi sẽ nhắc."
   goals:
-    saved: "Đã bật chế độ «%{goal}». Bạn có thể đổi trong hồ sơ."
+    saved: "Đã bật chế độ “%{goal}”. Bạn có thể đổi trong hồ sơ."
     current: Chế độ hiện tại
     profile:
       title: Chế độ và trình độ
@@ -1024,7 +1021,7 @@ vi:
       dispatched: Đã bắt đầu gửi trong nền. Hãy tải lại trang để theo dõi.
       incomplete: Hãy điền tiêu đề và nội dung bằng cả hai ngôn ngữ trước.
       not_configured: Chưa cấu hình gửi thư (thiếu SMTP_ADDRESS và các biến khác), nên chưa thể gửi gì.
-      send_hint: "Giới hạn mỗi ngày %{limit}; còn %{budget} thư cho 24 giờ tới, phần còn lại chờ nút «Gửi thư còn lại»."
+      send_hint: "Giới hạn mỗi ngày %{limit}; còn %{budget} thư cho 24 giờ tới, phần còn lại chờ nút “Gửi thư còn lại”."
       delete: Xóa bản nháp
       delete_confirm: Xóa bản nháp này?
       stat_sent: "Đã gửi %{sent}/%{total}"
@@ -1049,7 +1046,7 @@ vi:
     text_placeholder: Dán văn bản đã xuất vào đây
     name_label: Tên bộ thẻ
     check: Kiểm tra các từ
-    pick_source: Chọn ứng dụng mà danh sách được xuất ra.
+    pick_source: Chọn ứng dụng mà bạn đã xuất danh sách.
     too_big: "Tệp lớn hơn %{limit} MB. Hãy chia thành các tệp xuất nhỏ hơn."
     unreadable: "Không tìm thấy từ nào viết bằng chữ Hán. Hãy kiểm tra đây có đúng là tệp xuất từ ứng dụng bạn đã chọn không."
     default_name: "Từ %{source}"
@@ -1077,7 +1074,7 @@ vi:
       capped: "Một bộ thẻ chứa tối đa %{limit} từ, nên chỉ %{limit} từ đầu tiên được thêm. Hãy chia danh sách nếu cần phần còn lại."
       choices_lede: "Một cách viết giản thể ứng với nhiều từ phồn thể. Hãy chọn từ bạn muốn."
       skip_choice: Bỏ qua
-      china_lede: "Ở Đài Loan những từ này được nói khác. Chúng bị bỏ qua; hãy xem từ của Đài Loan để thêm vào thay thế."
+      china_lede: "Ở Đài Loan những từ này được nói khác. Chúng bị bỏ qua; hãy xem từ tương ứng của Đài Loan và thêm từ đó thay vào."
       taiwan_says: "Đài Loan: %{words}"
       no_taiwan_word: chưa có trong từ điển của chúng tôi
       converted_lede: "Viết bằng chữ giản thể; mỗi từ chỉ có đúng một cách viết của Đài Loan trong từ điển."
@@ -1102,7 +1099,7 @@ vi:
     panel_fresh: Mới với bạn
     panel_none: "—"
     reorder: Sắp xếp lại
-    reorder_hint: Kéo tay nắm để sắp xếp lại.
+    reorder_hint: Kéo và thả để sắp xếp lại.
     paste_hint: >-
       Mỗi từ một dòng hoặc cách nhau bằng dấu phẩy — tùy bạn. Bạn cũng có thể dán cả đoạn văn, hệ thống sẽ
       tự tách thành từ. Nghĩa lấy từ từ điển của chúng tôi; bạn không bao giờ phải tự gõ.
@@ -1162,7 +1159,7 @@ vi:
     paste_label: Dán văn bản
     paste_placeholder: Dán bất kỳ văn bản tiếng Quan thoại nào — biển hiệu, tin nhắn, bài báo…
     empty: Chưa có bộ thẻ nào. Hãy tạo từ một văn bản bất kỳ.
-    empty_text: Không tìm thấy từ nào đã biết trong văn bản đó.
+    empty_text: Không tìm thấy từ nào có trong từ điển trong văn bản đó.
     created: Đã tạo bộ thẻ.
     updated: Đã cập nhật bộ thẻ.
     deleted: Đã xóa bộ thẻ.
@@ -1272,7 +1269,7 @@ vi:
     export_link: Tải tệp xuất
   groups:
     reorder: Sắp xếp lại
-    reorder_hint: Kéo tay nắm để sắp xếp lại các nhóm.
+    reorder_hint: Kéo và thả để sắp xếp lại các nhóm.
     title: Nhóm
     default_name: "Nhóm %{count}"
     new: Nhóm mới
@@ -1458,12 +1455,12 @@ vi:
     examples: Trong câu thật
     also_title: Những trợ từ còn lại ở đâu
     also_grammar_html: 嗎, 了 và 的 cũng đứng cuối câu, nhưng chúng là ngữ pháp chứ không phải ngữ khí — dấu hiệu câu hỏi, sự thay đổi trạng thái, khung nhấn mạnh. Chúng có bài riêng trong mục ngữ pháp.
-    also_elsewhere: 唄, 咯, 嘞 và 咩 là trợ từ có thật, nhưng không thuộc tiếng Quan thoại Đài Loan. Bạn có thể bắt gặp chúng trong phụ đề phim nước ngoài; ở Đài Loan không ai dùng, nên ở đây chúng không có thẻ.
+    also_elsewhere: 唄, 咯, 嘞 và 咩 là trợ từ có thật, nhưng là của tiếng Bắc Kinh và tiếng Quảng Đông, không thuộc tiếng Quan thoại Đài Loan. Bạn có thể bắt gặp chúng trong phụ đề hoặc trong lời nói của người Trung Quốc; ở Đài Loan không ai dùng, nên ở đây chúng không có thẻ.
     families:
       core: Cốt lõi hằng ngày
       mood: Ngữ khí và sự thân mật
       taiwan: Kiểu Đài Loan
-      limiting: "«Chỉ thế thôi»"
+      limiting: "“Chỉ thế thôi”"
       cluster: Tổ hợp
   liangci:
     title: Lượng từ 量詞
@@ -1542,8 +1539,8 @@ vi:
     level_field: Trình độ bạn đã có
     level_test: làm bài kiểm tra trình độ
     level_change:
-      up: "Tiến độ với những từ bạn đã bắt đầu học vẫn được giữ. «%{level}» và mọi cấp thấp hơn giờ được tính là đã xong: thỉnh thoảng chúng tôi sẽ chỉ kiểm tra những từ khó nhất của «%{level}». Từ mới và ngữ pháp bắt đầu từ đầu «%{next}»."
-      down: "Mọi tiến độ với các từ ở cấp cao hơn vẫn được giữ, và những thẻ bạn đã bắt đầu vẫn được ôn. Nhưng từ mới và ngữ pháp giờ đến theo thứ tự, từ đầu «%{next}» — tốt nhất là học lần lượt từng cấp. Tạm thời không có từ mới ở cấp cao hơn; rồi bạn sẽ tự nhiên tới đó."
+      up: "Tiến độ với những từ bạn đã bắt đầu học vẫn được giữ. “%{level}” và mọi cấp thấp hơn giờ được tính là đã xong: thỉnh thoảng chúng tôi sẽ chỉ kiểm tra những từ khó nhất của “%{level}”. Từ mới và ngữ pháp bắt đầu từ đầu “%{next}”."
+      down: "Mọi tiến độ với các từ ở cấp cao hơn vẫn được giữ, và những thẻ bạn đã bắt đầu vẫn được ôn. Nhưng từ mới và ngữ pháp giờ đến theo thứ tự, từ đầu “%{next}” — tốt nhất là học lần lượt từng cấp. Tạm thời không có từ mới ở cấp cao hơn; rồi bạn sẽ tự nhiên tới đó."
       beyond: những từ hiếm nhất ngoài TBCL
     level_note: "Một kỳ thi bạn đã đỗ, hoặc trình độ ước chừng của bạn. Ví dụ TOCFL A1 nghĩa là bạn đã có A1: từ mới và ngữ pháp bắt đầu từ phần dễ nhất của A2. Thỉnh thoảng chúng tôi sẽ kiểm tra những từ khó nhất ở trình độ của bạn, và kiểm tra thường hơn nếu bạn bắt đầu quên hoặc trả lời chậm. Không chắc chắn? Bạn có thể"
     levels:
@@ -1644,7 +1641,7 @@ vi:
     watch_title: Xem một chữ được ghép thành
     watch_lede: Thứ tự nét nhìn một lần dễ hiểu hơn đọc mô tả. 永 là chữ dùng để dạy tám phép viết cơ bản.
     order_title: Trình tự viết
-    limits_title: Phần này không mang lại cho bạn điều gì
+    limits_title: Những gì phần này không mang lại
   history:
     title: Lịch sử
     subtitle: Những gì bạn học gần đây và mỗi chữ, mỗi từ đã vững đến đâu.
@@ -1666,7 +1663,7 @@ vi:
       reviews: Lượt ôn
       entities: Mục
       accuracy: Độ chính xác
-      breakdown: lại · khó · tốt · dễ
+      breakdown: không biết · sai một phần · biết · dễ
     table:
       entity: Mục
       meaning: Nghĩa
@@ -1712,7 +1709,7 @@ vi:
     grammar_title: Ngữ pháp
     placeholder: Tìm bất cứ thứ gì — chữ Hán, bính âm, chú âm, nghĩa…
     prompt: Gõ chữ Hán, bính âm có hoặc không có dấu thanh, chú âm, hoặc nghĩa.
-    empty: Không tìm thấy gì cho «%{query}».
+    empty: Không tìm thấy gì cho “%{query}”.
     show_all: Hiện tất cả
     showing_best: đây là %{count} kết quả gần nhất
     found: "Tìm thấy: %{count}"
@@ -1726,7 +1723,7 @@ vi:
     keyboard: bàn phím
     backspace: xóa
     clear_field: xóa hết
-    sentences_only: Tìm trong kho câu thay vào đó
+    sentences_only: Chỉ tìm trong kho câu
     sentences_only_hint: "Các loại ở trên bị bỏ qua: mọi kết quả đều là câu, có đánh dấu từ cần tìm."
     order:
       easy: đơn giản nhất trước
@@ -1737,8 +1734,7 @@ vi:
     pair_together: "— đứng cạnh nhau trong %{count} câu."
     pair_capped: Đã dừng đếm ở giới hạn tìm kiếm; có thể còn nhiều hơn.
     register_gap: >-
-      Phong cách không khớp: "%{left} chủ yếu mang sắc thái %{left_style} (%{left_share}%), còn %{right} chủ yếu"
-      %{right_style} (%{right_share}%). Đặt cạnh nhau sẽ nghe lạ.
+      Phong cách không khớp: "%{left}" chủ yếu mang sắc thái %{left_style} (%{left_share}%), còn "%{right}" chủ yếu là %{right_style} (%{right_share}%). Đặt cạnh nhau sẽ nghe lạ.
     classifier_main: "%{measure} là lượng từ thường dùng cho %{noun}."
     classifier_ok: "%{measure} dùng để đếm %{noun} — từ điển có ghi cặp này."
     classifier_not_listed: "%{measure} không được ghi là lượng từ của %{noun}."
@@ -1929,19 +1925,19 @@ vi:
       scale: "Năm bậc cao độ quy ước, từ thấp lên cao. Đọc mỗi đường từ trái sang phải: bắt đầu ở đâu và đi về đâu. Dấu ˀ đánh dấu chỗ thanh tắc họng của tiếng Hà Nội. Với Đài Bắc chúng tôi cố ý không ghi số — chưa có cách ghi chuẩn cho thanh điệu Đài Loan, và chúng tôi không tự đặt ra."
     hacks_title: Điều gì thực sự giúp ích
     hacks:
-      low: Thanh 3 chỉ đơn giản là một thanh thấp, đối lập với thanh 1. Hãy hạ giọng xuống đáy như nửa đầu thanh hỏi rồi ở yên đó. Đừng vút lên như khi đọc chữ «hỏi» chậm, và đừng thắt họng như thanh nặng — ở Đài Loan thanh 3 thấp, hơi rè, nhưng không bị cắt cụt.
-      pair: "Hãy coi thanh 1 và thanh 3 là một cặp: một cao bằng, một thấp bằng. Với tai người Hà Nội, đó là «thanh ngang đẩy lên tận trần» và «thanh hỏi đặt sát sàn». Như vậy dễ giữ hơn nhiều so với việc nhớ «bằng và lượn»."
+      low: Thanh 3 chỉ đơn giản là một thanh thấp, đối lập với thanh 1. Hãy hạ giọng xuống đáy như nửa đầu thanh hỏi rồi ở yên đó. Đừng vút lên như khi đọc chữ “hỏi” chậm, và đừng thắt họng như thanh nặng — ở Đài Loan thanh 3 thấp, hơi rè, nhưng không bị cắt cụt.
+      pair: "Hãy coi thanh 1 và thanh 3 là một cặp: một cao bằng, một thấp bằng. Với tai người Hà Nội, đó là “thanh ngang đẩy lên tận trần” và “thanh hỏi đặt sát sàn”. Như vậy dễ giữ hơn nhiều so với việc nhớ “bằng và lượn”."
       start: "Thanh 2 và thanh 3 hay bị nhầm. Mốc để phân biệt không phải là thanh đi về đâu mà là bắt đầu từ đâu: thanh 2 bắt đầu ở giữa rồi đi lên, đúng như thanh sắc; thanh 3 bắt đầu thấp và ở lại thấp."
-      after_third: "Khi thanh 2 đứng sau thanh 3, chỗ thấp của thanh 3 là đà chạy: bạn đã ở dưới đáy, và thanh 2 đi thẳng lên từ đó. Đừng nhích giọng về giữa giữa hai âm tiết — chính điều đó làm gãy chỗ nối."
-      fourth: "Thanh 4 là chỗ người Việt hay trượt nhất, vì dấu ˋ trông y hệt dấu huyền. Nhưng thanh huyền bắt đầu thấp và trượt nhẹ, còn thanh 4 bắt đầu ở đúng chỗ thanh sắc kết thúc — trên cao — rồi rơi thẳng xuống, ngắn và dứt khoát, như khi bạn gắt «Thôi!». Nếu nghe mềm hoặc trầm, có lẽ bạn bắt đầu chưa đủ cao."
+      after_third: "Khi thanh 2 đứng sau thanh 3, chỗ thấp của thanh 3 là đà chạy: bạn đã ở dưới đáy, và thanh 2 đi thẳng lên từ đó. Đừng đưa giọng trở lại mức giữa ở chỗ nối hai âm tiết — chính điều đó làm gãy chỗ nối."
+      fourth: "Thanh 4 là chỗ người Việt hay trượt nhất, vì dấu ˋ trông y hệt dấu huyền. Nhưng thanh huyền bắt đầu thấp và trượt nhẹ, còn thanh 4 bắt đầu ở đúng chỗ thanh sắc kết thúc — trên cao — rồi rơi thẳng xuống, ngắn và dứt khoát, như khi bạn gắt “Thôi!”. Nếu nghe mềm hoặc trầm, có lẽ bạn bắt đầu chưa đủ cao."
       relative: Cao độ là tương đối, không tuyệt đối. Năm bậc được đo trong chính âm vực giọng của bạn, không phải theo nốt nhạc. Giọng trầm không cản trở thanh điệu — bạn đã chứng minh điều đó mỗi ngày bằng sáu thanh của tiếng Việt.
       neutral: "Âm tiết thanh nhẹ không có cao độ riêng — nó lấy cao độ từ âm tiết đứng trước. Sau thanh 1 nó ở giữa, sau thanh 4 nó ở thấp. Không cần học riêng: nó tự đúng nếu thanh đứng trước đúng. Chỉ nhớ một điều: dấu ˙ trông như dấu nặng, nhưng thanh nhẹ không thắt họng và không trầm hẳn xuống như thanh nặng."
     title: Thanh điệu
     lede: Phần thứ tư của ngữ âm, thiếu nó thì ba phần kia không hoạt động. Bạn đã có sẵn sáu thanh của tiếng Hà Nội — ở đây là cách dựng bốn thanh và thanh nhẹ của tiếng Quan thoại Đài Loan từ chính đôi tai ấy, và những chỗ tiếng Việt sẽ đánh lừa bạn.
     why_title: Bạn đã có sẵn tai nghe thanh điệu
-    why_body: Người học châu Âu phải được thuyết phục rằng thanh điệu là một phần của âm tiết. Bạn thì không cần — «ma, mà, má, mả, mã, mạ» là sáu từ khác nhau, và bạn nghe ra điều đó mà không cần nghĩ. Tiếng Quan thoại cũng vậy, chỉ ít thanh hơn. Không tính thanh điệu, ngôn ngữ này có khoảng bốn trăm âm tiết phân biệt được; tính cả thanh điệu thì khoảng một nghìn ba trăm. Ưu thế của bạn là có thật, và các nghiên cứu cho thấy người Việt nắm thanh 2 và thanh 3 nhanh hơn nhiều người học khác.
-    myth_title: Cái bẫy «thanh nào cũng có sẵn trong tiếng Việt»
-    myth_body: Rất dễ muốn gán mỗi thanh Quan thoại cho một thanh tiếng Việt — nhiều trang học tiếng trên mạng làm đúng như vậy. Nhưng chỉ có một cặp thực sự khớp — thanh 2 và thanh sắc. Các cặp còn lại đánh lừa bạn, và lỗi được ghi nhận nhiều nhất ở người Việt chính là nhầm thanh 1 với thanh 4, kéo dài cả sau một năm rưỡi học. Lời khuyên phổ biến «thanh 4 là thanh huyền» là nguyên nhân hàng đầu của lỗi đó. Hãy dùng thanh tiếng Việt làm mốc để thấy chỗ khác, đừng dùng để thay thế.
+    why_body: Người học châu Âu phải được thuyết phục rằng thanh điệu là một phần của âm tiết. Bạn thì không cần — “ma, mà, má, mả, mã, mạ” là sáu từ khác nhau, và bạn nghe ra điều đó mà không cần nghĩ. Tiếng Quan thoại cũng vậy, chỉ ít thanh hơn. Không tính thanh điệu, ngôn ngữ này có khoảng bốn trăm âm tiết phân biệt được; tính cả thanh điệu thì khoảng một nghìn ba trăm. Ưu thế của bạn là có thật, và các nghiên cứu cho thấy người Việt nắm thanh 2 và thanh 3 nhanh hơn nhiều người học khác.
+    myth_title: Cái bẫy “thanh nào cũng có sẵn trong tiếng Việt”
+    myth_body: Rất dễ muốn gán mỗi thanh Quan thoại cho một thanh tiếng Việt — nhiều trang học tiếng trên mạng làm đúng như vậy. Nhưng chỉ có một cặp thực sự khớp — thanh 2 và thanh sắc. Các cặp còn lại đánh lừa bạn, và lỗi được ghi nhận nhiều nhất ở người Việt chính là nhầm thanh 1 với thanh 4, kéo dài cả sau một năm rưỡi học. Lời khuyên phổ biến “thanh 4 là thanh huyền” là nguyên nhân hàng đầu của lỗi đó. Hãy dùng thanh tiếng Việt làm mốc để thấy chỗ khác, đừng dùng để thay thế.
     cannot_title: Giọng Hà Nội không chỉ có cao độ
     cannot_body: "Thanh tiếng Việt mang theo cả chất giọng: thanh ngã và thanh nặng có chỗ tắc họng, thanh huyền hơi thở ra, thanh nặng bị cắt ngắn. Thanh Quan thoại thì gần như chỉ là đường nét cao độ, phát ra trơn tru. Nếu bạn mang chỗ tắc họng của thanh nặng vào thanh 4 hay thanh 3, hoặc cắt thanh 4 cụt như thanh nặng, người Đài Loan sẽ nghe thấy một âm tiết lạ chứ không phải một thanh đúng. Hãy giữ dây thanh mở và đều suốt âm tiết."
     cumulative_title: Thanh 1 và thanh 4 — cặp cần canh nhất
@@ -1975,11 +1971,11 @@ vi:
     taiwan_title: Thanh điệu ở Đài Loan nghe thế nào
     taiwan_body: Bạn học tiếng Quan thoại Đài Loan, nên đây chính là chuẩn của bạn. Hệ thống vẫn là bốn thanh, nhưng cách phát âm có những nét riêng.
     taiwan_points:
-      range: Âm vực nói chung thấp và hẹp. Người Đài Loan nói trong một khoảng cao độ nhỏ, nên thanh điệu nghe nhẹ nhàng, kiềm chế chứ không «đơn điệu». Thanh 1 không cần lên cao như giọng phát thanh viên.
+      range: Âm vực nói chung thấp và hẹp. Người Đài Loan nói trong một khoảng cao độ nhỏ, nên thanh điệu nghe nhẹ nhàng, kiềm chế chứ không “đơn điệu”. Thanh 1 không cần lên cao như giọng phát thanh viên.
       second: Thanh 2 không lên quá cao, và đôi khi có một chút trũng ở đầu, khiến hình dáng gần với thanh 3 trong sách giáo khoa.
       third: Thanh 3 không quay lên khỏi vùng thấp, hơi rè. Đường nét đầy đủ 214 gần như không xuất hiện ở Đài Loan.
       neutral: Thanh nhẹ ít gặp, và âm tiết cuối từ thường giữ thanh của mình.
-      erhua: Âm cuốn lưỡi 兒 ở cuối từ rất hiếm trong tiếng Quan thoại Đài Loan.
+      erhua: Nhi hóa — âm cuốn lưỡi 兒 ở cuối từ — rất hiếm trong tiếng Quan thoại Đài Loan.
       merge: Thanh 2 và thanh 3 nghe gần nhau hơn so với giọng đọc phát thanh. Đó là chuẩn mực, không phải khiếm khuyết phát âm.
     sandhi_title: Hai quy tắc làm thanh điệu thay đổi
     sandhi_lede: "Viết một thanh mà đọc một thanh khác. Thanh được viết thì không đổi: từ điển, chú âm và bính âm đều giữ thanh gốc. Tiếng Việt không có hiện tượng này, nên hãy coi đây là một kỹ năng mới."
@@ -2077,7 +2073,7 @@ vi:
     accuracy: Đúng
     done: Số từ đã gõ
     how_title: Vì sao nên học gõ theo cách này
-    how_body: "Đây là bố cục được in trên mọi bàn phím bán ở Đài Loan, và phần lớn người Đài Loan gõ chữ theo cách này. Bạn không cần cài gì để luyện: nhấn đúng các phím như trên bàn phím Đài Loan, chú âm sẽ hiện ra. Dấu thanh nằm ở các phím 6, 3, 4 và 7; thanh nhẹ ở phím 7. Giống như bạn gõ tiếng Việt bằng Telex mà không cần nghĩ, khi bố cục này đã vào tay, gõ tiếng Quan thoại thôi là việc tra cứu và trở thành phản xạ — và vì bạn gõ theo âm, cách đọc cũng được luyện cùng lúc."
+    how_body: "Đây là bố cục được in trên mọi bàn phím bán ở Đài Loan, và phần lớn người Đài Loan gõ chữ theo cách này. Bạn không cần cài gì để luyện: nhấn đúng các phím như trên bàn phím Đài Loan, chú âm sẽ hiện ra. Dấu thanh nằm ở các phím 6, 3, 4 và 7; thanh nhẹ ở phím 7. Giống như bạn gõ tiếng Việt bằng Telex mà không cần nghĩ, khi bố cục này đã vào tay, gõ tiếng Quan thoại không còn là việc tra cứu mà trở thành phản xạ — và vì bạn gõ theo âm, cách đọc cũng được luyện cùng lúc."
   cangjie:
     title: Gõ Thương Hiệt
     subtitle: Thương Hiệt 5 (五代) — gõ các phím Latinh để ghép thành chữ phồn thể của Đài Loan. Thẻ của mỗi chữ cũng hiện mã Thương Hiệt của chữ đó.
@@ -2207,20 +2203,20 @@ vi:
     rules:
       truncation:
         title: Chữ số đứng cuối chỉ đơn vị liền dưới
-        body: Đây là chỗ hay gây nhầm lẫn nhất với người học châu Âu, nhưng người Việt đã quen sẵn. Một chữ số đứng một mình ở cuối không được cộng vào số — nó nhân với đơn vị liền dưới, đơn vị đó chỉ được lược đi. Giống hệt khi bạn nói «một trăm hai» là 120 hay «hai nghìn ba» là 2.300. Vì vậy 三百五 là 350 chứ không phải 305.
+        body: Đây là chỗ hay gây nhầm lẫn nhất với người học châu Âu, nhưng người Việt đã quen sẵn. Một chữ số đứng một mình ở cuối không được cộng vào số — nó nhân với đơn vị liền dưới, đơn vị đó chỉ được lược đi. Giống hệt khi bạn nói “một trăm hai” là 120 hay “hai nghìn ba” là 2.300. Vì vậy 三百五 là 350 chứ không phải 305.
         rows:
           - huayu: 三百五
             value: "350"
-            note: dạng đầy đủ 三百五十, lược 十 — như «ba trăm rưởi»
+            note: dạng đầy đủ 三百五十, lược 十 — như “ba trăm rưởi”
           - huayu: 兩千三
             value: "2.300"
-            note: dạng đầy đủ 兩千三百, lược 百 — như «hai nghìn ba»
+            note: dạng đầy đủ 兩千三百, lược 百 — như “hai nghìn ba”
           - huayu: 一萬五
             value: "15.000"
-            note: dạng đầy đủ 一萬五千, lược 千 — «một vạn rưởi»
+            note: dạng đầy đủ 一萬五千, lược 千 — “một vạn rưởi”
       zero:
-        title: 零 chính là «linh» của tiếng Việt
-        body: "Để nói 305, chỉ gọi tên ba và năm là không đủ: phải có 零 ở giữa, đúng như bạn nói «ba trăm linh năm». 零 báo rằng có một hàng bị trống, và vì vậy chặn cách hiểu theo kiểu lược đơn vị. Chỉ cần một 零 cho khoảng trống rộng bao nhiêu cũng được — đây là chỗ khác tiếng Việt, vốn nói «một nghìn không trăm linh năm»."
+        title: 零 chính là “linh” của tiếng Việt
+        body: "Để nói 305, chỉ gọi tên ba và năm là không đủ: phải có 零 ở giữa, đúng như bạn nói “ba trăm linh năm”. 零 báo rằng có một hàng bị trống, và vì vậy chặn cách hiểu theo kiểu lược đơn vị. Chỉ cần một 零 cho khoảng trống rộng bao nhiêu cũng được — đây là chỗ khác tiếng Việt, vốn nói “một nghìn không trăm linh năm”."
         rows:
           - huayu: 三百零五
             value: "305"
@@ -2236,7 +2232,7 @@ vi:
             note: 零 cũng có tác dụng qua ranh giới 萬
       liang:
         title: 兩 hay 二 tùy thuộc vào chữ đứng sau
-        body: "二 là chữ số thuần túy: khi đếm, trong con số, trong 十二 và 二十. 兩 dùng khi số hai đo lường một thứ gì đó: trước lượng từ và trước 百, 千, 萬, 億. Có một ngoại lệ quan trọng: trước 十 luôn là 二. Tiếng Việt chỉ có một chữ «hai», nên đây là quy tắc hoàn toàn mới với bạn."
+        body: "二 là chữ số thuần túy: khi đếm, trong con số, trong 十二 và 二十. 兩 dùng khi số hai đo lường một thứ gì đó: trước lượng từ và trước 百, 千, 萬, 億. Có một ngoại lệ quan trọng: trước 十 luôn là 二. Tiếng Việt chỉ có một chữ “hai”, nên đây là quy tắc hoàn toàn mới với bạn."
         rows:
           - huayu: 二
             value: "2"
@@ -2252,13 +2248,13 @@ vi:
             note: 兩 trước 百; người Đài Loan không nói 二百
           - huayu: 兩千三百二十二
             value: "2.322"
-            note: hai lần 兩 ở hàng cao, 二 ở hàng thấp — trong cùng một số
+            note: 兩 ở hàng cao, 二 ở hàng thấp — trong cùng một số
           - huayu: 兩個人
             value: 2 người
-            note: trước lượng từ luôn là 兩 — như «hai người», «hai cái»
+            note: trước lượng từ luôn là 兩 — như “hai người”, “hai cái”
       shi:
         title: 十 đứng đầu không cần 一
-        body: Từ 10 đến 19, 十 đứng một mình — như «mười lăm» trong tiếng Việt. Nhưng khi có một đơn vị cao hơn đứng trước, chữ một quay lại, và đây là chỗ khác tiếng Việt — bạn nói «một trăm mười lăm», còn tiếng Quan thoại nói «một trăm một mười lăm».
+        body: Từ 10 đến 19, 十 đứng một mình — như “mười lăm” trong tiếng Việt. Nhưng khi có một đơn vị cao hơn đứng trước, chữ một quay lại, và đây là chỗ khác tiếng Việt — bạn nói “một trăm mười lăm”, còn tiếng Quan thoại nói “một trăm một mười lăm”.
         rows:
           - huayu: 十五
             value: "15"
@@ -2268,13 +2264,13 @@ vi:
             note: ở đây bắt buộc có 一 trước 十
           - huayu: 一百一
             value: "110"
-            note: cách nói tắt theo quy tắc chữ số đứng cuối — như «trăm mốt»
+            note: cách nói tắt theo quy tắc chữ số đứng cuối — như “trăm mốt”
     title: Số đếm và chữ số
     keys: Phím mũi tên, hoặc chạm vào một lựa chọn.
     done_title: Đã xong lượt
     restart: Làm lại
     system_title: Chữ số chia nhóm bốn, không phải nhóm ba
-    system_body: Tiếng Việt chia số theo nhóm ba chữ số (nghìn, triệu, tỷ); tiếng Quan thoại chia theo nhóm bốn. Bạn đã biết chữ «vạn» (萬) — mười nghìn — qua «muôn vạn», «vạn sự như ý»; tiếng Quan thoại đếm đúng theo vạn. Vì vậy «một triệu» không có từ riêng mà là 一百萬 — một trăm vạn. Cách dễ nhất là hình dung một dấu cách sau mỗi bốn chữ số tính từ phải sang, thay vì sau mỗi ba chữ số.
+    system_body: Tiếng Việt chia số theo nhóm ba chữ số (nghìn, triệu, tỷ); tiếng Quan thoại chia theo nhóm bốn. Bạn đã biết chữ “vạn” (萬) — mười nghìn — qua “muôn vạn”, “vạn sự như ý”; tiếng Quan thoại đếm đúng theo vạn. Vì vậy “một triệu” không có từ riêng mà là 一百萬 — một trăm vạn. Cách dễ nhất là hình dung một dấu cách sau mỗi bốn chữ số tính từ phải sang, thay vì sau mỗi ba chữ số.
     col_digits: Bằng chữ số
     col_huayu: Bằng chữ Hán
     col_western: Cách gọi trong tiếng Việt
@@ -2393,22 +2389,22 @@ vi:
     blocks:
       labial:
         title: Hai môi
-        body: Hai môi chạm nhau. Đây là thứ trẻ em Đài Loan học đầu tiên, mở đầu bài hát ㄅㄆㄇㄈ. ㄇ là m, ㄈ chính là ph của bạn. Nhưng ㄅ không phải b — b tiếng Việt rung dây thanh và hút hơi vào, còn ㄅ là p không rung, không bật hơi, như p trong «pin». ㄆ cũng không phải ph — đó là p kèm một luồng hơi mạnh, như th nhưng bằng môi.
+        body: Hai môi chạm nhau. Đây là thứ trẻ em Đài Loan học đầu tiên, mở đầu bài hát ㄅㄆㄇㄈ. ㄇ là m, ㄈ chính là ph của bạn. Nhưng ㄅ không phải b — b tiếng Việt rung dây thanh và hút hơi vào, còn ㄅ là p không rung, không bật hơi, như p trong “pin”. ㄆ cũng không phải ph — đó là p kèm một luồng hơi mạnh, như th nhưng bằng môi.
       alveolar:
         title: Đầu lưỡi
-        body: Đầu lưỡi đặt sau răng trên. Đây là nhóm dễ nhất với người Việt — ㄉ chính là t của «tôi», ㄊ chính là th của «thầy», ㄋ là n, ㄌ là l. Chỉ cần nhớ ㄉ không phải đ — bính âm viết d nhưng không có sự rung và hút hơi của đ. 不 và hầu hết từ phủ định nằm ở đây.
+        body: Đầu lưỡi đặt sau răng trên. Đây là nhóm dễ nhất với người Việt — ㄉ chính là t của “tôi”, ㄊ chính là th của “thầy”, ㄋ là n, ㄌ là l. Chỉ cần nhớ ㄉ không phải đ — bính âm viết d nhưng không có sự rung và hút hơi của đ. 的, 他, 你 và 了 đều bắt đầu bằng nhóm này.
       velar:
         title: Cuống lưỡi
         body: ㄍ gần như c/k của bạn, không bật hơi. ㄏ chính là kh của tiếng Hà Nội, có khi còn nhẹ hơn, gần như một hơi thở. Cái bẫy là ㄎ — nó không phải kh mà là c/k kèm một luồng hơi mạnh, như th nhưng ở cuống lưỡi.
       palatal:
         title: Chỉ đứng trước ㄧ và ㄩ
-        body: ㄐ gần với ch của «chị», ㄑ là âm đó kèm luồng hơi mạnh, ㄒ là x đọc với mặt lưỡi áp lên vòm như khi mỉm cười. Chúng chỉ đi với ㄧ và ㄩ, nên nếu để ý âm đứng sau thì không bao giờ nhầm với ㄓㄔㄕ. Cẩn thận với bính âm — x ở đây không phải x tiếng Việt, q cũng không phải qu.
+        body: ㄐ gần với ch của “chị”, ㄑ là âm đó kèm luồng hơi mạnh, ㄒ là x đọc với mặt lưỡi áp lên vòm như khi mỉm cười. Chúng chỉ đi với ㄧ và ㄩ, nên nếu để ý âm đứng sau thì không bao giờ nhầm với ㄓㄔㄕ. Cẩn thận với bính âm — x ở đây không phải x tiếng Việt, q cũng không phải qu.
       retroflex:
         title: Uốn lưỡi
         body: "Đầu lưỡi cong lên phía vòm miệng — người Hà Nội không có âm này. Tin vui là người Đài Loan đọc chúng nhẹ hơn hẳn sách giáo khoa, gần như ㄗㄘㄙ, nên bạn không cần uốn lưỡi quá mức. ㄖ đừng đọc như r kiểu Hà Nội (tức như d/gi): cong lưỡi lên và để hơi lướt qua."
       sibilant:
         title: Âm xuýt
-        body: Lưỡi đặt ở răng dưới, hơi thoát ra thành dòng hẹp. ㄙ là s/x của bạn. ㄗ không có trong tiếng Việt — đó là t và s dính liền thành một âm, như «ts». ㄘ là âm đó kèm luồng hơi mạnh. Cặp đôi của ba âm uốn lưỡi phía trên.
+        body: Lưỡi đặt ở răng dưới, hơi thoát ra thành dòng hẹp. ㄙ là s/x của bạn. ㄗ không có trong tiếng Việt — đó là t và s dính liền thành một âm, như “ts”. ㄘ là âm đó kèm luồng hơi mạnh. Cặp đôi của ba âm uốn lưỡi phía trên.
       medial:
         title: Âm đệm
         body: Chúng đứng giữa thanh mẫu và vận mẫu, trong bính âm thành i, u và ü — hoặc y và w ở đầu âm tiết. ㄧ là i, ㄨ là u. ㄩ không phải ư — ư không tròn môi, còn ㄩ là i đọc với môi chu tròn như khi nói u.
@@ -2429,7 +2425,7 @@ vi:
         body: Một âm đệm cộng một vận mẫu. Không cần luyện riêng — chúng được ghép từ những ký hiệu bạn đã luyện.
     finals_lede: "Mọi thứ còn lại trong âm tiết sau phụ âm đầu: một nguyên âm, một nguyên âm đôi, hoặc nguyên âm kèm âm mũi. Với vận ghép, từng ký hiệu được đọc riêng — đọc liền nhau thì không nghe như hai phần nối tiếp. Cấu trúc này quen với bạn: tiếng Việt cũng có âm đầu, âm đệm và vần."
     why_title: Vì sao đây không phải chuyện nhỏ
-    why_body: "Bạn đọc được bính âm mà không cần chuẩn bị gì, và chính điều đó làm nó nguy hiểm: chữ cái kéo theo cách đọc chữ quốc ngữ. d bị đọc thành đ, x thành s, c thành k, ch thành ch tiếng Việt, ph thành f — và lỗi cứ thế ngấm vào mà không ai hay. Sau một ký hiệu chú âm không có gì ngoài âm bạn dạy cho nó. Chính vì vậy Đài Loan dùng chú âm để ghi cách đọc, và các nghiên cứu về người Việt học tiếng Quan thoại cũng chỉ ra đúng điều này."
+    why_body: "Bạn đọc được bính âm mà không cần chuẩn bị gì, và chính điều đó làm nó nguy hiểm: chữ cái kéo theo cách đọc chữ quốc ngữ. d bị đọc thành đ, x thành s, c thành k, ch thành ch tiếng Việt, q thành qu, r thành r kiểu Hà Nội — và lỗi cứ thế ngấm vào mà không ai hay. Sau một ký hiệu chú âm không có gì ngoài âm bạn dạy cho nó. Chính vì vậy Đài Loan dùng chú âm để ghi cách đọc, và các nghiên cứu về người Việt học tiếng Quan thoại cũng chỉ ra đúng điều này."
     compound_audio: "Vận ghép: từng ký hiệu được đọc riêng. Đọc liền nhau thì không nghe như hai phần nối tiếp — xem ghi chú bên phải."
     play_symbol: Phát %{symbol}
     phonetics_card: "Bảng âm đầy đủ: chú âm, bính âm, IPA, mốc so sánh với tiếng Việt và ví dụ."
@@ -2484,7 +2480,7 @@ vi:
         initial_body: Một trong 21 phụ âm. Không bắt buộc — nhiều âm tiết bắt đầu bằng nguyên âm.
         medial_label: Âm đệm 介音
         medial_glyph: ㄨ
-        medial_body: Một trong ba âm lướt ㄧ ㄨ ㄩ. Đây là vị trí bính âm hay che giấu nhất — giống âm đệm u/o trong «hoa», «quê».
+        medial_body: Một trong ba âm lướt ㄧ ㄨ ㄩ. Đây là vị trí bính âm hay che giấu nhất — giống âm đệm u/o trong “hoa”, “quê”.
         final_label: Vận mẫu 韻母
         final_glyph: ㄥ
         final_body: Phần vần — một nguyên âm, một nguyên âm đôi, hoặc nguyên âm kèm -n hay -ng. Vị trí duy nhất bắt buộc.
@@ -2499,23 +2495,23 @@ vi:
         zhong:
           pinyin: zhong
           zhuyin: ㄓㄨㄥ
-          why: zh là ㄓ, nhưng o ở đây không phải ㄛ. Vần -ong thực ra là -ung, nên chú âm viết âm lướt ㄨ và vần ㄥ — gần «chung» hơn là «chong».
+          why: zh là ㄓ, nhưng o ở đây không phải ㄛ. Vần -ong thực ra là -ung, nên chú âm viết âm lướt ㄨ và vần ㄥ — gần “chung” hơn là “chong”.
         jiu:
           pinyin: jiu
           zhuyin: ㄐㄧㄡ
-          why: Vần là -iou; bính âm bỏ nguyên âm ở giữa cho gọn. Chú âm giữ cả ㄧ lẫn ㄡ — nghe gần «chiêu» hơn là «chiu».
+          why: Vần là -iou; bính âm bỏ nguyên âm ở giữa cho gọn. Chú âm giữ cả ㄧ lẫn ㄡ — nghe gần “chiêu” hơn là “chiu”.
         hui:
           pinyin: hui
           zhuyin: ㄏㄨㄟ
-          why: Cùng một mẹo — vần là -uei, bính âm nuốt mất e. Chú âm viết ㄨ và ㄟ — nghe gần «khuây» chứ không phải «khui».
+          why: Cùng một mẹo — vần là -uei, bính âm nuốt mất e. Chú âm viết ㄨ và ㄟ — nghe gần “khuây” chứ không phải “khui”.
         yu:
           pinyin: yu
           zhuyin: ㄩ
-          why: y không phải phụ âm, nó chỉ để mang nguyên âm, còn u thực ra là ü. Chỉ một âm, nên chú âm viết một ký hiệu. Đừng đọc «du» hay «iu».
+          why: y không phải phụ âm, nó chỉ để mang nguyên âm, còn u thực ra là ü. Chỉ một âm, nên chú âm viết một ký hiệu. Đừng đọc “du” hay “iu”.
         zhi:
           pinyin: zhi
           zhuyin: ㄓ
-          why: Chữ i ở đây không ghi nguyên âm nào — đó là lưỡi giữ ở thế uốn. Sau ㄓ chú âm không viết gì, vì chẳng có gì ở đó. Đừng đọc «chi».
+          why: Chữ i ở đây không ghi nguyên âm nào — đó là lưỡi giữ ở thế uốn. Sau ㄓ chú âm không viết gì, vì chẳng có gì ở đó. Đừng đọc “chi”.
         weng:
           pinyin: weng / -ong
           zhuyin: ㄨㄥ
@@ -2523,7 +2519,7 @@ vi:
       mismatch_more_title: Điều cần ghi nhớ
       mismatch_more_body: "Người đọc bính âm luôn phải âm thầm sửa: chỗ này o thực ra là u, chỗ này thiếu một nguyên âm, chỗ này i chẳng phải nguyên âm, chỗ này u thực ra là ü. Với người Việt còn thêm một lớp nữa: phải gạt bỏ cách đọc chữ quốc ngữ của từng chữ cái. Mỗi lần sửa như vậy là một chỗ cách phát âm sai có thể bám rễ. Chú âm không đòi hỏi điều nào trong số đó: viết sao đọc vậy."
     tones_title: Thanh điệu và âm
-    tones_card: Đọc to các âm tiết và nhận nhận xét từng thanh cho tới khi đúng.
+    tones_card: Đọc to các âm tiết và nhận phản hồi cho từng thanh cho tới khi đúng.
     dictation_title: Nghe chép
     dictation_card: Bản ghi của người bản ngữ — hãy viết lại bằng chữ Hán, bính âm hoặc chú âm.
     progress_title: Tiến độ luyện tập
@@ -2826,8 +2822,8 @@ vi:
       decks: Bộ thẻ của tôi
       redo: Làm lại
       mistakes: Lỗi trong tuần
-    all_again: Tất cả học lại
-    all_easy: Tất cả dễ
+    all_again: "Tất cả: Không biết"
+    all_easy: "Tất cả: Dễ"
     next: Tiếp
     done_title: Tạm thời xong rồi
     summary:
@@ -3012,8 +3008,8 @@ vi:
     impersonate_self: Đây đã là tài khoản của bạn.
     sources:
       title: Nguồn nội dung
-      intro: Từ và chữ Hán thuộc về ngôn ngữ nên không có nguồn. Câu, bản dịch và âm thanh thì có — hãy tắt chúng ở đây. Bỏ chọn «Hiện cho mọi người» sẽ gỡ tài liệu của nguồn đó khỏi mọi người dùng; «Giữ cho quản trị viên» vẫn để nó hiện trên tài khoản của bạn.
-      saved: Đã lưu nguồn «%{name}».
+      intro: Từ và chữ Hán thuộc về ngôn ngữ nên không có nguồn. Câu, bản dịch và âm thanh thì có — hãy tắt chúng ở đây. Bỏ chọn “Hiện cho mọi người” sẽ gỡ tài liệu của nguồn đó khỏi mọi người dùng; “Giữ cho quản trị viên” vẫn để nó hiện trên tài khoản của bạn.
+      saved: Đã lưu nguồn “%{name}”.
       enabled: Hiện cho mọi người
       enabled_for_admins: Giữ cho quản trị viên
       false: "tắt"
@@ -3039,7 +3035,7 @@ vi:
     delete_self: Bạn không thể xóa tài khoản của chính mình ở đây.
     demote_self: Bạn không thể tự gỡ quyền quản trị của mình ở đây.
     save_failed: Không lưu được các thay đổi đó.
-    unverified: chưa xác nhận
+    unverified: chưa xác minh
     title: Người dùng
     intro: Bật tắt ngôn ngữ mà mỗi tài khoản thấy và quyền truy cập nội dung hạn chế (không mã nguồn mở) cùng âm thanh.
     is_admin: Quản trị viên
@@ -3071,8 +3067,7 @@ vi:
       khoản: không có thẻ, không có tiến độ, không có âm thanh.
     install_title: Đặt lên màn hình chính
     install_hint: >-
-      Khi được cài đặt, ứng dụng giữ lại vĩnh viễn những gì bạn đã tải. Nếu chỉ để là một tab trình duyệt,
-      Safari sẽ xóa sau một tuần không truy cập.
+      Khi được cài đặt, ứng dụng giữ lại vĩnh viễn những gì bạn đã tải. Nếu chỉ mở trong một tab trình duyệt, Safari sẽ xóa sau một tuần không truy cập.
     install_action: Cài đặt
     storage: "Đã dùng %{used}/%{quota}"
     persisted: Bộ nhớ được bảo vệ khỏi việc tự động dọn dẹp.
@@ -3194,7 +3189,7 @@ vi:
       tocfl: Danh sách từ vựng TOCFL chính thức theo từng cấp.
       naer: Viện Nghiên cứu Giáo dục Quốc gia — bộ chuẩn TBCL, kho ngữ liệu COCT và bảng tần suất từ chung.
       moe_strokes: Danh sách chuẩn tên các nét, cơ sở của danh mục nét cơ bản và nét phức.
-      moe_idioms: "Từ điển thành ngữ 成語 chính thức: định nghĩa, xuất xứ cổ điển, điển tích và ví dụ cho mỗi thành ngữ. Văn bản gốc được hiển thị nguyên văn — giấy phép không cho phép cải biên; phần nghĩa và ghi chú tiếng Anh, tiếng Nga do chúng tôi viết."
+      moe_idioms: "Từ điển thành ngữ 成語 chính thức: định nghĩa, xuất xứ cổ điển, điển tích và ví dụ cho mỗi thành ngữ. Văn bản gốc được hiển thị nguyên văn — giấy phép không cho phép cải biên; phần nghĩa và ghi chú tiếng Việt, tiếng Anh, tiếng Nga do chúng tôi viết."
       cwa: Thang lượng mưa, cấp bão và các mức chỉ số tia UV.
       tbrs: Phân loại trà, các công đoạn chế biến và mức độ oxy hóa của các giống trà Đài Loan.
       hko: Âm lịch và bảng tiết khí dùng để tính ngày lễ tết.
@@ -3228,8 +3223,7 @@ vi:
       pronunciation:
         title: Nói
         body: >-
-          Nói một từ vào micrô và nhận nhận xét cho từng âm tiết về thanh điệu và âm. Chế độ tự động đi tiếp
-          khi bạn nói đúng và giữ micrô mở cho tới khi bạn đúng.
+          Nói một từ vào micrô và nhận phản hồi cho từng âm tiết về thanh điệu và âm. Chế độ tự động đi tiếp khi bạn nói đúng và giữ micrô mở cho tới khi bạn đúng.
       writing:
         title: Viết và tra chữ
         body: >-
@@ -3357,7 +3351,7 @@ vi:
       付款: Trả tiền ở quầy
       夜市小吃: Đồ ăn vặt chợ đêm
       中元節: Tháng cô hồn và lễ Trung Nguyên
-      媽祖: Mẫu Tổ (Mazu) và rước kiệu
+      媽祖: Ma Tổ (Mazu) và rước kiệu
       拜拜: Cúng bái và lễ vật
       清明節: Tảo mộ tiết Thanh Minh
       端午節: Phong tục Tết Đoan Ngọ
@@ -3426,7 +3420,7 @@ vi:
       松山新店線: Tuyến Xanh lá (Tùng Sơn – Tân Điếm)
       中和新蘆線: Tuyến Cam (Trung Hòa – Tân Lô)
       板南線: Tuyến Xanh dương (Bản Nam)
-      環狀線: Tuyến Vòng tròn Vàng
+      環狀線: Tuyến Vàng (Vành đai)
       淡海輕軌: Đường sắt nhẹ Đạm Hải
       安坑輕軌: Đường sắt nhẹ An Khanh
       搭車: Đi lại
@@ -3472,7 +3466,7 @@ vi:
       hint: Quán đồ uống nào cũng hỏi cả hai. Đây là thang có thứ tự, nên câu trả lời là một từ ở mỗi hàng.
       sugar: Đường 甜度
       ice: Đá 冰塊
-      note: "Mỗi chuỗi một khác: 50嵐 in 不要太甜 thành 九分糖, và chỉ ở miền bắc mới có ba mức riêng 常溫, 溫 và 熱. Lưu ý 微冰 là ít đá hơn 少冰, không phải nhiều hơn."
+      note: "Mỗi chuỗi một khác: 50嵐 in 不要太甜 thành 九分糖, và chỉ ở miền bắc Đài Loan mới có ba mức riêng 常溫, 溫 và 熱. Lưu ý 微冰 là ít đá hơn 少冰, không phải nhiều hơn."
       sugar_levels:
         full: đủ đường; có quán in là 正常甜
         nine: không ngọt quá — một mức thật, 90%
@@ -3570,7 +3564,7 @@ vi:
       departments: Khoa
       treatment: Xét nghiệm và điều trị
       people: Nhân viên y tế
-      nhi: Bảo hiểm Y tế Quốc dân
+      nhi: Bảo hiểm Y tế Toàn dân
     diagrams:
       hospital: Một bệnh viện Đài Loan điển hình
       body: Cơ thể người
@@ -3596,7 +3590,7 @@ vi:
         note: "Đây là thuật ngữ và ý nghĩa của chúng, không phải sách luật."
       mcr:
         title: "Mạt chược quốc tế (luật thi đấu)"
-        body: "Luật thi đấu quốc tế thông qua năm 1998. Mười ba quân, 81 mẫu và ngưỡng tám điểm: ván rẻ hơn hoàn toàn không được tính là thắng. Đơn vị điểm là phiên (番) chứ không phải đài, và nhiều mẫu của nó hoàn toàn xa lạ ở bàn chơi Đài Loan."
+        body: "Luật thi đấu quốc tế thông qua năm 1998. Mười ba quân, 81 mẫu và ngưỡng tám điểm: ván dưới tám điểm hoàn toàn không được tính là thắng. Đơn vị điểm là phiên (番) chứ không phải đài, và nhiều mẫu của nó hoàn toàn xa lạ ở bàn chơi Đài Loan."
         note: "Ở Đài Loan người ta chơi luật này trong giải đấu, còn ở nhà thì chơi luật của mình."
       xiangqi:
         title: "Cờ tướng"
@@ -3609,7 +3603,7 @@ vi:
       tabletop:
         title: "Board game, bài và trò chơi đường phố"
         body: "Board game hiện đại ở Đài Loan gọi là 桌遊 và được chơi trong các quán board game tính tiền theo giờ. Bên cạnh đó là những trò bài địa phương: 大老二, 十三支, 心臟病, và trò đường phố 暗棋, cờ tướng úp trên nửa bàn cờ."
-        note: "Ở đây cũng có những từ cần dùng ở bàn chơi nào: lượt đi, tính điểm, phỉnh, bốc chỗ ngồi."
+        note: "Ở đây cũng có những từ cần dùng ở bất cứ bàn chơi nào: lượt đi, tính điểm, phỉnh, bốc chỗ ngồi."
     categories:
       game: "Bản thân trò chơi"
       board: "Bàn cờ"
@@ -3644,7 +3638,7 @@ vi:
     lunar:
       title: Âm lịch thực sự vận hành thế nào
       months_html: "<p>Âm lịch của Đài Loan cũng là âm lịch người Việt dùng để ăn Tết — chỉ khác múi giờ, nên đôi khi một ngày lễ lệch nhau một ngày. Một tháng âm lịch bắt đầu vào ngày sóc và kéo dài tới ngày sóc tiếp theo. Khoảng đó dài chừng 29,53 ngày, nên một tháng có <strong>29</strong> hoặc <strong>30</strong> ngày — không bao giờ 31, và không có độ dài cố định để học thuộc. Mười hai tháng cộng lại khoảng 354 ngày, ngắn hơn năm dương lịch chừng mười một ngày.</p><p>Toàn bộ câu chuyện nằm ở khoảng thiếu hụt đó. Nếu không có gì điều chỉnh, năm mới sẽ trôi ngược qua các mùa và 春節 cuối cùng sẽ rơi vào mùa hè.</p>"
-      days_html: "<p>Ngày trong tháng âm lịch không viết bằng số trơn. Mười ngày đầu có tiền tố <strong>初</strong> — chính là «mồng» của tiếng Việt: 初一 (mồng một), 初二, 初三 … tới 初十. Ngày 11 tới 19 dùng 十 — 十一, 十二 … 十九 — và 二十 là ngày hai mươi. Từ ngày 21 tiền tố là <strong>廿</strong>: 廿一, 廿二 … 廿九, và tháng 30 ngày kết thúc ở 三十.</p><p>Vậy <strong>初五</strong> đơn giản là mồng năm. Khi ai đó nói 正月初五, họ muốn nói mồng năm tháng Giêng — không kèm năm, và không ngụ ý ngày dương lịch nào.</p>"
+      days_html: "<p>Ngày trong tháng âm lịch không viết bằng số trơn. Mười ngày đầu có tiền tố <strong>初</strong> — chính là “mồng” của tiếng Việt: 初一 (mồng một), 初二, 初三 … tới 初十. Ngày 11 tới 19 dùng 十 — 十一, 十二 … 十九 — và 二十 là ngày hai mươi. Từ ngày 21 tiền tố là <strong>廿</strong>: 廿一, 廿二 … 廿九, và tháng 30 ngày kết thúc ở 三十.</p><p>Vậy <strong>初五</strong> đơn giản là mồng năm. Khi ai đó nói 正月初五, họ muốn nói mồng năm tháng Giêng — không kèm năm, và không ngụ ý ngày dương lịch nào.</p>"
       drift_html: "<p>Đây là lý do 春節 không bao giờ rơi vào cùng một ngày dương lịch hai năm liền. Năm âm lịch ngắn hơn năm dương lịch khoảng mười một ngày, nên năm mới trượt sớm dần mỗi lần — và khi trượt quá xa, cả một tháng được chèn thêm và nó lại nhảy về muộn. Trong khoảng 1950–2050, Tết dao động từ 21 tháng 1 tới 20 tháng 2.</p>"
       leap_html: "<p>Cách điều chỉnh là <strong>tháng nhuận</strong>, 閏月. Khoảng bảy lần trong mỗi mười chín năm có một tháng được chèn thêm, khiến năm đó có mười ba tháng và khoảng 384 ngày. Nó không được thêm vào cuối năm — mà chèn sau một tháng có sẵn và lấy số của tháng đó: tháng nhuận sau tháng sáu là 閏六月, và năm đó có cả 六月 lẫn 閏六月.</p><p>Tháng nào được nhân đôi do mặt trời quyết định, không theo một quy tắc cố định để học thuộc: nó phụ thuộc vào vị trí của 24 tiết khí. Năm 2025 có 閏六月; năm 2033 có tháng hiếm 閏十一月.</p>"
       terms_html: "<p>Hai dịp lễ ở đây hoàn toàn không theo âm lịch. <strong>清明</strong> và <strong>冬至</strong> là <em>tiết khí</em> — những điểm trên đường đi hằng năm của mặt trời — nên chúng gần như đứng yên trên lịch dương trong khi mọi thứ theo âm lịch thì xê dịch.</p>"
@@ -3669,11 +3663,7 @@ vi:
       bounds: Hỗ trợ từ %{from} tới %{to}. Bảng được lấy từ Bảng đổi lịch Dương – Âm của Đài Thiên văn Hồng Kông và mọi ngày trong đó đều được đối chiếu lại với nguồn này.
   page_help:
     word_pairs_html: >-
-      <p>Những cặp và bộ ba từ dễ nhầm vì tiếng Việt dùng ít từ hơn cho cùng một vùng nghĩa: «có thể» cho 會,
-      能 và 可以, «lại» cho 再 và 又. Với 不 và 沒 thì người Việt có lợi thế, vì đã quen phân biệt «không» và
-      «chưa» — nhưng ranh giới không trùng khít hoàn toàn. Trước hết là quy tắc, rồi ví dụ cho từng từ, rồi
-      những lỗi người học hay mắc nhất.</p><p>Bài tập ở cuối không lưu gì: trả lời xong là bạn thấy ngay vì sao
-      đó là từ đúng. Trang từ điển của các từ này đều dẫn tới nhóm của chúng.</p>
+      <p>Những cặp và bộ ba từ dễ nhầm vì tiếng Việt dùng ít từ hơn cho cùng một vùng nghĩa: “có thể” cho 會, 能 và 可以, “lại” cho 再 và 又. Với 不 và 沒 thì người Việt có lợi thế, vì đã quen phân biệt “không” và “chưa” — nhưng ranh giới không trùng khít hoàn toàn. Trước hết là quy tắc, rồi ví dụ cho từng từ, rồi những lỗi người học hay mắc nhất.</p><p>Bài tập ở cuối không lưu gì: trả lời xong là bạn thấy ngay vì sao đó là từ đúng. Trang từ điển của các từ này đều dẫn tới nhóm của chúng.</p>
     dictation_html: >-
       <p>Nghe một bản ghi thật và viết lại những gì bạn nghe. Giọng đọc là người bản ngữ Đài Loan, và câu được
       xếp theo cấp độ từ vựng: 1 là dễ nhất.</p><p>Nghe bao nhiêu lần tùy ý. Nếu quá nhanh, hãy giảm tốc độ
@@ -3681,22 +3671,9 @@ vi:
       âm ngay tại đây: bật ㄅㄆㄇ và nhấn các phím theo bố cục Đài Loan hoặc các nút trên màn hình. Dấu thanh là
       6, 3, 4 và 7; thanh 1 không cần dấu.</p>
     desk_html: >-
-      <p>Màn hình chính thay đổi theo chế độ bạn chọn. <strong>TOCFL</strong> hiện đếm ngược tới kỳ thi, mức
-      sẵn sàng theo cấp, bài thi thử và ngữ pháp của cấp. <strong>Từ của tôi</strong> hiện lượt ôn bộ thẻ của
-      riêng bạn và cách nhanh để thêm từ học trên lớp. <strong>Theo lộ trình</strong> hiện bước tiếp theo về ngữ
-      âm hoặc khóa học, cùng thẻ của ngày. Đổi chế độ trong hồ sơ hoặc bằng liên kết «đổi» cạnh tiêu đề.</p><p>Các
-      bộ đếm: <strong>đến hạn</strong> là số thẻ tới lượt hôm nay theo lịch FSRS, <strong>mới</strong> là lượng
-      tài liệu chưa xem mà ứng dụng sẵn sàng thêm vào (hạn mức lấy từ kế hoạch của bạn, hoặc từ cài đặt nếu
-      chưa có kế hoạch), còn <strong>đang học</strong> là tổng số thẻ đang được dùng. Nút lớn luôn dẫn tới chỗ
-      hợp lý nhất để học tiếp.</p>
+      <p>Màn hình chính thay đổi theo chế độ bạn chọn. <strong>TOCFL</strong> hiện đếm ngược tới kỳ thi, mức sẵn sàng theo cấp, bài thi thử và ngữ pháp của cấp. <strong>Từ của tôi</strong> hiện lượt ôn bộ thẻ của riêng bạn và cách nhanh để thêm từ học trên lớp. <strong>Theo lộ trình</strong> hiện bước tiếp theo về ngữ âm hoặc khóa học, cùng thẻ của ngày. Đổi chế độ trong hồ sơ hoặc bằng liên kết “đổi” cạnh tiêu đề.</p><p>Các bộ đếm: <strong>đến hạn</strong> là số thẻ tới lượt hôm nay theo lịch FSRS, <strong>mới</strong> là lượng tài liệu chưa xem mà ứng dụng sẵn sàng thêm vào (hạn mức lấy từ kế hoạch của bạn, hoặc từ cài đặt nếu chưa có kế hoạch), còn <strong>đang học</strong> là tổng số thẻ đang được dùng. Nút lớn luôn dẫn tới chỗ hợp lý nhất để học tiếp.</p>
     progress_html: >-
-      <p><strong>Chuỗi ngày học</strong> là số ngày liên tiếp có ôn tập. Một ngày tính từ nửa đêm tới nửa đêm
-      theo múi giờ của thiết bị; khi bạn đi xa, những ngày đã tính vẫn giữ nguyên. <strong>Tỷ lệ ghi nhớ</strong>
-      là tỷ lệ đánh giá «tốt» trở lên trong số thẻ FSRS cho là đã chín: nếu nó thấp hơn hẳn mục tiêu trong cài
-      đặt, khoảng cách ôn đang quá dài.</p><p>Trạng thái: <strong>chưa xem</strong> là chưa từng hiện,
-      <strong>đang học</strong> là còn trong các bước học, <strong>mới nhớ</strong> có khoảng cách dưới ba tuần,
-      <strong>vững</strong> là trên ba tuần. <strong>Thẻ hay quên</strong> là những thẻ bạn quên đi quên lại;
-      học lại chúng bằng tay rẻ hơn là để chúng chạy theo lịch.</p>
+      <p><strong>Chuỗi ngày học</strong> là số ngày liên tiếp có ôn tập. Một ngày tính từ nửa đêm tới nửa đêm theo múi giờ của thiết bị; khi bạn đi xa, những ngày đã tính vẫn giữ nguyên. <strong>Tỷ lệ ghi nhớ</strong> là tỷ lệ đánh giá “tốt” trở lên trong số thẻ FSRS cho là đã chín: nếu nó thấp hơn hẳn mục tiêu trong cài đặt, khoảng cách ôn đang quá dài.</p><p>Trạng thái: <strong>chưa xem</strong> là chưa từng hiện, <strong>đang học</strong> là còn trong các bước học, <strong>mới nhớ</strong> có khoảng cách dưới ba tuần, <strong>vững</strong> là trên ba tuần. <strong>Thẻ hay quên</strong> là những thẻ bạn quên đi quên lại; học lại chúng bằng tay rẻ hơn là để chúng chạy theo lịch.</p>
     plan_html: >-
       <p>Chọn cấp TOCFL mục tiêu và ngày thi, ứng dụng sẽ tính mỗi ngày cần bao nhiêu tài liệu mới để hoàn
       thành cấp đó kịp lúc. Hạn mức được tính lại mỗi ngày từ những gì đã học, nên bỏ lỡ một ngày không làm hỏng
@@ -3711,16 +3688,7 @@ vi:
       bài đều có phần luyện riêng: gọi tên phím từ một hình dạng, gọi tên phím đầu của một chữ, chọn cách tách
       đúng và gõ mã đầy đủ. Gõ tự do nằm riêng, trong <strong>Luyện gõ Thương Hiệt</strong> ở mục Luyện tập.</p>
     names_html: >-
-      <p>Mục này giải thích tên người Đài Loan được cấu tạo thế nào và cho thấy người Đài Loan thực sự dùng
-      những gì, tính từ sổ hộ tịch. Nó không bịa tên cho bạn: chọn tên là chuyện riêng, thường được làm cùng
-      một người bạn hoặc thầy cô người Đài Loan.</p><p><strong>Họ</strong> là một chữ, được thừa kế, viết trước
-      tên; họ hai chữ có nhưng hiếm. <strong>Tên riêng</strong> gồm một hoặc hai chữ do gia đình chọn, phổ biến
-      là hai chữ. Thứ tự không bao giờ đổi — giống tiếng Việt, họ đứng trước dù hộ chiếu in thế nào. Khác với
-      người Việt gọi nhau bằng tên, người Đài Loan gọi họ kèm danh xưng cho tới khi được mời làm khác. Tên người
-      Đài Loan đọc theo âm Hán Việt nghe rất tự nhiên với người Việt: 林安安 là Lâm An An.</p><p>Ở tab «Chọn
-      tên», các chữ được xếp hạng theo đúng những số liệu ở tab thứ hai: tần suất theo thế hệ, mẫu thanh điệu,
-      độ gắn kết của cặp chữ và số nét. Kết quả là năm phương án kèm lý giải, để bạn có một danh sách ngắn thực
-      sự đem ra bàn được.</p>
+      <p>Mục này giải thích tên người Đài Loan được cấu tạo thế nào và cho thấy người Đài Loan thực sự dùng những gì, tính từ sổ hộ tịch. Nó không bịa tên cho bạn: chọn tên là chuyện riêng, thường được làm cùng một người bạn hoặc thầy cô người Đài Loan.</p><p><strong>Họ</strong> là một chữ, được thừa kế, viết trước tên; họ hai chữ có nhưng hiếm. <strong>Tên riêng</strong> gồm một hoặc hai chữ do gia đình chọn, phổ biến là hai chữ. Thứ tự không bao giờ đổi — giống tiếng Việt, họ đứng trước dù hộ chiếu in thế nào. Khác với người Việt gọi nhau bằng tên, người Đài Loan gọi họ kèm danh xưng cho tới khi được mời làm khác. Tên người Đài Loan đọc theo âm Hán Việt nghe rất tự nhiên với người Việt: 林安安 là Lâm An An.</p><p>Ở tab “Chọn tên”, các chữ được xếp hạng theo đúng những số liệu ở tab thứ hai: tần suất theo thế hệ, mẫu thanh điệu, độ gắn kết của cặp chữ và số nét. Kết quả là năm phương án kèm lý giải, để bạn có một danh sách ngắn thực sự đem ra bàn được.</p>
     desks_html: >-
       <p>Bộ thẻ được tạo từ bất cứ thứ gì bạn dán vào: danh sách mỗi dòng một từ, cách nhau bằng dấu phẩy, hay
       một đoạn văn bình thường — hệ thống tự xử lý. Bạn có thể tải tệp lên, hoặc lấy từ vựng từ một bài hát.</p><p>Khác
@@ -3740,14 +3708,7 @@ vi:
       hàng đợi bình thường, tới lượt cùng mọi thứ khác.</p><p>Những gì bạn đã thực sự học được để riêng, không
       bị động tới.</p>
     zhuyin_trainer_html: >-
-      <p>Ở đây chú âm được học như một hệ chữ độc lập, không có chỗ dựa Latinh. Bạn nghe một âm và chọn ký
-      hiệu — cố ý không có bính âm trên màn hình, nếu không thứ bám vào đầu sẽ là «ㄅ là chữ b» chứ không phải
-      «ㄅ là âm này». Với người Việt điều này càng quan trọng: chữ b của bạn là một âm khác hẳn ㄅ.</p><p>Các
-      ký hiệu đi theo nhóm cách phát âm chứ không theo thứ tự bảng. Nhóm mới mở ra khi nhóm trước đã xong. Các
-      lựa chọn cố ý gần nhau: hình dạng giống nhau và âm cùng vị trí phát âm — lựa chọn ngẫu nhiên chỉ tạo ảo
-      giác tiến bộ.</p><p>Một ký hiệu được tính là đã nắm sau ba lần trả lời đúng liên tiếp, và phải nhanh:
-      đúng nhưng chậm nghĩa là bạn đang suy ra chứ chưa nhận ra, và bộ đếm không tăng. Bạn có thể rời đi bất
-      cứ lúc nào.</p>
+      <p>Ở đây chú âm được học như một hệ chữ độc lập, không có chỗ dựa Latinh. Bạn nghe một âm và chọn ký hiệu — cố ý không có bính âm trên màn hình, nếu không thứ bám vào đầu sẽ là “ㄅ là chữ b” chứ không phải “ㄅ là âm này”. Với người Việt điều này càng quan trọng: chữ b của bạn là một âm khác hẳn ㄅ.</p><p>Các ký hiệu đi theo nhóm cách phát âm chứ không theo thứ tự bảng. Nhóm mới mở ra khi nhóm trước đã xong. Các lựa chọn cố ý gần nhau: hình dạng giống nhau và âm cùng vị trí phát âm — lựa chọn ngẫu nhiên chỉ tạo ảo giác tiến bộ.</p><p>Một ký hiệu được tính là đã nắm sau ba lần trả lời đúng liên tiếp, và phải nhanh: đúng nhưng chậm nghĩa là bạn đang suy ra chứ chưa nhận ra, và bộ đếm không tăng. Bạn có thể rời đi bất cứ lúc nào.</p>
     numbers_html: >-
       <p>Số đếm chỉ cần một ít chữ Hán và bạn cần tất cả — âm Hán Việt nhất, nhị, tam, tứ giúp bạn nhớ rất
       nhanh. Cái khó thực sự không nằm ở chữ mà ở các hàng đơn vị.</p><p>Tiếng Quan thoại chia chữ số theo nhóm
@@ -3831,14 +3792,7 @@ vi:
       suất thuần túy. Chạm vào mục bất kỳ để xem bài đầy đủ, hoặc dùng nút <strong>+</strong> để thêm thẳng vào
       bộ thẻ.</p>
     chengyu_html: >-
-      <p>成語 là các thành ngữ bốn âm tiết bắt nguồn từ văn bản cổ và ngụ ngôn — người Việt đã quen với nhiều
-      thành ngữ như vậy qua âm Hán Việt. Nghĩa đen của chúng thường khác xa nghĩa thật: 雪中送炭 (tuyết trung
-      tống thán) nghĩa đen là «đưa than trong tuyết», nhưng nghĩa là «giúp đúng lúc cần giúp nhất». Vì vậy mỗi
-      thành ngữ ở đây không chỉ có bản dịch mà còn có <strong>sắc thái</strong> — khen, trung tính hay chê. Gọi
-      một việc là 十拿九穩 hay là 莫名其妙 khác nhau một trời một vực.</p><p>Danh sách lấy từ từ điển: một số
-      thành ngữ được gắn nhãn theo từ điển, số khác được kiểm tra bằng tay — những thành ngữ đó có ghi chú về
-      lúc nào thực sự được dùng, kèm một ví dụ thật. Chạm vào thành ngữ để xem mục đầy đủ có âm thanh, phân
-      tích chữ và câu ví dụ.</p>
+      <p>成語 là các thành ngữ bốn âm tiết bắt nguồn từ văn bản cổ và ngụ ngôn — người Việt đã quen với nhiều thành ngữ như vậy qua âm Hán Việt. Nghĩa đen của chúng thường khác xa nghĩa thật: 雪中送炭 (tuyết trung tống thán) nghĩa đen là “đưa than trong tuyết”, nhưng nghĩa là “giúp đúng lúc cần giúp nhất”. Vì vậy mỗi thành ngữ ở đây không chỉ có bản dịch mà còn có <strong>sắc thái</strong> — khen, trung tính hay chê. Gọi một việc là 十拿九穩 hay là 莫名其妙 khác nhau một trời một vực.</p><p>Danh sách lấy từ từ điển: một số thành ngữ được gắn nhãn theo từ điển, số khác được kiểm tra bằng tay — những thành ngữ đó có ghi chú về lúc nào thực sự được dùng, kèm một ví dụ thật. Chạm vào thành ngữ để xem mục đầy đủ có âm thanh, phân tích chữ và câu ví dụ.</p>
     tbcl_html: >-
       <p>TBCL (臺灣華語文能力基準) là thang mà tiếng Quan thoại thực sự được dạy theo ở Đài Loan: bảy cấp, từ một
       đến bảy. Nó được xây dựng khác với kỳ thi TOCFL — theo chương trình học ở trường chứ không theo dạng đề
@@ -3869,10 +3823,7 @@ vi:
       sự đứng cuối mệnh đề trong kho ngữ liệu Đài Loan của chúng tôi; mở một thẻ để xem toàn bộ sắc thái nó mang
       theo, kèm ví dụ được dịch sao cho giữ được ngữ khí.</p>
     liangci_html: >-
-      <p>Lượng từ (量詞) của tiếng Quan thoại Đài Loan là những từ nhỏ đứng giữa số từ và danh từ: 一<b>本</b>書,
-      三<b>隻</b>貓 — như «một quyển sách», «ba con mèo». Mỗi mục cho biết nó đếm cái gì, danh từ nào thực sự đi
-      với nó và trông thế nào trong câu thật. Danh sách lấy từ 教育部國語辭典簡編本, CC-CEDICT và kho ngữ liệu
-      Đài Loan của chúng tôi. Ngoài ra còn có một trò chơi để ghép đúng lượng từ.</p>
+      <p>Lượng từ (量詞) của tiếng Quan thoại Đài Loan là những từ nhỏ đứng giữa số từ và danh từ: 一<b>本</b>書, 三<b>隻</b>貓 — như “một quyển sách”, “ba con mèo”. Mỗi mục cho biết nó đếm cái gì, danh từ nào thực sự đi với nó và trông thế nào trong câu thật. Danh sách lấy từ 教育部國語辭典簡編本, CC-CEDICT và kho ngữ liệu Đài Loan của chúng tôi. Ngoài ra còn có một trò chơi để ghép đúng lượng từ.</p>
     tocfl_html: >-
       <p>Tiến độ của bạn tới từng cấp TOCFL chính thức. Số liệu tính mọi chữ và từ bạn đã học ở bất cứ đâu
       trong ứng dụng, không chỉ ở đây. Mở một cấp để học thẳng hoặc xem chính xác còn lại những gì.</p>
@@ -3882,10 +3833,7 @@ vi:
       = khó. Phím mũi tên cũng dùng được, và chạm vào thẻ sẽ lật thẻ.</p><p>Mục mới được đưa vào theo từng lượt,
       trộn với mọi thứ đến hạn ôn. Lịch ôn theo FSRS, nên thẻ quay lại đúng lúc bạn sắp quên.</p>
     pronunciation_html: >-
-      <p>Đọc từ vào micrô; mỗi âm tiết được chấm về <strong>thanh điệu</strong> và <strong>thanh mẫu/vận
-      mẫu</strong>. Xanh lá là đúng, hổ phách là gần đúng, đỏ là lệch. Ở chế độ tự động, bài sẽ đi tiếp khi bạn
-      đúng và giữ micrô mở cho tới khi bạn đúng. Cả cách đọc chuẩn lẫn cách đọc Đài Loan đều được chấp nhận.
-      Hãy để ý thanh 1 và thanh 4 — đó là cặp người Việt hay lẫn nhất.</p>
+      <p>Đọc từ vào micrô; mỗi âm tiết được chấm về <strong>thanh điệu</strong> và <strong>thanh mẫu/vận mẫu</strong>. Xanh lá là đúng, hổ phách là gần đúng, đỏ là lệch. Ở chế độ tự động, bài sẽ đi tiếp khi bạn đúng và giữ micrô mở cho tới khi bạn đúng. Cả cách đọc trong từ điển lẫn cách đọc thường ngày ở Đài Loan đều được chấp nhận. Hãy để ý thanh 1 và thanh 4 — đó là cặp người Việt hay lẫn nhất.</p>
     writing_html: >-
       <p>Nhớ lại chữ từ nghĩa và cách đọc, rồi viết từng nét. Các nét được kiểm tra theo thứ tự; nét sai sẽ
       được nhắc quay lại. Những chữ hay trượt xuất hiện lại trước, sau đó những chữ còn lại đến từ dễ đến
@@ -3894,8 +3842,7 @@ vi:
       <p>Vẽ một chữ phồn thể từng nét, chữ sẽ được nhận dạng ngoại tuyến — không cần mạng, không có gì rời
       khỏi thiết bị của bạn. Dùng để tra nhanh khi bạn biết hình dạng nhưng không biết cách đọc.</p>
     cangjie_html: >-
-      <p>Gõ Thương Hiệt 5 cho chữ phồn thể Đài Loan. Gõ các phím Latinh tạo nên một chữ để ghép thành chữ đó.
-      Trang của mỗi chữ cũng hiện mã Thương Hiệt của nó.</p>
+      <p>Gõ Thương Hiệt 5 cho chữ phồn thể Đài Loan. Nhấn lần lượt các phím Latinh ứng với từng phần của chữ để gõ ra chữ đó. Trang của mỗi chữ cũng hiện mã Thương Hiệt của nó.</p>
     history_html: >-
       <p>Những gì bạn học gần đây và mỗi mục đã vững đến đâu. Các chấm cho thấy độ bền trí nhớ theo từng kỹ
       năng (nhận diện, đọc, thanh điệu, viết). Dùng nó để phát hiện những gì đang trượt trước khi tới hạn ôn.</p>
@@ -3923,7 +3870,7 @@ vi:
     skip: "Bỏ qua câu này"
     by_axis: "Kết quả từng phần"
     result_split: "Hai trình độ khác nhau"
-    split_hint: "Tai nghe của bạn vượt xa khả năng đọc, nên một con số duy nhất sẽ gây hiểu lầm. Hãy chọn trình độ bạn muốn ứng dụng điều chỉnh theo."
+    split_hint: "Khả năng nghe của bạn vượt xa khả năng đọc, nên một con số duy nhất sẽ gây hiểu lầm. Hãy chọn trình độ bạn muốn ứng dụng điều chỉnh theo."
     axes:
       listening: "Nghe"
       tones: "Thanh điệu"
@@ -3933,7 +3880,7 @@ vi:
       traditional: "Chữ phồn thể"
       writing: "Viết"
     sides:
-      listening: "Theo tai nghe"
+      listening: "Theo khả năng nghe"
       reading: "Theo khả năng đọc"
     intake:
       experience:
@@ -4068,7 +4015,7 @@ vi:
           - Mọi thứ ở đây đều thuần Đài Loan.
         life:
           - "Mỗi từ, mỗi câu, mỗi tình huống đều lấy từ đời sống thật ở Đài Loan:"
-          - cửa hàng tiện lợi, quán trà sữa, quán mì, tàu điện ngầm, phòng khám, ngày nghỉ bão.
+          - cửa hàng tiện lợi, quán trà sữa, quán mì, tàu điện MRT, phòng khám, ngày nghỉ bão.
         audience:
           - Dành cho người bắt đầu từ con số không, người đang học,
           - người sắp sang Đài Loan, hay người đã sống ở đây.
@@ -4201,10 +4148,8 @@ vi:
             Nghĩa, ví dụ và liên kết được đọc lại bằng tay. Phần tiếng Quan thoại do con người kiểm chứng — không
             có gì do máy tạo ra. Bản tiếng Việt đang được rà soát dần.
         written:
-          title: Viết cho người Hà Nội
-          body:
-            Phần giải thích bắt đầu từ sáu thanh và hệ thống âm của tiếng Hà Nội mà bạn đã có, và từ những cái
-            bẫy mà chữ quốc ngữ đặt ra khi bạn đọc bính âm.
+          title: Viết cho người Việt
+          body: Phần giải thích bắt đầu từ sáu thanh và hệ thống âm của tiếng Việt (giọng Hà Nội) mà bạn đã có, và từ những cái bẫy mà chữ quốc ngữ đặt ra khi bạn đọc bính âm.
     tools:
       heading: Mọi thứ mà bình thường bạn phải cài năm ứng dụng
       lede: Mở ra là đã có sẵn tất cả — không cần thiết lập, không phải đi tìm.
@@ -4437,7 +4382,7 @@ vi:
       classes: "Trình độ của bạn là gì?"
     level_hint:
       tocfl: "Không phải cấp bạn sẽ thi — cấp đó bạn chọn trong kế hoạch ôn thi."
-      guided: "Từ mới bắt đầu từ cấp cao hơn kế tiếp."
+      guided: "Từ mới sẽ bắt đầu từ cấp ngay trên đó."
       classes: "Chỉ để chúng tôi tham khảo — bỏ qua cũng được."
     scale:
       guide: Làm sao biết trình độ của mình?
@@ -4464,7 +4409,7 @@ vi:
           title: Bỏ qua
           chip: "chọn sau"
           body: Bạn có thể chọn trình độ sau trong hồ sơ.
-    known_question: Bạn đã quen với gì chưa?
+    known_question: Bạn đã biết những gì rồi?
     known:
       zero:
         title: Chưa gì cả
@@ -4535,7 +4480,7 @@ vi:
           body: "Bạn đã biết các âm. Phần này gắn chúng với các ký hiệu mà Đài Loan dùng để ghi, và chỉ ra các bẫy: vần rỗng, y và w, các vần rút gọn iu, ui và un."
         readings:
           title: "Học lại cách đọc của Đài Loan"
-          body: "Những từ Đài Loan đọc khác với sách giáo khoa thông thường, và những thanh đầy đủ Đài Loan giữ lại ở chỗ sách ghi thanh nhẹ."
+          body: "Những từ Đài Loan đọc khác với giáo trình in ở nơi khác, và những thanh đầy đủ mà Đài Loan giữ lại ở chỗ các giáo trình ấy ghi thanh nhẹ."
         placement:
           title: "Tìm trình độ của bạn"
           body: "Một bài kiểm tra thích ứng ngắn về nghe, thanh điệu, chữ Hán, từ vựng và câu. Nó đặt trình độ khởi đầu và đánh dấu những gì bạn đã biết."

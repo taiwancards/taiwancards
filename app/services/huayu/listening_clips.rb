@@ -4,8 +4,8 @@ module Huayu
   class ListeningClips
     DATA = JsonData.new("listening/manifest.json", root: :media, watch: true)
 
-    Row = Data.define(:text, :level, :clip, :en, :ru, :emoji, :emoji_word, :emoji_category) do
-      def translation(locale) = locale.to_s == "ru" ? (ru.presence || en) : en
+    Row = Data.define(:text, :level, :clip, :en, :ru, :vi, :emoji, :emoji_word, :emoji_category) do
+      def translation(locale) = {"ru" => ru, "vi" => vi}[locale.to_s].presence || en
 
       def emoji? = emoji.present?
     end
@@ -73,6 +73,7 @@ module Huayu
             clip: row["clip"],
             en: row["en"],
             ru: row["ru"],
+            vi: row["vi"],
             emoji: row["emoji"],
             emoji_word: row["emoji_word"],
             emoji_category: row["emoji_category"]
