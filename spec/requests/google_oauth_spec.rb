@@ -53,6 +53,44 @@ RSpec.describe "Google OAuth", :no_auth do
     expect(ReminderDelivery.where(user: fresh).pluck(:trigger)).to(eq(["welcome"]))
   end
 
+  it "gives a new account the interface language of the page it signed up from, not the browser's" do
+    mock_google(email: "hanoi@example.com", uid: "guid-vi")
+
+    post("/auth/google_oauth2?intent=sign_in&locale=vi", headers: {"Accept-Language" => "en-US,en;q=0.9"})
+    follow_redirect!(headers: {"Accept-Language" => "en-US,en;q=0.9"})
+
+    user = User.find_by(google_uid: "guid-vi")
+    expect(user.locale).to(eq("vi"))
+    expect(ReminderDelivery.find_by(user:, trigger: "welcome").locale).to(eq("vi"))
+    expect(response).to(redirect_to(desk_path(locale: "vi")))
+  end
+
+  it "falls back to the language picked in the switcher when the sign-in carries none" do
+    mock_google(email: "switcher@example.com", uid: "guid-cookie")
+    cookies[:locale] = "ru"
+
+    get("/auth/google_oauth2/callback", headers: {"Accept-Language" => "en-US"})
+
+    expect(User.find_by(google_uid: "guid-cookie").locale).to(eq("ru"))
+  end
+
+  it "keeps the language an existing account already chose" do
+    create(:user, email: "settled@example.com", locale: "ru")
+    mock_google(email: "settled@example.com", uid: "guid-settled")
+
+    post("/auth/google_oauth2?intent=sign_in&locale=vi")
+    follow_redirect!
+
+    expect(User.find_by(google_uid: "guid-settled").locale).to(eq("ru"))
+    expect(response).to(redirect_to(desk_path(locale: "vi")))
+  end
+
+  it "sends the interface language along with the Google sign-in" do
+    get("/vi/login")
+
+    expect(response.body).to(include("/auth/google_oauth2?intent=sign_in&amp;locale=vi"))
+  end
+
   it "links Google to the currently logged-in account" do
     user = sign_in(create(:user))
     mock_google(email: "someone@example.com", uid: "guid-3")

@@ -22,6 +22,15 @@ RSpec.describe "Admin users" do
     expect(target.restricted_content?).to(be(true))
   end
 
+  it "shows which interface language each user has" do
+    sign_in(create(:user, :admin))
+    create(:user, locale: "vi")
+
+    get(admin_users_path(locale: "ru"))
+
+    expect(response.body).to(include("интерфейс: Tiếng Việt"))
+  end
+
   describe "admin rights" do
     let(:admin) { create(:user, :admin) }
 

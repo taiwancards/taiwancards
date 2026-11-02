@@ -20,7 +20,7 @@ module Admin
     end
 
     def edit
-      @locale = params[:lang].presence_in(Newsletter::LOCALES) || Newsletter::LOCALES.last
+      @locale = params[:lang].presence_in(Newsletter::LOCALES) || "ru"
       @recipients = @newsletter.audience_recipients.group(:locale).count
       @subscribers = Newsletter.recipients.order(Arel.sql("last_seen_at DESC NULLS LAST")).to_a
       @deliveries = @newsletter.deliveries.includes(:user).order(:id).to_a
@@ -99,7 +99,7 @@ module Admin
       permitted = params.expect(
         newsletter: [
           *FIELDS,
-          buttons: [%i[label_en label_ru url]],
+          buttons: [[*Newsletter::BUTTON_LABELS, "url"]],
           audience: [:mode, levels: [], goals: [], user_ids: []]
         ]
       )
@@ -109,7 +109,7 @@ module Admin
     end
 
     def audience_labels
-      counts = {count: @recipients.values.sum, en: @recipients.fetch("en", 0), ru: @recipients.fetch("ru", 0)}
+      counts = {count: @recipients.values.sum, **Newsletter.per_locale(@recipients)}
       {
         recipients: t("newsletters.admin.audience_count", **counts),
         deliver: t("newsletters.admin.deliver", **counts),

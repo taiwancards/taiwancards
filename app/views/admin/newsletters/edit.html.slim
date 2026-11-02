@@ -2,7 +2,7 @@
 - content_for(:head) { stylesheet_link_tag("trix") }
 - locked = @newsletter.sent?
 - locale = @locale
-- other = (Newsletter::LOCALES - [locale]).first
+- others = Newsletter::LOCALES - [locale]
 - field = "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
 - labels = audience_labels
 - picked = @newsletter.audience_user_ids.to_set
@@ -53,7 +53,8 @@
             .grid.gap-2 class="sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
               = text_field_tag "newsletter[buttons][#{index}][label_#{locale}]", button["label_#{locale}"], placeholder: t("newsletters.admin.button_label"), class: field
               = text_field_tag "newsletter[buttons][#{index}][url]", button["url"], placeholder: "#{Newsletters::Tracking.base}/#{locale}/…", class: field
-              = hidden_field_tag "newsletter[buttons][#{index}][label_#{other}]", button["label_#{other}"]
+              - others.each do |other|
+                = hidden_field_tag "newsletter[buttons][#{index}][label_#{other}]", button["label_#{other}"]
         fieldset.min-w-0.space-y-3.rounded-xl.border.border-border.p-3
           legend.px-1.text-sm.font-medium = t("newsletters.admin.audience")
           = hidden_field_tag "newsletter[audience][levels][]", "", id: nil

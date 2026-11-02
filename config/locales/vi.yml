@@ -973,7 +973,7 @@ vi:
       hint: Nhiều nhất một hoặc hai lần mỗi tháng, chỉ về những gì mới. Không quảng cáo.
     admin:
       title: Bản tin
-      lede: "Người nhận: mọi người đã đăng nhập bằng Google và chưa hủy đăng ký, cộng với chính bạn. Hiện có %{en} người đọc tiếng Anh và %{ru} người đọc tiếng Nga. Mỗi người nhận bản theo ngôn ngữ giao diện của mình."
+      lede: "Người nhận: mọi người đã đăng nhập bằng Google và chưa hủy đăng ký, cộng với chính bạn. Hiện có %{en} người đọc tiếng Anh, %{ru} người đọc tiếng Nga và %{vi} người đọc tiếng Việt. Mỗi người nhận bản theo ngôn ngữ giao diện của mình."
       new: Bản tin mới
       empty: Chưa có bản tin nào.
       draft: Bản nháp
@@ -1002,7 +1002,7 @@ vi:
       sample_sent: "Đã gửi riêng cho %{email}. Đây là thư thật: các liên kết được đếm lượt bấm và liên kết hủy đăng ký hoạt động."
       failed: "Không gửi được: %{error}"
       deliver: "Gửi (%{count})"
-      deliver_confirm: "Gửi bản tin này cho %{count} người (%{en} bằng tiếng Anh, %{ru} bằng tiếng Nga)? Không thể thu hồi."
+      deliver_confirm: "Gửi bản tin này cho %{count} người (%{en} bằng tiếng Anh, %{ru} bằng tiếng Nga, %{vi} bằng tiếng Việt)? Không thể thu hồi."
       no_recipients: Không có ai khớp với nhóm người nhận đã chọn.
       audience: Người nhận
       audience_modes:
@@ -1015,11 +1015,11 @@ vi:
       audience_search: Tìm theo email
       audience_seen: "truy cập %{ago} trước"
       audience_count:
-        other: "%{count} người nhận: %{en} bằng tiếng Anh, %{ru} bằng tiếng Nga"
+        other: "%{count} người nhận: %{en} bằng tiếng Anh, %{ru} bằng tiếng Nga, %{vi} bằng tiếng Việt"
       resume: "Gửi %{count} thư còn lại"
       resume_confirm: "Gửi bản tin cho %{count} người chưa nhận được?"
       dispatched: Đã bắt đầu gửi trong nền. Hãy tải lại trang để theo dõi.
-      incomplete: Hãy điền tiêu đề và nội dung bằng cả hai ngôn ngữ trước.
+      incomplete: Trước hết hãy điền tiêu đề và nội dung bằng mọi ngôn ngữ mà những người nhận đã chọn đang dùng.
       not_configured: Chưa cấu hình gửi thư (thiếu SMTP_ADDRESS và các biến khác), nên chưa thể gửi gì.
       send_hint: "Giới hạn mỗi ngày %{limit}; còn %{budget} thư cho 24 giờ tới, phần còn lại chờ nút “Gửi thư còn lại”."
       delete: Xóa bản nháp
@@ -2966,6 +2966,7 @@ vi:
     seen_at: "truy cập %{at}"
     never: chưa bao giờ
     visits: "%{count} lượt truy cập"
+    interface_language: "giao diện: %{language}"
     cards: "%{count} thẻ"
     reviews_window: "%{count} lượt ôn / %{days} ngày"
     decks: "%{count} bộ thẻ"

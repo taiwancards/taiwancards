@@ -30,6 +30,7 @@
           span = t("admin.visits", count: user.visits_count)
           - if (place = whereabouts(user)).present?
             span = place
+          span = t("admin.interface_language", language: t("locales.#{user.locale}", default: user.locale))
           span = level_label(user.level)
           span = t("admin.cards", count: stats[:cards])
           span = t("admin.reviews_window", count: stats[:reviews], days: Admin::UserStats::WINDOW_DAYS)

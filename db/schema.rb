@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_20_021741) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_02_111132) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -408,6 +408,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_021741) do
     t.datetime("created_at", null: false)
     t.datetime("updated_at", null: false)
     t.jsonb("audience", default: {}, null: false)
+    t.string("subject_vi", default: "", null: false)
+    t.string("preheader_vi", default: "", null: false)
+    t.text("body_vi", default: "", null: false)
   end
 
   create_table("page_views", force: :cascade) do |t|

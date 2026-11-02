@@ -26,6 +26,16 @@ RSpec.describe NewsletterMailer do
     expect(mail["List-Unsubscribe-Post"].value).to(eq("List-Unsubscribe=One-Click"))
   end
 
+  it "writes to a Vietnamese reader in Vietnamese" do
+    reader = create(:user, google_uid: "g-vi", locale: "vi")
+    newsletter.update!(subject_vi: "Tin mới", body_vi: "<div>Xin chào</div>")
+
+    mail = described_class.issue(NewsletterDelivery.create!(newsletter:, user: reader, locale: "vi"))
+
+    expect(mail.subject).to(eq("Tin mới"))
+    expect(mail.html_part.body.decoded).to(include("Xin chào"))
+  end
+
   it "tracks links into the app, leaves other links alone and carries a text part" do
     mail = described_class.issue(delivery)
     html = mail.html_part.body.decoded

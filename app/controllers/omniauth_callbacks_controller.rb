@@ -18,12 +18,13 @@ class OmniauthCallbacksController < ApplicationController
       existing = User.exists?(google_uid: auth.uid) ||
         User.exists?(email: auth.info.email.to_s.downcase) ||
         User.exists?(google_email: auth.info.email.to_s.downcase)
-      user = User.for_google(auth, locale: preferred_locale)
+      user = User.for_google(auth, locale: interface_locale)
       user.update!(signup_from: signup_source) unless existing
       start_new_session_for(user)
       session[:fresh_account] = true unless existing
       welcome(user) unless existing
-      redirect_to(take_return_path || desk_path, notice: t(existing ? "auth.signed_in" : "auth.signed_up"))
+      notice = t(existing ? "auth.signed_in" : "auth.signed_up", locale: interface_locale)
+      redirect_to(take_return_path || desk_path(locale: interface_locale), notice:)
     end
 
   rescue => e
@@ -41,11 +42,12 @@ class OmniauthCallbacksController < ApplicationController
 
   private
 
-  def preferred_locale
-    header = request.env["HTTP_ACCEPT_LANGUAGE"].to_s
-    wanted = header.split(",").map { |part| part.split(";").first.to_s.strip.downcase.split("-").first }
-    available = I18n.available_locales.map(&:to_s)
-    wanted.find { |code| available.include?(code) } || I18n.default_locale.to_s
+  def interface_locale
+    @interface_locale ||= Locales.resolve(
+      url: request.env["omniauth.params"].to_h["locale"],
+      stored: cookies[:locale],
+      header: browser_locale
+    )
   end
 
   def signing_in? = request.env["omniauth.params"].to_h["intent"] == SIGN_IN

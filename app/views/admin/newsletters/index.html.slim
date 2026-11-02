@@ -4,7 +4,7 @@
   header.space-y-2
     h1.text-2xl.font-bold.tracking-tight = t("newsletters.admin.title")
     = render "admin/nav"
-    p.max-w-prose.text-sm.text-muted-foreground = t("newsletters.admin.lede", en: @recipients.fetch("en", 0), ru: @recipients.fetch("ru", 0))
+    p.max-w-prose.text-sm.text-muted-foreground = t("newsletters.admin.lede", **Newsletter.per_locale(@recipients))
 
   = button_to t("newsletters.admin.new"), admin_newsletters_path, class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
 

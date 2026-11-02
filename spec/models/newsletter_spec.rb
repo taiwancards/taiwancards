@@ -29,13 +29,33 @@ RSpec.describe Newsletter do
     expect(newsletter.audience_recipients).to(contain_exactly(student))
   end
 
-  it "is ready to send only with a subject and text in both languages" do
+  it "is ready to send only with a subject and text in every language its readers use" do
+    create(:user, google_uid: "g-en", locale: "en")
+    create(:user, google_uid: "g-ru", locale: "ru")
     newsletter = described_class.create!(subject_en: "News", body_en: "<div>Hi</div>", subject_ru: "Новости")
 
     expect(newsletter).not_to(be_complete)
 
     newsletter.update!(body_ru: "<div>Привет</div>")
     expect(newsletter).to(be_complete)
+
+    create(:user, google_uid: "g-vi", locale: "vi")
+    expect(newsletter).not_to(be_complete)
+
+    newsletter.update!(subject_vi: "Tin mới", body_vi: "<div>Xin chào</div>")
+    expect(newsletter).to(be_complete)
+  end
+
+  it "asks for every language while nobody is in the audience" do
+    newsletter = described_class.create!(
+      subject_en: "News",
+      body_en: "<div>Hi</div>",
+      subject_ru: "Новости",
+      body_ru: "<div>Привет</div>"
+    )
+
+    expect(newsletter.audience_locales).to(eq(Locales::ALL))
+    expect(newsletter).not_to(be_complete)
   end
 
   it "drops buttons whose link is not a web, mail or app address" do

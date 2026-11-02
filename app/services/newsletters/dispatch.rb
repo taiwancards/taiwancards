@@ -23,7 +23,7 @@ module Newsletters
         {
           newsletter_id: @newsletter.id,
           user_id: id,
-          locale: locale.presence_in(Newsletter::LOCALES) || "en",
+          locale: locale.presence_in(Newsletter::LOCALES) || Locales::DEFAULT,
           created_at: now,
           updated_at: now
         }

@@ -95,6 +95,18 @@ RSpec.describe "Admin newsletters" do
     expect(newsletter.reload.subject_ru).to(eq("Новости"))
   end
 
+  it "refuses to send while a reader's language has no text, then sends each reader their own" do
+    newsletter = complete_newsletter
+    create(:user, google_uid: "g-vi", locale: "vi")
+
+    post(deliver_admin_newsletter_path(newsletter))
+    expect(newsletter.reload).not_to(be_sent)
+
+    newsletter.update!(subject_vi: "Tin mới", body_vi: "<div>Xin chào</div>")
+    post(deliver_admin_newsletter_path(newsletter))
+    expect(newsletter.deliveries.pluck(:locale)).to(include("vi"))
+  end
+
   it "sends only to the hand-picked people and refuses when nobody is picked" do
     newsletter = complete_newsletter
     chosen = create(:user, google_uid: "g-1", locale: "en")

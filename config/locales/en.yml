@@ -1003,7 +1003,7 @@ en:
       hint: Once or twice a month at most, only what is new. No ads.
     admin:
       title: Newsletters
-      lede: "Recipients: everyone who signed in with Google and has not unsubscribed, plus you, always. Now %{en} in English and %{ru} in Russian. Each gets the version in their interface language."
+      lede: "Recipients: everyone who signed in with Google and has not unsubscribed, plus you, always. Now %{en} in English, %{ru} in Russian and %{vi} in Vietnamese. Each gets the version in their interface language."
       new: New newsletter
       empty: No newsletters yet.
       draft: Draft
@@ -1032,7 +1032,7 @@ en:
       sample_sent: "Sent to %{email} only. It is the real letter: its links count clicks and its unsubscribe link works."
       failed: "Could not send: %{error}"
       deliver: "Send (%{count})"
-      deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian)? It cannot be recalled."
+      deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian, %{vi} in Vietnamese)? It cannot be recalled."
       no_recipients: Nobody matches the chosen recipients.
       audience: Recipients
       audience_modes:
@@ -1045,12 +1045,12 @@ en:
       audience_search: Find by email
       audience_seen: "seen %{ago} ago"
       audience_count:
-        one: "1 recipient: %{en} in English, %{ru} in Russian"
-        other: "%{count} recipients: %{en} in English, %{ru} in Russian"
+        one: "1 recipient: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese"
+        other: "%{count} recipients: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese"
       resume: "Send the remaining %{count}"
       resume_confirm: "Send the newsletter to the %{count} people who haven't received it yet?"
       dispatched: Sending has started in the background. Refresh the page to follow it.
-      incomplete: Fill in the subject and the text in both languages first.
+      incomplete: First fill in the subject and the text in every language the chosen recipients read.
       not_configured: Mail delivery is not configured (SMTP_ADDRESS and the rest are missing), so nothing can be sent yet.
       send_hint: "Daily limit %{limit}; %{budget} left for the next 24 hours, the rest waits for “Send the remaining”."
       delete: Delete draft
@@ -3023,6 +3023,7 @@ en:
     seen_at: "seen %{at}"
     never: never
     visits: "%{count} visits"
+    interface_language: "interface: %{language}"
     cards: "%{count} cards"
     reviews_window: "%{count} reviews / %{days} d"
     decks: "%{count} decks"

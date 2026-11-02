@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Newsletter < ApplicationRecord
-  LOCALES = %w[en ru].freeze
+  LOCALES = Locales::ALL
+  BUTTON_LABELS = LOCALES.map { |locale| "label_#{locale}" }.freeze
   MAX_BUTTONS = 3
   SAFE_URL = %r{\A(?:https?://|/(?!/)|mailto:)}i
   AUDIENCES = %w[all filtered picked].freeze
@@ -12,6 +13,8 @@ class Newsletter < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   before_save :clean_bodies
+
+  def self.per_locale(counts) = LOCALES.to_h { |locale| [locale.to_sym, counts.fetch(locale, 0)] }
 
   def self.recipients
     subscribed = User.where.not(google_uid: nil).where(newsletter_unsubscribed_at: nil)
@@ -55,19 +58,26 @@ class Newsletter < ApplicationRecord
     }
   end
 
-  def complete? = LOCALES.all? { |locale|
+  def audience_locales
+    found = audience_recipients.distinct.pluck(:locale).map { |locale|
+      locale.presence_in(LOCALES) || Locales::DEFAULT
+    }
+    found.presence&.uniq || LOCALES
+  end
+
+  def complete? = audience_locales.all? { |locale|
     subject(locale).present? && Newsletters::PlainText.call(body(locale)).present?
   }
 
   def sent? = sent_at.present?
 
-  def title = subject("ru").presence || subject("en").presence || "##{id}"
+  def title = subject("ru").presence || subject("en").presence || subject("vi").presence || "##{id}"
 
   private
 
   def clean_bodies
     LOCALES.each { |locale| self["body_#{locale}"] = Newsletters::Body.clean(body(locale)) }
-    self.buttons = Array(buttons).first(MAX_BUTTONS).map { |button| button.to_h.slice("label_en", "label_ru", "url") }
+    self.buttons = Array(buttons).first(MAX_BUTTONS).map { |button| button.to_h.slice(*BUTTON_LABELS, "url") }
     self.audience = {
       "mode" => audience_mode,
       "levels" => audience_levels & User::LEVELS,
