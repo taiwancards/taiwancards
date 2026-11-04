@@ -95,6 +95,41 @@ RSpec.describe Reminders::Planner do
     expect(plans.map { |plan| [plan.trigger, plan.count] }).to(eq([["due_cards", 20]]))
   end
 
+  describe "a welcome letter for someone who left the first screen unfinished" do
+    def signed_up(ago) = create(:user, created_at: evening - ago)
+
+    def welcomes(at = evening) = plans(at).select { |plan| plan.trigger == "welcome" }.map(&:user)
+
+    it "goes out once they had time to choose a language, whatever their usual hour" do
+      fresh = signed_up(10.minutes)
+      left = signed_up(40.minutes)
+      left_long_ago = signed_up(3.days)
+
+      expect(welcomes).to(contain_exactly(left))
+      expect(welcomes).not_to(include(fresh, left_long_ago))
+    end
+
+    it "never welcomes an old account that merely changes its goal" do
+      expect(Reminders::Dispatch.welcome(create(:user, created_at: 3.days.ago))).to(be_empty)
+    end
+
+    it "skips anyone already welcomed, opted out, unverified, or while letters are paused" do
+      welcomed = signed_up(1.hour)
+      ReminderDelivery.create!(user: welcomed, trigger: "welcome", count: 0, path: "/", locale: "en")
+      signed_up(1.hour).update!(reminders: false)
+      signed_up(1.hour).update!(email_verified_at: nil)
+
+      expect(welcomes).to(be_empty)
+
+      waiting = signed_up(1.hour)
+      expect(welcomes).to(eq([waiting]))
+
+      Setting.instance.pause_reminders!(true)
+      expect(welcomes).to(be_empty)
+      Setting.instance.pause_reminders!(false)
+    end
+  end
+
   it "keeps welcome letters out of the nudge rhythm" do
     visit!(user, evening.to_date - 1)
     ReminderDelivery.create!(

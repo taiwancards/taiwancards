@@ -9,6 +9,9 @@ shared:
     regular_days: 8
     starter: 20
     steps: [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 100, 120, 150, 200]
+  welcome:
+    wait_minutes: 30
+    window_days: 2
   triggers:
     first_cards:
       days_after_signup: [1]

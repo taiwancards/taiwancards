@@ -1,0 +1,11 @@
+- ordered = I18n.available_locales.map(&:to_s).sort_by { |code| code == current_user.locale ? 0 : 1 }
+
+section.pb-1 aria-labelledby="language-step-title"
+  h2#language-step-title.text-lg.font-bold.leading-snug.sm:text-xl = t("language_step.heading")
+  .mt-3.grid.gap-2
+    - ordered.each do |code|
+      = button_to locale_path(code, locale: nil), method: :post, form: {class: "contents"}, lang: code,
+        class: "block w-full cursor-pointer rounded-xl border bg-card p-3.5 text-left transition-colors hover:border-primary/60 focus-visible:outline-2 focus-visible:outline-primary #{code == current_user.locale ? "border-primary" : "border-border"}" do
+        span.block.font-semibold = t("locales.#{code}", locale: code)
+        span.mt-0.5.block.text-sm.leading-snug.text-muted-foreground = t("language_step.edition", locale: code)
+  p.mt-3.text-xs.text-muted-foreground = t("language_step.later")

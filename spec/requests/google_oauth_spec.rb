@@ -28,7 +28,6 @@ RSpec.describe "Google OAuth", :no_auth do
     expect(user).to(be_present)
     expect(user.verified?).to(be(true))
     expect(user.google_refresh_token).to(eq("refresh-token"))
-    expect(ReminderDelivery.where(user:).pluck(:trigger)).to(eq(["welcome"]))
   end
 
   it "attaches Google to an existing account pre-linked by google_email" do
@@ -50,7 +49,6 @@ RSpec.describe "Google OAuth", :no_auth do
     fresh = User.find_by(google_uid: "guid-login")
     expect(fresh).to(have_attributes(email: "fresh@example.com"))
     expect(owner.reload.google_uid).not_to(eq("guid-login"))
-    expect(ReminderDelivery.where(user: fresh).pluck(:trigger)).to(eq(["welcome"]))
   end
 
   it "gives a new account the interface language of the page it signed up from, not the browser's" do
@@ -61,7 +59,34 @@ RSpec.describe "Google OAuth", :no_auth do
 
     user = User.find_by(google_uid: "guid-vi")
     expect(user.locale).to(eq("vi"))
-    expect(ReminderDelivery.find_by(user:, trigger: "welcome").locale).to(eq("vi"))
+    expect(response).to(redirect_to(desk_path(locale: "vi")))
+  end
+
+  it "holds the welcome letter until the language is settled on the first screen" do
+    mock_google(email: "switcher-after@example.com", uid: "guid-later")
+
+    post("/auth/google_oauth2?intent=sign_in&locale=en")
+    follow_redirect!
+
+    user = User.find_by(google_uid: "guid-later")
+    expect(ReminderDelivery.where(user:)).to(be_empty)
+
+    post("/locale/vi")
+    post("/start", params: {goal: "guided", level: "zero", known: "zero"})
+
+    expect(ReminderDelivery.where(user:).pluck(:trigger, :locale)).to(eq([%w[welcome vi]]))
+
+    post("/start", params: {goal: "tocfl", level: "zero", known: "zero"})
+    expect(ReminderDelivery.where(user:).count).to(eq(1))
+  end
+
+  it "starts a new account from the visitor's country when the page language is only the default" do
+    mock_google(email: "hanoi-en@example.com", uid: "guid-country")
+
+    post("/auth/google_oauth2?intent=sign_in&locale=en")
+    get("/auth/google_oauth2/callback", headers: {"CF-IPCountry" => "VN", "Accept-Language" => "en-US,en;q=0.9"})
+
+    expect(User.find_by(google_uid: "guid-country").locale).to(eq("vi"))
     expect(response).to(redirect_to(desk_path(locale: "vi")))
   end
 

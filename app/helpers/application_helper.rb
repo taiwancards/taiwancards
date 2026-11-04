@@ -20,6 +20,12 @@ module ApplicationHelper
     I18n.available_locales.map { |code| [t("locales.#{code}", locale: code), code.to_s] }
   end
 
+  def remember_language(code) = {
+    controller: "language-memory",
+    language_memory_code_value: code,
+    action: "language-memory#remember"
+  }
+
   def score_badge(lexeme)
     return if lexeme.score.nil?
 

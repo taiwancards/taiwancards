@@ -11,6 +11,10 @@ module Reminders
 
     def default_hour = settings.fetch(:default_hour)
 
+    def welcome_wait = settings.dig(:welcome, :wait_minutes).minutes
+
+    def welcome_window = settings.dig(:welcome, :window_days).days
+
     def quiet_hours = settings.fetch(:quiet_hours)
 
     def give_up_after = settings.fetch(:give_up_after)

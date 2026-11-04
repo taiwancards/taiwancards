@@ -137,6 +137,13 @@ en:
     en: English
     ru: Русский
     vi: Tiếng Việt
+  language_step:
+    heading: Choose the language of the app and its lessons
+    edition: "Not a word-for-word translation of another language, but an edition of its own. Taiwanese Mandarin is explained from an English speaker's point of view: sounds, grammar and culture."
+    later: You can change it later in the menu.
+  language_offer:
+    invite: This site is also in English
+    dismiss: Hide
   app:
     name: TaiwanCards
   languages:

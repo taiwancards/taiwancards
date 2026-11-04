@@ -28,6 +28,14 @@ RSpec.describe "Public caching" do
   end
 
   context("for a visitor with no account", :no_auth) do
+    it "keeps the language offer on a shared page: hidden until the browser finds no choice on record" do
+      get("/grammar")
+
+      expect(response.body).to(match(/data-controller="language-offer"[^>]*hidden/))
+      expect(response.body).to(include(I18n.t("language_offer.invite", locale: :vi), "href=\"/vi/grammar\""))
+      expect(session_cookie).not_to(include("_taiwancards_session"))
+    end
+
     it "answers the reference sections without opening a session" do
       REFERENCE_PAGES.each do |path|
         get(path)

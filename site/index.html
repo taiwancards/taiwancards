@@ -8,12 +8,33 @@
 <link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/">
 <link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/">
 <link rel="alternate" hreflang="x-default" href="https://taiwancards.app/en/">
-<meta http-equiv="refresh" content="0; url=/en/">
+<noscript><meta http-equiv="refresh" content="0; url=/en/"></noscript>
 <script>
 (function () {
-  var wanted = (navigator.language || "en").slice(0, 2);
-  var known = ['en', 'ru', 'vi'];
-  location.replace("/" + (known.indexOf(wanted) === -1 ? "en" : wanted) + "/");
+  var fallback = "en";
+  var known = ["en","ru","vi"];
+  var countries = {"VN":"vi","RU":"ru","UA":"ru","BY":"ru","KZ":"ru","KG":"ru","UZ":"ru","TJ":"ru","TM":"ru","AM":"ru","AZ":"ru","MD":"ru"};
+  var go = function (code) { location.replace("/" + code + "/"); };
+  var stored = null;
+  try { stored = localStorage.getItem("site_locale"); } catch (error) {}
+  if (known.indexOf(stored) !== -1) return go(stored);
+
+  var said = (navigator.languages || [navigator.language || ""])
+    .map(function (tag) { return tag.slice(0, 2).toLowerCase(); })
+    .filter(function (code) { return known.indexOf(code) !== -1; })[0];
+  if (said && said !== fallback) return go(said);
+
+  var done = false;
+  var settle = function (country) {
+    if (done) return;
+    done = true;
+    go(countries[country] || said || fallback);
+  };
+  setTimeout(settle, 800);
+  fetch("/cdn-cgi/trace")
+    .then(function (response) { return response.text(); })
+    .then(function (text) { settle((text.match(/^loc=(.+)$/m) || [])[1]); })
+    .catch(function () { settle(); });
 })();
 </script>
 </head>

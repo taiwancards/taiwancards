@@ -185,6 +185,11 @@ module Site
             panels.forEach(function (panel) { panel.classList.add("hidden"); });
             if (opening) wanted.classList.remove("hidden");
 
+            var language = event.target.closest("[data-controller~='language-memory']");
+            if (language) {
+              try { localStorage.setItem("site_locale", language.dataset.languageMemoryCodeValue); } catch (error) {}
+            }
+
             var pref = event.target.closest("[data-controller~='display-pref']");
             if (!pref) return;
             var name = pref.dataset.displayPrefNameValue;
@@ -255,12 +260,33 @@ module Site
           <title>#{I18n.t("app.name")}</title>
           <link rel="canonical" href="#{site_url}/#{I18n.default_locale}/">
           #{alternates("/")}
-          <meta http-equiv="refresh" content="0; url=/#{I18n.default_locale}/">
+          <noscript><meta http-equiv="refresh" content="0; url=/#{I18n.default_locale}/"></noscript>
           <script>
           (function () {
-            var wanted = (navigator.language || "en").slice(0, 2);
-            var known = #{I18n.available_locales.map(&:to_s).inspect.tr("\"", "'")};
-            location.replace("/" + (known.indexOf(wanted) === -1 ? "#{I18n.default_locale}" : wanted) + "/");
+            var fallback = "#{I18n.default_locale}";
+            var known = #{I18n.available_locales.map(&:to_s).to_json};
+            var countries = #{Locales::COUNTRIES.to_json};
+            var go = function (code) { location.replace("/" + code + "/"); };
+            var stored = null;
+            try { stored = localStorage.getItem("site_locale"); } catch (error) {}
+            if (known.indexOf(stored) !== -1) return go(stored);
+
+            var said = (navigator.languages || [navigator.language || ""])
+              .map(function (tag) { return tag.slice(0, 2).toLowerCase(); })
+              .filter(function (code) { return known.indexOf(code) !== -1; })[0];
+            if (said && said !== fallback) return go(said);
+
+            var done = false;
+            var settle = function (country) {
+              if (done) return;
+              done = true;
+              go(countries[country] || said || fallback);
+            };
+            setTimeout(settle, 800);
+            fetch("/cdn-cgi/trace")
+              .then(function (response) { return response.text(); })
+              .then(function (text) { settle((text.match(/^loc=(.+)$/m) || [])[1]); })
+              .catch(function () { settle(); });
           })();
           </script>
           </head>

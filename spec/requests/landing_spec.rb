@@ -11,6 +11,44 @@ RSpec.describe "Landing page" do
     expect(response.body).to(include(login_path))
   end
 
+  it "shows a first visitor the other interface languages, each in its own words", :no_auth do
+    get("/en")
+
+    expect(response.body).to(
+      include(
+        I18n.t("language_offer.invite", locale: :ru),
+        I18n.t("language_offer.invite", locale: :vi),
+        "href=\"/ru\"",
+        "href=\"/vi\""
+      )
+    )
+    expect(response.body).not_to(include(I18n.t("language_offer.invite", locale: :en)))
+  end
+
+  it "opens a bare address in the language of the visitor's country unless the browser says otherwise", :no_auth do
+    {
+      {"CF-IPCountry" => "VN", "Accept-Language" => "en-US,en;q=0.9"} => "/vi/grammar",
+      {"CF-IPCountry" => "UA", "Accept-Language" => "uk-UA,uk;q=0.9,en;q=0.8"} => "/ru/grammar",
+      {"CF-IPCountry" => "KZ"} => "/ru/grammar",
+      {"CF-IPCountry" => "VN", "Accept-Language" => "ru-RU,ru;q=0.9"} => "/ru/grammar",
+      {"CF-IPCountry" => "TW", "Accept-Language" => "en-US,en;q=0.9"} => "/en/grammar"
+    }.each do |headers, target|
+      raw_get("/grammar", headers:)
+      expect(response).to(redirect_to(target), headers.to_s)
+    end
+
+    cookies[:locale] = "en"
+    raw_get("/grammar", headers: {"CF-IPCountry" => "VN"})
+    expect(response).to(redirect_to("/en/grammar"))
+  end
+
+  it "never lets the country override a language written in the address", :no_auth do
+    get("/en/grammar", headers: {"CF-IPCountry" => "VN"})
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(match(/<html[^>]*lang="en"/))
+  end
+
   it "stays reachable for a signed-in person and offers a way back into the app" do
     get(root_path)
 

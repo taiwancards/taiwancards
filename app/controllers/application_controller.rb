@@ -69,7 +69,10 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_locale(&action)
-    I18n.with_locale(Locales.resolve(url: params[:locale], stored: stored_locale, header: browser_locale), &action)
+    I18n.with_locale(
+      Locales.resolve(url: params[:locale], stored: stored_locale, header: browser_locale, country: visitor_country),
+      &action
+    )
   end
 
   def switch_time_zone(&action)
@@ -92,6 +95,8 @@ class ApplicationController < ActionController::Base
   def stored_locale = current_user&.locale.presence || cookies[:locale].presence
 
   def browser_locale = request.headers["Accept-Language"]
+
+  def visitor_country = request.headers["CF-IPCountry"]
 
   def default_url_options = {locale: I18n.locale}
 

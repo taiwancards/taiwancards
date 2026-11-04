@@ -10,6 +10,10 @@ FactoryBot.define do
     prefs { {"goal" => "guided"} }
 
     trait(:undecided) do
+      prefs { {"language_chosen" => true} }
+    end
+
+    trait(:new_arrival) do
       prefs { {} }
     end
 

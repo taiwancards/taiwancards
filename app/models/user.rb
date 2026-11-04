@@ -203,6 +203,16 @@ class User < ApplicationRecord
   preference :text_direction, one_of: TEXT_DIRECTIONS
   preference :goal, one_of: GOALS, allow_nil: true
   preference :signup_from
+  preference :language_chosen
+
+  def language_chosen? = language_chosen.present?
+
+  def language_step? = !goal_chosen? && !language_chosen?
+
+  def choose_language!(code)
+    self.language_chosen = true
+    update_columns(locale: code, prefs:)
+  end
 
   def goal_chosen?
     goal.present?
@@ -239,6 +249,7 @@ class User < ApplicationRecord
     mobile_tabs
     goal
     signup_from
+    language_chosen
   ].freeze
 
   LEVELS = %w[zero phonetics 1 2 3 4 5 6 7].freeze

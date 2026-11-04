@@ -2,6 +2,7 @@
 
 class OnboardingController < ApplicationController
   def show
+    render(:language) if current_user.language_step?
   end
 
   def create
@@ -9,6 +10,7 @@ class OnboardingController < ApplicationController
     return redirect_to(origin || onboarding_start_path, alert: t("onboarding.pick_one")) unless start.valid?
 
     start.call
+    welcome
     redirect_to(after_start_path(start))
   end
 
@@ -30,6 +32,12 @@ class OnboardingController < ApplicationController
   end
 
   private
+
+  def welcome
+    Reminders::Dispatch.welcome(current_user)
+  rescue => e
+    Rails.logger.error("welcome email failed: #{e.class}: #{e.message}")
+  end
 
   def after_start_path(start)
     return origin if origin && !home?(origin)

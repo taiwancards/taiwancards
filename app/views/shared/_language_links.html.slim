@@ -1,0 +1,6 @@
+nav.flex.flex-wrap.items-center.gap-x-3.gap-y-1 class=local_assigns[:css] aria-label=t("auth.interface_language")
+  - (I18n.available_locales - [I18n.locale]).each do |code|
+    = link_to Locales.swap(request.fullpath, code), lang: code, data: remember_language(code),
+      class: "inline-flex min-h-9 items-center gap-1.5 text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline" do
+      = t("language_offer.invite", locale: code)
+      span aria-hidden="true" →

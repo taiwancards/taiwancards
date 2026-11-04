@@ -19,4 +19,4 @@
         = button_to label, locale_path(code, locale: nil), method: :post, form: {class: "block"},
           class: item_classes, lang: code, role: "menuitem"
       - else
-        = link_to label, Locales.swap(request.fullpath, code), class: item_classes, lang: code, role: "menuitem"
+        = link_to label, Locales.swap(request.fullpath, code), class: item_classes, lang: code, role: "menuitem", data: remember_language(code)

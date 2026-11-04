@@ -8,7 +8,7 @@ class LocalesController < ApplicationController
     return redirect_to(back_here(I18n.locale)) unless Locales.known?(code)
 
     cookies.permanent[:locale] = {value: code, same_site: :lax}
-    current_user&.update_column(:locale, code) if authenticated?
+    current_user&.choose_language!(code) if authenticated?
 
     redirect_to(back_here(code))
   end

@@ -22,7 +22,6 @@ class OmniauthCallbacksController < ApplicationController
       user.update!(signup_from: signup_source) unless existing
       start_new_session_for(user)
       session[:fresh_account] = true unless existing
-      welcome(user) unless existing
       notice = t(existing ? "auth.signed_in" : "auth.signed_up", locale: interface_locale)
       redirect_to(take_return_path || desk_path(locale: interface_locale), notice:)
     end
@@ -43,10 +42,11 @@ class OmniauthCallbacksController < ApplicationController
   private
 
   def interface_locale
-    @interface_locale ||= Locales.resolve(
-      url: request.env["omniauth.params"].to_h["locale"],
+    @interface_locale ||= Locales.for_signup(
+      page: request.env["omniauth.params"].to_h["locale"],
       stored: cookies[:locale],
-      header: browser_locale
+      header: browser_locale,
+      country: visitor_country
     )
   end
 
@@ -55,12 +55,6 @@ class OmniauthCallbacksController < ApplicationController
   def origin_path
     origin = params[:origin].to_s
     own_path?(origin) ? origin : desk_path
-  end
-
-  def welcome(user)
-    Reminders::Dispatch.welcome(user)
-  rescue => e
-    Rails.logger.error("welcome email failed: #{e.class}: #{e.message}")
   end
 
   def signup_source

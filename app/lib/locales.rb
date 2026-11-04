@@ -8,6 +8,10 @@ module Locales
   SEGMENT = /\A(#{ALL.join("|")})\z/
   TAIWAN_ONLY = %w[vi].freeze
   CHINA_COMPARISONS = %w[/variants].freeze
+  COUNTRIES = {
+    "VN" => "vi",
+    **%w[RU UA BY KZ KG UZ TJ TM AM AZ MD].to_h { |country| [country, "ru"] }
+  }.freeze
 
   module_function
 
@@ -23,11 +27,24 @@ module Locales
     source[locale.to_s].presence || source[DEFAULT]
   end
 
-  def resolve(url:, stored: nil, header: nil)
+  def resolve(url:, stored: nil, header: nil, country: nil)
     return url.to_s if known?(url)
     return stored.to_s if known?(stored)
 
-    from_header(header) || DEFAULT
+    guess(header:, country:)
+  end
+
+  def guess(header: nil, country: nil)
+    said = from_header(header)
+    return said if said && said != DEFAULT
+
+    COUNTRIES[country.to_s.upcase] || said || DEFAULT
+  end
+
+  def for_signup(page:, stored: nil, header: nil, country: nil)
+    return page.to_s if known?(page) && page.to_s != DEFAULT
+
+    resolve(url: nil, stored:, header:, country:)
   end
 
   def from_header(header)

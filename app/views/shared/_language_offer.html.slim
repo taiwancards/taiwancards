@@ -1,0 +1,9 @@
+.border-b.border-border data-controller="language-offer" hidden=true
+  .mx-auto.flex.w-full.items-center.gap-2.px-4 class=page_width_class
+    .min-w-0.flex-1
+      = render "shared/language_links"
+    button.inline-flex.size-9.shrink-0.cursor-pointer.items-center.justify-center.rounded-full.text-xs.text-muted-foreground.hover:text-foreground[
+      type="button" title=t("language_offer.dismiss") aria-label=t("language_offer.dismiss")
+      data-controller="language-memory" data-language-memory-code-value=I18n.locale
+      data-action="language-memory#remember language-offer#dismiss" ]
+      span aria-hidden="true" ✕

@@ -1,4 +1,5 @@
 - content_for(:title, t("auth.login_title"))
+- content_for(:language_offered, true)
 
 .mx-auto.mt-16.max-w-sm.space-y-6
   .text-center
@@ -6,6 +7,8 @@
       span Taiwan
       span.text-muted-foreground Cards
     p.mt-1.text-sm.text-muted-foreground = t("auth.login_subtitle")
+
+  = render "shared/language_links", css: "justify-center"
 
   .space-y-4.rounded-2xl.border.border-border.bg-card.p-6
     = render "shared/google_button"

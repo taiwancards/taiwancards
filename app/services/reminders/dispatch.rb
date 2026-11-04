@@ -6,6 +6,8 @@ module Reminders
 
     def self.welcome(user)
       return [] unless user.reminders? && user.verified? && !Setting.instance.reminders_paused?
+      return [] if user.created_at < Schedule.welcome_window.ago
+      return [] if ReminderDelivery.exists?(user:, trigger: Schedule::WELCOME)
 
       new.call([Planner::Plan.new(user:, trigger: Schedule::WELCOME, count: 0)])
     end

@@ -28,6 +28,14 @@ RSpec.describe Site::Exporter do
 
   def page(*parts) = root.join(*parts).read
 
+  it "opens the bare address by the visitor's choice, browser or country, and still works without scripts" do
+    fallback = page("index.html")
+
+    expect(fallback).to(include("<noscript><meta http-equiv=\"refresh\" content=\"0; url=/en/\"></noscript>"))
+    expect(fallback).to(include("/cdn-cgi/trace", "site_locale", "\"VN\":\"vi\"", "\"UA\":\"ru\""))
+    expect(page("en", "index.html")).to(include("\"site_locale\", language.dataset"))
+  end
+
   it "writes every page in every language, and keeps the old addresses alive" do
     expect(root.glob("**/index.html").map { |file| file.relative_path_from(root).to_s }).to(
       contain_exactly(

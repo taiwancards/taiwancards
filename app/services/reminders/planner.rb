@@ -9,10 +9,24 @@ module Reminders
     end
 
     def call
-      candidates.filter_map { |user| plan_for(user) }.sort_by { |plan| plan.trigger == Schedule::SCHEDULED ? 0 : 1 }
+      welcomes +
+        candidates.filter_map { |user| plan_for(user) }.sort_by { |plan| plan.trigger == Schedule::SCHEDULED ? 0 : 1 }
     end
 
     private
+
+    def welcomes
+      return [] if Setting.instance.reminders_paused?
+
+      User
+        .where(reminders_off_at: nil)
+        .where
+        .not(email_verified_at: nil)
+        .where(created_at: (@now - Schedule.welcome_window)..(@now - Schedule.welcome_wait))
+        .where
+        .not(id: ReminderDelivery.where(trigger: Schedule::WELCOME).select(:user_id))
+        .map { |user| Plan.new(user:, trigger: Schedule::WELCOME, count: 0) }
+    end
 
     def candidates
       users = User.where(reminders_off_at: nil).where.not(email_verified_at: nil).to_a
