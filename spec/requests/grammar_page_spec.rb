@@ -36,6 +36,7 @@ RSpec.describe "Grammar pages" do
   end
 
   it "keeps a Vietnamese formula out of the Chinese face and marks only its characters" do
+    read_in("vi")
     get("/vi/grammar/de-possessive")
 
     chinese = Nokogiri::HTML5(response.body).css("[lang='zh-TW']").map(&:text).join

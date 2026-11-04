@@ -51,6 +51,7 @@ RSpec.describe "Stories" do
     end
 
     it "shows the Russian translation on the Russian page" do
+      read_in("ru")
       get("/ru/stories/#{text.id}")
 
       expect(response.body).to(include("Мы идём на ночной рынок."))

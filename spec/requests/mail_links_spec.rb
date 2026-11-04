@@ -75,7 +75,7 @@ RSpec.describe "Links in letters", :no_auth do
   end
 
   it "switches from someone else's account to the reader's on a fresh link, but never on a used one" do
-    stranger = create(:user)
+    stranger = create(:user, locale: "ru")
     fresh = issue
     used = issue
     used.consume!

@@ -1,0 +1,16 @@
+- flag_classes = "inline-flex size-10 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-muted"
+
+nav.flex.items-center class=local_assigns[:css] aria-label=t("nav.interface_language")
+  - flagged_languages.each do |code|
+    - label = t("locales.#{code}", locale: code)
+    - if code == I18n.locale.to_s
+      span.inline-flex.size-10.items-center.justify-center lang=code title=label role="img" aria-label=label aria-current="true"
+        = language_flag(code, css: "ring-2 ring-primary ring-offset-2 ring-offset-background")
+    - elsif authenticated?
+      = button_to locale_path(code, locale: nil), method: :post, form: {class: "contents"},
+        class: flag_classes, lang: code, title: label, aria: {label:} do
+        = language_flag(code)
+    - else
+      = link_to Locales.swap(request.fullpath, code), class: flag_classes, lang: code, hreflang: code, title: label,
+        aria: {label:}, data: remember_language(code) do
+        = language_flag(code)

@@ -140,9 +140,6 @@ vi:
     heading: Chọn ngôn ngữ cho ứng dụng và học liệu
     edition: "Không phải bản dịch nguyên văn từ tiếng Anh, mà là một ấn bản riêng. Tiếng Quan thoại Đài Loan được giải thích từ góc nhìn của người nói tiếng Việt: phát âm, ngữ pháp và những nét văn hóa."
     later: Sau này bạn có thể đổi lại trong menu.
-  language_offer:
-    invite: Trang web này có cả tiếng Việt
-    dismiss: Ẩn
   app:
     name: TaiwanCards
   languages:

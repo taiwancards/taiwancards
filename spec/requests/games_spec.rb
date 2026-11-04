@@ -72,6 +72,7 @@ RSpec.describe "Board games" do
   end
 
   it "renders the Russian explanations next to every term" do
+    read_in("ru")
     import(
       [
         entry(

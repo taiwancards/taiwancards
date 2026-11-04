@@ -20,17 +20,10 @@ RSpec.describe "Auth forms", :no_auth do
     expect(nested_forms?(response.body)).to(be(false))
   end
 
-  it "offers the other interface languages next to the Google button, on an unhidden row" do
+  it "offers the other interface languages as flags next to the Google button" do
     get("/vi/login")
 
-    expect(response.body).to(
-      include(
-        I18n.t("language_offer.invite", locale: :en),
-        I18n.t("language_offer.invite", locale: :ru),
-        "href=\"/ru/login\""
-      )
-    )
-    expect(response.body).not_to(include("data-controller=\"language-offer\""))
+    expect(response.body).to(include("hreflang=\"ru\"", "hreflang=\"en\"", "href=\"/ru/login\"", "href=\"/en/login\""))
   end
 
   it "keeps the Google button out of the signup form" do

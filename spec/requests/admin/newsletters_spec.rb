@@ -47,7 +47,7 @@ RSpec.describe "Admin newsletters" do
   it "shows the letter in the preview frame straight away" do
     newsletter = complete_newsletter
 
-    get(edit_admin_newsletter_path(newsletter, lang: "ru"))
+    in_locale(:ru) { get(edit_admin_newsletter_path(newsletter, lang: "ru")) }
 
     frame = Nokolexbor::HTML(response.body).at_css("iframe[data-newsletter-editor-target=frame]")
     expect(frame["srcdoc"]).to(include("<html", "Привет", I18n.t("newsletters.mail.unsubscribe", locale: :ru)))

@@ -93,6 +93,7 @@ RSpec.describe "Dictionary" do
   end
 
   it "keeps the senses of the other spelling on the page" do
+    read_in("ru")
     plain = create(:lexeme, kind: :word, text: "舞台", meanings: {"en" => "stage", "ru" => "сцена"})
     rich = create(:lexeme, kind: :word, text: "舞臺", meanings: {"en" => "stage", "ru" => "сцена"})
     rich.senses.create!(position: 0, meanings: {"ru" => "площадка, на которой играют"})

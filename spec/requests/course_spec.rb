@@ -46,6 +46,7 @@ RSpec.describe "Course" do
   end
 
   it "shows the Russian side on the Russian page" do
+    read_in("ru")
     get("/ru/course/#{lesson.slug}")
 
     expect(response.body).to(include(lesson.goal_for(:ru)))
@@ -53,6 +54,7 @@ RSpec.describe "Course" do
   end
 
   it "shows the Vietnamese side, line by line, on the Vietnamese page" do
+    read_in("vi")
     get("/vi/course/#{lesson.slug}")
 
     expect(response.body).to(include(lesson.goal_for(:vi), CGI.escapeHTML(lesson.lines.first.translation(:vi))))

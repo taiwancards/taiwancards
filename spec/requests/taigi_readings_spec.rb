@@ -24,6 +24,7 @@ RSpec.describe "Taiwanese loanword readings" do
   end
 
   it "tells the reader that a native spelling is not read the Mandarin way" do
+    read_in("ru")
     import(
       [
         entry(
@@ -46,6 +47,7 @@ RSpec.describe "Taiwanese loanword readings" do
   end
 
   it "tells the reader that a sound spelling is read exactly as written" do
+    read_in("ru")
     import(
       [entry("賣安捏啦", "tailo" => "mài án-ne--lah", "hokkien" => "莫按呢啦", "taigi_reading" => "phonetic")]
     )

@@ -21,6 +21,7 @@ RSpec.describe "The progress section" do
   end
 
   it "keeps the data tab under the language prefix like its siblings" do
+    read_in("ru")
     get(progress_path(locale: :ru))
 
     expect(response.body).to(include("href=\"/ru/progress/data\""))

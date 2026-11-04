@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Reading hints on a grammar page" do
   it "carries both readings and leaves the choice to the header switch" do
+    read_in("ru")
     get("/ru/grammar/a-not-a")
 
     expect(response.body).to(include("zy-line"))
@@ -14,6 +15,7 @@ RSpec.describe "Reading hints on a grammar page" do
   end
 
   it "carries the readings on a level 5 point too" do
+    read_in("ru")
     lesson = Huayu::GrammarLessons.taught.find { |row| row.level == 5 }
 
     get("/ru/grammar/#{lesson.slug}")
@@ -23,6 +25,7 @@ RSpec.describe "Reading hints on a grammar page" do
   end
 
   it "drops both readings when the header switch is off" do
+    read_in("ru")
     cookies[:readings] = "off"
 
     get("/ru/grammar/a-not-a")

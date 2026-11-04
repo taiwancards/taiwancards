@@ -41,14 +41,13 @@ RSpec.describe "Interface locale" do
     expect(response).to(redirect_to("/ru/desk"))
   end
 
-  it "lets the address win over the stored language, so a shared link reads as it was sent" do
+  it "opens a shared link in the language of the account, so the interface and the letters agree" do
     sign_in(create(:user, locale: "ru"))
 
     get("/en/desk")
 
-    expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include(I18n.t("nav.progress", locale: :en)))
-    expect(response.body).not_to(include(I18n.t("nav.progress", locale: :ru)))
+    expect(response).to(have_http_status(:found))
+    expect(response).to(redirect_to("/ru/desk"))
   end
 
   it "keeps the query string while adding the prefix" do

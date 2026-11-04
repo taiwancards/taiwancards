@@ -80,6 +80,29 @@ RSpec.describe "Google OAuth", :no_auth do
     expect(ReminderDelivery.where(user:).count).to(eq(1))
   end
 
+  it "returns an existing account to its own language, whatever the page, browser or country says" do
+    owner = create(:user, email: "returning@example.com", locale: "en")
+    mock_google(email: "returning@example.com", uid: "guid-returning")
+
+    post("/auth/google_oauth2?intent=sign_in&locale=vi")
+    get("/auth/google_oauth2/callback", headers: {"CF-IPCountry" => "VN", "Accept-Language" => "vi-VN"})
+
+    expect(response).to(redirect_to(desk_path(locale: "en")))
+    expect(owner.reload.locale).to(eq("en"))
+    expect(flash[:notice]).to(eq(I18n.t("auth.signed_in", locale: :en)))
+  end
+
+  it "does not let the country change the language of an existing account signing in on the default page" do
+    owner = create(:user, email: "abroad@example.com", locale: "ru")
+    mock_google(email: "abroad@example.com", uid: "guid-abroad")
+
+    post("/auth/google_oauth2?intent=sign_in&locale=en")
+    get("/auth/google_oauth2/callback", headers: {"CF-IPCountry" => "VN", "Accept-Language" => "en-US"})
+
+    expect(response).to(redirect_to(desk_path(locale: "ru")))
+    expect(owner.reload.locale).to(eq("ru"))
+  end
+
   it "starts a new account from the visitor's country when the page language is only the default" do
     mock_google(email: "hanoi-en@example.com", uid: "guid-country")
 
@@ -107,7 +130,7 @@ RSpec.describe "Google OAuth", :no_auth do
     follow_redirect!
 
     expect(User.find_by(google_uid: "guid-settled").locale).to(eq("ru"))
-    expect(response).to(redirect_to(desk_path(locale: "vi")))
+    expect(response).to(redirect_to(desk_path(locale: "ru")))
   end
 
   it "sends the interface language along with the Google sign-in" do

@@ -26,8 +26,6 @@ html lang=I18n.locale class=html_preference_classes
       = render "shared/impersonation_banner"
       - if authenticated?
         = render "shared/setup_banner"
-      - elsif !content_for?(:language_offered)
-        = render "shared/language_offer"
     - if content_for?(:full_bleed)
       .mx-auto.w-full.px-4 class=page_width_class
         = render "shared/flash"

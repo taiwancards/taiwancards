@@ -7,7 +7,7 @@ header.sticky.top-0.z-40.border-b.border-border class="bg-background/85 backdrop
         span.font-normal.text-muted-foreground Cards
 
     .ml-auto.flex.shrink-0.items-center.gap-1
-      = render "shared/script_prefs"
+      = render "shared/language_flags"
 
       - if authenticated?
         = link_to t("landing.open_app"), desk_path, class: "rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"

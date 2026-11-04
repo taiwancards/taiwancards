@@ -11,18 +11,15 @@ RSpec.describe "Landing page" do
     expect(response.body).to(include(login_path))
   end
 
-  it "shows a first visitor the other interface languages, each in its own words", :no_auth do
+  it "offers every language as a flag in the navigation, and no font choice there", :no_auth do
     get("/en")
 
-    expect(response.body).to(
-      include(
-        I18n.t("language_offer.invite", locale: :ru),
-        I18n.t("language_offer.invite", locale: :vi),
-        "href=\"/ru\"",
-        "href=\"/vi\""
-      )
-    )
-    expect(response.body).not_to(include(I18n.t("language_offer.invite", locale: :en)))
+    navigation = Nokogiri::HTML5(response.body).at_css("header")
+    expect(navigation.css("nav [lang]").pluck("lang")).to(eq(%w[en vi ru]))
+    expect(navigation.css("nav svg").length).to(eq(Locales::ALL.length))
+    expect(navigation.css("a[hreflang]").pluck("href")).to(eq(%w[/vi /ru]))
+    expect(navigation.at_css("nav [aria-current=true]")["lang"]).to(eq("en"))
+    expect(navigation.at_css("[data-display-pref-css-value='font-kai']")).to(be_nil)
   end
 
   it "opens a bare address in the language of the visitor's country unless the browser says otherwise", :no_auth do

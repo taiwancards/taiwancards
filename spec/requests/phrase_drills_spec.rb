@@ -51,6 +51,7 @@ RSpec.describe "Phrase drills" do
     end
 
     it "shows the translation in the interface language" do
+      read_in("ru")
       drill("我好餓。", 1, ru: "Я так проголодался.")
 
       get("/ru/textbook/phrases")
@@ -104,6 +105,7 @@ RSpec.describe "Phrase drills" do
       expect(response.body).to(include("I&#39;m so hungry."))
       expect(response.body).not_to(include("How are you?"))
 
+      read_in("ru")
       get("/ru/textbook/phrases", params: {q: "дела"})
       expect(response.body).to(include("Как дела?"))
       expect(response.body).not_to(include("Я голоден."))

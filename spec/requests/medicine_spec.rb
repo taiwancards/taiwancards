@@ -48,6 +48,7 @@ RSpec.describe "Medicine and hospitals" do
   end
 
   it "renders in Russian with translated categories" do
+    read_in("ru")
     import([entry("醫院", "hospital")])
 
     in_locale(:ru) { get(medicine_path) }

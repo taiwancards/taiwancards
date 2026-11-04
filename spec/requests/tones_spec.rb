@@ -29,6 +29,7 @@ RSpec.describe "Tones" do
   end
 
   it "compares with the six Hanoi tones instead of Beijing for Vietnamese readers" do
+    read_in("vi")
     get("/vi/tones")
 
     ToneChartHelper::CONTOURS["hanoi"].each_value do |contour|

@@ -22,8 +22,9 @@ class OmniauthCallbacksController < ApplicationController
       user.update!(signup_from: signup_source) unless existing
       start_new_session_for(user)
       session[:fresh_account] = true unless existing
-      notice = t(existing ? "auth.signed_in" : "auth.signed_up", locale: interface_locale)
-      redirect_to(take_return_path || desk_path(locale: interface_locale), notice:)
+      language = existing ? user.locale : interface_locale
+      notice = t(existing ? "auth.signed_in" : "auth.signed_up", locale: language)
+      redirect_to(take_return_path || desk_path(locale: language), notice:)
     end
 
   rescue => e

@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   prepend_around_action :switch_locale
   around_action :switch_time_zone
   before_action :redirect_to_localized_url
+  before_action :follow_account_language
   after_action :track_activity
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
@@ -108,5 +109,16 @@ class ApplicationController < ActionController::Base
     return unless target.start_with?("/#{I18n.locale}")
 
     redirect_to(target, status: :moved_permanently)
+  end
+
+  def follow_account_language
+    return if impersonating? || !Locales.addressable?(request)
+
+    shown = Locales.prefix(request.path)
+    language = current_user&.locale
+    return if shown.nil? || shown == language || !Locales.known?(language)
+
+    flash.keep
+    redirect_to(Locales.swap(request.fullpath, language))
   end
 end

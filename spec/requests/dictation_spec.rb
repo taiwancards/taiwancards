@@ -50,6 +50,7 @@ RSpec.describe "Dictation" do
   end
 
   it "serves the level the learner asks for" do
+    read_in("ru")
     get("/ru/practice/dictation", params: {level: 5})
 
     expect(response.body).to(include("voice-5.mp3"))

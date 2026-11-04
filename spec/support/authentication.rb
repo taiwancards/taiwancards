@@ -17,8 +17,10 @@ module AuthenticationHelpers
     )
     get("/auth/google_oauth2/callback")
     Current.user = user
-    user
+    @signed_in_user = user
   end
+
+  def read_in(code) = @signed_in_user.update_column(:locale, code)
 end
 
 RSpec.configure do |config|

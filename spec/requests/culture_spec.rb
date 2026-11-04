@@ -21,6 +21,7 @@ RSpec.describe "Culture notes" do
   end
 
   it "links a signed-in learner to the lesson the note comes from" do
+    read_in("ru")
     get("/ru/culture")
 
     expect(response.body).to(include(lesson.culture_for(:ru)["title"]))

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Rating kept pronunciation recordings", :aggregate_failures do
-  let(:owner) { create(:user, restricted_content: true) }
+  let(:owner) { create(:user, restricted_content: true, locale: "ru") }
 
   let(:syllables) do
     [
@@ -40,6 +40,7 @@ RSpec.describe "Rating kept pronunciation recordings", :aggregate_failures do
   end
 
   it "keeps the page away from an ordinary learner" do
+    read_in("ru")
     get("/ru/pronunciation/judge")
 
     expect(response).to(redirect_to(root_path))

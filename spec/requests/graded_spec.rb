@@ -23,6 +23,7 @@ RSpec.describe "Graded reader" do
   end
 
   it "opens a named text and lists its glosses" do
+    read_in("ru")
     tier = Graded::Library.tiers.first
     text = Graded::Library.texts(tier).last
 

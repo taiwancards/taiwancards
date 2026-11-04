@@ -23,7 +23,7 @@ RSpec.describe "Admin users" do
   end
 
   it "shows which interface language each user has" do
-    sign_in(create(:user, :admin))
+    sign_in(create(:user, :admin, locale: "ru"))
     create(:user, locale: "vi")
 
     get(admin_users_path(locale: "ru"))

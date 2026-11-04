@@ -66,6 +66,7 @@ RSpec.describe "Mood particles" do
   end
 
   it "reads the Russian side of an entry in the Russian interface" do
+    read_in("ru")
     particle(
       "啦",
       rank: 1,
