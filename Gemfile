@@ -19,6 +19,7 @@ gem "omniauth-rails_csrf_protection"
 gem "pg"
 gem "propshaft"
 gem "puma"
+gem "rack-brotli", "~> 2.0"
 gem "rails-i18n"
 gem "rexml", require: false
 gem "roo", require: false

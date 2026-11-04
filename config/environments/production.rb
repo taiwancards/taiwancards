@@ -14,15 +14,15 @@ Rails.application.configure do
   COMPRESSIBLE = %r{\Atext/|\Aapplication/(json|javascript|xml|manifest\+json)}
   MIN_COMPRESSED_BYTES = 1024
 
-  config.middleware.use(
-    Rack::Deflater,
-    if: -> (_env, _status, headers, _body) {
-      next false unless headers["content-type"].to_s.match?(COMPRESSIBLE)
+  compressible = -> (_env, _status, headers, _body) {
+    next false unless headers["content-type"].to_s.match?(COMPRESSIBLE)
 
-      length = headers["content-length"]
-      length.nil? || length.to_i >= MIN_COMPRESSED_BYTES
-    }
-  )
+    length = headers["content-length"]
+    length.nil? || length.to_i >= MIN_COMPRESSED_BYTES
+  }
+
+  config.middleware.use(Rack::Deflater, if: compressible)
+  config.middleware.use(Rack::Brotli, if: compressible, sync: false)
 
   config.log_tags = [:request_id]
   config.logger = ActiveSupport::TaggedLogging.logger(STDOUT)
