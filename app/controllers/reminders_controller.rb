@@ -9,7 +9,7 @@ class RemindersController < ApplicationController
     given = request.authorization.to_s.delete_prefix("Bearer ")
     return head(:unauthorized) if expected.empty? || !ActiveSupport::SecurityUtils.secure_compare(given, expected)
 
-    render(json: {queued: Reminders::Dispatch.new.call.size})
+    render(json: {queued: Reminders::Dispatch.new.call.size, newsletters_resumed: Newsletters::Dispatch.resume})
   end
 
   def enable

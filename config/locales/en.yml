@@ -1056,7 +1056,7 @@ en:
       dispatched: Sending has started in the background. Refresh the page to follow it.
       incomplete: First fill in the subject and the text in every language the chosen recipients read.
       not_configured: Mail delivery is not configured (SMTP_ADDRESS and the rest are missing), so nothing can be sent yet.
-      send_hint: "Daily limit %{limit}; %{budget} left for the next 24 hours, the rest waits for “Send the remaining”."
+      send_hint: "Daily limit %{limit}, with %{reserve} kept for reminders and welcome letters. %{budget} can go out now; the rest continue on their own once the limit frees up. Failed letters wait for “Send the remaining”."
       delete: Delete draft
       delete_confirm: Delete this draft?
       stat_sent: "Sent %{sent} of %{total}"

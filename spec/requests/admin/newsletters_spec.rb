@@ -44,6 +44,14 @@ RSpec.describe "Admin newsletters" do
     expect(newsletter.reload.buttons).to(eq([{"label_ru" => "Открыть", "url" => "/ru/desk"}]))
   end
 
+  it "says what is left today and that the rest continue on their own" do
+    in_locale(:ru) { get(edit_admin_newsletter_path(complete_newsletter)) }
+
+    expect(response.body).to(
+      include(I18n.t("newsletters.admin.send_hint", limit: 100, reserve: 20, budget: 80, locale: :ru))
+    )
+  end
+
   it "shows the letter in the preview frame straight away" do
     newsletter = complete_newsletter
 

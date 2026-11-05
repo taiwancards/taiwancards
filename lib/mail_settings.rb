@@ -3,6 +3,7 @@
 module MailSettings
   DEFAULT_PORT = 587
   DEFAULT_DAILY_LIMIT = 100
+  DEFAULT_REMINDER_RESERVE = 20
   LOCAL_FROM_ADDRESS = "newsletter@example.com"
 
   module_function
@@ -38,6 +39,8 @@ module MailSettings
   def reply_to = ENV["MAIL_REPLY_TO"].presence || ENV["SUPPORT_EMAIL"].presence || from_address
 
   def daily_limit = integer("NEWSLETTER_DAILY_LIMIT", DEFAULT_DAILY_LIMIT)
+
+  def reminder_reserve = integer("NEWSLETTER_REMINDER_RESERVE", DEFAULT_REMINDER_RESERVE)
 
   def ready? = Rails.env.local? || [ENV["SMTP_ADDRESS"], ENV["MAIL_FROM_ADDRESS"], ENV["APP_URL"]].all?(&:present?)
 

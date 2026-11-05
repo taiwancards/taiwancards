@@ -1025,7 +1025,7 @@ vi:
       dispatched: Đã bắt đầu gửi trong nền. Hãy tải lại trang để theo dõi.
       incomplete: Trước hết hãy điền tiêu đề và nội dung bằng mọi ngôn ngữ mà những người nhận đã chọn đang dùng.
       not_configured: Chưa cấu hình gửi thư (thiếu SMTP_ADDRESS và các biến khác), nên chưa thể gửi gì.
-      send_hint: "Giới hạn mỗi ngày %{limit}; còn %{budget} thư cho 24 giờ tới, phần còn lại chờ nút “Gửi thư còn lại”."
+      send_hint: "Giới hạn %{limit} thư mỗi ngày, trong đó %{reserve} thư dành cho lời nhắc và thư chào mừng. Hiện có thể gửi %{budget} thư, phần còn lại sẽ tự gửi khi giới hạn được mở lại. Thư bị lỗi chờ nút “Gửi thư còn lại”."
       delete: Xóa bản nháp
       delete_confirm: Xóa bản nháp này?
       stat_sent: "Đã gửi %{sent}/%{total}"

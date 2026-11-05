@@ -120,7 +120,7 @@
         span.text-sm.text-muted-foreground = t("newsletters.admin.incomplete")
       - unless locked
         = button_to t("newsletters.admin.delete"), admin_newsletter_path(@newsletter), method: :delete, form: {data: {turbo_confirm: t("newsletters.admin.delete_confirm")}}, class: "min-h-11 cursor-pointer rounded-lg border border-red-500 px-4 text-sm font-medium text-red-600 hover:bg-red-500/10 md:min-h-9"
-    p.text-xs.text-muted-foreground = t("newsletters.admin.send_hint", budget: @budget, limit: MailSettings.daily_limit)
+    p.text-xs.text-muted-foreground = t("newsletters.admin.send_hint", budget: @budget, limit: MailSettings.daily_limit, reserve: MailSettings.reminder_reserve)
 
   - if @deliveries.any?
     section.space-y-3

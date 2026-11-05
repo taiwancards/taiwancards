@@ -3,13 +3,14 @@
 class NewsletterDispatchJob < ApplicationJob
   class_attribute :pause, default: 0.6
 
-  def perform(newsletter_id)
+  def perform(newsletter_id, retry_failed: true)
     newsletter = Newsletter.find_by(id: newsletter_id)
     return if newsletter.nil?
 
     pending = newsletter.deliveries.pending
     pending.where.not(user_id: Newsletter.recipients.select(:id)).delete_all
-    pending.order(:id).limit(Newsletters::Dispatch.budget).pluck(:id).each do |id|
+    waiting = retry_failed ? pending : pending.where(error: nil)
+    waiting.order(:id).limit(Newsletters::Dispatch.budget).pluck(:id).each do |id|
       next unless NewsletterDelivery.claim(id)
 
       deliver(NewsletterDelivery.find(id))

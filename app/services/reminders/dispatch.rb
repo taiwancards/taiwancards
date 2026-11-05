@@ -19,7 +19,7 @@ module Reminders
     def call(plans = nil)
       return [] unless MailSettings.ready?
 
-      (plans || Planner.new(now: @now).call).first(room).map do |plan|
+      (plans || Planner.new(now: @now).call).first(MailQuota.left(@now)).map do |plan|
         delivery = ReminderDelivery.create!(
           user: plan.user,
           trigger: plan.trigger,
@@ -33,12 +33,6 @@ module Reminders
     end
 
     private
-
-    def room
-      since = @now - 24.hours
-      sent = NewsletterDelivery.sent_since(since).count + ReminderDelivery.where(created_at: since..).count
-      [MailSettings.daily_limit - sent, 0].max
-    end
 
     def target(plan)
       if Schedule.card_triggers.include?(plan.trigger)

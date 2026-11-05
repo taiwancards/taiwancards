@@ -4,7 +4,22 @@ module Newsletters
   class Dispatch
     UNIQUE = :index_newsletter_deliveries_on_newsletter_and_user
 
-    def self.budget = [MailSettings.daily_limit - NewsletterDelivery.sent_since(24.hours.ago).count, 0].max
+    def self.budget = MailQuota.left_for_newsletters
+
+    def self.resume
+      return 0 unless MailSettings.ready? && budget.positive?
+
+      newsletter = Newsletter
+        .where
+        .not(sent_at: nil)
+        .where(id: NewsletterDelivery.pending.where(error: nil).select(:newsletter_id))
+        .order(:sent_at)
+        .first
+      return 0 if newsletter.nil?
+
+      NewsletterDispatchJob.perform_later(newsletter.id, retry_failed: false)
+      1
+    end
 
     def initialize(newsletter)
       @newsletter = newsletter

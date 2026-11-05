@@ -33,7 +33,7 @@ RSpec.describe "Reminders" do
 
     post("/reminders/run", headers: {"Authorization" => "Bearer secret-token"})
     expect(response).to(have_http_status(:ok))
-    expect(response.parsed_body).to(include("queued"))
+    expect(response.parsed_body).to(include("queued", "newsletters_resumed"))
   end
 
   it "writes one number and one button" do
