@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { revealOptions } from "lib/aloud";
 
 const RIGHT = ["border-emerald-500", "bg-emerald-500/10"];
 const WRONG = ["border-red-500", "bg-red-500/10"];
@@ -28,8 +29,13 @@ export default class extends Controller {
     this.misses = 0;
   }
 
+  reveal() {
+    revealOptions(this.element)?.focus({ preventScroll: true });
+  }
+
   choose(event) {
     if (this.settled) return;
+    revealOptions(this.element);
     const button = event.currentTarget;
     const slot = Number(button.dataset.slot);
     const correct = slot === this.answerValue;

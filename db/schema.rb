@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_02_111132) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_05_190812) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -439,7 +439,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_111132) do
     t.integer("seeded_count", default: 0, null: false)
     t.integer("status", default: 0, null: false)
     t.datetime("updated_at", null: false)
-    t.bigint("user_id", null: false)
+    t.bigint("user_id")
     t.index(["user_id"], name: "index_placement_tests_on_user_id")
   end
 

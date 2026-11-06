@@ -61,6 +61,7 @@ RSpec.describe Huayu::CourseExplainer do
       zh_title: "",
       title: {},
       goal: {},
+      say: nil,
       kind: "dialogue",
       lines:,
       vocabulary: words,

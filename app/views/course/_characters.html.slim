@@ -1,0 +1,37 @@
+- entries = local_assigns.fetch(:entries)
+
+section.space-y-3
+  .space-y-1
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.characters")
+    p.text-sm.text-muted-foreground = t("course.characters_hint")
+  ul.grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+    - entries.each do |entry|
+      li.flex.min-w-0.gap-3.rounded-xl.border.border-border.bg-card.p-4
+        = link_to character_path(entry.text), class: "shrink-0 text-4xl leading-none hover:text-primary", lang: "zh-TW" do
+          = zhuyin_ruby(entry.text, entry.zhuyin, context: :entry)
+        .min-w-0.flex-1.space-y-1.text-sm
+          p.break-words.font-medium = entry.meaning
+          - if entry.word
+            p.text-xs.text-muted-foreground = t("course.in_word_html", word: tag.span(entry.word, lang: "zh-TW"))
+          - if entry.kind
+            p.text-xs.uppercase.tracking-wide.text-muted-foreground = t("characters.etymology_types.#{entry.kind}", default: entry.kind)
+          - if entry.semantic || entry.phonetic
+            p.flex.flex-wrap.gap-x-3.text-muted-foreground
+              - if entry.semantic
+                span
+                  = "#{t("characters.semantic")}: "
+                  span.whitespace-nowrap
+                    = link_to entry.semantic, character_path(entry.semantic), class: "text-foreground hover:text-primary", lang: "zh-TW"
+                    - if entry.semantic_gloss
+                      = " (#{entry.semantic_gloss})"
+              - if entry.phonetic
+                span.whitespace-nowrap
+                  = "#{t("characters.phonetic")}: "
+                  = link_to entry.phonetic, character_path(entry.phonetic), class: "text-foreground hover:text-primary", lang: "zh-TW"
+          - if entry.hint
+            p.leading-relaxed = entry.hint
+          - if entry.family.any?
+            p.text-xs.text-muted-foreground
+              span = "#{t("course.sound_family")} "
+              - entry.family.each do |member|
+                = link_to member, character_path(member), class: "mr-1 text-base text-foreground hover:text-primary", lang: "zh-TW"

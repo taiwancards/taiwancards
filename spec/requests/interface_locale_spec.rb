@@ -82,12 +82,11 @@ RSpec.describe "Interface locale" do
   end
 
   it "keeps the language on every page that asks for an account", :no_auth do
-    %w[/desk /study /desks /triage /placement /practice /pronunciation /writing /reader /progress /profile]
-      .each do |path|
-        raw_get("/ru#{path}")
+    %w[/desk /study /desks /triage /practice /pronunciation /writing /reader /progress /profile].each do |path|
+      raw_get("/ru#{path}")
 
-        expect(response.location).to(start_with("http://www.example.com/ru/"), "#{path} left the Russian pages")
-      end
+      expect(response.location).to(start_with("http://www.example.com/ru/"), "#{path} left the Russian pages")
+    end
   end
 
   it "brings a guest back to the Russian page they wanted after signing in", :no_auth do

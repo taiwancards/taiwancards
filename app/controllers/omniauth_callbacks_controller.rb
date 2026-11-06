@@ -21,6 +21,7 @@ class OmniauthCallbacksController < ApplicationController
       user = User.for_google(auth, locale: interface_locale)
       user.update!(signup_from: signup_source) unless existing
       start_new_session_for(user)
+      PlacementTest.adopt(session.delete(PlacementTestsController::GUEST_TEST), user)
       session[:fresh_account] = true unless existing
       language = existing ? user.locale : interface_locale
       notice = t(existing ? "auth.signed_in" : "auth.signed_up", locale: language)

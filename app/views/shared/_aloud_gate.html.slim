@@ -1,0 +1,5 @@
+.aloud-gate.flex-col.items-start.gap-2.rounded-xl.border.border-dashed.border-primary.px-4.py-3
+  p.text-sm.leading-relaxed = t("aloud.prompt")
+  button.inline-flex.min-h-11.items-center.rounded-lg.bg-primary.px-4.text-sm.font-semibold.text-primary-foreground[
+    type="button" data-action=local_assigns.fetch(:action) class="hover:opacity-90" ]
+    = t("aloud.reveal")

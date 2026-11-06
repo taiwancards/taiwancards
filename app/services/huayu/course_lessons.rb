@@ -81,6 +81,7 @@ module Huayu
       :zh_title,
       :title,
       :goal,
+      :say,
       :kind,
       :lines,
       :vocabulary,
@@ -96,6 +97,8 @@ module Huayu
       def title_for(locale) = pick(title, locale)
 
       def goal_for(locale) = pick(goal, locale)
+
+      def key_line = say && lines[say]
 
       def culture_for(locale) = pick(culture, locale)
 
@@ -178,6 +181,7 @@ module Huayu
           zh_title: row["zh_title"],
           title: row["title"] || {},
           goal: row["goal"] || {},
+          say: row["say"]&.to_i,
           kind: row.dig("text", "kind") || "passage",
           lines: build_lines(row),
           vocabulary: build_vocabulary(row),

@@ -430,6 +430,7 @@ vi:
     games: Trò chơi trên bàn
     sounds_drill: Chú âm ↔ bính âm
     group_learn: Việc học của tôi
+    group_learn_guest: Khóa học và bài kiểm tra
     group_dictionary: Từ điển
     group_practice: Luyện tập
     group_basics: Cơ bản
@@ -552,6 +553,10 @@ vi:
     dialogue: Hội thoại
     passage: Bài đọc
     vocabulary: Từ vựng
+    characters: Chữ Hán mới
+    characters_hint: Lần đầu xuất hiện trong bài này, kèm cách cấu tạo của từng chữ.
+    in_word_html: "trong từ %{word}"
+    sound_family: "Cùng phần chỉ âm:"
     grammar: Ngữ pháp
     usage: Ngoài phố và trong đề thi
     culture: Về Đài Loan
@@ -560,6 +565,10 @@ vi:
     deck_prefix: "Khóa học %{number}"
     save_progress: Lưu tiến độ
     save_hint: Điểm được lưu sau khi bạn làm xong các bài tập.
+    you_will_say: Học xong bài này, bạn sẽ nói được
+    sign_in: Đăng nhập
+    sign_in_hint_html: "%{link} để lưu điểm và biến từ vựng của bài thành thẻ học."
+    stage_lessons: "%{count} bài"
     saved: Đã lưu tiến độ.
     check: Kiểm tra
     again: Làm lại
@@ -2159,6 +2168,43 @@ vi:
     started_count: "%{count} đang học"
     study_level: Học cấp này
     has_audio: Có âm thanh
+    guide_link: Cách kỳ thi diễn ra
+    exam:
+      title: Kỳ thi TOCFL
+      lede: "Kỳ thi năng lực tiếng Quan thoại của Đài Loan dành cho người nước ngoài, do SC-TOP (國家華語測驗推動工作委員會, Ủy ban thúc đẩy kỳ thi năng lực Hoa ngữ) tổ chức. Ngày thi diễn ra thế nào, điểm được tính ra sao và mỗi cấp mở ra những gì."
+      tests_title: Bốn bài thi
+      tests_body: "Nghe và đọc thi cùng nhau trên máy tính, thành một bài (聽讀測驗). Nói (口語) và viết (寫作) là hai bài thi riêng, đăng ký theo từng nhóm cấp. Trẻ em có kỳ thi riêng là CCCC."
+      adaptive_title: Một lần thi cho mọi cấp
+      adaptive_body: "Bài nghe và đọc là bài thi thích ứng: bạn không cần chọn cấp. Trả lời đúng thì câu hỏi khó dần, sai thì dễ đi, và bài thi dừng lại khi đã xác định được trình độ. Không thể quay lại câu trước, và điểm hiện ngay trên màn hình khi thi xong."
+      listening: "Nghe: khoảng 35 câu trong khoảng 50 phút, sau mỗi đoạn ghi âm có 10 giây để trả lời. Gồm tranh, hỏi đáp, hội thoại ngắn và đoạn dài."
+      reading: "Đọc: khoảng 35 câu trong 60 phút. Gồm câu đơn, tranh, điền vào chỗ trống và đọc hiểu đoạn văn."
+      scores_title: Điểm và cấp độ
+      scores_body: "Điểm được quy về thang tối đa 700. Nghe và đọc có ngưỡng đạt riêng, nên hai kỹ năng có thể đạt cấp khác nhau."
+      level: Cấp
+      name: Tên gọi
+      words: Số từ
+      pass_listening: Nghe
+      pass_reading: Đọc
+      level_n: "Cấp %{n}"
+      band: "Nhóm %{band}"
+      register_title: Đăng ký và kết quả
+      register_body: "Chỉ đăng ký trực tuyến. Ở Đài Loan, kỳ thi tổ chức vài lần mỗi năm, và hạn đăng ký đóng khoảng bốn tuần trước ngày thi. Điểm có sau khoảng 20 ngày, và ngay hôm đó có thể tải bảng điểm và chứng chỉ trong hệ thống đăng ký."
+      register_link: Lịch thi và lệ phí trên trang chính thức
+      uses_title: Mỗi cấp mở ra điều gì
+      uses:
+        moe: "Học bổng Đài Loan của Bộ Giáo dục, chương trình không dạy bằng tiếng Anh: cấp 3 (進階級) trở lên."
+        huayu: "Học bổng Hoa ngữ từ chín tháng trở lên: chứng chỉ cấp 3 trong vòng hai năm, hoặc thi cấp 3 trở lên sau khi sang Đài Loan."
+        mofa: "Học bổng Đài Loan của Bộ Ngoại giao, chương trình học bằng tiếng Quan thoại: nghe và đọc đạt cấp 2 (基礎級) trở lên."
+      uses_note: "Quy định thay đổi theo từng năm, nên hãy xem thông báo của chính học bổng bạn nộp."
+      uses_link: Yêu cầu học bổng trên trang chính thức
+      practice_title: Chuẩn bị ngay tại đây
+      practice:
+        placement: Xác định trình độ
+        mock: Đề thử theo dạng đề thi
+        lists: Danh sách từ theo từng cấp
+        grammar: Ngữ pháp theo cấp
+        official: Đề thi cũ miễn phí của SC-TOP
+      source: "Dạng đề, ngưỡng đạt, lịch thi và điều kiện học bổng theo công bố của SC-TOP trên tocfl.edu.tw."
   pronunciation:
     sections:
       all: Tất cả
@@ -2543,6 +2589,10 @@ vi:
   layers:
     translation: Bản dịch
     grammar: Ngữ pháp
+    aloud: Trả lời thành tiếng
+  aloud:
+    prompt: Trước hết, hãy nói to câu trả lời bằng tiếng Quan thoại. Sau đó mở các lựa chọn và chọn câu gần nhất với điều bạn vừa nói.
+    reveal: Xong, xem các lựa chọn
   graded:
     title: Truyện đọc theo cấp độ
     lede: Truyện ngắn viết trong giới hạn từ vựng cố định. Mọi thứ vượt giới hạn đều có chú thích, nên bạn đọc hết một bài mà không cần từ điển.
@@ -3940,6 +3990,11 @@ vi:
     apply: Đánh dấu mọi thứ bên dưới là đã biết
     apply_hint: Từ và chữ ở mức này trở xuống được ghi nhận như đã nhớ nhẹ — thỉnh thoảng quay lại thay vì được dạy như mới. Những gì bạn đang học vẫn giữ nguyên.
     applying: Đang đánh dấu…
+    guest:
+      title: Đăng nhập để áp dụng trình độ này
+      body: "Khi có tài khoản, các từ và chữ dưới trình độ này được đánh dấu là đã biết, thẻ mới bắt đầu từ cấp tiếp theo, và thỉnh thoảng những từ khó nhất trong số đó sẽ quay lại để kiểm tra. Kết quả bài kiểm tra này sẽ được chuyển sang tài khoản của bạn."
+      sign_in: Đăng nhập
+      course: Xem trước khóa học
     applied:
       zero: Không có gì mới để đánh dấu — tiến độ của bạn đã bao phủ cấp này.
       other: Đã đánh dấu %{count} mục là đã biết.

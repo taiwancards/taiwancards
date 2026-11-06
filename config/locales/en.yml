@@ -437,6 +437,7 @@ en:
     games: Board games
     sounds_drill: Zhuyin ↔ pinyin
     group_learn: My study
+    group_learn_guest: Course and tests
     group_dictionary: Dictionary
     group_practice: Practice
     group_basics: Basics
@@ -562,6 +563,10 @@ en:
     dialogue: Dialogue
     passage: Text
     vocabulary: Words
+    characters: New characters
+    characters_hint: First met in this lesson, and how each one is put together.
+    in_word_html: "in %{word}"
+    sound_family: "Same sound part:"
     grammar: Grammar
     usage: Street and exam
     culture: About Taiwan
@@ -570,6 +575,10 @@ en:
     deck_prefix: "Course %{number}"
     save_progress: Save progress
     save_hint: The score is stored once you have worked through the tasks.
+    you_will_say: After this lesson you can say
+    sign_in: Sign in
+    sign_in_hint_html: "%{link} to keep your score and turn the words of the lesson into cards."
+    stage_lessons: "%{count} lessons"
     saved: Progress saved.
     check: Check
     again: Again
@@ -2208,6 +2217,43 @@ en:
     started_count: "%{count} in progress"
     study_level: Study this level
     has_audio: Has audio
+    guide_link: How the exam works
+    exam:
+      title: The TOCFL exam
+      lede: "Taiwan's proficiency test for learners of Mandarin, set by SC-TOP, the Steering Committee for the Test Of Proficiency–Huayu (國家華語測驗推動工作委員會). How it runs on the day, how it is scored, and what a level opens."
+      tests_title: Four tests
+      tests_body: "Listening and reading are sat together, on a computer, as one test (聽讀測驗). Speaking (口語) and writing (寫作) are separate tests, each booked by band. Children have a test of their own, the CCCC."
+      adaptive_title: One sitting covers every level
+      adaptive_body: "The listening and reading test is adaptive: you do not pick a level. Questions get harder while you answer correctly and easier when you slip, and the test stops once it has placed you. There is no going back to an earlier question, and the score shows on screen at the end."
+      listening: "Listening: about 35 questions in about 50 minutes, with 10 seconds to answer after each recording. Pictures, questions and answers, short dialogues and longer passages."
+      reading: "Reading: about 35 questions in 60 minutes. Single sentences, pictures, gap-filling and passages to read."
+      scores_title: Scores and levels
+      scores_body: "Scores are scaled to a maximum of 700, and listening and reading each have their own pass mark, so the two can land on different levels."
+      level: Level
+      name: Name
+      words: Words
+      pass_listening: Listening
+      pass_reading: Reading
+      level_n: "Level %{n}"
+      band: "Band %{band}"
+      register_title: Booking and results
+      register_body: "Registration is online only. In Taiwan the test runs several times a year, and registration closes about four weeks before each date. Scores come out about 20 days after the test, and the transcript and certificate can be downloaded from the registration system on that day."
+      register_link: Dates and fees on the official site
+      uses_title: What a level opens
+      uses:
+        moe: "Taiwan Scholarship from the Ministry of Education, for programs not taught in English: Level 3 (進階級) or higher."
+        huayu: "Huayu Enrichment Scholarship of nine months or more: a Level 3 certificate from the last two years, or sitting the test at Level 3 or higher after arrival."
+        mofa: "Taiwan Scholarship from the Ministry of Foreign Affairs, for degrees taught in Mandarin: listening and reading at Level 2 (基礎級) or higher."
+      uses_note: "Rules change from year to year, so check the call for the scholarship you apply to."
+      uses_link: Scholarship requirements on the official site
+      practice_title: Get ready here
+      practice:
+        placement: Find your level
+        mock: Mock papers in the exam format
+        lists: Word lists for each level
+        grammar: Grammar by level
+        official: Free past papers from SC-TOP
+      source: "Format, pass marks, dates and scholarship rules as published by SC-TOP at tocfl.edu.tw."
   pronunciation:
     sections:
       all: All
@@ -2592,6 +2638,10 @@ en:
   layers:
     translation: Translation
     grammar: Grammar
+    aloud: Answer aloud
+  aloud:
+    prompt: Say your answer out loud first, in Mandarin. Then open the options and pick the one closest to what you said.
+    reveal: Done, show the options
   graded:
     title: Graded TW Reader
     lede: Short stories written for a fixed vocabulary ceiling. Everything above the ceiling is footnoted, so you can read a whole text without a dictionary.
@@ -4067,6 +4117,11 @@ en:
     apply: Mark everything below as known
     apply_hint: Words and characters at or below this level get a light memory — they come back occasionally instead of being taught as new. Anything you are already studying is left untouched.
     applying: Marking…
+    guest:
+      title: Sign in to put this level to work
+      body: "With an account, the words and characters below this level are marked as known, new cards start at the next level, and the hardest of the known ones come back now and then for a check. These answers move to the account with you."
+      sign_in: Sign in
+      course: Look through the course first
     applied:
       zero: Nothing new to mark — your progress already covers this level.
       one: Marked 1 item as already known.

@@ -14,6 +14,10 @@ class TocflController < ApplicationController
     @levels = Huayu::TocflReadiness.new(user: current_user).levels
   end
 
+  def exam
+    @levels = Huayu::TocflExam::LEVELS
+  end
+
   def show
     @collection = Collection.tocfl.find(params[:id])
     return send_level_list(@collection.lexemes.curriculum_order, @collection.name) if request.format.csv?

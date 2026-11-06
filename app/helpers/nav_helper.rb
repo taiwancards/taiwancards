@@ -6,7 +6,7 @@ module NavHelper
   end
 
   GROUPS = [
-    {id: "learn", key: :study, items: :learn_items, signed_in: true},
+    {id: "learn", key: :study, items: :learn_items, guest_label: "group_learn_guest"},
     {id: "dictionary", key: :characters, items: :dictionary_items},
     {id: "language", key: :book, items: :language_items},
     {id: "practice", key: :pencil, items: :practice_items},
@@ -22,7 +22,7 @@ module NavHelper
         type: :menu,
         id: group[:id],
         key: group[:key],
-        label: t("nav.group_#{group[:id]}"),
+        label: t("nav.#{(group[:guest_label] if current_user.nil?) || "group_#{group[:id]}"}"),
         items: send(group[:items])
       }
     end
@@ -50,8 +50,12 @@ module NavHelper
     }
   end
 
+  GUEST_LEARN = %i[course placement graded mock].freeze
+
   def learn_items
     catalog = learn_catalog
+    return GUEST_LEARN.map { |key| catalog.fetch(key) } if current_user.nil?
+
     items = LEARN_ORDER.fetch(current_user&.goal, LEARN_ORDER[nil]).map { |key| catalog.fetch(key) }
     if current_user&.restricted_access?
       items << [:book, t("nav.textbook"), textbook_path]

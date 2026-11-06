@@ -1,7 +1,22 @@
 # frozen_string_literal: true
 
 class PlacementTest < ApplicationRecord
-  belongs_to :user
+  GUEST_LIFETIME = 1.day
+
+  belongs_to :user, optional: true
+
+  scope :guest, -> { where(user_id: nil) }
+
+  def self.sweep_guests = guest.where(updated_at: ...GUEST_LIFETIME.ago).delete_all
+
+  def self.adopt(id, user)
+    return if id.blank?
+
+    test = guest.find_by(id:)
+    return if test.nil?
+
+    test.update!(user:)
+  end
 
   enum :status, {in_progress: 0, finished: 1, applied: 2}, prefix: :status
 

@@ -1,0 +1,78 @@
+- content_for(:title, t("tocfl.exam.title"))
+- official = Huayu::TocflExam::OFFICIAL
+- heading = "text-sm font-semibold uppercase tracking-wide text-muted-foreground"
+- card = "space-y-2 rounded-xl border border-border bg-card px-4 py-3 text-sm leading-relaxed"
+- outbound = "inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-2 md:min-h-8"
+
+.py-6.space-y-6
+  = link_to tocfl_levels_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+    span ←
+    span = t("tocfl.back")
+
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("tocfl.exam.title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("tocfl.exam.lede")
+
+  .grid.gap-4 class="lg:grid-cols-2"
+    section.space-y-2
+      h2 class=heading = t("tocfl.exam.tests_title")
+      div class=card
+        p = t("tocfl.exam.tests_body")
+
+    section.space-y-2
+      h2 class=heading = t("tocfl.exam.adaptive_title")
+      div class=card
+        p = t("tocfl.exam.adaptive_body")
+        ul.list-disc.space-y-1.pl-5.text-muted-foreground
+          li = t("tocfl.exam.listening")
+          li = t("tocfl.exam.reading")
+
+  section.space-y-2
+    h2 class=heading = t("tocfl.exam.scores_title")
+    p.text-sm.leading-relaxed.text-muted-foreground = t("tocfl.exam.scores_body")
+    .overflow-x-auto.rounded-xl.border.border-border
+      table.w-full.text-sm
+        thead.bg-muted
+          tr.text-left
+            th.px-3.py-2.font-semibold = t("tocfl.exam.level")
+            th.px-3.py-2.font-semibold = t("tocfl.exam.name")
+            th.px-3.py-2.font-semibold CEFR
+            th.px-3.py-2.text-right.font-semibold = t("tocfl.exam.words")
+            th.px-3.py-2.text-right.font-semibold = t("tocfl.exam.pass_listening")
+            th.px-3.py-2.text-right.font-semibold = t("tocfl.exam.pass_reading")
+        tbody
+          - @levels.each do |level|
+            tr.border-t.border-border
+              td.whitespace-nowrap.px-3.py-2
+                .font-medium = level.novice ? t("tocfl.novice", n: level.number) : t("tocfl.exam.level_n", n: level.number)
+                - if level.band
+                  .text-xs.text-muted-foreground = t("tocfl.exam.band", band: level.band)
+              td.whitespace-nowrap.px-3.py-2 lang="zh-TW" = level.zh
+              td.px-3.py-2 = level.cefr || "—"
+              td.px-3.py-2.text-right.tabular-nums = level.words || "—"
+              td.px-3.py-2.text-right.tabular-nums = level.listening
+              td.px-3.py-2.text-right.tabular-nums = level.reading
+    = link_to t("tocfl.exam.source"), official[:standards], target: "_blank", rel: "noopener", class: "text-xs text-muted-foreground underline underline-offset-2"
+
+  .grid.gap-4 class="lg:grid-cols-2"
+    section.space-y-2
+      h2 class=heading = t("tocfl.exam.register_title")
+      div class=card
+        p = t("tocfl.exam.register_body")
+        = link_to t("tocfl.exam.register_link"), official[:schedule], target: "_blank", rel: "noopener", class: outbound
+
+    section.space-y-2
+      h2 class=heading = t("tocfl.exam.uses_title")
+      div class=card
+        ul.list-disc.space-y-1.pl-5
+          - %w[moe huayu mofa].each do |key|
+            li = t("tocfl.exam.uses.#{key}")
+        p.text-muted-foreground = t("tocfl.exam.uses_note")
+        = link_to t("tocfl.exam.uses_link"), official[:scholarships], target: "_blank", rel: "noopener", class: outbound
+
+  section.space-y-2
+    h2 class=heading = t("tocfl.exam.practice_title")
+    .grid.gap-2 class="sm:grid-cols-2 lg:grid-cols-3"
+      - [[:placement, placement_path], [:mock, mock_exams_path], [:lists, tocfl_levels_path], [:grammar, grammar_path]].each do |key, path|
+        = link_to t("tocfl.exam.practice.#{key}"), path, class: "flex min-h-12 items-center rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted"
+      = link_to t("tocfl.exam.practice.official"), official[:papers], target: "_blank", rel: "noopener", class: "flex min-h-12 items-center rounded-lg border border-dashed border-border px-3 py-2.5 text-sm font-medium hover:bg-muted"

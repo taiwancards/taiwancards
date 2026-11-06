@@ -119,7 +119,9 @@ module Huayu
     end
 
     def examples_union(current, fresh)
-      (Array(current) + Array(fresh)).uniq { |row| row["zh"] }.presence
+      incoming = Array(fresh).index_by { |row| row["zh"] }
+      kept = Array(current).map { |row| row.merge(incoming.delete(row["zh"]) || {}) }
+      (kept + incoming.values).presence
     end
 
     def hokkien(entry)

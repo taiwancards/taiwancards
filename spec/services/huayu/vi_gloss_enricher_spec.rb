@@ -54,6 +54,17 @@ RSpec.describe Huayu::ViGlossEnricher do
     expect(lexeme.reload.meanings["vi"]).to(eq("cửa hàng tiện lợi"))
   end
 
+  it "gives a word the Vietnamese of the page that owns it when that page could not write it" do
+    lexeme = create(:lexeme, kind: :word, text: "氣", meanings: {"en" => "air, gas"})
+    page.write(
+      JSON.generate([{"text" => "氣", "en" => "air; a liberty (go)", "vi" => "không khí; khí (cờ vây)"}])
+    )
+
+    run(lexemes: {"氣" => "khí, hơi"}, curated: [page.to_s])
+
+    expect(lexeme.reload.meanings).to(eq("en" => "air, gas", "vi" => "không khí; khí (cờ vây)"))
+  end
+
   it "names a radical by its own Vietnamese name, not by the gloss of the character it shares" do
     character = create(:lexeme, kind: :character, text: "力", meanings: {"en" => "power"})
     radical = create(:lexeme, kind: :radical, text: "力", meanings: {"en" => "power"})

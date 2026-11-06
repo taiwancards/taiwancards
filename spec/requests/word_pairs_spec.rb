@@ -20,7 +20,7 @@ RSpec.describe "Confusable words" do
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include(ERB::Util.html_escape(pair.rule(:en))))
     expect(response.body).to(include(pair.mistakes.first.right))
-    expect(response.body).to(include("data-controller=\"course-quiz\""))
+    expect(Nokogiri::HTML(response.body).css("[data-controller~='course-quiz']")).not_to(be_empty)
     expect(response.body).not_to(include("<form"))
   end
 

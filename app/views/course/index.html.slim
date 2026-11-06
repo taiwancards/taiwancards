@@ -23,17 +23,21 @@
   - @stages.each do |stage|
     - lessons = @by_stage[stage.slug].to_a
     - next if lessons.empty?
-    - slice = @progress.slice_for(stage.slug)
+    - slice = @progress&.slice_for(stage.slug)
     section.space-y-3
       header.space-y-1
         .flex.flex-wrap.items-baseline.gap-2
           h2.text-lg.font-semibold = stage.title(I18n.locale)
           span.rounded-full.border.border-border.px-2.py-0.5.text-xs.text-muted-foreground = stage.band
-          span.ml-auto.text-sm.font-semibold.tabular-nums = "#{slice.percent}%"
-        .h-1.5.w-full.overflow-hidden.rounded-full.bg-muted
-          .h-full.rounded-full.bg-primary style="width: #{slice.percent}%"
-        p.text-xs.tabular-nums.text-muted-foreground
-          = "#{t("course.bar_lessons")} #{slice.done}/#{slice.lessons} · #{t("course.bar_words")} #{slice.words_met}/#{slice.words_total} · #{t("course.bar_grammar")} #{slice.grammar_met}/#{slice.grammar_total}"
+          - if slice
+            span.ml-auto.text-sm.font-semibold.tabular-nums = "#{slice.percent}%"
+          - else
+            span.ml-auto.text-xs.tabular-nums.text-muted-foreground = t("course.stage_lessons", count: lessons.size)
+        - if slice
+          .h-1.5.w-full.overflow-hidden.rounded-full.bg-muted
+            .h-full.rounded-full.bg-primary style="width: #{slice.percent}%"
+          p.text-xs.tabular-nums.text-muted-foreground
+            = "#{t("course.bar_lessons")} #{slice.done}/#{slice.lessons} · #{t("course.bar_words")} #{slice.words_met}/#{slice.words_total} · #{t("course.bar_grammar")} #{slice.grammar_met}/#{slice.grammar_total}"
         p.text-sm.leading-relaxed.text-muted-foreground = stage.body(I18n.locale)
       .grid.gap-3 class="sm:grid-cols-2 xl:grid-cols-3"
         - lessons.each do |lesson|

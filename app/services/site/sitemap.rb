@@ -16,6 +16,7 @@ module Site
       /zhuci
       /radicals
       /tocfl
+      /tocfl/exam
       /tbcl
       /grammar
       /pairs
@@ -38,6 +39,7 @@ module Site
       /metro
       /variants
       /mock
+      /course
       /graded
       /menu
     ]
@@ -153,7 +155,9 @@ module Site
       end
     end
 
-    def optional_pages = (Huayu::TaiwanNames.available? ? ["/names"] : []) + cangjie_paths + pair_paths
+    def optional_pages = (Huayu::TaiwanNames.available? ? ["/names"] : []) + cangjie_paths + pair_paths + course_paths
+
+    def course_paths = Huayu::CourseLessons.lessons.map { |lesson| "/course/#{lesson.slug}" }
 
     def pair_paths = Huayu::WordPairs.lessons.map { |pair| "/pairs/#{pair.slug}" }
 

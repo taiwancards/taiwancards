@@ -136,4 +136,69 @@ RSpec.describe "Placement test" do
 
     expect(LexemeMemory.owned_by(@authenticated_user).count).to(eq(seeded))
   end
+
+  context("for a visitor with no account", :no_auth) do
+    def guest_test = PlacementTest.guest.order(:created_at).last
+
+    def finish_as_guest
+      start(BEGINNER)
+      Placement::Intake::SANITY_BUDGET.times do
+        break if guest_test.pending.blank?
+
+        post("/placement/answer", params: {choice: guest_test.pending["answer"]})
+      end
+    end
+
+    it "runs the whole test without an account" do
+      finish_as_guest
+
+      expect(guest_test).to(be_status_finished)
+      get("/placement")
+      expect(response.body).to(include(I18n.t("placement.guest.title")))
+      expect(response.body).not_to(include(I18n.t("placement.apply")))
+    end
+
+    it "keeps one visitor's test away from another visitor" do
+      start(BEGINNER)
+      reset!
+
+      get("/placement")
+
+      expect(response.body).to(include(I18n.t("placement.intake.experience.question")))
+    end
+
+    it "hands the finished test to the account the visitor signs in with, and returns to it" do
+      finish_as_guest
+      get("/placement")
+      user = create(:user)
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+        provider: "google_oauth2",
+        uid: "test-uid-#{user.id}",
+        info: {email: user.email, name: user.name},
+        credentials: {token: "access-token", refresh_token: "refresh-token", expires_at: 2.hours.from_now.to_i}
+      )
+
+      get("/auth/google_oauth2/callback")
+
+      expect(response).to(redirect_to(placement_path))
+      expect(PlacementTest.where(user:).sole).to(be_status_finished)
+      expect(PlacementTest.guest).to(be_empty)
+    end
+
+    it "clears out tests that visitors abandoned a day ago" do
+      stale = PlacementTest.create!(status: :in_progress, intake: {}, updated_at: 2.days.ago)
+
+      start(BEGINNER)
+
+      expect(PlacementTest.exists?(stale.id)).to(be(false))
+      expect(guest_test).to(be_present)
+    end
+
+    it "still asks for an account before marking anything as known" do
+      post("/placement/apply", params: {grade: 2})
+
+      expect(response).to(redirect_to(login_path))
+    end
+  end
 end

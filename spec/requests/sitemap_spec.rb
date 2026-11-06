@@ -40,6 +40,15 @@ RSpec.describe "Sitemap", :no_auth do
     expect(response.body).not_to(include("/characters/#{ERB::Util.url_encode("㐀")}"))
   end
 
+  it "lists the course and every one of its lessons" do
+    get("/sitemaps/pages.xml")
+
+    expect(response.body).to(include("<loc>http://www.example.com/en/course</loc>"))
+    expect(response.body).to(
+      include("<loc>http://www.example.com/en/course/#{Huayu::CourseLessons.lessons.last.slug}</loc>")
+    )
+  end
+
   it "answers a section nobody publishes with a not found" do
     get("/sitemaps/nonsense.xml")
 

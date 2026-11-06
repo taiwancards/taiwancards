@@ -52,6 +52,15 @@ RSpec.describe Huayu::CourseLessons do
     end
   end
 
+  it "picks the line to show off from the lesson's own text, translated into every language" do
+    described_class.lessons.each do |lesson|
+      line = lesson.key_line
+
+      expect(line).to(be_present, "#{lesson.slug} has no key line")
+      expect(%i[en ru vi].map { |locale| line.translation(locale) }).to(all(be_present), lesson.slug)
+    end
+  end
+
   it "carries a reading for every vocabulary item" do
     unread = described_class.lessons.flat_map { |lesson| lesson.vocabulary.reject { |word| word.zhuyin.present? } }
 

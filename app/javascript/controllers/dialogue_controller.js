@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { revealOptions } from "lib/aloud";
 
 const RIGHT = ["border-emerald-500", "bg-emerald-500/10"];
 const WRONG = ["border-amber-500", "bg-amber-500/10"];
@@ -40,9 +41,15 @@ export default class extends Controller {
     }
   }
 
+  reveal(event) {
+    const step = event.currentTarget.closest("[data-dialogue-target='step']");
+    revealOptions(step)?.focus({ preventScroll: true });
+  }
+
   choose(event) {
     const button = event.currentTarget;
     const step = button.closest("[data-dialogue-target='step']");
+    revealOptions(step);
     const choices = this.within(step, this.choiceTargets);
     const correct = button.dataset.correct === "true";
     choices.forEach((choice) => {

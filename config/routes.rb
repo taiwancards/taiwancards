@@ -246,6 +246,7 @@ Rails.application.routes.draw do
     get("pairs", to: "word_pairs#index", as: :word_pairs)
     get("pairs/:id", to: "word_pairs#show", as: :word_pair, constraints: {id: /[a-z-]+/})
     get("tocfl", to: "tocfl#index", as: :tocfl_levels)
+    get("tocfl/exam", to: "tocfl#exam", as: :tocfl_exam)
     get("tocfl/:id", to: "tocfl#show", as: :tocfl_level)
     get("tbcl", to: "tbcl#index", as: :tbcl_levels)
     get("tbcl/:id", to: "tbcl#show", as: :tbcl_level, constraints: {id: /[1-7]/})

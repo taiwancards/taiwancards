@@ -2,6 +2,7 @@
 .py-6.space-y-6
   header.space-y-1
     = render("shared/page_help", key: "tocfl", title: t("tocfl.title"))
+    = link_to t("tocfl.guide_link"), tocfl_exam_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-2 md:min-h-8"
 
   .space-y-3
     - @levels.each do |level|

@@ -243,6 +243,18 @@
     display: flex;
   }
 
+  .aloud-gate {
+    display: none;
+  }
+
+  .show-aloud .aloud-gate:not([data-revealed]) {
+    display: flex;
+  }
+
+  .show-aloud .aloud-options:not([data-revealed]) {
+    display: none;
+  }
+
   .exam-sign {
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;

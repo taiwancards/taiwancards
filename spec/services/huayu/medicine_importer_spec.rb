@@ -79,6 +79,18 @@ RSpec.describe Huayu::MedicineImporter do
     everyday.delete if everyday.exist?
   end
 
+  it "brings a translation added later to an example of an everyday-owned word" do
+    create(:lexeme, kind: :word, text: "測試醫丁", data: {"placements" => ["everyday"]})
+    write([base("測試醫丁", "examples" => [{"zh" => "新例句。", "en" => "new"}])])
+    described_class.new(path:).call
+    write([base("測試醫丁", "examples" => [{"zh" => "新例句。", "en" => "new", "vi" => "câu mới"}])])
+    described_class.new(path:).call
+
+    expect(Lexeme.find_by!(text: "測試醫丁").data["examples"]).to(
+      eq([{"zh" => "新例句。", "en" => "new", "vi" => "câu mới"}])
+    )
+  end
+
   it "stores folk and formal counterparts and the Hokkien reading" do
     write(
       [

@@ -85,6 +85,18 @@ RSpec.describe "Phrases" do
       expect(response.headers["Cache-Control"]).to(include("public"))
     end
 
+    it "puts a say-it-aloud gate in front of the options of every question", :no_auth do
+      get(phrase_dialogue_path(scene: "store"))
+
+      page = Nokogiri::HTML(response.body)
+      questions = dialogue.steps.count(&:choice?)
+      expect(page.css("[data-layer='aloud']").size).to(eq(1))
+      expect(page.css(".aloud-gate [data-action='dialogue#reveal']").size).to(eq(questions))
+      expect(page.css(".aloud-options [data-dialogue-target='choice']").size).to(
+        eq(page.css("[data-dialogue-target='choice']").size)
+      )
+    end
+
     it "sends an unknown scene back to the phrasebook" do
       get(phrase_dialogue_path(scene: "nowhere"))
 

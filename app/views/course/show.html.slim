@@ -15,6 +15,12 @@
     h1.text-2xl.font-bold.tracking-tight = @lesson.title_for(I18n.locale)
     p.text-lg.font-semibold lang="zh-TW" = @lesson.zh_title
     p.text-sm.leading-relaxed.text-muted-foreground = @lesson.goal_for(I18n.locale)
+    - if (line = @lesson.key_line)
+      .space-y-1.rounded-xl.border.border-border.bg-card.px-4.py-3
+        p.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("course.you_will_say")
+        p.break-words.text-xl.font-semibold lang="zh-TW" = line.zh
+        = reading_lines(line.zh)
+        p.text-sm.leading-relaxed.text-muted-foreground = line.translation(I18n.locale)
 
   section.space-y-3
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
@@ -24,7 +30,8 @@
   section.space-y-3
     .flex.flex-wrap.items-center.justify-between.gap-3
       h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("course.vocabulary")
-      = button_to t("course.make_deck"), course_lesson_deck_path(@lesson), class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+      - if authenticated?
+        = button_to t("course.make_deck"), course_lesson_deck_path(@lesson), class: "rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
     ul.divide-y.divide-border.overflow-hidden.rounded-xl.border.border-border.bg-card
       - @lesson.vocabulary.each do |word|
         li.flex.items-start.gap-3.px-4.py-3
@@ -44,6 +51,9 @@
             .text-sm = word.gloss(I18n.locale)
             - if word.note_for(I18n.locale).present?
               .mt-1.text-xs.leading-relaxed.text-muted-foreground = word.note_for(I18n.locale)
+
+  - if @characters.any?
+    = render("course/characters", entries: @characters)
 
   - if @grammar.any?
     section.space-y-3
@@ -79,7 +89,7 @@
         p.mt-1.text-sm.leading-relaxed = @lesson.culture_for(I18n.locale)["body"]
 
   - if @lesson.exercises.any?
-    = render("course/exercises", exercises: @lesson.exercises, url: course_lesson_done_path(@lesson), explainer: @explainer)
+    = render("course/exercises", exercises: @lesson.exercises, url: (course_lesson_done_path(@lesson) if authenticated?), course_guest: !authenticated?, explainer: @explainer)
 
   nav.flex.justify-between.gap-3.text-sm
     - if @previous

@@ -45,7 +45,6 @@ RSpec.describe "Guest access", :no_auth do
     /study
     /desks
     /triage
-    /placement
     /practice
     /practice/progress
     /pronunciation
@@ -124,6 +123,7 @@ RSpec.describe "Guest access", :no_auth do
 
     expect(response.body).to(include(login_path))
     expect(response.body).not_to(include(I18n.t("nav.group_learn")))
+    expect(response.body).to(include(I18n.t("nav.group_learn_guest")))
     expect(response.body).not_to(include(I18n.t("nav.group_settings")))
     expect(response.body).to(include(I18n.t("nav.group_practice")))
   end

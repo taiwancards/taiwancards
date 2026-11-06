@@ -37,11 +37,20 @@ section.space-y-4
         = link_to t("placement.china.variants"), variants_path, class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
         = link_to t("placement.china.phrases"), phrases_path, class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
 
-  = form_with url: placement_apply_path, method: :post, class: "space-y-3" do |form|
-    label.block.space-y-1
-      span.text-sm.font-medium = t("placement.adjust_label")
-      = form.select :grade, placement_grade_options, {selected: test.result_grade.to_i}, class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
-    p.text-xs.text-muted-foreground = t("placement.apply_hint")
+  - if authenticated?
+    = form_with url: placement_apply_path, method: :post, id: "placement-apply", class: "space-y-3" do |form|
+      label.block.space-y-1
+        span.text-sm.font-medium = t("placement.adjust_label")
+        = form.select :grade, placement_grade_options, {selected: test.result_grade.to_i}, class: "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+      p.text-xs.text-muted-foreground = t("placement.apply_hint")
     .flex.flex-wrap.gap-2
-      = form.submit t("placement.apply"), data: {turbo_submits_with: t("placement.applying")}, class: "cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
-      = button_to t("placement.retake"), placement_path, class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+      = button_tag t("placement.apply"), type: "submit", form: "placement-apply", data: {turbo_submits_with: t("placement.applying")}, class: "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      = button_to t("placement.retake"), placement_path, class: "min-h-11 rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted"
+  - else
+    .space-y-3.rounded-xl.border.border-primary.bg-card.p-4
+      p.font-semibold = t("placement.guest.title")
+      p.text-sm.leading-relaxed.text-muted-foreground = t("placement.guest.body")
+      .flex.flex-wrap.gap-2
+        = link_to t("placement.guest.sign_in"), login_path, class: "inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90"
+        = link_to t("placement.guest.course"), course_path, class: "inline-flex min-h-11 items-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted"
+    = button_to t("placement.retake"), placement_path, class: "min-h-11 rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted"

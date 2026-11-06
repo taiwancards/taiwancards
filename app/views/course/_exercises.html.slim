@@ -5,10 +5,15 @@
 - score_form = local_assigns[:score_form]
 - option_classes = "w-full rounded-lg border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
 
-section.space-y-3 data-controller="course-quiz" data-course-quiz-total-value=exercises.size
+- replies = exercises.any? { |exercise| exercise.kind == "reply" }
+
+section.space-y-3 data-controller="course-quiz layers" data-course-quiz-total-value=exercises.size
   .flex.flex-wrap.items-center.justify-between.gap-3
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = heading
-    span.text-xs.tabular-nums.text-muted-foreground data-course-quiz-target="tally"
+    .flex.items-center.gap-3
+      span.text-xs.tabular-nums.text-muted-foreground data-course-quiz-target="tally"
+      - if replies
+        = render("shared/layer_button", layer: "aloud")
 
   ol.space-y-3
     - exercises.each_with_index do |exercise, index|
@@ -52,7 +57,9 @@ section.space-y-3 data-controller="course-quiz" data-course-quiz-total-value=exe
                   = exercise.option_text(exercise.pairs[slot], I18n.locale)
         - else
           - option_lang = exercise.kind == "meaning" ? I18n.locale.to_s : "zh-TW"
-          .space-y-2
+          - if exercise.kind == "reply"
+            = render("shared/aloud_gate", action: "course-task#reveal")
+          .space-y-2 class=("aloud-options" if exercise.kind == "reply")
             - exercise.options.each_with_index do |option, slot|
               button class=option_classes type="button" data-course-task-target="option" data-slot=slot data-action="course-task#choose"
                 span lang=option_lang = exercise.option_text(option, I18n.locale)
@@ -68,3 +75,6 @@ section.space-y-3 data-controller="course-quiz" data-course-quiz-total-value=exe
       span.text-xs.text-muted-foreground = t("course.save_hint")
   - elsif score_form
     input type="hidden" name="score" value="" form=score_form data-course-quiz-target="score"
+  - elsif local_assigns[:course_guest]
+    p.text-xs.text-muted-foreground
+      = t("course.sign_in_hint_html", link: link_to(t("course.sign_in"), login_path, class: "font-medium text-primary underline underline-offset-2"))

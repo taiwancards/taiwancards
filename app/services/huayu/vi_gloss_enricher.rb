@@ -30,9 +30,8 @@ module Huayu
       written = 0
       glosses.keys.each_slice(500) do |texts|
         scope(texts).find_each do |lexeme|
-          fresh = glosses[lexeme.text].to_s.strip
+          fresh = (page_gloss(lexeme) || glosses[lexeme.text]).to_s.strip
           next if fresh.empty? || lexeme.meanings[LOCALE] == fresh
-          next if owned_by_a_page?(lexeme)
 
           lexeme.update!(meanings: lexeme.meanings.merge(LOCALE => fresh))
           written += 1
@@ -74,8 +73,10 @@ module Huayu
       written
     end
 
-    def owned_by_a_page?(lexeme)
-      Lexeme::DICTIONARY_KINDS.include?(lexeme.kind.to_sym) && @curated.owns?(lexeme.text, LOCALE)
+    def page_gloss(lexeme)
+      return nil unless Lexeme::DICTIONARY_KINDS.include?(lexeme.kind.to_sym)
+
+      @curated.gloss(lexeme.text, LOCALE)
     end
   end
 end

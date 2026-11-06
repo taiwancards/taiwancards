@@ -181,6 +181,9 @@ Disallow: /*word=
 Disallow: /*page=
 Disallow: /*mark=
 Disallow: /*q=
+Disallow: /*progress=
+Disallow: /*school=
+Disallow: /*sort=
 Disallow: /*/login
 Disallow: /*/logout
 Disallow: /*/start

@@ -89,7 +89,7 @@ RSpec.describe "Course" do
     get("/course/exam/#{stage.slug}")
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("data-controller=\"course-quiz\""))
+    expect(Nokogiri::HTML(response.body).css("[data-controller~='course-quiz']")).not_to(be_empty)
   end
 
   it "builds a deck out of the lesson vocabulary" do
@@ -107,10 +107,79 @@ RSpec.describe "Course" do
     expect(response).to(have_http_status(:not_found))
   end
 
-  it "keeps the whole section behind the login", :no_auth do
-    get("/course")
+  it "lets the reply tasks be answered aloud before the options open" do
+    with_reply = Huayu::CourseLessons.lessons.find { |entry| entry.exercises.any? { |task| task.kind == "reply" } }
 
-    expect(response).to(redirect_to(login_path))
+    get("/course/#{with_reply.slug}")
+
+    page = Nokogiri::HTML(response.body)
+    replies = with_reply.exercises.count { |task| task.kind == "reply" }
+    expect(page.css("[data-layer='aloud']").size).to(eq(1))
+    expect(page.css(".aloud-gate [data-action='course-task#reveal']").size).to(eq(replies))
+    expect(page.css(".aloud-options").size).to(eq(replies))
+  end
+
+  it "explains how a character the lesson brings in is built" do
+    char = lesson.words.join[/\p{Han}/]
+    create(
+      :lexeme,
+      kind: :character,
+      text: char,
+      data: {"etymology" => {"type" => "ideographic", "hint" => "two parts"}}
+    )
+
+    get("/course/#{lesson.slug}")
+
+    expect(response.body).to(include(I18n.t("course.characters"), "two parts"))
+  end
+
+  it "opens with the line the learner will be able to say after it" do
+    get("/course/#{lesson.slug}")
+
+    expect(response.body).to(include(lesson.key_line.zh, CGI.escapeHTML(lesson.key_line.translation(:en))))
+  end
+
+  context("for a visitor with no account", :no_auth) do
+    let(:stage) { Huayu::CourseLessons.stages.first }
+
+    it "lets the shelf, a lesson and a level test be read without a session" do
+      ["/course", "/course/#{lesson.slug}", "/course/exam/#{stage.slug}"].each do |path|
+        get(path)
+
+        expect(response).to(have_http_status(:ok), path)
+        expect(response.headers["Cache-Control"]).to(include("public"), path)
+        expect(response.headers["Set-Cookie"].to_s).not_to(include("_taiwancards_session"), path)
+      end
+    end
+
+    it "lets the tasks be done in the page and asks for a sign-in only to keep the score" do
+      get("/course/#{lesson.slug}")
+
+      page = Nokogiri::HTML(response.body)
+      expect(page.css("[data-controller='course-task']")).not_to(be_empty)
+      expect(page.css("form[action$='/done']")).to(be_empty)
+      expect(page.css("form[action$='/deck']")).to(be_empty)
+      expect(page.css("a[href$='/login']").map(&:text)).to(include(I18n.t("course.sign_in")))
+      expect(page.at_css("[data-controller~='analyzer']")["data-analyzer-activate-url-value"]).to(be_blank)
+    end
+
+    it "counts the lessons of a stage instead of showing a progress bar" do
+      get("/course")
+
+      expect(response.body).to(
+        include(I18n.t("course.stage_lessons", count: Huayu::CourseLessons.by_stage[stage.slug].size))
+      )
+      expect(response.body).not_to(include(I18n.t("course.resume")))
+    end
+
+    it "keeps the progress page and every write behind the login" do
+      get("/course/progress")
+      expect(response).to(redirect_to(login_path))
+
+      post("/course/#{lesson.slug}/done", params: {score: 3})
+      expect(response).to(redirect_to(login_path))
+      expect(CourseCompletion.count).to(eq(0))
+    end
   end
 
   it "records a finished level test under its stage, capped at the number of questions" do

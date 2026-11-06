@@ -13,7 +13,7 @@
       p.text-muted-foreground = t("placement.intro")
       = render("placement_tests/intake", questions: @questions)
       p
-        = link_to t("placement.later"), desk_path, class: "text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+        = link_to t("placement.later"), (authenticated? ? desk_path : course_path), class: "text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
 
   - elsif @test.status_finished?
     = render("placement_tests/result", test: @test)

@@ -3,7 +3,7 @@
 - readings = sentence_readings(lines.map(&:first).compact_blank) if show_pinyin?
 
 .space-y-3[
-  data-controller="analyzer layers" data-analyzer-activate-url-value=reader_activate_path
+  data-controller="analyzer layers" data-analyzer-activate-url-value=(reader_activate_path if authenticated?)
   data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
 
   - if translated || annotated

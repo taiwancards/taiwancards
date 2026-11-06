@@ -89,9 +89,9 @@ namespace(:huayu) do
     pp(Huayu::GlossOverrideEnricher.new.call)
   end
 
-  desc("Apply the curated Russian etymologies from etymology_ru.json to the characters that have one")
+  desc("Apply the curated etymology translations (etymology_ru.json, etymology_vi.json, word_etymology_vi.json)")
   task(translate_etymologies: :environment) do
-    pp(Huayu::EtymologyTranslations.new.call)
+    pp(Huayu::EtymologyTranslations.call_all)
   end
 
   desc("Flag 成語 idioms and apply the curated chengyu.json (idempotent)")

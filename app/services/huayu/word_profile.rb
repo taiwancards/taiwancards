@@ -123,6 +123,11 @@ module Huayu
     end
 
     def etymology
+      [lexeme, content].uniq.each do |source|
+        text = EtymologyTranslations.translated(source, "text")
+        return text if text
+      end
+
       lexeme.data["etymology_text"].presence || content.data["etymology_text"].presence
     end
 

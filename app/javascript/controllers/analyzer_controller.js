@@ -136,9 +136,10 @@ export default class extends Controller {
     const audio = token.audio
       ? `<button type="button" data-action="analyzer#play" data-url="${token.audio}" class="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">♪</button>`
       : "";
-    const add = token.lexemeId
-      ? `<button type="button" data-action="analyzer#add" data-lexeme-id="${token.lexemeId}" class="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted">${this.addValue}</button>`
-      : "";
+    const add =
+      token.lexemeId && this.activateUrlValue
+        ? `<button type="button" data-action="analyzer#add" data-lexeme-id="${token.lexemeId}" class="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted">${this.addValue}</button>`
+        : "";
     const link = token.href
       ? `<a href="${token.href}" class="text-lg font-semibold text-primary hover:underline" lang="zh-TW">${token.text}</a>`
       : `<span class="text-lg font-semibold" lang="zh-TW">${token.text}</span>`;

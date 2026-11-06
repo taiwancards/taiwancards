@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 class PlacementTestsController < ApplicationController
+  GUEST_TEST = :placement_test_id
+
+  allow_unauthenticated_access only: %i[show create answer]
+
   def show
     @test = current_test
     @item = @test.pending.presence if @test&.status_in_progress?
     @questions = Placement::Intake::QUESTIONS
+    remember_return_path(placement_path) if current_user.nil? && @test&.status_finished?
   end
 
   def create
@@ -14,6 +19,7 @@ class PlacementTestsController < ApplicationController
       status: :in_progress,
       intake: {"answers" => intake_answers, "short" => params[:short].present?}
     )
+    remember_guest_test(@test) if current_user.nil?
     serve_next(@test)
     redirect_to(placement_path)
   end
@@ -49,7 +55,16 @@ class PlacementTestsController < ApplicationController
   end
 
   def current_test
-    @current_test ||= PlacementTest.where(user: current_user).order(:created_at).last
+    @current_test ||= if current_user
+      PlacementTest.where(user: current_user).order(:created_at).last
+    else
+      PlacementTest.guest.find_by(id: session[GUEST_TEST])
+    end
+  end
+
+  def remember_guest_test(test)
+    PlacementTest.sweep_guests
+    session[GUEST_TEST] = test.id
   end
 
   def serve_next(test)

@@ -18,7 +18,11 @@ module Huayu
     end
 
     def owned(text)
-      index.fetch(text.to_s, [])
+      index.fetch(text.to_s, {}).keys
+    end
+
+    def gloss(text, locale)
+      index.dig(text.to_s, locale.to_s)
     end
 
     def owns?(text, locale)
@@ -40,8 +44,8 @@ module Huayu
           text = row["text"].to_s
           next if text.empty?
 
-          locales = LOCALES.select { |locale| row[locale].to_s.strip.present? }
-          all[text] = all.fetch(text, []) | locales if locales.any?
+          glosses = LOCALES.to_h { |locale| [locale, row[locale].to_s.strip] }.compact_blank
+          all[text] = glosses.merge(all.fetch(text, {})) if glosses.any?
         end
       end
     end

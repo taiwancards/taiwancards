@@ -164,7 +164,7 @@ module Huayu
     private
 
     def translated(field)
-      lexeme.data.dig(EtymologyTranslations::KEY, I18n.locale.to_s, field).presence
+      EtymologyTranslations.translated(lexeme, field)
     end
   end
 end

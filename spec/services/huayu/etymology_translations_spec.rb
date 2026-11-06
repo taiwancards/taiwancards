@@ -84,6 +84,40 @@ RSpec.describe Huayu::EtymologyTranslations do
     expect(described_class.new(path:)).not_to(be_drift)
   end
 
+  it "keeps each language's translation when another language is applied" do
+    lexeme = character("味", {"etymology" => {"hint" => "mouth"}})
+    write({"味" => {"hint" => "рот"}})
+    described_class.new(path:).call
+    write({"味" => {"hint" => "miệng"}})
+    described_class.new(path:, locale: "vi").call
+
+    expect(lexeme.reload.data["etymology_i18n"]).to(eq({"ru" => {"hint" => "рот"}, "vi" => {"hint" => "miệng"}}))
+    I18n.with_locale(:vi) { expect(Huayu::CharacterProfile.new(lexeme, user: nil).etymology_hint).to(eq("miệng")) }
+  end
+
+  it "translates the etymology of a word on the word page" do
+    word = Lexeme.create!(kind: :word, text: "東西", data: {"etymology_text" => "\"thing; stuff\""})
+    character("東", {"etymology_text" => "Pictogram."})
+    write({"東西" => {"text" => "“đồ vật; thứ”"}})
+
+    expect(described_class.new(path:, locale: "vi", kind: :word).call).to(include(written: 1))
+    profile = Huayu::WordProfile.new(word.reload, user: nil)
+    I18n.with_locale(:vi) { expect(profile.etymology).to(eq("“đồ vật; thứ”")) }
+    I18n.with_locale(:ru) { expect(profile.etymology).to(eq("\"thing; stuff\"")) }
+    expect(Lexeme.find_by(kind: :character, text: "東").data).not_to(have_key("etymology_i18n"))
+  end
+
+  it "replaces a wrong English etymology of a word on the English page" do
+    word = Lexeme.create!(kind: :word, text: "衣服", data: {"etymology_text" => "From 衣, matching English E (“ecstasy”)."})
+    write({"衣服" => {"text" => "Compound of 衣 and 服."}})
+
+    described_class.new(path:, locale: "en", kind: :word).call
+    profile = Huayu::WordProfile.new(word.reload, user: nil)
+
+    I18n.with_locale(:en) { expect(profile.etymology).to(eq("Compound of 衣 and 服.")) }
+    expect(word.data["etymology_text"]).to(eq("From 衣, matching English E (“ecstasy”)."))
+  end
+
   it "ignores entries whose fields are blank" do
     character("味", {"etymology" => {"hint" => "mouth"}})
     write({"味" => {"hint" => "  ", "text" => ""}})

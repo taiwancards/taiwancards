@@ -3,25 +3,29 @@
 class CourseController < ApplicationController
   EXAM_PREFIX = "exam:"
 
+  allow_unauthenticated_access only: %i[index show exam]
+  publicly_cacheable only: %i[index show exam]
+
   before_action :set_lesson, only: %i[show complete deck]
   before_action :set_stage, only: %i[exam complete_exam]
 
   def index
     @stages = Huayu::CourseLessons.stages
     @by_stage = Huayu::CourseLessons.by_stage
-    @progress = progress
-    @completions = progress.completions
-    @resume = Huayu::CourseLessons.lessons.find { |lesson| @completions[lesson.slug].nil? }
-    @slice = progress.slice_for(@resume&.stage || @stages.last&.slug)
+    @progress = learner_progress
+    @completions = completions
+    @resume = Huayu::CourseLessons.lessons.find { |lesson| @completions[lesson.slug].nil? } if @progress
+    @slice = @progress&.slice_for(@resume&.stage || @stages.last&.slug)
   end
 
   def show
     @lines = annotated_lines
     @known_ids = known_lexeme_ids(@lines)
     @entries = vocabulary_entries
+    @characters = Huayu::LessonCharacters.new(@lesson).call
     @grammar = @lesson.grammar.filter_map { |ref| [ref, ref.lesson] if ref.lesson }
-    @completion = progress.completions[@lesson.slug]
-    @slice = progress.slice_for(@lesson.stage)
+    @completion = completions[@lesson.slug]
+    @slice = learner_progress&.slice_for(@lesson.stage)
     @previous, @next = Huayu::CourseLessons.neighbors(@lesson)
     @explainer = Huayu::CourseExplainer.new([@lesson])
   end
@@ -35,8 +39,8 @@ class CourseController < ApplicationController
   end
 
   def exam
-    @slice = progress.slice_for(@stage.slug)
-    @completion = progress.completions[exam_slug]
+    @slice = learner_progress&.slice_for(@stage.slug)
+    @completion = completions[exam_slug]
     @lessons = Huayu::CourseLessons.by_stage[@stage.slug].to_a
     @explainer = Huayu::CourseExplainer.new(@lessons)
   end
@@ -66,6 +70,10 @@ class CourseController < ApplicationController
   def progress
     @progress_service ||= Huayu::CourseProgress.new(current_user)
   end
+
+  def learner_progress = (progress if current_user)
+
+  def completions = learner_progress&.completions || {}
 
   def set_lesson
     @lesson = Huayu::CourseLessons.find(params[:slug])
@@ -116,7 +124,7 @@ class CourseController < ApplicationController
 
   def known_lexeme_ids(lines)
     ids = lines.flat_map { |_line, tokens| tokens.filter_map { |token| token.lexeme&.id } }.uniq
-    return Set.new if ids.empty?
+    return Set.new if ids.empty? || current_user.nil?
 
     LexemeMemory.owned_by(current_user).active.where(lexeme_id: ids).pluck(:lexeme_id).to_set
   end

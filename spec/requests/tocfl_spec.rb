@@ -41,4 +41,28 @@ RSpec.describe "TOCFL" do
     expect(response.body).to(include(I18n.t("levels.marked")))
     expect(response.body).to(include("電腦"))
   end
+
+  describe "the guide to the exam", :no_auth do
+    it "shows every level with its pass marks to a visitor, from the shared cache" do
+      get("/tocfl/exam")
+
+      expect(response).to(have_http_status(:ok))
+      expect(response.headers["Cache-Control"]).to(include("public"))
+      page = Nokogiri::HTML(response.body)
+      rows = page.css("tbody tr").map { |row| row.css("td").map { |cell| cell.text.strip } }
+      expect(rows.size).to(eq(Huayu::TocflExam::LEVELS.size))
+      expect(rows.last).to(include("精通級", "C2", "655", "690"))
+    end
+
+    it "is linked from the readiness page and reads in every language" do
+      get("/tocfl")
+      expect(response.body).to(include("/en/tocfl/exam"))
+
+      %w[ru vi].each do |code|
+        get("/#{code}/tocfl/exam")
+
+        expect(response.body).to(include(I18n.t("tocfl.exam.title", locale: code)), code)
+      end
+    end
+  end
 end

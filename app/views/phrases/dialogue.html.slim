@@ -17,7 +17,9 @@
 
   .flex.items-center.justify-between.gap-3
     p.text-xs.text-muted-foreground = t("phrases.dialogue.hint")
-    = render("shared/layer_button", layer: "translation")
+    .flex.shrink-0.gap-2
+      = render("shared/layer_button", layer: "aloud")
+      = render("shared/layer_button", layer: "translation")
 
   ol.space-y-4
     - @dialogue.steps.each_with_index do |step, index|
@@ -39,7 +41,8 @@
             = " #{goal}"
 
         - if step.choice?
-          .space-y-2 role="group" aria-label=t("phrases.dialogue.choose")
+          = render("shared/aloud_gate", action: "dialogue#reveal")
+          .aloud-options.space-y-2 role="group" aria-label=t("phrases.dialogue.choose")
             p.text-xs.font-medium.text-muted-foreground = t("phrases.dialogue.choose")
             - step.choices.each_with_index do |choice, slot|
               button.block.w-full.min-h-11.space-y-0.5.rounded-xl.border.border-border.bg-card.px-4.py-2.text-left.transition-colors[
