@@ -234,6 +234,7 @@ Rails.application.routes.draw do
     get("graded/:tier", to: "graded#show", as: :graded_tier)
     get("graded/:tier/:id", to: "graded#show", as: :graded_text)
     post("graded/:tier/:id/done", to: "graded#complete", as: :graded_text_done)
+    post("graded/:tier/:id/words", to: "graded#words", as: :graded_text_words)
     get("mock", to: "mock_exams#index", as: :mock_exams)
     get("mock/pictures", to: "mock_exams#pictures", as: :mock_pictures)
     post("mock/pictures", to: "mock_exams#grade_pictures", as: :grade_mock_pictures)

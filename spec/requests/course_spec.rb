@@ -119,6 +119,15 @@ RSpec.describe "Course" do
     expect(page.css(".aloud-options").size).to(eq(replies))
   end
 
+  it "gives the lesson text the same reading tools as the reader" do
+    get("/course/#{lesson.slug}")
+
+    page = Nokogiri::HTML(response.body)
+    expect(page.css(".reading-line").size).to(eq(lesson.lines.size))
+    expect(page.css(".reading-line [data-action='reading#toggleLine']").size).to(eq(lesson.lines.size))
+    expect(page.css("[data-reading-target='saved']").text).to(eq("0"))
+  end
+
   it "explains how a character the lesson brings in is built" do
     char = lesson.words.join[/\p{Han}/]
     create(

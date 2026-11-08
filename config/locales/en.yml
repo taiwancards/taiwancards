@@ -2639,6 +2639,13 @@ en:
     translation: Translation
     grammar: Grammar
     aloud: Answer aloud
+    focus: Focus
+  reading:
+    size: Text size
+    my_words_html: "My words: %{saved} of %{total}"
+    next: Next sentence
+    previous: Previous sentence
+    translate_line: Translate this sentence
   aloud:
     prompt: Say your answer out loud first, in Mandarin. Then open the options and pick the one closest to what you said.
     reveal: Done, show the options
@@ -2662,6 +2669,10 @@ en:
     shelf_done: That was the last text in the reader.
     sign_in: Sign in
     sign_in_hint_html: "%{link} to keep track of what you have read."
+    new_words_title: "New words in this text: %{count}"
+    new_words_hint: "Add them in one go. They come into your study sessions in small batches, not all at once."
+    new_words_add: Add all to study
+    words_added: "Added to your study set: %{count}"
     done_next: Done, next text
     done: Mark as read
     next: Next text
@@ -4167,6 +4178,7 @@ en:
     attribution_pts: "Source: 公視 PTS — used for personal study."
     fetched: Fetched %{count} news items.
     add: Add to study
+    sign_in_to_save: Sign in to save this word
     added: Added ✓
   stories:
     title: Reading room

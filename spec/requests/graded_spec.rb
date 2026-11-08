@@ -50,6 +50,70 @@ RSpec.describe "Graded reader" do
     expect(Nokogiri::HTML(response.body).css(".layer-grammar")).not_to(be_empty)
   end
 
+  describe "reading tools" do
+    let(:tier) { Graded::Library.tiers.first }
+    let(:text) { Graded::Library.texts(tier).first }
+    let(:char) { text.lines.first.zh[/\p{Han}/] }
+    let!(:lexeme) { create(:lexeme, kind: :character, text: char, meanings: {"en" => "a meaning"}) }
+
+    before { Huayu::TextAnalyzer.reset_vocabulary! }
+
+    after { Huayu::TextAnalyzer.reset_vocabulary! }
+
+    def page = Nokogiri::HTML(response.body)
+
+    it "puts the sentences ahead of the shelf of other texts" do
+      get("/en/graded/#{tier}/#{text.id}")
+
+      expect(response.body.index("reading-line")).to(be < response.body.index("data-controller=\"ribbon\""))
+    end
+
+    it "offers a translation for one sentence and the sentence-by-sentence mode" do
+      get("/en/graded/#{tier}/#{text.id}")
+
+      expect(page.css(".reading-line").size).to(eq(text.lines.size))
+      expect(page.css(".reading-line [data-action='reading#toggleLine']").size).to(eq(text.lines.size))
+      expect(page.css("[data-layer='focus']").size).to(eq(1))
+      expect(page.css(".focus-bar [data-action='reading#next']").size).to(eq(1))
+    end
+
+    it "counts the words of the text already in study and marks them" do
+      Lexemes::Activator.new(user: current_user).call(lexeme)
+
+      get("/en/graded/#{tier}/#{text.id}")
+
+      expect(page.css("[data-reading-target='saved']").text).to(eq("1"))
+      expect(page.css(".word-saved[data-lexeme-id='#{lexeme.id}']")).not_to(be_empty)
+    end
+
+    it "adds every new word of the text and leaves it in study only once" do
+      2.times { post("/en/graded/#{tier}/#{text.id}/words") }
+
+      expect(response).to(redirect_to("/en/graded/#{tier}/#{text.id}"))
+      expect(LexemeMemory.owned_by(current_user).where(lexeme:).active).not_to(be_empty)
+      expect(LexemeMemory.owned_by(current_user).where(lexeme:).group(:facet).count.values).to(all(eq(1)))
+    end
+
+    context("for a visitor with no account", :no_auth) do
+      it "asks for a sign-in instead of pretending to save a word" do
+        get("/en/graded/#{tier}/#{text.id}")
+
+        analyzer = page.at_css("[data-controller~='analyzer']")
+        expect(analyzer["data-analyzer-activate-url-value"]).to(be_blank)
+        expect(analyzer["data-analyzer-login-url-value"]).to(eq("/en/login"))
+        expect(page.css("[data-reading-target='saved']")).to(be_empty)
+        expect(page.css("form[action$='/words']")).to(be_empty)
+        expect(response.headers["Cache-Control"]).to(include("public"))
+      end
+
+      it "keeps adding words behind the login" do
+        post("/en/graded/#{tier}/#{text.id}/words")
+
+        expect(response).to(redirect_to(login_path))
+      end
+    end
+  end
+
   describe "reading progress" do
     let(:tier) { Graded::Library.tiers.first }
     let(:text) { Graded::Library.texts(tier).first }

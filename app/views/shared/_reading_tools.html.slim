@@ -1,0 +1,19 @@
+- grammar = local_assigns.fetch(:grammar, false)
+- translated = local_assigns.fetch(:translated, false)
+- saved = local_assigns[:saved]
+- total = local_assigns[:total]
+
+.flex.flex-wrap.items-center.gap-2
+  - if saved
+    span.rounded-lg.bg-muted.px-3.py-1.5.text-xs.font-medium.tabular-nums
+      = t("reading.my_words_html", saved: tag.span(saved, data: {reading_target: "saved"}), total:)
+  .ml-auto.flex.flex-wrap.items-center.justify-end.gap-2
+    button.inline-flex.min-h-11.items-center.gap-1.rounded-lg.border.border-border.px-3.text-xs.font-medium.text-muted-foreground.transition-colors[
+      type="button" data-action="reading#cycleSize" title=t("reading.size") aria-label=t("reading.size") class="md:min-h-8 hover:bg-muted" ]
+      span Aa
+      span class="text-[10px]" data-reading-target="sizeLabel" M
+    = render("shared/layer_button", layer: "focus")
+    - if grammar
+      = render("shared/layer_button", layer: "grammar")
+    - if translated
+      = render("shared/layer_button", layer: "translation")

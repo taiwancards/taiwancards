@@ -20,6 +20,11 @@ module ReaderHelper
     )
   end
 
+  def reading_word_counts(lines, known_ids)
+    ids = lines.flat_map { |_line, tokens| Array(tokens).filter_map { |token| token.lexeme&.id } }.uniq
+    [ids.count { |id| known_ids.include?(id) }, ids.size]
+  end
+
   def reader_level(lexeme)
     tocfl = lexeme.data["tocfl_level"]
     return PlacementHelper::TOCFL_BANDS.key(tocfl.to_s.sub("Novice", "Novice ")) if tocfl.present?

@@ -1,0 +1,18 @@
+- tokens = local_assigns.fetch(:tokens)
+- syllables = local_assigns[:syllables]&.dup
+- saved_ids = local_assigns.fetch(:saved_ids)
+
+- tokens.each do |token|
+  - if token.kind == :literal
+    span style="white-space: pre-wrap" = token.text
+  - else
+    - zhuyin = syllables&.shift(token.text.scan(/\p{Han}/).size)&.join(" ")
+    - saved = token.lexeme && saved_ids.include?(token.lexeme.id)
+    span.cursor-pointer.rounded.transition-colors[class="hover:bg-primary/10" class=("word-saved" if saved)
+      data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
+      data-lexeme-id=token.lexeme&.id data-saved=("true" if saved)
+      data-action="click->analyzer#open" ]
+      - if zhuyin.present?
+        = zhuyin_ruby(token.text, zhuyin, context: :text)
+      - else
+        = token.text

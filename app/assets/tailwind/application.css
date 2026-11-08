@@ -243,6 +243,40 @@
     display: flex;
   }
 
+  .reading-text {
+    font-size: calc(1.5rem * var(--reading-scale, 1));
+    line-height: 1.34;
+  }
+
+  .word-saved {
+    border-bottom: 1px dotted
+      color-mix(in oklab, var(--color-primary) 45%, transparent);
+  }
+
+  .line-open .layer-translation {
+    display: block;
+  }
+
+  .show-translation .line-translate {
+    display: none;
+  }
+
+  .focus-bar {
+    display: none;
+  }
+
+  .show-focus .focus-bar {
+    display: flex;
+  }
+
+  .reading-line {
+    transition: opacity 150ms ease;
+  }
+
+  .show-focus .reading-line:not(.is-current) {
+    opacity: 0.3;
+  }
+
   .aloud-gate {
     display: none;
   }

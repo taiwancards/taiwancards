@@ -1,9 +1,18 @@
 import { Controller } from "@hotwired/stimulus";
 import { computePosition, offset, flip, shift } from "@floating-ui/dom";
 
+const MARK = ["bg-amber-300/60", "dark:bg-amber-400/30"];
+const SHEET_GAP = 12;
+
 export default class extends Controller {
-  static targets = ["popover", "panel", "panelEmpty", "panelBody"];
-  static values = { activateUrl: String, add: String, added: String };
+  static targets = ["popover", "panel", "panelEmpty", "panelBody", "word"];
+  static values = {
+    activateUrl: String,
+    add: String,
+    added: String,
+    loginUrl: String,
+    signIn: String,
+  };
 
   connect() {
     this.outside = (e) => {
@@ -35,11 +44,12 @@ export default class extends Controller {
       if (event.type === "mouseenter") return;
       this.mark(anchor);
       this.panelEmptyTarget.hidden = true;
-      this.panelBodyTarget.innerHTML = this.render(token);
+      this.panelBodyTarget.innerHTML = this.render(token, anchor);
       this.panelBodyTarget.classList.remove("hidden");
       return;
     }
-    this.popoverTarget.innerHTML = this.render(token);
+    this.mark(anchor);
+    this.popoverTarget.innerHTML = this.render(token, anchor);
     this.popoverTarget.classList.remove("hidden");
 
     if (this.narrow()) {
@@ -52,6 +62,7 @@ export default class extends Controller {
         width: "auto",
         maxWidth: "none",
       });
+      this.keepAboveSheet(anchor);
       return;
     }
 
@@ -78,9 +89,18 @@ export default class extends Controller {
     return window.matchMedia("(max-width: 1023px)").matches;
   }
 
+  keepAboveSheet(anchor) {
+    const overlap =
+      anchor.getBoundingClientRect().bottom +
+      SHEET_GAP -
+      this.popoverTarget.getBoundingClientRect().top;
+    if (overlap > 0) window.scrollBy({ top: overlap, behavior: "smooth" });
+  }
+
   close() {
     this.sheet = false;
     this.popoverTarget.classList.add("hidden");
+    if (!this.docked()) this.unmark();
   }
 
   docked() {
@@ -90,9 +110,14 @@ export default class extends Controller {
   }
 
   mark(anchor) {
-    this.marked?.classList.remove("bg-primary/10");
+    this.unmark();
     this.marked = anchor;
-    anchor.classList.add("bg-primary/10");
+    anchor.classList.add(...MARK);
+  }
+
+  unmark() {
+    this.marked?.classList.remove(...MARK);
+    this.marked = null;
   }
 
   play(event) {
@@ -105,16 +130,45 @@ export default class extends Controller {
     const body = new FormData();
     body.append("lexeme_id", button.dataset.lexemeId);
     const token = document.querySelector('meta[name="csrf-token"]')?.content;
-    await fetch(this.activateUrlValue, {
+    button.disabled = true;
+    const response = await fetch(this.activateUrlValue, {
       method: "POST",
       body,
       headers: token ? { "X-CSRF-Token": token } : {},
-    });
+    }).catch(() => null);
+    if (!response?.ok) {
+      button.disabled = false;
+      return;
+    }
     button.textContent = this.addedValue;
-    button.disabled = true;
+    this.markSaved(button.dataset.lexemeId);
   }
 
-  render(token) {
+  markSaved(lexemeId) {
+    this.wordTargets
+      .filter((word) => word.dataset.lexemeId === lexemeId)
+      .forEach((word) => {
+        word.dataset.saved = "true";
+        word.classList.add("word-saved");
+      });
+    this.dispatch("saved");
+  }
+
+  saveControl(token, anchor) {
+    if (!token.lexemeId) return "";
+    if (anchor.dataset.saved === "true") {
+      return `<div class="mt-2 text-center text-xs text-muted-foreground">${this.addedValue}</div>`;
+    }
+    if (this.activateUrlValue) {
+      return `<button type="button" data-action="analyzer#add" data-lexeme-id="${token.lexemeId}" class="mt-2 min-h-11 w-full rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted md:min-h-8">${this.addValue}</button>`;
+    }
+    if (this.loginUrlValue) {
+      return `<a href="${this.loginUrlValue}" class="mt-2 flex min-h-11 items-center justify-center rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted md:min-h-8">${this.signInValue}</a>`;
+    }
+    return "";
+  }
+
+  render(token, anchor) {
     const zhuyin = token.zhuyin
       ? `<span class="zhuyin" lang="zh-TW">${token.zhuyin}</span>`
       : "";
@@ -136,10 +190,7 @@ export default class extends Controller {
     const audio = token.audio
       ? `<button type="button" data-action="analyzer#play" data-url="${token.audio}" class="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">♪</button>`
       : "";
-    const add =
-      token.lexemeId && this.activateUrlValue
-        ? `<button type="button" data-action="analyzer#add" data-lexeme-id="${token.lexemeId}" class="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted">${this.addValue}</button>`
-        : "";
+    const add = this.saveControl(token, anchor);
     const link = token.href
       ? `<a href="${token.href}" class="text-lg font-semibold text-primary hover:underline" lang="zh-TW">${token.text}</a>`
       : `<span class="text-lg font-semibold" lang="zh-TW">${token.text}</span>`;

@@ -1,50 +1,52 @@
 - translated = lines.any? { |_line, _tokens, translation| translation.present? }
 - annotated = lines.any? { |_line, _tokens, _translation, _speaker, grammar| grammar.present? }
 - readings = sentence_readings(lines.map(&:first).compact_blank) if show_pinyin?
+- counts = reading_word_counts(lines, known_ids) if authenticated?
 
 .space-y-3[
-  data-controller="analyzer layers" data-analyzer-activate-url-value=(reader_activate_path if authenticated?)
-  data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
+  data-controller="analyzer layers reading" data-action="analyzer:saved->reading#countSaved" *analyzer_attributes ]
 
-  - if translated || annotated
-    .flex.justify-end.gap-2
-      - if annotated
-        = render("shared/layer_button", layer: "grammar")
-      - if translated
-        = render("shared/layer_button", layer: "translation")
+  = render("shared/reading_tools", grammar: annotated, translated: translated, saved: counts&.first, total: counts&.last)
 
   .grid.items-start.gap-4 class="lg:grid-cols-[minmax(0,1fr)_17rem]"
-    .rounded-2xl.border.border-border.bg-card.p-5
-      .space-y-3 class=text_flow_class
-        - lines.each do |line, tokens, translation, speaker, grammar|
-          - next if line.blank?
-          p.text-2xl lang="zh-TW"
-            - if speaker.present?
-              span.mr-2.align-middle.text-xs.font-medium.text-muted-foreground = speaker
-            - tokens.each do |token|
-              - if token.kind == :literal
-                span style="white-space: pre-wrap" = token.text
-              - else
-                - unknown = token.lexeme && !known_ids.include?(token.lexeme.id)
-                - zhuyin = (reader_zhuyin(token.lexeme) if unknown)
-                span.cursor-pointer.rounded.transition-colors[class="mx-0.5"
-                  class=reader_token_classes(token, known_ids) class="hover:bg-primary/10"
-                  data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
-                  data-action="click->analyzer#open" ]
-                  - if zhuyin.present?
-                    = zhuyin_ruby(token.text, zhuyin, context: :text)
-                  - elsif unknown && (reading = reader_reading(token.lexeme))
-                    ruby
-                      = token.text
-                      rt.text-xs.font-normal.text-muted-foreground = reading
+    .min-w-0.space-y-3
+      .rounded-2xl.border.border-border.bg-card.p-4 class="sm:p-5"
+        .space-y-3 class=text_flow_class
+          - lines.each do |line, tokens, translation, speaker, grammar|
+            - next if line.blank?
+            .reading-line.relative.space-y-1 class=("pr-9" if translation.present?) data-reading-target="line" data-action="click->reading#pick"
+              p.reading-text lang="zh-TW"
+                - if speaker.present?
+                  span.mr-2.align-middle.text-xs.font-medium.text-muted-foreground = speaker
+                - tokens.each do |token|
+                  - if token.kind == :literal
+                    span style="white-space: pre-wrap" = token.text
                   - else
-                    = token.text
-          - if show_pinyin? && (reading = readings&.dig(line)) && reading.pinyin.present?
-            .py-line lang="zh-Latn" = reading.pinyin
-          - if translation.present?
-            p.layer-translation.text-sm.leading-relaxed.text-muted-foreground lang=I18n.locale = translation
-          - if grammar.present?
-            = render("shared/grammar_chips", lessons: grammar)
+                    - known = token.lexeme && known_ids.include?(token.lexeme.id)
+                    - unknown = token.lexeme && !known
+                    - zhuyin = (reader_zhuyin(token.lexeme) if unknown)
+                    span.cursor-pointer.rounded.transition-colors[class="mx-0.5"
+                      class=reader_token_classes(token, known_ids) class="hover:bg-primary/10"
+                      data-analyzer-target="word" data-token=analyze_token_payload(token).to_json
+                      data-lexeme-id=token.lexeme&.id data-saved=("true" if known)
+                      data-action="click->analyzer#open" ]
+                      - if zhuyin.present?
+                        = zhuyin_ruby(token.text, zhuyin, context: :text)
+                      - elsif unknown && (reading = reader_reading(token.lexeme))
+                        ruby
+                          = token.text
+                          rt.text-xs.font-normal.text-muted-foreground = reading
+                      - else
+                        = token.text
+              - if translation.present?
+                = render("shared/line_translate")
+              - if show_pinyin? && (reading = readings&.dig(line)) && reading.pinyin.present?
+                .py-line lang="zh-Latn" = reading.pinyin
+              - if translation.present?
+                p.layer-translation.text-sm.leading-relaxed.text-muted-foreground lang=I18n.locale = translation
+              - if grammar.present?
+                = render("shared/grammar_chips", lessons: grammar)
+      = render("shared/reading_focus_bar")
 
     aside.hidden.rounded-xl.border.border-border.bg-card.p-4[
       class="lg:sticky lg:top-40 lg:block" data-analyzer-target="panel" ]

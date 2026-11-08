@@ -2590,6 +2590,13 @@ vi:
     translation: Bản dịch
     grammar: Ngữ pháp
     aloud: Trả lời thành tiếng
+    focus: Từng câu
+  reading:
+    size: Cỡ chữ
+    my_words_html: "Từ của tôi: %{saved}/%{total}"
+    next: Câu tiếp theo
+    previous: Câu trước
+    translate_line: Dịch câu này
   aloud:
     prompt: Trước hết, hãy nói to câu trả lời bằng tiếng Quan thoại. Sau đó mở các lựa chọn và chọn câu gần nhất với điều bạn vừa nói.
     reveal: Xong, xem các lựa chọn
@@ -2613,6 +2620,10 @@ vi:
     shelf_done: Đó là bài cuối cùng trong bộ truyện.
     sign_in: Đăng nhập
     sign_in_hint_html: "%{link} để theo dõi những bài bạn đã đọc."
+    new_words_title: "Từ mới trong bài: %{count}"
+    new_words_hint: "Thêm tất cả một lần. Từ mới sẽ vào các buổi học theo từng phần nhỏ, không dồn cùng lúc."
+    new_words_add: Thêm tất cả để học
+    words_added: "Đã thêm vào danh sách học: %{count}"
     done_next: Xong, sang bài tiếp
     done: Đánh dấu đã đọc
     next: Bài tiếp theo
@@ -4038,6 +4049,7 @@ vi:
     attribution_pts: "Nguồn: 公視 PTS — dùng cho việc tự học."
     fetched: Đã lấy %{count} tin.
     add: Thêm vào danh sách học
+    sign_in_to_save: Đăng nhập để lưu từ này
     added: Đã thêm ✓
   stories:
     title: Phòng đọc

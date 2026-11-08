@@ -1,51 +1,37 @@
 - content_for(:title, "#{@text.title(I18n.locale)} · #{t("graded.tiers.#{@tier.id}")}")
 
-.py-6.space-y-5 data-controller="layers"
-  header.space-y-2
-    = link_to graded_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+.py-6.space-y-4 data-controller="layers reading" data-action="analyzer:saved->reading#countSaved"
+  header.space-y-1
+    = link_to graded_path, class: "inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-foreground md:min-h-0" do
       = t("graded.back")
     h1.text-2xl.font-bold.tracking-tight lang="zh-TW" = @text.zh
     p.text-sm.text-muted-foreground = @text.title(I18n.locale)
 
-  nav.-mx-4.flex.items-center.gap-2.overflow-x-auto.px-4.pb-1[
-    data-controller="ribbon" aria-label=t("graded.texts_in_tier") class="[scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0" ]
-    - @texts.each do |text|
-      = link_to graded_text_path(tier: @tier.id, id: text.id), lang: "zh-TW",
-        aria: {current: (text.id == @text.id ? "page" : nil)},
-        class: "inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border px-2.5 py-1 text-sm md:min-h-8 #{text.id == @text.id ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted"}" do
-        - if @shelf&.read?(text)
-          = icon(:check, css: "size-3.5 text-emerald-600", stroke: 2.2)
-        = text.zh
-
-  .flex.flex-wrap.items-center.justify-between.gap-3
-    .flex.flex-wrap.gap-2.text-xs.text-muted-foreground
-      span.rounded-lg.border.border-border.px-2.py-1 = t("graded.tiers.#{@tier.id}")
-      span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.coverage", percent: (@cover.rate * 100).round(1))
-      span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.size", lines: @text.sentences, chars: @text.length)
-      - if (completion = @shelf&.completion(@text))
-        span.inline-flex.items-center.gap-1.rounded-lg.border.border-emerald-500.px-2.py-1.text-emerald-700 class="bg-emerald-500/10 dark:text-emerald-400"
-          = icon(:check, css: "size-3.5", stroke: 2.2)
-          = graded_read_label(completion)
-    .flex.shrink-0.items-center.gap-2
-      - if @text.lines.any? { |line| line.grammar.any? }
-        = render("shared/layer_button", layer: "grammar")
-      = render("shared/layer_button", layer: "translation")
+  = render("shared/reading_tools", grammar: @text.lines.any? { |line| line.grammar.any? }, translated: true, saved: @words&.saved_count, total: @words&.total)
 
   .grid.items-start.gap-4[
     class="lg:grid-cols-[minmax(0,1fr)_18rem]"
-    data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
-    data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
-    article.space-y-4.rounded-xl.border.border-border.bg-card.p-5
-      - @text.lines.each do |line|
-        - reading = @readings[line.zh]
-        .space-y-1
-          p.text-2xl.leading-loose lang="zh-TW" = render("notices/line", text: line.zh, tokens: @tokens[line.zh], ruby: false)
-          - if reading&.zhuyin.present?
-            .zy-line lang="zh-TW" = reading.zhuyin
-          - if reading&.pinyin.present?
-            .py-line lang="zh-Latn" = reading.pinyin
-          p.layer-translation.text-sm.leading-relaxed.text-muted-foreground = line.name(I18n.locale)
-          = render("shared/grammar_chips", lessons: line.grammar_lessons)
+    data-controller="analyzer" *analyzer_attributes ]
+    .min-w-0.space-y-3
+      article.space-y-4.rounded-xl.border.border-border.bg-card.p-4 class="sm:p-5"
+        - @text.lines.each do |line|
+          - reading = @readings[line.zh]
+          - tokens = @tokens[line.zh]
+          - syllables = aligned_syllables(reading, tokens)
+          .reading-line.relative.space-y-1.pr-9 data-reading-target="line" data-action="click->reading#pick"
+            p.reading-text lang="zh-TW"
+              - if tokens.present?
+                = render("graded/line", tokens:, syllables:, saved_ids: @words&.saved_ids || Set.new)
+              - else
+                = line.zh
+            = render("shared/line_translate")
+            - if syllables.nil? && reading&.zhuyin.present?
+              .zy-line lang="zh-TW" = reading.zhuyin
+            - if reading&.pinyin.present?
+              .py-line lang="zh-Latn" = reading.pinyin
+            p.layer-translation.text-sm.leading-relaxed.text-muted-foreground = line.name(I18n.locale)
+            = render("shared/grammar_chips", lessons: line.grammar_lessons)
+      = render("shared/reading_focus_bar")
 
     aside.hidden.rounded-xl.border.border-border.bg-card.p-4[
       class="lg:sticky lg:top-20 lg:block" data-analyzer-target="panel" ]
@@ -69,4 +55,30 @@
     = render("course/exercises", exercises: @quiz.exercises, heading: t("graded.quiz"),
       score_form: (graded_finish_form if @shelf))
 
+  - if @words&.fresh.present?
+    section.flex.flex-col.gap-3.rounded-xl.border.border-border.bg-card.p-4 class="sm:flex-row sm:items-center sm:justify-between"
+      .min-w-0.space-y-0.5
+        p.text-sm.font-medium = t("graded.new_words_title", count: @words.fresh.size)
+        p.text-xs.text-muted-foreground = t("graded.new_words_hint")
+      = button_to t("graded.new_words_add"), graded_text_words_path(tier: @text.tier, id: @text.id), class: "inline-flex min-h-11 w-full shrink-0 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted sm:w-auto"
+
   = render("graded/finish", text: @text, following: @following, shelf: @shelf)
+
+  nav.-mx-4.flex.items-center.gap-2.overflow-x-auto.px-4.pb-1[
+    data-controller="ribbon" aria-label=t("graded.texts_in_tier") class="[scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0" ]
+    - @texts.each do |text|
+      = link_to graded_text_path(tier: @tier.id, id: text.id), lang: "zh-TW",
+        aria: {current: (text.id == @text.id ? "page" : nil)},
+        class: "inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border px-2.5 py-1 text-sm md:min-h-8 #{text.id == @text.id ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted"}" do
+        - if @shelf&.read?(text)
+          = icon(:check, css: "size-3.5 text-emerald-600", stroke: 2.2)
+        = text.zh
+
+  .flex.flex-wrap.gap-2.text-xs.text-muted-foreground
+    span.rounded-lg.border.border-border.px-2.py-1 = t("graded.tiers.#{@tier.id}")
+    span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.coverage", percent: (@cover.rate * 100).round(1))
+    span.rounded-lg.border.border-border.px-2.py-1.tabular-nums = t("graded.size", lines: @text.sentences, chars: @text.length)
+    - if (completion = @shelf&.completion(@text))
+      span.inline-flex.items-center.gap-1.rounded-lg.border.border-emerald-500.px-2.py-1.text-emerald-700 class="bg-emerald-500/10 dark:text-emerald-400"
+        = icon(:check, css: "size-3.5", stroke: 2.2)
+        = graded_read_label(completion)

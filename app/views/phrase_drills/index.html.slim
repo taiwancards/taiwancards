@@ -45,8 +45,7 @@
       = t("phrase_drills.empty")
   - else
     .divide-y.divide-border.rounded-xl.border.border-border[
-      data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
-      data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
+      data-controller="analyzer" *analyzer_attributes ]
       - @phrases.zip(@tokens).each do |phrase, tokens|
         .space-y-1.px-4.py-3 class="hover:bg-muted/50"
           .text-xl.leading-loose lang="zh-TW"

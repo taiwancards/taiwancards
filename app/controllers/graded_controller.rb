@@ -4,8 +4,8 @@ class GradedController < ApplicationController
   allow_unauthenticated_access only: %i[index show]
   publicly_cacheable only: %i[index show]
 
-  before_action :set_tier, only: %i[show complete]
-  before_action :set_text, only: %i[show complete]
+  before_action :set_tier, only: %i[show complete words]
+  before_action :set_text, only: %i[show complete words]
 
   def index
     @tiers = Graded::Levels.all.select { |tier| Graded::Library.texts(tier.id).any? }
@@ -20,6 +20,12 @@ class GradedController < ApplicationController
     @quiz = Graded::Quiz.new(@text, tokens: @tokens)
     @following = Graded::Library.following(@text)
     @shelf = current_user && Graded::Shelf.new(current_user)
+    @words = text_words(@tokens) if current_user
+  end
+
+  def words
+    added = text_words(tokens_for(@text)).add_fresh
+    redirect_to(graded_text_path(tier: @text.tier, id: @text.id), notice: t("graded.words_added", count: added))
   end
 
   def complete
@@ -31,6 +37,8 @@ class GradedController < ApplicationController
   end
 
   private
+
+  def text_words(tokens) = Graded::TextWords.new(tokens.values.flatten, user: current_user)
 
   def tokens_for(text)
     Huayu::TextAnalyzer.new(locale: I18n.locale).analyze_map(text.lines.map(&:zh))

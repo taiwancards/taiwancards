@@ -108,7 +108,11 @@ RSpec.describe Huayu::EtymologyTranslations do
   end
 
   it "replaces a wrong English etymology of a word on the English page" do
-    word = Lexeme.create!(kind: :word, text: "衣服", data: {"etymology_text" => "From 衣, matching English E (“ecstasy”)."})
+    word = Lexeme.create!(
+      kind: :word,
+      text: "衣服",
+      data: {"etymology_text" => "From 衣, matching English E (“ecstasy”)."}
+    )
     write({"衣服" => {"text" => "Compound of 衣 and 服."}})
 
     described_class.new(path:, locale: "en", kind: :word).call

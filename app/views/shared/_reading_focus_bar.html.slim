@@ -1,0 +1,9 @@
+- step_classes = "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border text-sm font-medium hover:bg-muted md:min-h-9"
+
+.focus-bar.sticky.z-30.items-center.gap-3.rounded-xl.border.border-border.bg-card.p-2.shadow-lg class="bottom-20 md:bottom-4"
+  button class=step_classes type="button" data-action="reading#previous" aria-label=t("reading.previous") ←
+  .min-w-0.flex-1.space-y-1
+    p.text-center.text-xs.tabular-nums.text-muted-foreground data-reading-target="position"
+    .h-1.w-full.overflow-hidden.rounded-full.bg-muted
+      .h-full.rounded-full.bg-primary.transition-all data-reading-target="progress"
+  button class=step_classes type="button" data-action="reading#next" aria-label=t("reading.next") →

@@ -189,8 +189,11 @@ module Deploy
         name: "etymology_translations",
         task: "huayu:translate_etymologies",
         paths: %w[
-          huayu/etymology_ru.json huayu/etymology_vi.json
-          huayu/word_etymology_vi.json huayu/word_etymology_en.json huayu/word_etymology_ru.json
+          huayu/etymology_ru.json
+          huayu/etymology_vi.json
+          huayu/word_etymology_vi.json
+          huayu/word_etymology_en.json
+          huayu/word_etymology_ru.json
         ],
         code: %w[app/services/huayu/etymology_translations.rb]
       ),

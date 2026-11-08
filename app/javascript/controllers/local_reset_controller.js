@@ -7,6 +7,7 @@ const KEYS = [
   "graded.translations",
   "cangjie.progress",
   "audio.rate",
+  "reading.size",
 ];
 
 const PREFIXES = ["layers."];

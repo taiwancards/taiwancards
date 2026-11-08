@@ -13,6 +13,16 @@ module AnalyzeHelper
     "ph" => "text-emerald-600"
   }.freeze
 
+  def analyzer_attributes
+    {
+      "data-analyzer-activate-url-value": (reader_activate_path if authenticated?),
+      "data-analyzer-login-url-value": login_path,
+      "data-analyzer-sign-in-value": t("reader.sign_in_to_save"),
+      "data-analyzer-added-value": t("reader.added"),
+      "data-analyzer-add-value": t("reader.add")
+    }
+  end
+
   def pos_color(pos)
     return "text-foreground" if pos.blank?
 

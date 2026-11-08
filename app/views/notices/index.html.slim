@@ -14,8 +14,7 @@
         class: "#{chip} #{@category == category ? "border-primary bg-primary/10 font-medium text-foreground" : ""}"
 
   .space-y-6[
-    data-controller="analyzer" data-analyzer-activate-url-value=reader_activate_path
-    data-analyzer-added-value=t("reader.added") data-analyzer-add-value=t("reader.add") ]
+    data-controller="analyzer" *analyzer_attributes ]
     - @notices.each do |notice|
       article.notice-sheet
         header.space-y-1
