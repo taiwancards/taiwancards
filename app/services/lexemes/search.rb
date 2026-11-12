@@ -45,7 +45,7 @@ module Lexemes
     end
 
     def tier_for(lexeme, parsed)
-      return EXACT if lexeme.text == parsed.raw
+      return EXACT if lexeme.text == parsed.raw || Huayu::VariantForms.tai_twins(parsed.raw).include?(lexeme.text)
 
       forms = forms_for(lexeme)
       if parsed.reading?
@@ -82,7 +82,7 @@ module Lexemes
     end
 
     def build_branches(parsed)
-      branches = [branch("lexemes.text = :raw", "lexemes.score NULLS LAST", 5, parsed)]
+      branches = [branch("lexemes.text IN (:exact)", "lexemes.score NULLS LAST", 5, parsed)]
 
       tokens = parsed.tokens
       if tokens.any?
@@ -121,6 +121,7 @@ module Lexemes
         kinds: Lexeme.kinds.values_at(*kinds),
         include_restricted: @user&.restricted_access? || false,
         raw: parsed.raw,
+        exact: [parsed.raw, *Huayu::VariantForms.tai_twins(parsed.raw)],
         prefix: "#{parsed.raw}%",
         contains: "%#{parsed.lower}%",
         tokens: parsed.tokens.map { |token| Huayu::ReadingForms.reading_token(token) }.presence || [""]

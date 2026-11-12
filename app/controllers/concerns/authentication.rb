@@ -72,7 +72,7 @@ module Authentication
 
   def terminate_session
     Current.user = nil
-    session.delete(:impersonated_user_id)
+    reset_session
     cookies.delete(:user_id)
     cookies[DEV_GUEST] = "1" if User.signed_in_by_default?
   end

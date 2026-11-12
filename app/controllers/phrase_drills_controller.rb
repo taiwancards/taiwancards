@@ -35,10 +35,7 @@ class PhraseDrillsController < ApplicationController
     scope = scope.where("NOT jsonb_exists(lexemes.data, 'drill')") if @book == "DA"
     return scope if @q.blank?
 
-    scope.where(
-      "lexemes.text ILIKE :q OR lexemes.meanings ->> 'en' ILIKE :q OR lexemes.meanings ->> 'ru' ILIKE :q",
-      q: "%#{@q}%"
-    )
+    scope.matching(@q)
   end
 
   def grades_for(scheme)

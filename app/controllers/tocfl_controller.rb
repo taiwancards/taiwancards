@@ -20,7 +20,7 @@ class TocflController < ApplicationController
 
   def show
     @collection = Collection.tocfl.find(params[:id])
-    return send_level_list(@collection.lexemes.curriculum_order, @collection.name) if request.format.csv?
+    return send_level_list(@collection.lexemes.curriculum_order, @collection.name) if addressed_format?(:csv)
 
     @stat = Huayu::TocflReadiness.new(user: current_user).stat(@collection)
     ordered = @collection.lexemes.order(Arel.sql("collection_items.position"))

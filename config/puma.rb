@@ -14,13 +14,13 @@ if worker_count > 1
   preload_app!
 
   before_fork do
-    Content::Preload.new.call if defined?(Content::Preload)
+    Rails.logger.info(Content::Preload.new.call.to_s) if defined?(Content::Preload)
+    Process.warmup
     ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base)
   end
 
   before_worker_boot { ActiveRecord::Base.establish_connection if defined?(ActiveRecord::Base) }
   before_worker_shutdown { ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord::Base) }
-  before_worker_boot { Process.warmup }
 else
   after_booted do
     Content::Preload.new.call if defined?(Content::Preload)

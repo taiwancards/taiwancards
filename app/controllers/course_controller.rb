@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CourseController < ApplicationController
+  include ProgressMarks
+
   EXAM_PREFIX = "exam:"
 
   allow_unauthenticated_access only: %i[index show exam]
@@ -20,7 +22,7 @@ class CourseController < ApplicationController
 
   def show
     @lines = annotated_lines
-    @known_ids = known_lexeme_ids(@lines)
+    @known_ids = started_lexeme_ids(token_lexeme_ids(@lines))
     @entries = vocabulary_entries
     @characters = Huayu::LessonCharacters.new(@lesson).call
     @grammar = @lesson.grammar.filter_map { |ref| [ref, ref.lesson] if ref.lesson }
@@ -122,24 +124,12 @@ class CourseController < ApplicationController
     end
   end
 
-  def known_lexeme_ids(lines)
-    ids = lines.flat_map { |_line, tokens| tokens.filter_map { |token| token.lexeme&.id } }.uniq
-    return Set.new if ids.empty? || current_user.nil?
-
-    LexemeMemory.owned_by(current_user).active.where(lexeme_id: ids).pluck(:lexeme_id).to_set
-  end
-
   KIND_PREFERENCE = %w[word collocation measure_word phrase character].freeze
 
   def vocabulary_entries
-    @vocabulary_entries ||= begin
-      texts = @lesson.words
-      ranked = Lexeme
-        .visible_to(current_user)
-        .where(kind: KIND_PREFERENCE, text: texts)
-        .group_by(&:text)
-        .transform_values { |group| group.min_by { |lexeme| KIND_PREFERENCE.index(lexeme.kind) } }
-      texts.index_with { |text| ranked[text] }.compact
-    end
+    @vocabulary_entries ||= Lexeme
+      .visible_to(current_user)
+      .where(kind: KIND_PREFERENCE)
+      .index_by_spelling(@lesson.words, preference: KIND_PREFERENCE)
   end
 end

@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { typingElsewhere } from "lib/hotkeys";
 
 const KEYS = { ArrowUp: 1, ArrowRight: 2, ArrowDown: 3, ArrowLeft: 4 };
 
@@ -84,6 +85,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     const tone = KEYS[event.key];
     if (!tone) return;
     event.preventDefault();
@@ -132,9 +134,12 @@ export default class extends Controller {
       const response = await fetch(this.urlValue, {
         headers: { Accept: "application/json" },
       });
+      if (!response.ok) throw new Error(`Refill ${response.status}`);
       const data = await response.json();
       this.queue.push(...(data.items || []));
-    } catch {}
+    } catch (error) {
+      this.dispatch("failed", { detail: { error } });
+    }
   }
 
   optionClass() {

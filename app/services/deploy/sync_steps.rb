@@ -269,6 +269,16 @@ module Deploy
         code: %w[app/services/huayu/authored_sentence_importer.rb app/services/huayu/curated_sentence_importer.rb]
       ),
       Step.new(
+        name: "retired_words",
+        task: "huayu:retire_words",
+        paths: %w[huayu/word_rejects.jsonl],
+        code: %w[
+          app/services/huayu/reject_purge.rb
+          app/services/huayu/reject_store.rb
+          app/services/huayu/word_reject_store.rb
+        ]
+      ),
+      Step.new(
         name: "segmentation",
         task: "huayu:resegment",
         paths: SEGMENTATION_SOURCES,
@@ -276,13 +286,18 @@ module Deploy
           app/services/huayu/text_analyzer.rb
           app/services/huayu/bigram_frequency.rb
           app/services/huayu/segmentation_vocabulary.rb
+          app/services/huayu/variant_forms.rb
         ]
       ),
       Step.new(
         name: "register_mix",
         task: "huayu:register_mix",
         paths: SEGMENTATION_SOURCES + %w[content_sources.json],
-        code: %w[app/services/lexemes/register_mix.rb app/services/huayu/text_analyzer.rb]
+        code: %w[
+          app/services/lexemes/register_mix.rb
+          app/services/huayu/text_analyzer.rb
+          app/services/huayu/variant_forms.rb
+        ]
       ),
       Step.new(
         name: "derived_levels",
@@ -292,6 +307,7 @@ module Deploy
           app/services/lexemes/derived_levels.rb
           app/services/lexemes/level_scale.rb
           app/services/huayu/text_analyzer.rb
+          app/services/huayu/variant_forms.rb
         ]
       )
     ].freeze

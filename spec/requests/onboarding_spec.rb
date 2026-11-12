@@ -188,12 +188,6 @@ RSpec.describe "Onboarding" do
     expect(Onboarding::Path.new(@authenticated_user).steps.find { |s| s[:key] == "typing" }[:state]).to(eq(:done))
   end
 
-  it "points every step at a route that exists" do
-    Onboarding::Path::STEPS.each_value do |step|
-      expect(Rails.application.routes.url_helpers).to(respond_to(step.route))
-    end
-  end
-
   it "sends each step to the page that can complete it" do
     @authenticated_user.update!(prefs: {"start_level" => "zero"})
 

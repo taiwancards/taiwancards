@@ -19,7 +19,7 @@ class TbclController < ApplicationController
     raise ActiveRecord::RecordNotFound unless Huayu::TbclReadiness::GRADES.include?(@grade)
 
     readiness = Huayu::TbclReadiness.new(user: current_user)
-    return send_level_list(readiness.scope(@grade).curriculum_order, "TBCL #{@grade}") if request.format.csv?
+    return send_level_list(readiness.scope(@grade).curriculum_order, "TBCL #{@grade}") if addressed_format?(:csv)
 
     @stat = readiness.stat(@grade)
     ordered = readiness.scope(@grade).curriculum_order

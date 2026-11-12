@@ -60,6 +60,19 @@ RSpec.describe Lexemes::LevelScale do
     expect(placement.exact).to(be(false))
   end
 
+  it "gives a unit written with the other spelling of 臺 the level of the entry it mirrors" do
+    table = {"台啤" => 2, "臺" => 6, "啤" => 6}
+
+    expect(scale(table).place(["臺啤"]).index).to(eq(2))
+    expect(scale({"舞台" => 3}).place(["舞臺"]).index).to(eq(3))
+  end
+
+  it "prefers the spelling the text uses when both carry a level" do
+    placement = scale({"臺北" => 1, "台北" => 5}).place(["臺北"])
+
+    expect(placement.index).to(eq(1))
+  end
+
   it "never resolves a term through itself" do
     placement = scale({"甲乙" => 1, "甲" => 4, "乙" => 4}).place(["甲乙"], excluding: "甲乙")
 

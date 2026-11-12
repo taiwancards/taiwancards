@@ -3,6 +3,8 @@
 class RadicalsController < ApplicationController
   allow_unauthenticated_access
   publicly_cacheable
+  include ProgressMarks
+
   def index
     @radicals = Lexeme.where(kind: :radical).order(Arel.sql("(data ->> 'number')::int"))
     @counts = ContentCache.fetch("radicals/counts") { character_counts }
@@ -10,19 +12,8 @@ class RadicalsController < ApplicationController
 
   def show
     @radical = Lexeme.find_by!(kind: :radical, text: params[:text])
-    number = @radical.data["number"]
-    @characters = Lexeme
-      .where(kind: :character)
-      .where("(data ->> 'radical_number')::int = ?", number)
-      .frequency_order
-    @studied_ids = LexemeMemory
-      .owned_by(Current.user)
-      .where(lexeme_id: @characters.map(&:id))
-      .where
-      .not(activated_at: nil)
-      .distinct
-      .pluck(:lexeme_id)
-      .to_set
+    @characters = Lexeme.under_radical(@radical.data["number"]).frequency_order
+    @studied_ids = started_lexeme_ids(@characters.map(&:id))
   end
 
   private

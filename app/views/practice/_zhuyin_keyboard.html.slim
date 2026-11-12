@@ -14,8 +14,8 @@
           span.text-muted-foreground class="text-[10px]" = cell[:key] == " " ? "␣" : cell[:key]
   .flex.justify-center.pt-1 class="gap-0.5 sm:gap-1"
     button.flex.min-w-20.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
-      type="button" data-key="Backspace" aria-label="Backspace"
+      type="button" data-key="Backspace" aria-label=t("search.backspace")
       data-action="#{controller}#tap" class="h-11 hover:bg-muted sm:h-12 sm:min-w-24" ] ⌫
     button.flex.min-w-20.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
-      type="button" data-key="Enter" aria-label="Enter"
+      type="button" data-key="Enter" aria-label=t("search.enter")
       data-action="#{controller}#tap" class="h-11 hover:bg-muted sm:h-12 sm:min-w-24" ] ⏎

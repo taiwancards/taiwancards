@@ -14,16 +14,31 @@ RSpec.describe Placement::ItemBank do
     )
   end
 
-  def character(text, meaning, zhuyin, grade: 2, freq: 10)
+  def character(text, meaning, pinyin, zhuyin, grade: 2, freq: 10)
     create(
       :lexeme,
       kind: :character,
       text:,
       meanings: {"en" => meaning},
-      readings: {"zhuyin" => zhuyin, "pinyin" => "ma"},
+      readings: {"zhuyin" => zhuyin, "pinyin" => pinyin},
       data: {"tbcl_grade" => grade, "freq_rank" => freq}
     )
   end
+
+  def characters
+    [
+      ["媽", "mother", "mā", "ㄇㄚ"],
+      ["麻", "hemp", "má", "ㄇㄚˊ"],
+      ["馬", "horse", "mǎ", "ㄇㄚˇ"],
+      ["罵", "scold", "mà", "ㄇㄚˋ"],
+      ["八", "eight", "bā", "ㄅㄚ"],
+      ["爸", "dad", "bà", "ㄅㄚˋ"]
+    ]
+      .each_with_index
+      .map { |(text, meaning, pinyin, zhuyin), i| character(text, meaning, pinyin, zhuyin, freq: i + 1) }
+  end
+
+  def voices(clips = {}) = allow(Huayu::CnsVoice).to(receive(:table).and_return(clips))
 
   def bank = described_class.new(rng: Random.new(42))
 
@@ -103,17 +118,79 @@ RSpec.describe Placement::ItemBank do
   end
 
   it "prompts with the reading and answers with the character on the script axis" do
-    5.times { |i| character("字#{i}", "glyph #{i}", "ㄇㄚ#{"ˊ" * i}", freq: i + 1) }
+    characters
 
     row = item("script")
+    target = Lexeme.find(row["lexeme_id"])
 
-    expect(row["prompt"]).to(start_with("ㄇㄚ"))
-    expect(row["choices"]).to(include(Lexeme.find(row["lexeme_id"]).text))
+    expect(row["prompt"]).to(eq(target.reading("zhuyin")))
+    expect(row["choices"][row["answer"]]).to(eq(target.text))
+    expect(row["choices"].uniq.length).to(eq(described_class::CHOICES))
+  end
+
+  it "asks the meaning of a character on the characters axis" do
+    characters
+
+    row = item("characters")
+
+    expect(row["axis"]).to(eq("characters"))
+    expect(row["prompt"]).to(eq(Lexeme.find(row["lexeme_id"]).text))
+    expect(row["choices"][row["answer"]]).to(eq(Lexeme.find(row["lexeme_id"]).meaning))
+  end
+
+  it "plays a voiced syllable and answers with its tone on the tones axis" do
+    characters
+    voices("ㄇㄚˊ" => "ma2")
+
+    row = item("tones")
+
+    expect(Lexeme.find(row["lexeme_id"]).text).to(eq("麻"))
+    expect(row["choices"][row["answer"]]).to(eq("2"))
+    expect(row["audio"]["url"]).to(be_present)
+  end
+
+  it "plays a voiced syllable and answers with its spelling among close ones on the syllables axis" do
+    characters
+    voices("ㄅㄚˋ" => "ba4")
+
+    row = item("syllables")
+
+    expect(Lexeme.find(row["lexeme_id"]).text).to(eq("爸"))
+    expect(row["choices"][row["answer"]]).to(eq("ㄅㄚˋ"))
+    expect(row["choices"]).to(include("ㄅㄚ"))
+    expect(row["choices"].uniq.length).to(eq(described_class::CHOICES))
   end
 
   it "returns nothing for an audio axis when no clip covers the syllable" do
-    5.times { |i| character("音#{i}", "sound #{i}", "ㄅㄨㄥ#{"ˊ" * i}", freq: i + 1) }
+    characters
+    voices
 
     expect(item("tones")).to(be_nil)
+    expect(item("syllables")).to(be_nil)
+  end
+
+  it "asks what a graded sentence means on the sentences axis" do
+    source = create(:content_source)
+    {
+      "我是學生。" => "I am a student.",
+      "他在台北。" => "He is in Taipei.",
+      "你好嗎？" => "How are you?",
+      "我很忙。" => "I am busy."
+    }.each do |text, meaning|
+      sentence = create(:lexeme, :sentence, text:, meanings: {"en" => meaning}, content_source: source)
+      sentence.sentence_profile.update!(tocfl_exact: true)
+    end
+
+    row = item("sentences", grade: 1)
+
+    expect(row["prompt"]).to(eq(Lexeme.find(row["lexeme_id"]).text))
+    expect(row["choices"][row["answer"]]).to(eq(Lexeme.find(row["lexeme_id"]).meaning))
+    expect(row["choices"].length).to(eq(described_class::CHOICES))
+  end
+
+  it "leaves a sentence out of the sentences axis when its level is only an estimate" do
+    6.times { |i| create(:lexeme, :sentence, meanings: {"en" => "meaning #{i}"}) }
+
+    expect(item("sentences", grade: 1)).to(be_nil)
   end
 end

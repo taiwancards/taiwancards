@@ -99,6 +99,32 @@ RSpec.describe "Course" do
     expect(Collection.last.name).to(include(lesson.title_for(:en)))
   end
 
+  describe "a vocabulary item written with 臺" do
+    let(:beer) { Huayu::CourseLessons.lessons.find { |entry| entry.words.include?("臺啤") } }
+
+    def word_links
+      Nokogiri::HTML(response.body).css("a[href]").map { |link| CGI.unescape(link["href"]) }
+    end
+
+    it "links to the 台 entry when the dictionary holds only that spelling" do
+      create(:lexeme, kind: :word, text: "台啤", meanings: {"en" => "Taiwan Beer"})
+
+      get("/course/#{beer.slug}")
+
+      expect(word_links).to(include("/en/dict/台啤"))
+    end
+
+    it "links to its own spelling when the dictionary holds both" do
+      create(:lexeme, kind: :word, text: "台啤", meanings: {"en" => "Taiwan Beer"})
+      create(:lexeme, kind: :word, text: "臺啤", meanings: {"en" => "Taiwan Beer"})
+
+      get("/course/#{beer.slug}")
+
+      expect(word_links).to(include("/en/dict/臺啤"))
+      expect(word_links).not_to(include("/en/dict/台啤"))
+    end
+  end
+
   it "answers with not found for a lesson that does not exist", :no_auth do
     sign_in(create(:user))
 

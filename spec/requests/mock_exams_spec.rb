@@ -7,7 +7,7 @@ RSpec.describe "Mock exams" do
     get("/mock")
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("TOCFL emulation"))
+    expect(response.body).to(include("TOCFL simulator"))
     expect(response.body).to(include("tocfl.edu.tw"))
     MockExam::Bank.levels.each do |level|
       expect(response.body).to(include("/mock/#{MockExam::Bank.slug(level)}"))

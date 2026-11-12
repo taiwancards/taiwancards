@@ -5,7 +5,23 @@ module Huayu
     TAI = %w[檯 臺 台].freeze
     TAIWAN_TAI = %w[檯 臺 台].freeze
     PLAIN_TAI = %w[檯 台 臺].freeze
-    TAIWAN = /\A[臺台](?:灣|北|中|南|東|語|幣|獨|商|胞|鐵|客|積|美|日|股|僑|大)|[臺台](?:灣|幣|獨|語)/
+    TAI_CHARS = /[台臺]/
+    ALWAYS_TAIWAN_AFTER = "灣北"
+    STAGES = "櫃舞平月後站陽窗講看擂吧戲歌亭樓燭燈硯妝理布手席令揮備告劑號班衛詢證通駛務記報播聞視電象文望景火魚"
+    MORE_STAGES = "灶露炮砲跳拳鏡神祭頭刑獎射作術制銀帳換轉高上下登底滿如兄"
+    PLACES_ELSEWHERE = "仙茅蒙天煙邢"
+    COUNTERS = "一二兩三四五六七八九十百千萬幾數多每整單這那哪"
+    NOT_TAIWAN_BEFORE = [STAGES, MORE_STAGES, PLACES_ELSEWHERE, COUNTERS].join
+    STAGE_WORDS = "詞階長數地子燈上下柱布面秤鐘曆座基榭球步口前風車扇鉗戲"
+    HONORIFICS = "端鑒篆鼎甫啟照駕"
+    MAINLAND_PLACES = "州山兒"
+    NOT_TAIWAN_AFTER = [STAGE_WORDS, HONORIFICS, MAINLAND_PLACES].join
+    TO_TAIWAN = "來訪抵返回赴離旅在駐留居滯遊全對親反挺援保護愛賣擾繞犯攻侵治據"
+    TAIWAN = /
+      [臺台](?=[#{ALWAYS_TAIWAN_AFTER}])
+      | (?<![#{NOT_TAIWAN_BEFORE}])[臺台](?=[^#{NOT_TAIWAN_AFTER}])
+      | (?<=[#{TO_TAIWAN}])[臺台]\z
+    /x
 
     GROUPS = [
       TAI,
@@ -58,6 +74,21 @@ module Huayu
 
     def taiwan?(text) = text.to_s.match?(TAIWAN)
 
+    def self.tai_twins(text)
+      text = text.to_s
+      return [] if text.length < 2 || !text.match?(TAI_CHARS)
+
+      [text.tr("台", "臺"), text.tr("臺", "台")].uniq - [text]
+    end
+
+    def self.lookup(index, text)
+      index.fetch(text) { tai_twins(text).filter_map { |twin| index[twin] }.first }
+    end
+
+    def self.taiwan_twins(text)
+      text.to_s.match?(TAIWAN) ? tai_twins(text) : []
+    end
+
     private
 
     def rank(lexeme)
@@ -75,10 +106,20 @@ module Huayu
     end
 
     def glyphs(text)
-      tai = taiwan?(text) ? TAIWAN_TAI : PLAIN_TAI
+      taiwan = taiwan_positions(text)
 
       WORD_RANKS.fetch(text, 0) +
-        text.each_char.sum { |char| TAI.include?(char) ? tai.index(char) : RANKS.fetch(char, 0) }
+        text.each_char.with_index.sum { |char, index| glyph_rank(char, taiwan.include?(index)) }
+    end
+
+    def glyph_rank(char, taiwan)
+      return RANKS.fetch(char, 0) unless TAI.include?(char)
+
+      (taiwan ? TAIWAN_TAI : PLAIN_TAI).index(char)
+    end
+
+    def taiwan_positions(text)
+      text.to_enum(:scan, TAIWAN).map { Regexp.last_match.begin(0) }.to_set
     end
   end
 end

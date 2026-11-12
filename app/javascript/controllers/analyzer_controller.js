@@ -1,5 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 import { computePosition, offset, flip, shift } from "@floating-ui/dom";
+import { applyAudioRate } from "lib/audio_rate";
+import { csrfToken } from "lib/csrf";
+import { escapeHtml } from "lib/html";
 
 const MARK = ["bg-amber-300/60", "dark:bg-amber-400/30"];
 const SHEET_GAP = 12;
@@ -35,6 +38,8 @@ export default class extends Controller {
     document.removeEventListener("click", this.outside);
     window.removeEventListener("scroll", this.onScroll, true);
     document.removeEventListener("keydown", this.escHandler);
+    this.sound?.pause();
+    this.sound = null;
   }
 
   open(event) {
@@ -122,14 +127,18 @@ export default class extends Controller {
 
   play(event) {
     const url = event.currentTarget.dataset.url;
-    if (url) new Audio(url).play();
+    if (!url) return;
+    this.sound?.pause();
+    this.sound = new Audio(url);
+    applyAudioRate(this.sound);
+    this.sound.play().catch(() => {});
   }
 
   async add(event) {
     const button = event.currentTarget;
     const body = new FormData();
     body.append("lexeme_id", button.dataset.lexemeId);
-    const token = document.querySelector('meta[name="csrf-token"]')?.content;
+    const token = csrfToken();
     button.disabled = true;
     const response = await fetch(this.activateUrlValue, {
       method: "POST",
@@ -157,23 +166,23 @@ export default class extends Controller {
   saveControl(token, anchor) {
     if (!token.lexemeId) return "";
     if (anchor.dataset.saved === "true") {
-      return `<div class="mt-2 text-center text-xs text-muted-foreground">${this.addedValue}</div>`;
+      return `<div class="mt-2 text-center text-xs text-muted-foreground">${escapeHtml(this.addedValue)}</div>`;
     }
     if (this.activateUrlValue) {
-      return `<button type="button" data-action="analyzer#add" data-lexeme-id="${token.lexemeId}" class="mt-2 min-h-11 w-full rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted md:min-h-8">${this.addValue}</button>`;
+      return `<button type="button" data-action="analyzer#add" data-lexeme-id="${escapeHtml(token.lexemeId)}" class="mt-2 min-h-11 w-full rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted md:min-h-8">${escapeHtml(this.addValue)}</button>`;
     }
     if (this.loginUrlValue) {
-      return `<a href="${this.loginUrlValue}" class="mt-2 flex min-h-11 items-center justify-center rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted md:min-h-8">${this.signInValue}</a>`;
+      return `<a href="${escapeHtml(this.loginUrlValue)}" class="mt-2 flex min-h-11 items-center justify-center rounded-md border border-border px-2 py-1 text-xs font-medium hover:bg-muted md:min-h-8">${escapeHtml(this.signInValue)}</a>`;
     }
     return "";
   }
 
   render(token, anchor) {
     const zhuyin = token.zhuyin
-      ? `<span class="zhuyin" lang="zh-TW">${token.zhuyin}</span>`
+      ? `<span class="zhuyin" lang="zh-TW">${escapeHtml(token.zhuyin)}</span>`
       : "";
     const pinyin = token.pinyin
-      ? `<span class="pinyin">${token.zhuyin ? " · " : ""}${token.pinyin}</span>`
+      ? `<span class="pinyin">${token.zhuyin ? " · " : ""}${escapeHtml(token.pinyin)}</span>`
       : "";
     const reading = `${zhuyin}${pinyin}`;
     const chars = (token.chars || [])
@@ -181,24 +190,24 @@ export default class extends Controller {
         (
           c,
         ) => `<div class="grid grid-cols-[1.5rem_auto_1fr] items-baseline gap-x-2 gap-y-0.5 text-sm">
-          <span lang="zh-TW" class="text-base">${c.text}</span>
-          <span class="zhuyin whitespace-nowrap text-muted-foreground" lang="zh-TW">${c.zhuyin || ""}</span>
-          <span class="text-muted-foreground">${c.meaning || ""}</span>
+          <span lang="zh-TW" class="text-base">${escapeHtml(c.text)}</span>
+          <span class="zhuyin whitespace-nowrap text-muted-foreground" lang="zh-TW">${escapeHtml(c.zhuyin)}</span>
+          <span class="text-muted-foreground">${escapeHtml(c.meaning)}</span>
         </div>`,
       )
       .join("");
     const audio = token.audio
-      ? `<button type="button" data-action="analyzer#play" data-url="${token.audio}" class="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">♪</button>`
+      ? `<button type="button" data-action="analyzer#play" data-url="${escapeHtml(token.audio)}" class="shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground">♪</button>`
       : "";
     const add = this.saveControl(token, anchor);
     const link = token.href
-      ? `<a href="${token.href}" class="text-lg font-semibold text-primary hover:underline" lang="zh-TW">${token.text}</a>`
-      : `<span class="text-lg font-semibold" lang="zh-TW">${token.text}</span>`;
+      ? `<a href="${escapeHtml(token.href)}" class="text-lg font-semibold text-primary hover:underline" lang="zh-TW">${escapeHtml(token.text)}</a>`
+      : `<span class="text-lg font-semibold" lang="zh-TW">${escapeHtml(token.text)}</span>`;
     return `
       <div class="flex items-center justify-between gap-2">${link}${audio}</div>
       ${reading ? `<div class="mt-0.5 whitespace-nowrap text-sm font-medium">${reading}</div>` : ""}
-      ${token.pos ? `<div class="text-[10px] uppercase tracking-wide text-muted-foreground">${token.pos}</div>` : ""}
-      ${token.meaning ? `<div class="mt-1 text-sm">${token.meaning}</div>` : ""}
+      ${token.pos ? `<div class="text-[10px] uppercase tracking-wide text-muted-foreground">${escapeHtml(token.pos)}</div>` : ""}
+      ${token.meaning ? `<div class="mt-1 text-sm">${escapeHtml(token.meaning)}</div>` : ""}
       ${chars ? `<div class="mt-2 space-y-1 border-t border-border pt-2">${chars}</div>` : ""}
       ${add}
     `;

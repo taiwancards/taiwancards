@@ -1,4 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
+import { csrfToken } from "lib/csrf";
+import { typingElsewhere } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = [
@@ -14,6 +16,7 @@ export default class extends Controller {
   static values = { items: Array, url: String };
 
   connect() {
+    this.unsent = [];
     this.keyHandler = (event) => this.onKey(event);
     document.addEventListener("keydown", this.keyHandler);
     this.begin();
@@ -23,6 +26,7 @@ export default class extends Controller {
     document.removeEventListener("keydown", this.keyHandler);
     clearTimeout(this.timer);
     this.stopAudio();
+    this.submit({ keepalive: true });
   }
 
   begin() {
@@ -96,6 +100,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     if (event.key === " ") {
       event.preventDefault();
       return this.replay();
@@ -162,24 +167,28 @@ export default class extends Controller {
     this.summaryTarget.classList.remove("hidden");
     this.correctTarget.textContent = this.correct;
     this.totalTarget.textContent = this.planned;
+    this.unsent.push(...this.results);
     this.submit();
   }
 
-  async submit() {
-    if (!this.urlValue || this.results.length === 0) return;
+  async submit({ keepalive = false } = {}) {
+    if (!this.urlValue || this.unsent.length === 0 || this.sending) return;
 
-    const token = document.querySelector("meta[name='csrf-token']")?.content;
+    const token = csrfToken();
     if (!token) return;
 
-    try {
-      await fetch(this.urlValue, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": token,
-        },
-        body: JSON.stringify({ results: this.results }),
-      });
-    } catch {}
+    const results = this.unsent.slice();
+    this.sending = true;
+    const response = await fetch(this.urlValue, {
+      method: "POST",
+      keepalive,
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": token,
+      },
+      body: JSON.stringify({ results }),
+    }).catch(() => null);
+    this.sending = false;
+    if (response?.ok) this.unsent.splice(0, results.length);
   }
 }

@@ -7,9 +7,10 @@ class EverydayController < ApplicationController
   ORDER = %i[rank tier difficulty freq]
     .index_with { |key| "(lexemes.data->>'#{key == :freq ? "freq_rank" : key}')::int NULLS LAST" }
     .freeze
+  PLACEMENTS_SQL = "lexemes.data->'placements'"
 
   def index
-    @collection = Collection.find_by(kind: :everyday)
+    @collection = Collection.curated.find_by(kind: :everyday)
     @domains = Huayu::TaiwanEverydayImporter::DOMAINS
     @origins = Huayu::TaiwanEverydayImporter::ORIGINS
     @area = params[:area].presence_in(@domains)
@@ -55,7 +56,7 @@ class EverydayController < ApplicationController
   end
 
   def filtered
-    scope = base_scope.includes(:memories)
+    scope = base_scope
     scope = scope.where("lexemes.data->'placements' @> ?", [{domain: @area}].to_json) if @area
     scope = scope.where("lexemes.data->>'origin' = ?", @origin) if @origin
     if @tag
@@ -65,8 +66,10 @@ class EverydayController < ApplicationController
     scope.reorder(order_clause)
   end
 
-  def placement_tags(lexeme)
-    Array(lexeme.data["placements"])
+  def placement_tags(lexeme) = tags_in(lexeme.data["placements"])
+
+  def tags_in(placements)
+    Array(placements)
       .select { |row| @area.nil? || row["domain"] == @area }
       .filter_map { |row| row["tag"].presence }
       .uniq
@@ -88,19 +91,34 @@ class EverydayController < ApplicationController
   def available_tags
     return [] if @area.nil?
 
+    ContentCache.fetch("everyday/tags", @area, @origin.to_s, Lexeme.visibility_key(current_user)) { count_tags }
+  end
+
+  def count_tags
     scope = base_scope.where("lexemes.data->'placements' @> ?", [{domain: @area}].to_json)
     scope = scope.where("lexemes.data->>'origin' = ?", @origin) if @origin
-    scope.flat_map { |lexeme| placement_tags(lexeme) }.tally.sort_by { |_, count| -count }.map(&:first)
+    scope
+      .reorder(nil)
+      .pluck(Arel.sql(PLACEMENTS_SQL))
+      .flat_map { |placements| tags_in(placements) }
+      .tally
+      .sort_by { |_, count| -count }
+      .map(&:first)
   end
 
   def landing_samples
     return {} unless @area.nil? && @origin.nil?
 
+    ContentCache.fetch("everyday/samples", Lexeme.visibility_key(current_user)) { collect_samples }
+  end
+
+  def collect_samples
     base_scope
       .where("(lexemes.data->>'tier')::int = 1")
-      .order(Arel.sql("collection_items.position"))
-      .each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |lexeme, index|
-        placement_domains(lexeme).each { |domain| index[domain] << lexeme.text }
+      .reorder(Arel.sql("collection_items.position"))
+      .pluck(:text, Arel.sql(PLACEMENTS_SQL))
+      .each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(text, placements), index|
+        domains_in(placements).each { |domain| index[domain] << text }
       end
       .transform_values { |texts| texts.first(3) }
   end
@@ -119,7 +137,9 @@ class EverydayController < ApplicationController
     groups.sort_by { |group, lexemes| [group.nil? ? 1 : 0, -lexemes.size] }
   end
 
-  def placement_domains(lexeme)
-    Array(lexeme.data["placements"]).filter_map { |row| row["domain"].presence }.uniq
+  def placement_domains(lexeme) = domains_in(lexeme.data["placements"])
+
+  def domains_in(placements)
+    Array(placements).filter_map { |row| row["domain"].presence }.uniq
   end
 end

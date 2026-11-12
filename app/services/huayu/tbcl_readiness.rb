@@ -10,18 +10,25 @@ module Huayu
       end
     end
 
+    PROGRESS = [
+      "lexemes.tbcl_grade",
+      "count(DISTINCT lexemes.id) FILTER (WHERE lexeme_memories.activated_at IS NOT NULL)",
+      "count(DISTINCT lexemes.id) FILTER (WHERE lexeme_memories.state = #{LexemeMemory.states.fetch("review")})"
+    ]
+      .map { |column| Arel.sql(column) }
+      .freeze
+
     def initialize(user:)
       @user = user
     end
 
     def levels
-      totals = grouped(base)
-      owned = LexemeMemory.owned_by(@user)
-      started = grouped(base.where(id: owned.active.select(:lexeme_id)))
-      known = grouped(base.where(id: owned.state_review.select(:lexeme_id)))
-
-      GRADES.map do |grade|
-        Stat.new(grade:, total: totals[grade].to_i, started: started[grade].to_i, known: known[grade].to_i)
+      @levels ||= begin
+        counted = progress
+        GRADES.map do |grade|
+          started, known = counted[grade]
+          Stat.new(grade:, total: totals[grade].to_i, started: started.to_i, known: known.to_i)
+        end
       end
     end
 
@@ -39,8 +46,23 @@ module Huayu
       Lexeme.where(kind: Lexeme::DICTIONARY_KINDS).visible_to(@user)
     end
 
-    def grouped(relation)
-      relation.group(:tbcl_grade).count
+    def totals
+      @totals ||= ContentCache.fetch("tbcl/totals", Lexeme.visibility_key(@user)) do
+        base.where.not(tbcl_grade: nil).group(:tbcl_grade).count
+      end
+    end
+
+    def progress
+      return {} if @user.nil?
+
+      base
+        .where
+        .not(tbcl_grade: nil)
+        .joins(:memories)
+        .merge(LexemeMemory.owned_by(@user))
+        .group(:tbcl_grade)
+        .pluck(*PROGRESS)
+        .to_h { |grade, started, known| [grade, [started, known]] }
     end
   end
 end

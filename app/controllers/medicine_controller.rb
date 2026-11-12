@@ -6,7 +6,7 @@ class MedicineController < ApplicationController
   CATEGORIES = Huayu::MedicineImporter::CATEGORIES
 
   def show
-    @collection = Collection.find_by(kind: :medicine)
+    @collection = Collection.curated.find_by(kind: :medicine)
     @lexemes = ordered
     @by_text = @lexemes.index_by(&:text)
     @sections = sectioned

@@ -27,7 +27,7 @@ module Huayu
     end
 
     def levels
-      build(Collection.where(kind: :tocfl).order(:position).to_a)
+      build(Collection.curated.where(kind: :tocfl).order(:position).to_a)
     end
 
     def stat(collection)

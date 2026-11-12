@@ -64,12 +64,15 @@ module ZhuyinHelper
 
   CLIP_DIR = Rails.root.join("public/zhuyin")
 
+  def self.clip_symbols
+    @clip_symbols ||= CLIP_DIR.glob("*.opus").to_set { |path| path.basename(".opus").to_s }.freeze
+  end
+
   def zhuyin_clip(symbol)
     symbol = symbol.to_s.strip
     return if symbol.length != 1
 
-    path = "/zhuyin/#{symbol}.opus"
-    CLIP_DIR.join("#{symbol}.opus").exist? ? path : nil
+    "/zhuyin/#{symbol}.opus" if ZhuyinHelper.clip_symbols.include?(symbol)
   end
 
   def zhuyin_clips(text)

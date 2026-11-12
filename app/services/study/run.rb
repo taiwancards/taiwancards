@@ -3,6 +3,7 @@
 module Study
   class Run
     RADIX = 36
+    RATINGS = Fsrs::Scheduler::RATINGS.keys.map(&:to_s).freeze
     REPEATED = [Fsrs::Scheduler::RATINGS[:again], Fsrs::Scheduler::RATINGS[:hard]].freeze
     PASSED = [Fsrs::Scheduler::RATINGS[:good], Fsrs::Scheduler::RATINGS[:easy]].freeze
 
@@ -78,7 +79,7 @@ module Study
     def collection
       return if collection_id.blank?
 
-      @collection ||= Collection.where(user_id: [nil, Current.user&.id]).find_by(id: collection_id)
+      @collection ||= Collection.studyable_by(Current.user).find_by(id: collection_id)
     end
 
     private

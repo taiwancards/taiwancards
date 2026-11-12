@@ -41,10 +41,7 @@ class ChengyuController < ApplicationController
     scope = apply_band(scope) if @band
     return scope if @q.blank?
 
-    scope.where(
-      "lexemes.text ILIKE :q OR lexemes.meanings ->> 'en' ILIKE :q OR lexemes.meanings ->> 'ru' ILIKE :q",
-      q: "%#{@q}%"
-    )
+    scope.matching(@q)
   end
 
   def apply_grade(scope)
@@ -66,7 +63,7 @@ class ChengyuController < ApplicationController
   end
 
   def band_edges
-    @band_edges ||= Rails.cache.fetch("chengyu/band_edges/#{base.maximum(:updated_at).to_i}", expires_in: 1.day) do
+    @band_edges ||= ContentCache.fetch("chengyu/band_edges", Lexeme.visibility_key(current_user)) do
       row = base.pick(
         Arel.sql(
           "percentile_cont(0.33) WITHIN GROUP (ORDER BY lexemes.score), " \

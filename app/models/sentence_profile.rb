@@ -14,6 +14,8 @@ class SentenceProfile < ApplicationRecord
     "freq" => {levels: FREQ_BANDS, index: :freq_index, exact: :freq_exact}
   }.freeze
 
+  LEVEL_SQL = "COALESCE(sentence_profiles.tocfl_index, sentence_profiles.tbcl_index)"
+
   scope :ordered, -> { order(:difficulty, :id) }
 
   scope(

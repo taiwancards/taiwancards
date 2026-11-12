@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Stats and settings" do
-  before { Rails.application.load_seed }
-
   it "renders the progress summary" do
     get("/progress")
     expect(response).to(have_http_status(:ok))
@@ -49,7 +47,7 @@ RSpec.describe "Stats and settings" do
   end
 
   it "lets an administrator promote their settings to the installation defaults" do
-    sign_in(User.find_by!(google_email: User.owner_google_email))
+    sign_in(create(:user, :admin))
 
     patch("/settings", params: {setting: {daily_new_limit: "33"}, as_default: "1"})
 

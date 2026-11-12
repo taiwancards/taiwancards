@@ -15,6 +15,9 @@ module Progress
       placement_tests
     ]
       .freeze
+    TEXT_KINDS = %w[article graded].freeze
+    KEPT_PREFS = %w[signup_from].freeze
+    NAME_LIMIT = 200
 
     def initialize(user)
       @user = user
@@ -44,8 +47,9 @@ module Progress
 
     def import_settings(row)
       return if row.blank?
-      @user.restricted_content = row["restricted_content"] if row.key?("restricted_content")
-      @user.prefs = @user.prefs.merge(row["prefs"] || {})
+
+      prefs = row["prefs"]
+      @user.prefs = @user.prefs.merge(prefs.except(*KEPT_PREFS)) if prefs.is_a?(Hash)
       @user.save!
       @counts[:settings] += 1
     end
@@ -173,38 +177,32 @@ module Progress
     end
 
     def import_collection(row)
-      name = row["name"].presence or return @counts[:skipped] += 1
+      name = row["name"].to_s.first(NAME_LIMIT).presence or return @counts[:skipped] += 1
 
       collection = Collection.find_or_initialize_by(user: @user, name:)
       collection.assign_attributes(
         description: row["description"],
-        kind: row["kind"].presence || collection.kind,
+        kind: :manual,
         level_tag: row["level_tag"],
         position: row["position"].to_i,
         settings: row["settings"] || {},
         last_used_at: row["last_used_at"]
       )
       collection.save!
-
-      Array(row["items"]).each do |item|
-        lexeme = find_lexeme(item) or next
-
-        entry = CollectionItem.find_or_initialize_by(collection:, lexeme:)
-        entry.position = item["position"].to_i
-        entry.save!
-      end
+      collection.add_lexemes(Array(row["items"]).filter_map { |item| find_lexeme(item)&.id })
 
       @counts[:collections] += 1
     end
 
     def import_reading_text(row)
       title = row["title"].presence or return @counts[:skipped] += 1
+      return @counts[:skipped] += 1 if row["body"].blank?
 
       text = ReadingText.find_or_initialize_by(user: @user, title:)
       text.assign_attributes(
-        body: row["body"],
+        body: row["body"].to_s.first(ReadingText::LEARNER_LIMIT),
         author: row["author"],
-        kind: row["kind"].presence || text.kind,
+        kind: row["kind"].presence_in(TEXT_KINDS) || TEXT_KINDS.first,
         source: row["source"],
         source_url: row["source_url"],
         level_tag: row["level_tag"]
@@ -239,8 +237,12 @@ module Progress
       return nil if kind.nil? || row["text"].blank?
 
       @lexemes.fetch([kind, row["text"]]) do
-        @lexemes[[kind, row["text"]]] = Lexeme.find_by(kind:, text: row["text"])
+        @lexemes[[kind, row["text"]]] = visible_lexemes.find_by(kind:, text: row["text"])
       end
+    end
+
+    def visible_lexemes
+      @visible_lexemes ||= Lexeme.visible_to(@user)
     end
 
     def facet_int(row)

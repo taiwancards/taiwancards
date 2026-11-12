@@ -97,6 +97,18 @@ RSpec.describe "Taiwan everyday vocabulary" do
     expect(response.body).not_to(include("三小"))
   end
 
+  it "marks the zhuyin reading so the header switch can hide it" do
+    import
+
+    get(everyday_path(area: "food"))
+
+    readings = Nokogiri::HTML5(response.body).css("span.text-brand[lang='zh-TW']").select { |node|
+      node.text == "ㄓㄣ ㄋㄞˇ"
+    }
+    expect(readings).not_to(be_empty)
+    expect(readings).to(all(satisfy { |node| node["class"].split.include?("zhuyin") }))
+  end
+
   it "shows a word once even after a classifier moved it to collocation" do
     import
     Lexeme.find_by!(text: "珍奶").update_columns(kind: Lexeme.kinds[:collocation])

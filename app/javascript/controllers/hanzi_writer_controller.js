@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import HanziWriter from "hanzi-writer";
+import { strokeData } from "lib/stroke_data";
 
 export default class extends Controller {
   static targets = ["canvas", "status"];
@@ -22,11 +23,8 @@ export default class extends Controller {
       strokeColor: "#18181b",
       outlineColor: "#d4d4d8",
       drawingColor: "#10b981",
-      charDataLoader: (char, onComplete) => {
-        fetch(this.urlValue)
-          .then((response) => response.json())
-          .then(onComplete);
-      },
+      charDataLoader: strokeData(this.urlValue),
+      onLoadCharDataError: () => {},
     });
   }
 

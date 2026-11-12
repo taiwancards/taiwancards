@@ -100,4 +100,15 @@ RSpec.describe "Deck groups" do
 
     expect(Collection.desks_for(current_user).arranged.map(&:name)).to(eq(%w[News Songs]))
   end
+
+  it "leaves someone else's decks where they were when their ids are slipped into a reorder" do
+    mine = deck("Songs")
+    theirs = Collection.create!(kind: :manual, name: "Theirs", user: create(:user), position: 7)
+
+    post("/desks/reorder", params: {order: [theirs.id, mine.id]})
+
+    expect(response).to(have_http_status(:no_content))
+    expect(theirs.reload.position).to(eq(7))
+    expect(mine.reload.position).to(eq(1))
+  end
 end

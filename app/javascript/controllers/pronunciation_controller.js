@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import { toWav } from "lib/speech_recorder";
 import { postGrade } from "lib/grade_request";
+import { csrfToken } from "lib/csrf";
 
 const PRELISTEN_KEY = "pron_prelisten";
 const SPEECH_RMS = 0.02;
@@ -167,6 +168,7 @@ export default class extends Controller {
   };
 
   connect() {
+    this.gone = false;
     this.recording = false;
     this.mode = "word";
     this.prelisten = localStorage.getItem(PRELISTEN_KEY) === "1";
@@ -175,10 +177,24 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.gone = true;
     this.clearTimers();
+    clearTimeout(this.armTimer);
+    clearTimeout(this.clipTimer);
     this.teardownMeter();
+    this.releaseMic();
     this.silence();
     this.dropTake();
+  }
+
+  releaseMic() {
+    this.recording = false;
+    if (this.recorder) {
+      this.recorder.onstop = null;
+      if (this.recorder.state !== "inactive") this.recorder.stop();
+    }
+    this.stream?.getTracks().forEach((track) => track.stop());
+    this.stream = null;
   }
 
   keepTake(blob) {
@@ -207,10 +223,6 @@ export default class extends Controller {
   silence() {
     this.player?.pause();
     this.player = null;
-  }
-
-  csrfToken() {
-    return document.querySelector('meta[name="csrf-token"]')?.content;
   }
 
   async checkHealth() {
@@ -306,6 +318,7 @@ export default class extends Controller {
     if (this.recording) return this.requestStop();
     if (this.prelisten && this.hasAudio() && this.mode === "word") {
       await this.playAudio();
+      if (this.gone) return;
       this.retryTimer = setTimeout(() => this.start(), 400);
       return;
     }
@@ -325,7 +338,7 @@ export default class extends Controller {
   }
 
   async start() {
-    if (this.recording) return;
+    if (this.recording || this.gone) return;
     this.primeMeter();
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -335,6 +348,7 @@ export default class extends Controller {
       this.teardownMeter();
       return;
     }
+    if (this.gone) return this.releaseMic();
     this.chunks = [];
     this.pendingStop = false;
     this.takes = 0;
@@ -568,7 +582,7 @@ export default class extends Controller {
     if (this.hasLexemeIdValue) form.append("lexeme_id", this.lexemeIdValue);
     try {
       const headers = {};
-      const token = this.csrfToken();
+      const token = csrfToken();
       if (token) headers["X-CSRF-Token"] = token;
       const res = await postGrade(this.gradeUrlValue, form, headers, () =>
         this.setStatus(this.labelQueuedValue),

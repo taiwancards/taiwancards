@@ -181,7 +181,7 @@ module Offline
     end
 
     def level_title(section)
-      Collection.find_by(kind: :tocfl, level_tag: section.level)&.name || section.level
+      Collection.curated.find_by(kind: :tocfl, level_tag: section.level)&.name || section.level
     end
 
     def existing_manifest

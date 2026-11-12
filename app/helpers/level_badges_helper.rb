@@ -106,7 +106,7 @@ module LevelBadgesHelper
   end
 
   def tocfl_collection_ids
-    @tocfl_collection_ids ||= Collection.where(kind: :tocfl).pluck(:level_tag, :id).to_h
+    @tocfl_collection_ids ||= Collection.curated.where(kind: :tocfl).pluck(:level_tag, :id).to_h
   end
 
   def level_marks(lexeme)

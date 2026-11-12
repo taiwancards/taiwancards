@@ -20,9 +20,10 @@ module Pronunciation
       HAN = /\p{Han}/
       LENGTHS = (VariabilityBuilder::MIN_CHARS..VariabilityBuilder::MAX_CHARS)
       LICENSE = "CC0-1.0"
-      FILTER = "дикторы с указанным местом рождения в Тайване (поле accents), " \
-        "фразы в #{LENGTHS.min}–#{LENGTHS.max} иероглифа — длиннее не режется на слоги надёжно"
-      ROLE = "допуск и нормализация по диктору; в центр эталона НЕ идёт (предложения, не цитатные формы)"
+      FILTER = "speakers whose stated birthplace is in Taiwan (the accents field), " \
+        "phrases of #{LENGTHS.min}–#{LENGTHS.max} characters, since longer ones do not split into syllables reliably"
+      ROLE = "tolerance and per-speaker normalization only, never the center of a reference template " \
+        "(sentences, not citation forms)"
 
       def initialize(repo: REPO, release: RELEASE, archive: nil, io: nil, base: nil)
         @repo = repo

@@ -13,9 +13,18 @@ class Collection < ApplicationRecord
   enum :kind, {manual: 0, lesson: 1, tocfl: 2, phrases: 3, everyday: 4, medicine: 5, games: 6}
 
   validates :name, presence: true, length: {maximum: 200}, uniqueness: {scope: :user_id}
+  validates :kind, inclusion: {in: %w[manual]}, if: :user_id?
 
   scope :ordered, -> { order(:position, :name) }
+  scope :curated, -> { where(user_id: nil) }
   scope :desks_for, -> (user) { where(kind: :manual, user:) }
+  scope(
+    :studyable_by,
+    -> (user) {
+      open = user&.restricted_access? ? curated : curated.where.not(kind: :lesson)
+      user ? where(user:).or(open) : open
+    }
+  )
   scope :recent, -> { order(Arel.sql("last_used_at DESC NULLS LAST"), updated_at: :desc) }
   scope :arranged, -> { order(:position, :id) }
 

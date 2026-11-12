@@ -237,4 +237,22 @@ RSpec.describe Pronunciation::Queue do
       expect(result.index(other.id)).to(be < 3)
     end
   end
+
+  describe ".pronounceable" do
+    it "offers words and characters that carry a pinyin reading" do
+      spoken = word("高", "gāo", kind: :character)
+      word("無聲", nil)
+      create(:lexeme, kind: :radical, text: "子", readings: {"pinyin" => "zǐ"})
+
+      expect(described_class.pronounceable).to(contain_exactly(spoken))
+    end
+
+    it "keeps to the deck when one is given" do
+      inside = word("學校", "xuéxiào")
+      word("老師", "lǎoshī")
+      deck = Collection.create!(user:, name: "Deck").tap { |collection| collection.add_lexeme(inside) }
+
+      expect(described_class.pronounceable(deck)).to(contain_exactly(inside))
+    end
+  end
 end

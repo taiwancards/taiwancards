@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 class ReaderController < ApplicationController
-  before_action :set_text, only: %i[show destroy create_desk]
+  include ProgressMarks
+
+  before_action :set_text, only: %i[show create_desk]
+
+  rate_limit(
+    to: 20,
+    within: 5.minutes,
+    only: :create,
+    with: -> { redirect_to(new_reader_text_path, alert: t("desks.too_fast")) }
+  )
 
   def index
     @kind = params[:kind].presence_in(ReadingText::LIBRARY_KINDS)
@@ -17,6 +26,7 @@ class ReaderController < ApplicationController
   def create
     body, changed = Huayu::SimpToTrad.convert(params.dig(:reading_text, :body).to_s)
     return redirect_to(new_reader_text_path, alert: t("reader.empty_body")) if body.blank?
+    return redirect_to(new_reader_text_path, alert: too_long_message) if body.length > ReadingText::LEARNER_LIMIT
 
     text = ReadingText.create!(
       user: current_user,
@@ -31,7 +41,7 @@ class ReaderController < ApplicationController
   end
 
   def activate
-    lexeme = Lexeme.find_by(id: numeric_id(params[:lexeme_id]))
+    lexeme = Lexeme.visible_to(current_user).find_by(id: numeric_id(params[:lexeme_id]))
     raise ActiveRecord::RecordNotFound if lexeme.nil?
 
     Lexemes::Activator.new(user: current_user).call(lexeme)
@@ -41,19 +51,20 @@ class ReaderController < ApplicationController
   def show
     lines = @text.lines
     @lines = lines.zip(analyzer.analyze_lines(lines))
-    @known_ids = known_lexeme_ids(@lines)
+    @known_ids = known_lexeme_ids(token_lexeme_ids(@lines))
   end
 
   def destroy
-    @text.destroy!
+    ReadingText.removable_by(current_user).find(params[:id]).destroy!
     redirect_to(reader_path, notice: t("reader.deleted"))
   end
 
   def create_desk
-    return redirect_to(reader_text_path(@text)) if @text.collection.present?
+    own = @text.user_id == current_user.id
+    return redirect_to(reader_text_path(@text)) if own && @text.collection.present?
 
     desk = Collections::DeskBuilder.new(user: current_user).call(text: @text.body, name: @text.title)
-    @text.update!(collection: desk)
+    @text.update!(collection: desk) if own
     redirect_to(my_desk_path(desk), notice: t("desks.created"))
   end
 
@@ -67,18 +78,11 @@ class ReaderController < ApplicationController
     @analyzer ||= Huayu::TextAnalyzer.new(locale: I18n.locale)
   end
 
-  def known_lexeme_ids(lines)
-    ids = lines.flat_map { |_line, tokens| tokens.filter_map { |token| token.lexeme&.id } }.uniq
-    return Set.new if ids.empty?
-
-    LexemeMemory
-      .owned_by(current_user)
-      .active
-      .where(lexeme_id: ids)
-      .where
-      .not(state: :unseen)
-      .distinct
-      .pluck(:lexeme_id)
-      .to_set
+  def too_long_message
+    t(
+      "errors.format",
+      attribute: t("reader.body_label"),
+      message: t("errors.messages.too_long", count: ReadingText::LEARNER_LIMIT)
+    )
   end
 end

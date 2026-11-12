@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe Huayu::RejectPurge do
   let(:store) { Huayu::SentenceRejectStore }
   let(:collocations) { Huayu::CollocationRejectStore }
+  let(:words) { Huayu::WordRejectStore }
   let!(:source) do
     ContentSource.create!(
       slug: "spoken",
@@ -21,6 +22,7 @@ RSpec.describe Huayu::RejectPurge do
   before do
     allow(store).to(receive(:path).and_return(scratch.join("sentence_rejects.jsonl")))
     allow(collocations).to(receive(:path).and_return(scratch.join("collocation_rejects.jsonl")))
+    allow(words).to(receive(:path).and_return(scratch.join("word_rejects.jsonl")))
   end
 
   after { scratch.rmtree }
@@ -93,5 +95,68 @@ RSpec.describe Huayu::RejectPurge do
 
     described_class.new(io: StringIO.new).call
     expect(Lexeme.exists?(same.id)).to(be(true))
+  end
+
+  it "removes a word listed under its old spelling and leaves the new headword" do
+    doomed = Lexeme.create!(kind: :word, text: "打吃")
+    keeper = Lexeme.create!(kind: :word, text: "叫吃")
+    listed(doomed.text, "renamed", into: words)
+
+    expect(described_class.new(io: StringIO.new).call[:word]).to(include(listed: 1, found: 1, removed: 1))
+    expect(Lexeme.exists?(doomed.id)).to(be(false))
+    expect(Lexeme.exists?(keeper.id)).to(be(true))
+  end
+
+  it "spares a listed word someone is already studying" do
+    studied = Lexeme.create!(kind: :word, text: "鼠標")
+    LexemeMemory.create!(lexeme: studied, user: nil, facet: :recognition, activated_at: Time.current)
+    listed(studied.text, "off_taiwan", into: words)
+
+    expect(described_class.new(io: StringIO.new).call[:word]).to(include(removed: 0, studied: 1))
+    expect(Lexeme.exists?(studied.id)).to(be(true))
+  end
+
+  it "removes nothing the second time" do
+    Lexeme.create!(kind: :word, text: "酸奶")
+    listed("酸奶", "off_taiwan", into: words)
+    described_class.new(io: StringIO.new).call
+
+    expect(described_class.new(io: StringIO.new).call[:word]).to(include(listed: 1, found: 0, removed: 0))
+  end
+
+  it "rebuilds the segmentation vocabulary once a word is gone" do
+    Lexeme.create!(kind: :word, text: "莜麥菜")
+    listed("莜麥菜", "off_taiwan", into: words)
+    allow(Huayu::TextAnalyzer).to(receive(:reset_vocabulary!))
+
+    described_class.new(io: StringIO.new).call
+
+    expect(Huayu::TextAnalyzer).to(have_received(:reset_vocabulary!))
+  end
+
+  it "names the words it would remove and the ones it keeps" do
+    Lexeme.create!(kind: :word, text: "定式")
+    studied = Lexeme.create!(kind: :word, text: "鼠標")
+    LexemeMemory.create!(lexeme: studied, user: nil, facet: :recognition, activated_at: Time.current)
+    listed("定式", "renamed", into: words)
+    listed("鼠標", "off_taiwan", into: words)
+    io = StringIO.new
+
+    described_class.new(io:).call(dry_run: true)
+
+    expect(io.string).to(include("to remove 1\n    定式\n", "studying them: 1\n    鼠標\n"))
+  end
+
+  it "acts only on the stores it is given" do
+    word = Lexeme.create!(kind: :word, text: "打吃")
+    collocation = Lexeme.create!(kind: :collocation, text: "服務員")
+    listed(word.text, "renamed", into: words)
+    listed(collocation.text, "off_corpus", into: collocations)
+
+    result = described_class.new(io: StringIO.new, stores: [words]).call
+
+    expect(result.keys).to(eq([:word]))
+    expect(Lexeme.exists?(word.id)).to(be(false))
+    expect(Lexeme.exists?(collocation.id)).to(be(true))
   end
 end

@@ -4,13 +4,10 @@ class LlmExportsController < ApplicationController
   MATURE_STABILITY_DAYS = 21
 
   def show
-    lexemes = Lexeme
-      .joins(:memories)
-      .merge(LexemeMemory.active.owned_by(current_user))
-      .includes(:memories)
-      .distinct
-
-    known, learning = lexemes.partition { |lexeme| mature?(lexeme) }
+    memories = LexemeMemory.owned_by(current_user).to_a.group_by(&:lexeme_id)
+    studied = memories.select { |_, rows| rows.any?(&:activated_at) }
+    lexemes = Lexeme.where(id: studied.keys).select(:id, :text, :meanings, :data)
+    known, learning = lexemes.partition { |lexeme| mature?(studied.fetch(lexeme.id)) }
 
     render(
       json: {
@@ -23,9 +20,9 @@ class LlmExportsController < ApplicationController
 
   private
 
-  def mature?(lexeme)
-    memories = lexeme.memories.select { |memory| memory.user_id == current_user&.id && memory.state_review? }
-    memories.any? && memories.all? { |memory| memory.stability.to_f >= MATURE_STABILITY_DAYS }
+  def mature?(memories)
+    reviewed = memories.select(&:state_review?)
+    reviewed.any? && reviewed.all? { |memory| memory.stability.to_f >= MATURE_STABILITY_DAYS }
   end
 
   def word_payload(lexeme)

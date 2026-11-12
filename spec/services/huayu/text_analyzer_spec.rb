@@ -108,6 +108,134 @@ RSpec.describe Huayu::TextAnalyzer do
     end
   end
 
+  describe "a word written in the other spelling of 臺 and 台" do
+    after { described_class.reset_vocabulary! }
+
+    def link(text, word_text)
+      described_class.new.analyze(text).find { |token| token.text == word_text }
+    end
+
+    it "links a 台 token to the 臺 entry when only that one exists" do
+      taiwan = word!("臺北")
+      allow(Huayu::SegmentationVocabulary).to(receive(:words).and_return(Set["台北"]))
+      described_class.reset_vocabulary!
+
+      expect(segment("我住在台北")).to(eq(%w[我 住 在 台北]))
+      expect(link("我住在台北", "台北").lexeme).to(eq(taiwan))
+    end
+
+    it "links a 臺 token to the 台 entry when only that one exists" do
+      stage = word!("舞台")
+      allow(Huayu::SegmentationVocabulary).to(receive(:words).and_return(Set["舞臺"]))
+      described_class.reset_vocabulary!
+
+      expect(link("在舞臺上", "舞臺").lexeme).to(eq(stage))
+    end
+
+    it "prefers the spelling the text uses when both exist" do
+      word!("臺啤")
+      plain = word!("台啤")
+      described_class.reset_vocabulary!
+
+      expect(link("我們喝台啤", "台啤").lexeme).to(eq(plain))
+    end
+
+    it "looks the twins up in the same query as the words" do
+      word!("臺北")
+      allow(Huayu::SegmentationVocabulary).to(receive(:words).and_return(Set["台北"]))
+      described_class.reset_vocabulary!
+      analyzer = described_class.new
+      analyzer.analyze("我住在台北")
+      queries = []
+      counter = -> (*, payload) { queries << payload[:sql] unless payload[:name] == "SCHEMA" }
+
+      ActiveSupport::Notifications.subscribed(counter, "sql.active_record") { analyzer.analyze("我住在台北") }
+
+      expect(queries.size).to(eq(2))
+    end
+  end
+
+  describe "a Taiwan word the vocabulary holds in one spelling only" do
+    before { allow(Huayu::SegmentationVocabulary).to(receive(:words).and_return(Set.new)) }
+
+    def analyzed(text, word_text)
+      described_class.new.analyze(text).find { |token| token.text == word_text }
+    end
+
+    it "keeps 臺啤 whole and links it to the 台啤 entry" do
+      beer = word!("台啤")
+      described_class.reset_vocabulary!
+
+      expect(segment("晚上喝臺啤")).to(include("臺啤"))
+      expect(analyzed("晚上喝臺啤", "臺啤").lexeme).to(eq(beer))
+    end
+
+    it "keeps 台客 whole and links it to the 臺客 entry" do
+      taike = word!("臺客")
+      described_class.reset_vocabulary!
+
+      expect(segment("他是台客")).to(include("台客"))
+      expect(analyzed("他是台客", "台客").lexeme).to(eq(taike))
+    end
+
+    it "keeps a twin written with Latin letters whole" do
+      word!("台北101")
+      described_class.reset_vocabulary!
+
+      expect(segment("我們去臺北101")).to(include("臺北101"))
+    end
+
+    it "gives a stage word no twin" do
+      word!("舞台")
+      word!("櫃台")
+      described_class.reset_vocabulary!
+
+      expect(described_class.vocabulary[:twins]).not_to(include("舞臺", "櫃臺"))
+      expect(segment("在舞臺上")).not_to(include("舞臺"))
+    end
+
+    it "gives no twin to a spelling that cuts across a common word" do
+      word!("台電")
+      described_class.reset_vocabulary!
+
+      expect(described_class.vocabulary[:twins]).not_to(include("臺電"))
+    end
+
+    it "does not glue a twin when a neighbouring token would form a word with it" do
+      word!("臺客")
+      word!("來臺")
+      described_class.reset_vocabulary!
+
+      expect(segment("請來台客")).not_to(include("來台"))
+    end
+
+    it "leaves a sentence without 臺 or 台 exactly as it was" do
+      word!("台啤")
+      described_class.reset_vocabulary!
+      text = "我們可以在超級市場買東西"
+      with_twins = segment(text)
+      allow(described_class).to(
+        receive(:vocabulary).and_wrap_original { |original| original.call.merge(twins: Set.new) }
+      )
+
+      expect(with_twins).to(eq(%w[我們 可以 在 超級 市場 買 東西]))
+      expect(segment(text)).to(eq(with_twins))
+    end
+
+    it "rebuilds the twins with the rest of the vocabulary on reset" do
+      word!("台啤")
+      described_class.reset_vocabulary!
+      expect(described_class.vocabulary[:twins]).to(include("臺啤"))
+
+      word!("臺啤")
+      expect(described_class.vocabulary[:twins]).to(include("臺啤"))
+
+      described_class.reset_vocabulary!
+      expect(described_class.vocabulary[:twins]).not_to(include("臺啤"))
+      expect(described_class.vocabulary[:words]).to(include("臺啤"))
+    end
+  end
+
   describe "mixed-script vocabulary words" do
     it "keeps a Latin-plus-Han word whole" do
       word!("K書")

@@ -24,7 +24,7 @@ RSpec.describe "Pronunciation data arriving after boot" do
 
   def deliver!
     Pronunciation::Sync::PAYLOAD.each do |entry|
-      FileUtils.cp_r(source.join(entry).realpath.to_s, File.join(root, entry))
+      File.symlink(source.join(entry).realpath, File.join(root, entry))
     end
   end
 

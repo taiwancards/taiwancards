@@ -9,6 +9,8 @@ module Huayu
     TOKEN_KINDS = %i[word collocation measure_word character].freeze
     SEGMENTABLE = "NOT (data ? 'no_segment')"
     KIND_PREFERENCE = %i[word collocation measure_word character].freeze
+    TWIN_SHAPE = /\A[\p{Han}A-Za-z0-9]+\z/
+    TWIN_REJECTS = %w[臺電 臺聯 台兩].to_set.freeze
 
     Token = Data.define(:kind, :text, :lexeme, :chars)
 
@@ -16,19 +18,25 @@ module Huayu
       def vocabulary
         @vocabulary ||= {}
         @vocabulary[:zh_tw] ||= begin
-          words = Lexeme
+          excluded = blocked
+          entries = Lexeme
             .where(kind: %i[word collocation])
             .where("length(text) >= 2")
             .where(SEGMENTABLE)
             .pluck(:text)
             .to_set
-          words |= SegmentationVocabulary.words
-          words -= blocked
+          entries -= excluded
+          words = (entries | SegmentationVocabulary.words) - excluded
+          merges = merge_words(words)
+          taken = -> (text) { words.include?(text) || merges.include?(text) || excluded.include?(text) }
+          twins = taiwan_twins(entries, taken) | taiwan_twins(merges, taken)
+          words |= twins.grep(ALNUM)
           {
             words: words,
             max: [words.map(&:length).max || 2, MAX_WORD].min,
             mixed: mixed_pattern(words),
-            merges: merge_words(words)
+            merges: merges,
+            twins: twins
           }
         end
       end
@@ -41,6 +49,14 @@ module Huayu
 
       def blocked
         SegmentationBlocks.words | Lexeme.where("data ? 'no_segment'").pluck(:text).to_set
+      end
+
+      def taiwan_twins(texts, taken)
+        texts
+          .select { |text| text.match?(VariantForms::TAI_CHARS) && text.match?(TWIN_SHAPE) }
+          .flat_map { |text| VariantForms.taiwan_twins(text) }
+          .reject { |twin| TWIN_REJECTS.include?(twin) || taken.call(twin) }
+          .to_set
       end
 
       def merge_words(words)
@@ -294,18 +310,31 @@ module Huayu
     end
 
     def merge_longest(batches, excluding: nil)
-      known = self.class.vocabulary[:merges]
-      return batches if known.empty?
+      vocabulary = self.class.vocabulary
+      merges = vocabulary[:merges]
+      twins = vocabulary[:twins]
+      batches = batches.map { |tokens| fold(tokens, merges, excluding) } unless merges.empty?
+      return batches if twins.empty?
 
-      batches.map { |tokens| fold(tokens, known, excluding) }
+      rivals = vocabulary.values_at(:words, :merges, :twins)
+      batches.map { |tokens| fold(tokens, twins, excluding, rivals:, reach: tai_reach(tokens)) }
     end
 
-    def fold(tokens, known, excluding)
+    def tai_reach(tokens)
+      last = nil
+      tokens.each_index.reverse_each.with_object(Array.new(tokens.length)) do |index, reach|
+        last = index if tokens[index].last.match?(VariantForms::TAI_CHARS)
+        reach[index] = !last.nil? && last - index < MERGE_SPAN
+      end
+    end
+
+    def fold(tokens, known, excluding, rivals: nil, reach: nil)
       out = []
       index = 0
 
       while index < tokens.length
-        span = longest_span(tokens, index, known, excluding)
+        span = reach && !reach[index] ? nil : longest_span(tokens, index, known, excluding)
+        span = nil if span && rivals && contested?(tokens, index, span, rivals)
         if span
           out << [:word, tokens[index..span].map(&:last).join]
           index = span + 1
@@ -335,15 +364,23 @@ module Huayu
       best
     end
 
+    def contested?(tokens, start, stop, rivals)
+      [[start - 1, start], [stop, stop + 1]].any? do |left, right|
+        next false if left.negative? || right >= tokens.length
+
+        pair = tokens.values_at(left, right)
+        next false if pair.any? { |kind, _| kind == :literal }
+
+        text = pair.map(&:last).join
+        rivals.any? { |set| set.include?(text) }
+      end
+    end
+
     def index_for(batches)
       han_texts = batches.flat_map { |tokens| tokens.reject { |kind, _| kind == :literal }.map(&:last) }.uniq
       return {lexemes: {}, chars: {}} if han_texts.empty?
 
-      lexemes = Lexeme
-        .where(kind: TOKEN_KINDS, text: han_texts)
-        .sort_by { |lexeme| KIND_PREFERENCE.index(lexeme.kind.to_sym) || KIND_PREFERENCE.size }
-        .reverse
-        .index_by(&:text)
+      lexemes = Lexeme.where(kind: TOKEN_KINDS).index_by_spelling(han_texts, preference: KIND_PREFERENCE)
       char_texts = han_texts.flat_map(&:chars).uniq - lexemes.keys
       chars = lexemes.select { |text, lexeme| text.length == 1 && lexeme.character? }
       chars = chars.merge(Lexeme.where(kind: :character, text: char_texts).index_by(&:text))

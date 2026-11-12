@@ -7,7 +7,7 @@ RSpec.describe "Graded reader" do
     get("/en/graded")
 
     expect(response).to(have_http_status(:ok))
-    expect(response.body).to(include("Graded TW Reader"))
+    expect(response.body).to(include("Graded reader"))
     Graded::Library.tiers.each { |tier| expect(response.body).to(include("/graded/#{tier}")) }
   end
 

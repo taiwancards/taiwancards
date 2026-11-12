@@ -49,7 +49,7 @@ vi:
       reference: "Cách hoạt động"
       not_measured: "chưa đo"
       no_template: "Chúng tôi chưa có mẫu cho âm tiết này, nên không có gì để chấm. Đây không phải lỗi phát âm."
-      risky: "Chúng tôi nhận diện âm tiết này kém tin cậy hơn các âm khác, nên điểm có thể khắt khe hơn mức bạn đáng được. Người mới học không bao giờ gặp những âm này — ở đây bạn tự chịu rủi ro."
+      risky: "Chúng tôi nhận diện âm tiết này kém tin cậy hơn các âm khác, nên điểm có thể khắt khe hơn mức bạn đáng nhận. Người mới học không bao giờ gặp những âm này — ở đây bạn tự chịu rủi ro."
       no_part: "âm tiết này không có"
       details: "Chi tiết"
       hide: "Thu gọn"
@@ -79,7 +79,7 @@ vi:
       metrics: "Chi tiết"
       copy: "Sao chép"
       sandhi: "Lưu ý: không đọc như viết —"
-      warmup_why: "Không có khởi động, thanh điệu được chấm theo hình dạng đường cong chứ không theo cao độ tuyệt đối: giọng trầm và giọng cao hát cùng một thanh ở các tần số khác nhau. Khởi động cho ta điểm mốc."
+      warmup_why: "Nếu không khởi động, thanh điệu được chấm theo hình dạng đường cong chứ không theo cao độ tuyệt đối: giọng trầm và giọng cao hát cùng một thanh ở các tần số khác nhau. Khởi động cho ta điểm mốc."
     codes:
       near: "Không có lỗi rõ ràng, nhưng chưa tới được mẫu."
       tone:
@@ -112,7 +112,7 @@ vi:
         short: "Âm tiết quá ngắn — thanh điệu không đủ chỗ để thể hiện."
         neutral_long: "Thanh nhẹ phải ngắn."
       timbre:
-        drift: "Màu sắc chung của âm tiết lệch khỏi mẫu."
+        drift: "Âm sắc chung của âm tiết lệch khỏi mẫu."
       lead_in:
         noisy: "Có %{ms} ms âm thừa trước âm tiết — tiếng thở hoặc tiếng ồn. Không kiểm tra được thanh mẫu qua đó: hãy bắt đầu âm tiết ngay sau tín hiệu."
         clipped: "Bản ghi bắt đầu đúng vào âm, nên không đo được độ bật hơi của %{initial}-. Hãy chờ vòng tròn xanh rồi mới nói."
@@ -140,7 +140,7 @@ vi:
         too_front: "Lùi lưỡi về sau thêm."
         too_back: "Đưa lưỡi ra trước thêm."
       medial:
-        weak: "Âm đệm ngắn nhưng không được nuốt mất — hãy cho nó nghe rõ, như o trong “hoa”."
+        weak: "Âm đệm ngắn nhưng không được nuốt mất — hãy đọc cho rõ, như o trong “hoa”."
       vowel:
         open: "Khép hàm lại một chút và nâng lưỡi lên."
         close: "Hạ hàm xuống."
@@ -149,12 +149,12 @@ vi:
         apical: "Đừng chèn âm i hay ư vào đây: giữ lưỡi ở chỗ phụ âm và tiếp tục rung dây thanh."
       coda:
         weak: "Giữ cuối âm tiết: cho hơi đi qua mũi thay vì dừng ở nguyên âm."
-        heavy: "Giữ nguyên âm sạch và chỉ cho hơi vào mũi ở tận cuối."
+        heavy: "Giữ cho nguyên âm không bị mũi hóa và chỉ cho hơi vào mũi ở tận cuối."
         ng_for_n: "Đầu lưỡi chạm lợi sau răng; hạ cuống lưỡi — như -n trong “an”."
         n_for_ng: "Cuống lưỡi chạm ngạc mềm; để đầu lưỡi tự do — như -ng trong “ang”."
       duration:
         long: "Nói với nhịp tự nhiên."
-        short: "Để âm tiết nói hết."
+        short: "Đọc cho trọn âm tiết."
         neutral_long: "Rút ngắn lại — âm tiết thanh nhẹ không được nhấn."
       timbre:
         drift: "Nghe mẫu và bắt chước trọn vẹn."
@@ -164,7 +164,7 @@ vi:
         clipped: "Đừng cắt giọng ở chỗ nối — mang âm từ âm tiết này sang âm tiết kia."
       read:
         doubtful: "Kiểm tra văn bản và đọc lại."
-        mismatch: "Kiểm tra văn bản: điểm được đo theo những gì viết."
+        mismatch: "Kiểm tra văn bản: điểm được chấm theo đúng những gì được viết."
     confusion:
       tone_only: "Âm đúng, nhưng đó là thanh %{tone} thay vì thanh %{expected_tone}"
       segments_only: "Thanh đúng, nhưng đó là /%{syllable}/ thay vì /%{expected_syllable}/"
@@ -239,3 +239,22 @@ vi:
         accepted: "đã chấp nhận"
         rejected: "đã từ chối"
         unsure: "không chắc"
+    warmup:
+      prompts:
+        vowels:
+          text: "i — a — u"
+          hint: "kéo dài mỗi âm khoảng một giây rưỡi"
+        rise:
+          text: "Thật à?!"
+          hint: "với giọng ngạc nhiên"
+        fall:
+          text: "Ừ, thật đấy."
+          hint: "bình thản, hạ giọng ở cuối câu"
+        tone_1:
+          hint: "cao và đều: giữ một nốt cao hơn giọng nói thường một chút, không hạ xuống"
+        tone_2:
+          hint: "đi lên, như khi hỏi lại “Hả?” — giọng cứ lên, không dừng lại"
+        tone_3:
+          hint: "xuống tận đáy giọng rồi nhích lên một chút, như tiếng “Ờ…” đang ngẫm nghĩ"
+        tone_4:
+          hint: "rơi mạnh từ cao xuống thấp, như khi quát “Dừng lại!”"

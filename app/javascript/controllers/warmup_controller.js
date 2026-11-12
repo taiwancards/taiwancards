@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { playClip } from "lib/clip";
+import { csrfToken } from "lib/csrf";
 import { toWav } from "lib/speech_recorder";
 
 const SILENCE_RMS = 0.015;
@@ -35,13 +36,28 @@ export default class extends Controller {
   };
 
   connect() {
+    this.gone = false;
     this.index = 0;
     this.recording = false;
     this.showPrompt();
   }
 
   disconnect() {
+    this.gone = true;
+    clearTimeout(this.doneTimer);
     this.teardown();
+    this.releaseMic();
+    this.silenceReference();
+  }
+
+  releaseMic() {
+    this.recording = false;
+    if (this.recorder) {
+      this.recorder.onstop = null;
+      if (this.recorder.state !== "inactive") this.recorder.stop();
+    }
+    this.stream?.getTracks().forEach((track) => track.stop());
+    this.stream = null;
   }
 
   showPrompt() {
@@ -100,8 +116,9 @@ export default class extends Controller {
       this.statusTarget.textContent = this.micProblem(error);
       return;
     }
+    if (this.gone) return this.releaseMic();
     await new Promise((resolve) => setTimeout(resolve, MIC_SETTLE_MS));
-    if (!this.stream) return;
+    if (!this.stream || this.gone) return;
 
     this.chunks = [];
     this.recorder = new MediaRecorder(this.stream);
@@ -190,7 +207,7 @@ export default class extends Controller {
 
     try {
       const headers = {};
-      const token = document.querySelector('meta[name="csrf-token"]')?.content;
+      const token = csrfToken();
       if (token) headers["X-CSRF-Token"] = token;
       const res = await fetch(this.urlValue, {
         method: "POST",
@@ -198,6 +215,7 @@ export default class extends Controller {
         headers,
       });
       const body = await res.json();
+      if (this.gone) return;
       if (!body.ok) {
         this.statusTarget.textContent = this.labelErrorValue;
         this.markPip(this.index, "#ef4444");
@@ -243,7 +261,7 @@ export default class extends Controller {
       return;
 
     this.statusTarget.textContent = this.labelDoneValue;
-    setTimeout(() => {
+    this.doneTimer = setTimeout(() => {
       window.location.href = this.doneUrlValue || window.location.href;
     }, 900);
   }

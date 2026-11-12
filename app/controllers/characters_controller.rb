@@ -5,6 +5,7 @@ class CharactersController < ApplicationController
   publicly_cacheable
   include Paginated
   include Filtered
+  include ProgressMarks
   filtered_by :q
 
   PER_PAGE = 96
@@ -20,14 +21,7 @@ class CharactersController < ApplicationController
     content_key = ["characters", params[:radical], @component, params[:q]].join("|")
     page, = paginate(scope.frequency_order, per_page: PER_PAGE, content_key: content_key)
     @characters = page.to_a
-    @studied_ids = LexemeMemory
-      .owned_by(current_user)
-      .where(lexeme_id: @characters.map(&:id))
-      .where
-      .not(activated_at: nil)
-      .distinct
-      .pluck(:lexeme_id)
-      .to_set
+    @studied_ids = started_lexeme_ids(@characters.map(&:id))
   end
 
   def show

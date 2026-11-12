@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { lessonScore, recordChar, recordLesson } from "lib/cangjie_progress";
+import { typingElsewhere } from "lib/hotkeys";
 
 const RIGHT = ["border-emerald-500", "bg-emerald-500/10"];
 const WRONG = ["border-red-500", "bg-red-500/10"];
@@ -211,8 +212,7 @@ export default class extends Controller {
   }
 
   handleKeydown(event) {
-    if (event.metaKey || event.ctrlKey || event.altKey) return;
-    if (event.target.closest("input, textarea, [contenteditable]")) return;
+    if (typingElsewhere(event)) return;
     if (!this.element.checkVisibility?.()) return;
 
     if (this.settled) {

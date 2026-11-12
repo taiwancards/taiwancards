@@ -35,7 +35,7 @@
 
     = form_with url: new_desk_path, method: :get, class: "flex flex-wrap items-center gap-2" do |form|
       = hidden_field_tag :tab, "song"
-      = form.search_field :q, value: @query, placeholder: t("songs.search_placeholder"), lang: "zh-TW",
+      = form.search_field :q, value: @query, placeholder: t("songs.search_placeholder"), aria: {label: t("songs.search_placeholder")}, lang: "zh-TW",
         class: "min-w-48 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
       = form.submit t("songs.search"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
 

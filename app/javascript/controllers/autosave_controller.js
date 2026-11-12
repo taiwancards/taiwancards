@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { csrfToken } from "lib/csrf";
 
 export default class extends Controller {
   static targets = ["status"];
@@ -9,6 +10,7 @@ export default class extends Controller {
 
   disconnect() {
     if (this.timer) clearTimeout(this.timer);
+    if (this.hideTimer) clearTimeout(this.hideTimer);
   }
 
   save() {
@@ -27,17 +29,13 @@ export default class extends Controller {
     try {
       const response = await fetch(form.action, {
         method: "POST",
-        headers: { "X-CSRF-Token": this.token(), Accept: "application/json" },
+        headers: { "X-CSRF-Token": csrfToken(), Accept: "application/json" },
         body,
       });
       this.flash(response.ok);
     } catch {
       this.flash(false);
     }
-  }
-
-  token() {
-    return document.querySelector("meta[name='csrf-token']")?.content || "";
   }
 
   flash(ok) {

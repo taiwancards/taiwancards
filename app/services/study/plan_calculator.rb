@@ -61,10 +61,10 @@ module Study
     end
 
     def scope_collections
-      target = Collection.where(kind: :tocfl).find_by(level_tag: @plan.target_level)
+      target = Collection.curated.where(kind: :tocfl).find_by(level_tag: @plan.target_level)
       return Collection.none if target.nil?
 
-      Collection.where(kind: :tocfl).where(position: ..target.position)
+      Collection.curated.where(kind: :tocfl).where(position: ..target.position)
     end
   end
 end

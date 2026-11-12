@@ -12,13 +12,13 @@ class User < ApplicationRecord
   encrypts :google_refresh_token
   encrypts :google_access_token
 
-  has_many :activity_events, dependent: :destroy
+  has_many :activity_events, dependent: :delete_all
   has_many :user_days, dependent: :delete_all
-  has_many :pronunciation_attempts, dependent: :destroy
+  has_many :pronunciation_attempts, dependent: :delete_all
   has_many :pronunciation_recordings, dependent: :delete_all
   has_many :syllable_skills, dependent: :delete_all
-  has_many :lexeme_reviews, dependent: :destroy
-  has_many :lexeme_memories, dependent: :destroy
+  has_many :lexeme_reviews, dependent: :delete_all
+  has_many :lexeme_memories, dependent: :delete_all
   has_many :reading_texts, dependent: :destroy
   has_many :collections, dependent: :destroy
   has_many :collection_groups, dependent: :delete_all

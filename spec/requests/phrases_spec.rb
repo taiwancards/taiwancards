@@ -29,6 +29,8 @@ RSpec.describe "Phrases" do
     get(phrases_path(scene: "nope"))
 
     expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("不會"))
+    expect(response.body).not_to(include("甜度冰塊"))
   end
 
   it "renders the fillers of a closed slot and the localized label of an open one" do

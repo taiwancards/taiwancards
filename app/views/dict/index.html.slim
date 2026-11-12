@@ -15,7 +15,7 @@
       - if @progress
         = form.hidden_field :progress, value: @progress
       .flex.flex-wrap.items-center.gap-2
-        = form.search_field :q, value: @q, placeholder: t("dict.search_placeholder"),
+        = form.search_field :q, value: @q, placeholder: t("dict.search_placeholder"), aria: {label: t("dict.search_placeholder")},
           class: "min-w-40 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
         = form.submit t("words.search"), class: "min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
 

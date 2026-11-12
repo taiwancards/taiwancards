@@ -19,4 +19,16 @@ RSpec.describe Pronunciation::SyllableIndex do
     expect(index.fetch("ba1")).not_to(eq(noisy.id))
     expect(index.fetch("bo1")).to(eq(lone.id))
   end
+
+  it "keeps the index until the reference audio changes rather than rebuilding it twice a day" do
+    allow(Huayu::MoeAudio).to(receive(:stamp).and_return("41-7-0"))
+    allow(Rails.cache).to(receive(:fetch).and_return({}))
+    allow(Rails.cache).to(receive(:delete))
+
+    described_class.for
+    described_class.refresh
+
+    expect(Rails.cache).to(have_received(:fetch).with("pron:syllable_index:audio:41-7-0").twice)
+    expect(Rails.cache).to(have_received(:delete).with("pron:syllable_index:audio:41-7-0"))
+  end
 end

@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
-
-const DIRECTIONS = ["up", "right", "down", "left"];
+import { csrfToken } from "lib/csrf";
+import { typingElsewhere } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = [
@@ -35,12 +35,15 @@ export default class extends Controller {
     this.stage = this.stageValue || "consonants";
     this.keyHandler = (event) => this.onKey(event);
     document.addEventListener("keydown", this.keyHandler);
+    this.voiceTimers = new Set();
+    this.voices = new Set();
     this.begin();
   }
 
   disconnect() {
     document.removeEventListener("keydown", this.keyHandler);
     clearTimeout(this.advanceTimer);
+    this.hush();
   }
 
   setDirection(event) {
@@ -144,6 +147,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     const map = {
       ArrowUp: "up",
       ArrowRight: "right",
@@ -265,11 +269,24 @@ export default class extends Controller {
     if (!symbols.length) return;
 
     symbols.forEach((symbol, index) => {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
+        this.voiceTimers.delete(timer);
         const audio = new Audio(`/zhuyin/${encodeURIComponent(symbol)}.opus`);
-        audio.play().catch(() => {});
+        this.voices.add(audio);
+        audio.addEventListener("ended", () => this.voices.delete(audio), {
+          once: true,
+        });
+        audio.play().catch(() => this.voices.delete(audio));
       }, index * 420);
+      this.voiceTimers.add(timer);
     });
+  }
+
+  hush() {
+    this.voiceTimers.forEach((timer) => clearTimeout(timer));
+    this.voiceTimers.clear();
+    this.voices.forEach((audio) => audio.pause());
+    this.voices.clear();
   }
 
   finish() {
@@ -292,7 +309,7 @@ export default class extends Controller {
 
   persist() {
     if (Object.keys(this.misses).length === 0) return;
-    const token = document.querySelector("meta[name='csrf-token']")?.content;
+    const token = csrfToken();
     this.weakValue = { ...this.weakValue, ...this.misses };
     if (!token) return;
 
@@ -306,5 +323,3 @@ export default class extends Controller {
     }).catch(() => {});
   }
 }
-
-export { DIRECTIONS };

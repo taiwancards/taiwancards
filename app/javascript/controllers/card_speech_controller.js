@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import { SpeechRecorder } from "lib/speech_recorder";
 import { postGrade } from "lib/grade_request";
+import { csrfToken } from "lib/csrf";
 
 const QUIET_MS = 5000;
 
@@ -130,7 +131,7 @@ export default class extends Controller {
 
     try {
       const headers = {};
-      const token = document.querySelector('meta[name="csrf-token"]')?.content;
+      const token = csrfToken();
       if (token) headers["X-CSRF-Token"] = token;
       const response = await postGrade(this.gradeUrlValue, form, headers, () =>
         this.setStatus(this.labelQueuedValue),

@@ -46,8 +46,47 @@ RSpec.describe "Rating kept pronunciation recordings", :aggregate_failures do
     expect(response).to(redirect_to(root_path))
   end
 
-  context("as the owner") do
-    before { sign_in(owner) }
+  context("as an account cleared for restricted content but not an admin") do
+    before { sign_in(create(:user, restricted_content: true, locale: "ru")) }
+
+    it "refuses the list" do
+      get("/ru/pronunciation/judge")
+
+      expect(response).to(redirect_to(root_path))
+      expect(response.body).not_to(include("好事"))
+    end
+
+    it "refuses to play someone's recording" do
+      get("/ru/pronunciation/judge/#{recording.id}/audio")
+
+      expect(response).to(redirect_to(root_path))
+      expect(response.body).not_to(include("bytes"))
+    end
+
+    it "refuses to rate someone's recording" do
+      patch("/ru/pronunciation/judge/#{recording.id}", params: {verdict: "accepted"})
+
+      expect(recording.reload.verdict).to(eq("unrated"))
+    end
+
+    it "refuses to delete someone's recording" do
+      delete("/ru/pronunciation/judge/#{recording.id}")
+
+      expect(PronunciationRecording.exists?(recording.id)).to(be(true))
+    end
+  end
+
+  context("as the admin") do
+    before { sign_in(create(:user, :admin, locale: "ru")) }
+
+    it "lists without loading the recorded audio" do
+      report = count_queries { get("/ru/pronunciation/judge") }
+
+      listing = report.statements.grep(/FROM "pronunciation_recordings"/).grep(/LIMIT/)
+      expect(response.body).to(include("好事"))
+      expect(listing).not_to(be_empty)
+      expect(listing.join).not_to(match(/"audio"|\.\*/))
+    end
 
     it "lists what is waiting to be rated" do
       get("/ru/pronunciation/judge")

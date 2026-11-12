@@ -6,6 +6,7 @@ module PubliclyCacheable
   SHARED_TTL = ENV.fetch("PUBLIC_SHARED_TTL", 1.day.to_i).to_i
   STALE_TTL = ENV.fetch("PUBLIC_STALE_TTL", 7.days.to_i).to_i
   SHARED_VARY = "Accept-Encoding"
+  ADDRESSED_FORMATS = %w[html csv json].freeze
 
   PERSONAL = [
     ZhuyinHelper::HANZI_FONT_COOKIE,
@@ -16,6 +17,8 @@ module PubliclyCacheable
 
   included do
     class_attribute(:public_cache_actions, default: nil)
+    class_attribute(:public_cache_ttl, default: SHARED_TTL)
+    class_attribute(:public_cache_stale, default: STALE_TTL)
 
     prepend_before_action :answer_without_a_session
     after_action :allow_shared_caching
@@ -29,8 +32,10 @@ module PubliclyCacheable
   end
 
   class_methods do
-    def publicly_cacheable(only: nil)
+    def publicly_cacheable(only: nil, ttl: SHARED_TTL, stale: STALE_TTL)
       self.public_cache_actions = only ? Array(only).map(&:to_s) : :all
+      self.public_cache_ttl = ttl.to_i
+      self.public_cache_stale = stale.to_i
     end
   end
 
@@ -41,12 +46,17 @@ module PubliclyCacheable
     return false if actions.nil?
     return false unless actions == :all || actions.include?(action_name)
 
-    request.get? && !request.xhr? && shareable_format? && current_user.nil? && plain_reader?
+    request.get? && !request.xhr? && !turbo_frame_request? && shareable_format? && current_user.nil? && plain_reader?
   end
 
   def shareable_format?
-    request.format.html? || request.format.csv? || request.format.json? || request.format.to_s == Mime::ALL.to_s
+    addressed = params[:format].presence
+    return ADDRESSED_FORMATS.include?(addressed.to_s) if addressed
+
+    request.format.html? || request.format.to_s == Mime::ALL.to_s
   end
+
+  def addressed_format?(format) = params[:format].to_s == format.to_s
 
   def plain_reader? = PERSONAL.none? { |name| cookies[name].present? }
 
@@ -60,6 +70,6 @@ module PubliclyCacheable
     return unless sessionless?
     return unless response.status == 200
 
-    cache_at_the_edge
+    cache_at_the_edge(ttl: public_cache_ttl, stale: public_cache_stale)
   end
 end

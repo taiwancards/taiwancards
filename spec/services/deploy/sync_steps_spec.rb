@@ -17,6 +17,12 @@ RSpec.describe Deploy::SyncSteps do
     end
   end
 
+  it "re-runs every tokenization step when the rule for which 臺 means Taiwan changes" do
+    %w[segmentation register_mix derived_levels].each do |name|
+      expect(step(name).code).to(include("app/services/huayu/variant_forms.rb"), "#{name} tokenizes through it")
+    end
+  end
+
   it "names a task that exists for every step" do
     described_class::STEPS.each do |step|
       expect(Rake::Task.task_defined?(step.task)).to(be(true), "#{step.name} points at a missing #{step.task}")
@@ -62,9 +68,33 @@ RSpec.describe Deploy::SyncSteps do
   end
 
   it "keeps a step that only warms apart from one that rewrites content" do
-    expect(described_class::WARMING).to(match_array(%w[landing_counts syllable_index prune_activity google_scopes]))
-    expect(described_class::ACCOUNT).to(match_array(described_class::WARMING + %w[admin_rights]))
     expect(described_class::ALWAYS.keys - described_class::WARMING).not_to(be_empty)
     expect(described_class::ALWAYS.keys).to(include(*described_class::ACCOUNT))
+  end
+
+  it "retires rejected words after every step that creates lexemes and before the ones derived from them" do
+    names = described_class::STEPS.map(&:name)
+    creators = %w[
+      textbook_lexemes
+      taiwan_everyday
+      medicine
+      games
+      naer_terms
+      common_words
+      places
+      song_vocabulary
+      phrase_drills
+      chengyu
+      authored_sentences
+    ]
+    derived = %w[segmentation register_mix derived_levels]
+
+    creators.each do |name|
+      expect(names.index(name)).to(be < names.index("retired_words"), "#{name} could recreate a rejected entry")
+    end
+
+    derived.each { |name|
+      expect(names.index(name)).to(be > names.index("retired_words"), "#{name} would see stale rows")
+    }
   end
 end

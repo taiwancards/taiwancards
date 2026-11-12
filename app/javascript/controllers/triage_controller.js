@@ -1,4 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
+import { csrfToken } from "lib/csrf";
+import { typingElsewhere } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = [
@@ -22,7 +24,7 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("keydown", this.keyHandler);
-    this.flush();
+    this.flush({ keepalive: true });
   }
 
   begin() {
@@ -30,6 +32,8 @@ export default class extends Controller {
     this.planned = this.queue.length;
     this.knownIds = [];
     this.normalIds = [];
+    this.sentKnown = 0;
+    this.sentNormal = 0;
     this.render();
   }
 
@@ -46,6 +50,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     if (event.key === "ArrowRight") {
       event.preventDefault();
       this.mark(true);
@@ -107,23 +112,26 @@ export default class extends Controller {
     this.flush();
   }
 
-  async flush() {
-    if (this.sent) return;
-    if (this.knownIds.length === 0 && this.normalIds.length === 0) return;
+  async flush({ keepalive = false } = {}) {
+    if (this.flushing && !keepalive) return;
+    const known = this.knownIds.slice(this.sentKnown);
+    const normal = this.normalIds.slice(this.sentNormal);
+    if (known.length === 0 && normal.length === 0) return;
 
-    this.sent = true;
-    try {
-      await fetch(this.urlValue, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token":
-            document.querySelector("meta[name='csrf-token']")?.content || "",
-        },
-        body: JSON.stringify({ known: this.knownIds, normal: this.normalIds }),
-      });
-    } catch {
-      this.sent = false;
-    }
+    this.flushing = true;
+    const response = await fetch(this.urlValue, {
+      method: "POST",
+      keepalive,
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken(),
+      },
+      body: JSON.stringify({ known, normal }),
+    }).catch(() => null);
+    this.flushing = false;
+    if (!response?.ok) return;
+
+    this.sentKnown += known.length;
+    this.sentNormal += normal.length;
   }
 }

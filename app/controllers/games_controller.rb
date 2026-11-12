@@ -7,7 +7,7 @@ class GamesController < ApplicationController
   CATEGORIES = Huayu::GamesImporter::CATEGORIES
 
   def show
-    @collection = Collection.find_by(kind: :games)
+    @collection = Collection.curated.find_by(kind: :games)
     @counts = counts
     @boards = GAMES.select { |name| @counts[name].to_i.positive? }
     @active = @boards.find { |name| name == params[:game] } || @boards.first
@@ -24,7 +24,9 @@ class GamesController < ApplicationController
   end
 
   def counts
-    scope.pluck(Arel.sql("lexemes.data -> 'game' ->> 'name'")).tally
+    ContentCache.fetch("games/counts", Lexeme.visibility_key(current_user)) do
+      scope.reorder(nil).group(Arel.sql("lexemes.data -> 'game' ->> 'name'")).count
+    end
   end
 
   def ordered(game)

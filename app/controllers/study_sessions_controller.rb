@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class StudySessionsController < ApplicationController
+  include PracticeQueue
+
   MODES = %w[cram daily collection desk decks today redo mistakes].freeze
-  RATINGS = %w[again hard good easy].freeze
 
   def show
     @mode = params[:mode].presence_in(MODES) || "daily"
@@ -12,6 +13,7 @@ class StudySessionsController < ApplicationController
       collection: find_collection,
       offset: params[:offset].to_i
     )
+    drop_legacy_queues
     session[:study] = @run.state
     load_current
   end
@@ -50,11 +52,11 @@ class StudySessionsController < ApplicationController
   def find_collection
     return if params[:collection_id].blank?
 
-    Collection.where(user_id: [nil, Current.user&.id]).find_by(id: params[:collection_id])
+    Collection.studyable_by(Current.user).find_by(id: params[:collection_id])
   end
 
   def grade_facet(lexeme_id, facet, rating, elapsed_ms, session_id)
-    return if lexeme_id.blank? || facet.blank? || RATINGS.exclude?(rating)
+    return if lexeme_id.blank? || facet.blank? || Study::Run::RATINGS.exclude?(rating)
 
     memory = LexemeMemory.owned_by(Current.user).find_by(lexeme_id:, facet: LexemeMemory.facets[facet])
     return if memory.nil?

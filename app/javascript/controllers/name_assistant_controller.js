@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { escapeHtml } from "lib/html";
 
 const VOWELS = "aeiouv";
 const COHORTS = ["elder", "middle", "young", "recent"];
@@ -400,7 +401,7 @@ export default class extends Controller {
           ...row.combo.chars.map((c) => c.pinyin),
         ].join(" ");
         const meanings = row.combo.chars
-          .map((c) => `${c.text} — ${this.escape(this.gloss(c))}`)
+          .map((c) => `${escapeHtml(c.text)} — ${escapeHtml(this.gloss(c))}`)
           .join("; ");
         const badges = [];
         if (row.combo.pmi)
@@ -417,21 +418,21 @@ export default class extends Controller {
         if (strokes) badges.push(`${labels.labelStrokes} ${strokes}`);
 
         const why = this.reasons(row, context)
-          .map((line) => `<li>${this.escape(line)}</li>`)
+          .map((line) => `<li>${escapeHtml(line)}</li>`)
           .join("");
 
         return `<li class="min-w-0 rounded-xl border border-border bg-card px-4 py-3">
           <div class="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-            <span class="text-2xl font-semibold" lang="zh-TW">${full}</span>
-            <span class="text-sm text-muted-foreground">${this.escape(pinyin)}</span>
+            <span class="text-2xl font-semibold" lang="zh-TW">${escapeHtml(full)}</span>
+            <span class="text-sm text-muted-foreground">${escapeHtml(pinyin)}</span>
             <span class="text-xs text-muted-foreground tabular-nums">${row.tones.join("-")}</span>
           </div>
           <p class="mt-1 break-words text-sm text-muted-foreground">${meanings}</p>
           <div class="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
-            ${badges.map((b) => `<span class="rounded-full bg-muted px-2 py-0.5">${this.escape(b)}</span>`).join("")}
+            ${badges.map((b) => `<span class="rounded-full bg-muted px-2 py-0.5">${escapeHtml(b)}</span>`).join("")}
           </div>
           <div class="mt-3 border-t border-border pt-2">
-            <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">${this.escape(labels.labelWhy)}</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">${escapeHtml(labels.labelWhy)}</p>
             <ul class="mt-1 list-disc space-y-1 pl-4 text-sm leading-relaxed text-muted-foreground">${why}</ul>
           </div>
         </li>`;
@@ -448,11 +449,5 @@ export default class extends Controller {
     if (text.startsWith("˙")) return 5;
     const marks = { ˊ: 2, ˇ: 3, ˋ: 4 };
     return marks[text.slice(-1)] || 1;
-  }
-
-  escape(text) {
-    const div = document.createElement("div");
-    div.textContent = String(text ?? "");
-    return div.innerHTML;
   }
 }

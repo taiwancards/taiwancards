@@ -25,4 +25,16 @@ RSpec.describe HanziHelper do
       expect(helper.mark_script("")).to(eq(""))
     end
   end
+
+  describe "#evolution_rows" do
+    it "lists characters drawn in at least three eras, once per process" do
+      rows = helper.evolution_rows
+
+      expect(rows).to(be_frozen)
+      expect(rows).to(equal(HanziHelper.evolution_rows))
+      expect(rows.map(&:first)).to(eq(rows.map(&:first).sort))
+      expect(rows).to(all(satisfy { |_char, eras| eras.size >= 3 && (eras - HanziHelper::ERAS).empty? }))
+      expect(rows.to_h).to(include("人" => HanziHelper::ERAS))
+    end
+  end
 end

@@ -137,12 +137,12 @@ RSpec.describe "Phonetics drill" do
   it "remembers the sounds you missed and accumulates them" do
     user = sign_in(create(:user))
 
-    post(practice_drill_path, params: {misses: {"initial:b" => 2, "final:a" => 1}})
+    post(practice_drill_path, params: {misses: {"b|ㄅ" => 2, "a|ㄚ" => 1}})
     expect(response).to(have_http_status(:no_content))
-    expect(user.reload.phonetic_misses).to(eq({"initial:b" => 2, "final:a" => 1}))
+    expect(user.reload.phonetic_misses).to(eq({"b|ㄅ" => 2, "a|ㄚ" => 1}))
 
-    post(practice_drill_path, params: {misses: {"initial:b" => 1}})
-    expect(user.reload.phonetic_misses).to(eq({"initial:b" => 3, "final:a" => 1}))
+    post(practice_drill_path, params: {misses: {"b|ㄅ" => 1}})
+    expect(user.reload.phonetic_misses).to(eq({"b|ㄅ" => 3, "a|ㄚ" => 1}))
   end
 
   it "ignores a result with nothing missed" do

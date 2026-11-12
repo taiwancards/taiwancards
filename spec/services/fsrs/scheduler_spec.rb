@@ -23,6 +23,22 @@ RSpec.describe Fsrs::Scheduler do
     ]
   end
 
+  def unfuzzed(**overrides) = described_class.new(
+    parameters: Fsrs::Parameters.default(enable_fuzzing: false, **overrides)
+  )
+
+  def seasoned(scheduler, rating, stability: 20.0)
+    scheduler.review(
+      state: :review,
+      step: 0,
+      stability:,
+      difficulty: 5.0,
+      last_reviewed_at: start_time - 20 * 86_400,
+      rating:,
+      now: start_time
+    )
+  end
+
   it "reproduces the py-fsrs golden interval history" do
     scheduler = described_class.new(parameters: Fsrs::Parameters.default(enable_fuzzing: false))
     ratings = %i[good good good good good good again again good good good good good]
@@ -114,6 +130,54 @@ RSpec.describe Fsrs::Scheduler do
     delta = 1.0 + (0.15 * 4.5) + (0.1 * 13.0) + (0.05 * (base_days - 20.0))
 
     expect(result.interval_days).to(be_between((base_days - delta - 1).floor, (base_days + delta + 1).ceil))
+  end
+
+  it "keeps a new card rated hard on its first step, due halfway between the first two steps" do
+    parameters = Fsrs::Parameters.default(enable_fuzzing: false)
+    first, second = parameters.learning_steps
+
+    result = described_class.new(parameters:).review(**blank_memory, rating: :hard, now: start_time)
+
+    expect(result.state).to(eq(:learning))
+    expect(result.step).to(eq(0))
+    expect(result.due_at).to(eq(start_time + ((first + second) * 60 / 2.0)))
+  end
+
+  it "stretches the only step by half for a new card rated hard" do
+    result = unfuzzed(learning_steps: [5]).review(**blank_memory, rating: :hard, now: start_time)
+
+    expect(result.state).to(eq(:learning))
+    expect(result.due_at).to(eq(start_time + (5 * 60 * 1.5)))
+  end
+
+  it "graduates a new card rated easy straight to review" do
+    result = unfuzzed.review(**blank_memory, rating: :easy, now: start_time)
+
+    expect(result.state).to(eq(:review))
+    expect(result.interval_days).to(be >= 1)
+  end
+
+  it "spaces a reviewed card further the easier it was recalled" do
+    scheduler = unfuzzed
+    hard, good, easy = %i[hard good easy].map { |rating| seasoned(scheduler, rating) }
+
+    expect(hard.interval_days).to(be < good.interval_days)
+    expect(good.interval_days).to(be < easy.interval_days)
+    expect(hard.stability).to(be < good.stability)
+    expect(good.stability).to(be < easy.stability)
+  end
+
+  it "graduates on the first review when there are no learning steps" do
+    result = unfuzzed(learning_steps: []).review(**blank_memory, rating: :again, now: start_time)
+
+    expect(result.state).to(eq(:review))
+    expect(result.interval_days).to(be >= 1)
+  end
+
+  it "never schedules a card past the maximum interval" do
+    scheduler = unfuzzed(maximum_interval: 30)
+
+    expect(seasoned(scheduler, :good, stability: 1000.0).interval_days).to(eq(30))
   end
 
   it "computes retrievability as a power curve" do

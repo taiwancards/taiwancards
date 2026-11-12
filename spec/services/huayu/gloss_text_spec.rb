@@ -21,6 +21,16 @@ RSpec.describe Huayu::GlossText do
       .to(eq("одеяло; счётное слово: 條"))
   end
 
+  it "names measure words in Vietnamese" do
+    expect(described_class.normalize("cái chăn; CL:條|条[tiao2]", locale: "vi"))
+      .to(eq("cái chăn; lượng từ: 條"))
+  end
+
+  it "falls back to English for a language it does not know" do
+    expect(described_class.normalize("quilt; CL:床[chuang2]", locale: "ja"))
+      .to(eq("quilt; measure word: 床"))
+  end
+
   it "keeps a bracket that is not a reading" do
     expect(described_class.normalize("a counter (archaic)")).to(eq("a counter (archaic)"))
   end

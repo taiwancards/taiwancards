@@ -33,6 +33,11 @@ module Pronunciation
     PHRASES = 4
     PHRASE_EVERY = 7
 
+    def self.pronounceable(collection = nil)
+      scope = Lexeme.where(kind: %i[word character]).where("readings ->> 'pinyin' IS NOT NULL")
+      collection ? scope.where(id: collection.lexemes.select(:id)) : scope
+    end
+
     def initialize(
       user:,
       collection: nil,
@@ -220,11 +225,7 @@ module Pronunciation
       pronounceable.where(kind: :word)
     end
 
-    def pronounceable
-      scope = Lexeme.where(kind: %i[word character]).where("readings ->> 'pinyin' IS NOT NULL")
-      scope = scope.where(id: @collection.lexemes.select(:id)) if @collection
-      scope
-    end
+    def pronounceable = self.class.pronounceable(@collection)
 
     def target_for(lexeme)
       Huayu::PronunciationTarget.new(lexeme).syllables

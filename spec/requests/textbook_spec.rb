@@ -3,7 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Textbook" do
-  before { Rails.application.load_seed }
   before { sign_in(create(:user, restricted_content: true)) }
 
   let!(:textbook_lesson) do

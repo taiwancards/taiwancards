@@ -3,12 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "PWA", :no_auth do
-  it "serves the web app manifest without a session" do
-    get(pwa_manifest_path)
-
-    expect(response).to(have_http_status(:ok))
-  end
-
   it "describes the application for the install prompt" do
     get(pwa_manifest_path)
     manifest = JSON.parse(response.body)

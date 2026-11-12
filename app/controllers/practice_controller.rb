@@ -122,6 +122,21 @@ class PracticeController < ApplicationController
     return {} if raw.blank?
 
     hash = raw.respond_to?(:to_unsafe_h) ? raw.to_unsafe_h : raw.to_h
-    hash.first(MAX_TRACKED).to_h
+    hash.select { |key, _count| drill_keys.include?(key.to_s) }.first(MAX_TRACKED).to_h
+  end
+
+  def drill_keys
+    @drill_keys ||= (phonetic_part_keys + syllable_keys).to_set
+  end
+
+  def phonetic_part_keys
+    (Huayu::Phonetics.initials + Huayu::Phonetics.finals).map { |row| "#{row["pinyin"]}|#{row["zhuyin"]}" }
+  end
+
+  def syllable_keys
+    Huayu::Zhuyin::SYLLABLES.flat_map do |syllable|
+      bare = Huayu::Zhuyin.syllable_to_zhuyin(syllable)
+      bare ? (1..5).map { |tone| Huayu::Zhuyin.apply_tone(bare, tone) } : []
+    end
   end
 end

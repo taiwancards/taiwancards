@@ -192,7 +192,7 @@ module Offline
     end
 
     def level_words
-      collection = Collection.find_by(kind: :tocfl, level_tag: section.level)
+      collection = Collection.curated.find_by(kind: :tocfl, level_tag: section.level)
       return [] if collection.nil?
 
       Lexeme.visible_to(nil).where(id: collection.collection_items.select(:lexeme_id)).to_a

@@ -64,10 +64,12 @@ module Huayu
       )
       return if context.nil?
 
-      units = segments.flat_map { |unit| word_ids.key?(unit) ? [unit] : unit.chars }.uniq
+      units = segments.flat_map do |unit|
+        lexeme_id = VariantForms.lookup(word_ids, unit)
+        lexeme_id ? [[unit, lexeme_id]] : unit.chars.map { |char| [char, word_ids[char]] }
+      end
 
-      units.each do |unit|
-        lexeme_id = word_ids[unit]
+      units.uniq(&:last).each do |unit, lexeme_id|
         next if lexeme_id.nil?
 
         gdex = @quality.score(context, unit)

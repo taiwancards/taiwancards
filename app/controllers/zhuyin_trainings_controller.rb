@@ -18,7 +18,7 @@ class ZhuyinTrainingsController < ApplicationController
 
   def update
     trainer = build_trainer
-    Array(params[:results]).each do |result|
+    submitted_results.each do |result|
       symbol = result[:symbol].to_s
       next unless Huayu::ZhuyinTrainer::ALL.include?(symbol)
 
@@ -38,6 +38,12 @@ class ZhuyinTrainingsController < ApplicationController
   end
 
   private
+
+  def submitted_results
+    Array(params[:results]).grep(ActionController::Parameters).map { |result|
+      result.permit(:symbol, :correct, :elapsed_ms)
+    }
+  end
 
   def build_trainer(group: nil, block: nil, set: nil)
     Huayu::ZhuyinTrainer.new(current_user&.zhuyin_mastery || {}, group:, block:, set:)

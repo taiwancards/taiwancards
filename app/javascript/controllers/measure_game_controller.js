@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { typingElsewhere } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = ["card", "option", "feedback"];
@@ -16,6 +17,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     const map = {
       ArrowUp: "up",
       ArrowRight: "right",

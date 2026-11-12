@@ -199,14 +199,14 @@ RSpec.describe "Corpus search" do
 
   describe "the register filter in dictionary mode" do
     it "keeps only the entries whose dominant register was ticked" do
-      xuexiao.update!(data: xuexiao.data.merge("register_mix" => [0.8, 0.2]))
+      xuexiao.update!(data: xuexiao.data.merge("register_mix" => [0.6, 0.2, nil, 0.1, 0.05, 0.05, nil]))
       word(
         "學生",
         "xuéshēng",
         "ㄒㄩㄝˊ ㄕㄥ",
         score: 7,
         meaning: "student",
-        data: {"register_mix" => [0.1, 0.9]}
+        data: {"register_mix" => [0.1, 0.7, nil, 0.1, 0.05, 0.05, nil]}
       )
 
       get("/search", params: {q: "學", registers: ["literary"]})

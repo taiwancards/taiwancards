@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { activatesFocus, typingElsewhere } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = [
@@ -24,9 +25,11 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("keydown", this.keyHandler);
+    clearTimeout(this.flingTimer);
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     if (event.key === "ArrowLeft") this.fling(-1, 0, "again");
     else if (event.key === "ArrowRight") this.fling(1, 0, "good");
     else if (event.key === "ArrowUp") {
@@ -36,6 +39,7 @@ export default class extends Controller {
       event.preventDefault();
       this.fling(0, 1, "hard");
     } else if (event.key === " " || event.key === "Enter") {
+      if (activatesFocus(event)) return;
       event.preventDefault();
       this.reveal();
     }
@@ -145,7 +149,7 @@ export default class extends Controller {
       "transform 240ms ease-in, opacity 240ms ease-in";
     this.cardTarget.style.transform = `translate(${x}px, ${y}px) rotate(${x / 16}deg)`;
     this.cardTarget.style.opacity = "0.3";
-    setTimeout(() => this.rate(rating), 170);
+    this.flingTimer = setTimeout(() => this.rate(rating), 170);
   }
 
   rateAgain() {

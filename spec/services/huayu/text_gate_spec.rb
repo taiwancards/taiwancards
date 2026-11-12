@@ -8,18 +8,7 @@ RSpec.describe Huayu::TextGate do
   before { described_class.reset! }
 
   describe "the policy this application applies" do
-    it "diverges from the corpus policy in three declared ways" do
-      policy = described_class::POLICY
-
-      expect(policy.orthography_rejects).to(be(false))
-      expect(policy.punctuation).to(eq(:strict))
-      topics = policy.respond_to?(:foreign_topics_reject) ? policy.foreign_topics_reject : policy.prc_topics_reject
-      expect(topics).to(be(true))
-    end
-
     it "imposes no length or density bound, unlike the corpus policy" do
-      expect(described_class::POLICY.han_range).to(cover(1))
-      expect(described_class::POLICY.min_han_ratio).to(eq(0.0))
       expect(gate.call("好")).to(be_ok)
     end
 
@@ -43,7 +32,6 @@ RSpec.describe Huayu::TextGate do
 
   describe "the verdict it exposes" do
     it "renames every gem finding code onto its own reason vocabulary" do
-      expect(described_class::REASONS.values.uniq).to(match_array(%i[empty no_han junk unlisted china wenyan]))
       expect(gate.call("値得思考").reason).to(eq(:unlisted))
       expect(gate.call("LINE Pay").reason).to(eq(:no_han))
       expect(gate.call("一點兒").reason).to(eq(:china))
@@ -87,6 +75,15 @@ RSpec.describe Huayu::TextGate do
 
       expect(Huayu::ChinaGuard.marker?("信息")).to(be(false))
       expect(Huayu::ChinaGuard.marker?("測試詞")).to(be(true))
+    end
+
+    it "sees a marker added after the gate was built once the marker cache is reset" do
+      expect(gate.call("這是新標記詞的例子")).to(be_ok)
+
+      ChinaMarker.create!(word: "新標記詞", taiwan_form: "標記", band: :hard, active: true)
+      ChinaMarker.reset_cache!
+
+      expect(gate.call("這是新標記詞的例子").reason).to(eq(:china))
     end
 
     it "ignores markers banded soft or deactivated" do

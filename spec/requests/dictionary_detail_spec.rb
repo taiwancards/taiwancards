@@ -21,7 +21,11 @@ RSpec.describe "Dictionary detail level" do
       text: "學校",
       readings: {"pinyin" => "xuéxiào", "zhuyin" => "ㄒㄩㄝˊ ㄒㄧㄠˋ"},
       meanings: {"en" => "school", "ru" => "школа"},
-      data: {"pos" => "N", "etymology_text" => "A compound of study and comparison.", "register_mix" => [0.8, 0.2]}
+      data: {
+        "pos" => "N",
+        "etymology_text" => "A compound of study and comparison.",
+        "register_mix" => [0.6, 0.2, nil, 0.1, 0.05, 0.05, nil]
+      }
     )
   end
 
@@ -44,7 +48,7 @@ RSpec.describe "Dictionary detail level" do
       kind: :sentence,
       text: "我去學校。",
       meanings: {"en" => "I go to school.", "ru" => "Я иду в школу."},
-      data: {"segments" => %w[我 去 學校 。], "register_mix" => [0.9, 0.1]},
+      data: {"segments" => %w[我 去 學校 。], "register_mix" => [0.7, 0.1, nil, 0.1, 0.05, 0.05, nil]},
       score: 5,
       content_sources: [source]
     )

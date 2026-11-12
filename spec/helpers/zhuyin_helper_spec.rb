@@ -38,4 +38,14 @@ RSpec.describe ZhuyinHelper do
   it "falls back to plain text without a reading" do
     expect(bases(helper.zhuyin_ruby("ABC", ""))).to(be_empty)
   end
+
+  describe "#zhuyin_clip" do
+    it "answers from the clips that exist in public/zhuyin" do
+      on_disk = ZhuyinHelper::CLIP_DIR.glob("*.opus").map { |path| path.basename(".opus").to_s }
+
+      expect(ZhuyinHelper.clip_symbols).to(be_frozen)
+      expect(ZhuyinHelper.clip_symbols.to_a).to(match_array(on_disk))
+      expect(helper.zhuyin_clips("ㄅㄚˋ")).to(eq([["ㄅ", "/zhuyin/ㄅ.opus"], ["ㄚ", "/zhuyin/ㄚ.opus"]]))
+    end
+  end
 end

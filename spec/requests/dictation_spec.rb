@@ -20,17 +20,16 @@ RSpec.describe "Dictation" do
   let(:harder) { row.with(text: "經濟成長很快", level: 5, clip: "voice-5.mp3") }
 
   before do
-    source = ContentSource.create!(
-      slug: "voices",
-      license_commercial: true,
-      name: "Voices",
-      enabled: true,
-      enabled_for_admins: true,
-      attribution: "Voices."
-    )
-    sentence = Lexeme.new(kind: :sentence, text: row.text, readings: {"pinyin" => "wǒ yě bù zhīdào"})
-    sentence.lexeme_content_sources.build(content_source: source)
-    sentence.save!
+    {
+      "我" => %w[wǒ ㄨㄛˇ],
+      "也" => %w[yě ㄧㄝˇ],
+      "不" => %w[bù ㄅㄨˋ],
+      "知道" => ["zhīdào", "ㄓ ㄉㄠˋ"]
+    }.each do |text, (pinyin, zhuyin)|
+      create(:lexeme, text:, readings: {"pinyin" => pinyin, "zhuyin" => zhuyin})
+    end
+
+    create(:lexeme, :sentence, text: row.text, segments: %w[我 也 不 知道])
 
     allow(Huayu::ListeningClips).to(receive(:all).and_return([row, harder]))
     allow(Huayu::ListeningClips).to(receive(:by_clip).and_return(nil))

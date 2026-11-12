@@ -27,7 +27,13 @@ export default class extends Controller {
     this.index = 0;
     this.scores = [];
     this.zhuyin = false;
+    this.flashTimers = new Set();
     if (this.itemsValue.length) this.show();
+  }
+
+  disconnect() {
+    this.flashTimers.forEach((timer) => clearTimeout(timer));
+    this.flashTimers.clear();
   }
 
   get item() {
@@ -146,8 +152,10 @@ export default class extends Controller {
     );
     if (!node) return;
     node.dataset.hit = "true";
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      this.flashTimers.delete(timer);
       node.dataset.hit = "false";
     }, 140);
+    this.flashTimers.add(timer);
   }
 }

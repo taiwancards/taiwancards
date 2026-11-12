@@ -42,4 +42,25 @@ RSpec.describe "Progress import" do
     expect(flash[:alert]).to(eq(I18n.t("auth.import_bad")))
     expect(current_user.lexeme_memories.count).to(eq(0))
   end
+
+  it "refuses a file larger than any real export without reading it" do
+    stub_const("ProfilesController::MAX_IMPORT_BYTES", 64)
+    payload = {"memories" => [{"kind" => "word", "text" => "學校", "facet" => "recognition"}], "padding" => "x" * 64}
+
+    post("/profile/import", params: {file: upload(JSON.generate(payload))})
+
+    expect(response).to(redirect_to(profile_path))
+    expect(flash[:alert]).to(eq(I18n.t("auth.import_bad")))
+    expect(current_user.lexeme_memories.count).to(eq(0))
+  end
+
+  it "does not let a file clear the account for restricted content" do
+    post("/profile/import", params: {file: upload(JSON.generate("settings" => {"restricted_content" => true}))})
+
+    expect(current_user.reload.restricted_access?).to(be(false))
+  end
+
+  it "accepts a full-size export of a heavy learner" do
+    expect(ProfilesController::MAX_IMPORT_BYTES).to(be >= 20.megabytes)
+  end
 end

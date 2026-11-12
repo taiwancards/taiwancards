@@ -155,6 +155,7 @@ module Textbook
 
     def collection_for(lesson)
       Collection
+        .curated
         .create_with(
           kind: :lesson,
           description: lesson.title_zh,

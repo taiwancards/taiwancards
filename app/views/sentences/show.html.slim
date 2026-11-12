@@ -4,7 +4,7 @@
 .py-6.space-y-6
   div
     .flex.items-center.gap-3
-      p.text-2xl.leading-relaxed.tracking-wide = @sentence.text
+      p.text-2xl.leading-relaxed.tracking-wide lang="zh-TW" = @sentence.text
       - if (clip = Huayu::ListeningClips.for_text(@sentence.text))
         button.inline-flex.shrink-0.items-center.justify-center.rounded-full.border.border-border.p-2.text-muted-foreground[
           type="button" data-controller="audio"
@@ -37,16 +37,16 @@
         - if word.lexeme
           = link_to lexeme_page_path(word.lexeme), class: "group rounded-lg border border-border px-3 py-2 hover:bg-muted" do
             .flex.items-baseline.gap-2
-              span.text-lg = word.text
+              span.text-lg lang="zh-TW" = word.text
               = render("shared/speak", lexeme: word.lexeme, size: :sm)
             - if word.lexeme.reading("zhuyin").present?
-              .zhuyin.text-xs.text-muted-foreground = word.lexeme.reading("zhuyin")
+              .zhuyin.text-xs.text-muted-foreground lang="zh-TW" = word.lexeme.reading("zhuyin")
             - gloss = word.lexeme.meaning(I18n.locale).presence || word.senses.filter_map { |sense| sense.meaning(I18n.locale) }.first
             - if gloss.present?
               .mt-1.max-w-56.text-xs.text-muted-foreground = gloss
         - else
           .rounded-lg.border.border-dashed.border-border.px-3.py-2.text-muted-foreground
-            span.text-lg = word.text
+            span.text-lg lang="zh-TW" = word.text
             .text-xs = t("sentences.not_in_dictionary")
 
   section.space-y-2
@@ -57,7 +57,7 @@
       - @breakdown.characters.each do |char|
         - if char.lexeme
           = link_to character_path(char.lexeme.text), class: "flex items-center gap-2 rounded-lg border border-border px-2.5 py-1.5 hover:bg-muted" do
-            span.text-lg = char.text
+            span.text-lg lang="zh-TW" = char.text
             .flex.min-w-0.flex-col
               - if detailed?
                 .flex.items-center.gap-1
@@ -74,4 +74,4 @@
               - if char.lexeme.meaning.present?
                 span.truncate.text-2xs.text-muted-foreground style="max-width: 9rem" = char.lexeme.meaning
         - else
-          .rounded-lg.border.border-dashed.border-border.text-lg.text-muted-foreground class="px-2.5 py-1.5" = char.text
+          .rounded-lg.border.border-dashed.border-border.text-lg.text-muted-foreground lang="zh-TW" class="px-2.5 py-1.5" = char.text

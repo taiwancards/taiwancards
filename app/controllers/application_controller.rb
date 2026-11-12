@@ -103,13 +103,15 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_localized_url
     return if params[:locale].present?
-    return unless Locales.addressable?(request)
+    return unless Locales.addressable?(request) && localized_route?
 
-    target = url_for(params.to_unsafe_h.merge(locale: I18n.locale, only_path: true))
+    target = Locales.swap(request.fullpath, I18n.locale)
     return unless target.start_with?("/#{I18n.locale}")
 
     redirect_to(target, status: :moved_permanently)
   end
+
+  def localized_route? = request.route_uri_pattern.to_s.start_with?("(/:locale)", "/(:locale)")
 
   def follow_account_language
     return if impersonating? || !Locales.addressable?(request)

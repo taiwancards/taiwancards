@@ -9,6 +9,8 @@ module Pronunciation
     WORD_INITIAL = "taiwan_wi"
     WORD_MEDIAL = "taiwan_wm"
     WORD_FINAL = "taiwan_wf"
+    NORMS = [CITATION, WORD, WORD_INITIAL, WORD_MEDIAL, WORD_FINAL].freeze
+    KEY = /\A[a-z]+[1-5]\z/
 
     class << self
       def instance
@@ -21,6 +23,8 @@ module Pronunciation
       def reset!
         @instance = nil
       end
+
+      def key?(key) = key.is_a?(String) && KEY.match?(key)
 
       def root_path
         explicit = ENV["PRONUNCIATION_DATA_PATH"].presence
@@ -44,6 +48,8 @@ module Pronunciation
     end
 
     def template(key, norm = CITATION)
+      return nil unless self.class.key?(key) && NORMS.include?(norm)
+
       @mutex.synchronize do
         cache_key = [key, norm]
         cached = @cache.delete(cache_key)

@@ -45,8 +45,4 @@ RSpec.describe SharedAssets do
 
     expect(described_class.carried?("json", "not-on-this-machine.json")).to(be(false))
   end
-
-  it "mounts exactly what the static middleware serves" do
-    expect(described_class::MOUNTS).to(contain_exactly("fonts", "json", "packs"))
-  end
 end

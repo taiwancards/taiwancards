@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DictController < ApplicationController
-  allow_unauthenticated_access
+  allow_unauthenticated_access only: %i[index show]
   publicly_cacheable
   include Paginated
   include ProgressMarks
@@ -13,7 +13,7 @@ class DictController < ApplicationController
 
   def index
     @levels = Huayu::TocflReadiness.new(user: current_user).levels
-    @level = params[:level].presence
+    @level = params[:level].presence_in(@levels.map { |stat| stat.collection.level_tag })
     @school = params[:school].presence_in(%w[1 2 3 4 5 6 7])
     @progress = params[:progress].presence_in(%w[new learning known])
     @sort = params[:sort].presence_in(%w[level freq]) || "level"
@@ -23,10 +23,7 @@ class DictController < ApplicationController
     scope = scope.where(id: level_lexeme_ids(@level)) if @level
     scope = scope.where("lexemes.data ->> 'tbcl_grade' = ?", @school) if @school
     if @q.present?
-      scope = scope.where(
-        "lexemes.text ILIKE :q OR lexemes.meanings ->> 'en' ILIKE :q OR lexemes.meanings ->> 'ru' ILIKE :q",
-        q: "%#{@q}%"
-      )
+      scope = scope.matching(@q)
     end
 
     scope = filter_progress(scope, @progress) if @progress
@@ -90,15 +87,11 @@ class DictController < ApplicationController
   end
 
   def find_entry(text)
-    entry = Lexeme.visible_to(current_user).where(kind: KINDS, text: text).order(:kind).first
-    return entry if entry || !text.to_s.match?(/[台臺]/)
-
-    twin = text.include?("臺") ? text.tr("臺", "台") : text.tr("台", "臺")
-    Lexeme.visible_to(current_user).where(kind: KINDS, text: twin).order(:kind).first
+    Lexeme.visible_to(current_user).where(kind: KINDS).index_by_spelling([text], preference: KINDS)[text.to_s]
   end
 
   def level_lexeme_ids(level)
-    collection = Collection.find_by(kind: :tocfl, level_tag: level)
+    collection = Collection.curated.find_by(kind: :tocfl, level_tag: level)
     collection ? collection.collection_items.select(:lexeme_id) : Lexeme.none
   end
 

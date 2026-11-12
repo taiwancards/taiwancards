@@ -88,7 +88,7 @@
                 button.mx-auto.inline-flex.items-center.justify-center.rounded-full.p-2.text-muted-foreground[
                   type="button" data-no-swipe="" data-controller="audio" data-audio-url-value=audio[:url]
                   data-audio-stop-ms-value=audio[:stop_ms]
-                  data-action="click->audio#play" class="hover:bg-muted hover:text-foreground" aria-label="audio" ]
+                  data-action="click->audio#play" class="hover:bg-muted hover:text-foreground" aria-label=t("study.play") ]
                   = icon(:speaker, css: "size-6")
               - if facet == "tone"
                 .pt-1

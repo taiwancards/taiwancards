@@ -10,6 +10,21 @@ RSpec.describe "Profile panels" do
     expect(@authenticated_user.reload.zhuyin_position).to(eq("over"))
   end
 
+  it "refuses an inline change it cannot store and keeps the rest of the form unsaved" do
+    patch("/profile", params: {inline: "1", user: {locale: "xx", level: "4"}})
+
+    expect(response).to(have_http_status(:unprocessable_content))
+    expect(@authenticated_user.reload).to(have_attributes(locale: "en", level: User::LEVELS.first))
+  end
+
+  it "shows the form again when a submitted change is refused" do
+    patch("/profile", params: {tab: "show", user: {locale: "xx", name: "Renamed"}})
+
+    expect(response).to(have_http_status(:unprocessable_content))
+    expect(response.media_type).to(eq("text/html"))
+    expect(@authenticated_user.reload.name).to(eq("Test User"))
+  end
+
   it "still redirects when the panel was submitted by its own button" do
     patch("/profile", params: {user: {level: "4"}})
 

@@ -31,23 +31,30 @@ RSpec.describe Deploy::SyncGuard do
     expect(described_class.new("probe", [path]).stale?).to(be(false))
   end
 
-  it "can be forced regardless of the fingerprint" do
-    described_class.new("probe", [path]).remember!
-
-    ClimateControl.modify(FORCE_SYNC: "1") do
-      expect(described_class.new("probe", [path]).stale?).to(be(true))
+  context("when a sync is forced") do
+    around do |example|
+      previous = ENV["FORCE_SYNC"]
+      ENV["FORCE_SYNC"] = "1"
+      example.run
+    ensure
+      ENV["FORCE_SYNC"] = previous
     end
 
-  rescue NameError
-    ENV["FORCE_SYNC"] = "1"
-    expect(described_class.new("probe", [path]).stale?).to(be(true))
-  ensure
-    ENV.delete("FORCE_SYNC")
+    it "is stale regardless of the fingerprint" do
+      described_class.new("probe", [path]).remember!
+
+      expect(described_class.new("probe", [path]).stale?).to(be(true))
+    end
   end
 
-  it "treats a missing source as settled rather than crashing" do
-    guard = described_class.new("absent", [Rails.root.join("tmp/does_not_exist.json")])
+  it "ignores a missing source, so the step runs once and then settles" do
+    missing = Rails.root.join("tmp/does_not_exist.json")
+    guard = described_class.new("absent", [missing])
 
-    expect { guard.fingerprint }.not_to(raise_error)
+    expect(guard.files).to(be_empty)
+    expect(guard.stale?).to(be(true))
+    guard.remember!
+
+    expect(described_class.new("absent", [missing]).stale?).to(be(false))
   end
 end

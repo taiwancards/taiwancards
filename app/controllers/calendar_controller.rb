@@ -2,7 +2,9 @@
 
 class CalendarController < ApplicationController
   allow_unauthenticated_access
-  publicly_cacheable
+  publicly_cacheable ttl: 1.hour, stale: 1.hour
+  include ProgressMarks
+
   def show
     @first_year = Huayu::LunarCalendar.first_year
     @last_year = Huayu::LunarCalendar.last_year
@@ -13,7 +15,7 @@ class CalendarController < ApplicationController
     @lunar_year = Huayu::LunarCalendar.years[@year]
     @table = Huayu::LunarCalendar.payload
     @lexemes = holiday_lexemes
-    load_memory_state
+    load_progress(@lexemes.values)
   end
 
   private
@@ -32,11 +34,5 @@ class CalendarController < ApplicationController
       .where(kind: Lexeme::DICTIONARY_KINDS, text: Huayu::Holidays.word_texts)
       .visible_to(current_user)
       .index_by(&:text)
-  end
-
-  def load_memory_state
-    memories = LexemeMemory.owned_by(Current.user).where(lexeme_id: @lexemes.values.map(&:id))
-    @started_ids = memories.active.distinct.pluck(:lexeme_id).to_set
-    @known_ids = memories.state_review.distinct.pluck(:lexeme_id).to_set
   end
 end

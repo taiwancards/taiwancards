@@ -9,9 +9,9 @@ RSpec.describe Reminders::Dose do
 
   def study!(days:, cards:)
     memory = LexemeMemory.create!(user:, lexeme: word, facet: :recognition, state: :review, due_at: now)
+    lexemes = [word] + create_list(:lexeme, cards - 1)
     rows = days.times.flat_map { |day|
-      cards.times.map { |index|
-        lexeme = index.zero? ? word : create(:lexeme, kind: :word, text: "詞#{day}#{index}")
+      lexemes.map { |lexeme|
         {
           user_id: user.id,
           lexeme_id: lexeme.id,

@@ -6,7 +6,7 @@ module Songs
   class LrclibClient
     HOST = ENV["LRCLIB_HOST"].to_s
     OPEN_TIMEOUT = 5
-    READ_TIMEOUT = 15
+    READ_TIMEOUT = 8
     LIMIT = 20
 
     def search(query)
@@ -45,6 +45,7 @@ module Songs
       http.use_ssl = true
       http.open_timeout = OPEN_TIMEOUT
       http.read_timeout = READ_TIMEOUT
+      http.max_retries = 0
 
       request = Net::HTTP::Get.new(uri)
       request["User-Agent"] = Sources.user_agent

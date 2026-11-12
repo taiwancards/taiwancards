@@ -200,7 +200,7 @@ module Site
         .order(:text)
         .pluck(:text)
         .map { |text| "/zhuci/#{ERB::Util.url_encode(text)}" }
-      tocfl = Collection.tocfl.order(:id).pluck(:id).map { |id| "/tocfl/#{id}" }
+      tocfl = Collection.curated.tocfl.order(:id).pluck(:id).map { |id| "/tocfl/#{id}" }
       tbcl = Huayu::TbclReadiness::GRADES.map { |grade| "/tbcl/#{grade}" }
 
       radicals + measures + particles + tocfl + tbcl

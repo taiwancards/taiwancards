@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class WritingController < ApplicationController
+  include PracticeQueue
+
   QUEUE_SIZE = 30
+  QUEUE_SLOT = "writing_practice"
   MISTAKE_WINDOW_DAYS = 30
-  RATINGS = %w[again hard good easy].freeze
 
   before_action :load_scope
 
@@ -20,7 +22,7 @@ class WritingController < ApplicationController
     return head(:not_found) if lexeme.nil?
 
     rating = params[:rating].to_s
-    return head(:unprocessable_entity) if RATINGS.exclude?(rating)
+    return head(:unprocessable_content) if Study::Run::RATINGS.exclude?(rating)
 
     memory = Lexemes::Activator.new(user: current_user).activate(lexeme, :writing)
     Lexemes::ReviewProcessor.new.call(
@@ -39,7 +41,7 @@ class WritingController < ApplicationController
   end
 
   def load_scope
-    @collection = Collection.where(user_id: [nil, current_user&.id]).find_by(id: params[:collection_id])
+    @collection = Collection.studyable_by(current_user).find_by(id: params[:collection_id])
   end
 
   def next_params(extra = {})
@@ -55,17 +57,7 @@ class WritingController < ApplicationController
   def pick_lexeme
     return writable_scope.find_by(id: params[:lexeme_id]) if params[:lexeme_id].present?
 
-    queue = Array(session[queue_key])
-    position = session[position_key].to_i
-    position += 1 if params[:advance].present?
-
-    if queue.empty? || position >= queue.size
-      queue = build_queue
-      position = 0
-    end
-
-    session[queue_key] = queue
-    session[position_key] = position
+    queue, position = practice_queue(QUEUE_SLOT, deck: @collection&.id) { build_queue }
     first_writable(queue, position)
   end
 
@@ -78,7 +70,7 @@ class WritingController < ApplicationController
       lexeme = found[id]
       next if lexeme.nil? || !Huayu::WritingTarget.new(lexeme).writable?
 
-      session[position_key] = position + offset
+      move_practice_position(QUEUE_SLOT, position + offset)
       return lexeme
     end
 
@@ -117,13 +109,5 @@ class WritingController < ApplicationController
       .pluck(:lexeme_id)
       .uniq
     writable_scope.where(id: ids).pluck(:id).to_set.then { |allowed| ids.select { |id| allowed.include?(id) } }
-  end
-
-  def queue_key
-    @collection ? "writing_queue_#{@collection.id}" : "writing_queue"
-  end
-
-  def position_key
-    @collection ? "writing_position_#{@collection.id}" : "writing_position"
   end
 end

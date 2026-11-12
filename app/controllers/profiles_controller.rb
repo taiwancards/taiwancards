@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProfilesController < ApplicationController
+  MAX_IMPORT_BYTES = 20.megabytes
+
   before_action :set_user
 
   def show
@@ -28,9 +30,9 @@ class ProfilesController < ApplicationController
 
       redirect_to(helpers.profile_tab_path(tab), notice: t("auth.profile_saved"))
     else
-      return head(:unprocessable_entity) if params[:inline].present?
+      return head(:unprocessable_content) if params[:inline].present?
 
-      render(tab, status: :unprocessable_entity)
+      render(tab, status: :unprocessable_content)
     end
   end
 
@@ -46,8 +48,11 @@ class ProfilesController < ApplicationController
   def import
     file = params[:file]
     return redirect_to(profile_path, alert: t("auth.import_no_file")) if file.blank?
+    return redirect_to(profile_path, alert: t("auth.import_bad")) if oversized?(file)
 
     json = JSON.parse(file.read)
+    return redirect_to(profile_path, alert: t("auth.import_bad")) unless json.is_a?(Hash)
+
     result = Progress::Import.new(current_user).call(json)
     redirect_to(profile_path, notice: t("auth.import_done", **result))
   rescue JSON::ParserError
@@ -95,6 +100,10 @@ class ProfilesController < ApplicationController
 
   private
 
+  def oversized?(file)
+    !file.respond_to?(:read) || file.size > MAX_IMPORT_BYTES
+  end
+
   def reseat_known_words(from:)
     grade = current_user.level_grade
     Placement::Seeder.new(current_user).reseat(grade) if grade != from
@@ -105,23 +114,18 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    permitted = params.expect(
+    params.expect(
       user: [
         :name,
         :locale,
         :zhuyin_position,
         :text_direction,
         :level,
-        :password,
-        :password_confirmation,
         :newsletter,
         :reminders,
         {mobile_tabs: []},
         {reminder_schedule: [:mode, :hour, {days: []}]}
       ]
     )
-    permitted.delete(:password) if permitted[:password].blank?
-    permitted.delete(:password_confirmation) if permitted[:password_confirmation].blank?
-    permitted
   end
 end

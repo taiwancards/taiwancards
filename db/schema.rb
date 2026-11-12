@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_05_190812) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -313,6 +313,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_190812) do
       name: "index_lexemes_on_search_tokens",
       where: "((kind <> 4) AND (search_text IS NOT NULL))",
       using: :gin
+    )
+    t.index(
+      ["id"],
+      name: "index_lexemes_on_voiced_sentences",
+      where: "((kind = 4) AND (NOT restricted) AND (data ? 'audio'::text))"
     )
     t.index(["kind", "freq_rank", "moe_index", "text"], name: "index_lexemes_frequency_order")
     t.index(["kind", "tbcl_grade"], name: "index_lexemes_on_kind_and_tbcl_grade")

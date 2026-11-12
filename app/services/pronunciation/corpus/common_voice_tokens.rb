@@ -11,7 +11,7 @@ module Pronunciation
       SOURCE = "common_voice"
       MIN_SYLLABLES = 2
       MAX_SYLLABLES = 5
-      DESCRIPTION = "Common Voice zh-TW, дикторы с тайваньским местом рождения — связная речь многих голосов"
+      DESCRIPTION = "Common Voice zh-TW, speakers born in Taiwan: connected speech from many voices"
 
       def initialize(store: TemplateStore.instance, io: $stdout)
         @store = store

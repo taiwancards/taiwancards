@@ -2,14 +2,18 @@
 
 module Huayu
   class RejectPurge
-    STORES = [SentenceRejectStore, CollocationRejectStore].freeze
+    STORES = [SentenceRejectStore, CollocationRejectStore, WordRejectStore].freeze
+    LISTED = 100
 
-    def initialize(io: $stdout)
+    def initialize(io: $stdout, stores: STORES)
       @io = io
+      @stores = stores
     end
 
     def call(dry_run: false)
-      STORES.index_with { |store| purge(store, dry_run:) }.transform_keys { |store| store::KIND }
+      results = @stores.index_with { |store| purge(store, dry_run:) }.transform_keys { |store| store::KIND }
+      TextAnalyzer.reset_vocabulary! if results.values.sum { |result| result[:removed] }.positive?
+      results
     end
 
     private
@@ -42,9 +46,15 @@ module Huayu
       end
 
       @io.puts(format("  to remove %d", removable.size))
+      list(removable.map(&:last))
       return if studied.empty?
 
       @io.puts(format("  kept, someone is studying them: %d", studied.size))
+      list(found.select { |id, _text| studied.include?(id) }.map(&:last))
+    end
+
+    def list(texts)
+      @io.puts("    #{texts.join(" ")}") if texts.any? && texts.size <= LISTED
     end
   end
 end

@@ -21,7 +21,7 @@
             .text-xs.text-muted-foreground = t("plan.stat.#{key}")
 
       p.text-sm
-        = t("plan.per_day_html", count: @calculator.daily_new_quota, minutes: @calculator.est_minutes_per_day).html_safe
+        = t("plan.per_day_html", count: @calculator.daily_new_quota, minutes: @calculator.est_minutes_per_day)
       .flex.flex-wrap.gap-2.text-xs.text-muted-foreground
         - @calculator.remaining_by_kind.each do |kind, count|
           - next if count.zero?

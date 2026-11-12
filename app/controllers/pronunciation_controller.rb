@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-require "json"
-
 class PronunciationController < ApplicationController
+  include PracticeQueue
+
   QUEUE_SIZE = Pronunciation::Queue::SIZE
+  QUEUE_SLOT = "pron_practice"
 
   def show
-    @collection = Collection.where(user_id: [nil, current_user&.id]).find_by(id: params[:collection_id])
+    @collection = Collection.studyable_by(current_user).find_by(id: params[:collection_id])
     @drills = Pronunciation::Drills.instance
     @section = @drills.section(params[:section])
     @tonal = params[:section].blank? || !params[:section].to_s.start_with?("initials_", "vowel_")
@@ -35,7 +36,8 @@ class PronunciationController < ApplicationController
   end
 
   def template
-    data = Pronunciation::TemplateStore.instance.template(params[:key], params[:norm].presence || "taiwan")
+    norm = params[:norm].presence_in(Pronunciation::TemplateStore::NORMS) || Pronunciation::TemplateStore::CITATION
+    data = Pronunciation::TemplateStore.instance.template(params[:key], norm)
     return head(:not_found) if data.nil?
 
     expires_in(1.day, public: true)
@@ -57,7 +59,7 @@ class PronunciationController < ApplicationController
 
     return render(json: {status: "busy"}, status: :too_many_requests) if result == :busy
     return render(json: {status: "offline"}, status: :service_unavailable) if result.nil?
-    return render(json: result, status: :unprocessable_entity) if result["status"] == "retry"
+    return render(json: result, status: :unprocessable_content) if result["status"] == "retry"
 
     render(json: result)
   end
@@ -76,16 +78,13 @@ class PronunciationController < ApplicationController
   end
 
   def parse_expected
-    JSON.parse(params[:expected].to_s)
+    parsed = JSON.parse(params[:expected].to_s)
+    parsed.is_a?(Array) ? parsed.grep(Hash) : []
   rescue JSON::ParserError
     []
   end
 
-  def pronounceable
-    scope = Lexeme.where(kind: %i[word character]).where("readings ->> 'pinyin' IS NOT NULL")
-    scope = scope.where(id: @collection.lexemes.select(:id)) if @collection
-    scope
-  end
+  def pronounceable = Pronunciation::Queue.pronounceable(@collection)
 
   def sandhi_syllables
     @syllables
@@ -112,17 +111,7 @@ class PronunciationController < ApplicationController
     return practiceable(params[:lexeme_id]) if params[:lexeme_id].present?
     return pick_from_section if @section
 
-    queue = Array(session[queue_key])
-    position = session[position_key].to_i
-    position += 1 if params[:advance].present?
-
-    if queue.empty? || position >= queue.size
-      queue = build_queue
-      position = 0
-    end
-
-    session[queue_key] = queue
-    session[position_key] = position
+    queue, position = practice_queue(QUEUE_SLOT, deck: @collection&.id) { build_queue }
     practiceable(queue[position]) || pronounceable.order(Arel.sql("RANDOM()")).first
   end
 
@@ -165,13 +154,5 @@ class PronunciationController < ApplicationController
       .ids
 
     ids.presence || pronounceable.curriculum_order.limit(QUEUE_SIZE).pluck(:id)
-  end
-
-  def queue_key
-    @collection ? "pron_queue_#{@collection.id}" : "pron_queue"
-  end
-
-  def position_key
-    @collection ? "pron_position_#{@collection.id}" : "pron_position"
   end
 end

@@ -229,19 +229,19 @@ module Study
 
       known = LexemeMemory.owned_by(@user).state_review.select(:lexeme_id)
       scope = Lexeme
-        .where(kind: :sentence, restricted: false)
-        .where("lexemes.data ? 'audio'")
+        .voiced_sentences
+        .left_joins(:sentence_profile)
         .where("lexemes.meanings ? :locale", locale: I18n.locale.to_s)
+        .where(id: SentenceWord.where(lexeme_id: known).select(:sentence_id))
         .where
         .not(id: activated_lexeme_ids + exclude)
         .where(
           "NOT EXISTS (SELECT 1 FROM sentence_words sw WHERE sw.sentence_id = lexemes.id " \
             "AND sw.lexeme_id NOT IN (#{known.to_sql}))"
         )
-        .where("EXISTS (SELECT 1 FROM sentence_words sw WHERE sw.sentence_id = lexemes.id)")
       ceiling = level_ceiling
-      scope = scope.up_to_level(ceiling) if ceiling
-      scope.order(Arel.sql("#{Lexeme::LEVEL_INDEX_SQL} NULLS LAST"), :id).limit(count).pluck(:id)
+      scope = scope.where("#{SentenceProfile::LEVEL_SQL} <= ?", ceiling) if ceiling
+      scope.order(Arel.sql("#{SentenceProfile::LEVEL_SQL} NULLS LAST"), :id).limit(count).pluck(:id)
     end
 
     def everyday_fresh_ids(count)

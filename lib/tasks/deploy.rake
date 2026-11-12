@@ -3,7 +3,9 @@
 namespace(:deploy) do
   desc("Import committed data sources that changed since the last boot (idempotent, no-op when unchanged)")
   task(sync: :environment) do
-    puts(Deploy::Sync.new.call)
+    report = Deploy::Sync.new.call
+    puts(report)
+    abort("deploy:sync FAILED [#{report.failed.join(", ")}]") if report.failed.any?
   end
 
   desc("Download everything the running app reads from the runtime bucket. Usage: rake deploy:hydrate")

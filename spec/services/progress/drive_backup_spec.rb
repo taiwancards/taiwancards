@@ -46,4 +46,33 @@ RSpec.describe Progress::DriveBackup do
     restored = other.lexeme_memories.joins(:lexeme).find_by(lexemes: {text: "學校"})
     expect(restored).to(be_present)
   end
+
+  def archive_of(text)
+    io = StringIO.new
+    gz = Zlib::GzipWriter.new(io)
+    gz.write(text)
+    gz.close
+    io.string
+  end
+
+  def restoring(content)
+    client = instance_double(Google::DriveClient, backups: [{"id" => "f"}], download: content)
+    Progress::DriveBackup.new(user, client:).restore
+  end
+
+  it "refuses an archive that unpacks past the limit" do
+    stub_const("Progress::DriveBackup::LIMIT", 1024)
+
+    expect { restoring(archive_of("{" + (" " * 4096) + "}")) }
+      .to(raise_error(Google::DriveClient::Error, /larger than/))
+  end
+
+  it "reports a file that is not a gzip archive as a Drive error" do
+    expect { restoring("plain text") }.to(raise_error(Google::DriveClient::Error, /could not be read/))
+  end
+
+  it "reports an archive that does not hold a JSON object as a Drive error" do
+    expect { restoring(archive_of("not json")) }.to(raise_error(Google::DriveClient::Error, /could not be read/))
+    expect { restoring(archive_of("[1, 2]")) }.to(raise_error(Google::DriveClient::Error, /could not be read/))
+  end
 end

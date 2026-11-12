@@ -5,7 +5,7 @@ module Pronunciation
     module_function
 
     def for(target, store: TemplateStore.instance)
-      explicit = target["key"].presence
+      explicit = target["key"] if TemplateStore.key?(target["key"])
       return explicit if explicit && store.template(explicit)
 
       options = candidates(target)

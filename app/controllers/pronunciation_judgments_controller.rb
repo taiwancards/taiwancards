@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 class PronunciationJudgmentsController < ApplicationController
-  before_action :require_restricted_access
+  before_action :require_admin
 
   PAGE = 12
 
   def index
-    @pending = PronunciationRecording.unrated.oldest_first.limit(PAGE).to_a
+    @pending = PronunciationRecording
+      .unrated
+      .oldest_first
+      .select(PronunciationRecording.column_names - %w[audio])
+      .limit(PAGE)
+      .to_a
     @tally = PronunciationRecording.group(:verdict).count
     @coverage = coverage
   end

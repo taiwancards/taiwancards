@@ -4,6 +4,7 @@ class CollectionsController < ApplicationController
   FACETS = LexemeMemory.facets.keys.freeze
   TABS = %w[text import song photo].freeze
   PER_PAGE = 120
+  UPLOAD_BYTES = Collections::TextPreview::MAX_CHARS * 4
 
   before_action :set_desk, only: %i[show update destroy add_item add_cards remove_item remove_items]
 
@@ -12,6 +13,14 @@ class CollectionsController < ApplicationController
     within: 5.minutes,
     only: %i[preview song],
     with: -> { redirect_to(new_desk_path, alert: t("desks.too_fast")) }
+  )
+  rate_limit(
+    to: 20,
+    within: 5.minutes,
+    only: :new,
+    if: -> { params[:q].present? },
+    name: "song_search",
+    with: -> { redirect_to(new_desk_path(tab: "song"), alert: t("desks.too_fast")) }
   )
 
   def index
@@ -93,7 +102,7 @@ class CollectionsController < ApplicationController
   end
 
   def add_item
-    lexeme = Lexeme.find_by(id: numeric_id(params[:lexeme_id]))
+    lexeme = Lexeme.visible_to(current_user).find_by(id: numeric_id(params[:lexeme_id]))
     if lexeme.nil?
       redirect_to(my_desk_path(@desk))
     elsif @desk.add_lexemes([lexeme.id]).zero? && @desk.room_left&.zero?
@@ -137,7 +146,7 @@ class CollectionsController < ApplicationController
     ids = @desk.ordered_lexeme_ids(limit: PER_PAGE, offset: (@page - 1) * PER_PAGE)
     return [] if ids.empty?
 
-    by_id = Lexeme.where(id: ids).index_by(&:id)
+    by_id = Lexeme.visible_to(current_user).where(id: ids).index_by(&:id)
     ids.filter_map { |id| by_id[id] }
   end
 
@@ -163,7 +172,7 @@ class CollectionsController < ApplicationController
   def existing(ids)
     return [] if ids.empty?
 
-    known = Lexeme.where(id: ids).pluck(:id).to_set
+    known = Lexeme.visible_to(current_user).where(id: ids).pluck(:id).to_set
     ids.select { |id| known.include?(id) }
   end
 
@@ -182,9 +191,14 @@ class CollectionsController < ApplicationController
   end
 
   def submitted_text
+    [params[:text].to_s, uploaded_text].compact_blank.join("\n").first(Collections::TextPreview::MAX_CHARS)
+  end
+
+  def uploaded_text
     upload = params[:file]
-    uploaded = upload.respond_to?(:read) ? upload.read.to_s.force_encoding("UTF-8").scrub : ""
-    [params[:text].to_s, uploaded].compact_blank.join("\n").first(Collections::TextPreview::MAX_CHARS)
+    return "" unless upload.respond_to?(:read)
+
+    upload.read(UPLOAD_BYTES).to_s.force_encoding("UTF-8").scrub
   end
 
   def chosen_facets

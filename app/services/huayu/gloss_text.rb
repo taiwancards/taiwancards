@@ -5,7 +5,6 @@ module Huayu
     TWIN = /(\p{Han}+)\|\p{Han}+/
     READING = /(?<=\p{Han})[[:blank:]]*\[[A-Za-z][A-Za-z[:blank:]]*\d[A-Za-z0-9[:blank:]]*\]/
     CLASSIFIER = /\bCL:([^;]+)/
-    LABELS = {"en" => "measure word:", "ru" => "счётное слово:"}.freeze
 
     module_function
 
@@ -22,7 +21,12 @@ module Huayu
     def measure_words(list, locale)
       forms = list.split(/[,，]/).map(&:strip).compact_blank.join(", ")
 
-      "#{LABELS.fetch(locale, LABELS["en"])} #{forms}"
+      "#{label(locale)} #{forms}"
+    end
+
+    def label(locale)
+      language = I18n.locale_available?(locale.to_s) ? locale.to_s : "en"
+      I18n.t("glosses.measure_word", locale: language)
     end
   end
 end

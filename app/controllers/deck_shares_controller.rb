@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class DeckSharesController < ApplicationController
-  before_action :set_share, only: %i[show accept]
-  before_action :set_own_share, only: :destroy
-
   rate_limit to: 20, within: 1.hour, only: :create, with: -> { redirect_to(desks_path, alert: t("shares.too_many")) }
   rate_limit to: 30, within: 1.hour, only: :accept, with: -> { redirect_to(desks_path, alert: t("shares.too_many")) }
+
+  before_action :set_share, only: %i[show accept]
+  before_action :set_own_share, only: :destroy
 
   def index
     @shares = DeckShare.where(user: current_user).live.recent.limit(DeckShare::MAX_ACTIVE_PER_USER)

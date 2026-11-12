@@ -34,7 +34,7 @@
         = radio_button_tag(:book, "", @book.nil?, class: "sr-only")
         = t("phrase_drills.any_book")
     .flex.flex-wrap.items-center.gap-2
-      = search_field_tag :q, @q, placeholder: t("phrase_drills.search_placeholder"),
+      = search_field_tag :q, @q, placeholder: t("phrase_drills.search_placeholder"), aria: {label: t("phrase_drills.search_placeholder")},
         class: "min-w-40 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm"
       = submit_tag t("sentences.apply"), class: "cursor-pointer rounded-lg bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
       - if @q.present? || @level || @scheme || @book

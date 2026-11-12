@@ -82,6 +82,28 @@ RSpec.describe Lexemes::Search do
     end
   end
 
+  describe "the other spelling of 臺 and 台" do
+    it "finds a word held only as 台 when it is typed with 臺" do
+      word("台啤", "táipí", "ㄊㄞˊ ㄆㄧˊ", score: 50, meaning: "Taiwan Beer")
+
+      result = described_class.new.call("臺啤").results.first
+      expect([result.lexeme.text, result.tier]).to(eq(["台啤", described_class::EXACT]))
+    end
+
+    it "finds a word held only as 臺 when it is typed with 台" do
+      word("臺積電", "táijīdiàn", "ㄊㄞˊ ㄐㄧ ㄉㄧㄢˋ", score: 50, meaning: "TSMC")
+
+      expect(texts("台積電").first).to(eq("臺積電"))
+    end
+
+    it "returns both spellings when both are held" do
+      word("台海", "táihǎi", "ㄊㄞˊ ㄏㄞˇ", score: 60, meaning: "Strait")
+      word("臺海", "táihǎi", "ㄊㄞˊ ㄏㄞˇ", score: 40, meaning: "the Taiwan Strait")
+
+      expect(texts("台海").first(2)).to(eq(%w[臺海 台海]))
+    end
+  end
+
   describe "what the quick panel returns" do
     before do
       15.times { |index| word("詞#{index}", "cí", "ㄘˊ", score: index + 1, meaning: "word #{index}") }

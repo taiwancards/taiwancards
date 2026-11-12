@@ -23,8 +23,10 @@ module Huayu
       "#{vocabulary_digest}:#{rule_digest}"
     end
 
+    RULE_FILES = %w[app/services/lexemes/level_scale.rb app/services/huayu/variant_forms.rb].freeze
+
     def self.rule_digest
-      Digest::SHA256.file(Rails.root.join("app/services/lexemes/level_scale.rb")).hexdigest
+      RULE_FILES.map { |path| Digest::SHA256.file(Rails.root.join(path)).hexdigest }.join(":")
     end
 
     def self.vocabulary_digest

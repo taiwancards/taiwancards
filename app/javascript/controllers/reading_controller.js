@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus";
+import { typingElsewhere } from "lib/hotkeys";
 
 const SIZES = { s: 0.85, m: 1, l: 1.25 };
 const ORDER = Object.keys(SIZES);
 const SIZE_KEY = "reading.size";
-const FIELDS = "input, textarea, select, [contenteditable]";
 
 export default class extends Controller {
   static targets = ["line", "position", "progress", "sizeLabel", "saved"];
@@ -71,7 +71,7 @@ export default class extends Controller {
   }
 
   key(event) {
-    if (!this.focusing() || event.target.closest?.(FIELDS)) return;
+    if (!this.focusing() || typingElsewhere(event)) return;
     if (event.key === "ArrowRight") this.next();
     if (event.key === "ArrowLeft") this.previous();
   }

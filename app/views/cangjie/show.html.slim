@@ -16,7 +16,7 @@
       data-controller="cangjie" data-cangjie-url-value=@url ]
 
       textarea.w-full.rounded-xl.border.border-border.bg-card.px-4.py-3.text-2xl.leading-relaxed[
-        lang="zh-TW" rows="3" placeholder=t("cangjie.output_placeholder")
+        lang="zh-TW" rows="3" placeholder=t("cangjie.output_placeholder") aria-label=t("cangjie.output_placeholder")
         autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"
         data-cangjie-target="output" data-action="keydown->cangjie#keydown beforeinput->cangjie#beforeinput" ]
 
@@ -33,12 +33,12 @@
         .flex.justify-center.pt-1 class="gap-0.5 sm:gap-1"
           button.flex.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
             type="button" class="h-12 w-14 hover:bg-muted active:bg-primary/20 sm:h-12 sm:w-20"
-            aria-label="Backspace" data-action="cangjie#backspace" ] ⌫
+            aria-label=t("search.backspace") data-action="cangjie#backspace" ] ⌫
           button.flex.h-12.flex-1.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
             type="button" class="max-w-72 hover:bg-muted active:bg-primary/20"
-            aria-label="Space" data-action="cangjie#space" ] ␣
+            aria-label=t("search.space") data-action="cangjie#space" ] ␣
           button.flex.items-center.justify-center.rounded-lg.border.border-border.bg-card.text-lg.transition-colors[
             type="button" class="h-12 w-14 hover:bg-muted active:bg-primary/20 sm:h-12 sm:w-20"
-            aria-label="Clear" data-action="cangjie#clear" ] ✕
+            aria-label=t("search.clear_field") data-action="cangjie#clear" ] ✕
 
       p.text-center.text-xs.text-muted-foreground = t("cangjie.hint")

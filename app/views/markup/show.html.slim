@@ -26,12 +26,15 @@ ul.words
     = link_to("Next", @next_path, class: "btn", id: "markup-next")
 
 .actions
-  = button_to("Delete sentence", markup_sentence_path(@sentence, lang: @locale, mode: @mode), method: :delete, class: "danger", form: {data: {turbo_confirm: "Delete this sentence?"}})
+  = button_to("Delete sentence", markup_sentence_path(@sentence, lang: @locale, mode: @mode), method: :delete, class: "danger", form: {id: "markup-delete", data: {confirm: "Delete this sentence?"}})
 
 p.hint Enter — save and go on · Shift+Enter — newline · → — next without saving
 
 = javascript_tag nonce: true do
-  | document.addEventListener("keydown", (event) => {
+  | document.getElementById("markup-delete").addEventListener("submit", (event) => {
+      if (!window.confirm(event.target.dataset.confirm)) event.preventDefault();
+    });
+    document.addEventListener("keydown", (event) => {
       const form = document.getElementById("markup-form");
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();

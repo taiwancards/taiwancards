@@ -8,7 +8,7 @@ RSpec.describe "Progress export and restore", :aggregate_failures do
   let!(:character) { create(:lexeme, kind: :character, text: "水") }
 
   def populate!
-    user.update!(prefs: user.prefs.merge("level" => "b1", "mobile_tabs" => %w[desk study]))
+    user.update!(prefs: user.prefs.merge("level" => "3", "mobile_tabs" => %w[desk study]))
 
     memory = LexemeMemory.create!(
       user:,
@@ -147,7 +147,7 @@ RSpec.describe "Progress export and restore", :aggregate_failures do
     fresh = create(:user)
     Progress::Import.new(fresh).call(payload)
 
-    expect(fresh.reload.prefs).to(include("level" => "b1", "mobile_tabs" => %w[desk study]))
+    expect(fresh.reload.prefs).to(include("level" => "3", "mobile_tabs" => %w[desk study]))
   end
 
   it "is idempotent" do

@@ -42,16 +42,12 @@ module Huayu
       delegate :call, :ok?, :tier_of, to: :instance
     end
 
-    def initialize
-      @china = ChinaGuard.instance
-    end
-
     def call(text)
       report = TWFilter.examine(text.to_s, policy: POLICY)
       finding = report.rejects.first
       return reject(finding) if finding
 
-      stored = @china.offender(report.text)
+      stored = ChinaGuard.instance.offender(report.text)
       return Verdict.new(ok: false, tier: nil, reason: :china, offender: stored) if stored
 
       Verdict.new(ok: true, tier: report.tier || CharacterTiers::COMMON, reason: nil, offender: nil)

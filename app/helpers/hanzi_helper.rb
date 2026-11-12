@@ -6,7 +6,7 @@ module HanziHelper
   ERAS = %w[oracle bronze seal clerical].freeze
   SCRIPT_DIR = Rails.root.join("app/assets/images/scripts")
 
-  def evolution_rows
+  def self.evolution_rows
     @evolution_rows ||= SCRIPT_DIR
       .glob("*.svg")
       .group_by { |path| path.basename.to_s.split("-").first }
@@ -15,7 +15,11 @@ module HanziHelper
         [char, eras] if eras.size >= 3
       }
       .sort_by(&:first)
+      .map { |row| row.map(&:freeze).freeze }
+      .freeze
   end
+
+  def evolution_rows = HanziHelper.evolution_rows
 
   def evolution_image(char, era)
     "scripts/#{char}-#{era}.svg"

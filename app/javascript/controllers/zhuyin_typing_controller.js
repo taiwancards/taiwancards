@@ -1,4 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
+import { csrfToken } from "lib/csrf";
+import { typingElsewhere } from "lib/hotkeys";
 
 const TONES = { 6: "ˊ", 3: "ˇ", 4: "ˋ", 7: "˙" };
 
@@ -26,6 +28,7 @@ export default class extends Controller {
     this.attempts = 0;
     this.reported = false;
     this.buffer = "";
+    this.flashTimers = new Set();
     this.handler = (event) => this.onKey(event);
     document.addEventListener("keydown", this.handler);
     this.render();
@@ -33,6 +36,9 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("keydown", this.handler);
+    clearTimeout(this.acceptTimer);
+    this.flashTimers.forEach((timer) => clearTimeout(timer));
+    this.flashTimers.clear();
   }
 
   get word() {
@@ -40,7 +46,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
-    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    if (typingElsewhere(event)) return;
 
     const key = event.key;
     if (key === "Backspace") {
@@ -99,7 +105,8 @@ export default class extends Controller {
     this.buffer = "";
     this.report();
 
-    setTimeout(() => {
+    clearTimeout(this.acceptTimer);
+    this.acceptTimer = setTimeout(() => {
       this.bufferTarget.dataset.state = "";
       this.verdictTarget.textContent = "";
       this.verdictTarget.dataset.state = "";
@@ -113,9 +120,11 @@ export default class extends Controller {
     );
     if (!node) return;
     node.dataset.hit = "true";
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      this.flashTimers.delete(timer);
       node.dataset.hit = "false";
     }, 140);
+    this.flashTimers.add(timer);
   }
 
   normalize(value) {
@@ -144,10 +153,9 @@ export default class extends Controller {
     if (this.correct < (this.goalValue || 10)) return;
 
     this.reported = true;
-    const token = document.querySelector("meta[name='csrf-token']")?.content;
     fetch(this.resultUrlValue, {
       method: "POST",
-      headers: { "X-CSRF-Token": token || "" },
+      headers: { "X-CSRF-Token": csrfToken() },
     }).catch(() => {});
   }
 

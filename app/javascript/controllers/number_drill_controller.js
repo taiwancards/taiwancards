@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
-
-const DIRECTIONS = ["up", "right", "down", "left"];
+import { csrfToken } from "lib/csrf";
+import { typingElsewhere } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = [
@@ -83,6 +83,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     const map = {
       ArrowUp: "up",
       ArrowRight: "right",
@@ -144,7 +145,7 @@ export default class extends Controller {
 
   report() {
     if (this.reported || !this.resultUrlValue) return;
-    const token = document.querySelector("meta[name='csrf-token']")?.content;
+    const token = csrfToken();
     if (!token) return;
 
     this.reported = true;

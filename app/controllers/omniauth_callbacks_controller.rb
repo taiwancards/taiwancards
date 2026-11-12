@@ -20,12 +20,15 @@ class OmniauthCallbacksController < ApplicationController
         User.exists?(google_email: auth.info.email.to_s.downcase)
       user = User.for_google(auth, locale: interface_locale)
       user.update!(signup_from: signup_source) unless existing
+      return_path = take_return_path
+      guest_test = session.delete(PlacementTestsController::GUEST_TEST)
+      reset_session
       start_new_session_for(user)
-      PlacementTest.adopt(session.delete(PlacementTestsController::GUEST_TEST), user)
+      PlacementTest.adopt(guest_test, user)
       session[:fresh_account] = true unless existing
       language = existing ? user.locale : interface_locale
       notice = t(existing ? "auth.signed_in" : "auth.signed_up", locale: language)
-      redirect_to(take_return_path || desk_path(locale: language), notice:)
+      redirect_to(return_path || desk_path(locale: language), notice:)
     end
 
   rescue => e

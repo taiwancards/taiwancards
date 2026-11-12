@@ -20,6 +20,6 @@
               = t("shares.accepted_count", count: share.accepted_count)
           .flex.flex-wrap.items-center.gap-2
             input.min-w-0.flex-1.rounded-lg.border.border-border.bg-muted.px-3.py-2.font-mono[
-              type="text" readonly=true onclick="this.select()"
+              type="text" readonly=true data-controller="select-all" data-action="click->select-all#select focus->select-all#select"
               class="text-xs" value=deck_share_url(share.token) aria-label=t("shares.link_label") ]
             = button_to t("shares.revoke"), revoke_deck_share_path(share.token), method: :delete, class: "shrink-0 rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-muted"

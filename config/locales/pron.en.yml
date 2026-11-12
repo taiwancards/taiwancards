@@ -2,7 +2,7 @@ en:
   pron:
     legend:
       title: "What the colors mean"
-      body: "Nobody scores 100 — Taiwanese broadcasters don't either. Green means there is nothing left to fix. Amber means you will be understood first time. Only red is worth acting on."
+      body: "Nobody scores 100 — Taiwanese broadcasters don't either. Green means there is nothing left to fix. Amber means you will be understood the first time. Only red is worth acting on."
     levels:
       green:
         name: "Excellent"
@@ -42,7 +42,7 @@ en:
       your_take: "Your recording"
       model: "Reference"
       open_syllable: "Tap a syllable to see its breakdown"
-      chart_hint: "The band is how living speakers actually produce this syllable: inside it nothing counts against you. Dashed is its middle, solid is you, red marks where you left the band."
+      chart_hint: "The band is how real speakers actually produce this syllable: inside it nothing counts against you. Dashed is its middle, solid is you, red marks where you left the band."
       chart_range: "The scale is semitones from the middle of your voice, so it shows not only the shape of the tone but the height you took it at."
       parts_title: "What the score is made of"
       fix_title: "What to fix"
@@ -85,7 +85,7 @@ en:
       near: "No clear error, but it falls short of the reference."
       tone:
         wrong: "That was tone %{got}; tone %{tone} is needed."
-        shape: "The contour parts from the tone %{tone} reference."
+        shape: "The contour departs from the tone %{tone} reference."
         falls: "The voice went down; tone %{tone} goes up."
         rises: "The voice went up; tone %{tone} goes down."
       initial:
@@ -105,7 +105,7 @@ en:
         apical: "There is no separate vowel after %{initial}: the sound continues where the consonant leaves the tongue."
       coda:
         weak: "The nasal coda barely sounded."
-        heavy: "The nasal is too heavy — the vowel is nasalised too early."
+        heavy: "The nasal is too heavy — the vowel is nasalized too early."
         ng_for_n: "The -n coda came out as -ng."
         n_for_ng: "The -ng coda came out as -n."
       duration:
@@ -120,8 +120,8 @@ en:
       flow:
         ok: "The syllables hold together the way they do in real speech."
         choppy: "The pauses between syllables are too long — the words fall apart into separate syllables."
-        pitch_reset: "The voice picks its pitch afresh on every syllable: it sounds like a list, not a phrase."
-        clipped: "Loudness drops out at the joins — the syllables break off instead of running into each other."
+        pitch_reset: "The voice resets its pitch on every syllable: it sounds like a list, not a phrase."
+        clipped: "Loudness drops out between syllables — they break off instead of running into each other."
       read:
         ok: "What was read matches what is written."
         doubtful: "The recording fits the text poorly — something else may have been said."
@@ -130,13 +130,13 @@ en:
       near: "Try again, following the reference."
       tone:
         wrong: "Follow the reference curve on the chart."
-        shape: "Check the chart and see where your line parts from the reference."
+        shape: "Check the chart and see where your line departs from the reference."
         falls: "Start lower and carry the voice up to the end of the syllable."
         rises: "Start higher and let the voice down to the end of the syllable."
       initial:
         under_aspirated: "Push more air after the release — the puff must clearly precede the voice."
         over_aspirated: "Start voicing immediately after the release, with no puff in between."
-        vot_off: "Watch the join between the consonant and the vowel."
+        vot_off: "Watch the transition between the consonant and the vowel."
       sibilant:
         too_front: "Pull the tongue further back."
         too_back: "Bring the tongue further forward."
@@ -147,7 +147,7 @@ en:
         close: "Drop the jaw."
         front: "Pull the tongue back."
         back: "Bring the tongue forward."
-        apical: "Do not put an ee sound here: keep the tongue on the consonant and voice it on."
+        apical: "Do not put an ee sound here: keep the tongue on the consonant and keep voicing."
       coda:
         weak: "Hold the end of the syllable: let the air go through the nose instead of stopping on the vowel."
         heavy: "Keep the vowel clean and let the nose in only at the very end."
@@ -162,7 +162,7 @@ en:
       flow:
         choppy: "Read the phrase in one breath, without stopping between syllables."
         pitch_reset: "Carry one line of voice through the whole phrase: each syllable continues the pitch of the last."
-        clipped: "Do not cut the voice at the join — carry the sound from one syllable into the next."
+        clipped: "Do not cut the voice between syllables — carry the sound from one syllable into the next."
       read:
         doubtful: "Check the text and read it again."
         mismatch: "Check the text: the score is measured against what is written."
@@ -222,7 +222,7 @@ en:
       empty: "A buzzing vowel with no symbol of its own: leave the tongue exactly where the consonant left it and keep voicing. Neither 'ee' nor 'uh'."
     judge:
       title: "Pronunciation score calibration"
-      hint: "Your own recordings from pronunciation practice collect here; other people's recordings are never stored. A native speaker listens to each one and says whether they would accept that pronunciation from someone talking to them. Those answers set the thresholds for the green, yellow and red scores. The engine's score stays hidden until the decision is made — seeing it first would give the answer away."
+      hint: "Your own recordings from pronunciation practice collect here; other people's recordings are never stored. A native speaker listens to each one and says whether they would accept that pronunciation from someone talking to them. Those answers set the thresholds for the green, amber and red scores. The engine's score stays hidden until the decision is made — seeing it first would give the answer away."
       which: "What you rejected"
       accept: "Accept"
       reject: "Reject"
@@ -240,3 +240,22 @@ en:
         accepted: "accepted"
         rejected: "rejected"
         unsure: "not sure"
+    warmup:
+      prompts:
+        vowels:
+          text: "ee — ah — oo"
+          hint: "hold each sound for about a second and a half"
+        rise:
+          text: "Really?!"
+          hint: "with surprise"
+        fall:
+          text: "Yes, it is."
+          hint: "calmly, ending flat"
+        tone_1:
+          hint: "level and high: hold one steady note a little above your speaking voice"
+        tone_2:
+          hint: 'rising, like a questioning "Huh?" — the voice keeps climbing'
+        tone_3:
+          hint: 'down to the bottom of your voice and a little back up, like a doubtful "Well…"'
+        tone_4:
+          hint: 'falling sharply from high to low, like a firm "Stop!"'

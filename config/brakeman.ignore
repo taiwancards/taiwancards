@@ -65,10 +65,6 @@
       "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
     },
     {
-      "fingerprint": "9852aba12b0d5cc53d4ed69846ecedc4c6007a011a1bd6f0dadc5a18e20f2d0f",
-      "note": "The _html translation interpolates numbers computed by the planner, never user text."
-    },
-    {
       "fingerprint": "9ddcbaed171ad701cdc30bb952d830e3b3d420ea6919a90d34a4959146d82b69",
       "note": "The command line is assembled from constants and integers and passed either as an argument array or through Shellwords#shelljoin."
     },

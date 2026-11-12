@@ -40,15 +40,16 @@ RSpec.describe Study::CardSet do
     word
   end
 
-  def voiced_sentence(text, words:, level: 1)
+  def voiced_sentence(text, words:, level: 1, audio: "common_voice")
     sentence = Lexeme.new(
       kind: :sentence,
       text:,
       meanings: {"en" => "a translated sentence"},
-      data: {"tbcl_grade" => level, "audio" => "common_voice"}
+      data: {"audio" => audio, "difficulty" => 100}.compact
     )
     sentence.lexeme_content_sources.build(content_source: source)
     sentence.save!
+    SentenceProfile.create!(lexeme: sentence, tocfl_index: level, tbcl_index: level, difficulty: 100)
     words.each { |word| SentenceWord.create!(sentence:, lexeme: word, gdex: 500) }
     sentence
   end
@@ -104,19 +105,36 @@ RSpec.describe Study::CardSet do
   end
 
   it "holds back a sentence that has no recording" do
-    known = known_word("喝")
-    silent = Lexeme.new(
-      kind: :sentence,
-      text: "我喝水。",
-      meanings: {"en" => "I drink water."},
-      data: {"tbcl_grade" => 1}
-    )
-    silent.lexeme_content_sources.build(content_source: source)
-    silent.save!
-    SentenceWord.create!(sentence: silent, lexeme: known, gdex: 500)
+    silent = voiced_sentence("我喝水。", words: [known_word("喝")], audio: nil)
 
     ids = described_class.new.select(mode: "daily", size: 20)
 
     expect(ids).not_to(include(silent.id))
+  end
+
+  it "holds back a sentence graded above the level the learner is working toward" do
+    hard = voiced_sentence("我喝咖啡。", words: [known_word("喝")], level: 6)
+
+    ids = described_class.new.select(mode: "daily", size: 20)
+
+    expect(ids).not_to(include(hard.id))
+  end
+
+  it "offers the easiest readable sentences first" do
+    word = known_word("喝")
+    later = voiced_sentence("我想喝。", words: [word], level: 3)
+    sooner = voiced_sentence("我喝。", words: [word], level: 1)
+
+    ids = described_class.new.select(mode: "daily", size: 7)
+
+    expect(ids & [sooner.id, later.id]).to(eq([sooner.id]))
+  end
+
+  it "holds back a sentence the learner has no word for" do
+    stray = voiced_sentence("你好。", words: [])
+
+    ids = described_class.new.select(mode: "daily", size: 20)
+
+    expect(ids).not_to(include(stray.id))
   end
 end

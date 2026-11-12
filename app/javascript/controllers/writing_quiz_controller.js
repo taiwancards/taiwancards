@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import HanziWriter from "hanzi-writer";
+import { csrfToken } from "lib/csrf";
+import { strokeData } from "lib/stroke_data";
 import { writerSize } from "lib/writer_size";
 
 const STAGES = ["watch", "trace", "recall"];
@@ -30,6 +32,7 @@ export default class extends Controller {
   };
 
   connect() {
+    this.active = true;
     this.startedAt = performance.now();
     this.writers = [];
     this.finished = false;
@@ -38,6 +41,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.active = false;
     clearTimeout(this.advanceTimer);
     clearTimeout(this.stageTimer);
     this.writers.forEach((w) => w?.cancelQuiz());
@@ -60,10 +64,8 @@ export default class extends Controller {
       drawingColor: "#10b981",
       strokeAnimationSpeed: 1,
       delayBetweenStrokes: 250,
-      charDataLoader: (_char, onComplete) =>
-        fetch(url)
-          .then((r) => r.json())
-          .then(onComplete),
+      charDataLoader: strokeData(url),
+      onLoadCharDataError: () => {},
     });
   }
 
@@ -170,25 +172,41 @@ export default class extends Controller {
     if (this.hasRevealTarget) this.revealTarget.disabled = true;
   }
 
-  async grade(rating) {
+  grade(rating) {
     const body = new URLSearchParams({
       lexeme_id: this.lexemeIdValue,
       rating,
       elapsed_ms: Math.round(performance.now() - this.startedAt),
     });
+    this.grading = this.postGrade(body)
+      .then((status) => (status === "retry" ? this.postGrade(body) : status))
+      .then((status) => {
+        if (status !== "ok") this.dispatch("failed", { detail: { rating } });
+      });
+    return this.grading;
+  }
+
+  async postGrade(body) {
     try {
-      await fetch(this.gradeUrlValue, {
+      const response = await fetch(this.gradeUrlValue, {
         method: "POST",
+        keepalive: true,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "X-CSRF-Token": this.csrf(),
+          "X-CSRF-Token": csrfToken(),
         },
         body,
       });
-    } catch {}
+      if (response.ok) return "ok";
+      return response.status >= 500 ? "retry" : "rejected";
+    } catch {
+      return "retry";
+    }
   }
 
-  advance() {
+  async advance() {
+    await this.grading;
+    if (!this.active) return;
     if (this.advanceUrlValue) window.location.href = this.advanceUrlValue;
   }
 
@@ -216,9 +234,5 @@ export default class extends Controller {
 
   setStatus(text) {
     if (this.hasStatusTarget) this.statusTarget.textContent = text;
-  }
-
-  csrf() {
-    return document.querySelector('meta[name="csrf-token"]')?.content;
   }
 }

@@ -11,6 +11,9 @@ module Google
     UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name"
     FILES_URL = "https://www.googleapis.com/drive/v3/files"
     NAME_PREFIX = "taiwancards-progress-"
+    OPEN_TIMEOUT = 5
+    READ_TIMEOUT = 20
+    UNREACHABLE = [Timeout::Error, SocketError, SystemCallError, OpenSSL::SSL::SSLError, IOError].freeze
 
     def initialize(user)
       @user = user
@@ -23,7 +26,7 @@ module Google
       body << "\r\n--#{boundary}\r\nContent-Type: #{mime}\r\n\r\n"
       body << content
       body << "\r\n--#{boundary}--"
-      JSON.parse(request(:post, UPLOAD_URL, body:, content_type: "multipart/related; boundary=#{boundary}"))
+      parse(request(:post, UPLOAD_URL, body:, content_type: "multipart/related; boundary=#{boundary}"))
     end
 
     def backups
@@ -34,7 +37,7 @@ module Google
         fields: "files(id,name,createdTime)",
         pageSize: 50
       )
-      JSON.parse(request(:get, uri.to_s)).fetch("files", [])
+      parse(request(:get, uri.to_s)).fetch("files", [])
     end
 
     def download(file_id)
@@ -58,14 +61,15 @@ module Google
     def refresh!
       raise Error, "Google account is not connected" if @user.google_refresh_token.blank?
 
-      response = Net::HTTP.post_form(
-        URI(TOKEN_URL),
+      uri = URI(TOKEN_URL)
+      req = Net::HTTP::Post.new(uri)
+      req.set_form_data(
         "grant_type" => "refresh_token",
         "refresh_token" => @user.google_refresh_token,
         "client_id" => ENV["GOOGLE_OAUTH_CLIENT_ID"],
         "client_secret" => ENV["GOOGLE_OAUTH_CLIENT_SECRET"]
       )
-      data = JSON.parse(response.body)
+      data = parse(deliver(uri, req).body)
       raise Error, data["error_description"] || "Token refresh failed" if data["access_token"].blank?
 
       @user.update!(
@@ -83,9 +87,7 @@ module Google
       req["Content-Type"] = content_type if content_type
       req.body = body if body
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      response = http.request(req)
+      response = deliver(uri, req)
       unless response.code.to_i.between?(200, 299)
         reason = refusal(response)
         Rails.logger.error("Google Drive API #{response.code} for user #{@user.id}: #{response.body}")
@@ -93,6 +95,28 @@ module Google
       end
 
       response.body
+    end
+
+    def deliver(uri, req)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.open_timeout = OPEN_TIMEOUT
+      http.read_timeout = READ_TIMEOUT
+      http.write_timeout = READ_TIMEOUT
+      http.max_retries = 0
+      http.request(req)
+    rescue *UNREACHABLE => e
+      Rails.logger.error("Google request to #{uri.host} failed for user #{@user.id}: #{e.class}: #{e.message}")
+      raise Error, "Google could not be reached, please try again"
+    end
+
+    def parse(body)
+      data = JSON.parse(body.to_s)
+      raise Error, "Google sent an unexpected answer" unless data.is_a?(Hash)
+
+      data
+    rescue JSON::ParserError
+      raise Error, "Google sent an unexpected answer"
     end
 
     def refusal(response)

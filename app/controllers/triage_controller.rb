@@ -26,7 +26,7 @@ class TriageController < ApplicationController
     ids = Array(ids).map(&:to_i).reject(&:zero?).first(500)
     return [] if ids.empty?
 
-    Lexeme.where(id: ids).to_a
+    Lexeme.visible_to(current_user).where(id: ids).to_a
   end
 
   def batch

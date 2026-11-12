@@ -7,12 +7,16 @@ class ReadingText < ApplicationRecord
   enum :kind, {article: 0, song: 1, news: 2, graded: 3, story: 4}
 
   LIBRARY_KINDS = (kinds.keys - %w[story]).freeze
+  LEARNER_LIMIT = Collections::TextPreview::MAX_CHARS
 
   validates :title, presence: true
   validates :body, presence: true
+  validates :body, length: {maximum: LEARNER_LIMIT}, if: :user_id?
 
   scope :unrestricted, -> { where(restricted: false) }
-  scope :visible_to, -> (user) { user&.restricted_access? ? all : unrestricted }
+  scope :visible_to, -> (user) { (user&.restricted_access? ? all : unrestricted).where(user_id: [nil, user&.id].uniq) }
+  scope :owned_by, -> (user) { user ? where(user:) : none }
+  scope :removable_by, -> (user) { user&.admin? ? where(user_id: [nil, user.id]) : owned_by(user) }
   scope :recent, -> { order(created_at: :desc) }
   scope :library, -> { where(kind: LIBRARY_KINDS) }
   scope :ordered, -> { order(:level_tag, :id) }

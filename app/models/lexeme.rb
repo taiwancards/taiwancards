@@ -60,7 +60,29 @@ class Lexeme < ApplicationRecord
     }
   )
   scope :with_source, -> (tag) { where("sources @> ?", [tag].to_json) }
+
+  RADICAL_NUMBER_SQL = "(lexemes.data ->> 'radical_number')"
+
+  scope(
+    :under_radical,
+    -> (number) {
+      where(kind: :character)
+        .where("#{RADICAL_NUMBER_SQL} ~ '^[0-9]+$'")
+        .where("#{RADICAL_NUMBER_SQL}::int = ?", number.to_i)
+    }
+  )
   scope :unrestricted, -> { where(restricted: false) }
+
+  MATCHING_SQL = (["lexemes.text"] + Locales::ALL.map { |code| "lexemes.meanings ->> '#{code}'" })
+    .map { |column| "#{column} ILIKE :q" }
+    .join(" OR ")
+    .freeze
+
+  scope :matching, -> (query) { where(MATCHING_SQL, q: "%#{sanitize_sql_like(query.to_s)}%") }
+
+  VOICED_SENTENCE_SQL = "lexemes.kind = :kind AND NOT lexemes.restricted AND lexemes.data ? 'audio'"
+
+  scope :voiced_sentences, -> { where(VOICED_SENTENCE_SQL, kind: kinds.fetch("sentence")) }
 
   VISIBLE_SQL = <<~SQL
     lexemes.kind <> #{kinds[:sentence]}
@@ -83,6 +105,20 @@ class Lexeme < ApplicationRecord
       user&.restricted_access? ? scope : scope.where(restricted: false)
     }
   )
+
+  def self.index_by_spelling(texts, preference: kinds.keys)
+    texts = Array(texts).map(&:to_s).uniq
+    twins = texts.index_with { |text| Huayu::VariantForms.tai_twins(text) }
+    ranks = preference.map(&:to_s)
+    found = where(text: (texts + twins.values.flatten).uniq)
+      .group_by(&:text)
+      .transform_values { |rows| rows.min_by { |row| ranks.index(row.kind) || ranks.size } }
+
+    texts.each_with_object({}) do |text, index|
+      lexeme = found[text] || found.values_at(*twins[text]).compact.first
+      index[text] = lexeme if lexeme
+    end
+  end
 
   def self.visibility_key(user)
     [

@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { csrfToken } from "lib/csrf";
 
 export default class extends Controller {
   static targets = ["item"];
@@ -7,11 +8,15 @@ export default class extends Controller {
   connect() {
     this.dragging = null;
     this.pending = null;
+    this.saved = this.itemTargets;
   }
 
   disconnect() {
     this.release();
-    if (this.pending) clearTimeout(this.pending);
+    if (!this.pending) return;
+
+    clearTimeout(this.pending);
+    this.persist({ keepalive: true });
   }
 
   start(event) {
@@ -87,27 +92,45 @@ export default class extends Controller {
     this.pending = setTimeout(() => this.persist(), 300);
   }
 
-  async persist() {
+  async persist({ keepalive = false } = {}) {
     this.pending = null;
     if (!this.urlValue) return;
 
+    const order = this.itemTargets;
     const body = new URLSearchParams();
-    for (const item of this.itemTargets)
+    for (const item of order)
       body.append(`${this.paramValue}[]`, item.dataset.sortableId);
 
-    try {
-      await fetch(this.urlValue, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "X-CSRF-Token": this.csrf(),
-        },
-        body,
-      });
-    } catch {}
+    const response = await fetch(this.urlValue, {
+      method: "POST",
+      keepalive,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRF-Token": csrfToken(),
+      },
+      body,
+    }).catch(() => null);
+
+    if (response?.ok) {
+      this.saved = order;
+      return;
+    }
+    if (!this.pending && !this.dragging) this.restore(this.saved);
   }
 
-  csrf() {
-    return document.querySelector('meta[name="csrf-token"]')?.content;
+  restore(order) {
+    const current = this.itemTargets;
+    if (
+      order.length !== current.length ||
+      !order.every((item) => current.includes(item))
+    )
+      return;
+
+    const marks = current.map((item) => {
+      const mark = document.createTextNode("");
+      item.before(mark);
+      return mark;
+    });
+    marks.forEach((mark, index) => mark.replaceWith(order[index]));
   }
 }

@@ -2,7 +2,7 @@
 
 class QuickAddsController < ApplicationController
   def create
-    lexeme = Lexeme.find_by(id: params[:lexeme_id])
+    lexeme = Lexeme.visible_to(current_user).find_by(id: numeric_id(params[:lexeme_id]))
     return redirect_back(fallback_location: desks_path, alert: t("desks.quick_add_failed")) if lexeme.nil?
 
     desk = target_desk
@@ -25,6 +25,6 @@ class QuickAddsController < ApplicationController
     end
 
     Collection.desks_for(current_user).recent.first ||
-      Collections::DeskBuilder.new.call(lexemes: [])
+      Collections::DeskBuilder.new(user: current_user).call(lexemes: [])
   end
 end

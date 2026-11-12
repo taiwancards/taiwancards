@@ -61,7 +61,7 @@ module Lexemes
 
     def atoms(units, excluding)
       units.flat_map do |unit|
-        level = @table[unit] unless unit == excluding
+        level = Huayu::VariantForms.lookup(@table, unit) unless unit == excluding
         next [level] if level
 
         unit.chars.select { |char| char.match?(HAN) }.map { |char| @table[char] }

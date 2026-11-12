@@ -35,16 +35,20 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  data_root = nil
+
   config.before(:suite) do
-    ENV["DATA_ROOT"] = Dir.mktmpdir("taiwancards-test-data")
+    data_root = Dir.mktmpdir("taiwancards-test-data")
+    ENV["DATA_ROOT"] = data_root
     ENV["ADMIN_EMAIL"] = "new.learner@example.com"
     ENV["ADMIN_NAME"] = "New Learner"
     ENV["ADMIN_GOOGLE_EMAIL"] = "new.learner@example.com"
   end
 
+  config.after(:suite) { FileUtils.remove_entry(data_root, true) if data_root }
+
   config.before { Huayu::MoeAudio.reset! }
 
-  config.fixture_paths = [Rails.root.join("spec/fixtures")]
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
@@ -54,7 +58,6 @@ RSpec.configure do |config|
   config.include(ActiveJob::TestHelper)
 
   config.include(LocalizedPaths, type: :request)
-  config.include(LocalizedPaths, type: :system)
 end
 
 Shoulda::Matchers.configure do |config|

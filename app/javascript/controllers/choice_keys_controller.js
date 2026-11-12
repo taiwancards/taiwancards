@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { typingElsewhere } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = ["choice"];
@@ -13,7 +14,7 @@ export default class extends Controller {
   }
 
   handleKeydown(event) {
-    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    if (typingElsewhere(event)) return;
 
     const index = Number(event.key) - 1;
     if (Number.isNaN(index) || index < 0 || index >= this.choiceTargets.length)

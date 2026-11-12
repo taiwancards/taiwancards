@@ -77,11 +77,11 @@
   section.space-y-4
     h2.text-lg.font-semibold = t("calendar.lunar.title")
     .space-y-3.text-sm.leading-relaxed class="[&_p]:mb-2 [&_p:last-child]:mb-0"
-      = raw(t("calendar.lunar.months_html"))
-      = raw(t("calendar.lunar.days_html"))
-      = raw(t("calendar.lunar.drift_html"))
-      = raw(t("calendar.lunar.leap_html"))
-      = raw(t("calendar.lunar.terms_html"))
+      = t("calendar.lunar.months_html")
+      = t("calendar.lunar.days_html")
+      = t("calendar.lunar.drift_html")
+      = t("calendar.lunar.leap_html")
+      = t("calendar.lunar.terms_html")
 
   .space-y-4
     section.space-y-3.rounded-xl.border.border-border.bg-card.p-4 data-controller="minguo"
@@ -96,7 +96,7 @@
           input.w-full.rounded-md.border.border-border.bg-background.px-3.py-2.text-sm type="number" inputmode="numeric" data-minguo-target="minguo" data-action="input->minguo#fromMinguo"
       p.text-sm.font-medium data-minguo-target="note" data-template=t("calendar.minguo.note") data-before=t("calendar.minguo.before")
       .text-sm.leading-relaxed.text-muted-foreground class="[&_p]:mb-2 [&_p:last-child]:mb-0"
-        = raw(t("calendar.minguo.explain_html"))
+        = t("calendar.minguo.explain_html")
 
     section.space-y-4.rounded-xl.border.border-border.bg-card.p-4 data-controller="lunar-converter" data-lunar-converter-table-value=@table.to_json
       h2.text-lg.font-semibold = t("calendar.converter.title")

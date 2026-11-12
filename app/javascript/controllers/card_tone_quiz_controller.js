@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { typingElsewhere } from "lib/hotkeys";
 
 const SETTLE_MS = 1100;
 const KEYS = {
@@ -25,6 +26,7 @@ export default class extends Controller {
   }
 
   onKey(event) {
+    if (typingElsewhere(event)) return;
     const direction = KEYS[event.key];
     if (!direction) return;
 

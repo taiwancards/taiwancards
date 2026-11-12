@@ -11,8 +11,9 @@ class TextbookController < ApplicationController
     @textbook_lesson = TextbookLesson.find_by!(book: params[:book], lesson: params[:lesson])
     @neighbors = neighbors(@textbook_lesson)
     @collection = Collection
-      .all
-      .where("name LIKE ?", "Textbook #{@textbook_lesson.label} ·%")
+      .curated
+      .lesson
+      .where("name LIKE ?", "#{Collection.sanitize_sql_like("Textbook #{@textbook_lesson.label} ·")}%")
       .first
   end
 

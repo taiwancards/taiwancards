@@ -45,12 +45,6 @@
       span.text-xs.font-medium.text-muted-foreground = t("auth.email")
       = email_field_tag :email, @user.email, disabled: true, class: "w-full rounded-lg border border-border bg-muted px-3 py-2 text-sm text-muted-foreground"
       span.text-xs.text-muted-foreground = t("auth.email_locked")
-    = form_with model: @user, url: profile_path, method: :patch, class: "space-y-3" do |form|
-      label.block.space-y-1
-        span.text-xs.font-medium.text-muted-foreground = t("auth.new_password")
-        = form.password_field :password, autocomplete: "new-password", placeholder: t("auth.leave_blank"),
-          class: "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-      = form.submit t("auth.save"), class: "rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 cursor-pointer"
 
   section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("auth.google")

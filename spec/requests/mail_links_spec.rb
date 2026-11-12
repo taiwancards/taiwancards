@@ -174,4 +174,28 @@ RSpec.describe "Links in letters", :no_auth do
       expect(reader.reload.reminders?).to(be(true))
     end
   end
+
+  describe "a link that only leads somewhere" do
+    before { allow(Site).to(receive(:url).and_return("https://site.example")) }
+
+    it "follows the link to the static site without signing the reader in" do
+      link = issue(kind: "visit", target: "https://site.example/ru/culture")
+
+      get("/l/#{link.token}")
+
+      expect(response).to(redirect_to("https://site.example/ru/culture"))
+      expect(signed_in_as).to(be_nil)
+      expect(link.reload.used_at).to(be_nil)
+      expect(MailEvent.where(user: reader, event: "clicked").pluck(:source)).to(eq(["visit"]))
+    end
+
+    it "sends a link aimed at any other host to the home page instead" do
+      link = issue(kind: "visit", target: "https://evil.test/ru/culture")
+
+      get("/l/#{link.token}")
+
+      expect(response.location).to(eq("http://www.example.com/ru"))
+      expect(signed_in_as).to(be_nil)
+    end
+  end
 end

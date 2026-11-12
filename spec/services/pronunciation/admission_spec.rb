@@ -28,4 +28,10 @@ RSpec.describe Pronunciation::Admission do
   it "keeps at least one seat even if the setting is nonsense" do
     expect(described_class.seats.available_permits).to(be >= 1)
   end
+
+  it "hands every thread the same seats, however many arrive first at once" do
+    seen = Array.new(8) { Thread.new { described_class.seats } }.map(&:value)
+
+    expect(seen.map(&:object_id).uniq.length).to(eq(1))
+  end
 end

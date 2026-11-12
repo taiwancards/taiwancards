@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { csrfToken } from "lib/csrf";
 
 const SAVE_DELAY_MS = 300;
 const NEEDLE_LENGTH = 24;
@@ -81,7 +82,7 @@ export default class extends Controller {
       const response = await fetch(this.formTarget.action, {
         method: "POST",
         body: new FormData(this.formTarget),
-        headers: { Accept: "application/json", "X-CSRF-Token": this.token() },
+        headers: { Accept: "application/json", "X-CSRF-Token": csrfToken() },
         signal: request.signal,
       });
       if (!response.ok) throw new Error(String(response.status));
@@ -184,7 +185,7 @@ export default class extends Controller {
       const response = await fetch(this.uploadUrlValue, {
         method: "POST",
         body,
-        headers: { Accept: "application/json", "X-CSRF-Token": this.token() },
+        headers: { Accept: "application/json", "X-CSRF-Token": csrfToken() },
       });
       if (!response.ok) throw new Error(String(response.status));
       const { url } = await response.json();
@@ -225,9 +226,5 @@ export default class extends Controller {
         quality,
       ),
     );
-  }
-
-  token() {
-    return document.querySelector('meta[name="csrf-token"]')?.content || "";
   }
 }

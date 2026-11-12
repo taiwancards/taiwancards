@@ -17,7 +17,7 @@ class StudyPlansController < ApplicationController
     if @plan.save
       redirect_to(study_plan_path, notice: t("plan.saved"))
     else
-      render(:new, status: :unprocessable_entity)
+      render(:new, status: :unprocessable_content)
     end
   end
 

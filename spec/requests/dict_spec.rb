@@ -68,6 +68,71 @@ RSpec.describe "Dictionary" do
     expect(response.body).to(include("platform").or(include("перрон")))
   end
 
+  describe "a Taiwan word in either spelling" do
+    def headline
+      Nokogiri::HTML(response.body).at_css("h1").text
+    end
+
+    it "opens a word held only as 臺 from its 台 spelling" do
+      create(
+        :lexeme,
+        kind: :word,
+        text: "臺啤",
+        meanings: {"en" => "Taiwan Beer", "ru" => "тайваньское пиво"}
+      )
+
+      get("/dict/#{CGI.escape("台啤")}")
+
+      expect(response).to(have_http_status(:ok))
+      expect(response.body).to(include("Taiwan Beer").or(include("тайваньское пиво")))
+      expect(headline).to(include("臺"))
+    end
+
+    it "opens a word held only as 台 from its 臺 spelling" do
+      create(
+        :lexeme,
+        kind: :word,
+        text: "台電",
+        meanings: {"en" => "Taiwan Power Company", "ru" => "Тайпауэр"}
+      )
+
+      get("/dict/#{CGI.escape("臺電")}")
+
+      expect(response).to(have_http_status(:ok))
+      expect(response.body).to(include("Taiwan Power Company").or(include("Тайпауэр")))
+      expect(headline).to(include("台"))
+    end
+
+    it "heads the article with 臺 whichever spelling was asked for" do
+      create(:lexeme, kind: :word, text: "台海", meanings: {"en" => "Strait", "ru" => "пролив"})
+      create(
+        :lexeme,
+        kind: :word,
+        text: "臺海",
+        meanings: {"en" => "the Taiwan Strait", "ru" => "Тайваньский пролив"}
+      )
+
+      %w[台海 臺海].each do |spelling|
+        get("/dict/#{CGI.escape(spelling)}")
+
+        expect(response).to(have_http_status(:ok))
+        expect(headline).to(include("臺"))
+        expect(headline).not_to(include("台"))
+        expect(response.body).to(include("/dict/#{CGI.escape("台海")}"))
+      end
+    end
+
+    it "keeps 台 at the head of a word about a stage" do
+      create(:lexeme, kind: :word, text: "講台", meanings: {"en" => "podium", "ru" => "кафедра"})
+      create(:lexeme, kind: :word, text: "講臺", meanings: {"en" => "podium", "ru" => "кафедра"})
+
+      get("/dict/#{CGI.escape("講臺")}")
+
+      expect(headline).to(include("台"))
+      expect(headline).not_to(include("臺"))
+    end
+  end
+
   it "shows the same entry for both spellings and links them" do
     create(
       :lexeme,

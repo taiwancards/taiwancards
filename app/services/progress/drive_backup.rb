@@ -5,6 +5,9 @@ require "stringio"
 
 module Progress
   class DriveBackup
+    LIMIT = 64.megabytes
+    UNREADABLE = "The backup on Drive could not be read"
+
     def initialize(user, client: Google::DriveClient.new(user))
       @user = user
       @client = client
@@ -21,8 +24,7 @@ module Progress
       file_id ||= @client.backups.first&.fetch("id", nil)
       raise Google::DriveClient::Error, "No backup found on Drive" if file_id.blank?
 
-      json = JSON.parse(gunzip(@client.download(file_id)))
-      Progress::Import.new(@user).call(json)
+      Progress::Import.new(@user).call(decode(@client.download(file_id)))
     end
 
     def list
@@ -39,8 +41,25 @@ module Progress
       io.string
     end
 
+    def decode(binary)
+      data = JSON.parse(gunzip(binary))
+      raise Google::DriveClient::Error, UNREADABLE unless data.is_a?(Hash)
+
+      data
+    rescue JSON::ParserError, Zlib::Error
+      raise Google::DriveClient::Error, UNREADABLE
+    end
+
     def gunzip(binary)
-      Zlib::GzipReader.new(StringIO.new(binary)).read
+      reader = Zlib::GzipReader.new(StringIO.new(binary.to_s))
+      text = reader.read(LIMIT + 1).to_s
+      if text.bytesize > LIMIT
+        raise Google::DriveClient::Error, "The backup on Drive is larger than #{LIMIT / 1.megabyte} MB"
+      end
+
+      text.force_encoding(Encoding::UTF_8)
+    ensure
+      reader&.close
     end
   end
 end

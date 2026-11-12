@@ -5,7 +5,7 @@ module StructuredDataHelper
     return if payload.blank?
 
     tag.script(
-      raw(JSON.generate(payload.merge("@context" => "https://schema.org"))),
+      raw(json_escape(JSON.generate(payload.merge("@context" => "https://schema.org")))),
       type: "application/ld+json"
     )
   end

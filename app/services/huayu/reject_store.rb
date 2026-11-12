@@ -2,7 +2,7 @@
 
 module Huayu
   class RejectStore < JsonlStore
-    REASONS = %w[fragment ambiguous garbled off_corpus].freeze
+    REASONS = %w[fragment ambiguous garbled off_corpus renamed off_taiwan].freeze
 
     Entry = Data.define(:text, :reason, :note, :en, :ru) do
       def initialize(text:, reason:, note: nil, en: nil, ru: nil)

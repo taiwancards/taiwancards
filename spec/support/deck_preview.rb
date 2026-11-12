@@ -10,10 +10,6 @@ module DeckPreviewHelpers
   def preview_candidates
     preview_payload.fetch("candidates", []).map { |entry| entry["t"] }
   end
-
-  def preview_digest
-    response.body[/name="digest" value="([^"]+)"/, 1]
-  end
 end
 
 RSpec.configure do |config|

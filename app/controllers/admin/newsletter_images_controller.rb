@@ -8,11 +8,11 @@ module Admin
       newsletter = Newsletter.find(params[:newsletter_id])
       upload = params[:file]
       unless upload.respond_to?(:read) && upload.size <= NewsletterImage::MAX_BYTES && !newsletter.sent?
-        return head(:unprocessable_entity)
+        return head(:unprocessable_content)
       end
 
       image = NewsletterImage.from_upload(newsletter, upload)
-      return head(:unprocessable_entity) unless image.save
+      return head(:unprocessable_content) unless image.save
 
       render(json: {url: newsletter_image_path(image, locale: nil), id: image.id})
     end

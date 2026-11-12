@@ -8,7 +8,7 @@ class WarmupsController < ApplicationController
   end
 
   def create
-    return head(:unprocessable_entity) if params[:audio].blank?
+    return head(:unprocessable_content) if params[:audio].blank?
 
     heard = profile.f0_low
     analysis = Pronunciation::Admission.take { Pronunciation::WarmupAnalysis.new.call(params[:audio], f0_low: heard) }

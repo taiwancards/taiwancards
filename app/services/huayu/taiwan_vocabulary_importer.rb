@@ -25,6 +25,7 @@ module Huayu
 
       entries = JSON.parse(@path.read)
       existing = Lexeme.where(kind: %i[word collocation character]).pluck(:text).to_set
+      rejected = WordRejectStore.texts
 
       added = 0
       marked = 0
@@ -32,6 +33,8 @@ module Huayu
       entries.each_slice(500) do |slice|
         ActiveRecord::Base.transaction do
           slice.each do |text, info|
+            next if rejected.include?(text)
+
             if existing.include?(text)
               marked += 1 if mark_existing(text)
               next

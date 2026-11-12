@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import HanziWriter from "hanzi-writer";
+import { strokeData } from "lib/stroke_data";
 import { writerSize } from "lib/writer_size";
 
 const SETTLE_MS = 900;
@@ -54,10 +55,8 @@ export default class extends Controller {
       showHintAfterMisses: false,
       strokeColor: "#18181b",
       drawingColor: "#10b981",
-      charDataLoader: (_char, onComplete) =>
-        fetch(element.dataset.url)
-          .then((response) => response.json())
-          .then(onComplete),
+      charDataLoader: strokeData(element.dataset.url),
+      onLoadCharDataError: () => {},
     });
 
     this.writers[index] = writer;

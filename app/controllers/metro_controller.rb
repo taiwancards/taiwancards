@@ -19,7 +19,7 @@ class MetroController < ApplicationController
   PAD = 46
 
   def show
-    @collection = Collection.find_by(kind: :everyday)
+    @collection = Collection.curated.find_by(kind: :everyday)
     @lines = LINES
     @stations = ordered_stations
     @placed = @stations.values.flatten.uniq.select { |lexeme| lexeme.data["lat"].present? }

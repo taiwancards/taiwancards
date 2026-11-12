@@ -195,6 +195,8 @@ export default class extends Controller {
     try {
       for (const row of needed) await this.fetchPack(row);
       await this.keepAssets();
+    } catch (error) {
+      this.dispatch("failed", { detail: { pack: pack.id, error } });
     } finally {
       this.busy = null;
       this.draw();
@@ -206,33 +208,41 @@ export default class extends Controller {
     const row = this.rowFor(pack.id);
     const chunks = (pack.chunks && pack.chunks[this.locale]) || [];
     const cache = await caches.open(FRAGMENTS);
+    const held = new Set(this.state[pack.id]?.paths || []);
     const paths = [];
     let done = 0;
 
-    await this.dropPack(pack.id);
+    try {
+      for (const name of chunks) {
+        const response = await fetch(`${this.baseValue}/${name}`);
+        if (!response.ok)
+          throw new Error(`${name} answered ${response.status}`);
 
-    for (const name of chunks) {
-      const response = await fetch(`${this.baseValue}/${name}`);
-      if (!response.ok) throw new Error(`${name} answered ${response.status}`);
+        const batch = Object.entries(await response.json());
 
-      const batch = Object.entries(await response.json());
+        for (let start = 0; start < batch.length; start += BATCH) {
+          const slice = batch.slice(start, start + BATCH);
+          await Promise.all(
+            slice.map(([path, fragment]) => {
+              paths.push(path);
 
-      for (let start = 0; start < batch.length; start += BATCH) {
-        const slice = batch.slice(start, start + BATCH);
-        await Promise.all(
-          slice.map(([path, fragment]) => {
-            paths.push(path);
-
-            return cache.put(`/__frag${path}`, json(fragment));
-          }),
-        );
-        done += slice.length;
-        this.report(row, done, pack.pages);
+              return cache.put(`/__frag${path}`, json(fragment));
+            }),
+          );
+          done += slice.length;
+          this.report(row, done, pack.pages);
+        }
       }
+
+      if (pack.index) await this.keepIndex(pack);
+      if (pack.shells) await this.keepShells(pack);
+    } catch (error) {
+      await this.dropPaths(paths.filter((path) => !held.has(path)));
+      throw error;
     }
 
-    if (pack.index) await this.keepIndex(pack);
-    if (pack.shells) await this.keepShells(pack);
+    const kept = new Set(paths);
+    await this.dropPaths([...held].filter((path) => !kept.has(path)));
 
     this.state[pack.id] = {
       digest: pack.digest,
@@ -310,10 +320,14 @@ export default class extends Controller {
     const held = this.state[id];
     if (!held) return;
 
+    await this.dropPaths(held.paths || []);
+  }
+
+  async dropPaths(paths) {
+    if (paths.length === 0) return;
+
     const cache = await caches.open(FRAGMENTS);
-    await Promise.all(
-      (held.paths || []).map((path) => cache.delete(`/__frag${path}`)),
-    );
+    await Promise.all(paths.map((path) => cache.delete(`/__frag${path}`)));
   }
 
   async showStorage() {

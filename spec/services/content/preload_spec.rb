@@ -25,4 +25,13 @@ RSpec.describe Content::Preload do
     expect(result.failed).to(eq(1))
     expect(result.warmed).to(eq(described_class::CACHES.length - 1))
   end
+
+  it "logs which cache failed and why instead of swallowing it" do
+    allow(Huayu::StrokeData).to(receive(:has?).and_raise(Errno::ENOENT, "strokes.json"))
+    allow(Rails.logger).to(receive(:error))
+
+    described_class.new.call
+
+    expect(Rails.logger).to(have_received(:error).with(/stroke_data.*Errno::ENOENT.*strokes\.json/))
+  end
 end

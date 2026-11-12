@@ -6,12 +6,14 @@ module Pronunciation
 
     module_function
 
+    def key = "#{KEY}:#{Huayu::MoeAudio.stamp}"
+
     def for
-      Rails.cache.fetch(KEY, expires_in: 12.hours) { build }
+      Rails.cache.fetch(key) { build }
     end
 
     def refresh
-      Rails.cache.delete(KEY)
+      Rails.cache.delete(key)
       self.for
     end
 

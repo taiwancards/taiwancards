@@ -9,9 +9,11 @@ module Pronunciation
         File.join(TemplateStore.instance.root, "inventory.json")
       end
 
-      @inventory = nil
-      @by_syllable = nil
-      @zhuyin = {}
+      NO_TONES = [].freeze
+
+      @inventory = {}.freeze
+      @by_syllable = {}.freeze
+      @zhuyin = {}.freeze
       @loaded = false
 
       class << self
@@ -50,21 +52,24 @@ module Pronunciation
         end
 
         def load!(path = Syllables.default_path)
-          @loaded = File.exist?(path)
-          @inventory = @loaded ? JSON.parse(File.read(path))["keys"] : {}
-          @by_syllable = Hash.new { |h, k| h[k] = [] }
-          @zhuyin = Hash.new { |cache, key| cache[key] = spell(key) }
-          @inventory.each do |key, meta|
-            @by_syllable[meta["syllable"]] << meta["tone"]
-            next unless spells_its_own_key?(key, meta["zhuyin"])
-
-            @zhuyin[key] = meta["zhuyin"]
+          present = File.exist?(path)
+          inventory = present ? JSON.parse(File.read(path))["keys"] : {}
+          by_syllable = {}
+          zhuyin = {}
+          inventory.each do |key, meta|
+            (by_syllable[meta["syllable"]] ||= []) << meta["tone"]
+            zhuyin[key] = spells_its_own_key?(key, meta["zhuyin"]) ? meta["zhuyin"] : spell(key)
           end
 
-          @by_syllable.each_value(&:sort!)
+          by_syllable.each_value { |tones| tones.sort!.freeze }
+          speller = method(:spell)
           @structure_cache = {}
           @neighbor_cache = {}
-          @inventory
+          @inventory = inventory.freeze
+          @by_syllable = by_syllable.freeze
+          @zhuyin = Hash.new { |_table, key| speller.call(key) }.merge!(zhuyin).freeze
+          @loaded = present
+          inventory
         end
 
         def described?(key) = spells_its_own_key?(key, inventory.dig(key, "zhuyin"))
@@ -85,7 +90,7 @@ module Pronunciation
 
         def tones_for(syllable)
           load! unless @loaded
-          @by_syllable[syllable] || []
+          @by_syllable.fetch(syllable, NO_TONES)
         end
 
         def key_for(syllable, tone) = "#{syllable}#{tone}"

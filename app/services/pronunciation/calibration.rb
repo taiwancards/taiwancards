@@ -9,96 +9,26 @@ module Pronunciation
       {id: "tone_4", key: "ma4", char: "罵", zhuyin: "ㄇㄚˋ", pinyin: "mà", tone: 4}
     ].freeze
 
-    PROMPTS = {
-      "ru" => [
-        {
-          id: "vowels",
-          text: "и — а — у",
-          hint: "тяните каждый звук полторы секунды",
-          kind: :sustained
-        },
-        {id: "rise", text: "Это правда?!", hint: "с удивлением", kind: :intonation},
-        {
-          id: "fall",
-          text: "Да, это правда.",
-          hint: "спокойно, с точкой в конце",
-          kind: :intonation
-        },
-        {
-          id: "tone_1",
-          text: "媽",
-          hint: "ровно и высоко: возьмите ноту чуть выше обычной речи и держите её, не отпуская",
-          kind: :tone,
-          tone: 1
-        },
-        {
-          id: "tone_2",
-          text: "麻",
-          hint: "снизу вверх, как переспрос «Да?» — голос идёт вверх и не останавливается",
-          kind: :tone,
-          tone: 2
-        },
-        {
-          id: "tone_3",
-          text: "馬",
-          hint: "в самый низ голоса и чуть обратно вверх, как задумчивое «ну-у…»",
-          kind: :tone,
-          tone: 3
-        },
-        {
-          id: "tone_4",
-          text: "罵",
-          hint: "резко сверху вниз, как окрик «Стой!»",
-          kind: :tone,
-          tone: 4
-        }
-      ],
-      "en" => [
-        {
-          id: "vowels",
-          text: "ee — ah — oo",
-          hint: "hold each sound for about a second and a half",
-          kind: :sustained
-        },
-        {id: "rise", text: "Really?!", hint: "with surprise", kind: :intonation},
-        {id: "fall", text: "Yes, it is.", hint: "calmly, ending flat", kind: :intonation},
-        {
-          id: "tone_1",
-          text: "媽",
-          hint: "level and high: hold one steady note a little above your speaking voice",
-          kind: :tone,
-          tone: 1
-        },
-        {
-          id: "tone_2",
-          text: "麻",
-          hint: "rising, like a questioning \"Huh?\" — the voice keeps climbing",
-          kind: :tone,
-          tone: 2
-        },
-        {
-          id: "tone_3",
-          text: "馬",
-          hint: "down to the bottom of your voice and a little back up, like a doubtful \"Well…\"",
-          kind: :tone,
-          tone: 3
-        },
-        {
-          id: "tone_4",
-          text: "罵",
-          hint: "falling sharply from high to low, like a firm \"Stop!\"",
-          kind: :tone,
-          tone: 4
-        }
-      ]
-    }.freeze
+    PROMPTS = [
+      {id: "vowels", kind: :sustained},
+      {id: "rise", kind: :intonation},
+      {id: "fall", kind: :intonation},
+      *TONE_STEPS.map { |step| {id: step[:id], text: step[:char], kind: :tone, tone: step[:tone]} }
+    ].freeze
 
     GOOD_ENOUGH_TO_LEARN_FROM = 80
 
     module_function
 
     def prompts_for(locale)
-      PROMPTS[locale.to_s.split("-").first] || PROMPTS["en"]
+      language = locale.to_s.split("-").first
+      language = "en" unless I18n.locale_available?(language)
+
+      PROMPTS.map do |step|
+        words = I18n.t("pron.warmup.prompts.#{step[:id]}", locale: language)
+        prompt = {id: step[:id], text: step[:text] || words.fetch(:text), hint: words.fetch(:hint), kind: step[:kind]}
+        step[:tone] ? prompt.merge(tone: step[:tone]) : prompt
+      end
     end
 
     def ingest(profile, analysis, kind:, tone: nil, locale: nil)

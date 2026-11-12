@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Desks" do
-  before { Rails.application.load_seed }
-
   it "sends a returning person straight to their language desk" do
     user = create(:user, google_uid: "desk-uid")
     sign_in(user)
@@ -12,10 +10,14 @@ RSpec.describe "Desks" do
     expect(response).to(redirect_to("/en/desk"))
   end
 
-  it "renders the Taiwanese home screen" do
+  it "renders the Taiwanese home screen laid out for the learner's goal" do
     get("/desk")
+    page = Nokogiri::HTML(response.body)
 
     expect(response).to(have_http_status(:ok))
+    expect(page.at_css("title").text).to(include(I18n.t("languages.zh-TW")))
+    expect(response.body).to(include(I18n.t("goals.options.guided.short")))
+    expect(page.at_css("#desk-start")).to(be_present)
   end
 
   it "renders in the language the address asks for" do
