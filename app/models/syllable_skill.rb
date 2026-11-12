@@ -49,6 +49,8 @@ class SyllableSkill < ApplicationRecord
     tone.falls
     tone.rises
     vowel.apical
+    coda.weak
+    coda.heavy
   ]
     .freeze
 

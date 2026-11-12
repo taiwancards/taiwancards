@@ -49,6 +49,34 @@ RSpec.describe "Sentence markup" do
     expect(Huayu::SentenceGlossStore).to(have_received(:put).with("我喝茶。", en: nil, ru: nil))
   end
 
+  context("outside a local environment") do
+    before { allow(Rails.env).to(receive(:local?).and_return(false)) }
+
+    it "answers not found on every route, even to an administrator" do
+      kept = stored_sentence
+
+      get("/markup")
+      expect(response).to(have_http_status(:not_found))
+      get("/markup/#{kept.id}")
+      expect(response).to(have_http_status(:not_found))
+      patch("/markup/#{kept.id}", params: {en: "Changed."})
+      expect(response).to(have_http_status(:not_found))
+      delete("/markup/#{kept.id}")
+      expect(response).to(have_http_status(:not_found))
+
+      expect(kept.reload.meanings).to(eq({"en" => "I drink tea."}))
+      expect(Huayu::SentenceGlossStore).not_to(have_received(:put))
+    end
+
+    it "answers not found to a guest instead of asking to sign in", :no_auth do
+      reset!
+
+      get("/markup")
+
+      expect(response).to(have_http_status(:not_found))
+    end
+  end
+
   it "refuses a plain account, and the sentence survives" do
     kept = stored_sentence
     sign_in(create(:user))

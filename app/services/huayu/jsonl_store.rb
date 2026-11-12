@@ -33,9 +33,14 @@ module Huayu
       end
 
       def write(entries)
-        path.dirname.mkpath
-        path.open("w") { |file| sorted(entries).each { |entry| file.puts(serialize(entry)) } }
+        target = path
+        target.dirname.mkpath
+        partial = target.dirname.join(".#{target.basename}.#{SecureRandom.hex(6)}")
+        partial.open("w") { |file| sorted(entries).each { |entry| file.puts(serialize(entry)) } }
+        partial.rename(target)
         entries.length
+      ensure
+        partial&.delete if partial&.exist?
       end
 
       def rewrite_sorted = write(read)

@@ -11,7 +11,8 @@ module Deploy
       "fonts.json" => :data,
       "media/listening" => :media,
       "media/moe_audio" => :media,
-      "media/moe_audio_words" => :media
+      "media/moe_audio_words" => :media,
+      "media/word_clips" => :media
     }.freeze
 
     ARCHIVES = {"pronunciation/templates.tar.gz" => "pronunciation"}.freeze

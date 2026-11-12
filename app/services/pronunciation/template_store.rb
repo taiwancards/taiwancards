@@ -2,7 +2,17 @@
 
 module Pronunciation
   class TemplateStore
-    DEFAULT_PATH = "/var/data/pronunciation"
+    PAYLOAD = %w[
+      templates
+      thresholds.json
+      inventory.json
+      drills.json
+      axis_norms.json
+      context_norms.json
+      junction_norms.json
+    ]
+      .freeze
+
     MAX_CACHED_TEMPLATES = Integer(ENV.fetch("PRONUNCIATION_TEMPLATE_CACHE", 256))
     CITATION = "taiwan"
     WORD = "taiwan_word"
@@ -26,13 +36,7 @@ module Pronunciation
 
       def key?(key) = key.is_a?(String) && KEY.match?(key)
 
-      def root_path
-        explicit = ENV["PRONUNCIATION_DATA_PATH"].presence
-        return explicit if explicit
-
-        candidates = [DEFAULT_PATH, Rails.root.join("data/pronunciation").to_s]
-        candidates.find { |path| File.directory?(File.join(path, "templates", CITATION)) } || DEFAULT_PATH
-      end
+      def root_path = ENV["PRONUNCIATION_DATA_PATH"].presence || Rails.root.join("data/pronunciation").to_s
     end
 
     def initialize(root)

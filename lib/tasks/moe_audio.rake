@@ -272,12 +272,10 @@ namespace(:moe) do
       stage.join("index.json").write(JSON.pretty_generate(payload))
 
       total = stage.join("audio").glob("*.opus").sum(&:size)
-      remote = "/var/data/moe_audio#{scope_name == "chars" ? "" : "_words"}"
+      folder = Huayu::MoeAudio::SCOPES.fetch(scope_name)
       puts("\n#{index.size} entries, #{readings} readings (#{multi} with more than one)")
       puts("#{human(total)} staged in #{stage}, took #{(Time.now - started).round}s")
-      puts("\nupload with:")
-      puts("  tar cf - -C #{stage} . | ssh -o UpdateHostKeys=no USER@HOST \\")
-      puts("    'mkdir -p #{remote} && tar xf - -C #{remote}'")
+      puts("next: copy it into media/#{folder}, then bin/distribute media and bin/distribute runtime")
     end
 
     desc("Recompute the head boundaries from the wav files already unpacked (no re-download, no re-transcode)")

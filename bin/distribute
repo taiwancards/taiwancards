@@ -17,7 +17,7 @@ ARCHIVE_DIRS=(
   data/corpora
 )
 
-MEDIA_DIRS=(moe_audio moe_audio_words cns_voice word_clips)
+MEDIA_DIRS=(moe_audio moe_audio_words cns_voice word_clips listening)
 IMMUTABLE="public, max-age=31536000, immutable"
 MANIFEST_CACHE="public, max-age=60"
 
@@ -28,7 +28,7 @@ usage() {
 usage: bin/distribute [archive|media|assets|runtime|all|pull|status] [--dry-run]
 
   archive  source corpora and the speech corpus      -> private R2 bucket
-  media    MOE and CNS11643 audio clips              -> public R2 bucket behind the CDN
+  media    word, syllable and listening audio clips  -> public R2 bucket behind the CDN
   assets   web fonts and browser data files          -> public assets bucket behind the CDN
   runtime  everything the running app reads         -> private runtime bucket
   all      archive, media, assets, runtime
@@ -196,7 +196,7 @@ do_packs() {
 
 media_type() {
   case "$1" in
-  cns_voice | word_clips) echo audio/mpeg ;;
+  cns_voice | word_clips | listening) echo audio/mpeg ;;
   *) echo audio/ogg ;;
   esac
 }

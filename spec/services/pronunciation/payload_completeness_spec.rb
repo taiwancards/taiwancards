@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Pronunciation::Sync::PAYLOAD covers what the serving code reads" do
+RSpec.describe "Pronunciation::TemplateStore::PAYLOAD covers what the serving code reads" do
   SERVED = {
     "templates" => "the reference templates and their index",
     "templates/index.json" => "the quiz index",
@@ -14,7 +14,9 @@ RSpec.describe "Pronunciation::Sync::PAYLOAD covers what the serving code reads"
     "junction_norms.json" => "Pronunciation::Acoustic::Junctions"
   }.freeze
 
-  def covered?(name) = Pronunciation::Sync::PAYLOAD.any? { |entry| name == entry || name.start_with?("#{entry}/") }
+  def covered?(name) = Pronunciation::TemplateStore::PAYLOAD.any? { |entry|
+    name == entry || name.start_with?("#{entry}/")
+  }
 
   SERVED.each do |name, reader|
     it "ships #{name}, which #{reader} reads" do

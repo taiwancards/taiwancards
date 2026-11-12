@@ -3,6 +3,7 @@
 class MarkupController < ApplicationController
   layout "markup"
 
+  prepend_before_action :require_local_environment
   before_action :require_admin
   before_action :set_locale
   before_action :set_mode
@@ -36,6 +37,10 @@ class MarkupController < ApplicationController
   end
 
   private
+
+  def require_local_environment
+    head(:not_found) unless Rails.env.local?
+  end
 
   def set_locale
     code = params[:lang].presence || cookies[:locale].presence || I18n.default_locale.to_s

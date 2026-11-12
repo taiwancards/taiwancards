@@ -20,6 +20,20 @@ RSpec.describe Pronunciation::TemplateStore do
     expect(store.template("ma1")).to(eq("key" => "ma1"))
   end
 
+  it "reads from where deploy:hydrate lays the pronunciation data down" do
+    allow(ENV).to(receive(:[]).and_call_original)
+    allow(ENV).to(receive(:[]).with("PRONUNCIATION_DATA_PATH").and_return(nil))
+
+    expect(described_class.root_path).to(eq(Deploy::Hydrator.new.send(:target, "pronunciation").to_s))
+  end
+
+  it "ships its whole payload through the runtime bucket" do
+    script = Rails.root.join("bin/distribute").read
+    shipped = script.scan(%r{\|pronunciation/([\w.]+?)(?:\.tar\.gz)?"}).flatten
+
+    expect(shipped).to(match_array(described_class::PAYLOAD))
+  end
+
   it "lists every norm the store knows" do
     expect(described_class::NORMS).to(
       contain_exactly("taiwan", "taiwan_word", "taiwan_wi", "taiwan_wm", "taiwan_wf")

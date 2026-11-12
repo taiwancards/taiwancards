@@ -167,7 +167,7 @@ printf "%s✓%s\n" "$GREEN" "$R"
 
 printf "\n  %sper-table row counts%s\n" "$B" "$R"
 TABLES="lexemes lexeme_links lexeme_senses sense_examples sentence_words sentence_profiles
-lexeme_content_sources content_sources mainland_markers textbook_lessons collections
+lexeme_content_sources content_sources china_markers textbook_lessons collections
 collection_items settings users"
 
 MISMATCH=0

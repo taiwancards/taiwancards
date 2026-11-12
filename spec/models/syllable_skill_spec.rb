@@ -57,6 +57,19 @@ RSpec.describe SyllableSkill do
     expect(skill.habitual_error).to(include("code" => "initial.under_aspirated", "n" => 4))
   end
 
+  it "counts the coda errors the analyzer emits" do
+    3.times { skill.record!(overall: 60, level: "red", codes: ["coda.weak"]) }
+    skill.record!(overall: 60, level: "red", codes: ["coda.heavy"])
+
+    expect(skill.habitual_error).to(include("code" => "coda.weak", "n" => 3))
+    expect(skill.error_counts.sum).to(eq(4))
+  end
+
+  it "keeps every stored histogram slot where it was" do
+    expect(described_class::ERROR_CODES.index("tone.wrong")).to(eq(0))
+    expect(described_class::ERROR_CODES.index("vowel.apical")).to(eq(23))
+  end
+
   it "caps the recent window so the row cannot grow with practice" do
     40.times { |i| skill.record!(overall: i, level: "amber") }
 

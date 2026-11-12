@@ -15,6 +15,15 @@ RSpec.describe Install::Runner do
 
   def value(prefix) = checks.find { |name, _, _| name.start_with?(prefix) }[1]
 
+  it "names only scripts that exist as the next step" do
+    io = StringIO.new
+    described_class.new(io:).send(:finish)
+    scripts = io.string.scan(%r{bin/[\w.-]+})
+
+    expect(scripts).not_to(be_empty)
+    scripts.each { |script| expect(Rails.root.join(script)).to(exist) }
+  end
+
   it "expects every check to come out at zero" do
     expect(checks.map(&:last)).to(all(eq(0)))
   end

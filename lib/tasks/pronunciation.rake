@@ -21,24 +21,6 @@ namespace(:pronunciation) do
     rows.sort_by(&:name).each do |t|
       puts(format("  %-#{width}s  %s", PRONUNCIATION_INVOCATION.call(t), t.comment))
     end
-
-    puts(
-      <<~USAGE
-
-        The server argument is the part before @ in the SSH host:
-          ssh srv-abc123@ssh.singapore.render.com
-              ^^^^^^^^^^
-        Both abc123 and srv-abc123 are accepted. Default region: singapore.
-
-        Usual order:
-          rake pronunciation:check_local          what is ready locally
-          rake pronunciation:sync_check[abc123]   what would change, no upload
-          rake pronunciation:sync[abc123]         upload
-
-        If the connection fails:
-          rake pronunciation:ssh_debug[abc123]    full ssh log
-      USAGE
-    )
   end
 
   desc("Corpus audio to per-token features. KEYS limits the run to a comma-separated list")
@@ -313,98 +295,6 @@ namespace(:pronunciation) do
     end
   end
 
-  desc("Sync pronunciation templates to a Render disk. Usage: rake pronunciation:sync[srv-12345]")
-  task(:sync, %i[server region] => :environment) do |_t, args|
-    if args[:server].blank?
-      abort(
-        <<~USAGE
-          Specify the Render service.
-
-            rake pronunciation:sync[srv-abc123]
-            rake pronunciation:sync[abc123]
-            rake pronunciation:sync[abc123,frankfurt]
-
-          It is the part before @ in the SSH host:
-            ssh srv-abc123@ssh.singapore.render.com
-                ^^^^^^^^^^
-          The second argument is the region, default singapore.
-        USAGE
-      )
-    end
-
-    sync = Pronunciation::Sync.new(
-      server: args[:server],
-      region: args[:region].presence || Pronunciation::Sync::DEFAULT_REGION
-    )
-
-    begin
-      sync.call(dry_run: ENV["DRY_RUN"].present?)
-    rescue StandardError => e
-      abort("\nERROR: #{e.message}")
-    end
-  end
-
-  desc("Remove leftovers of an interrupted sync (*.old, *.prev). Usage: rake pronunciation:cleanup[srv-12345]")
-  task(:cleanup, %i[server region] => :environment) do |_t, args|
-    abort("specify the service: rake pronunciation:cleanup[srv-abc123]") if args[:server].blank?
-
-    sync = Pronunciation::Sync.new(
-      server: args[:server],
-      region: args[:region].presence || Pronunciation::Sync::DEFAULT_REGION
-    )
-
-    begin
-      sync.cleanup(dry_run: ENV["DRY_RUN"].present?)
-    rescue StandardError => e
-      abort("\nERROR: #{e.message}")
-    end
-  end
-
-  desc("Show what sync would change without sending anything")
-  task(:sync_check, %i[server region] => :environment) do |_t, args|
-    ENV["DRY_RUN"] = "1"
-    Rake::Task["pronunciation:sync"].invoke(args[:server], args[:region])
-  end
-
-  desc("Download what is currently on Render into a local mirror. Usage: rake pronunciation:pull[srv-12345]")
-  task(:pull, %i[server region] => :environment) do |_t, args|
-    abort("specify the service: rake pronunciation:pull[srv-abc123]") if args[:server].blank?
-
-    dest = ENV["DEST"].presence || Rails.root.join("tmp/render_mirror").to_s
-    sync = Pronunciation::Sync.new(
-      server: args[:server],
-      region: args[:region].presence || Pronunciation::Sync::DEFAULT_REGION
-    )
-
-    begin
-      sync.send(:check_ssh!)
-      sync.send(:mirror!, dest)
-      sync.send(:close_connection)
-      files = Dir.glob(File.join(dest, "**", "*")).count { |f| File.file?(f) }
-      puts("\nMirror: #{files} files in #{dest}")
-      puts("Compare with local: diff -rq data/pronunciation #{dest} | head")
-    rescue StandardError => e
-      abort("\nERROR: #{e.message}")
-    end
-  end
-
-  desc("Show the exact ssh command and its verbose output. Usage: rake pronunciation:ssh_debug[srv-12345]")
-  task(:ssh_debug, %i[server region] => :environment) do |_t, args|
-    abort("specify the service: rake pronunciation:ssh_debug[srv-abc123]") if args[:server].blank?
-
-    sync = Pronunciation::Sync.new(
-      server: args[:server],
-      region: args[:region].presence || Pronunciation::Sync::DEFAULT_REGION
-    )
-    cmd = sync.send(:ssh_command, sync.host, "echo ok")
-
-    puts("Command the task runs:\n  #{cmd.join(" ")}\n\n")
-    puts("Same call with -v (full negotiation log):\n")
-    system("ssh", "-v", *cmd[1..-3], sync.host, "echo ok")
-    puts("\n\nWithout multiplexing and extra options:\n")
-    system("ssh", "-o", "BatchMode=yes", "-o", "UpdateHostKeys=no", sync.host, "echo ok")
-  end
-
   desc("Prune the raw attempt log. The accumulators in syllable_skills are kept forever")
   task(compact: :environment) do
     days = ENV.fetch("DAYS", 180).to_i
@@ -493,10 +383,10 @@ namespace(:pronunciation) do
     end
   end
 
-  desc("Verify the local payload is complete before syncing")
+  desc("Verify the local payload the runtime reads is complete before distributing it")
   task(check_local: :environment) do
     source = Rails.root.join("data/pronunciation")
-    missing = Pronunciation::Sync::PAYLOAD.reject { |e| File.exist?(source.join(e)) }
+    missing = Pronunciation::TemplateStore::PAYLOAD.reject { |e| File.exist?(source.join(e)) }
 
     if missing.any?
       abort("missing: #{missing.join(", ")}\nRebuild with: rake pronunciation:rebuild")

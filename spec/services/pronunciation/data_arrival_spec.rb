@@ -23,12 +23,12 @@ RSpec.describe "Pronunciation data arriving after boot" do
   end
 
   def deliver!
-    Pronunciation::Sync::PAYLOAD.each do |entry|
+    Pronunciation::TemplateStore::PAYLOAD.each do |entry|
       File.symlink(source.join(entry).realpath, File.join(root, entry))
     end
   end
 
-  it "reports itself unavailable while the disk is empty" do
+  it "reports itself unavailable while no data is there" do
     expect(Pronunciation::AcousticBackend.new.health["ok"]).to(be(false))
     expect(Pronunciation::Drills.instance.sections).to(be_empty)
     expect(Pronunciation::TemplateStore.instance.thresholds).to(be_empty)

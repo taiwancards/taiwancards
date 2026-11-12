@@ -76,6 +76,19 @@ RSpec.describe "bin/distribute" do
     expect(script.scan(/--metadata "sha256=\$digest"/).length).to(eq(2))
   end
 
+  it "uploads every clip folder the app links to on the CDN, as mp3" do
+    folders = script[/^MEDIA_DIRS=\((.*?)\)/, 1].to_s.split
+    mpeg = script[/^\s*([\w |]+)\) echo audio\/mpeg/, 1].to_s.split("|").map(&:strip)
+    allow(ENV).to(receive(:[]).and_call_original)
+    allow(ENV).to(receive(:[]).with("MEDIA_BASE_URL").and_return("https://cdn.test"))
+    linked = [Huayu::ListeningClips.clip_url("a.mp3"), Huayu::WordClips.clip_url("a.mp3")]
+
+    linked.map { |url| URI(url).path.split("/")[1] }.each do |folder|
+      expect(folders).to(include(folder))
+      expect(mpeg).to(include(folder))
+    end
+  end
+
   it "digests an archive from its source tree, never from the tarball it just built" do
     expect(script).to(match(/sha_tree\(\) \{\n\s*find /))
   end

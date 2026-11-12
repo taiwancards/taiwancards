@@ -5,6 +5,9 @@ require "rails_helper"
 RSpec.describe Huayu::SentenceImporter do
   let(:root) { Pathname(Dir.mktmpdir("sentences")) }
   let(:io) { StringIO.new }
+  let(:rejects) { Huayu::SentenceRejectStore }
+
+  before { allow(rejects).to(receive(:path).and_return(root.join("sentence_rejects.jsonl"))) }
 
   after { FileUtils.remove_entry(root) }
 
@@ -23,6 +26,8 @@ RSpec.describe Huayu::SentenceImporter do
   def write(slug, texts)
     root.join("#{slug}.json").write(JSON.generate(texts))
   end
+
+  def listed(text) = rejects.append([rejects::Entry.new(text:, reason: "fragment")])
 
   def run = described_class.new(root: root, io: io).call
 
@@ -75,6 +80,18 @@ RSpec.describe Huayu::SentenceImporter do
 
       expect(io.string).to(include("junk"))
     end
+
+    it "never inserts a sentence the reject list already names" do
+      source(slug: "corpus", register: :colloquial)
+      listed("今天天氣很好，我們去公園散步。")
+      write("corpus", ["今天天氣很好，我們去公園散步。", "明天我們一起去圖書館看書。"])
+
+      stats = run
+
+      expect(Lexeme.where(kind: :sentence).pluck(:text)).to(eq(["明天我們一起去圖書館看書。"]))
+      expect(stats["corpus_listed"]).to(eq(1))
+      expect(io.string).to(include("listed     1"))
+    end
   end
 
   describe "attribution" do
@@ -89,6 +106,22 @@ RSpec.describe Huayu::SentenceImporter do
       sentence = Lexeme.find_by(kind: :sentence)
       expect(Lexeme.where(kind: :sentence).count).to(eq(1))
       expect(sentence.content_sources.ids).to(match_array([first.id, second.id]))
+    end
+
+    it "never attaches a listed sentence that is already stored to another source" do
+      first = source(slug: "one", register: :colloquial)
+      source(slug: "two", register: :literary)
+      sentence = Lexeme.new(kind: :sentence, text: "今天天氣很好，我們去公園散步。")
+      sentence.lexeme_content_sources.build(content_source: first)
+      sentence.save!
+      listed(sentence.text)
+      write("two", [sentence.text])
+
+      stats = run
+
+      expect(sentence.reload.content_sources.ids).to(eq([first.id]))
+      expect(stats["two_shared"]).to(eq(0))
+      expect(stats["two_listed"]).to(eq(1))
     end
   end
 

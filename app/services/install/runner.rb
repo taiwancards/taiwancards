@@ -171,7 +171,7 @@ module Install
       end
 
       @console.title("DONE in #{@console.elapsed}")
-      @console.note("next: bin/rebuild-data-render.sh, then bin/rebuild-db-render.sh")
+      @console.note("next: bin/distribute runtime, then bin/rebuild-db-render.sh")
     end
   end
 end

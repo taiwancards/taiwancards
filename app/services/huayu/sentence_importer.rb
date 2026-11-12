@@ -13,6 +13,7 @@ module Huayu
       @gate = TextGate.instance
       @predicate = Predicate.new
       @log = RejectionLog.new("sentences")
+      @listed = SentenceRejectStore.texts
     end
 
     def call
@@ -49,10 +50,11 @@ module Huayu
 
       @io.puts(
         format(
-          "  %-16s kept %7d · shared %5d · gate %6d · junk %5d · fragment %5d · parse %5d",
+          "  %-16s kept %7d · shared %5d · listed %5d · gate %6d · junk %5d · fragment %5d · parse %5d",
           source.slug,
           stats["#{source.slug}_new"],
           stats["#{source.slug}_shared"],
+          stats["#{source.slug}_listed"],
           stats["#{source.slug}_gate"],
           stats["#{source.slug}_junk"],
           stats["#{source.slug}_fragment"],
@@ -121,6 +123,11 @@ module Huayu
       slice.filter_map do |raw|
         text = normalize(raw)
         next if text.blank?
+
+        if @listed.include?(text)
+          stats["#{source.slug}_listed"] += 1
+          next
+        end
 
         verdict = @gate.call(text)
         unless verdict.ok
