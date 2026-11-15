@@ -130,6 +130,31 @@ RSpec.describe Deploy::ContentPush do
     expect(push.plan).to(be_empty)
   end
 
+  it "moves a row to its new parent before the old parent is deleted" do
+    push.refresh
+    mirror.exec(
+      <<~SQL
+        INSERT INTO lexemes (id, kind, text, created_at, updated_at) VALUES (#{new_word_id}, 2, 'push-spec-new', now(), now());
+        UPDATE sentence_profiles SET lexeme_id = #{new_word_id} WHERE lexeme_id = #{sentence_id};
+        DELETE FROM sentence_words WHERE sentence_id = #{sentence_id};
+        DELETE FROM lexemes WHERE id = #{sentence_id};
+      SQL
+    )
+
+    report = push.plan
+    profiles = report.plans.find { |plan| plan.table.name == "sentence_profiles" }
+    expect(profiles.updates).to(be_empty)
+    expect(profiles.deletes).to(eq(profiles.inserts))
+
+    push.push
+
+    expect(prod.exec("SELECT lexeme_id FROM sentence_profiles WHERE lexeme_id >= 900000").column_values(0)).to(
+      eq([new_word_id.to_s])
+    )
+    expect(prod.exec("SELECT count(*) FROM lexemes WHERE id = #{sentence_id}").getvalue(0, 0)).to(eq("0"))
+    expect(push.plan).to(be_empty)
+  end
+
   it "refuses when production changed after the snapshot" do
     push.refresh
     prod.exec("UPDATE lexemes SET score = 9 WHERE id = #{word_id}")

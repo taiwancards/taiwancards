@@ -42,7 +42,7 @@ module Deploy
       prod = connect(@prod_url)
       diff = ContentDiff.new(source: prod, target: mirror)
 
-      plans = ContentTables::ORDERED.map { |table| diff.plan(table) }
+      plans = diff.detach(ContentTables::ORDERED.map { |table| diff.plan(table) })
       mirror.transaction do
         transfer(diff, plans, "refresh")
         copy_settings(prod, mirror)
@@ -63,7 +63,7 @@ module Deploy
 
       check_written_tables(mirror, snapshot)
       check_untouched_production(diff, prod, snapshot)
-      plans = ContentTables::ORDERED.map { |table| diff.plan(table) }
+      plans = diff.detach(ContentTables::ORDERED.map { |table| diff.plan(table) })
       report = Report.new(plans:, cascade: user_references(prod, plans))
       check_cascade(report, cascade)
       report

@@ -97,6 +97,19 @@ module Deploy
       )
     end
 
+    def detach(plans)
+      gone = {}
+      plans.map do |plan|
+        table = plan.table
+        doomed = plan.deletes | referencing(table, gone)
+        gone[table.name] = doomed.flatten if table.sequenced?
+        moved = doomed - plan.deletes
+        next plan if moved.empty?
+
+        plan.with(inserts: plan.inserts | moved, updates: plan.updates - moved, deletes: doomed)
+      end
+    end
+
     def apply(plan)
       table = plan.table
       deleted = delete(table, plan.deletes)
@@ -234,6 +247,26 @@ module Deploy
       WHERE c.contype = 'f' AND c.conrelid = $1::regclass
     SQL
       .squish
+
+    REFERENCES_SQL = <<~SQL
+      SELECT a.attname, p.relname
+      FROM pg_constraint c
+      JOIN pg_class p ON p.oid = c.confrelid
+      JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = c.conkey[1]
+      WHERE c.contype = 'f' AND c.conrelid = $1::regclass AND cardinality(c.conkey) = 1
+      ORDER BY a.attname
+    SQL
+      .squish
+
+    def referencing(table, gone)
+      @target.exec_params(REFERENCES_SQL, [table.name]).values.flat_map do |column, parent|
+        ids = gone[parent]
+        next [] if ids.blank?
+
+        sql = "SELECT #{list(table.key)} FROM #{table.name} WHERE #{table.predicate} AND #{column} = ANY($1::bigint[])"
+        @target.exec_params(sql, ["{#{ids.join(",")}}"]).values.map { |row| row.map(&:to_i) }
+      end
+    end
 
     def park(table, index)
       fixed = @target.exec_params(FOREIGN_COLUMNS_SQL, [table.name]).column_values(0) + table.key
