@@ -4,9 +4,11 @@ module Authentication
   extend ActiveSupport::Concern
 
   DEV_GUEST = :dev_guest
+  EDGE_PASS = :edge_pass
 
   included do
     before_action :require_authentication
+    after_action :renew_edge_pass
     helper_method :authenticated?, :current_user, :true_user, :impersonating?
   end
 
@@ -68,12 +70,28 @@ module Authentication
     Current.user = user
     cookies.delete(DEV_GUEST)
     cookies.signed.permanent[:user_id] = {value: user.id, httponly: true, same_site: :lax}
+    grant_edge_pass
+  end
+
+  def edge_pass = ENV["EDGE_PASS"].presence
+
+  def grant_edge_pass
+    return if edge_pass.nil?
+
+    cookies.permanent[EDGE_PASS] = {value: edge_pass, httponly: true, same_site: :lax}
+  end
+
+  def renew_edge_pass
+    return if edge_pass.nil? || cookies[EDGE_PASS] == edge_pass
+
+    grant_edge_pass if authenticated?
   end
 
   def terminate_session
     Current.user = nil
     reset_session
     cookies.delete(:user_id)
+    cookies.delete(EDGE_PASS)
     cookies[DEV_GUEST] = "1" if User.signed_in_by_default?
   end
 end
