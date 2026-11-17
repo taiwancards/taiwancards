@@ -1226,7 +1226,19 @@ vi:
     streak: Chuỗi ngày học
     streak_today: "liên tiếp từ %{date}, tính cả hôm nay"
     streak_pending: "liên tiếp từ %{date}; hôm nay chưa ôn thẻ nào"
-    streak_none: hôm nay và hôm qua chưa ôn thẻ nào
+    streak_none: hiện chưa có chuỗi ngày học
+    streak_resting: "từ %{date}; đang nghỉ, chuỗi vẫn được giữ"
+    streak_rest_used: "Đã hết ngày nghỉ: ôn tập hôm nay để giữ chuỗi."
+    streak_rest_left: "Số ngày nghỉ còn lại trong đợt này: %{count}."
+    streak_rest_allowed:
+      other: "Nghỉ tối đa %{count} ngày thì chuỗi vẫn không bị đứt."
+    streak_rest_ahead:
+      other: "Học thêm %{count} ngày liên tiếp nữa thì được nghỉ tối đa %{days} ngày."
+    streak_rest_earn:
+      other: "Học thêm %{count} ngày liên tiếp nữa thì nghỉ tối đa %{days} ngày cũng không bị đứt chuỗi."
+    streak_rests:
+      other: "Chuỗi này có %{count} ngày nghỉ, gần nhất là %{date}."
+    activity_rest: "%{date}: ngày nghỉ, chuỗi vẫn được giữ"
     streak_longest: Chuỗi dài nhất
     streak_days: Số ngày có ôn tập
     streak_zone: "lượt ôn mỗi ngày; ngày tính theo múi giờ của bạn, %{zone}"
@@ -3739,7 +3751,7 @@ vi:
     desk_html: >-
       <p>Trang chủ thay đổi theo chế độ bạn chọn. <strong>TOCFL</strong> hiện đếm ngược tới kỳ thi, mức sẵn sàng theo cấp, bài thi thử và ngữ pháp của cấp. <strong>Từ của tôi</strong> hiện lượt ôn bộ thẻ của riêng bạn và cách nhanh để thêm từ học trên lớp. <strong>Theo lộ trình</strong> hiện bước tiếp theo về ngữ âm hoặc khóa học, cùng thẻ của ngày. Đổi chế độ trong hồ sơ hoặc bằng liên kết “đổi” cạnh tiêu đề.</p><p>Các bộ đếm: <strong>đến hạn</strong> là số thẻ tới lượt hôm nay theo lịch FSRS, <strong>mới</strong> là lượng tài liệu chưa xem mà ứng dụng sẵn sàng thêm vào (hạn mức lấy từ kế hoạch của bạn, hoặc từ cài đặt nếu chưa có kế hoạch), còn <strong>đang học</strong> là tổng số thẻ đang được dùng. Nút lớn luôn dẫn tới chỗ hợp lý nhất để học tiếp.</p>
     progress_html: >-
-      <p><strong>Chuỗi ngày học</strong> là số ngày liên tiếp có ôn tập. Một ngày tính từ nửa đêm tới nửa đêm theo múi giờ của thiết bị; khi bạn đi xa, những ngày đã tính vẫn giữ nguyên. <strong>Tỷ lệ ghi nhớ</strong> là tỷ lệ đánh giá “Biết” trở lên trong số thẻ mà FSRS cho là đã đến lúc ôn: nếu nó thấp hơn hẳn mục tiêu trong cài đặt, khoảng cách ôn đang quá dài.</p><p>Trạng thái: <strong>mới</strong> là chưa từng hiện, <strong>đang học</strong> là còn trong các bước học, <strong>mới nhớ</strong> có khoảng cách dưới ba tuần, <strong>vững</strong> là trên ba tuần. <strong>Thẻ hay quên</strong> là những thẻ bạn quên đi quên lại; tự học lại chúng đỡ tốn công hơn là để chúng chạy theo lịch.</p>
+      <p><strong>Chuỗi ngày học</strong> là số ngày liên tiếp có ôn tập. Một ngày tính từ nửa đêm tới nửa đêm theo múi giờ của thiết bị; khi bạn đi xa, những ngày đã tính vẫn giữ nguyên. Sau 30 ngày liên tiếp, nghỉ tối đa 2 ngày sẽ không làm đứt chuỗi; sau 90 ngày liên tiếp không nghỉ, có thể nghỉ tối đa 4 ngày. Ngày nghỉ không được cộng vào chuỗi, và sau mỗi lần nghỉ, việc đếm tới lần nghỉ tiếp theo bắt đầu lại từ đầu. <strong>Tỷ lệ ghi nhớ</strong> là tỷ lệ đánh giá “Biết” trở lên trong số thẻ mà FSRS cho là đã đến lúc ôn: nếu nó thấp hơn hẳn mục tiêu trong cài đặt, khoảng cách ôn đang quá dài.</p><p>Trạng thái: <strong>mới</strong> là chưa từng hiện, <strong>đang học</strong> là còn trong các bước học, <strong>mới nhớ</strong> có khoảng cách dưới ba tuần, <strong>vững</strong> là trên ba tuần. <strong>Thẻ hay quên</strong> là những thẻ bạn quên đi quên lại; tự học lại chúng đỡ tốn công hơn là để chúng chạy theo lịch.</p>
     plan_html: >-
       <p>Chọn cấp TOCFL mục tiêu và ngày thi, ứng dụng sẽ tính mỗi ngày cần bao nhiêu tài liệu mới để hoàn
       thành cấp đó kịp lúc. Hạn mức được tính lại mỗi ngày từ những gì đã học, nên bỏ lỡ một ngày không làm hỏng

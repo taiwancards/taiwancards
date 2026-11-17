@@ -15,11 +15,9 @@
       .flex.items-baseline.gap-2
         span.text-4xl.font-bold.tabular-nums class=(streak.current.positive? ? "text-emerald-600" : nil) = number_with_delimiter(streak.current)
         h2 class=heading = t("stats.streak")
-      p.mt-1.text-2xs.text-muted-foreground
-        - if streak.since
-          = t(streak.today? ? "stats.streak_today" : "stats.streak_pending", date: l(streak.since, format: :short))
-        - else
-          = t("stats.streak_none")
+      p.mt-1.text-2xs.text-muted-foreground = streak_status(streak)
+      - [streak_rest_note(streak), streak_rests_note(streak)].compact.each do |note|
+        p.max-w-72.text-2xs.text-muted-foreground class="mt-0.5" = note
     .flex.gap-6.text-sm
       div
         .text-xl.font-bold.tabular-nums = number_with_delimiter(streak.longest)
@@ -31,7 +29,7 @@
       .ml-auto.max-w-md
         .grid.grid-flow-col.grid-rows-7.auto-cols-fr.gap-1
           - activity.each do |date, count|
-            .aspect-square.rounded-sm class=activity_shade(count, peak) title="#{l(date, format: :short)}: #{count}"
+            .aspect-square.rounded-sm *activity_cell(date, count, peak, streak)
         .mt-1.5.flex.items-center.justify-between.gap-2.text-2xs.tabular-nums.text-muted-foreground
           span = l(activity.first.first, format: :short)
           span.flex.items-center.gap-1

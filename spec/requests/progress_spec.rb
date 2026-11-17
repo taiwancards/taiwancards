@@ -45,6 +45,39 @@ RSpec.describe "The progress section" do
     )
   end
 
+  it "keeps a resting streak and marks the rest day on the activity map" do
+    user = @authenticated_user
+    word = create(:lexeme, kind: :word, text: "休息")
+    memory = LexemeMemory.create!(user:, lexeme: word, facet: :recognition, state: :review, due_at: 1.day.from_now)
+    today = Time.zone.today
+    (2..31).each do |offset|
+      day = today - offset
+      LexemeReview.create!(
+        user:,
+        lexeme: word,
+        lexeme_memory: memory,
+        facet: :recognition,
+        rating: Fsrs::Scheduler::RATINGS.fetch(:good),
+        reviewed_at: day.in_time_zone.noon,
+        reviewed_on: day
+      )
+    end
+
+    rest = I18n.l(today - 1, format: :short)
+
+    get(progress_path)
+
+    expect(response.body).to(
+      include(
+        I18n.t("stats.streak_resting", date: I18n.l(today - 31, format: :short)),
+        I18n.t("stats.streak_rest_left", count: 1),
+        I18n.t("stats.streak_rests", count: 1, date: rest),
+        "title=\"#{I18n.t("stats.activity_rest", date: rest)}\"",
+        ProgressHelper::REST_MARK
+      )
+    )
+  end
+
   it "counts what is stored about the user on the data tab" do
     lexeme = create(:lexeme, kind: :character, text: "水", meanings: {"en" => "water"})
     Lexemes::Activator.new.call(lexeme)

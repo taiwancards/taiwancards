@@ -1262,7 +1262,23 @@ en:
     streak: Day streak
     streak_today: "in a row since %{date}, today included"
     streak_pending: "in a row since %{date}; today has no reviews yet"
-    streak_none: no reviews today or yesterday
+    streak_none: no streak right now
+    streak_resting: "since %{date}; resting now, the streak holds"
+    streak_rest_used: "The rest is used up: a review today keeps the streak."
+    streak_rest_left: "Rest days left in this break: %{count}."
+    streak_rest_allowed:
+      one: "A one-day break won't end this streak."
+      other: "A break of up to %{count} days won't end this streak."
+    streak_rest_ahead:
+      one: "Up to %{days} days after one more day in a row."
+      other: "Up to %{days} days after %{count} more days in a row."
+    streak_rest_earn:
+      one: "After one more day in a row a break of up to %{days} days will be forgiven."
+      other: "After %{count} more days in a row a break of up to %{days} days will be forgiven."
+    streak_rests:
+      one: "One rest day in this streak, on %{date}."
+      other: "Rest days in this streak: %{count}, the latest on %{date}."
+    activity_rest: "%{date}: rest day, the streak holds"
     streak_longest: Longest streak
     streak_days: Days with reviews
     streak_zone: "reviews per day; a day follows your time zone, %{zone}"
@@ -3816,6 +3832,9 @@ en:
     progress_html: >-
       <p><strong>Streak</strong> is how many days in a row had reviews. A day runs from midnight to midnight
       in the time zone of your device; when you travel, the days already counted stay as they were.
+      After 30 days in a row a break of up to 2 days no longer ends the streak, and after 90 days in a row
+      without a rest, a break of up to 4. Rest days are not added to the count, and after a rest the count
+      toward the next one starts over.
       <strong>Retention</strong> is the
       share of “good” or better among the cards FSRS considered ripe: if it sits well below the target in
       settings, the intervals are too long.</p><p>States: <strong>unseen</strong> has never been shown,

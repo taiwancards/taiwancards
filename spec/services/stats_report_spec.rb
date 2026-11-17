@@ -179,20 +179,35 @@ RSpec.describe StatsReport do
       streak = report.streak
 
       expect(streak).to(have_attributes(current: 3, longest: 5, days: 8, since: 2.days.ago.to_date))
-      expect(streak).to(be_today)
+      expect(streak).to(be_done)
     end
 
     it "survives until the end of the next day" do
       subject_memory = memory
       [1, 2].each { |offset| review(subject_memory, reviewed_at: offset.days.ago) }
 
-      expect(report.streak).to(have_attributes(current: 2, today?: false))
+      expect(report.streak).to(have_attributes(current: 2, state: :pending))
     end
 
     it "is over once a whole day was missed" do
       review(memory, reviewed_at: 2.days.ago)
 
-      expect(report.streak).to(have_attributes(current: 0, since: nil, longest: 1, days: 1))
+      expect(report.streak).to(have_attributes(current: 0, since: nil, longest: 1, days: 1, state: :none))
+    end
+
+    it "keeps a 30-day streak alive through a forgiven day off" do
+      subject_memory = memory
+      [0, *(2..31)].each { |offset| review(subject_memory, reviewed_at: offset.days.ago) }
+
+      expect(report.streak).to(have_attributes(current: 31, state: :done, rests: [1.day.ago.to_date]))
+    end
+
+    it "asks the database once for the whole streak" do
+      subject_memory = memory
+      [0, 1, 2].each { |offset| review(subject_memory, reviewed_at: offset.days.ago) }
+      fresh = report
+
+      expect(count_queries { fresh.streak }).to(issue_at_most(1))
     end
 
     it "is empty without reviews" do
@@ -208,7 +223,7 @@ RSpec.describe StatsReport do
           review(subject_memory, reviewed_at: Time.zone.local(2026, 9, 29, 23, 30))
           review(subject_memory, reviewed_at: Time.zone.local(2026, 9, 30, 20, 0))
 
-          expect(report.streak).to(have_attributes(current: 2, since: Date.new(2026, 9, 29), today?: true))
+          expect(report.streak).to(have_attributes(current: 2, since: Date.new(2026, 9, 29), state: :done))
         end
       end
     end

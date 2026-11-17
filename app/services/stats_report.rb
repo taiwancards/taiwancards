@@ -6,10 +6,6 @@ class StatsReport
   GRADUATING_STATES = %w[unseen learning].freeze
   MATURE_DAYS = 21.0
 
-  Streak = Data.define(:current, :since, :longest, :days, :today) do
-    alias_method :today?, :today
-  end
-
   def initialize(user: nil, now: Time.current)
     @user = user
     @now = now
@@ -23,19 +19,7 @@ class StatsReport
     ((today - (weeks - 1).weeks).beginning_of_week..today).map { |date| [date, day_counts.fetch(date, 0)] }
   end
 
-  def streak
-    days = day_counts.keys.sort
-    runs = days.slice_when { |earlier, later| later != earlier + 1 }.to_a
-    current = runs.last if days.any? && days.last >= today - 1
-
-    Streak.new(
-      current: current.to_a.length,
-      since: current&.first,
-      longest: runs.map(&:length).max.to_i,
-      days: days.length,
-      today: day_counts.key?(today)
-    )
-  end
+  def streak = Stats::DayStreak.new(day_counts.keys.sort, today:).call
 
   def actual_retention(days: 30)
     total, recalled = language_reviews
