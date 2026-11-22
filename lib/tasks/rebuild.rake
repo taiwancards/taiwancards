@@ -135,6 +135,15 @@ namespace(:huayu) do
     pp(Huayu::RejectPurge.new(stores: [Huayu::WordRejectStore]).call(dry_run: ENV["DRY_RUN"].present?))
   end
 
+  desc("Remove the sentences and collocations listed as off_taiwan, keeping any someone studies. DRY_RUN=1 to only list them")
+  task(retire_off_taiwan: :environment) do
+    purge = Huayu::RejectPurge.new(
+      stores: [Huayu::SentenceRejectStore, Huayu::CollocationRejectStore],
+      reasons: %w[off_taiwan]
+    )
+    pp(purge.call(dry_run: ENV["DRY_RUN"].present?))
+  end
+
   desc("Split single words from collocations using MOE headword status")
   task(classify_collocations: :environment) do
     Huayu::CollocationClassifier.new.call(dry_run: ENV["DRY_RUN"].present?)

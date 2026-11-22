@@ -10,7 +10,7 @@ RSpec.describe Huayu::JsonlStore do
   before { allow(store).to(receive(:path).and_return(path)) }
   after { scratch.rmtree }
 
-  def entry(text, en) = store::Entry.new(text:, en:, ru: nil, vi: nil)
+  def entry(text, en) = store::Entry.new(text:, en:, ru: nil, vi: nil, de: nil, ind: nil)
 
   it "leaves the previous file whole when a rewrite breaks off" do
     store.write([entry("一", "one"), entry("二", "two")])

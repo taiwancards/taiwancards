@@ -10,6 +10,7 @@ module Huayu
     MIN_PRUNE_RATIO = 0.9
 
     Result = Data.define(:imported, :skipped, :dropped)
+    PAGE_KEYS = %w[note tag domain placements].freeze
 
     def initialize(path: self.class::PATH)
       @path = Pathname(path)
@@ -44,7 +45,18 @@ module Huayu
       return 0 if current.zero?
       return 0 if kept_ids.size < current * MIN_PRUNE_RATIO
 
-      collection.collection_items.where.not(lexeme_id: kept_ids).destroy_all.size
+      doomed = collection.collection_items.where.not(lexeme_id: kept_ids)
+      release(Lexeme.where(id: doomed.select(:lexeme_id)).to_a)
+      doomed.destroy_all.size
+    end
+
+    def release(lexemes)
+      pages = CuratedGlosses.new
+      lexemes.each do |lexeme|
+        next if pages.owned(lexeme.text).any?
+
+        lexeme.update!(data: lexeme.data.except(*PAGE_KEYS))
+      end
     end
 
     def valid?(entry)
@@ -74,7 +86,7 @@ module Huayu
 
     def readings(entry) = {"pinyin" => entry["pinyin"], "zhuyin" => zhuyin_for(entry)}
 
-    def meanings(entry) = Locales::ALL.to_h { |code| [code, entry[code]] }
+    def meanings(entry) = Locales::STORED.to_h { |key| [key, entry[key]] }
 
     def guarded?(text)
       existing = Lexeme.where(kind: Lexeme::DICTIONARY_KINDS, text:).order(:kind).first
@@ -85,12 +97,18 @@ module Huayu
       data = lexeme.data.merge(payload(entry))
       refresh_examples(data, entry, guarded)
       shared_metadata(entry).each do |key, value|
-        next if guarded && data[key].present?
-
-        data[key] = value
+        data[key] = guarded && data[key].present? ? completed(data[key], value) : value
       end
 
       data.compact
+    end
+
+    def completed(stored, fresh)
+      unless stored.is_a?(Hash) && fresh.is_a?(Hash) && stored[Locales::DEFAULT] == fresh[Locales::DEFAULT]
+        return stored
+      end
+
+      fresh.merge(stored.compact_blank)
     end
 
     def payload(_entry) = {}
@@ -109,12 +127,12 @@ module Huayu
       }
     end
 
-    def note(entry) = Locales::ALL.to_h { |code| [code, entry["note_#{code}"]] }.compact_blank.presence
+    def note(entry) = Locales::STORED.to_h { |key| [key, entry["note_#{key}"]] }.compact_blank.presence
 
     def examples(entry)
       rows = entry["examples"].presence || [entry["example"]].compact
       rows
-        .filter_map { |row| row.slice("zh", *Locales::ALL).compact_blank.presence if row.is_a?(Hash) }
+        .filter_map { |row| row.slice("zh", *Locales::STORED).compact_blank.presence if row.is_a?(Hash) }
         .presence
     end
 

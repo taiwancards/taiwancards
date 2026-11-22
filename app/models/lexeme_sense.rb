@@ -21,7 +21,7 @@ class LexemeSense < ApplicationRecord
   end
 
   def meaning(locale)
-    meanings[locale.to_s].presence || meanings["en"].presence
+    Locales.pick(meanings, locale).presence
   end
 
   def number

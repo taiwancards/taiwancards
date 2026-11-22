@@ -6,8 +6,8 @@ module Offline
 
     Result = Data.define(:paths, :entries)
 
-    Entry = Data.define(:text, :zhuyin, :pinyin, :en, :ru, :vi, :path, :kind) do
-      def to_row = [text, zhuyin, pinyin, en, ru, path, kind, (vi == en ? "" : vi)]
+    Entry = Data.define(:text, :zhuyin, :pinyin, :en, :ru, :vi, :de, :ind, :path, :kind) do
+      def to_row = [text, zhuyin, pinyin, en, ru, path, kind, *[vi, de, ind].map { |gloss| gloss == en ? "" : gloss }]
     end
 
     CORE_PATHS = %w[
@@ -81,6 +81,8 @@ module Offline
         en: pair.gist(:en).to_s,
         ru: pair.gist(:ru).to_s,
         vi: pair.gist(:vi).to_s,
+        de: pair.gist(:de).to_s,
+        ind: pair.gist(:id).to_s,
         path: word_pair_path(id: pair.to_param),
         kind: "grammar"
       )
@@ -94,6 +96,8 @@ module Offline
         en: lesson.title(:en).to_s,
         ru: lesson.title(:ru).to_s,
         vi: lesson.title(:vi).to_s,
+        de: lesson.title(:de).to_s,
+        ind: lesson.title(:id).to_s,
         path: grammar_lesson_path(id: lesson.to_param),
         kind: "grammar"
       )
@@ -120,6 +124,8 @@ module Offline
         en: text.title(:en).to_s,
         ru: text.title(:ru).to_s,
         vi: text.title(:vi).to_s,
+        de: text.title(:de).to_s,
+        ind: text.title(:id).to_s,
         path: graded_text_path(tier: text.tier, id: text.id),
         kind: "text"
       )
@@ -141,6 +147,8 @@ module Offline
         en: lesson.title_for(:en).to_s,
         ru: lesson.title_for(:ru).to_s,
         vi: lesson.title_for(:vi).to_s,
+        de: lesson.title_for(:de).to_s,
+        ind: lesson.title_for(:id).to_s,
         path: cangjie_lesson_path(id: lesson.to_param),
         kind: "text"
       )
@@ -245,6 +253,8 @@ module Offline
         en: lexeme.meanings["en"].to_s,
         ru: lexeme.meanings["ru"].to_s,
         vi: lexeme.meanings["vi"].to_s,
+        de: lexeme.meanings["de"].to_s,
+        ind: lexeme.meanings["ind"].to_s,
         path: lexeme_path_for(lexeme),
         kind: lexeme.kind.to_s
       )
@@ -258,6 +268,8 @@ module Offline
         en: lexeme.meanings["en"].to_s,
         ru: lexeme.meanings["ru"].to_s,
         vi: lexeme.meanings["vi"].to_s,
+        de: lexeme.meanings["de"].to_s,
+        ind: lexeme.meanings["ind"].to_s,
         path: sentence_path(id: lexeme.to_param),
         kind: "sentence"
       )

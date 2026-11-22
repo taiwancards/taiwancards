@@ -3,9 +3,11 @@
 module Huayu
   class CharacterEnricher
     PATH = AppData.path("dictionaries/makemeahanzi/dictionary.txt")
+    OVERRIDES = AppData.path("huayu/etymology_structure.json")
 
-    def initialize(path: PATH)
+    def initialize(path: PATH, overrides: OVERRIDES)
       @path = Pathname(path)
+      @overrides_path = Pathname(overrides)
     end
 
     def call
@@ -23,6 +25,15 @@ module Huayu
       count
     end
 
+    def repair_overrides
+      Lexeme.where(kind: :character, text: overrides.keys).count do |lexeme|
+        fixed = etymology_for(lexeme.text, lexeme.data["etymology"])
+        next false if fixed == lexeme.data["etymology"]
+
+        lexeme.update!(data: lexeme.data.except("etymology").merge({"etymology" => fixed}.compact))
+      end
+    end
+
     private
 
     def load_index
@@ -32,16 +43,15 @@ module Huayu
       end
     end
 
-    ETYMOLOGY_OVERRIDES = {
-      "捨" => {"semantic" => "扌", "phonetic" => "舍"},
-      "這" => {"semantic" => "辶", "phonetic" => "言"}
-    }.freeze
+    def overrides
+      @overrides ||= @overrides_path.exist? ? JSON.parse(@overrides_path.read) : {}
+    end
 
     def etymology_for(text, etymology)
-      override = ETYMOLOGY_OVERRIDES[text]
-      return etymology if override.nil? || etymology.nil?
+      override = overrides[text]
+      return etymology if override.nil?
 
-      etymology.merge(override)
+      (etymology || {}).merge(override).compact.presence
     end
 
     def enrich(lexeme, entry)

@@ -6,7 +6,7 @@ module Huayu
     STYLES = %w[document minutes steps].freeze
 
     Item = Data.define(:mark, :head, :zh, :indent, :names) do
-      def name(locale) = names[locale.to_s].presence || names["en"]
+      def name(locale) = Locales.pick(names, locale)
 
       def indent? = indent
     end
@@ -14,11 +14,11 @@ module Huayu
     Notice = Data.define(:id, :kind, :category, :position, :style, :date, :doc, :issuer, :closing, :items, :names) do
       def zh = names["zh"]
 
-      def name(locale) = names[locale.to_s].presence || names["en"]
+      def name(locale) = Locales.pick(names, locale)
 
-      def issuer_name(locale) = issuer[locale.to_s].presence || issuer["en"]
+      def issuer_name(locale) = Locales.pick(issuer, locale)
 
-      def closing_name(locale) = closing && (closing[locale.to_s].presence || closing["en"])
+      def closing_name(locale) = closing && Locales.pick(closing, locale)
 
       def steps? = style == "steps"
 

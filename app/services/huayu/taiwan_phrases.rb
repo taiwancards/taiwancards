@@ -7,43 +7,43 @@ module Huayu
     ROLES = %w[you staff].freeze
 
     Scene = Data.define(:id, :zh, :domain, :position, :names) do
-      def name(locale) = names[locale.to_s] || names["en"]
+      def name(locale) = Locales.pick(names, locale)
     end
 
     Option = Data.define(:text, :pinyin, :names) do
-      def name(locale) = names[locale.to_s] || names["en"]
+      def name(locale) = Locales.pick(names, locale)
     end
 
     Slot = Data.define(:id, :names, :options) do
-      def name(locale) = names[locale.to_s] || names["en"]
+      def name(locale) = Locales.pick(names, locale)
 
       def closed? = options.any?
     end
 
     Line = Data.define(:zh, :names) do
-      def name(locale) = names[locale.to_s].presence || names["en"]
+      def name(locale) = Locales.pick(names, locale)
     end
 
     Choice = Data.define(:zh, :names, :correct, :why, :note) do
-      def name(locale) = names[locale.to_s].presence || names["en"]
+      def name(locale) = Locales.pick(names, locale)
 
       def correct? = correct
 
-      def why_for(locale) = why[locale.to_s].presence || why["en"]
+      def why_for(locale) = Locales.pick(why, locale)
 
-      def note_for(locale) = note[locale.to_s].presence || note["en"]
+      def note_for(locale) = Locales.pick(note, locale)
     end
 
     Step = Data.define(:says, :goal, :choices) do
-      def goal_for(locale) = goal && (goal[locale.to_s].presence || goal["en"])
+      def goal_for(locale) = goal && Locales.pick(goal, locale)
 
       def choice? = choices.any?
     end
 
     Dialogue = Data.define(:scene, :partner, :titles, :settings, :steps) do
-      def title(locale) = titles[locale.to_s].presence || titles["en"]
+      def title(locale) = Locales.pick(titles, locale)
 
-      def setting(locale) = settings[locale.to_s].presence || settings["en"]
+      def setting(locale) = Locales.pick(settings, locale)
 
       def chinese = steps.flat_map { |step| [step.says&.zh, *step.choices.map(&:zh)] }.compact
 
@@ -64,9 +64,9 @@ module Huayu
       :names,
       :notes
     ) do
-      def name(locale) = names[locale.to_s] || names["en"]
+      def name(locale) = Locales.pick(names, locale)
 
-      def note(locale) = notes[locale.to_s] || notes["en"]
+      def note(locale) = Locales.pick(notes, locale)
 
       def staff? = role == "staff"
 
@@ -139,17 +139,17 @@ module Huayu
           zh: row["zh"],
           domain: row["domain"],
           position: row["position"].to_i,
-          names: row.slice(*Locales::ALL).freeze
+          names: row.slice(*Locales::STORED).freeze
         )
       end
 
       def slot_from(row)
         Slot.new(
           id: row["id"],
-          names: row.slice(*Locales::ALL).freeze,
+          names: row.slice(*Locales::STORED).freeze,
           options: Array(row["options"])
             .map { |option|
-              Option.new(text: option["text"], pinyin: option["pinyin"], names: option.slice(*Locales::ALL).freeze)
+              Option.new(text: option["text"], pinyin: option["pinyin"], names: option.slice(*Locales::STORED).freeze)
             }
             .freeze
         )
@@ -167,8 +167,8 @@ module Huayu
           links: Array(row["links"]).freeze,
           replies: Array(row["replies"]).freeze,
           avoid: row["avoid"]&.freeze,
-          names: row.slice(*Locales::ALL).freeze,
-          notes: Locales::ALL.to_h { |code| [code, row["note_#{code}"]] }.compact.freeze
+          names: row.slice(*Locales::STORED).freeze,
+          notes: Locales::STORED.to_h { |key| [key, row["note_#{key}"]] }.compact.freeze
         )
       end
 
@@ -193,14 +193,14 @@ module Huayu
       def choice_from(row)
         Choice.new(
           zh: row["zh"],
-          names: row.slice(*Locales::ALL).freeze,
+          names: row.slice(*Locales::STORED).freeze,
           correct: row["correct"] == true,
           why: Hash(row["why"]).freeze,
           note: Hash(row["note"]).freeze
         )
       end
 
-      def line_from(row) = Line.new(zh: row["zh"], names: row.slice(*Locales::ALL).freeze)
+      def line_from(row) = Line.new(zh: row["zh"], names: row.slice(*Locales::STORED).freeze)
 
       SPOKEN = /[^\p{Latin}\p{Mn}' ]+/
 

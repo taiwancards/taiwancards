@@ -59,7 +59,7 @@ module Huayu
     end
 
     def candidate_sentences
-      ExampleSentences.for(content, user: @user, limit: SENTENCE_LIMIT)
+      ExampleSentences.for_entry(content, user: @user, limit: SENTENCE_LIMIT)
     end
 
     COLLOCATION_LIMIT = 12
@@ -123,12 +123,20 @@ module Huayu
     end
 
     def etymology
-      [lexeme, content].uniq.each do |source|
+      sources = [character, lexeme, content].compact.uniq
+      sources.each do |source|
         text = EtymologyTranslations.translated(source, "text")
         return text if text
       end
 
-      lexeme.data["etymology_text"].presence || content.data["etymology_text"].presence
+      sources.filter_map { |source| source.data["etymology_text"].presence }.first
+    end
+
+    def character
+      return @character if defined?(@character)
+
+      single = lexeme.text.length == 1 && !lexeme.character?
+      @character = single ? Lexeme.find_by(kind: :character, text: lexeme.text) : nil
     end
 
     def pos

@@ -9,7 +9,7 @@ module Huayu
         entry = DATA.value[text]
         return nil if entry.nil?
 
-        entry[locale.to_s].presence || entry["en"].presence
+        Locales.pick(entry, locale).presence
       end
 
       def reset! = DATA.reset!

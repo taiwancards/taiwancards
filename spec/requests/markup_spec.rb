@@ -39,6 +39,25 @@ RSpec.describe "Sentence markup" do
     expect(Huayu::SentenceGlossStore.index.fetch("我喝茶。").vi).to(eq("Tôi uống trà."))
   end
 
+  it "keeps the German translation beside the Vietnamese one when the English and Russian are edited" do
+    sentence = create(
+      :lexeme,
+      kind: :sentence,
+      text: "我喝茶。",
+      meanings: {"en" => "I drink.", "vi" => "Tôi uống trà.", "de" => "Ich trinke Tee."},
+      content_sources: [source]
+    )
+
+    patch("/markup/#{sentence.id}", params: {en: "I drink tea.", ru: ""})
+
+    expect(sentence.reload.meanings).to(
+      eq({"vi" => "Tôi uống trà.", "de" => "Ich trinke Tee.", "en" => "I drink tea."})
+    )
+    expect(Huayu::SentenceGlossStore.index.fetch("我喝茶。")).to(
+      have_attributes(en: "I drink tea.", ru: nil, vi: "Tôi uống trà.", de: "Ich trinke Tee.")
+    )
+  end
+
   it "lets an administrator delete a sentence and forget its translations" do
     doomed = stored_sentence
 

@@ -137,6 +137,8 @@ en:
     en: English
     ru: Русский
     vi: Tiếng Việt
+    de: Deutsch
+    id: Bahasa Indonesia
   language_step:
     heading: Choose the language of the app and its lessons
     edition: "Not a word-for-word translation of another language, but an edition of its own. Taiwanese Mandarin is explained from an English speaker's point of view: sounds, grammar and culture."
@@ -150,8 +152,8 @@ en:
   names:
     title: How a Taiwanese name is built
     meta_description: >-
-      What Taiwanese names are made of, which surnames Taiwan actually uses, and which characters
-      turn up in given names — from the national registration statistics.
+      What Taiwanese names are made of, which surnames Taiwan actually uses — counted in the household
+      register — and which characters turn up in given names.
     caveat: >-
       Counted from %{people} names of people connected to Taiwan. The record leans toward people notable
       enough to be written about, so it describes naming across the last century rather than what is given
@@ -489,7 +491,7 @@ en:
       grammar: "582 patterns by level, each with a breakdown, corpus examples and neighboring topics."
       zhuci: "語氣詞 particles: what 吧, 啊, 呢 and 嘛 do to a sentence."
       variants: "Where Taiwan parts ways with China — readings, glyphs, words."
-      names: "How a Taiwanese name is built, from the national registration statistics."
+      names: "How a Taiwanese name is built, with surname counts from the household register."
       practice-zhuyin-trainer: "Zhuyin by ear in groups: the next group waits until you know this one."
       practice-drill: "Zhuyin against pinyin at speed, with weak symbols surfacing more often."
       tones-drill: "Tones by ear on studio recordings, male and female voices alternating."
@@ -1016,7 +1018,7 @@ en:
       hint: Once or twice a month at most, only what is new. No ads.
     admin:
       title: Newsletters
-      lede: "Recipients: everyone who signed in with Google and has not unsubscribed, plus you, always. Currently %{en} in English, %{ru} in Russian and %{vi} in Vietnamese. Each gets the version in their interface language."
+      lede: "Recipients: everyone who signed in with Google and has not unsubscribed, plus you, always. Currently %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German and %{id} in Indonesian. Each gets the version in their interface language."
       new: New newsletter
       empty: No newsletters yet.
       draft: Draft
@@ -1045,7 +1047,7 @@ en:
       sample_sent: "Sent to %{email} only. It is the real email: its links count clicks and its unsubscribe link works."
       failed: "Could not send: %{error}"
       deliver: "Send (%{count})"
-      deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian, %{vi} in Vietnamese)? It cannot be recalled."
+      deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian)? It cannot be recalled."
       no_recipients: Nobody matches the chosen recipients.
       audience: Recipients
       audience_modes:
@@ -1058,8 +1060,8 @@ en:
       audience_search: Find by email
       audience_seen: "seen %{ago} ago"
       audience_count:
-        one: "1 recipient: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese"
-        other: "%{count} recipients: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese"
+        one: "1 recipient: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian"
+        other: "%{count} recipients: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian"
       resume: "Send the remaining %{count}"
       resume_confirm: "Send the newsletter to the %{count} people who haven't received it yet?"
       dispatched: Sending has started in the background. Refresh the page to follow it.
@@ -2151,7 +2153,7 @@ en:
     accuracy: Correct
     done: Words done
     how_title: Why learn to type this way
-    how_body: "This is the layout printed on every keyboard sold in Taiwan, and it is how most people here type. You do not need to install anything to practice: press the same keys you would press on a Taiwanese keyboard and the zhuyin appears. Tones live on 6, 3, 4 and 7; the neutral tone is 7. Once the layout is in your fingers, typing Mandarin stops being a lookup exercise and becomes muscle memory — and because you type the sound, it drills the reading at the same time."
+    how_body: "This is the layout printed on every keyboard sold in Taiwan, and it is how most people here type. You do not need to install anything to practice: press the same keys you would press on a Taiwanese keyboard and the zhuyin appears. The tone keys sit on the number row: 6 for the second tone, 3 for the third, 4 for the fourth and 7 for the neutral tone; the first tone needs no key. Once the layout is in your fingers, typing Mandarin stops being a lookup exercise and becomes muscle memory — and because you type the sound, it drills the reading at the same time."
   cangjie:
     title: Cangjie input
     subtitle: Cangjie 5 (五代) — type Latin keys to compose Taiwan's traditional characters. Every character's card also shows its Cangjie code.
@@ -2453,7 +2455,7 @@ en:
       hokkien: Twenty-three further symbols were created for Taiwanese Hokkien — the same system extended to another language of Taiwan.
     practice_now:
       title: Practice it right away
-      initials: Twenty-one initials, in blocks by manner of articulation. Read on once these come back by ear without hesitation.
+      initials: Twenty-one initials, in blocks by place of articulation. Read on once these come back by ear without hesitation.
       finals: Sixteen finals. The same drill, with no Latin letters on screen.
       tricky: >-
         Six spellings where pinyin hides the real rime. The drill mixes them with look-alikes, so you
@@ -2504,10 +2506,10 @@ en:
     blocks:
       labial:
         title: Lips
-        body: Both lips meet. The first thing Taiwanese children learn, and the opening of the ㄅㄆㄇㄈ song.
+        body: "The lips make these sounds: both lips meet for ㄅ ㄆ ㄇ, and for ㄈ the lower lip touches the upper teeth. The first thing Taiwanese children learn, and the opening of the ㄅㄆㄇㄈ song."
       alveolar:
         title: Tip of the tongue
-        body: The tongue presses behind the upper teeth. 不 and almost every negation live here.
+        body: The tongue presses behind the upper teeth. 的, 他, 你 and 了 all start here.
       velar:
         title: Back of the tongue
         body: Made further back than the English equivalents. ㄏ is softer than an English h — closer to a breath.
@@ -3890,7 +3892,7 @@ en:
     zhuyin_trainer_html: >-
       <p>Here zhuyin is learned as a script in its own right, with no Latin crutch. You hear a sound and
       pick the symbol — there is deliberately no pinyin on screen, otherwise what sets in is “ㄅ equals the
-      letter b” rather than “ㄅ equals this sound.”</p><p>Symbols come in blocks by manner of articulation
+      letter b” rather than “ㄅ equals this sound.”</p><p>Symbols come in blocks by place of articulation
       rather than straight down the chart. A new block opens once the previous one is done. The options
       are deliberately close: similar shapes and sounds from the same place of articulation — random options
       would only create an illusion of progress.</p><p>A symbol counts as mastered after three correct answers
@@ -3966,7 +3968,7 @@ en:
       <p>Every line of the Taipei and New Taipei network, with its stations in official order. Tap a station
       and the card at the top shows its zhuyin, pinyin and meaning; from there you can open the full dictionary
       entry or add it to a deck.</p><p>Hollow dots are transfer stations — the card lists every line that station
-      belongs to. The layout is deliberately schematic rather than geographic.</p>
+      belongs to. The map is drawn from the stations' real coordinates, so each one sits where it actually is.</p>
     games_html: "<p>The vocabulary of Taiwanese mahjong, Chinese official mahjong, xiangqi, go and board games, each word explained by what it does inside the game. This is not a rulebook: the aim is to follow the talk at the table and to read signs, apps and streams.</p><p>The tabs split the vocabulary by game and, inside each, by role: tiles and pieces, how a game runs, calls, patterns, strategy, what players say. A green dot marks what is said differently outside Taiwan, and where China uses another word it is shown beside the entry. Meanings are checked against the Ministry of Education dictionary, the Taiwanese sixteen-tile rules and the 1998 Chinese official rules.</p>"
     medicine_html: >-
       <p>Western medicine as Taiwan actually speaks it: the body and the organs, the diseases a doctor

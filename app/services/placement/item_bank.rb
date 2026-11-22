@@ -108,7 +108,7 @@ module Placement
         .unrestricted
         .where(kind: kinds)
         .at_level(grade)
-        .where("lexemes.meanings ->> ? IS NOT NULL OR lexemes.meanings ->> 'en' IS NOT NULL", I18n.locale.to_s)
+        .where("lexemes.meanings ->> ? IS NOT NULL OR lexemes.meanings ->> 'en' IS NOT NULL", Locales.key)
         .curriculum_order
         .limit(POOL_SIZE)
         .to_a

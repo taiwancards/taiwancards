@@ -19,9 +19,9 @@
       - if @word
         = link_to t("liangci.as_word"), dict_entry_path(@entry.text), class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
     p.text-base = @entry.meaning
-    - if @entry.data.dig("notes", I18n.locale.to_s).present?
+    - if @entry.data.dig("notes", Locales.key).present?
       p.rounded-lg.border.border-border.bg-card.px-3.py-2.text-sm.text-muted-foreground
-        = @entry.data.dig("notes", I18n.locale.to_s)
+        = @entry.data.dig("notes", Locales.key)
     - if detailed? && @entry.data["moe_gloss"].present?
       details.rounded-lg.border.border-border.px-3.py-2
         summary.cursor-pointer.text-xs.text-muted-foreground = t("liangci.moe_gloss")

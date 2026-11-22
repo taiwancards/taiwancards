@@ -11,6 +11,8 @@ RSpec.describe MockExam::Listening do
       en: "en #{text}",
       ru: nil,
       vi: nil,
+      de: nil,
+      ind: nil,
       emoji:,
       emoji_word: emoji ? text[0, 2] : nil,
       emoji_category: category

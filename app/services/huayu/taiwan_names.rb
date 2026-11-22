@@ -31,6 +31,8 @@ module Huayu
       :en,
       :ru,
       :vi,
+      :de,
+      :ind,
       :fields,
       :cohorts,
       :lean
@@ -41,7 +43,7 @@ module Huayu
 
       def per_mille(cohort) = cohorts[cohort].to_f
 
-      def meaning(locale) = {"ru" => ru, "vi" => vi}[locale.to_s] || en
+      def meaning(locale) = Locales.pick(Locales::STORED.to_h { |key| [key, public_send(key)] }, locale)
 
       def leans = first == second ? "any" : (first > second ? "first" : "second")
 
@@ -89,6 +91,8 @@ module Huayu
             en: row["en"],
             ru: row["ru"],
             vi: row["vi"],
+            de: row["de"],
+            ind: row["ind"],
             fields: Array(row["fields"]),
             cohorts: (row["cohorts"] || {}),
             lean: row["lean"]
@@ -136,6 +140,8 @@ module Huayu
               "en",
               "ru",
               "vi",
+              "de",
+              "ind",
               "fields",
               "lean",
               "cohorts"

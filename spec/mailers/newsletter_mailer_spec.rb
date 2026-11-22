@@ -36,6 +36,26 @@ RSpec.describe NewsletterMailer do
     expect(mail.html_part.body.decoded).to(include("Xin chào"))
   end
 
+  it "writes to a German reader in German" do
+    reader = create(:user, google_uid: "g-de", locale: "de")
+    newsletter.update!(subject_de: "Neuigkeiten", body_de: "<div>Hallo</div>")
+
+    mail = described_class.issue(NewsletterDelivery.create!(newsletter:, user: reader, locale: "de"))
+
+    expect(mail.subject).to(eq("Neuigkeiten"))
+    expect(mail.html_part.body.decoded).to(include("Hallo"))
+  end
+
+  it "writes to an Indonesian reader from the ind columns" do
+    reader = create(:user, google_uid: "g-id", locale: "id")
+    newsletter.update!(subject_ind: "Kabar terbaru", body_ind: "<div>Halo</div>")
+
+    mail = described_class.issue(NewsletterDelivery.create!(newsletter:, user: reader, locale: "id"))
+
+    expect(mail.subject).to(eq("Kabar terbaru"))
+    expect(mail.html_part.body.decoded).to(include("Halo"))
+  end
+
   it "tracks links into the app, leaves other links alone and carries a text part" do
     mail = described_class.issue(delivery)
     html = mail.html_part.body.decoded

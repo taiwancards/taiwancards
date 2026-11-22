@@ -11,6 +11,8 @@ RSpec.describe "Dictation" do
       en: "I don't know either.",
       ru: "Я тоже не знаю.",
       vi: "Tôi cũng không biết.",
+      de: nil,
+      ind: nil,
       emoji: nil,
       emoji_word: nil,
       emoji_category: nil

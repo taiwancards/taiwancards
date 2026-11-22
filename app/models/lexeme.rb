@@ -73,7 +73,7 @@ class Lexeme < ApplicationRecord
   )
   scope :unrestricted, -> { where(restricted: false) }
 
-  MATCHING_SQL = (["lexemes.text"] + Locales::ALL.map { |code| "lexemes.meanings ->> '#{code}'" })
+  MATCHING_SQL = (["lexemes.text"] + Locales::STORED.map { |key| "lexemes.meanings ->> '#{key}'" })
     .map { |column| "#{column} ILIKE :q" }
     .join(" OR ")
     .freeze
@@ -192,7 +192,7 @@ class Lexeme < ApplicationRecord
   def note(locale = I18n.locale) = Locales.pick(data["note"], locale)
 
   def meaning(locale = I18n.locale)
-    value = meanings[locale.to_s].presence || meanings[Locales::DEFAULT].presence || meanings.values.find(&:present?)
+    value = Locales.pick(meanings, locale).presence || meanings.values.find(&:present?)
     value.is_a?(Array) ? value.join("; ") : value
   end
 

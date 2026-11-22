@@ -15,9 +15,12 @@ RSpec.describe "Landing page" do
     get("/en")
 
     navigation = Nokogiri::HTML5(response.body).at_css("header")
-    expect(navigation.css("nav [lang]").pluck("lang")).to(eq(%w[en vi ru]))
+    flagged = LanguageFlagHelper::FLAGS.keys
+    expect(flagged).to(match_array(Locales::ALL))
+    expect(flagged.last).to(eq("id"))
+    expect(navigation.css("nav [lang]").pluck("lang")).to(eq(flagged))
     expect(navigation.css("nav svg").length).to(eq(Locales::ALL.length))
-    expect(navigation.css("a[hreflang]").pluck("href")).to(eq(%w[/vi /ru]))
+    expect(navigation.css("a[hreflang]").pluck("href")).to(eq((flagged - ["en"]).map { |code| "/#{code}" }))
     expect(navigation.at_css("nav [aria-current=true]")["lang"]).to(eq("en"))
     expect(navigation.at_css("[data-display-pref-css-value='font-kai']")).to(be_nil)
   end
@@ -28,7 +31,15 @@ RSpec.describe "Landing page" do
       {"CF-IPCountry" => "UA", "Accept-Language" => "uk-UA,uk;q=0.9,en;q=0.8"} => "/ru/grammar",
       {"CF-IPCountry" => "KZ"} => "/ru/grammar",
       {"CF-IPCountry" => "VN", "Accept-Language" => "ru-RU,ru;q=0.9"} => "/ru/grammar",
-      {"CF-IPCountry" => "TW", "Accept-Language" => "en-US,en;q=0.9"} => "/en/grammar"
+      {"CF-IPCountry" => "TW", "Accept-Language" => "en-US,en;q=0.9"} => "/en/grammar",
+      {"CF-IPCountry" => "DE", "Accept-Language" => "en-US,en;q=0.9"} => "/de/grammar",
+      {"CF-IPCountry" => "AT"} => "/de/grammar",
+      {"CF-IPCountry" => "CH", "Accept-Language" => "fr-CH,fr;q=0.9,en;q=0.8"} => "/en/grammar",
+      {"CF-IPCountry" => "LU", "Accept-Language" => "fr-LU"} => "/en/grammar",
+      {"CF-IPCountry" => "FR", "Accept-Language" => "de-DE,de;q=0.9"} => "/de/grammar",
+      {"CF-IPCountry" => "ID", "Accept-Language" => "en-US,en;q=0.9"} => "/id/grammar",
+      {"CF-IPCountry" => "SG", "Accept-Language" => "id-ID,id;q=0.9"} => "/id/grammar",
+      {"CF-IPCountry" => "TW", "Accept-Language" => "in"} => "/id/grammar"
     }.each do |headers, target|
       raw_get("/grammar", headers:)
       expect(response).to(redirect_to(target), headers.to_s)
@@ -44,6 +55,16 @@ RSpec.describe "Landing page" do
 
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(match(/<html[^>]*lang="en"/))
+  end
+
+  it "serves the Indonesian edition under its own prefix", :no_auth do
+    %w[/id /id/grammar].each do |path|
+      get(path)
+
+      expect(response).to(have_http_status(:ok), path)
+      expect(response.body).to(match(/<html[^>]*lang="id"/), path)
+      expect(response.body).to(include("hreflang=\"id\""), path)
+    end
   end
 
   it "stays reachable for a signed-in person and offers a way back into the app" do

@@ -11,6 +11,8 @@ RSpec.describe MockExam::Pictures do
       en: "en #{text}",
       ru: "ru #{text}",
       vi: "vi #{text}",
+      de: nil,
+      ind: nil,
       emoji:,
       emoji_word: word,
       emoji_category: category

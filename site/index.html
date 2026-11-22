@@ -7,28 +7,33 @@
 <link rel="alternate" hreflang="en" href="https://taiwancards.app/en/">
 <link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/">
 <link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/">
+<link rel="alternate" hreflang="de" href="https://taiwancards.app/de/">
+<link rel="alternate" hreflang="id" href="https://taiwancards.app/id/">
 <link rel="alternate" hreflang="x-default" href="https://taiwancards.app/en/">
 <noscript><meta http-equiv="refresh" content="0; url=/en/"></noscript>
 <script>
 (function () {
   var fallback = "en";
-  var known = ["en","ru","vi"];
-  var countries = {"VN":"vi","RU":"ru","UA":"ru","BY":"ru","KZ":"ru","KG":"ru","UZ":"ru","TJ":"ru","TM":"ru","AM":"ru","AZ":"ru","MD":"ru"};
+  var known = ["en","ru","vi","de","id"];
+  var countries = {"VN":"vi","RU":"ru","UA":"ru","BY":"ru","KZ":"ru","KG":"ru","UZ":"ru","TJ":"ru","TM":"ru","AM":"ru","AZ":"ru","MD":"ru","DE":"de","AT":"de","CH":"de","LI":"de","LU":"de","ID":"id"};
+  var vetoes = {"CH":["fr","it","rm"],"LU":["fr"]};
+  var legacy = {"in":"id"};
   var go = function (code) { location.replace("/" + code + "/"); };
   var stored = null;
   try { stored = localStorage.getItem("site_locale"); } catch (error) {}
   if (known.indexOf(stored) !== -1) return go(stored);
 
-  var said = (navigator.languages || [navigator.language || ""])
-    .map(function (tag) { return tag.slice(0, 2).toLowerCase(); })
-    .filter(function (code) { return known.indexOf(code) !== -1; })[0];
+  var spoken = (navigator.languages || [navigator.language || ""])
+    .map(function (tag) { var code = tag.split("-")[0].toLowerCase(); return legacy[code] || code; });
+  var said = spoken.filter(function (code) { return known.indexOf(code) !== -1; })[0];
   if (said && said !== fallback) return go(said);
 
   var done = false;
   var settle = function (country) {
     if (done) return;
     done = true;
-    go(countries[country] || said || fallback);
+    var vetoed = (vetoes[country] || []).some(function (code) { return spoken.indexOf(code) !== -1; });
+    go((!vetoed && countries[country]) || said || fallback);
   };
   setTimeout(settle, 800);
   fetch("/cdn-cgi/trace")

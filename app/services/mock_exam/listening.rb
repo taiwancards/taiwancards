@@ -10,7 +10,7 @@ module MockExam
     }.freeze
 
     Question = Data.define(:number, :mode, :text, :clip, :options, :answer, :meanings) do
-      def translation(locale) = meanings[locale.to_s].presence || meanings["en"]
+      def translation(locale) = Locales.pick(meanings, locale)
 
       def emoji? = mode == "emoji"
     end
@@ -63,7 +63,7 @@ module MockExam
           clip: row.clip,
           options: options,
           answer: options.index(row.emoji),
-          meanings: {"en" => row.en, "ru" => row.ru, "vi" => row.vi}
+          meanings: row.translations
         }
       end
 
@@ -84,7 +84,7 @@ module MockExam
           clip: row.clip,
           options: options,
           answer: options.index(row.text),
-          meanings: {"en" => row.en, "ru" => row.ru, "vi" => row.vi}
+          meanings: row.translations
         }
       end
     end

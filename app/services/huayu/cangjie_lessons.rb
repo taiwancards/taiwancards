@@ -40,7 +40,9 @@ module Huayu
         {
           stages: Array(raw["stages"]).freeze,
           groups: Array(raw["groups"])
-            .map { |row| Group.new(id: row["id"], zh: row["zh"], keys: row["keys"], names: row.slice(*Locales::ALL)) }
+            .map { |row|
+              Group.new(id: row["id"], zh: row["zh"], keys: row["keys"], names: row.slice(*Locales::STORED))
+            }
             .freeze,
           core: Array(raw["core"]).freeze,
           exam: Array(raw["exam"]).freeze,

@@ -64,6 +64,19 @@ RSpec.describe Huayu::RejectPurge do
     expect(result).to(include(removed: 0, studied: 1))
   end
 
+  it "removes only the entries listed for the given reasons" do
+    political = sentence("中國一點都不能少")
+    fragment = sentence("常常讓我的心")
+    listed(political.text, "off_taiwan")
+    listed(fragment.text, "fragment")
+
+    result = described_class.new(io: StringIO.new, stores: [store], reasons: %w[off_taiwan]).call[:sentence]
+
+    expect(result).to(include(listed: 1, removed: 1))
+    expect(Lexeme.exists?(political.id)).to(be(false))
+    expect(Lexeme.exists?(fragment.id)).to(be(true))
+  end
+
   it "reports without deleting on a dry run" do
     doomed = sentence("這個東西好像")
     listed(doomed.text, "fragment")

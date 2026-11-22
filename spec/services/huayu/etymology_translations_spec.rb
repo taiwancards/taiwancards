@@ -122,6 +122,59 @@ RSpec.describe Huayu::EtymologyTranslations do
     expect(word.data["etymology_text"]).to(eq("From 衣, matching English E (“ecstasy”)."))
   end
 
+  it "serves a corrected English character etymology to every language without its own" do
+    lexeme = character(
+      "回",
+      {
+        "etymology" => {"hint" => "a spiral"},
+        "etymology_text" => "For pronunciation and definitions of 回 – see 迴."
+      }
+    )
+    write({"回" => {"text" => "Pictogram (象形): rotation (originally a spiral)."}})
+    described_class.new(path:, locale: "en").call
+    write({"回" => {"text" => "Piktogramm (象形): Drehung (ursprünglich eine Spirale)."}})
+    described_class.new(path:, locale: "de").call
+    profile = Huayu::CharacterProfile.new(lexeme.reload, user: nil)
+
+    I18n.with_locale(:en) do
+      expect(profile.etymology_text).to(eq("Pictogram (象形): rotation (originally a spiral)."))
+      expect(profile.etymology_hint).to(eq("a spiral"))
+      expect(profile).not_to(be_etymology_translated)
+    end
+
+    I18n.with_locale(:ru) do
+      expect(profile.etymology_text).to(eq("Pictogram (象形): rotation (originally a spiral)."))
+      expect(profile).not_to(be_etymology_translated)
+    end
+
+    I18n.with_locale(:de) do
+      expect(profile.etymology_text).to(eq("Piktogramm (象形): Drehung (ursprünglich eine Spirale)."))
+      expect(profile).to(be_etymology_translated)
+    end
+  end
+
+  it "shows the character's etymology on the page of a one-character word" do
+    word = Lexeme.create!(kind: :word, text: "簡", data: {"etymology_text" => "Borrowed from English Jane."})
+    character(
+      "簡",
+      {
+        "etymology_text" => "Phono-semantic compound (形聲): semantic 竹 + phonetic 閒.",
+        "etymology_i18n" => {
+          "de" => {"text" => "Laut-Bedeutungs-Zeichen (形聲): Bedeutungsträger 竹 + Lautträger 閒."}
+        }
+      }
+    )
+    profile = Huayu::WordProfile.new(word, user: nil)
+
+    I18n.with_locale(:de) do
+      expect(profile.etymology).to(eq("Laut-Bedeutungs-Zeichen (形聲): Bedeutungsträger 竹 + Lautträger 閒."))
+    end
+
+    I18n.with_locale(:en) do
+      expect(profile.etymology).to(eq("Phono-semantic compound (形聲): semantic 竹 + phonetic 閒."))
+    end
+  end
+
   it "ignores entries whose fields are blank" do
     character("味", {"etymology" => {"hint" => "mouth"}})
     write({"味" => {"hint" => "  ", "text" => ""}})

@@ -10,7 +10,21 @@ module Huayu
       "sentence_words.gdex DESC, " \
       "lexemes.id ASC"
 
+    TWIN_KINDS = %i[word character].freeze
+
     class << self
+      def for_entry(lexeme, user:, limit:, locale: I18n.locale)
+        own = self.for(lexeme, user:, limit:, locale:)
+        twin = own.empty? ? twin_of(lexeme, user) : nil
+        twin ? self.for(twin, user:, limit:, locale:) : own
+      end
+
+      def twin_of(lexeme, user)
+        return nil unless lexeme.text.to_s.length == 1 && TWIN_KINDS.include?(lexeme.kind.to_sym)
+
+        Lexeme.visible_to(user).where(kind: TWIN_KINDS - [lexeme.kind.to_sym], text: lexeme.text).first
+      end
+
       def for(lexeme, user:, limit:, locale: I18n.locale)
         Lexeme
           .where(kind: :sentence)
@@ -19,7 +33,7 @@ module Huayu
           .where(sentence_words: {lexeme_id: lexeme.id})
           .left_joins(:sentence_profile)
           .preload(:content_sources, :sentence_profile)
-          .order(Arel.sql(Lexeme.sanitize_sql_array([ORDER, locale.to_s])))
+          .order(Arel.sql(Lexeme.sanitize_sql_array([ORDER, Locales.key(locale)])))
           .limit(limit)
           .to_a
       end

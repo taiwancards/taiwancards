@@ -40,7 +40,7 @@ RSpec.describe Deploy::SyncSteps do
   end
 
   it "re-runs every step that reads a curated page file when one of them changes" do
-    %w[ru_glosses collocation_meanings].each do |name|
+    %w[ru_glosses collocation_meanings vi_glosses de_glosses ind_glosses].each do |name|
       expect(step(name).paths).to(include(*described_class::CURATED_PAGE_SOURCES), "#{name} defers to the page files")
       expect(step(name).code).to(include("app/services/huayu/curated_glosses.rb"), "#{name} reads them through it")
     end
@@ -95,6 +95,7 @@ RSpec.describe Deploy::SyncSteps do
 
     derived.each { |name|
       expect(names.index(name)).to(be > names.index("retired_words"), "#{name} would see stale rows")
+      expect(names.index(name)).to(be > names.index("retired_off_taiwan"), "#{name} would see stale rows")
     }
   end
 end

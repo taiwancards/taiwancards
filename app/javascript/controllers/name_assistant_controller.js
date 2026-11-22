@@ -9,6 +9,7 @@ const STRONG_PAIR = 1;
 const RARE_RATE = 0.08;
 const MALE_LEAN = 0.7;
 const FEMALE_LEAN = 0.3;
+const STORAGE_KEYS = { id: "ind" };
 
 export default class extends Controller {
   static values = { url: String };
@@ -58,7 +59,10 @@ export default class extends Controller {
   }
 
   gloss(character) {
-    const local = this.locale === "en" ? null : character[this.locale];
+    const local =
+      this.locale === "en"
+        ? null
+        : character[STORAGE_KEYS[this.locale] || this.locale];
     return local || character.en || "";
   }
 

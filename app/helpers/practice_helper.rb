@@ -112,6 +112,8 @@ module PracticeHelper
 
   def phon_localized(source) = Locales.pick(source).to_s
 
+  def phon_cell(row, field) = Locales.pick(row["#{field}_i18n"]).presence || row[field]
+
   def phon_example_gloss(example) = Locales.pick(example).to_s
 
   def accuracy_pct(correct, total)

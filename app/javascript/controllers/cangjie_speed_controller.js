@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { load, pace, recordChar, recordRun } from "lib/cangjie_progress";
-import { typingElsewhere } from "lib/hotkeys";
+import { positionKey, typingElsewhere } from "lib/hotkeys";
 
 const ROUND = 20;
 
@@ -200,9 +200,9 @@ export default class extends Controller {
       return;
     }
 
-    if (/^[a-zA-Z]$/.test(event.key)) {
+    if (/^[a-zA-Z]$/.test(positionKey(event))) {
       event.preventDefault();
-      this.type(event.key.toLowerCase());
+      this.type(positionKey(event).toLowerCase());
     } else if (event.key === "Backspace") {
       event.preventDefault();
       this.erase();

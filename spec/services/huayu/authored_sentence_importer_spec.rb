@@ -28,7 +28,7 @@ RSpec.describe Huayu::AuthoredSentenceImporter do
 
     sentence = stored.find_by!(text: rows.first["zh"])
     expect(sentence.content_sources).to(include(source))
-    expect(sentence.meanings.keys).to(match_array(Locales::ALL))
+    expect(sentence.meanings.keys).to(match_array(Locales::STORED))
   end
 
   it "segments and grades each sentence so its words can be linked" do
@@ -43,8 +43,8 @@ RSpec.describe Huayu::AuthoredSentenceImporter do
 
   it "keeps translations whole in every language" do
     rows.each do |row|
-      expect(row.values_at("zh", *Locales::ALL)).to(all(be_present))
-      expect(row.values_at(*Locales::ALL).join).not_to(match(/\p{Han}/))
+      expect(row.values_at("zh", *Locales::STORED)).to(all(be_present))
+      expect(row.values_at(*Locales::STORED).join).not_to(match(/\p{Han}/))
     end
   end
 

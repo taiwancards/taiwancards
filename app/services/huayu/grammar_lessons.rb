@@ -6,8 +6,8 @@ module Huayu
 
     DATA = JsonData.new("huayu/grammar_lessons.json", default: [], watch: true)
 
-    Example = Data.define(:zh, :en, :ru, :vi, :zhuyin, :pinyin, :sentence, :segments) do
-      def translation(locale) = (Locales.known?(locale) && public_send(locale.to_s)).presence || en
+    Example = Data.define(:zh, :en, :ru, :vi, :de, :ind, :zhuyin, :pinyin, :sentence, :segments) do
+      def translation(locale) = (Locales.known?(locale) && public_send(Locales.key(locale))).presence || en
 
       def annotated? = zhuyin.present?
 
@@ -24,6 +24,8 @@ module Huayu
       :en,
       :ru,
       :vi,
+      :de,
+      :ind,
       :examples,
       :excluded,
       :supplementary,
@@ -38,7 +40,7 @@ module Huayu
       def exclusion_reason(locale)
         return nil if excluded.blank?
 
-        excluded["reason_#{locale}"].presence || excluded["reason_en"]
+        excluded["reason_#{Locales.key(locale)}"].presence || excluded["reason_en"]
       end
 
       def title(locale) = text_for(locale, "title")
@@ -48,7 +50,7 @@ module Huayu
       def tip(locale) = text_for(locale, "tip")
 
       def formula_for(locale)
-        formula[locale.to_s] || formula["en"]
+        Locales.pick(formula, locale)
       end
 
       def to_param = slug
@@ -58,7 +60,7 @@ module Huayu
       private
 
       def text_for(locale, key)
-        source = Locales.known?(locale) ? public_send(locale.to_s) : en
+        source = Locales.known?(locale) ? public_send(Locales.key(locale)) : en
         source[key].presence || en[key]
       end
     end
@@ -117,7 +119,7 @@ module Huayu
         return true if lesson.heads.any? { |head| head.include?(needle) }
         return true if lesson.formula.values.any? { |text| text.to_s.downcase.include?(needle) }
 
-        [lesson.en, lesson.ru, lesson.vi].any? { |source| source["title"].to_s.downcase.include?(needle) }
+        Locales::STORED.any? { |key| lesson.public_send(key)["title"].to_s.downcase.include?(needle) }
       end
 
       def build(rows)
@@ -133,12 +135,16 @@ module Huayu
               en: row["en"] || {},
               ru: row["ru"] || {},
               vi: row["vi"] || {},
+              de: row["de"] || {},
+              ind: row["ind"] || {},
               examples: Array(row["examples"]).map do |example|
                 Example.new(
                   zh: example["zh"],
                   en: example["en"],
                   ru: example["ru"],
                   vi: example["vi"],
+                  de: example["de"],
+                  ind: example["ind"],
                   zhuyin: example["zhuyin"],
                   pinyin: example["pinyin"],
                   sentence: example["sentence"],

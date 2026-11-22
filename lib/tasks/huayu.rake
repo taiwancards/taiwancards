@@ -81,7 +81,17 @@ namespace(:huayu) do
 
   desc("Apply the Vietnamese glosses of the dictionary and its senses from vi_glosses.json")
   task(enrich_vi: :environment) do
-    pp(Huayu::ViGlossEnricher.new.call)
+    pp(Huayu::LocaleGlossEnricher.new(locale: "vi").call)
+  end
+
+  desc("Apply the German glosses of the dictionary and its senses from de_glosses.json")
+  task(enrich_de: :environment) do
+    pp(Huayu::LocaleGlossEnricher.new(locale: "de").call)
+  end
+
+  desc("Apply the Indonesian glosses of the dictionary and its senses from ind_glosses.json")
+  task(enrich_id: :environment) do
+    pp(Huayu::LocaleGlossEnricher.new(locale: "id").call)
   end
 
   desc("Backfill missing English + Russian glosses from the curated gloss_overrides.json (non-destructive)")
@@ -89,7 +99,12 @@ namespace(:huayu) do
     pp(Huayu::GlossOverrideEnricher.new.call)
   end
 
-  desc("Apply the curated etymology translations (etymology_ru.json, etymology_vi.json, word_etymology_vi.json)")
+  desc(
+    "Apply the curated etymology translations " \
+      "(etymology_ru.json, etymology_vi.json, etymology_de.json, etymology_ind.json, etymology_en.json, " \
+      "word_etymology_vi.json, word_etymology_de.json, word_etymology_ind.json, " \
+      "word_etymology_en.json, word_etymology_ru.json)"
+  )
   task(translate_etymologies: :environment) do
     pp(Huayu::EtymologyTranslations.call_all)
   end

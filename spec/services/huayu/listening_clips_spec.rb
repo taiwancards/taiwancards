@@ -13,6 +13,8 @@ RSpec.describe Huayu::ListeningClips do
           "en" => "I go to school.",
           "ru" => "Я иду в школу.",
           "vi" => "Tôi đi học.",
+          "de" => "Ich gehe zur Schule.",
+          "ind" => "Saya pergi ke sekolah.",
           "emoji" => "🏫",
           "emoji_word" => "學校",
           "emoji_category" => "place"
@@ -52,6 +54,12 @@ RSpec.describe Huayu::ListeningClips do
     expect(row.translation(:vi)).to(eq("Tôi đi học."))
     expect(described_class.for_text("他喝咖啡。").translation(:ru)).to(eq("He drinks coffee."))
     expect(described_class.for_text("他喝咖啡。").translation(:vi)).to(eq("He drinks coffee."))
+    expect(row.translation(:de)).to(eq("Ich gehe zur Schule."))
+    expect(described_class.for_text("他喝咖啡。").translation(:de)).to(eq("He drinks coffee."))
+    expect(row.translation(:id)).to(eq("Saya pergi ke sekolah."))
+    expect(row.translations).to(include("ind" => "Saya pergi ke sekolah."))
+    expect(row.translations).not_to(have_key("id"))
+    expect(described_class.for_text("他喝咖啡。").translation(:id)).to(eq("He drinks coffee."))
   end
 
   it "filters pools by level" do
@@ -66,5 +74,16 @@ RSpec.describe Huayu::ListeningClips do
 
     allow(ENV).to(receive(:[]).with("MEDIA_BASE_URL").and_return(nil))
     expect(described_class.clip_url("a.mp3")).to(eq("/listening/clips/a"))
+  end
+
+  it "leaves out a clip whose sentence is listed as garbled" do
+    list = Pathname(Dir.mktmpdir).join("listening_excluded.json")
+    list.write(JSON.generate(["他喝咖啡。"]))
+    allow(AppData).to(receive(:path).and_call_original)
+    allow(AppData).to(receive(:path).with("huayu/listening_excluded.json").and_return(list))
+    described_class.reset!
+
+    expect(described_class.all.map(&:text)).to(eq(["我去學校。", "經濟成長很快。"]))
+    expect(described_class.for_text("他喝咖啡。")).to(be_nil)
   end
 end

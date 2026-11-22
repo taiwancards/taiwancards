@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -416,6 +416,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
     t.string("subject_vi", default: "", null: false)
     t.string("preheader_vi", default: "", null: false)
     t.text("body_vi", default: "", null: false)
+    t.string("subject_de", default: "", null: false)
+    t.string("preheader_de", default: "", null: false)
+    t.text("body_de", default: "", null: false)
+    t.string("subject_ind", default: "", null: false)
+    t.string("preheader_ind", default: "", null: false)
+    t.text("body_ind", default: "", null: false)
   end
 
   create_table("page_views", force: :cascade) do |t|

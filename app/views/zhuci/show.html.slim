@@ -1,5 +1,5 @@
 - content_for(:title, "#{@entry.text} · #{t("zhuci.title")}")
-- locale = I18n.locale.to_s
+- locale = Locales.key
 - examples = Array(@entry.data["examples"]).select { |row| row.is_a?(Hash) && row["zh"].present? }
 - sentence_readings(examples.map { |row| row["zh"] }) if examples.any?
 
@@ -49,7 +49,7 @@
             .flex.items-baseline.gap-2
               span.text-xl.font-semibold lang="zh-TW" = variant["text"]
               span.text-xs.text-muted-foreground = variant["zhuyin"]
-            p.mt-1.text-sm.leading-relaxed.text-muted-foreground = variant[locale].presence || variant["en"]
+            p.mt-1.text-sm.leading-relaxed.text-muted-foreground = Locales.pick(variant)
 
   - if examples.any?
     section.space-y-2
@@ -59,7 +59,7 @@
           li.space-y-1.rounded-xl.border.border-border.bg-card.px-4.py-3
             p.text-lg.leading-relaxed lang="zh-TW" = example["zh"]
             = reading_lines(example["zh"])
-            p.text-sm = example[locale].presence || example["en"]
+            p.text-sm = Locales.pick(example)
             - note = example["note_#{locale}"].presence || example["note_en"].presence
             - if note
               p.text-xs.leading-relaxed.text-muted-foreground = note

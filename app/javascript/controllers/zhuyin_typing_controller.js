@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { csrfToken } from "lib/csrf";
-import { typingElsewhere } from "lib/hotkeys";
+import { positionKey, typingElsewhere } from "lib/hotkeys";
 
 const TONES = { 6: "ˊ", 3: "ˇ", 4: "ˋ", 7: "˙" };
 
@@ -48,7 +48,7 @@ export default class extends Controller {
   onKey(event) {
     if (typingElsewhere(event)) return;
 
-    const key = event.key;
+    const key = positionKey(event);
     if (key === "Backspace") {
       event.preventDefault();
       return this.erase();

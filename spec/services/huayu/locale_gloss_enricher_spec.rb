@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Huayu::ViGlossEnricher do
+RSpec.describe Huayu::LocaleGlossEnricher do
   let(:store) { Rails.root.join("tmp/spec-vi-glosses.json") }
   let(:page) { Rails.root.join("tmp/spec-vi-curated-page.json") }
 
@@ -11,9 +11,9 @@ RSpec.describe Huayu::ViGlossEnricher do
     page.delete if page.exist?
   end
 
-  def run(lexemes: {}, senses: {}, radicals: {}, curated: [])
+  def run(lexemes: {}, senses: {}, radicals: {}, curated: [], locale: "vi")
     store.write(JSON.generate({"lexemes" => lexemes, "senses" => senses, "radicals" => radicals}))
-    described_class.new(path: store, curated: Huayu::CuratedGlosses.new(paths: curated)).call
+    described_class.new(locale:, path: store, curated: Huayu::CuratedGlosses.new(paths: curated)).call
   end
 
   it "adds the Vietnamese gloss beside the English and Russian ones" do
@@ -23,6 +23,50 @@ RSpec.describe Huayu::ViGlossEnricher do
 
     expect(lexeme.reload.meanings).to(eq("en" => "thank you", "ru" => "спасибо", "vi" => "cảm ơn"))
     expect(lexeme.search_text).to(include("cảm ơn"))
+  end
+
+  it "writes a German gloss under its own key and leaves the Vietnamese one alone" do
+    lexeme = create(:lexeme, kind: :word, text: "謝謝", meanings: {"en" => "thank you", "vi" => "cảm ơn"})
+    sense = LexemeSense.create!(lexeme:, position: 0, gloss_zh: "表示感激。", meanings: {"en" => "thanks"})
+
+    run(lexemes: {"謝謝" => "danke"}, locale: "de")
+
+    expect(lexeme.reload.meanings).to(eq("en" => "thank you", "vi" => "cảm ơn", "de" => "danke"))
+    expect(sense.reload.meanings["de"]).to(eq("danke"))
+  end
+
+  it "reads each language from its own file" do
+    expect(described_class.path_for("de").to_s).to(end_with("huayu/de_glosses.json"))
+    expect(described_class.path_for(:vi).to_s).to(end_with("huayu/vi_glosses.json"))
+    expect(described_class.path_for("id").to_s).to(end_with("huayu/ind_glosses.json"))
+  end
+
+  it "reads Indonesian from the ind file by default and writes it under the ind key" do
+    lexeme = create(:lexeme, kind: :word, text: "謝謝", meanings: {"en" => "thank you"})
+    sense = LexemeSense.create!(lexeme:, position: 0, gloss_zh: "表示感激。", meanings: {"en" => "thanks"})
+    store.write(JSON.generate({"lexemes" => {"謝謝" => "terima kasih"}}))
+    allow(AppData).to(receive(:path).and_call_original)
+    allow(AppData).to(receive(:path).with("huayu/ind_glosses.json").and_return(store))
+
+    described_class.new(locale: "id", curated: Huayu::CuratedGlosses.new(paths: [])).call
+
+    expect(lexeme.reload.meanings).to(eq("en" => "thank you", "ind" => "terima kasih"))
+    expect(sense.reload.meanings).to(eq("en" => "thanks", "ind" => "terima kasih"))
+    expect(lexeme.meaning(:id)).to(eq("terima kasih"))
+  end
+
+  it "keeps an Indonesian gloss that a curated page owns under ind" do
+    lexeme = create(:lexeme, kind: :word, text: "超商", meanings: {"en" => "convenience store"})
+    page.write(JSON.generate([{"text" => "超商", "id" => 3, "ind" => "minimarket"}]))
+
+    run(lexemes: {"超商" => "toko"}, curated: [page.to_s], locale: "id")
+
+    expect(lexeme.reload.meanings).to(eq("en" => "convenience store", "ind" => "minimarket"))
+  end
+
+  it "reports a missing file instead of failing" do
+    expect(described_class.new(locale: "de", path: Rails.root.join("tmp/spec-absent-glosses.json")).call)
+      .to(include(:error))
   end
 
   it "fills each sense by its Chinese definition and leaves the others alone" do

@@ -10,7 +10,7 @@ module Huayu
 
     def wanted
       @wanted ||= JSON.parse(File.read(PATH)).to_h do |row|
-        [row.fetch("zh"), row.slice(*Locales::ALL).compact_blank]
+        [row.fetch("zh"), row.slice(*Locales::STORED).compact_blank]
       end
     end
   end

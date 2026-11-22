@@ -2,7 +2,7 @@
 
 module Huayu
   class CuratedGlosses
-    LOCALES = Locales::ALL
+    LOCALES = Locales::STORED
 
     PATHS = %w[
       huayu/taiwan_everyday.json
@@ -22,11 +22,11 @@ module Huayu
     end
 
     def gloss(text, locale)
-      index.dig(text.to_s, locale.to_s)
+      index.dig(text.to_s, Locales.key(locale))
     end
 
     def owns?(text, locale)
-      owned(text).include?(locale.to_s)
+      owned(text).include?(Locales.key(locale))
     end
 
     def size
@@ -44,7 +44,7 @@ module Huayu
           text = row["text"].to_s
           next if text.empty?
 
-          glosses = LOCALES.to_h { |locale| [locale, row[locale].to_s.strip] }.compact_blank
+          glosses = LOCALES.to_h { |key| [key, row[key].to_s.strip] }.compact_blank
           all[text] = glosses.merge(all.fetch(text, {})) if glosses.any?
         end
       end

@@ -43,7 +43,7 @@ module Huayu
       def localized(row, field, locale)
         return nil if row.nil?
 
-        row["#{locale}_#{field}"].presence || row["#{Locales::DEFAULT}_#{field}"].presence
+        row["#{Locales.key(locale)}_#{field}"].presence || row["#{Locales::DEFAULT}_#{field}"].presence
       end
 
       def raw = DATA.value

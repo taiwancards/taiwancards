@@ -1,0 +1,261 @@
+de:
+  pron:
+    legend:
+      title: Was die Farben bedeuten
+      body: "Niemand erreicht 100 – auch taiwanische Rundfunksprecher nicht. Grün heißt: Hier gibt es nichts mehr zu verbessern. Orange heißt: Man versteht dich auf Anhieb. Nur bei Rot lohnt es sich, etwas zu tun."
+    levels:
+      green:
+        name: Ausgezeichnet
+        note: Klingt natürlich. Hier gibt es nichts mehr zu verbessern.
+      amber:
+        name: Verständlich
+        note: Ein Akzent ist hörbar, aber die Silbe wird richtig erkannt. Das reicht, um verstanden zu werden.
+      red:
+        name: Verbesserungswürdig
+        note: Die Silbe ist schwer zu erkennen. Lies den Hinweis und versuch es noch einmal.
+      dark:
+        name: Unverständlich
+        note: Dein Gegenüber würde eine andere Silbe hören – oder gar keine.
+      gray:
+        name: Nicht gemessen
+        note: Für diese Silbe haben wir keine verlässliche Referenz. Deshalb zeigen wir lieber keine Bewertung als eine irreführende.
+    parts:
+      initial: Anlaut
+      medial: Gleitlaut
+      final: Auslaut
+      tone: Ton
+      timbre: Ganze Silbe
+      absent: keiner
+      empty_rime: 空韻
+    weight: Gewicht %{percent} %
+    weight_hint: "Das Gewicht zeigt, wie viel dieser Teil in genau dieser Silbe ausmacht: Je mehr echte Silben sich nur in diesem Teil von ihr unterscheiden, desto stärker bewegt er die Gesamtbewertung."
+    chart:
+      title: Tonverlauf
+      reference: Referenz
+      yours: du
+      band: Streuung der Sprecher
+      semitones: Halbtöne
+    ui:
+      overall: Gesamt
+      sounds: Laute
+      tone: Ton
+      your_take: Deine Aufnahme
+      model: Referenz
+      open_syllable: Tipp eine Silbe an, um sie aufzuschlüsseln
+      chart_hint: "Das Band zeigt, wie echte Sprecher diese Silbe tatsächlich sprechen: Innerhalb des Bands wird dir nichts angekreidet. Gestrichelt ist seine Mitte, die durchgezogene Linie bist du, Rot markiert, wo du das Band verlassen hast."
+      chart_range: Die Skala misst in Halbtönen von der Mitte deiner Stimme aus. So siehst du nicht nur die Form des Tons, sondern auch, in welcher Höhe du ihn gesprochen hast.
+      parts_title: Woraus sich die Bewertung zusammensetzt
+      fix_title: Was du verbessern kannst
+      reference: So funktioniert es
+      not_measured: nicht gemessen
+      no_template: Für diese Silbe haben wir keine Referenz, es gibt also nichts, woran wir messen könnten. Das ist kein Aussprachefehler.
+      risky: Diese Silbe erkennen wir weniger zuverlässig als die übrigen; die Bewertung kann also strenger ausfallen, als du es verdienst. Wer gerade anfängt, bekommt solche Silben nie zu sehen – hier übst du sie auf eigene Gefahr.
+      no_part: in dieser Silbe nicht vorhanden
+      details: Details
+      hide: Einklappen
+      flow_title: Redefluss
+      read_title: Was wir gehört haben
+      focus_title: Woran du arbeiten solltest
+      focus_empty: Üb ein wenig, dann erscheinen hier persönliche Empfehlungen.
+      focus_attempts:
+        one: "%{count} Versuch"
+        other: "%{count} Versuche"
+      focus_bias: Systematische Abweichung
+      focus_drill: Gezielt üben
+      trend_up: wird besser
+      trend_down: lässt nach
+      trend_flat: gleichbleibend
+      mastered: sitzt
+      warmup_title: Stimme aufwärmen
+      warmup_hint: Freiwillig. Die App lernt deine Stimmlage aus deinen ersten Wörtern; mit einer halben Minute Aufwärmen kennt sie sie sofort.
+      warming: "Die ersten Bewertungen sind ungefähr: Die App lernt deine Stimmlage noch kennen."
+      warmup_start: Aufwärmen starten
+      warmup_redo: Noch einmal
+      warmup_done: Stimme kalibriert
+      warmup_next: Weiter
+      warmup_skip: Überspringen
+      warmup_saved: Aufgenommen
+      warmup_listen: Noch einmal anhören
+      warmup_anchors: "Der 1. und der 3. Ton lagen fast auf derselben Höhe, deshalb wird die Tonbewertung ungenau. Sprich nur die vier Silben noch einmal: 媽 deutlich über deiner Sprechstimme, 馬 ganz unten, mit hörbarem Abstand dazwischen."
+      metrics: Details
+      copy: Kopieren
+      sandhi: "Achtung: Das wird nicht so gelesen, wie es dasteht –"
+      warmup_why: "Ohne Aufwärmen wird der Ton nach der Form der Kurve beurteilt, aber nicht nach der absoluten Höhe: Ein Bass und ein Sopran singen denselben Ton auf verschiedenen Frequenzen. Das Aufwärmen liefert den Bezugspunkt."
+    codes:
+      near: Kein klarer Fehler, aber die Referenz ist noch nicht erreicht.
+      tone:
+        wrong: Das war der %{got}. Ton; gebraucht wird der %{tone}. Ton.
+        shape: Der Verlauf weicht von der Referenz für den %{tone}. Ton ab.
+        falls: Die Stimme ging nach unten; der %{tone}. Ton geht nach oben.
+        rises: Die Stimme ging nach oben; der %{tone}. Ton geht nach unten.
+      initial:
+        under_aspirated: "Zu wenig Hauch: %{initial} klang eher wie %{pair}."
+        over_aspirated: "Zu viel Hauch: %{initial} klang eher wie %{pair}."
+        vot_off: Die Stimme setzt im Verhältnis zur Verschlusslösung zum falschen Zeitpunkt ein.
+      sibilant:
+        too_front: Die Reibung ist für /%{ipa}/ zu hell und zu weit vorn.
+        too_back: Die Reibung ist für /%{ipa}/ zu dunkel und zu weit hinten.
+      medial:
+        weak: Der Gleitlaut ist fast verschwunden.
+      vowel:
+        open: Der Vokal ist offener als die Referenz.
+        close: Der Vokal ist geschlossener als die Referenz.
+        front: Der Vokal ist nach vorn verschoben.
+        back: Der Vokal ist nach hinten verschoben.
+        apical: "Nach %{initial} folgt kein eigener Vokal: Der Laut klingt dort weiter, wo der Konsonant die Zunge zurücklässt."
+      coda:
+        weak: Der Nasal am Silbenende war kaum zu hören.
+        heavy: Der Nasal ist zu schwer – der Vokal wird zu früh nasaliert.
+        ng_for_n: Aus dem -n am Ende wurde ein -ng.
+        n_for_ng: Aus dem -ng am Ende wurde ein -n.
+      duration:
+        long: Die Silbe dauert länger als die Referenz.
+        short: Die Silbe ist zu kurz – der Ton hat keinen Platz, sich zu entfalten.
+        neutral_long: Ein neutraler Ton muss kurz sein.
+      timbre:
+        drift: Die Klangfarbe der Silbe insgesamt weicht von der Referenz ab.
+      lead_in:
+        noisy: "Vor der Silbe liegen %{ms} ms Störgeräusch – ein Atemzug oder Rauschen. Der Anlaut lässt sich so nicht prüfen: Fang direkt nach dem Signal mit der Silbe an."
+        clipped: Die Aufnahme begann mitten im Laut, deshalb ließ sich die Behauchung von %{initial}- nicht messen. Warte auf den grünen Kreis, bevor du sprichst.
+      flow:
+        ok: Die Silben hängen so zusammen wie in echter Rede.
+        choppy: Die Pausen zwischen den Silben sind zu lang – die Wörter zerfallen in einzelne Silben.
+        pitch_reset: "Die Stimme setzt bei jeder Silbe in der Höhe neu an: Das klingt wie eine Aufzählung, nicht wie ein Satz."
+        clipped: Zwischen den Silben bricht die Lautstärke ein – sie reißen ab, statt ineinander überzugehen.
+      read:
+        ok: Das Gelesene stimmt mit dem Geschriebenen überein.
+        doubtful: Die Aufnahme passt schlecht zum Text – vielleicht wurde etwas anderes gesagt.
+        mismatch: Das klingt, als wäre etwas anderes gelesen worden als der Text.
+    fixes:
+      near: Versuch es noch einmal und orientier dich an der Referenz.
+      tone:
+        wrong: Folge der Referenzkurve im Diagramm.
+        shape: Schau ins Diagramm, wo sich deine Linie von der Referenz entfernt.
+        falls: Setz tiefer an und führ die Stimme bis zum Silbenende nach oben – wie bei einem erstaunten „Was?“.
+        rises: Setz höher an und lass die Stimme bis zum Silbenende fallen – wie bei einem festen „Nein!“.
+      initial:
+        under_aspirated: Gib nach der Verschlusslösung mehr Luft – wie beim p, t, k am Anfang von „Pass“, „Tee“, „Kuh“. Der Hauch muss deutlich vor der Stimme kommen.
+        over_aspirated: Lass die Stimme sofort nach der Verschlusslösung einsetzen, ohne Hauch dazwischen – wie beim p, t, k in „Spiel“, „Stein“, „Skat“.
+        vot_off: Achte auf den Übergang zwischen Konsonant und Vokal.
+      sibilant:
+        too_front: Zieh die Zunge weiter zurück.
+        too_back: Bring die Zunge weiter nach vorn.
+      medial:
+        weak: Der Gleitlaut ist kurz, aber verschlucken darfst du ihn nicht – lass ihn hören.
+      vowel:
+        open: Schließ den Kiefer ein wenig und heb die Zunge.
+        close: Öffne den Kiefer weiter.
+        front: Zieh die Zunge zurück.
+        back: Bring die Zunge nach vorn.
+        apical: "Sprich hier kein i: Lass die Zunge am Konsonanten und lass die Stimme weiterklingen."
+      coda:
+        weak: "Halt das Silbenende: Lass die Luft durch die Nase strömen, statt auf dem Vokal aufzuhören."
+        heavy: Halt den Vokal rein und lass die Nase erst ganz am Ende dazukommen.
+        ng_for_n: Zungenspitze an den Zahndamm hinter den Zähnen; der Zungenrücken bleibt unten – „Bann“, nicht „bang“.
+        n_for_ng: Zungenrücken an den weichen Gaumen; die Spitze bleibt frei – „bang“, nicht „Bann“.
+      duration:
+        long: Sprich in natürlichem Tempo.
+        short: Lass die Silbe ausklingen.
+        neutral_long: Kürzer – eine neutrale Silbe ist unbetont, wie das e in „bitte“.
+      timbre:
+        drift: Hör dir die Referenz an und sprich sie als Ganzes nach.
+      flow:
+        choppy: Lies die Wendung in einem Atemzug, ohne zwischen den Silben anzuhalten.
+        pitch_reset: "Zieh eine Stimmlinie durch die ganze Wendung: Jede Silbe setzt die Höhe der vorigen fort."
+        clipped: Brich die Stimme zwischen den Silben nicht ab – trag den Klang von einer Silbe in die nächste.
+      read:
+        doubtful: Schau noch einmal auf den Text und lies ihn erneut.
+        mismatch: "Schau auf den Text: Bewertet wird nach dem, was dasteht."
+    confusion:
+      tone_only: Die Laute stimmen, aber das war der %{tone}. Ton statt des %{expected_tone}.
+      segments_only: Der Ton stimmt, aber das war /%{syllable}/ statt /%{expected_syllable}/
+      both: Das war /%{syllable}/ im %{tone}. Ton statt /%{expected_syllable}/ im %{expected_tone}. Ton
+    tones:
+      "1": Hoch und eben, bis zum Ende auf einer Höhe gehalten – wie ein gesungener Ton. Das Deutsche lässt die Stimme am Wortende gern absinken; hier fühlt es sich deshalb an, als hieltest du den Ton zu lange.
+      "2": Steigend, wie ein erstauntes „Was?“ oder „Echt?“. Setz tiefer an, als es sich natürlich anfühlt, sonst fehlt der Raum zum Steigen.
+      "3": "In Taiwan ist das ein tiefer Ton: Geh ans untere Ende deiner Stimme und bleib dort, oft mit einem Knarren – wie bei einem skeptischen „Hm …“. Den Wiederanstieg aus dem Lehrbuch (214) gibt es in normaler Rede nicht."
+      "4": Steil von oben nach unten, wie ein knappes „Halt!“ oder „Nein!“. Setz hoch an und fall schnell.
+      "5": "Neutral: kurz, schwach, ohne eigene Melodie – die Höhe kommt von der Silbe davor. So leicht wie das e in „bitte“."
+    initials:
+      b: Stimmlos und unbehaucht, wie das p in „Spiel“ – nicht das b in „Ball“.
+      p: "Kräftig behaucht, wie das p in „Pass“: ein Luftstoß, den du auf der Hand spürst."
+      m: Wie im Deutschen.
+      f: Wie im Deutschen.
+      d: Wie das t in „Stein“, nicht das d in „Dach“.
+      t: Wie das t in „Tee“, mit deutlichem Luftstoß.
+      "n": Wie im Deutschen, Zungenspitze am Zahndamm hinter den Zähnen.
+      l: Wie in „Liebe“ – das helle deutsche l passt genau.
+      g: Wie das k in „Skat“, nicht das g in „gut“.
+      k: Wie das k in „Kuh“ – allein der Hauch trennt es von ㄍ.
+      h: "Rauer als das deutsche h: eine leichte Reibung hinten, wie ein sanfter ach-Laut („ach“, „Buch“)."
+      j: "Zungenspitze unten hinter den unteren Schneidezähnen, Zungenblatt am harten Gaumen: „dj“ wie die Mitte von „Mädchen“, ohne Hauch. Nicht das deutsche j."
+      q: "Dieselbe Stelle wie ㄐ, aber mit kräftigem Hauch: das „tch“ in „Brötchen“. Nicht „tsch“ wie in „Deutsch“ – das liegt weiter hinten."
+      x: "Fast der ich-Laut, etwas schärfer. Nicht „sch“: Die Zungenspitze bleibt unten an den unteren Schneidezähnen, die Lippen bleiben breit."
+      zh: Bieg die Zungenspitze nach oben und hinten. Nahe am „dsch“ in „Dschungel“, aber stimmlos und weiter hinten.
+      ch: Wie ㄓ mit kräftigem Luftstoß – etwa „tsch“ mit zurückgebogener Zunge.
+      sh: Wie „sch“, aber mit nach oben und hinten gebogener Zungenspitze und ohne vorgestülpte Lippen.
+      r: Kein deutsches r. Stell die Zunge wie für ㄕ ein und gib Stimme dazu – es summt, ungefähr wie das j in „Journal“.
+      z: Ein weiches „ds“ ohne Hauch am Silbenanfang – nicht das deutsche z.
+      c: Das deutsche z in „Zeit“, mit kräftigem Hauch – dieser Hauch trennt es von ㄗ.
+      s: Immer scharf wie ß in „Straße“ – nie stimmhaft wie das s in „Sonne“.
+    medials:
+      i: Ein schnelles, gleitendes i wie das j in „ja“ – kurz, aber es muss zu hören sein.
+      u: Ein schnelles, gleitendes u; runde die Lippen, bevor der Vokal beginnt.
+      ü: Ein schnelles, gleitendes ü – wie in „über“, nur ganz kurz.
+    rimes:
+      a: Ein offenes a mit gesenktem Kiefer, wie in „Vater“.
+      o: Ein gerundetes o; nach ㄅㄆㄇㄈ klingt es fast wie „uo“.
+      e: "Gibt es im Deutschen nicht: ein o wie in „Ofen“, aber mit breiten, ungerundeten Lippen. Kein e, kein ö."
+      ê: Ein offenes ä, wie in „Bär“ oder „Bett“.
+      ai: Wie „ei“ in „mein“, mit vollem, offenem ersten Teil.
+      ei: Wie „ey“ im englischen „hey“ – nicht das deutsche „ei“. Kürzer und geschlossener als ㄞ.
+      ao: Wie „au“ in „Haus“; die Lippen runden sich zum Ende hin.
+      ou: "„o-u“ in einem Zug, wie das englische „oh“ – kein deutsches u."
+      an: Wie „an“ in „Bann“, Zungenspitze am Zahndamm; der Vokal bleibt vorn.
+      en: Wie „-en“ in „bitten“ – ein schwacher, kurzer Vokal, kein e wie in „denn“.
+      ang: Ein tiefes, hinteres a plus „ng“ wie in „lang“ – ohne hartes g am Ende.
+      eng: "Ein schwacher Vokal plus „ng“: Zungenrücken an den weichen Gaumen. Nicht das „eng“ aus „eng“."
+      er: Wie das amerikanische „are“ – mit hochgebogener Zungenspitze, nicht das deutsche „er“.
+      i: Ein klares, langes i wie in „sie“.
+      u: Ein klares u wie in „Schuh“, mit kräftig gerundeten Lippen.
+      ü: Das deutsche ü, wie in „über“.
+      empty: "Ein summender Vokal ohne eigenes Zeichen: Lass die Zunge genau dort, wo der Konsonant sie zurückgelassen hat, und lass die Stimme weiterklingen. Weder i noch Schwa."
+    judge:
+      title: Kalibrierung der Aussprachebewertung
+      hint: Hier sammeln sich deine eigenen Aufnahmen aus dem Aussprachetraining; Aufnahmen anderer werden nie gespeichert. Eine Person, die mit Mandarin aufgewachsen ist, hört sich jede an und sagt, ob sie diese Aussprache im Gespräch akzeptieren würde. Aus diesen Antworten ergeben sich die Schwellen für Grün, Orange und Rot. Die Bewertung der Engine bleibt verborgen, bis die Entscheidung gefallen ist – sie vorher zu sehen würde die Antwort vorwegnehmen.
+      which: Was du abgelehnt hast
+      accept: Akzeptieren
+      reject: Ablehnen
+      unsure: Unsicher
+      drop: Aufnahme löschen
+      drop_confirm: Diese Aufnahme unbewertet löschen?
+      reveal: Was die Engine gesagt hat
+      reveal_hint: Öffne das erst, nachdem du selbst entschieden hast.
+      saved: Gespeichert
+      dropped: Aufnahme gelöscht
+      empty: Nichts zu bewerten – jede Aufnahme ist schon eingestuft.
+      coverage: eingestufte Silben (verschiedene / gesamt)
+      verdicts:
+        unrated: offen
+        accepted: akzeptiert
+        rejected: abgelehnt
+        unsure: unsicher
+    warmup:
+      prompts:
+        vowels:
+          text: i – a – u
+          hint: halte jeden Laut etwa anderthalb Sekunden
+        rise:
+          text: Echt jetzt?!
+          hint: erstaunt
+        fall:
+          text: Ja, genau.
+          hint: ruhig, am Ende flach
+        tone_1:
+          hint: "eben und hoch: Halte einen ruhigen Ton etwas über deiner Sprechstimme"
+        tone_2:
+          hint: steigend, wie ein fragendes „Hä?“ – die Stimme klettert immer weiter
+        tone_3:
+          hint: ganz nach unten und wieder ein wenig hoch, wie ein zweifelndes „Naja …“
+        tone_4:
+          hint: steil von oben nach unten, wie ein festes „Halt!“

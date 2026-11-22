@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { lessonScore, recordChar, recordLesson } from "lib/cangjie_progress";
-import { typingElsewhere } from "lib/hotkeys";
+import { positionKey, typingElsewhere } from "lib/hotkeys";
 
 const RIGHT = ["border-emerald-500", "bg-emerald-500/10"];
 const WRONG = ["border-red-500", "bg-red-500/10"];
@@ -226,9 +226,9 @@ export default class extends Controller {
     if (this.index >= this.tasksValue.length) return;
 
     if (this.task.kind === "code") {
-      if (/^[a-zA-Z]$/.test(event.key)) {
+      if (/^[a-zA-Z]$/.test(positionKey(event))) {
         event.preventDefault();
-        this.type(event.key.toLowerCase());
+        this.type(positionKey(event).toLowerCase());
       } else if (event.key === "Backspace") {
         event.preventDefault();
         this.erase();

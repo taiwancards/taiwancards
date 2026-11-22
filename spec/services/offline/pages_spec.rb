@@ -40,6 +40,23 @@ RSpec.describe Offline::Pages do
     expect(paths_for("core").grep(%r{\A/(en|ru)/})).to(be_empty)
   end
 
+  it "appends each further language as a trailing column, blank where it only repeats the English" do
+    entry = Offline::Pages::Entry.new(
+      text: "茶",
+      zhuyin: "ㄔㄚˊ",
+      pinyin: "chá",
+      en: "tea",
+      ru: "чай",
+      vi: "tea",
+      de: "Tee",
+      ind: "teh",
+      path: "/dict/茶",
+      kind: "word"
+    )
+
+    expect(entry.to_row).to(eq(["茶", "ㄔㄚˊ", "chá", "tea", "чай", "/dict/茶", "word", "", "Tee", "teh"]))
+  end
+
   it "asks for no page twice inside one pack" do
     paths = paths_for("reference")
 

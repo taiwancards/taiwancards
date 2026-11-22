@@ -10,10 +10,10 @@ RSpec.describe Huayu::Phonetics do
   it "carries a localized anchor and note on every initial and final" do
     (described_class.initials + described_class.finals).each do |row|
       expect(row["anchor"]).to(be_a(Hash), row["pinyin"])
-      expect(row["anchor"].keys).to(match_array(Locales::ALL), row["pinyin"])
+      expect(row["anchor"].keys).to(match_array(Locales::STORED), row["pinyin"])
       expect(row["anchor"].values).to(all(be_present), row["pinyin"])
       expect(row["note"]).to(be_a(Hash), row["pinyin"])
-      expect(row["note"].keys).to(match_array(Locales::ALL), row["pinyin"])
+      expect(row["note"].keys).to(match_array(Locales::STORED), row["pinyin"])
       expect(row["vi"]).to(be_present, row["pinyin"])
     end
   end
@@ -47,6 +47,18 @@ RSpec.describe Huayu::Phonetics do
   it "writes every rime IPA without brackets, matching the other tables" do
     described_class.rimes.each do |rime|
       expect(rime["ipa"]).not_to(start_with("["), rime["pinyin"])
+    end
+  end
+
+  it "translates every rime label and spelling note that contains English words" do
+    english = /\b(?:after|vs|in|written|standing|also|keep|series|not|vowels|dropped|all)\b/
+
+    described_class.rimes.each do |rime|
+      %w[pinyin written].each do |field|
+        next unless rime[field].match?(english)
+
+        expect(rime["#{field}_i18n"].to_h.keys).to(include("ru", "vi", "de"), rime[field])
+      end
     end
   end
 end

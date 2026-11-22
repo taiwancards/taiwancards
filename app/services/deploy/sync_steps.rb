@@ -191,7 +191,12 @@ module Deploy
         paths: %w[
           huayu/etymology_ru.json
           huayu/etymology_vi.json
+          huayu/etymology_de.json
+          huayu/etymology_ind.json
+          huayu/etymology_en.json
           huayu/word_etymology_vi.json
+          huayu/word_etymology_de.json
+          huayu/word_etymology_ind.json
           huayu/word_etymology_en.json
           huayu/word_etymology_ru.json
         ],
@@ -224,7 +229,21 @@ module Deploy
         task: "huayu:enrich_vi",
         paths: %w[huayu/vi_glosses.json huayu/sense_glosses.jsonl huayu/collocation_glosses.jsonl] +
           CURATED_PAGE_SOURCES,
-        code: %w[app/services/huayu/vi_gloss_enricher.rb app/services/huayu/curated_glosses.rb]
+        code: %w[app/services/huayu/locale_gloss_enricher.rb app/services/huayu/curated_glosses.rb]
+      ),
+      Step.new(
+        name: "de_glosses",
+        task: "huayu:enrich_de",
+        paths: %w[huayu/de_glosses.json huayu/sense_glosses.jsonl huayu/collocation_glosses.jsonl] +
+          CURATED_PAGE_SOURCES,
+        code: %w[app/services/huayu/locale_gloss_enricher.rb app/services/huayu/curated_glosses.rb]
+      ),
+      Step.new(
+        name: "ind_glosses",
+        task: "huayu:enrich_id",
+        paths: %w[huayu/ind_glosses.json huayu/sense_glosses.jsonl huayu/collocation_glosses.jsonl] +
+          CURATED_PAGE_SOURCES,
+        code: %w[app/services/huayu/locale_gloss_enricher.rb app/services/huayu/curated_glosses.rb]
       ),
       Step.new(
         name: "sentence_meanings",
@@ -276,6 +295,17 @@ module Deploy
           app/services/huayu/reject_purge.rb
           app/services/huayu/reject_store.rb
           app/services/huayu/word_reject_store.rb
+        ]
+      ),
+      Step.new(
+        name: "retired_off_taiwan",
+        task: "huayu:retire_off_taiwan",
+        paths: %w[huayu/sentence_rejects.jsonl huayu/collocation_rejects.jsonl],
+        code: %w[
+          app/services/huayu/reject_purge.rb
+          app/services/huayu/reject_store.rb
+          app/services/huayu/sentence_reject_store.rb
+          app/services/huayu/collocation_reject_store.rb
         ]
       ),
       Step.new(
@@ -359,6 +389,9 @@ module Deploy
 
         $stdout.puts(repair.call.to_s)
         :ran
+      },
+      "etymology_structure" => -> {
+        Huayu::CharacterEnricher.new.repair_overrides.zero? ? :skipped : :ran
       },
       "etymology_text" => -> {
         repair = Huayu::EtymologyRepair.new

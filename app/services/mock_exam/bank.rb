@@ -12,15 +12,15 @@ module MockExam
     Sign = Data.define(:style, :title, :lines, :foot)
 
     Question = Data.define(:slot, :ask, :options, :answer, :names, :notes) do
-      def ask_name(locale) = names[locale.to_s].presence || names["en"]
+      def ask_name(locale) = Locales.pick(names, locale)
 
-      def note(locale) = notes[locale.to_s].presence || notes["en"]
+      def note(locale) = Locales.pick(notes, locale)
 
       def key = options[answer]
     end
 
     Block = Data.define(:id, :level, :format, :text, :names, :sign, :questions) do
-      def name(locale) = names[locale.to_s].presence || names["en"]
+      def name(locale) = Locales.pick(names, locale)
 
       def size = questions.size
 
@@ -68,7 +68,7 @@ module MockExam
           level: level,
           format: raw.fetch("format"),
           text: raw["zh"].to_s,
-          names: raw.slice("en", "ru", "vi"),
+          names: raw.slice(*Locales::STORED),
           sign: raw["sign"] && sign(raw["sign"]),
           questions: raw.fetch("questions", []).each_with_index.map { |question, index| question(question, index) }
         )
@@ -89,8 +89,8 @@ module MockExam
           ask: raw["ask"].to_s,
           options: raw.fetch("options"),
           answer: raw.fetch("answer").to_i,
-          names: raw.slice("en", "ru", "vi"),
-          notes: {"en" => raw["why_en"], "ru" => raw["why_ru"], "vi" => raw["why_vi"]}.compact_blank
+          names: raw.slice(*Locales::STORED),
+          notes: Locales::STORED.to_h { |key| [key, raw["why_#{key}"]] }.compact_blank
         )
       end
     end

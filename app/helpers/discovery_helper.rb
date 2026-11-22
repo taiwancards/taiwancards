@@ -32,7 +32,7 @@ module DiscoveryHelper
     when "grammar"
       subject.title(I18n.locale)
     when "graded"
-      "#{subject.titles["zh"]} · #{subject.titles[I18n.locale.to_s] || subject.titles["en"]}"
+      "#{subject.titles["zh"]} · #{Locales.pick(subject.titles)}"
     when "phrases"
       "#{subject.zh} · #{subject.name(I18n.locale)}"
     when "culture"

@@ -83,7 +83,7 @@ module Huayu
     end
 
     def hint(lexeme, etymology)
-      translated = lexeme.data.dig(ETYMOLOGY_TEXT, @locale, "hint").presence
+      translated = lexeme.data.dig(ETYMOLOGY_TEXT, Locales.key(@locale), "hint").presence
       return translated if translated || @locale != Locales::DEFAULT
 
       etymology["hint"].presence

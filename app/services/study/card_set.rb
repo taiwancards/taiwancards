@@ -231,7 +231,7 @@ module Study
       scope = Lexeme
         .voiced_sentences
         .left_joins(:sentence_profile)
-        .where("lexemes.meanings ? :locale", locale: I18n.locale.to_s)
+        .where("lexemes.meanings ? :locale", locale: Locales.key)
         .where(id: SentenceWord.where(lexeme_id: known).select(:sentence_id))
         .where
         .not(id: activated_lexeme_ids + exclude)

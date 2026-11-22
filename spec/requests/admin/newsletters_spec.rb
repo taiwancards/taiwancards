@@ -115,6 +115,53 @@ RSpec.describe "Admin newsletters" do
     expect(newsletter.deliveries.pluck(:locale)).to(include("vi"))
   end
 
+  it "holds the newsletter for a German reader until the German text is written" do
+    newsletter = complete_newsletter
+    create(:user, google_uid: "g-de", locale: "de")
+
+    post(deliver_admin_newsletter_path(newsletter))
+    expect(newsletter.reload).not_to(be_sent)
+
+    patch(
+      admin_newsletter_path(newsletter),
+      params: {newsletter: {subject_de: "Neuigkeiten", body_de: "<div>Hallo</div>"}},
+      as: :json
+    )
+    expect(newsletter.reload.subject_de).to(eq("Neuigkeiten"))
+
+    post(deliver_admin_newsletter_path(newsletter))
+    expect(newsletter.deliveries.pluck(:locale)).to(include("de"))
+  end
+
+  it "opens the German version of a draft for editing" do
+    newsletter = complete_newsletter
+
+    in_locale(:ru) { get(edit_admin_newsletter_path(newsletter, lang: "de")) }
+
+    expect(response).to(have_http_status(:ok))
+    expect(response.body).to(include("newsletter[subject_de]"))
+  end
+
+  it "edits the Indonesian version of a draft in the ind columns and sends it to readers in id" do
+    newsletter = complete_newsletter
+    create(:user, google_uid: "g-id", locale: "id")
+
+    in_locale(:ru) { get(edit_admin_newsletter_path(newsletter, lang: "id")) }
+    expect(response.body).to(include("newsletter[subject_ind]", "newsletter[buttons][0][label_ind]"))
+    expect(response.body).not_to(include("newsletter[subject_id]"))
+
+    patch(
+      admin_newsletter_path(newsletter, lang: "id"),
+      params: {newsletter: {subject_ind: "Kabar", body_ind: "<div>Halo</div>"}},
+      as: :json
+    )
+    expect(newsletter.reload.subject("id")).to(eq("Kabar"))
+    expect(response.parsed_body["recipients"]).to(include("Indonesian"))
+
+    post(deliver_admin_newsletter_path(newsletter))
+    expect(newsletter.deliveries.pluck(:locale)).to(include("id"))
+  end
+
   it "sends only to the hand-picked people and refuses when nobody is picked" do
     newsletter = complete_newsletter
     chosen = create(:user, google_uid: "g-1", locale: "en")

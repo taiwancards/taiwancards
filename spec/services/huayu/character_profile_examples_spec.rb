@@ -34,6 +34,29 @@ RSpec.describe Huayu::CharacterProfile do
     end
   end
 
+  it "borrows the examples of the word written with the same single character when it has none of its own" do
+    word = Lexeme.create!(kind: :word, text: "離", meanings: {"en" => "away from"})
+    sentence = example("離這裡很遠", gdex: 5)
+    SentenceWord.where(sentence:).update_all(lexeme_id: word.id)
+
+    expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq([sentence.id]))
+  end
+
+  it "shows a single-character word the examples filed under its character" do
+    word = Lexeme.create!(kind: :word, text: "離", meanings: {"en" => "away from"})
+    sentence = example("離這裡很遠", gdex: 5)
+
+    expect(Huayu::WordProfile.new(word, user: nil).sentences.map(&:id)).to(eq([sentence.id]))
+  end
+
+  it "never lends a longer word the examples of another entry" do
+    word = Lexeme.create!(kind: :word, text: "離開", meanings: {"en" => "to leave"})
+    Lexeme.create!(kind: :collocation, text: "離開", meanings: {"en" => "to leave"})
+    example("離開這裡", gdex: 5)
+
+    expect(Huayu::WordProfile.new(word, user: nil).sentences).to(be_empty)
+  end
+
   it "falls back to quality order when nothing is translated" do
     low = example("離開三", gdex: 2)
     high = example("離開四", gdex: 40)

@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
 module Locales
-  ALL = %w[en ru vi].freeze
+  ALL = %w[en ru vi de id].freeze
+  KEYS = {"id" => "ind"}.freeze
+  STORED = ALL.map { |code| KEYS.fetch(code, code) }.freeze
+  LEGACY = {"in" => "id"}.freeze
   DEFAULT = "en"
   PATTERN = Regexp.union(ALL)
-  OPEN_GRAPH = {"en" => "en_US", "ru" => "ru_RU", "vi" => "vi_VN"}.freeze
+  OPEN_GRAPH = {"en" => "en_US", "ru" => "ru_RU", "vi" => "vi_VN", "de" => "de_DE", "id" => "id_ID"}.freeze
   SEGMENT = /\A(#{ALL.join("|")})\z/
   TAIWAN_ONLY = %w[vi].freeze
   CHINA_COMPARISONS = %w[/variants].freeze
   COUNTRIES = {
     "VN" => "vi",
-    **%w[RU UA BY KZ KG UZ TJ TM AM AZ MD].to_h { |country| [country, "ru"] }
+    **%w[RU UA BY KZ KG UZ TJ TM AM AZ MD].to_h { |country| [country, "ru"] },
+    **%w[DE AT CH LI LU].to_h { |country| [country, "de"] },
+    "ID" => "id"
   }.freeze
+  COUNTRY_VETOES = {"CH" => %w[fr it rm], "LU" => %w[fr]}.freeze
 
   module_function
 
@@ -21,10 +27,12 @@ module Locales
 
   def serves?(path, locale) = compares_china?(locale) || !CHINA_COMPARISONS.include?(path)
 
+  def key(locale = I18n.locale) = KEYS.fetch(locale.to_s, locale.to_s)
+
   def pick(source, locale = I18n.locale)
     return nil if source.blank?
 
-    source[locale.to_s].presence || source[DEFAULT]
+    source[key(locale)].presence || source[DEFAULT]
   end
 
   def resolve(url:, stored: nil, header: nil, country: nil)
@@ -38,7 +46,14 @@ module Locales
     said = from_header(header)
     return said if said && said != DEFAULT
 
-    COUNTRIES[country.to_s.upcase] || said || DEFAULT
+    from_country(country, header:) || said || DEFAULT
+  end
+
+  def from_country(country, header: nil)
+    code = country.to_s.upcase
+    return nil if spoken(header).intersect?(COUNTRY_VETOES.fetch(code, []))
+
+    COUNTRIES[code]
   end
 
   def for_signup(page:, stored: nil, header: nil, country: nil)
@@ -47,14 +62,13 @@ module Locales
     resolve(url: nil, stored:, header:, country:)
   end
 
-  def from_header(header)
-    header.to_s.split(",").each do |part|
-      tag = part.split(";").first.to_s.strip.downcase
-      code = tag.split("-").first
-      return code if known?(code)
-    end
+  def from_header(header) = spoken(header).find { |code| known?(code) }
 
-    nil
+  def spoken(header)
+    header.to_s.split(",").map { |part|
+      code = part.split(";").first.to_s.strip.downcase.split("-").first
+      LEGACY.fetch(code, code)
+    }
   end
 
   def addressable?(request)

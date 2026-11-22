@@ -11,10 +11,10 @@ module Huayu
     Localized = LessonData::Localized
 
     module Translated
-      def translated(locale) = Locales.pick({"en" => en, "ru" => ru, "vi" => vi}, locale)
+      def translated(locale) = Locales.pick(Locales::STORED.to_h { |key| [key, public_send(key)] }, locale)
     end
 
-    Line = Data.define(:who, :zh, :en, :ru, :vi, :zhuyin, :pinyin, :grammar) do
+    Line = Data.define(:who, :zh, :en, :ru, :vi, :de, :ind, :zhuyin, :pinyin, :grammar) do
       include Localized
       include Translated
 
@@ -23,7 +23,7 @@ module Huayu
       def syllables = zhuyin.to_s.split(/[[:space:]]+/).reject(&:empty?)
     end
 
-    Word = Data.define(:zh, :zhuyin, :pinyin, :pos, :en, :ru, :vi, :register, :note) do
+    Word = Data.define(:zh, :zhuyin, :pinyin, :pos, :en, :ru, :vi, :de, :ind, :register, :note) do
       include Localized
       include Translated
 
@@ -42,7 +42,7 @@ module Huayu
       def note_for(locale) = pick(note, locale)
     end
 
-    Usage = Data.define(:street, :standard, :en, :ru, :vi) do
+    Usage = Data.define(:street, :standard, :en, :ru, :vi, :de, :ind) do
       include Localized
       include Translated
 
@@ -115,7 +115,7 @@ module Huayu
       def exercise_payload(locale) = exercises.map { |exercise| exercise.payload(locale) }
     end
 
-    Stage = Data.define(:slug, :band, :order, :zh, :en, :ru, :vi, :exam) do
+    Stage = Data.define(:slug, :band, :order, :zh, :en, :ru, :vi, :de, :ind, :exam) do
       include Localized
 
       def to_param = slug
@@ -127,7 +127,7 @@ module Huayu
       private
 
       def text(locale, key)
-        source = {"en" => en, "ru" => ru, "vi" => vi}.transform_values { |row| row[key] }
+        source = Locales::STORED.to_h { |stored| [stored, public_send(stored)[key]] }
         pick(source, locale)
       end
     end
@@ -162,6 +162,8 @@ module Huayu
               en: row["en"] || {},
               ru: row["ru"] || {},
               vi: row["vi"] || {},
+              de: row["de"] || {},
+              ind: row["ind"] || {},
               exam: build_exercises(row, "exam")
             )
           end
@@ -200,6 +202,8 @@ module Huayu
             en: line["en"],
             ru: line["ru"],
             vi: line["vi"],
+            de: line["de"],
+            ind: line["ind"],
             zhuyin: line["zhuyin"],
             pinyin: line["pinyin"],
             grammar: Array(line["grammar"]).freeze
@@ -217,6 +221,8 @@ module Huayu
             en: word["en"],
             ru: word["ru"],
             vi: word["vi"],
+            de: word["de"],
+            ind: word["ind"],
             register: word["register"] || "standard",
             note: word["note"]
           )
@@ -234,7 +240,9 @@ module Huayu
             standard: entry["standard"],
             en: entry["en"],
             ru: entry["ru"],
-            vi: entry["vi"]
+            vi: entry["vi"],
+            de: entry["de"],
+            ind: entry["ind"]
           )
         end
       end

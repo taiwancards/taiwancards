@@ -151,7 +151,7 @@ module Huayu
         hanzi: lexeme.text,
         hanziZhuyin: zhuyin,
         hanziPinyin: pinyin,
-        hanziGloss: lexeme.meanings[@locale].presence || lexeme.meanings["en"].to_s,
+        hanziGloss: Locales.pick(lexeme.meanings, @locale).to_s,
         note: "",
         hard: hard_case(plain),
         bare:,
@@ -187,7 +187,7 @@ module Huayu
     end
 
     def localized(row)
-      (row[@locale].presence || row["en"]).to_s
+      Locales.pick(row, @locale).to_s
     end
 
     def zhuyin_for(pinyin)

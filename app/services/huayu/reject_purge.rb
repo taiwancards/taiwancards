@@ -5,9 +5,10 @@ module Huayu
     STORES = [SentenceRejectStore, CollocationRejectStore, WordRejectStore].freeze
     LISTED = 100
 
-    def initialize(io: $stdout, stores: STORES)
+    def initialize(io: $stdout, stores: STORES, reasons: nil)
       @io = io
       @stores = stores
+      @reasons = reasons
     end
 
     def call(dry_run: false)
@@ -19,7 +20,7 @@ module Huayu
     private
 
     def purge(store, dry_run:)
-      entries = store.read
+      entries = listed(store)
       return report_empty(store) if entries.empty?
 
       found = Lexeme.where(kind: store::KIND, text: entries.map(&:text)).pluck(:id, :text)
@@ -32,6 +33,11 @@ module Huayu
       removable.map(&:first).each_slice(200) { |slice| Lexeme.where(id: slice).destroy_all }
 
       {listed: entries.size, found: found.size, removed: removable.size, studied: studied.size}
+    end
+
+    def listed(store)
+      entries = store.read
+      @reasons ? entries.select { |entry| @reasons.include?(entry.reason) } : entries
     end
 
     def report_empty(store)

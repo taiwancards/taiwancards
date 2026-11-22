@@ -28,7 +28,7 @@
           data-drill-groups-target="group" data-group=group ]
           - sections.each do |sec|
             - on = @section && @section["id"] == sec["id"]
-            = link_to @drills.short(sec["id"]), pronunciation_path(section: sec["id"]), lang: "zh-TW", title: sec.dig("title", I18n.locale.to_s) || sec.dig("title", "en"), class: "rounded-full border px-2.5 py-1 text-xs font-medium tabular-nums transition-colors #{on ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted"}"
+            = link_to @drills.short(sec["id"]), pronunciation_path(section: sec["id"]), lang: "zh-TW", title: Locales.pick(sec["title"]), class: "rounded-full border px-2.5 py-1 text-xs font-medium tabular-nums transition-colors #{on ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted"}"
 
     - if @section && !@tonal
       p.text-3xs.text-muted-foreground = t("pronunciation.sections.no_tone")

@@ -3,9 +3,12 @@
 module Huayu
   class ListeningClips
     DATA = JsonData.new("listening/manifest.json", root: :media, watch: true)
+    EXCLUDED = JsonData.new("huayu/listening_excluded.json", default: [])
 
-    Row = Data.define(:text, :level, :clip, :en, :ru, :vi, :emoji, :emoji_word, :emoji_category) do
-      def translation(locale) = {"ru" => ru, "vi" => vi}[locale.to_s].presence || en
+    Row = Data.define(:text, :level, :clip, :en, :ru, :vi, :de, :ind, :emoji, :emoji_word, :emoji_category) do
+      def translations = Locales::STORED.to_h { |key| [key, public_send(key)] }
+
+      def translation(locale) = Locales.pick(translations, locale)
 
       def emoji? = emoji.present?
     end
@@ -47,6 +50,7 @@ module Huayu
 
       def reset!
         DATA.reset!
+        EXCLUDED.reset!
         remove_instance_variable(:@payload) if defined?(@payload)
         @manifest = nil
         @index = nil
@@ -66,7 +70,8 @@ module Huayu
       end
 
       def build(manifest)
-        Array(manifest["clips"]).map do |row|
+        garbled = EXCLUDED.value
+        Array(manifest["clips"]).reject { |row| garbled.include?(row["text"]) }.map do |row|
           Row.new(
             text: row["text"],
             level: row["level"].to_i,
@@ -74,6 +79,8 @@ module Huayu
             en: row["en"],
             ru: row["ru"],
             vi: row["vi"],
+            de: row["de"],
+            ind: row["ind"],
             emoji: row["emoji"],
             emoji_word: row["emoji_word"],
             emoji_category: row["emoji_category"]

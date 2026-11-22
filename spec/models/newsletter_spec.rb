@@ -46,6 +46,53 @@ RSpec.describe Newsletter do
     expect(newsletter).to(be_complete)
   end
 
+  it "asks for German text once a German reader is in the audience" do
+    create(:user, google_uid: "g-de", locale: "de")
+    newsletter = described_class.create!(subject_en: "News", body_en: "<div>Hi</div>")
+
+    expect(newsletter.audience_locales).to(eq(["de"]))
+    expect(newsletter).not_to(be_complete)
+
+    newsletter.update!(subject_de: "Neuigkeiten", body_de: "<div>Hallo</div>")
+    expect(newsletter).to(be_complete)
+  end
+
+  it "names a draft by the first subject it has, German last" do
+    expect(described_class.new(subject_de: "Neuigkeiten").title).to(eq("Neuigkeiten"))
+    expect(described_class.new(subject_de: "Neuigkeiten", subject_vi: "Tin mới").title).to(eq("Tin mới"))
+    expect(described_class.new(subject_de: "Neuigkeiten", subject_ru: "Новости").title).to(eq("Новости"))
+  end
+
+  it "keeps a German label on a button" do
+    newsletter = described_class.create!(buttons: [{"label_de" => "Öffnen", "url" => "/de/desk"}])
+
+    expect(newsletter.buttons_for("de")).to(eq([{label: "Öffnen", url: "/de/desk"}]))
+  end
+
+  it "keeps the Indonesian text in the ind columns while the reader's locale stays id" do
+    create(:user, google_uid: "g-id", locale: "id")
+    newsletter = described_class.create!(subject_en: "News", body_en: "<div>Hi</div>")
+
+    expect(newsletter.audience_locales).to(eq(["id"]))
+    expect(newsletter).not_to(be_complete)
+
+    newsletter.update!(subject_ind: "Kabar", preheader_ind: "Singkat", body_ind: "<div>Halo</div>")
+
+    expect(newsletter).to(be_complete)
+    expect(described_class.field("subject", "id")).to(eq("subject_ind"))
+    expect([newsletter.subject("id"), newsletter.preheader("id")]).to(eq(%w[Kabar Singkat]))
+    expect(newsletter.body("id")).to(include("Halo"))
+  end
+
+  it "keeps an Indonesian label on a button under label_ind" do
+    newsletter = described_class.create!(
+      buttons: [{"label_ind" => "Buka", "id" => "stray", "url" => "/id/desk"}]
+    )
+
+    expect(newsletter.buttons).to(eq([{"label_ind" => "Buka", "url" => "/id/desk"}]))
+    expect(newsletter.buttons_for("id")).to(eq([{label: "Buka", url: "/id/desk"}]))
+  end
+
   it "asks for every language while nobody is in the audience" do
     newsletter = described_class.create!(
       subject_en: "News",

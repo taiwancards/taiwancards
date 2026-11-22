@@ -31,16 +31,16 @@
     = form_with model: @newsletter, url: admin_newsletter_path(@newsletter, lang: locale), method: :patch, data: {newsletter_editor_target: "form", action: "input->newsletter-editor#changed trix-change->newsletter-editor#changed trix-selection-change->newsletter-editor#follow focusin->newsletter-editor#follow"}, class: "min-w-0 space-y-4" do |form|
       fieldset.min-w-0.space-y-4 disabled=locked
         .space-y-1
-          = form.label "subject_#{locale}", t("newsletters.admin.subject"), class: "text-sm font-medium"
-          = form.text_field "subject_#{locale}", maxlength: 150, class: field
+          = form.label Newsletter.field("subject", locale), t("newsletters.admin.subject"), class: "text-sm font-medium"
+          = form.text_field Newsletter.field("subject", locale), maxlength: 150, class: field
           p.text-xs.text-muted-foreground = t("newsletters.admin.subject_hint")
         .space-y-1
-          = form.label "preheader_#{locale}", t("newsletters.admin.preheader"), class: "text-sm font-medium"
-          = form.text_field "preheader_#{locale}", maxlength: 150, class: field
+          = form.label Newsletter.field("preheader", locale), t("newsletters.admin.preheader"), class: "text-sm font-medium"
+          = form.text_field Newsletter.field("preheader", locale), maxlength: 150, class: field
           p.text-xs.text-muted-foreground = t("newsletters.admin.preheader_hint")
         .space-y-1
           span.text-sm.font-medium = t("newsletters.admin.body")
-          = form.hidden_field "body_#{locale}", id: "newsletter_body_input"
+          = form.hidden_field Newsletter.field("body", locale), id: "newsletter_body_input"
           trix-editor.trix-content.block.min-h-80.rounded-lg.border.border-border.bg-card.px-3.py-2.text-sm[
             input="newsletter_body_input" data-newsletter-editor-target="editor" ]
           p.text-xs.text-muted-foreground = t("newsletters.admin.body_hint")
@@ -51,10 +51,12 @@
           - Newsletter::MAX_BUTTONS.times do |index|
             - button = buttons[index] || {}
             .grid.gap-2 class="sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
-              = text_field_tag "newsletter[buttons][#{index}][label_#{locale}]", button["label_#{locale}"], placeholder: t("newsletters.admin.button_label"), class: field
+              - label = Newsletter.field("label", locale)
+              = text_field_tag "newsletter[buttons][#{index}][#{label}]", button[label], placeholder: t("newsletters.admin.button_label"), class: field
               = text_field_tag "newsletter[buttons][#{index}][url]", button["url"], placeholder: "#{Newsletters::Tracking.base}/#{locale}/…", class: field
               - others.each do |other|
-                = hidden_field_tag "newsletter[buttons][#{index}][label_#{other}]", button["label_#{other}"]
+                - hidden = Newsletter.field("label", other)
+                = hidden_field_tag "newsletter[buttons][#{index}][#{hidden}]", button[hidden]
         fieldset.min-w-0.space-y-3.rounded-xl.border.border-border.p-3
           legend.px-1.text-sm.font-medium = t("newsletters.admin.audience")
           = hidden_field_tag "newsletter[audience][levels][]", "", id: nil

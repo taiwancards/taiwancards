@@ -73,7 +73,7 @@ module Huayu
 
     def phrases
       @phrases ||= begin
-        own = ExampleSentences.for(lexeme, user: @user, limit: SENTENCE_LIMIT)
+        own = ExampleSentences.for_entry(lexeme, user: @user, limit: SENTENCE_LIMIT)
         own.empty? && standard_form ? ExampleSentences.for(standard_form, user: @user, limit: SENTENCE_LIMIT) : own
       end
     end
@@ -111,7 +111,7 @@ module Huayu
     end
 
     def etymology_translated?
-      EtymologyTranslations::FIELDS.any? { |field| translated(field).present? }
+      EtymologyTranslations.localized?(lexeme)
     end
 
     def etymology_source

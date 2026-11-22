@@ -30,6 +30,15 @@ RSpec.describe "Sitemap", :no_auth do
     expect(response.body).to(include("hreflang=\"vi\" href=\"http://www.example.com/vi/dict\""))
   end
 
+  it "keeps the German edition in the comparison with other varieties" do
+    get("/sitemaps/pages.xml")
+
+    expect(response.body).to(include("hreflang=\"de\" href=\"http://www.example.com/de/variants\""))
+    expect(response.body).to(include("hreflang=\"de\" href=\"http://www.example.com/de/dict\""))
+    expect(response.body).to(include("hreflang=\"id\" href=\"http://www.example.com/id/variants\""))
+    expect(response.body).to(include("hreflang=\"id\" href=\"http://www.example.com/id/dict\""))
+  end
+
   it "carries an entry for a character that has a reading and skips one that has nothing" do
     create(:lexeme, kind: :character, text: "水", readings: {"zhuyin" => "ㄕㄨㄟˇ"})
     create(:lexeme, kind: :character, text: "㐀")

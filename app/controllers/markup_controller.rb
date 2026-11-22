@@ -3,6 +3,8 @@
 class MarkupController < ApplicationController
   layout "markup"
 
+  EDITED = %w[en ru].freeze
+
   prepend_before_action :require_local_environment
   before_action :require_admin
   before_action :set_locale
@@ -21,10 +23,10 @@ class MarkupController < ApplicationController
   def update
     sentence = sentences.find_by(id: numeric_id(params[:id])) || raise(ActiveRecord::RecordNotFound)
     following = markup_next_path(sentence)
-    edited = {"en" => params[:en].to_s.strip, "ru" => params[:ru].to_s.strip}.reject { |_, value| value.empty? }
-    meanings = sentence.meanings.slice("vi").merge(edited)
+    edited = EDITED.to_h { |code| [code, params[code].to_s.strip] }.reject { |_, value| value.empty? }
+    meanings = sentence.meanings.slice(*(Locales::STORED - EDITED)).merge(edited)
     sentence.update!(meanings: meanings)
-    Huayu::SentenceGlossStore.put(sentence.text, en: meanings["en"], ru: meanings["ru"], vi: meanings["vi"])
+    Huayu::SentenceGlossStore.put(sentence.text, **Locales::STORED.to_h { |key| [key.to_sym, meanings[key]] })
     redirect_to(following)
   end
 
@@ -84,6 +86,6 @@ class MarkupController < ApplicationController
     units = Huayu::TextAnalyzer.new.segment(sentence.text) unless units.is_a?(Array) && units.any?
 
     lexemes = Lexeme.where(kind: %i[word character], text: units.uniq).index_by(&:text)
-    units.map { |unit| [unit, lexemes[unit]&.meanings&.dig(@locale).to_s] }
+    units.map { |unit| [unit, lexemes[unit]&.meanings&.dig(Locales.key(@locale)).to_s] }
   end
 end

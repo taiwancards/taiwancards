@@ -10,7 +10,7 @@ module Huayu
     def wanted
       @wanted ||= TaiwanNotices.all.each_with_object({}) do |notice, all|
         notice.items.each do |item|
-          all[item.zh] = item.names.slice(*Locales::ALL).compact_blank
+          all[item.zh] = item.names.slice(*Locales::STORED).compact_blank
         end
       end
     end

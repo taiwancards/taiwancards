@@ -5,7 +5,7 @@ module Huayu
     DATA = JsonData.new("huayu/tea_classes.json", default: {"classes" => [], "scale" => [], "notes" => []})
 
     Row = Data.define(:text, :pinyin, :oxidation, :roast, :names, :bodies) do
-      def name(locale = I18n.locale) = names[locale.to_s].presence
+      def name(locale = I18n.locale) = names[Locales.key(locale)].presence
 
       def body(locale = I18n.locale) = Locales.pick(bodies, locale)
     end
@@ -21,7 +21,7 @@ module Huayu
 
       def notes
         @notes ||= Array(raw["notes"]).to_h do |row|
-          [row["key"], row.slice(*Locales::ALL)]
+          [row["key"], row.slice(*Locales::STORED)]
         end
       end
 
@@ -51,8 +51,8 @@ module Huayu
             pinyin: row["pinyin"],
             oxidation: row["oxidation"],
             roast: row["roast"],
-            names: Locales::ALL.to_h { |code| [code, row["#{code}_name"]] },
-            bodies: row.slice(*Locales::ALL)
+            names: Locales::STORED.to_h { |key| [key, row["#{key}_name"]] },
+            bodies: row.slice(*Locales::STORED)
           )
         end
       end

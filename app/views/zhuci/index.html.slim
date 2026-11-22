@@ -1,5 +1,5 @@
 - content_for(:title, t("zhuci.title"))
-- locale = I18n.locale.to_s
+- locale = Locales.key
 
 .py-6.space-y-6
   = render("shared/page_help", key: "zhuci", title: t("zhuci.title"))

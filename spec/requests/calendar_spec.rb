@@ -121,9 +121,9 @@ RSpec.describe Huayu::Holidays do
     described_class.all.each do |entry|
       expect(entry.rule["type"]).to(be_in(%w[lunar gregorian solar_term]))
       expect(entry.words.size).to(be_between(5, 10))
-      expect(entry.summaries.values_at(*Locales::ALL)).to(all(be_present))
+      expect(entry.summaries.values_at(*Locales::STORED)).to(all(be_present))
       entry.words.each do |word|
-        expect(word.glosses.values_at(*Locales::ALL)).to(all(be_present))
+        expect(word.glosses.values_at(*Locales::STORED)).to(all(be_present))
       end
     end
   end

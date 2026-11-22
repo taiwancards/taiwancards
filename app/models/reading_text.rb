@@ -41,6 +41,6 @@ class ReadingText < ApplicationRecord
   end
 
   def translations(locale)
-    Array(body_data.dig("translations", locale.to_s))
+    Array(body_data.dig("translations", Locales.key(locale)))
   end
 end

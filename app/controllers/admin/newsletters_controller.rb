@@ -6,7 +6,11 @@ module Admin
     before_action :set_newsletter, except: %i[index create]
     before_action :require_draft, only: %i[update destroy]
 
-    FIELDS = Newsletter::LOCALES.flat_map { |locale| %W[subject_#{locale} preheader_#{locale} body_#{locale}] }.freeze
+    FIELDS = Newsletter::LOCALES
+      .flat_map { |locale|
+        %w[subject preheader body].map { |name| Newsletter.field(name, locale) }
+      }
+      .freeze
 
     def index
       @newsletters = Newsletter.recent.to_a

@@ -96,6 +96,20 @@ RSpec.describe Huayu::TaiwanEverydayImporter do
     expect(Lexeme.exists?(text: "測試19")).to(be(true))
   end
 
+  it "takes the page's note and placement off a word the source dropped" do
+    entries = Array.new(20) { |i| base("測試#{i}", "note_en" => "a page note", "tag" => "politics") }
+    write(entries)
+    described_class.new(path:).call
+    dropped = Lexeme.find_by!(text: "測試19")
+    expect(dropped.data).to(include("note", "placements"))
+
+    write(entries.first(19))
+    described_class.new(path:).call
+
+    expect(dropped.reload.data.keys & %w[note tag domain placements]).to(be_empty)
+    expect(Lexeme.find_by!(text: "測試0").data).to(include("note", "placements"))
+  end
+
   it "stores the Hokkien reading and source spelling when given" do
     write(
       [

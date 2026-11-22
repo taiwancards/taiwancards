@@ -266,21 +266,24 @@ module Site
             var fallback = "#{I18n.default_locale}";
             var known = #{I18n.available_locales.map(&:to_s).to_json};
             var countries = #{Locales::COUNTRIES.to_json};
+            var vetoes = #{Locales::COUNTRY_VETOES.to_json};
+            var legacy = #{Locales::LEGACY.to_json};
             var go = function (code) { location.replace("/" + code + "/"); };
             var stored = null;
             try { stored = localStorage.getItem("site_locale"); } catch (error) {}
             if (known.indexOf(stored) !== -1) return go(stored);
 
-            var said = (navigator.languages || [navigator.language || ""])
-              .map(function (tag) { return tag.slice(0, 2).toLowerCase(); })
-              .filter(function (code) { return known.indexOf(code) !== -1; })[0];
+            var spoken = (navigator.languages || [navigator.language || ""])
+              .map(function (tag) { var code = tag.split("-")[0].toLowerCase(); return legacy[code] || code; });
+            var said = spoken.filter(function (code) { return known.indexOf(code) !== -1; })[0];
             if (said && said !== fallback) return go(said);
 
             var done = false;
             var settle = function (country) {
               if (done) return;
               done = true;
-              go(countries[country] || said || fallback);
+              var vetoed = (vetoes[country] || []).some(function (code) { return spoken.indexOf(code) !== -1; });
+              go((!vetoed && countries[country]) || said || fallback);
             };
             setTimeout(settle, 800);
             fetch("/cdn-cgi/trace")

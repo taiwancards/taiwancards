@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 module Huayu
-  class ViGlossEnricher
-    PATH = AppData.path("huayu/vi_glosses.json")
-    LOCALE = "vi"
+  class LocaleGlossEnricher
     OWNED_ELSEWHERE = %i[sentence measure_word radical].freeze
 
-    def initialize(path: PATH, curated: CuratedGlosses.new)
+    def self.path_for(locale) = AppData.path("huayu/#{Locales.key(locale)}_glosses.json")
+
+    def initialize(locale:, path: self.class.path_for(locale), curated: CuratedGlosses.new)
+      @key = Locales.key(locale)
       @path = Pathname(path)
       @curated = curated
     end
@@ -31,9 +32,9 @@ module Huayu
       glosses.keys.each_slice(500) do |texts|
         scope(texts).find_each do |lexeme|
           fresh = (page_gloss(lexeme) || glosses[lexeme.text]).to_s.strip
-          next if fresh.empty? || lexeme.meanings[LOCALE] == fresh
+          next if fresh.empty? || lexeme.meanings[@key] == fresh
 
-          lexeme.update!(meanings: lexeme.meanings.merge(LOCALE => fresh))
+          lexeme.update!(meanings: lexeme.meanings.merge(@key => fresh))
           written += 1
         end
       end
@@ -51,9 +52,9 @@ module Huayu
         wanted = by_text.fetch(text, {})
         rows_for.filter_map do |id, _lexeme_id, gloss_zh, stored|
           fresh = wanted[gloss_zh].presence || (glosses[text].presence if rows_for.one?)
-          next if fresh.blank? || stored[LOCALE] == fresh
+          next if fresh.blank? || stored[@key] == fresh
 
-          [id, stored.merge(LOCALE => fresh.strip)]
+          [id, stored.merge(@key => fresh.strip)]
         end
       end
 
@@ -64,9 +65,9 @@ module Huayu
       written = 0
       Lexeme.where(kind: :radical, text: names.keys).find_each do |radical|
         fresh = names[radical.text].to_s.strip
-        next if fresh.empty? || radical.meanings[LOCALE] == fresh
+        next if fresh.empty? || radical.meanings[@key] == fresh
 
-        radical.update!(meanings: radical.meanings.merge(LOCALE => fresh))
+        radical.update!(meanings: radical.meanings.merge(@key => fresh))
         written += 1
       end
 
@@ -76,7 +77,7 @@ module Huayu
     def page_gloss(lexeme)
       return nil unless Lexeme::DICTIONARY_KINDS.include?(lexeme.kind.to_sym)
 
-      @curated.gloss(lexeme.text, LOCALE)
+      @curated.gloss(lexeme.text, @key)
     end
   end
 end

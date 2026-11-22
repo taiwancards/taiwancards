@@ -1,0 +1,261 @@
+id:
+  pron:
+    legend:
+      title: Arti warna
+      body: Tidak ada yang mendapat 100 — penyiar berita Taiwan pun tidak. Hijau berarti tidak ada lagi yang perlu diperbaiki. Kuning berarti orang akan langsung memahamimu tanpa perlu kamu ulangi. Hanya merah yang benar-benar perlu kamu perbaiki.
+    levels:
+      green:
+        name: Sangat baik
+        note: Terdengar alami. Tidak ada lagi yang perlu diperbaiki di sini.
+      amber:
+        name: Bisa dipahami
+        note: Aksenmu terdengar, tetapi suku katanya dikenali dengan benar. Itu sudah cukup untuk dipahami.
+      red:
+        name: Perlu diperbaiki
+        note: Suku katanya sulit dikenali. Baca catatannya, lalu coba lagi.
+      dark:
+        name: Tidak terpahami
+        note: Pendengar akan menangkap suku kata lain, atau tidak menangkap apa pun.
+      gray:
+        name: Tidak diukur
+        note: Kami belum punya acuan yang andal untuk suku kata ini, jadi lebih baik tidak menampilkan skor daripada menampilkan skor yang menyesatkan.
+    parts:
+      initial: Konsonan awal
+      medial: Medial
+      final: Bagian akhir
+      tone: Nada
+      timbre: Suku kata utuh
+      absent: tidak ada
+      empty_rime: 空韻 (vokal kosong)
+    weight: bobot %{percent}%
+    weight_hint: "Bobot menunjukkan seberapa penting bagian ini dalam suku kata yang satu ini: makin banyak suku kata nyata yang berbeda darinya hanya pada bagian ini, makin besar pengaruhnya pada skor keseluruhan."
+    chart:
+      title: Kontur nada
+      reference: acuan
+      yours: kamu
+      band: sebaran penutur
+      semitones: semiton
+    ui:
+      overall: Keseluruhan
+      sounds: Bunyi
+      tone: Nada
+      your_take: Rekamanmu
+      model: Acuan
+      open_syllable: Ketuk suku kata untuk melihat rinciannya
+      chart_hint: "Pita menunjukkan cara penutur asli benar-benar mengucapkan suku kata ini: selama kamu berada di dalamnya, tidak ada yang dihitung salah. Garis putus-putus adalah bagian tengahnya, garis utuh adalah suaramu, dan warna merah menandai tempat kamu keluar dari pita."
+      chart_range: Skalanya dihitung dalam semiton dari tengah wilayah suaramu, jadi grafik ini menunjukkan bukan hanya bentuk nadanya, tetapi juga ketinggian tempat kamu mengucapkannya.
+      parts_title: Dari mana skor ini berasal
+      fix_title: Yang perlu diperbaiki
+      reference: Cara kerjanya
+      not_measured: tidak diukur
+      no_template: Kami belum punya acuan untuk suku kata ini, jadi tidak ada pembanding untuk menilainya. Ini bukan kesalahan pelafalan.
+      risky: Suku kata ini kami kenali kurang andal dibanding yang lain, jadi skornya bisa lebih keras daripada yang pantas kamu dapat. Pemula tidak pernah melihatnya — di sini risikonya kamu tanggung sendiri.
+      no_part: tidak ada dalam suku kata ini
+      details: Detail
+      hide: Ciutkan
+      flow_title: Kelancaran
+      read_title: Yang kami dengar
+      focus_title: Yang perlu dilatih
+      focus_empty: Berlatihlah sedikit, nanti rekomendasi khusus untukmu muncul di sini.
+      focus_attempts:
+        one: "%{count} percobaan"
+        other: "%{count} percobaan"
+      focus_bias: Penyimpangan yang berulang
+      focus_drill: Latih ini
+      trend_up: membaik
+      trend_down: menurun
+      trend_flat: stabil
+      mastered: dikuasai
+      warmup_title: Pemanasan suara
+      warmup_hint: Opsional. Aplikasi mempelajari tinggi suaramu dari kata-kata pertamamu; pemanasan setengah menit langsung menyelesaikannya.
+      warming: "Skor pertama masih perkiraan: aplikasi masih mempelajari tinggi suaramu."
+      warmup_start: Mulai pemanasan
+      warmup_redo: Ulangi
+      warmup_done: Suara sudah dikalibrasi
+      warmup_next: Lanjut
+      warmup_skip: Lewati
+      warmup_saved: Terekam
+      warmup_listen: Putar lagi
+      warmup_anchors: "Nada 1 dan nada 3 keluar hampir sama tinggi, jadi penilaian nada akan kurang tepat. Ulangi empat suku kata itu saja: 媽 jelas di atas suara bicaramu, 馬 di paling bawah, dengan jarak yang terdengar di antara keduanya."
+      metrics: Detail
+      copy: Salin
+      sandhi: "Hati-hati: ini tidak dibaca seperti tulisannya —"
+      warmup_why: "Tanpa pemanasan, nada dinilai dari bentuk kurvanya, tetapi tidak dari tinggi suara yang sebenarnya: penyanyi bas dan sopran menyanyikan nada yang sama pada frekuensi yang berbeda. Pemanasan memberi titik acuannya."
+    codes:
+      near: Tidak ada kesalahan yang jelas, tetapi belum sebaik acuannya.
+      tone:
+        wrong: Itu tadi nada %{got}; yang dibutuhkan nada %{tone}.
+        shape: Konturnya menyimpang dari acuan nada %{tone}.
+        falls: Suaramu turun; nada %{tone} justru naik.
+        rises: Suaramu naik; nada %{tone} justru turun.
+      initial:
+        under_aspirated: "Embusan napasnya kurang: %{initial} terdengar lebih mirip %{pair}."
+        over_aspirated: "Embusan napasnya berlebihan: %{initial} terdengar lebih mirip %{pair}."
+        vot_off: Suara mulai pada saat yang kurang tepat setelah konsonan dilepas.
+      sibilant:
+        too_front: Desisnya terlalu tinggi dan terlalu ke depan untuk /%{ipa}/.
+        too_back: Desisnya terlalu rendah dan terlalu ke belakang untuk /%{ipa}/.
+      medial:
+        weak: Bunyi medialnya hampir hilang.
+      vowel:
+        open: Vokalnya lebih terbuka daripada acuan.
+        close: Vokalnya lebih tertutup daripada acuan.
+        front: Vokalnya bergeser ke depan.
+        back: Vokalnya bergeser ke belakang.
+        apical: "Tidak ada vokal tersendiri setelah %{initial}: bunyinya berlanjut di posisi lidah yang ditinggalkan konsonan."
+      coda:
+        weak: Bunyi sengau di akhir hampir tidak terdengar.
+        heavy: Bunyi sengaunya terlalu berat — vokalnya sudah sengau terlalu awal.
+        ng_for_n: Akhiran -n terdengar sebagai -ng.
+        n_for_ng: Akhiran -ng terdengar sebagai -n.
+      duration:
+        long: Suku katanya lebih panjang daripada acuan.
+        short: Suku katanya terlalu pendek — nadanya tidak sempat terbentuk.
+        neutral_long: Nada netral seharusnya pendek.
+      timbre:
+        drift: Warna bunyi suku kata ini secara keseluruhan menjauh dari acuan.
+      lead_in:
+        noisy: "Ada %{ms} ms bunyi lain sebelum suku kata — napas atau derau. Konsonan awal tidak bisa diperiksa karenanya: mulai suku kata tepat setelah tanda."
+        clipped: Rekaman langsung dimulai pada bunyinya, jadi embusan napas %{initial}- tidak bisa diukur. Tunggu lingkaran hijau sebelum kamu bicara.
+      flow:
+        ok: Suku-suku katanya menyambung seperti dalam percakapan sungguhan.
+        choppy: Jeda antarsuku kata terlalu panjang — kata-katanya terpecah menjadi suku kata yang terpisah-pisah.
+        pitch_reset: "Tinggi suaramu kembali ke awal di setiap suku kata: terdengar seperti daftar, bukan frasa."
+        clipped: Suara menghilang di antara suku kata — suku katanya terputus, bukan mengalir satu ke yang lain.
+      read:
+        ok: Yang dibaca sesuai dengan yang tertulis.
+        doubtful: Rekaman kurang cocok dengan teks — mungkin yang diucapkan berbeda.
+        mismatch: Sepertinya yang dibaca bukan teks ini.
+    fixes:
+      near: Coba lagi sambil mengikuti acuannya.
+      tone:
+        wrong: Ikuti kurva acuan pada grafik.
+        shape: Lihat grafiknya dan cari di mana garismu menyimpang dari acuan.
+        falls: Mulai lebih rendah dan bawa suaramu naik sampai akhir suku kata.
+        rises: Mulai lebih tinggi dan biarkan suaramu turun sampai akhir suku kata.
+      initial:
+        under_aspirated: Embuskan lebih banyak udara setelah konsonan dilepas — embusannya harus jelas terdengar sebelum suara muncul.
+        over_aspirated: Nyalakan suara langsung setelah konsonan dilepas, tanpa embusan di antaranya.
+        vot_off: Perhatikan peralihan dari konsonan ke vokal.
+      sibilant:
+        too_front: Tarik lidah lebih ke belakang.
+        too_back: Majukan lidah sedikit.
+      medial:
+        weak: Medialnya memang pendek, tetapi tidak boleh ditelan — buat agar terdengar.
+      vowel:
+        open: Rapatkan rahang sedikit dan angkat lidah.
+        close: Turunkan rahang.
+        front: Tarik lidah ke belakang.
+        back: Majukan lidah.
+        apical: "Jangan selipkan bunyi “i” di sini: biarkan lidah di posisi konsonan dan teruskan suaranya."
+      coda:
+        weak: "Tahan akhir suku kata: biarkan udara keluar lewat hidung, jangan berhenti di vokal."
+        heavy: Jaga vokalnya tetap bersih, dan biarkan bunyi hidung masuk hanya di bagian paling akhir.
+        ng_for_n: Ujung lidah ke gusi di belakang gigi atas; pangkal lidah tetap turun.
+        n_for_ng: Pangkal lidah ke langit-langit lunak; ujung lidah dibiarkan bebas.
+      duration:
+        long: Ucapkan dengan tempo yang wajar.
+        short: Selesaikan suku katanya sampai tuntas.
+        neutral_long: Pendekkan — suku kata bernada netral tidak diberi tekanan.
+      timbre:
+        drift: Dengarkan acuannya dan tirukan secara utuh.
+      flow:
+        choppy: Baca frasanya dalam satu napas, tanpa berhenti di antara suku kata.
+        pitch_reset: "Bawa satu garis suara sepanjang frasa: tiap suku kata meneruskan tinggi suara suku kata sebelumnya."
+        clipped: Jangan putus suaramu di antara suku kata — alirkan bunyinya dari satu suku kata ke suku kata berikutnya.
+      read:
+        doubtful: Periksa teksnya dan baca sekali lagi.
+        mismatch: "Periksa teksnya: skor diukur berdasarkan yang tertulis."
+    confusion:
+      tone_only: Bunyinya sudah benar, tetapi itu nada %{tone}, bukan nada %{expected_tone}
+      segments_only: Nadanya sudah benar, tetapi itu /%{syllable}/, bukan /%{expected_syllable}/
+      both: Itu /%{syllable}/ dengan nada %{tone}, bukan /%{expected_syllable}/ dengan nada %{expected_tone}
+    tones:
+      "1": Datar dan tinggi, ditahan rata sampai akhir — seperti menahan satu nada saat bernyanyi. Bahasa Indonesia tidak memakai nada datar seperti ini, jadi rasanya seperti kamu menahannya terlalu lama.
+      "2": Naik, seperti “Hah?” atau “Masa?” yang heran. Mulailah lebih rendah daripada yang terasa wajar, supaya ada ruang untuk naik.
+      "3": "Di Taiwan ini nada rendah: turun ke dasar suaramu dan tetap di sana, sering disertai suara serak yang berderik. Kenaikan di akhir seperti di buku pelajaran (214) tidak ada dalam percakapan sehari-hari."
+      "4": Turun tajam dari atas, seperti “Stop!” atau “Awas!” yang tegas. Mulai tinggi, lalu jatuhkan dengan cepat.
+      "5": "Netral: pendek, lemah, tanpa melodi sendiri — mirip akhiran “-lah” atau “-nya” yang tidak diberi tekanan. Tingginya ditentukan oleh suku kata sebelumnya."
+    initials:
+      b: Tak bersuara dan tanpa embusan napas, persis p pada “pagi” — bukan b pada “baju”.
+      p: "Dengan embusan napas kuat: p seperti pada “pagi”, ditambah embusan udara yang terasa di telapak tanganmu."
+      m: Sama seperti m dalam bahasa Indonesia.
+      f: f sungguhan seperti pada “fakta” — jangan sampai bergeser menjadi p.
+      d: Seperti t pada “tahu”, bukan d pada “dua”.
+      t: Seperti t pada “tahu”, tetapi dengan embusan napas yang jelas.
+      "n": Sama seperti n dalam bahasa Indonesia, ujung lidah di gusi belakang gigi atas.
+      l: Seperti l pada “lima” — ringan dan jernih.
+      g: Seperti k pada “kaki”, bukan g pada “gigi”.
+      k: Seperti k pada “kaki”, tetapi dengan embusan napas kuat — hanya embusan itulah yang membedakannya dari ㄍ.
+      h: "Lebih kasar daripada h biasa: ada gesekan di bagian belakang mulut, seperti kh pada “khas”, tetapi ringan."
+      j: "Mirip c pada “cinta”: ujung lidah turun di belakang gigi bawah, daun lidah naik ke langit-langit keras. Bukan j pada “jalan”."
+      q: Posisinya sama dengan ㄐ, tetapi dengan embusan napas kuat — c pada “cari” yang diembuskan. Bukan k, meskipun ditulis q.
+      x: Mirip sy pada “syukur”, tetapi ujung lidah tetap turun di gigi bawah dan bibir melebar, tidak dibulatkan.
+      zh: Lengkungkan ujung lidah ke atas dan ke belakang. Mirip c pada “cari”, tetapi lidahnya lebih ke belakang; tak bersuara, jadi bukan j pada “jalan”.
+      ch: Seperti ㄓ, tetapi dengan embusan napas kuat.
+      sh: Seperti sy pada “syarat”, tetapi ujung lidah dilengkungkan ke atas dan ke belakang.
+      r: Bukan r Indonesia yang bergetar. Pasang lidah seperti untuk ㄕ, lalu nyalakan suara — bunyinya mendengung.
+      z: "“ts” yang menyatu menjadi satu bunyi di awal suku kata, tanpa embusan napas. Bukan z Indonesia."
+      c: "“ts” dengan embusan napas kuat — embusan itulah yang membedakannya dari ㄗ. Bukan c Indonesia."
+      s: Sama seperti s pada “satu”.
+    medials:
+      i: Luncuran “i” yang cepat, seperti y pada “ya” — singkat, tetapi harus terdengar.
+      u: Luncuran “u” yang cepat, seperti w pada “wangi”; bulatkan bibir sebelum vokalnya dimulai.
+      ü: Bibir bulat seperti untuk “u”, lidah di posisi “i” — tahan keduanya sekaligus.
+    rimes:
+      a: "“a” terbuka seperti pada “apa”, rahang turun."
+      o: o bulat seperti pada “obat”; setelah ㄅㄆㄇㄈ terdengar hampir seperti “wo”.
+      e: "Tidak ada dalam bahasa Indonesia: mulai dari e pepet pada “emas”, tarik lidah ke belakang dan sedikit ke atas, bibir tidak dibulatkan."
+      ê: é taling yang terbuka, seperti pada “enak”.
+      ai: "“ai” seperti “pantai” yang diucapkan jelas (bukan “pante”), dengan a yang penuh."
+      ei: "“ei” seperti pada “survei”, lebih pendek dan lebih rapat daripada ㄞ."
+      ao: "“au” seperti “pulau” yang diucapkan jelas (bukan “pulo”), bibir membulat di akhir."
+      ou: "o yang meluncur ke u: “ou” dalam satu suku kata."
+      an: "“an” seperti pada “makan”: ujung lidah menyentuh gusi di belakang gigi atas, vokalnya tetap di depan."
+      en: e pepet + n, seperti “en” pada “entah” — vokalnya lemah dan pendek.
+      ang: a yang dalam, diucapkan di belakang mulut, + ng seperti pada “orang” — tanpa g keras di akhir.
+      eng: "e pepet + ng, seperti “leng” pada “lengkap”: pangkal lidah menutup ke langit-langit lunak."
+      er: e pepet dengan ujung lidah melengkung ke atas — tanpa getaran r.
+      i: i yang jernih dan panjang seperti pada “ini”, tanpa luncuran di akhir.
+      u: u yang jernih seperti pada “itu”, dengan bibir benar-benar dibulatkan.
+      ü: Bibir bulat seperti untuk “u”, lidah di posisi “i”.
+      empty: "Vokal mendengung tanpa simbol sendiri: biarkan lidah tepat di tempat yang ditinggalkan konsonan dan teruskan suaranya. Bukan “i”, bukan juga e pepet."
+    judge:
+      title: Kalibrasi skor pelafalan
+      hint: Rekamanmu sendiri dari latihan pelafalan terkumpul di sini; rekaman orang lain tidak pernah disimpan. Seorang penutur asli mendengarkan setiap rekaman dan memutuskan apakah ia akan menerima pelafalan itu dari lawan bicaranya. Jawaban-jawaban itulah yang menentukan ambang skor hijau, kuning, dan merah. Skor dari mesin tetap tersembunyi sampai keputusan dibuat — kalau dilihat lebih dulu, jawabannya jadi ketahuan.
+      which: Yang kamu tolak
+      accept: Terima
+      reject: Tolak
+      unsure: Tidak yakin
+      drop: Hapus rekaman
+      drop_confirm: Hapus rekaman ini tanpa dinilai?
+      reveal: Penilaian mesin
+      reveal_hint: Buka ini hanya setelah kamu sendiri memutuskan.
+      saved: Tersimpan
+      dropped: Rekaman dihapus
+      empty: Tidak ada yang perlu dinilai — semua rekaman sudah diberi label.
+      coverage: suku kata berlabel (berbeda / total)
+      verdicts:
+        unrated: menunggu
+        accepted: diterima
+        rejected: ditolak
+        unsure: tidak yakin
+    warmup:
+      prompts:
+        vowels:
+          text: i — a — u
+          hint: tahan setiap bunyi kira-kira satu setengah detik
+        rise:
+          text: Masa?!
+          hint: dengan heran
+        fall:
+          text: Iya, betul.
+          hint: dengan tenang, akhirnya datar
+        tone_1:
+          hint: "datar dan tinggi: tahan satu nada yang stabil, sedikit di atas suara bicaramu"
+        tone_2:
+          hint: naik, seperti “Hah?” yang bertanya — suaranya terus naik
+        tone_3:
+          hint: turun ke dasar suaramu lalu sedikit naik lagi, seperti “Hmm…” yang ragu
+        tone_4:
+          hint: turun tajam dari tinggi ke rendah, seperti “Stop!” yang tegas

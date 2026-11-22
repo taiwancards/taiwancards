@@ -33,6 +33,8 @@ RSpec.describe Site::Exporter do
 
     expect(fallback).to(include("<noscript><meta http-equiv=\"refresh\" content=\"0; url=/en/\"></noscript>"))
     expect(fallback).to(include("/cdn-cgi/trace", "site_locale", "\"VN\":\"vi\"", "\"UA\":\"ru\""))
+    expect(fallback).to(include("\"CH\":\"de\"", "var vetoes = {\"CH\":[\"fr\",\"it\",\"rm\"],\"LU\":[\"fr\"]}"))
+    expect(fallback).to(include("\"ID\":\"id\"", "var legacy = {\"in\":\"id\"}"))
     expect(page("en", "index.html")).to(include("\"site_locale\", language.dataset"))
   end
 
@@ -52,6 +54,14 @@ RSpec.describe Site::Exporter do
         "vi/licenses/index.html",
         "vi/privacy/index.html",
         "vi/terms/index.html",
+        "de/index.html",
+        "de/licenses/index.html",
+        "de/privacy/index.html",
+        "de/terms/index.html",
+        "id/index.html",
+        "id/licenses/index.html",
+        "id/privacy/index.html",
+        "id/terms/index.html",
         "licenses/index.html",
         "privacy/index.html",
         "terms/index.html"
@@ -63,6 +73,8 @@ RSpec.describe Site::Exporter do
     expect(page("en", "index.html")).to(match(/<html[^>]*lang="en"/))
     expect(page("ru", "index.html")).to(match(/<html[^>]*lang="ru"/))
     expect(page("vi", "index.html")).to(match(/<html[^>]*lang="vi"/))
+    expect(page("de", "index.html")).to(match(/<html[^>]*lang="de"/))
+    expect(page("id", "index.html")).to(match(/<html[^>]*lang="id"/))
   end
 
   it "keeps nothing that only a Rails request can satisfy" do

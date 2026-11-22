@@ -91,6 +91,29 @@ RSpec.describe Huayu::MedicineImporter do
     )
   end
 
+  it "brings a translation added later to the note of an everyday-owned word" do
+    create(:lexeme, kind: :word, text: "測試醫丁", data: {"placements" => ["everyday"]})
+    write([base("測試醫丁", "note_en" => "a note")])
+    described_class.new(path:).call
+    write([base("測試醫丁", "note_en" => "a note", "note_vi" => "ghi chú")])
+    described_class.new(path:).call
+
+    expect(Lexeme.find_by!(text: "測試醫丁").data["note"]).to(eq({"en" => "a note", "vi" => "ghi chú"}))
+  end
+
+  it "leaves the note of an everyday-owned word alone when it is a different note" do
+    create(
+      :lexeme,
+      kind: :word,
+      text: "測試醫丁",
+      data: {"placements" => ["everyday"], "note" => {"en" => "the everyday note"}}
+    )
+    write([base("測試醫丁", "note_en" => "a medical note", "note_vi" => "ghi chú y tế")])
+    described_class.new(path:).call
+
+    expect(Lexeme.find_by!(text: "測試醫丁").data["note"]).to(eq({"en" => "the everyday note"}))
+  end
+
   it "stores folk and formal counterparts and the Hokkien reading" do
     write(
       [

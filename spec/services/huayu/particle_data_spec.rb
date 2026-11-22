@@ -25,7 +25,7 @@ RSpec.describe "mood particle data" do
 
   it "writes every language for the summary, the force and the body" do
     incomplete = entries.reject { |entry|
-      Locales::ALL.all? { |code|
+      Locales::STORED.all? { |code|
         entry["summary_#{code}"].to_s.present? && entry["force_#{code}"].to_s.present? && entry["body_#{code}"].present?
       }
     }
@@ -36,7 +36,7 @@ RSpec.describe "mood particle data" do
   it "translates and annotates every example in every language" do
     thin = entries.flat_map { |entry|
       Array(entry["examples"]).filter_map { |row|
-        unless ["zh", *Locales::ALL, *Locales::ALL.map { |code| "note_#{code}" }].all? { |field|
+        unless ["zh", *Locales::STORED, *Locales::STORED.map { |code| "note_#{code}" }].all? { |field|
             row[field].to_s.present?
           }
           "#{entry["text"]}: #{row["zh"]}"

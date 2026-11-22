@@ -107,7 +107,7 @@ module Huayu
 
       def raw = DATA.value
 
-      def localized(row, field) = Locales::ALL.to_h { |code| [code, row["#{field}_#{code}"]] }
+      def localized(row, field) = Locales::STORED.to_h { |key| [key, row["#{field}_#{key}"]] }
     end
   end
 end

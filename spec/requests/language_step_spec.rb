@@ -22,6 +22,30 @@ RSpec.describe "Choosing a language on first entry" do
     expect(order).to(eq(order.sort))
   end
 
+  it "offers German among the choices, labelled in German" do
+    get("/vi/desk")
+
+    expect(response.body).to(include("action=\"/locale/de\""))
+    expect(Nokogiri::HTML5(response.body).css("[lang='de']")).not_to(be_empty)
+  end
+
+  it "moves the interface to German in the same step" do
+    post("/locale/de", headers: {"HTTP_REFERER" => "http://www.example.com/vi/desk"})
+
+    expect(response).to(redirect_to("http://www.example.com/de/desk"))
+    expect(newcomer.reload).to(have_attributes(locale: "de", language_chosen?: true))
+  end
+
+  it "offers Indonesian and moves the interface to it under the id prefix" do
+    get("/vi/desk")
+    expect(response.body).to(include("action=\"/locale/id\"", "Bahasa Indonesia"))
+
+    post("/locale/id", headers: {"HTTP_REFERER" => "http://www.example.com/vi/desk"})
+
+    expect(response).to(redirect_to("http://www.example.com/id/desk"))
+    expect(newcomer.reload).to(have_attributes(locale: "id", language_chosen?: true))
+  end
+
   it "counts confirming the suggested language as a choice, and goes on to the goal" do
     post("/locale/vi", headers: {"HTTP_REFERER" => "http://www.example.com/vi/desk"})
     expect(newcomer.reload).to(have_attributes(locale: "vi", language_chosen?: true))

@@ -2,7 +2,7 @@
 
 class Newsletter < ApplicationRecord
   LOCALES = Locales::ALL
-  BUTTON_LABELS = LOCALES.map { |locale| "label_#{locale}" }.freeze
+  BUTTON_LABELS = LOCALES.map { |locale| "label_#{Locales.key(locale)}" }.freeze
   MAX_BUTTONS = 3
   SAFE_URL = %r{\A(?:https?://|/(?!/)|mailto:)}i
   AUDIENCES = %w[all filtered picked].freeze
@@ -44,15 +44,17 @@ class Newsletter < ApplicationRecord
     end
   end
 
-  def subject(locale) = self["subject_#{locale}"].to_s
+  def self.field(name, locale) = "#{name}_#{Locales.key(locale)}"
 
-  def preheader(locale) = self["preheader_#{locale}"].to_s
+  def subject(locale) = self[self.class.field("subject", locale)].to_s
 
-  def body(locale) = self["body_#{locale}"].to_s
+  def preheader(locale) = self[self.class.field("preheader", locale)].to_s
+
+  def body(locale) = self[self.class.field("body", locale)].to_s
 
   def buttons_for(locale)
     Array(buttons).filter_map { |button|
-      label = button["label_#{locale}"].to_s.strip
+      label = button[self.class.field("label", locale)].to_s.strip
       url = button["url"].to_s.strip
       {label:, url:} if label.present? && url.match?(SAFE_URL)
     }
@@ -71,12 +73,12 @@ class Newsletter < ApplicationRecord
 
   def sent? = sent_at.present?
 
-  def title = subject("ru").presence || subject("en").presence || subject("vi").presence || "##{id}"
+  def title = (%w[ru] + LOCALES).uniq.map { |locale| subject(locale) }.find(&:present?) || "##{id}"
 
   private
 
   def clean_bodies
-    LOCALES.each { |locale| self["body_#{locale}"] = Newsletters::Body.clean(body(locale)) }
+    LOCALES.each { |locale| self[self.class.field("body", locale)] = Newsletters::Body.clean(body(locale)) }
     self.buttons = Array(buttons).first(MAX_BUTTONS).map { |button| button.to_h.slice(*BUTTON_LABELS, "url") }
     self.audience = {
       "mode" => audience_mode,

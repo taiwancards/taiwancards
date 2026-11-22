@@ -10,7 +10,7 @@ const MAIN_SLOT = "§MAIN§";
 const CSS_SLOT = "§CSS§";
 const JS_SLOT = "§JS§";
 
-const LOCALES = ["en", "ru", "vi"];
+const LOCALES = ["en", "ru", "vi", "de", "id"];
 const LANG = LOCALES.join("|");
 const SHELL_KEYS = ["page", "narrow", "medium", "wide"];
 

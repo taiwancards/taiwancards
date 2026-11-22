@@ -52,6 +52,8 @@ RSpec.describe Offline::Builder do
     build
 
     expect(renderer).to(have_received(:call).with("/variants", "en"))
+    expect(renderer).to(have_received(:call).with("/variants", "de"))
+    expect(renderer).to(have_received(:call).with("/variants", "id"))
     expect(renderer).not_to(have_received(:call).with("/variants", "vi"))
   end
 

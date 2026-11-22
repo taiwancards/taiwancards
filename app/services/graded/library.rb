@@ -5,17 +5,17 @@ module Graded
     DIR = "huayu/reader"
 
     Note = Data.define(:zh, :names) do
-      def name(locale) = names[locale.to_s].presence || names["en"]
+      def name(locale) = Locales.pick(names, locale)
     end
 
     Line = Data.define(:zh, :names, :grammar) do
-      def name(locale) = names[locale.to_s].presence || names["en"]
+      def name(locale) = Locales.pick(names, locale)
 
       def grammar_lessons = grammar.filter_map { |slug| Huayu::GrammarLessons.find(slug) }
     end
 
     Text = Data.define(:id, :tier, :topic, :titles, :lines, :notes) do
-      def title(locale) = titles[locale.to_s].presence || titles["en"]
+      def title(locale) = Locales.pick(titles, locale)
 
       def zh = titles["zh"]
 
@@ -59,7 +59,7 @@ module Graded
       end
 
       def build_line(raw)
-        Line.new(zh: raw.fetch("zh"), names: raw.slice(*Locales::ALL), grammar: Array(raw["grammar"]).freeze)
+        Line.new(zh: raw.fetch("zh"), names: raw.slice(*Locales::STORED), grammar: Array(raw["grammar"]).freeze)
       end
 
       def build(tier, raw)
@@ -69,7 +69,9 @@ module Graded
           topic: raw["topic"].to_s,
           titles: raw.fetch("title", {}),
           lines: raw.fetch("lines", []).map { |line| build_line(line) },
-          notes: raw.fetch("notes", []).map { |note| Note.new(zh: note.fetch("zh"), names: note.slice(*Locales::ALL)) }
+          notes: raw.fetch("notes", []).map { |note|
+            Note.new(zh: note.fetch("zh"), names: note.slice(*Locales::STORED))
+          }
         )
       end
     end

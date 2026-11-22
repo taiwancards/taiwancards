@@ -70,7 +70,7 @@ module Huayu
     end
 
     def localized(entry, key)
-      Locales::ALL.to_h { |code| [code, entry["#{key}_#{code}"]] }.compact_blank.presence
+      Locales::STORED.to_h { |stored| [stored, entry["#{key}_#{stored}"]] }.compact_blank.presence
     end
   end
 end

@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { positionKey } from "lib/hotkeys";
 
 export default class extends Controller {
   static targets = ["output", "code", "radicals", "candidates", "key"];
@@ -35,7 +36,7 @@ export default class extends Controller {
   }
 
   keydown(event) {
-    const key = event.key;
+    const key = positionKey(event);
 
     if (/^[a-zA-Z]$/.test(key)) {
       event.preventDefault();

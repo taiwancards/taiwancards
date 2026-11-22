@@ -97,7 +97,7 @@ module Huayu
 
     def curated_meanings(row) = localized(row, "")
 
-    def localized(row, prefix) = Locales::ALL.to_h { |code| [code, row["#{prefix}#{code}"]] }.compact_blank
+    def localized(row, prefix) = Locales::STORED.to_h { |key| [key, row["#{prefix}#{key}"]] }.compact_blank
 
     def existing_index(texts)
       index = {}

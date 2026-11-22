@@ -6,7 +6,12 @@ module Huayu
     SOURCES = [
       {path: PATH, locale: "ru", kind: :character},
       {path: AppData.path("huayu/etymology_vi.json"), locale: "vi", kind: :character},
+      {path: AppData.path("huayu/etymology_de.json"), locale: "de", kind: :character},
+      {path: AppData.path("huayu/etymology_ind.json"), locale: "id", kind: :character},
+      {path: AppData.path("huayu/etymology_en.json"), locale: "en", kind: :character},
       {path: AppData.path("huayu/word_etymology_vi.json"), locale: "vi", kind: :word},
+      {path: AppData.path("huayu/word_etymology_de.json"), locale: "de", kind: :word},
+      {path: AppData.path("huayu/word_etymology_ind.json"), locale: "id", kind: :word},
       {path: AppData.path("huayu/word_etymology_en.json"), locale: "en", kind: :word},
       {path: AppData.path("huayu/word_etymology_ru.json"), locale: "ru", kind: :word}
     ].freeze
@@ -19,12 +24,20 @@ module Huayu
     end
 
     def self.translated(lexeme, field, locale = I18n.locale)
-      lexeme&.data&.dig(KEY, locale.to_s, field).presence
+      stored = lexeme&.data&.[](KEY)
+      return nil unless stored.is_a?(Hash)
+
+      Locales.pick(stored.transform_values { |fields| fields[field] }, locale).presence
+    end
+
+    def self.localized?(lexeme, locale = I18n.locale)
+      key = Locales.key(locale)
+      key != Locales::DEFAULT && FIELDS.any? { |field| lexeme&.data&.dig(KEY, key, field).present? }
     end
 
     def initialize(path: PATH, locale: "ru", kind: :character)
       @path = Pathname(path)
-      @locale = locale.to_s
+      @locale = Locales.key(locale)
       @kind = kind
     end
 

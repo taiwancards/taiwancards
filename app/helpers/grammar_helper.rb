@@ -2,9 +2,9 @@
 
 module GrammarHelper
   HAN_RUN = /(\p{Han}+)/
-  QUOTES = {"ru" => ["«", "»"], "en" => ["“", "”"]}.freeze
+  QUOTES = {"ru" => ["«", "»"], "en" => ["“", "”"], "de" => ["„", "“"], "id" => ["“", "”"]}.freeze
   ZH_RUN = /[\p{Han}][\p{Han}\p{Latin}0-9，、：；？！。…（）]*/
-  GLOSS = /«[^»]+»|“[^”]+”|"[^"]+"/
+  GLOSS = /«[^»]+»|“[^”]+”|„[^“]+“|"[^"]+"/
   SEPARATOR = /\s*(?:[—–-]\s*)?/
   INLINE_MAX = 3
   CONTINUATION = /\A[[:lower:]]/
@@ -37,7 +37,7 @@ module GrammarHelper
 
   def grammar_chip(lesson, locale = I18n.locale)
     title = lesson.title(locale).to_s
-    label, gist = title.split(" — ", 2)
+    label, gist = title.split(/ [—–] /, 2)
     return [lesson.head, title.truncate(CHIP_LENGTH, separator: " ")] if gist.blank?
 
     [label, gist.truncate(CHIP_LENGTH, separator: " ")]
@@ -118,7 +118,7 @@ module GrammarHelper
 
   def grammar_quote(text, locale = I18n.locale)
     open, close = QUOTES.fetch(locale.to_s, QUOTES["en"])
-    body = text.to_s.strip.sub(/\A[«"“]/, "").sub(/[»"”]\z/, "")
+    body = text.to_s.strip.sub(/\A[«"“„]/, "").sub(/[»"”“]\z/, "")
     tag.em("#{open}#{body}#{close}", class: "grammar-gloss")
   end
 

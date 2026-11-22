@@ -14,6 +14,8 @@ RSpec.describe Huayu::GrammarImporter do
       en: {"title" => "#{slug} in English", "body" => "body", "tip" => "tip"},
       ru: {"title" => "#{slug} по-русски", "body" => "тело", "tip" => "подсказка"},
       vi: {"title" => "#{slug} bằng tiếng Việt", "body" => "thân bài", "tip" => "mẹo"},
+      de: {"title" => "#{slug} auf Deutsch", "body" => "Text", "tip" => "Tipp"},
+      ind: {"title" => "#{slug} dalam bahasa Indonesia", "body" => "isi", "tip" => "kiat"},
       examples: [],
       excluded:,
       supplementary:,
@@ -30,7 +32,16 @@ RSpec.describe Huayu::GrammarImporter do
     lexeme = Lexeme.find_by(kind: :grammar, text: "繫動詞")
 
     expect(result.imported).to(eq(1))
-    expect(lexeme.meanings).to(include("en" => "shi in English", "ru" => "shi по-русски"))
+    expect(lexeme.meanings).to(
+      include(
+        "en" => "shi in English",
+        "ru" => "shi по-русски",
+        "vi" => "shi bằng tiếng Việt",
+        "de" => "shi auf Deutsch"
+      )
+    )
+    expect(lexeme.meanings).to(include("ind" => "shi dalam bahasa Indonesia"))
+    expect(lexeme.meanings).not_to(have_key("id"))
     expect(lexeme.data).to(include("grammar_slug" => "shi", "head" => "是", "tbcl_grade" => 1))
   end
 
