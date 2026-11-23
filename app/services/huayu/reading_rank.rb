@@ -29,6 +29,15 @@ module Huayu
       "啦" => {"˙ㄌㄚ" => 10.0}
     }.freeze
 
+    COMPONENTS = {
+      "丨" => {"ㄍㄨㄣˇ" => 10.0},
+      "丶" => {"ㄓㄨˇ" => 10.0},
+      "厂" => {"ㄏㄢˇ" => 10.0},
+      "宀" => {"ㄇㄧㄢˊ" => 10.0},
+      "广" => {"ㄧㄢˇ" => 10.0},
+      "隶" => {"ㄉㄞˋ" => 10.0}
+    }.freeze
+
     def weights
       @weights ||= begin
         table = Hash.new { |all, id| all[id] = {} }
@@ -48,7 +57,7 @@ module Huayu
       readings = lexeme.reading_set
       return readings if readings.size < 2
 
-      floors = SPOKEN[lexeme.text] || {}
+      floors = SPOKEN[lexeme.text] || COMPONENTS[lexeme.text] || {}
       return readings if floors.empty? && !decisive?(usage)
 
       audio = audio_index(lexeme.text)

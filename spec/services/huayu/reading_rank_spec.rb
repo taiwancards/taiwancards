@@ -110,6 +110,20 @@ RSpec.describe Huayu::ReadingRank do
     expect(described_class.new.order(dou.reload).first["zhuyin"]).to(eq("ㄉㄡ"))
   end
 
+  it "leads a component with its own reading, not with the one of a simplified look-alike" do
+    cliff = create(
+      :lexeme,
+      :character,
+      text: "厂",
+      readings: {"pinyin" => "chǎng", "zhuyin" => "ㄔㄤˇ"},
+      data: {
+        "readings" => [{"pinyin" => "chǎng", "zhuyin" => "ㄔㄤˇ"}, {"pinyin" => "hǎn", "zhuyin" => "ㄏㄢˇ"}]
+      }
+    )
+
+    expect(described_class.new.order(cliff).first["zhuyin"]).to(eq("ㄏㄢˇ"))
+  end
+
   it "leads with the everyday reading when the rare one owns more compounds" do
     ping = create(
       :lexeme,
