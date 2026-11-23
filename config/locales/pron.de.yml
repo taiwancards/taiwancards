@@ -80,7 +80,7 @@ de:
       metrics: Details
       copy: Kopieren
       sandhi: "Achtung: Das wird nicht so gelesen, wie es dasteht –"
-      warmup_why: "Ohne Aufwärmen wird der Ton nach der Form der Kurve beurteilt, aber nicht nach der absoluten Höhe: Ein Bass und ein Sopran singen denselben Ton auf verschiedenen Frequenzen. Das Aufwärmen liefert den Bezugspunkt."
+      warmup_why: "Ohne Aufwärmen wird der Ton nach der Form der Kurve beurteilt, aber nicht nach der absoluten Höhe: Ein Bass und ein Sopran sprechen denselben Ton in ganz verschiedener Stimmlage. Das Aufwärmen liefert den Bezugspunkt."
     codes:
       near: Kein klarer Fehler, aber die Referenz ist noch nicht erreicht.
       tone:
@@ -174,7 +174,7 @@ de:
       "1": Hoch und eben, bis zum Ende auf einer Höhe gehalten – wie ein gesungener Ton. Das Deutsche lässt die Stimme am Wortende gern absinken; hier fühlt es sich deshalb an, als hieltest du den Ton zu lange.
       "2": Steigend, wie ein erstauntes „Was?“ oder „Echt?“. Setz tiefer an, als es sich natürlich anfühlt, sonst fehlt der Raum zum Steigen.
       "3": "In Taiwan ist das ein tiefer Ton: Geh ans untere Ende deiner Stimme und bleib dort, oft mit einem Knarren – wie bei einem skeptischen „Hm …“. Den Wiederanstieg aus dem Lehrbuch (214) gibt es in normaler Rede nicht."
-      "4": Steil von oben nach unten, wie ein knappes „Halt!“ oder „Nein!“. Setz hoch an und fall schnell.
+      "4": Steil von oben nach unten, wie ein knappes „Halt!“ oder „Nein!“. Setz hoch an und lass die Stimme schnell fallen.
       "5": "Neutral: kurz, schwach, ohne eigene Melodie – die Höhe kommt von der Silbe davor. So leicht wie das e in „bitte“."
     initials:
       b: Stimmlos und unbehaucht, wie das p in „Spiel“ – nicht das b in „Ball“.

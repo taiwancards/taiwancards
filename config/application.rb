@@ -36,7 +36,7 @@ module Taiwancards
     config.time_zone = "Asia/Taipei"
     config.active_record.default_timezone = :utc
 
-    config.i18n.available_locales = %i[en ru vi de id]
+    config.i18n.available_locales = %i[en vi id de ru]
     config.i18n.default_locale = :en
     config.i18n.fallbacks = [:en]
 

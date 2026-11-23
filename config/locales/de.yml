@@ -124,7 +124,7 @@ de:
     hokkien: Taiwanisch (Hokkien)
     hanzi: Langzeichen
   glossary:
-    fsrs: "Ein Algorithmus für verteilte Wiederholung: Aus deinen eigenen Bewertungen sagt er voraus, wann du eine Karte gleich vergessen würdest, und zeigt sie dir genau dann."
+    fsrs: "Ein Algorithmus für verteilte Wiederholung: Aus deinen eigenen Bewertungen berechnet er den Moment, kurz bevor du eine Karte vergisst, und zeigt sie dir genau dann."
     tocfl: Taiwans staatliche Mandarin-Prüfung mit ihrer Stufenskala von Novice bis Band C.
     tbcl: "Die Taiwan Benchmarks for the Chinese Language: Taiwans staatlicher Standard mit sieben Stufen für den Unterricht von Mandarin als Fremdsprache."
     zhuyin: Taiwans Lautschrift, ㄅㄆㄇㄈ. Kinder lernen sie statt Pinyin, und mit ihr wird getippt.
@@ -188,7 +188,7 @@ de:
       badge_contour: Tonmuster
       badge_repeat: wiederholter Ton, meist vermieden
       badge_strokes: Striche
-      disclaimer: "Das ist kein fertiger Name und keine persönliche Empfehlung für dich. Es ist Registerstatistik: welche Zeichen und Kombinationen häufiger vorkommen als andere. Einen Namen wählt man gemeinsam mit jemandem, der mit der Sprache aufgewachsen ist – nimm diese Liste als Material für dieses Gespräch."
+      disclaimer: "Das ist kein fertiger Name und keine persönliche Empfehlung für dich. Es ist eine Statistik aus dem Haushaltsregister: welche Zeichen und Kombinationen häufiger vorkommen als andere. Einen Namen wählt man gemeinsam mit jemandem, der mit der Sprache aufgewachsen ist – nimm diese Liste als Material für dieses Gespräch."
       results_note: Fünf Vorschläge, jeweils mit Begründung. Ändere deine Antworten, und die Liste baut sich neu auf.
       why_heading: Warum diese Kombination funktioniert
       vibes:
@@ -203,16 +203,16 @@ de:
       why:
         meaning_two: Der Name sagt zweierlei – %{first}, %{second}.
         meaning_one: Beide Zeichen ziehen in dieselbe Richtung – %{first} –, und dadurch wirkt der Name wie aus einem Guss.
-        meaning_single: Die Bedeutung trägt %{text} – %{first}; das andere Zeichen steht wegen des Klangs da.
+        meaning_single: Die Bedeutung trägt %{text} – %{first}; das andere Zeichen sorgt für den Klang.
         meaning_solo: "Ein einziges Zeichen, und es steht für %{first}: Einsilbige Vornamen sind in Taiwan seltener, darum bleibt dieser im Gedächtnis."
         meaning_plain: "Diese Zeichen sind nicht nach dem Wörterbuch ausgesucht: Wer in Taiwan einen solchen Namen liest, nimmt ihn als Stimmung wahr, nicht als Satz."
         sound_common: Die Melodie %{tones} gehört zu den häufigsten Formen eines taiwanischen Namens, und sie geht ohne Stolpern über die Lippen.
         sound_rare: "Das Tonmuster %{tones} ist ungewöhnlich: Der Name klingt eigenständig und bleibt trotzdem leicht auszusprechen."
         sound_repeat: Zwei gleiche Töne hintereinander vermeidet man in Taiwan – zusammen klingt das flach.
         pair_strong: "Diese beiden Zeichen gehören wirklich zusammen: Das Paar kommt im Register weit häufiger vor, als der Zufall erwarten ließe. Der Name wirkt deshalb echt und nicht zusammengebaut."
-        pair_fresh: Für diese Kombination gibt es im Register kein fertiges Vorbild – der Name wirkt wie deiner und nicht wie einer aus einer Liste.
+        pair_fresh: Für diese Kombination gibt es im Register kein fertiges Vorbild – der Name wirkt wie dein eigener und nicht wie einer aus einer Liste.
         era_match: Beide Zeichen sind in deiner Generation gebräuchlich – weder ein Großelternname noch ein Babyname.
-        era_older: "Die Zeichen sind älter als deine Generation: Der Name trägt die Zeit deiner Eltern in sich, und in Taiwan hört man darin eher Solidität."
+        era_older: "Die Zeichen sind älter als deine Generation: Der Name trägt die Zeit deiner Eltern in sich, und das wirkt in Taiwan eher solide."
         era_recent: So heißen Kinder, die vor Kurzem geboren sind – der Name wird betont jung klingen.
         rare_char: "Das Zeichen %{text} ist selten: Den Namen merkt man sich sofort, aber man wird dich fragen, wie er geschrieben wird."
         gender_male: Klingt eindeutig männlich.
@@ -257,7 +257,7 @@ de:
     characters:
       heading: Zeichen in Vornamen
       body: Sortiert danach, wie oft sie in eingetragenen Vornamen vorkommen. Jedes ist mit seinem Wörterbucheintrag verlinkt, damit du nachlesen kannst, was es wirklich bedeutet.
-      caution: Ein Zeichen bringt seine Wörterbuchbedeutung mit, seinen Klang und die Gesellschaft, in der es meist steht. Die Bedeutung allein macht noch keinen guten Namen – Homophone, Stilebene und das Zusammenspiel mit dem Familiennamen zählen ebenso. Deshalb zeigt diese Seite Belege statt Vorschlägen.
+      caution: Ein Zeichen bringt seine Wörterbuchbedeutung mit, seinen Klang und die Zeichen, mit denen es gewöhnlich zusammensteht. Die Bedeutung allein macht noch keinen guten Namen – Homophone, Stilebene und das Zusammenspiel mit dem Familiennamen zählen ebenso. Deshalb zeigt diese Seite Belege statt Vorschlägen.
       none: Zu dieser Filterkombination passt nichts.
     given:
       heading: Vornamen im Register
@@ -331,7 +331,7 @@ de:
     progress: Fortschritt
     settings: Einstellungen
     language: Sprache
-    interface_language: "Die Sprache der Oberfläche und aller Inhalte darin. Sie wechselt mehr als Buttons und Menüs: Wortbedeutungen, Anmerkungen, Grammatikerklärungen und Analysen sind in jeder Sprache geschrieben und wechseln mit."
+    interface_language: "Die Sprache der Oberfläche und aller Inhalte darin. Umgestellt werden nicht nur Buttons und Menüs: Wortbedeutungen, Anmerkungen, Grammatikerklärungen und Analysen sind in jeder Sprache eigens geschrieben und wechseln mit."
     hanzi_font_toggle: Schrift der Zeichen
     hanzi_font_hint: "Schrift der Zeichen. An: Kaishu, die kalligrafische Regelschrift, die die Striche so zeigt, wie eine Hand sie schreibt. Aus: eine schlichte serifenlose Schrift. Standardmäßig an."
     readings_toggle: Zhuyin und Pinyin
@@ -342,7 +342,7 @@ de:
     script_setup_hint: "Wie die Sprache angezeigt wird: Schrift, Pinyin, Wiedergabetempo, das Wort aus China, wie viel eine Wörterbuchseite zeigt – und die Sprache, in der du die Website liest."
     china_toggle: Wort aus China zeigen
     china_hint: "Das Wort, das in China verwendet wird. An: Eine kleine Zeile auf der Karte zeigt, was man in China stattdessen sagt. Aus: nichts weiter. Standardmäßig aus – diese App lehrt das taiwanische Wort, das aus China dient nur zum Vergleich."
-    readings_hint: "Lesungen über den Zeichen, in drei Stufen: nur Zhuyin, Zhuyin mit Pinyin und gar nichts. Pinyin gibt es nie ohne Zhuyin – Taiwan liest mit Zhuyin. Standardmäßig nur Zhuyin; was du wählst, gilt auf jeder Seite, bis du es änderst."
+    readings_hint: "Lesungen über den Zeichen, in drei Stufen: nur Zhuyin, Zhuyin mit Pinyin und gar nichts. Pinyin gibt es nie ohne Zhuyin – in Taiwan liest man mit Zhuyin. Standardmäßig nur Zhuyin; was du wählst, gilt auf jeder Seite, bis du es änderst."
     locale_switch: DE
     textbook: Lehrbuchlektionen
     phrase_drills: Sprechsätze
@@ -402,11 +402,11 @@ de:
     group_language: Über die Sprache
     group_settings: Einstellungen
     group_lede:
-      learn: Deine tägliche Lernliste, deine Stapel, eigene Texte lesen, der Einstufungstest und der Prüfungsplan.
+      learn: Deine tägliche Lernliste, deine Stapel, „Texte lesen“, der Einstufungstest und der Prüfungsplan.
       dictionary: Zeichen, Wörter, Korpussätze, Redewendungen, Zählwörter und die Stufenlisten.
       language: Zhuyin und seine Laute, Töne, der Aufbau der Zeichen, Zahlen, Grammatik, taiwanische Lesungen.
       practice: Laut- und Tonübungen, Aussprache, Handschrift, Tippen, Cangjie und Probeprüfungen.
-      taiwan: Wortschatz für den Alltag, was die Leute wirklich sagen, die MRT Taipeh und der Kalender.
+      taiwan: Wortschatz für den Alltag, was die Leute wirklich sagen, die MRT in Taipeh und der Kalender.
       settings: Dein Profil, Statistiken, Anzeigeoptionen und die Hilfeseiten.
     item_lede:
       course: Sechzig Lektionen von „Hallo“ bis B1 – Dialoge, Wörter, Grammatik, Übungen.
@@ -427,7 +427,7 @@ de:
       dict: "Wörter und Kollokationen: nummerierte Bedeutungen, Thesaurus, Zählwörter, Korpusbeispiele."
       sentences: Das Satzkorpus, filterbar nach Stufe, Stilebene und danach, wie genau die Stufe passt.
       chengyu: 成語-Redewendungen, filterbar nach Ton, Typ und Schwierigkeitsbereich.
-      liangci: "Zählwörter: wozu sie gehören, Beispiele aus dem echten Leben und ein Spiel, damit sie sitzen."
+      liangci: "Zählwörter: zu welchen Wörtern sie passen, Beispiele aus dem echten Leben und ein Spiel, damit sie sitzen."
       tbcl: TBCL-Wortlisten in sieben Stufen – dein Fortschritt ist hervorgehoben.
       tocfl: TOCFL-Wortlisten nach Stufe – dein Fortschritt ist hervorgehoben.
       practice-zhuyin: Woraus eine Silbe besteht – Anlaute, Auslaute, Töne und die typischen Verwechslungen.
@@ -443,7 +443,7 @@ de:
       practice-zhuyin-trainer: "Zhuyin nach Gehör, in Gruppen: Die nächste Gruppe kommt erst, wenn du diese kannst."
       practice-drill: Zhuyin gegen Pinyin im Schnelldurchlauf; Zeichen, die noch nicht sitzen, kommen öfter dran.
       tones-drill: Töne nach Gehör mit Studioaufnahmen, abwechselnd Männer- und Frauenstimmen.
-      pronunciation: Sprich ins Mikrofon und sieh Silbe für Silbe, wo Ton und Laut abgedriftet sind.
+      pronunciation: Sprich ins Mikrofon und sieh Silbe für Silbe, wo Ton und Laut danebenlagen.
       writing: Schreib ein Zeichen aus dem Gedächtnis, ganz ohne Vorlage; das Ergebnis fließt in die Fertigkeit Schreiben ein.
       practice-typing: Die taiwanische Zhuyin-Tastaturbelegung, bis das Tippen im Muskelgedächtnis sitzt.
       cangjie: "Cangjie-Eingabe: Zerlege ein Zeichen in Komponenten und tippe seinen Code."
@@ -451,7 +451,7 @@ de:
       everyday: "Wortschatz nach Situation: Essen, Getränke, Verkehr, Behördengänge, Wetter, Slang."
       phrases: 186 Satzmuster in 17 Situationen, darunter die Hälfte, die du nur verstehen musst.
       notices: Schilder und Durchsagen, die dir auf der Straße und in Bus und Bahn begegnen.
-      metro: Der Netzplan der MRT Taipeh, jede Station mit Bedeutung und Lesung.
+      metro: Der Netzplan der MRT in Taipeh, jede Station mit Bedeutung und Lesung.
       calendar: Der Mondkalender, Feste, Wörter der Jahreszeiten und zwei Datumsumrechner.
       medicine: Wie du dich in der Apotheke und im Krankenhaus verständlich machst.
       culture: Kurze Notizen dazu, wie das Leben in Taiwan funktioniert – von Schichtplänen über Kassenbons bis zu Festen.
@@ -767,9 +767,9 @@ de:
     right: Richtig!
     wrong: Das ist es nicht. Hör noch einmal hin.
     tones:
-      first: "1. Ton: hoch und gleichbleibend, wie ein gesungener Ton."
+      first: "1. Ton: hoch und gleichbleibend, wie beim Singen gehalten."
       second: "2. Ton: steigend, wie ein erstauntes „Echt?“"
-      third: "3. Ton: tief, die Stimme sinkt nach unten."
+      third: "3. Ton: tief, die Stimme sinkt ab."
       fourth: "4. Ton: fällt scharf ab, wie ein bestimmtes „Nein!“"
       neutral: "Neutraler Ton: kurz und leicht."
     tone_shift_third: "Zwei 3. Töne hintereinander: Der erste steigt wie ein 2. Ton. Sprich es in einem Atemzug: %{word}."
@@ -877,7 +877,7 @@ de:
         title:
           one: Karte, um wieder in den Rhythmus zu kommen
           other: Karten, um wieder in den Rhythmus zu kommen
-        body: Eine Woche Pause kommt vor, und dein Fortschritt ist gespeichert. Wir haben eine kleine Portion der wichtigsten Karten ausgesucht – etwa %{minutes} Min. Der Rest folgt nach und nach.
+        body: Eine Woche Pause kann vorkommen. Dein Fortschritt ist gespeichert. Wir haben eine kleine Portion der wichtigsten Karten ausgesucht – etwa %{minutes} Min. Der Rest folgt nach und nach.
         button: Zurück zu meinen Wörtern
       last_call:
         subject: Alles, was du gelernt hast, ist gespeichert
@@ -1071,7 +1071,7 @@ de:
       no_taiwan_word: noch nicht in unserem Wörterbuch
       converted_lede: In Kurzzeichen geschrieben; für jedes gab es im Wörterbuch genau eine taiwanische Schreibung.
       missing_lede: Nicht in unserem Wörterbuch – meist eine Wendung, ein Name oder ein Tippfehler. Diese Wörter werden weggelassen.
-      duplicates_lede: Dasselbe Wort kam mehrmals vor; es kommt nur einmal hinein.
+      duplicates_lede: Dasselbe Wort kam mehrmals vor; es wird nur einmal aufgenommen.
       list_title: Wörter für den Stapel (%{count})
       covered: wird schon gelernt oder steckt in einem Stapel
       skip_covered:
@@ -1097,7 +1097,7 @@ de:
     paste_hint: Ein Wort pro Zeile oder durch Kommas getrennt – wie du magst. Du kannst auch Fließtext einfügen, das System zerlegt ihn dann in Wörter. Die Übersetzungen kommen aus unserem Wörterbuch, du tippst sie nie selbst ein.
     file_label: "… oder lade eine Datei mit der Liste hoch"
     stat_cards: "%{count} Karten"
-    stat_duplicates: "%{count} Doppelte entfernt"
+    stat_duplicates: "%{count} Duplikate entfernt"
     stat_known: "%{count} schon bekannt"
     stat_missing: "%{count} nicht gefunden"
     stat_selected_html: "%{count} ausgewählt"
@@ -1148,7 +1148,7 @@ de:
     paste_label: Text einfügen
     paste_placeholder: Füge einen beliebigen Text auf Mandarin ein – Schilder, Chats, Artikel …
     empty: Noch keine Stapel. Erstelle einen aus einem beliebigen Text.
-    empty_text: In diesem Text wurden keine bekannten Wörter gefunden.
+    empty_text: In diesem Text wurden keine Wörter aus unserem Wörterbuch gefunden.
     created: Stapel erstellt.
     updated: Stapel aktualisiert.
     deleted: Stapel gelöscht.
@@ -1233,12 +1233,12 @@ de:
     coverage_tbcl: TBCL-Stufen
     coverage_hint: dunkel = bekannt, hell = angefangen
     skills: Fähigkeiten
-    skills_hint: bekannt von angefangen, je Fertigkeit
+    skills_hint: bekannt / angefangen, je Fertigkeit
     nothing_yet: Noch nichts angefangen.
     learned_by_week: Gelernt pro Woche
-    learned_hint: Wörter, die zum ersten Mal einen Tag oder länger gehalten haben
+    learned_hint: Wörter, die zum ersten Mal einen Tag oder länger im Gedächtnis geblieben sind
     forecast: Nächste 7 Tage
-    forecast_hint: fällige Wiederholungen pro Tag; überfällige zählen für heute
+    forecast_hint: fällige Wiederholungen pro Tag; überfällige zählen zu heute
     reviews_hint: Wiederholungen der letzten zwei Wochen
     leeches_hint: Wörter, die du immer wieder vergisst; schau sie dir neu an
     answer_time: Ø Antwortzeit
@@ -1277,7 +1277,7 @@ de:
     create: Gruppe erstellen
     created: Gruppe erstellt.
     updated: Gruppe umbenannt.
-    deleted: Gruppe gelöscht. Die Stapel darin sind geblieben.
+    deleted: Gruppe gelöscht. Die Stapel darin bleiben erhalten.
     delete_confirm: Diese Gruppe löschen? Die Stapel darin bleiben unter „Meine Stapel“.
     too_many: Du hast schon die Höchstzahl an Gruppen.
     empty: Noch keine Gruppen. Ein Stapel kann in mehreren Gruppen gleichzeitig sein.
@@ -1533,7 +1533,7 @@ de:
     export_full: Alle meine Daten herunterladen
     mobile_tabs: Untere Leiste auf dem Handy
     google_backup_hint: Verbinde dein Google-Konto, dann meldest du dich mit einem Tippen an. Die Sicherung in Google Drive ist ein eigener Schritt, den du später im Tab „Sicherungen“ machen kannst.
-    font_recommendation: "Schriftart und Pinyin stellst du jetzt in der oberen Leiste ein: Der Knopf 臺 wechselt zwischen der Pinselschrift Kaishu und einer schlichten serifenlosen Schrift, der Knopf ㄅa blendet das Pinyin ein oder aus. Beides merkt sich dieser Browser. Voreingestellt ist Kaishu, und dabei solltest du bleiben: Diese Schrift zeigt ein Zeichen so, wie man es von Hand schreibt – und genau so lernt man es in Taiwan in der Schule."
+    font_recommendation: "Schriftart und Pinyin stellst du jetzt in der oberen Leiste ein: Der Button 臺 wechselt zwischen der Pinselschrift Kaishu und einer schlichten serifenlosen Schrift, der Button ㄅa blendet das Pinyin ein oder aus. Beides merkt sich dieser Browser. Voreingestellt ist Kaishu, und dabei solltest du bleiben: Diese Schrift zeigt ein Zeichen so, wie man es von Hand schreibt – und genau so lernt man es in Taiwan in der Schule."
     security: Zugang
     save_failed: Nicht gespeichert
     saved: Gespeichert
@@ -1618,7 +1618,7 @@ de:
       modern: Heute
       oracle: Orakelknochen
       oracle_zh: 甲骨文
-      bronze: Bronze
+      bronze: Bronzeinschrift
       bronze_zh: 金文
       seal: Siegelschrift
       seal_zh: 篆書
@@ -1632,7 +1632,7 @@ de:
     semantics_title: Bedeutungsträger
     semantics_lede: Der Bestandteil gibt das Bedeutungsfeld vor. Neben der freien Form steht die gestauchte – so erscheint er tatsächlich im Zeichen.
     series_title: Lautreihen
-    series_lede: Zeichen mit gemeinsamem Lautträger. Achte darauf, wo die Lesung gleich bleibt und wo sie abdriftet.
+    series_lede: Zeichen mit gemeinsamem Lautträger. Achte darauf, wo die Lesung gleich bleibt und wo sie abweicht.
     phonetic_label: Lautträger
     walkthrough_title: Ein Zeichen lesen, das du noch nie gesehen hast
     misses: greift hier nicht
@@ -1864,7 +1864,7 @@ de:
     filters_none: alle Stufen
     hokkien_source: "Auf Taiwanisch:"
     taigi_native: "Die Zeichen werden nicht auf Mandarin gelesen: So schreibt man das Wort auf Taiwanisch (Hokkien), und in dieser Sprache wird es auch gesprochen. Den ungefähren Mandarin-Klang siehst du neben dem Stichwort."
-    taigi_phonetic: "Die Zeichen wurden nach ihrem Klang ausgewählt, nicht nach ihrer Bedeutung: Lies sie mit ihren gewöhnlichen Mandarin-Lesungen, und heraus kommt das taiwanische Wort. Was die Zeichen selbst bedeuten, spielt keine Rolle."
+    taigi_phonetic: "Die Zeichen wurden nach ihrem Klang ausgewählt, nicht nach ihrer Bedeutung: Lies sie mit ihren gewöhnlichen Mandarin-Lesungen, und heraus kommt das Wort auf Taiwanisch (Hokkien). Was die Zeichen selbst bedeuten, spielt keine Rolle."
     taigi_say: Klingt ungefähr wie
     no_corpus: keine Schriftdaten
     no_corpus_hint: "Dieses Wort lebt in der gesprochenen Sprache: In unseren schriftlichen Korpora kommt es nicht vor, deshalb gibt es keine gemessene Korpushäufigkeit."
@@ -1974,7 +1974,7 @@ de:
     taiwan_title: Was an den Tönen in Taiwan anders ist
     taiwan_body: Die Unterschiede liegen nicht im System – es sind dieselben vier Töne –, sondern in der Art, wie sie gesprochen werden.
     taiwan_points:
-      range: Der Stimmumfang ist insgesamt tiefer und enger. Taiwanische Sprecher kommen mit einem kleineren Tonhöhenabstand aus als Sprecher in China; deshalb klingen die Töne zurückhaltend, aber nicht flach.
+      range: Der Stimmumfang ist insgesamt tiefer und enger. Taiwanische Sprecher kommen mit einem kleineren Tonhöhenbereich aus als Sprecher in China; deshalb klingen die Töne zurückhaltend, aber nicht flach.
       second: Der zweite Ton steigt weniger hoch. Oft setzt er außerdem mit einer leichten Senke an und ähnelt in der Form dann dem dritten Ton aus dem Lehrbuch.
       third: Der dritte Ton kommt aus der tiefen, knarrenden Lage nicht wieder nach oben. Den vollen Verlauf 214 spricht man in Taiwan praktisch nicht.
       neutral: Der neutrale Ton kommt seltener vor; Endsilben behalten in der Regel ihren eigenen Ton.
@@ -1984,7 +1984,7 @@ de:
     sandhi_lede: "Geschrieben wird der eine Ton, gesprochen ein anderer. Der geschriebene Ton ändert sich nicht: Wörterbuch, Zhuyin und Pinyin behalten das Original."
     third_title: Dritter Ton vor drittem Ton
     third_body: Folgen zwei dritte Töne aufeinander, wird der erste als zweiter gesprochen. 你好 schreibt man ㄋㄧˇ ㄏㄠˇ, es klingt aber wie ní hǎo. Die Regel richtet sich nach dem Gesprochenen und nicht nach der Wörterbuchform, sie gilt also auch über Wortgrenzen hinweg.
-    third_three: "Bei drei dritten Tönen hintereinander hängt das Ergebnis davon ab, wie sich die Wendung dem Sinn nach gliedert. 我很好 wird meist zu wó hén hǎo, weil 很好 enger zusammengehört. Auswendig lernen muss man nichts: Die Regel greift bei genau den Silben, die du beim Sprechen tatsächlich zusammenziehst."
+    third_three: "Bei drei dritten Tönen hintereinander hängt das Ergebnis davon ab, wie sich die Wendung dem Sinn nach gliedert. 我很好 wird meist zu wó hén hǎo, weil 很好 enger zusammengehört. Auswendig lernen muss man nichts: Die Regel greift bei genau den Silben, die du beim Sprechen tatsächlich zu einer Einheit verbindest."
     yi_title: 一 und 不
     yi_body: Der Ton dieser beiden Silben hängt davon ab, was folgt.
     yi_rules:
@@ -1995,7 +1995,7 @@ de:
       bu_other: "不 überall sonst – vierter: 不好 bù hǎo, 不能 bù néng."
     practice_title: Üben
     practice_body: "Unten findest du ein Hörtraining: Eine Silbe erklingt, und du benennst den Ton. Es wird kein Fortschritt gespeichert und nichts fließt in deine Wiederholungen ein – reines Üben, das du jederzeit abbrechen kannst."
-    practice_pending: "Töne laut zu üben ist noch nicht möglich: Das kommt, sobald eine Spracherkennung mit Verlaufsprüfung nach taiwanischer Norm angebunden ist. Bis dahin wird nur das Erkennen nach Gehör trainiert."
+    practice_pending: "Töne laut zu üben ist noch nicht möglich: Das kommt, sobald eine Spracherkennung angebunden ist, die den Tonverlauf nach taiwanischer Norm prüft. Bis dahin wird nur das Erkennen nach Gehör trainiert."
     drill:
       title: Ton-Training nach Gehör
       lede: "Eine Silbe erklingt, und du benennst den Ton. Nichts wird gespeichert, deine Wiederholungen bleiben unberührt: reines Üben, das du jederzeit beenden kannst."
@@ -2023,7 +2023,7 @@ de:
     check: Prüfen
     next: Weiter
     show_translation: Übersetzung
-    keyboard_hint: Zhuyin auf dem Bildschirm. Auch deine eigene Tastatur gibt mit denselben Tasten Zhuyin ein.
+    keyboard_hint: Zhuyin auf dem Bildschirm. Auch auf deiner eigenen Tastatur ergeben dieselben Tasten Zhuyin.
     average: Durchschnitt der Runde
     again: Noch zehn
     empty: Auf dieser Stufe gibt es noch keine Aufnahmen.
@@ -2208,7 +2208,7 @@ de:
     arming: Einen Moment – das Mikrofon stellt sich ein …
     repeat_hint: Sag es %{count}-mal, mit Pausen – lass dir Zeit.
     takes_done: "%{done} von %{total} gehört – sag es noch einmal, ganz in Ruhe."
-    takes_full: Alle %{total} gehört – wird jetzt bewertet.
+    takes_full: Alle %{total} gehört – jetzt wird bewertet.
     takes_finish: Fertig · %{done} von %{total}
     takes_waiting: Ich höre zu – sag es noch einmal, wenn du so weit bist.
     heard_takes: Bewertet aus %{count} Durchgängen.
@@ -2258,7 +2258,7 @@ de:
             note: 零 wirkt auch über die Grenze von 萬 hinweg
       liang:
         title: 兩 oder 二 – das hängt vom Folgenden ab
-        body: "二 ist die Ziffer selbst: beim Zählen, in Nummern, in 十二 und in 二十. 兩 steht dort, wo die Zwei etwas abzählt: vor einem Zählwort und vor 百, 千, 萬, 億. Es gibt eine wichtige Ausnahme: Vor 十 steht immer 二."
+        body: "二 ist die Ziffer selbst: beim Zählen, in Nummern, in 十二 und in 二十. 兩 steht dort, wo die Zwei eine Menge angibt: vor einem Zählwort und vor 百, 千, 萬, 億. Es gibt eine wichtige Ausnahme: Vor 十 steht immer 二."
         rows:
           - huayu: 二
             value: "2"
@@ -2347,7 +2347,7 @@ de:
       alveolar: "Zungenspitzenlaute: ㄉㄊㄋㄌ"
       velar: "Zungenrückenlaute: ㄍㄎㄏ"
       palatal: "Gaumenlaute: ㄐㄑㄒ"
-      retroflex: "Zurückgebogene Zunge: ㄓㄔㄕㄖ"
+      retroflex: "Laute mit zurückgebogener Zunge: ㄓㄔㄕㄖ"
       sibilant: "Zischlaute: ㄗㄘㄙ"
       medial: "Gleitlaute: ㄧㄨㄩ"
       open: "Einfache Vokale: ㄚㄛㄜㄝ"
@@ -2407,7 +2407,7 @@ de:
     blocks:
       labial:
         title: Lippen
-        body: Die Lippen bilden den Laut, bei ㄈ berührt die Unterlippe die oberen Zähne. Das Erste, was Kinder in Taiwan lernen, und der Anfang des ㄅㄆㄇㄈ-Lieds.
+        body: "Die Lippen bilden diese Laute: Bei ㄅ ㄆ ㄇ treffen sich beide Lippen, bei ㄈ berührt die Unterlippe die oberen Zähne. Das Erste, was Kinder in Taiwan lernen, und der Anfang des ㄅㄆㄇㄈ-Lieds."
       alveolar:
         title: Zungenspitze
         body: Die Zunge drückt hinter die oberen Zähne. 的, 他, 你 und 了 fangen alle hier an.
@@ -2475,7 +2475,7 @@ de:
       title: Zhuyin ↔ Pinyin
       direction_zhuyin: Zhuyin → Pinyin
       direction_pinyin: Pinyin → Zhuyin
-      systems_html: "Zhuyin, das sind 37 Zeichen, mit denen Taiwan Laute schreibt. Jedes wird immer gleich gelesen, und eine eigene Lesart kannst du dir nicht ausdenken – du lernst einfach, wie es klingt. Pinyin schreibt dieselben Laute mit lateinischen Buchstaben; es ist eine Stütze, mehr nicht. So gehst du vor: Arbeite dich durch die Tabellen unten, bis du die Zeichen am Klang erkennst."
+      systems_html: "Zhuyin, das sind 37 Zeichen, mit denen Taiwan Laute schreibt. Jedes wird immer gleich gelesen, und du kannst nichts hineinlesen, was du von lateinischen Buchstaben gewohnt bist – du lernst einfach, wie es klingt. Pinyin schreibt dieselben Laute mit lateinischen Buchstaben; es ist eine Stütze, mehr nicht. So gehst du vor: Arbeite dich durch die Tabellen unten, bis du die Zeichen am Klang erkennst."
       stage_hint: "Geh der Reihe nach vor: zuerst die Konsonanten, dann Vokale und Gleitlaute, dann die vollständigen Reime und erst dann ganze Silben."
       stages:
         consonants: Konsonanten
@@ -2517,7 +2517,7 @@ de:
         jiu:
           pinyin: jiu
           zhuyin: ㄐㄧㄡ
-          why: Der Reim ist -iou; das Pinyin lässt den mittleren Vokal weg, um die Schreibung kurz zu halten. Zhuyin behält ㄧ und ㄡ beide.
+          why: "Der Reim ist -iou; das Pinyin lässt den mittleren Vokal weg, um die Schreibung kurz zu halten. Zhuyin behält beide: ㄧ und ㄡ."
         hui:
           pinyin: hui
           zhuyin: ㄏㄨㄟ
@@ -3172,7 +3172,7 @@ de:
   licenses:
     moe_notice: 使用說明 – die offiziellen Nutzungshinweise, vollständig wiedergegeben, wie es die Lizenz verlangt
     title: Lizenzen und Danksagungen
-    intro: Hier steht alles, worauf TaiwanCards aufbaut – mit Namen, Links und Lizenzen. Jedes Wörterbuch, jedes Korpus, jede Schriftart und jede Aufnahme hat eine Quelle, die du öffnen und prüfen kannst, und eine Lizenz, die uns die Nutzung ausdrücklich erlaubt.
+    intro: TaiwanCards baut dankbar auf frei lizenzierten offenen Ressourcen und amtlichen Sprachdaten aus Taiwan auf. Bei jeder sind Quelle und Lizenz verlinkt.
     projects_title: Unsere eigenen offenen Projekte
     projects_note: "TaiwanCards beruht auf eigener, offener Forschung zum taiwanischen Mandarin: der Korpus-Pipeline, die die Daten erzeugt, der Herkunftsanalyse, die sie taiwanisch hält, den Bibliotheken zur Signalverarbeitung hinter der Aussprachebewertung und den veröffentlichten Datensätzen. All das ist offen, auch diese Anwendung selbst."
     groups:
@@ -3208,9 +3208,9 @@ de:
       opencc: Die Tabelle STCharacters, mit der Kurzzeichen in Langzeichen umgewandelt werden, wenn du Text einfügst. Jede Ersetzung wird dir aufgelistet.
       roboto: Die Schrift der Oberfläche, für lateinischen Text und Pinyin. Sie liegt auf unserem Server statt bei Google, deshalb geht beim Öffnen einer Seite keine Anfrage an Dritte.
       noto_sans_tc: Die Standardschrift für Langzeichen. Ebenfalls auf unserem Server.
-      tw_kai: "Taiwans eigene Kaishu-Pinselschrift aus dem CNS11643 全字庫, herausgegeben vom 數位發展部. Auf ihr beruht die Handschrift-Option, und das Logo der Seite ist nach ihrem 臺 gezeichnet. Wir liefern eine Teilmenge aus: Die Datei ist auf die Zeichen reduziert, die diese App tatsächlich verwendet, und das Logo enthält daraus entnommene Umrisse. Unsere Kopie ist also verändert, nicht original."
+      tw_kai: "Taiwans eigene Kaishu-Pinselschrift aus der Zeichendatenbank CNS11643 全字庫, herausgegeben vom Digitalministerium (數位發展部). Auf ihr beruht die Handschrift-Option, und das Logo der Seite ist nach ihrem 臺 gezeichnet. Wir liefern eine Teilmenge aus: Die Datei ist auf die Zeichen reduziert, die diese App tatsächlich verwendet, und das Logo enthält daraus entnommene Umrisse. Unsere Kopie ist also verändert, nicht original."
       moe: Standardzeichenformen des Bildungsministeriums, die Liste der 4808 gebräuchlichen Zeichen und Zeichenhäufigkeiten.
-      bopomofo_audio: Aufnahmen der Zhuyin-Zeichen aus dem offenen Komponentenpaket des 國語注音符號手冊 vom Bildungsministerium, separat unter CC BY 4.0 veröffentlicht. 2017 © 教育部,國語注音符號手冊-開放部件.
+      bopomofo_audio: Aufnahmen der Zhuyin-Zeichen aus dem offenen Komponentenpaket zum Zhuyin-Handbuch 國語注音符號手冊 des Bildungsministeriums, separat unter CC BY 4.0 veröffentlicht. 2017 © 教育部,國語注音符號手冊-開放部件.
       tocfl: Die offiziellen TOCFL-Wortschatzlisten, Stufe für Stufe.
       naer: National Academy for Educational Research – der TBCL-Standard, das COCT-Korpus und die allgemeine Worthäufigkeitstabelle.
       moe_strokes: Die amtliche Liste der Strichnamen, auf der das Inventar der Grund- und zusammengesetzten Striche beruht.
@@ -3421,7 +3421,7 @@ de:
       麵食: Nudeln und Teigtaschen
       豆漿店: Der Sojamilch-Frühstücksladen
       地方名產: Regionale Spezialitäten und essbare Mitbringsel
-      蛋餅: Eierpfannkuchen-Rollen
+      蛋餅: Danbing (Ei-Crêpe)
       冰塊: Eis und Temperatur
       甜度: Süßegrad
       文湖線: Braune Linie (Wenhu)
@@ -3473,7 +3473,7 @@ de:
     make_deck_button: Stapel erstellen
     scales:
       title: Zucker und Eis, von voll bis gar nicht
-      hint: Jeder Teeladen fragt nach beidem. Beides sind abgestufte Skalen; du antwortest also mit je einem Wort aus jeder Reihe.
+      hint: Jeder Teeladen fragt nach beidem. Es sind abgestufte Skalen; du antwortest also mit je einem Wort aus jeder Reihe.
       sugar: Zucker 甜度
       ice: Eis 冰塊
       note: "Die Ketten unterscheiden sich: 50嵐 druckt 不要太甜 als 九分糖 und führt 常溫, 溫 und 熱 nur im Norden als drei getrennte Stufen. Achtung: 微冰 ist weniger Eis als 少冰, nicht mehr."
@@ -3609,7 +3609,7 @@ de:
         note: Bei Rot und Schwarz tragen dieselben Figuren verschiedene Zeichen.
       go:
         title: Go, auch Weiqi genannt
-        body: "Go und Weiqi sind ein und dasselbe Spiel: 圍棋 heißt „Umzingelungsspiel“, auf Japanisch heißt es Go, und in Taiwan sind beide Wörter üblich. Die Steine werden auf Schnittpunkte gesetzt und nie mehr bewegt, eine Gruppe mit zwei echten Augen lebt, und in Taiwan gilt die Flächenzählung, nicht die Gebietszählung."
+        body: "Go und Weiqi sind ein und dasselbe Spiel: 圍棋 bedeutet „Umzingelungsspiel“, auf Japanisch heißt es Go, und in Taiwan sind beide Wörter üblich. Die Steine werden auf Schnittpunkte gesetzt und nie mehr bewegt, eine Gruppe mit zwei echten Augen lebt, und in Taiwan gilt die Flächenzählung, nicht die Gebietszählung."
         note: Viele Begriffe stammen aus dem Japanischen, werden aber mit eigenen Zeichen geschrieben.
       tabletop:
         title: Brettspiele, Karten und Straßenspiele
@@ -3650,8 +3650,8 @@ de:
       title: Wie der Mondkalender wirklich funktioniert
       months_html: "<p>Ein Mondmonat beginnt mit dem Neumond und dauert bis zum nächsten. Das sind etwa 29,53 Tage, also hat ein Monat entweder <strong>29</strong> oder <strong>30</strong> Tage – nie 31 und nie eine feste Länge, die man auswendig lernen könnte. Zwölf solcher Monate ergeben rund 354 Tage, etwa elf Tage weniger als ein Sonnenjahr.</p><p>Um diese Lücke dreht sich alles. Würde sie nicht ausgeglichen, wanderte das Neujahr rückwärts durch die Jahreszeiten, und 春節 läge irgendwann im Sommer.</p>"
       days_html: "<p>Die Tage eines Mondmonats schreibt man nicht als bloße Zahlen. Die ersten zehn bekommen das Präfix <strong>初</strong>: 初一, 初二, 初三 … bis 初十. Die Tage 11 bis 19 werden mit 十 gebildet – 十一, 十二 … 十九 –, und 二十 ist der zwanzigste. Ab dem 21. lautet das Präfix <strong>廿</strong>: 廿一, 廿二 … 廿九, und ein Monat mit 30 Tagen endet mit 三十.</p><p><strong>初五</strong> heißt also einfach der fünfte Tag des Monats. Wer 正月初五 sagt, meint den fünften Tag des ersten Mondmonats – ohne Jahr und ohne jeden Bezug zu einem gregorianischen Datum.</p>"
-      drift_html: "<p>Deshalb fällt 春節 nie zweimal hintereinander auf dasselbe gregorianische Datum. Das Mondjahr ist etwa elf Tage kürzer als das Sonnenjahr, also fällt das Neujahr jedes Mal früher – und rutscht es zu weit nach vorn, wird ein ganzer Monat eingeschoben, und es springt wieder auf einen späten Termin. Zwischen 1950 und 2050 liegt es zwischen dem 21. Januar und dem 20. Februar.</p>"
-      leap_html: "<p>Der Ausgleich ist ein <strong>Schaltmonat</strong>, 閏月. Ungefähr siebenmal in neunzehn Jahren wird ein zusätzlicher Monat eingefügt; das betreffende Jahr hat dann dreizehn Monate und etwa 384 Tage. Er wird nicht ans Ende gehängt, sondern hinter einen bestehenden Monat gesetzt und übernimmt dessen Nummer: Ein Schaltmonat nach dem sechsten heißt 閏六月, und das Jahr hat dann sowohl 六月 als auch 閏六月.</p><p>Welcher Monat doppelt vorkommt, entscheidet die Sonne, keine Regel zum Aufsagen: Es hängt davon ab, wo die 24 Sonnenperioden liegen. 2025 gab es einen 閏六月, 2033 kommt der seltene 閏十一月.</p>"
+      drift_html: "<p>Deshalb fällt 春節 nie zweimal hintereinander auf dasselbe gregorianische Datum. Das Mondjahr ist etwa elf Tage kürzer als das Sonnenjahr, also fällt das Neujahr jedes Mal früher – und rutscht es zu weit nach vorn, wird ein ganzer Monat eingeschoben, und es springt wieder auf einen späten Termin. Im Zeitraum 1950–2050 fällt es auf einen Tag zwischen dem 21. Januar und dem 20. Februar.</p>"
+      leap_html: "<p>Der Ausgleich ist ein <strong>Schaltmonat</strong>, 閏月. Ungefähr siebenmal in neunzehn Jahren wird ein zusätzlicher Monat eingefügt; das betreffende Jahr hat dann dreizehn Monate und etwa 384 Tage. Er wird nicht ans Ende gehängt, sondern hinter einen bestehenden Monat gesetzt und übernimmt dessen Nummer: Ein Schaltmonat nach dem sechsten heißt 閏六月, und das Jahr hat dann sowohl 六月 als auch 閏六月.</p><p>Welcher Monat doppelt vorkommt, entscheidet die Sonne und keine feste Regel, die man aufsagen könnte: Es hängt davon ab, wo die 24 Sonnenperioden liegen. 2025 gab es einen 閏六月, 2033 kommt der seltene 閏十一月.</p>"
       terms_html: "<p>Zwei der Feste hier richten sich gar nicht nach dem Mond. <strong>清明</strong> und <strong>冬至</strong> sind <em>Sonnenperioden</em> – Punkte auf der jährlichen Bahn der Sonne. Deshalb stehen sie im gregorianischen Kalender fast still, während alles, was nach dem Mond geht, wandert.</p>"
     minguo:
       title: Umrechner für 民國-Jahre
@@ -3678,7 +3678,7 @@ de:
     desk_html: "<p>Die Startseite richtet sich nach dem Modus, den du gewählt hast. <strong>TOCFL</strong> zeigt den Countdown bis zur Prüfung, deinen Stand pro Stufe, eine Probeprüfung und die Grammatik der Stufe. <strong>Eigene Wörter</strong> zeigt die Wiederholungen deiner eigenen Stapel und einen schnellen Weg, Wörter aus dem Unterricht hinzuzufügen. <strong>Unsere Methode</strong> zeigt den nächsten Schritt in der Phonetik oder im Kurs und dazu die Karten des Tages. Den Modus wechselst du im Profil oder über den Link „ändern“ neben der Überschrift.</p><p>Die Zähler: <strong>fällig</strong> heißt, wie viele Karten heute laut FSRS-Plan dran sind, <strong>neu</strong>, wie viel ungesehenen Stoff die App zusätzlich hinzunehmen würde (das Pensum kommt aus deinem Prüfungsplan, ohne Plan aus den Einstellungen), und <strong>im Stapel</strong>, wie viele Karten überhaupt im Spiel sind. Der große Button führt immer dorthin, wo es sinnvoll weitergeht.</p>"
     progress_html: "<p>Die <strong>Serie</strong> zählt, an wie vielen Tagen in Folge du wiederholt hast. Ein Tag geht von Mitternacht bis Mitternacht in der Zeitzone deines Geräts; wenn du verreist, bleiben die schon gezählten Tage, wie sie sind. Nach 30 Tagen in Folge beendet eine Pause von bis zu 2 Tagen die Serie nicht mehr, nach 90 Tagen in Folge ohne Ruhetag eine Pause von bis zu 4 Tagen. Ruhetage werden nicht mitgezählt, und nach einem Ruhetag beginnt die Zählung bis zum nächsten von vorn. Die <strong>Behaltensrate</strong> ist der Anteil von „Gut“ oder besser unter den Karten, die laut FSRS fällig waren: Liegt sie deutlich unter dem Zielwert in den Einstellungen, sind die Abstände zu lang.</p><p>Zustände: <strong>ungesehen</strong> wurde noch nie gezeigt, <strong>in Lernphase</strong> steckt noch in den Lernschritten, <strong>jung</strong> hat einen Abstand unter drei Wochen, <strong>ausgereift</strong> darüber. <strong>Problemkarten</strong> sind die, die du immer wieder vergisst; sie gezielt neu zu lernen ist günstiger, als sie weiter durch den Plan laufen zu lassen.</p>"
     plan_html: "<p>Nenne eine TOCFL-Zielstufe und ein Datum, und die App rechnet aus, wie viel neuer Stoff pro Tag nötig ist, um die Stufe bis dahin abzuschließen. Das Pensum wird täglich aus dem bereits Gelernten neu berechnet; ein ausgelassener Tag wirft den Plan also nicht um, er hebt das Pensum nur etwas an.</p><p>Ist das Pensum nicht zu schaffen, wird es orange markiert: Bis zu diesem Datum lässt sich die Stufe nicht abschließen. Verschieb dann das Datum oder nimm dir eine niedrigere Stufe vor.</p>"
-    cangjie_lessons_html: "<p>Cangjie ist die taiwanische Art, Langzeichen nach ihrer Form statt nach ihrem Klang zu tippen: Ein Zeichen wird in sichtbare Teile zerlegt, und jeder Teil ist eine lateinische Taste. Dieses Lehrbuch behandelt nur die fünfte Generation der Methode (倉頡五代) – nicht Cangjie 3 und nicht das vereinfachte Cangjie.</p><p>Die Reihenfolge: zuerst vier Lektionen dazu, wie ein Code aufgebaut ist, dann je eine Lektion für jede der sechsundzwanzig Tasten, dann die Zerlegungsregeln und die geschlossenen Ausnahmelisten. Am Ende stehen Taiwans eigene Zeichen und der gesamte Stoff von Novice 1–2.</p><p>Jede Lektion hat ihre eigenen Übungen: die Taste zu einer Form nennen, die erste Taste eines Zeichens nennen, die richtige Zerlegung wählen und einen vollständigen Code tippen. Freies Tippen gibt es getrennt davon im <strong>Cangjie-Trainer</strong> unter „Üben“.</p>"
+    cangjie_lessons_html: "<p>Cangjie ist die taiwanische Art, Langzeichen nach ihrer Form statt nach ihrem Klang zu tippen: Ein Zeichen wird in sichtbare Teile zerlegt, und jedem Teil entspricht eine Buchstabentaste. Dieses Lehrbuch behandelt nur die fünfte Generation der Methode (倉頡五代) – nicht Cangjie 3 und nicht das vereinfachte Cangjie.</p><p>Die Reihenfolge: zuerst vier Lektionen dazu, wie ein Code aufgebaut ist, dann je eine Lektion für jede der sechsundzwanzig Tasten, dann die Zerlegungsregeln und die geschlossenen Ausnahmelisten. Am Ende stehen Taiwans eigene Zeichen und der gesamte Stoff von Novice 1–2.</p><p>Jede Lektion hat ihre eigenen Übungen: die Taste zu einer Form nennen, die erste Taste eines Zeichens nennen, die richtige Zerlegung wählen und einen vollständigen Code tippen. Freies Tippen gibt es getrennt davon im <strong>Cangjie-Trainer</strong> unter „Üben“.</p>"
     names_html: "<p>Dieser Bereich erklärt, wie ein taiwanischer Name aufgebaut ist, und zeigt, was in Taiwan tatsächlich verwendet wird – ausgezählt aus dem Haushaltsregister. Einen Namen denkt er sich nicht für dich aus: Die Wahl ist persönlich und wird meist mit einem taiwanischen Freund oder einer Lehrkraft getroffen.</p><p>Der <strong>Familienname</strong> besteht aus einem Zeichen, wird vererbt und steht vor dem Vornamen; Familiennamen aus zwei Zeichen gibt es, sie sind aber selten. Der <strong>Vorname</strong> hat ein oder zwei Zeichen, die die Familie aussucht, meist zwei. Die Reihenfolge ändert sich nie: Auf Mandarin steht der Familienname immer vorn, egal, was im Pass steht, und du sprichst jemanden mit Familienname und Titel an, bis er dir etwas anderes anbietet.</p><p>Im Tab „Namen finden“ werden die Zeichen nach denselben Zahlen bewertet, die der zweite Tab zeigt: Häufigkeit nach Generation, Tonmuster, wie fest ein Paar zusammengehört, und Strichzahl. Heraus kommen fünf Vorschläge mit Begründung – eine Auswahl, über die man wirklich reden kann.</p>"
     desks_html: "<p>Ein Stapel entsteht aus allem, was du einfügst: einer Liste mit einem Wort pro Zeile, einer Liste mit Kommas oder einfach Fließtext – das System erkennt es selbst. Du kannst auch eine Datei hochladen oder die Wörter aus einem Lied übernehmen.</p><p>Der entscheidende Unterschied zu Anki: <strong>Du tippst nie Übersetzungen ein</strong>. Lesung, Bedeutung, Zerlegung der Zeichen und Audio kommen alle aus unserem Wörterbuch. Du lieferst nur die Wörter.</p><p>Bevor der Stapel angelegt wird, siehst du eine Vorschau: wie viele Karten entstehen, was doppelt war und was nicht im Wörterbuch steht. Die Einträge sind nach Schwierigkeit sortiert, die leichtesten zuerst. Kennst du die ganze Liste schon, schickt ein Button sie in die Langzeitwiederholung statt in die Warteschlange für neue Karten.</p>"
     hanzi_html: Diese Seite nimmt ein Zeichen auseinander und zeigt, was du mit den Teilen anfangen kannst. Der Bedeutungsträger verweist auf ein Bedeutungsfeld, der Lautträger auf eine ungefähre Lesung. In unseren eigenen Daten trifft der Lautträger den Reim etwa in vier von fünf Fällen, ein unbekanntes Zeichen lässt sich also oft schon beim ersten Versuch lesen. Öffne die Abschnitte einzeln.
@@ -3686,9 +3686,9 @@ de:
     zhuyin_trainer_html: "<p>Hier lernst du Zhuyin als eigenständige Schrift, ohne lateinische Krücke. Du hörst einen Laut und wählst das Zeichen – Pinyin ist absichtlich nicht zu sehen, sonst setzt sich „ㄅ ist der Buchstabe b“ fest statt „ㄅ ist dieser Laut“.</p><p>Die Zeichen kommen in Blöcken nach Artikulationsstelle, nicht der Reihe nach durch die Tabelle. Ein neuer Block öffnet sich, wenn der vorige geschafft ist. Die Antwortmöglichkeiten liegen absichtlich nah beieinander: ähnliche Formen und Laute von derselben Artikulationsstelle – zufällige Optionen würden nur Fortschritt vortäuschen.</p><p>Ein Zeichen gilt als gelernt, wenn du es dreimal hintereinander richtig erkennst, und zwar schnell: Wer richtig, aber langsam antwortet, rechnet noch, statt zu erkennen, und der Zähler bleibt stehen. Aufhören kannst du jederzeit.</p>"
     numbers_html: "<p>Für Zahlen brauchst du nur eine Handvoll Zeichen, und die brauchst du alle. Die eigentliche Schwierigkeit sind aber nicht die Zeichen, sondern die Größenordnungen.</p><p>Mandarin fasst Ziffern zu Vierergruppen zusammen: 萬 ist 10.000, und alles darüber baut darauf auf. Deshalb ist eine Million 一百萬 und eine Milliarde 十億. Die fünf Abschnitte unten führen von den Zeichen bis zu den Fallen; der letzte behandelt die 民國-Jahre, die auf jedem taiwanischen Formular stehen.</p>"
     practice_phonetics_html: "<p><strong>Zhuyin</strong> (ㄅㄆㄇㄈ, auch Bopomofo genannt) ist ein phonetisches Alphabet: 37 Zeichen, jedes fest an einen Laut des Mandarin gebunden, dazu Tonzeichen. Die Zeichen bedeuten für sich nichts, aus Gewohnheit falsch lesen kannst du sie also nicht. Mit ihnen werden in taiwanischen Wörterbüchern und Schulbüchern die Lesungen angegeben, und mit ihnen wird hier Text getippt.</p><p><strong>Pinyin</strong> ist eine Rechtschreibung – eine Art, dieselben Laute mit lateinischen Buchstaben nach eigenen Regeln zu schreiben. Diese Regeln sind auf Kürze angelegt, nicht auf Genauigkeit: Ein Buchstabe kann für verschiedene Laute stehen, und manche Vokale fallen in der Schreibung ganz weg. Als Stütze ist es nützlich, aber es führt in die Irre, sobald du es wie Deutsch liest: Pinyin z ist kein deutsches z, ch kein deutsches ch.</p><p>In den Tabellen unten steht zuerst der <strong>Anker</strong>: eine Zeile, die dir sagt, was du jetzt sprechen sollst. Dann folgt die Artikulation – wie sich die Sprechorgane bewegen. Am Ende jeder Zeile steht in Orange der Fehler, den du vermeiden solltest.</p>"
-    roadmap_html: "<p>Die beste Reihenfolge, die App durchzuarbeiten, wenn du bei null anfängst. Nichts davon ist Pflicht – alles ist ohnehin über das Menü erreichbar.</p><p>Schritte mit einem Training haken sich selbst ab: nach einem Durchgang des Lauttrainings, nach zehn richtig getippten Wörtern, nach zwanzig Wiederholungen. Die übrigen hakst du selbst ab, sobald du dich bereit fühlst weiterzugehen.</p><p>Optionale Schritte kannst du ohne Folgen überspringen – der Weg gilt auch ohne sie als abgeschlossen.</p>"
+    roadmap_html: "<p>Die beste Reihenfolge, die App durchzuarbeiten, wenn du bei null anfängst. Nichts davon ist Pflicht – alles ist ohnehin über das Menü erreichbar.</p><p>Schritte mit einem Training haken sich selbst ab: nach einem Durchgang des Lauttrainings, nach zehn richtig getippten Wörtern, nach zwanzig Wiederholungen. Die übrigen hakst du von Hand ab, sobald du dich bereit fühlst weiterzugehen.</p><p>Optionale Schritte kannst du ohne Folgen überspringen – der Weg gilt auch ohne sie als abgeschlossen.</p>"
     label: So funktioniert diese Seite
-    typing_html: "<p>Die Tastatur hier zeigt die taiwanische Zhuyin-Belegung – die, die auf den in Taiwan verkauften Tastaturen aufgedruckt ist und die die meisten dort benutzen. Installieren musst du nichts: Drück dieselben Tasten, und das Zhuyin erscheint.</p><p>Tippe die Lesung des angezeigten Worts und drück dann die Leertaste oder Enter, um sie zu prüfen. Die Tontasten sind 6 (ˊ), 3 (ˇ), 4 (ˋ) und 7 (˙); eine Silbe im 1. Ton braucht keine Tontaste.</p><p>Die Wörter kommen aus deinem Wörterbuch in Lernreihenfolge – so übst du Lesungen und Tippen zugleich.</p>"
+    typing_html: "<p>Die Tastatur hier zeigt die taiwanische Zhuyin-Belegung – sie ist auf den in Taiwan verkauften Tastaturen aufgedruckt, und die meisten dort tippen damit. Installieren musst du nichts: Drück dieselben Tasten, und das Zhuyin erscheint.</p><p>Tippe die Lesung des angezeigten Worts und drück dann die Leertaste oder Enter, um sie zu prüfen. Die Tontasten sind 6 (ˊ), 3 (ˇ), 4 (ˋ) und 7 (˙); eine Silbe im 1. Ton braucht keine Tontaste.</p><p>Die Wörter kommen aus deinem Wörterbuch in Lernreihenfolge – so übst du Lesungen und Tippen zugleich.</p>"
     reader_html: "<p>Lies echtes Mandarin mit eingebautem Wörterbuch. Wörter, die du schon kennst, sind ausgegraut; alles Neue ist nach Stufe eingefärbt und unterstrichen, die Lesung steht darüber.</p><p>Tippe auf ein Wort, und du bekommst den ganzen Eintrag, das Audio und einen Button, um es zu lernen. Den ganzen Text machst du mit einem Klick zu einem Stapel.</p><p>Füge selbst beliebigen Text ein oder importiere Liedtexte. Kurzzeichen werden immer zuerst in Langzeichen umgewandelt.</p>"
     placement_html: "<p>Ein adaptiver Test, der in etwa fünf Minuten deine Stufe ermittelt und dann anbietet, alles bis einschließlich dieser Stufe als bekannt zu markieren.</p><p>Die Fragen werden schwerer, solange du richtig antwortest, und leichter, wenn du danebenliegst. Die Schätzung ist absichtlich grob – auf dem Ergebnisbildschirm kannst du sie vor dem Übernehmen anpassen.</p><p>Das Markieren ist sicher: Was du schon lernst, behält seinen Fortschritt, und die markierten Einträge werden über die nächsten Wochen verteilt, damit sich die Wiederholungen nie zu einem Berg auftürmen.</p>"
     phrases_html: "<p>Ganze Äußerungen statt einzelner Vokabeln. Jede Karte ist ein Muster mit Lücken, die du aus dem Wörterbuch füllst – so deckt eine Zeile hundert Bestellungen im Teeladen ab.</p><p>Karten mit <strong>Du hörst</strong> sind die Hälfte, die jeder Sprachführer weglässt: die Fragen, die das Personal an der Theke auf dich abfeuert. Sie zu verstehen, ist wichtiger, als perfekte Sätze zu bilden.</p><p>Wo eine Form aus China zwar verstanden wird, aber importiert klingt, steht die taiwanische Form da und die andere ist durchgestrichen.</p>"
@@ -3705,7 +3705,7 @@ de:
     sentences_html: "<p>Vollständige Beispielsätze aus den Lektionen. Jedes Wort in einem Satz verlinkt auf seinen Wörterbucheintrag, du kannst also auf alles Unbekannte tippen. Mit dem Quellenfilter beschränkst du die Liste auf ein Buch oder eine Lektion.</p>"
     search_html: "<p>Drei Felder, die sich kombinieren lassen. <strong>Schreibung oder Bedeutung</strong> nimmt Zeichen oder ein Wort auf Deutsch oder Englisch. <strong>Pinyin</strong> und <strong>Zhuyin</strong> nehmen eine Lesung; Töne kannst du als Tonzeichen, als Ziffern nach jeder Silbe oder gar nicht schreiben – <code>nǐhǎo</code>, <code>ni3hao3</code> und <code>ni hao</code> führen alle zum selben Wort. Gibst du Töne an, kommen zuerst die Einträge mit genau diesen Tönen und erst danach der Rest.</p><p>Setzt du den Haken bei <strong>Stattdessen in der Satzsammlung suchen</strong>, fällt die Einteilung nach Art weg: Jeder Treffer ist ein Satz, in dem dein Wort markiert ist, zehn pro Seite, filterbar nach Stufe und Stil. Stehen zwei Wörter in der Anfrage, sagt dir die Seite außerdem, ob sie zusammenpassen.</p>"
     radicals_html: "<p>Die 214 Kangxi-Radikale – die Bausteine, unter denen jedes Zeichen eingeordnet ist. Tippe auf ein Radikal, um die Zeichen zu sehen, die es enthalten.</p>"
-    zhuci_html: "<p>Die Partikeln, die das taiwanische Mandarin ans Satzende hängt: 啦, 喔, 耶, 嘛, 齁 und die übrigen. Eine Wörterbuchbedeutung tragen sie gar nicht, dafür alles, was im Tonfall liegt – Wärme, Ungeduld, eine freundliche Warnung, gespielte Empörung. Wer mit „doch“, „ja“ und „halt“ aufgewachsen ist, versteht das Prinzip sofort. Die Karten sind danach sortiert, wie oft die Partikel in unseren taiwanischen Korpora tatsächlich einen Satz abschließt; öffne eine, um die ganze Bandbreite an Gefühl zu sehen, die sie trägt – mit Beispielen, deren Übersetzung die Stimmung mitnimmt.</p>"
+    zhuci_html: "<p>Die Partikeln, die das taiwanische Mandarin ans Satzende hängt: 啦, 喔, 耶, 嘛, 齁 und die übrigen. Eine Wörterbuchbedeutung tragen sie gar nicht, dafür alles, was im Tonfall liegt – Wärme, Ungeduld, eine freundliche Warnung, gespielte Empörung. Wer mit „doch“, „ja“ und „halt“ aufgewachsen ist, versteht das Prinzip sofort. Die Karten sind danach sortiert, wie oft die Partikel in unseren taiwanischen Korpora tatsächlich einen Satz abschließt; öffne eine, um alle Nuancen zu sehen, die sie ausdrücken kann – mit Beispielen, deren Übersetzung die Stimmung bewahrt.</p>"
     liangci_html: "<p>Zählwörter (量詞) im taiwanischen Mandarin sind die kleinen Wörter zwischen Zahl und Nomen: 一<b>本</b>書, 三<b>隻</b>貓 – so wie „Glas“ in „ein Glas Wasser“, nur bei jedem Nomen. Jeder Eintrag zeigt, was das Zählwort zählt, zu welchen Nomen es tatsächlich gehört und wie es in echten Sätzen aussieht. Die Listen stammen aus 教育部國語辭典簡編本, CC-CEDICT und unseren taiwanischen Korpora. Außerdem gibt es ein Spiel, bei dem du das passende Zählwort zuordnest.</p>"
     tocfl_html: "<p>Dein Fortschritt auf dem Weg zu jeder offiziellen TOCFL-Stufe. Mitgezählt wird jedes Zeichen und jedes Wort, das du irgendwo in der App gelernt hast, nicht nur hier. Öffne eine Stufe, um sie direkt zu lernen oder genau zu sehen, was noch fehlt.</p>"
     study_html: "<p>Wisch einmal durch die ganze Runde – Karten, die du nicht wusstest, kommen zurück, die anderen sind erledigt. <strong>Nach rechts</strong> = „Gewusst“, <strong>nach links</strong> = „Nicht gewusst“, <strong>nach oben</strong> = „Leicht“, <strong>nach unten</strong> = „Mit Fehler“. Die Pfeiltasten funktionieren auch, und ein Tippen auf die Karte dreht sie um.</p><p>Neues kommt jeweils als Gruppe dazu, gemischt mit allem, was zur Wiederholung fällig ist. Geplant wird mit FSRS, eine Karte kommt also genau dann zurück, wenn du sie sonst vergessen würdest.</p>"
@@ -3899,15 +3899,15 @@ de:
       heading: Was das hier ist
       items:
         taiwan: Taiwans Mandarin und sonst nichts – Langzeichen, Zhuyin, die TOCFL-Stufen und Taiwans eigene TBCL-Niveaus
-        decks: Wie Anki, nur ohne Stapel von Unbekannten und ohne Abende, an denen du eigene Karten abtippst – und ein Wort besteht hier aus fünf getrennten Erinnerungen statt aus einem einzigen „kann ich / kann ich nicht“
+        decks: Wie Anki, nur ohne Stapel von Unbekannten und ohne Abende, an denen du eigene Karten abtippst – und ein Wort wird hier in fünf Fertigkeiten getrennt bewertet statt mit einem einzigen „kann ich / kann ich nicht“
         dictionary: Wie Pleco, nur mehr als ein Nachschlagewerk – derselbe Eintrag speist die Übungen und einen Lernplan, der entscheidet, was du als Nächstes siehst. Und Taiwan steht vorn, nicht in der Fußnote
         writing: Wie Skritter, nur ist Schreiben hier keine eigene App mit eigener Liste – du schreibst die Zeichen, die du diese Woche ohnehin lernst, und es zählt zum selben Fortschritt
-        reading: "Wie Du Chinese, nur sucht dir niemand den Text aus: ein Lieblingslied, eine Nachricht, ein Arbeitsblatt aus dem Unterricht, eine Chatnachricht – füg den Text ein und du bekommst ihn in Wörter zerlegt zurück, bereit für einen Stapel"
+        reading: "Wie Du Chinese, nur sucht dir niemand den Text aus: ein Lieblingslied, eine Nachrichtenmeldung, ein Arbeitsblatt aus dem Unterricht, eine Chatnachricht – füg den Text ein und du bekommst ihn in Wörter zerlegt zurück, bereit für einen Stapel"
         photo: Fotografier die Speisekarte an der Wand oder ein Schild an der Straße – die Zeichen, die du nicht lesen konntest, kommen in Wörter zerlegt zurück, bereit für einen Stapel
         speaking: Keine Spracherkennung, die nur Ja oder Nein sagt – jede Silbe, die du sprichst, wird nach neunzehn akustischen Merkmalen bewertet. Maßstab ist, wie man in Taiwan spricht, nicht in China
-        everyday: "Das Taiwan, das kein Kurs unterrichtet: im Teeladen bestellen, die Kassenbon-Lotterie, eine Wohnung mieten, der Arztbesuch, taifunfrei"
+        everyday: "Das Taiwan, das in keinem Kurs vorkommt: im Teeladen bestellen, die Kassenbon-Lotterie, eine Wohnung mieten, der Arztbesuch, freie Tage wegen Taifun"
         corpus: Jeden Beispielsatz hat jemand in Taiwan wirklich so geschrieben – Quelle und Lizenz stehen dabei
-        measured: "Hier wird nichts geschätzt: Wie häufig ein Wort ist, wie schwer es ist und auf welche Stufe es gehört, ist an einem echten taiwanischen Korpus ausgezählt"
+        measured: "Hier wird nichts geschätzt: Wie häufig ein Wort ist, wie schwer es ist und zu welcher Stufe es gehört, ist an einem echten taiwanischen Korpus ausgezählt"
         memory: "Ein einziger Lernstand hinter jedem Bildschirm: Was du beim Lesen eines Textes lernst, zählt auch im Wörterbuch, in den Übungen und beim Schreiben"
     isnt:
       heading: Was das hier nicht ist
@@ -3993,13 +3993,13 @@ de:
           title: Prüfungsplan
           body: TOCFL-Stufe und Termin angeben – das Tagespensum ergibt sich von selbst
     core:
-      heading: Ein Wort nachschlagen und das ganze Bild sehen
-      lede: "Aus Radikalen werden Zeichen, aus Zeichen Wörter, aus Wörtern Sätze. Jede Seite zeigt den Rest des Netzes: woraus ein Wort besteht, wo es vorkommt und wie sicher du jeden Teil beherrschst."
+      heading: Ein Wort nachschlagen – und alles sehen, was dazugehört
+      lede: "Aus Radikalen werden Zeichen, aus Zeichen Wörter, aus Wörtern Sätze. Jede Seite zeigt, wie alles zusammenhängt: woraus ein Wort besteht, wo es vorkommt und wie sicher du jeden Teil beherrschst."
       layers:
         radicals: Radikale
         characters: Zeichen
         words: Wörter
-      facets_note: Ein Wort zu kennen ist nicht eine Sache. Du kannst es auf dem Papier lesen und trotzdem ins Stocken geraten, sobald du es sagen sollst. Deshalb trägt jedes Wort fünf getrennte Erinnerungen, und nur die, die verblasst ist, kommt wieder dran.
+      facets_note: Ein Wort kennen ist nicht gleich ein Wort kennen. Du kannst es auf dem Papier lesen und trotzdem ins Stocken geraten, sobald du es sagen sollst. Deshalb merkt sich die App jedes Wort in fünf getrennten Fertigkeiten, und nur die, die nachlässt, kommt wieder dran.
       facets:
         recognition: du siehst es und erkennst es
         production: du kommst von der Bedeutung zum Wort
@@ -4034,7 +4034,7 @@ de:
           title: Ein Lied, das du liebst
           body: Der Liedtext Wort für Wort, mit Aussprache, Tönen und Bedeutungen
         feed:
-          title: Eine Nachricht, ein Kapitel, ein Kommentar auf Threads
+          title: Eine Nachrichtenmeldung, ein Kapitel, ein Kommentar auf Threads
           body: Mit dem Wörterbuch zur Hand lesen und Neues direkt in einen Stapel schicken
     instead:
       heading: Im Vergleich zu dem, was du vielleicht schon nutzt
@@ -4054,7 +4054,7 @@ de:
         tocfl: TOCFL- und TBCL-Stufen
         order: Entscheidet, was du als Nächstes lernst
         facets: Erfasste Fertigkeiten pro Eintrag
-        tone: Rückmeldung zu den Tönen deiner Stimme
+        tone: Rückmeldung zu deinen Tönen beim Sprechen
         handwriting: Handschrift Strich für Strich geprüft
         placement: Einstufungstest
         scheduler: Wiederholungsplanung
@@ -4082,7 +4082,7 @@ de:
         if_configured: wenn du es einrichtest
         configurable: einstellbar
         companion_service: Zusatzdienst
-        speech_no_tone: Sprache, keine Tonbewertung
+        speech_no_tone: Spracherkennung, keine Tonbewertung
         addon_no_tone: Add-ons, keine Töne
         drawn_not_spoken: gezeichnet, nicht gesprochen
         addons: Add-ons
@@ -4127,13 +4127,13 @@ de:
       limits: Eine gute Aussprache baut man am besten mit einer Lehrkraft aus Fleisch und Blut auf, und echten Unterricht ersetzt das hier nicht. Was du bekommst, ist eine Prüfung von Tönen und Aussprache – einen Gesprächspartner oder Übungen zum Hörverstehen gibt es hier nicht, und die App will sie auch gar nicht bieten.
     honest:
       heading: Warum es das gibt
-      body: Ich bin Linguist, ich lebe in Taiwan, und das hier ist die App, die ich mir immer gewünscht habe, als ich die Sprache hier gelernt habe. Entstanden ist sie aus einer Masterarbeit in Computerlinguistik und aus sehr viel ganz gewöhnlichem Alltag – Schilder, Speisekarten, noch einmal nachfragen, wenn ich etwas nicht verstanden habe. Werbung gibt es keine und wird es nie geben, und das ist schon der halbe Grund, warum es die App gibt.
+      body: Ich bin Linguist, ich lebe in Taiwan, und das hier ist die App, die ich mir immer gewünscht habe, als ich die Sprache hier gelernt habe. Entstanden ist sie aus einer Masterarbeit in Computerlinguistik und aus sehr viel ganz alltäglicher Praxis – Schilder, Speisekarten, Nachfragen, wenn ich etwas nicht verstanden habe. Werbung gibt es keine und wird es nie geben, und das ist schon der halbe Grund, warum es die App gibt.
     final:
       heading: Fang mit einer Frage an
-      body: Neu im Mandarin? Dann geht es bei den Lauten los. Schon ein bisschen gelernt? Fünf Minuten, und die App weiß, wo sie dich abholt.
+      body: Mandarin ist neu für dich? Dann geht es bei den Lauten los. Schon ein bisschen gelernt? Fünf Minuten, und die App weiß, wo sie dich abholt.
       cta: Konto erstellen
     gold_card: Taiwan Gold Card
-    disclaimer_html: "TaiwanCards wird von einer einzigen Person entwickelt und gepflegt – einem Linguisten, dessen Leben seit der Hälfte seiner Jahre mit Taiwan verbunden ist, bis hin zur %{gold_card} im Portemonnaie. Ministerien, Prüfungen und Publikationen werden nur genannt, um die Herkunft der Daten auszuweisen – das Projekt steht mit keiner dieser Stellen in Verbindung und wird von keiner unterstützt. Fehler sind möglich: keine Gewähr für Richtigkeit, Verfügbarkeit oder Eignung für einen bestimmten Zweck. Nutz es als Lernhilfe und bewahr einen eigenen Export deines Lernstands auf."
+    disclaimer_html: "TaiwanCards wird von einer einzigen Person entwickelt und gepflegt – einem Linguisten, dessen halbes Leben schon mit Taiwan verbunden ist, bis hin zur %{gold_card} im Portemonnaie. Ministerien, Prüfungen und Publikationen werden nur genannt, um die Herkunft der Daten auszuweisen – das Projekt steht mit keiner dieser Stellen in Verbindung und wird von keiner unterstützt. Fehler sind möglich: keine Gewähr für Richtigkeit, Verfügbarkeit oder Eignung für einen bestimmten Zweck. Nutz es als Lernhilfe und bewahr einen eigenen Export deines Lernstands auf."
   onboarding:
     goal_question: Wie möchtest du lernen?
     goal_hint: Danach richten sich deine Startseite und die Menüs. Du kannst es jederzeit ändern.

@@ -144,6 +144,11 @@ namespace(:huayu) do
     pp(purge.call(dry_run: ENV["DRY_RUN"].present?))
   end
 
+  desc("Remove rejected sentences no word needs as an example, keeping any someone uses. DRY_RUN=1 to only count them")
+  task(prune_rejected_sentences: :environment) do
+    pp(Huayu::SentenceRejectPruner.new.call(dry_run: ENV["DRY_RUN"].present?))
+  end
+
   desc("Split single words from collocations using MOE headword status")
   task(classify_collocations: :environment) do
     Huayu::CollocationClassifier.new.call(dry_run: ENV["DRY_RUN"].present?)

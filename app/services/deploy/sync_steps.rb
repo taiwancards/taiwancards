@@ -309,6 +309,16 @@ module Deploy
         ]
       ),
       Step.new(
+        name: "pruned_rejected_sentences",
+        task: "huayu:prune_rejected_sentences",
+        paths: %w[huayu/sentence_rejects.jsonl],
+        code: %w[
+          app/services/huayu/sentence_reject_pruner.rb
+          app/services/huayu/reject_store.rb
+          app/services/huayu/sentence_reject_store.rb
+        ]
+      ),
+      Step.new(
         name: "segmentation",
         task: "huayu:resegment",
         paths: SEGMENTATION_SOURCES,

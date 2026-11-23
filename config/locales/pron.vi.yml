@@ -124,7 +124,7 @@ vi:
       read:
         ok: "Những gì được đọc khớp với văn bản."
         doubtful: "Bản ghi khớp kém với văn bản — có thể bạn đã nói thứ khác."
-        mismatch: "Có vẻ đây là bản đọc của một nội dung khác văn bản."
+        mismatch: "Có vẻ bạn đang đọc một nội dung khác chứ không phải văn bản này."
     fixes:
       near: "Thử lại, bám theo mẫu."
       tone:

@@ -96,6 +96,7 @@ RSpec.describe Deploy::SyncSteps do
     derived.each { |name|
       expect(names.index(name)).to(be > names.index("retired_words"), "#{name} would see stale rows")
       expect(names.index(name)).to(be > names.index("retired_off_taiwan"), "#{name} would see stale rows")
+      expect(names.index(name)).to(be > names.index("pruned_rejected_sentences"), "#{name} would see stale rows")
     }
   end
 end

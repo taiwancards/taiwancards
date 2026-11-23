@@ -17,7 +17,7 @@ RSpec.describe "Landing page" do
     navigation = Nokogiri::HTML5(response.body).at_css("header")
     flagged = LanguageFlagHelper::FLAGS.keys
     expect(flagged).to(match_array(Locales::ALL))
-    expect(flagged.last).to(eq("id"))
+    expect(flagged).to(eq(%w[en vi id de ru]))
     expect(navigation.css("nav [lang]").pluck("lang")).to(eq(flagged))
     expect(navigation.css("nav svg").length).to(eq(Locales::ALL.length))
     expect(navigation.css("a[hreflang]").pluck("href")).to(eq((flagged - ["en"]).map { |code| "/#{code}" }))

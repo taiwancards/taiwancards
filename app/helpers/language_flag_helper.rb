@@ -12,19 +12,19 @@ module LanguageFlagHelper
       <rect width="24" height="18" fill="#da251d"/>
       <path fill="#ff0" d="M12 3l1.35 4.15h4.36l-3.53 2.56 1.35 4.14L12 11.29l-3.53 2.56 1.35-4.14-3.53-2.56h4.36z"/>
     SVG
-      "ru" => <<~SVG,
-      <rect width="24" height="6" fill="#fff"/>
-      <rect y="6" width="24" height="6" fill="#0039a6"/>
-      <rect y="12" width="24" height="6" fill="#d52b1e"/>
+      "id" => <<~SVG,
+      <rect width="24" height="9" fill="#ce1126"/>
+      <rect y="9" width="24" height="9" fill="#fff"/>
     SVG
       "de" => <<~SVG,
       <rect width="24" height="6" fill="#000"/>
       <rect y="6" width="24" height="6" fill="#dd0000"/>
       <rect y="12" width="24" height="6" fill="#ffce00"/>
     SVG
-      "id" => <<~SVG
-      <rect width="24" height="9" fill="#ce1126"/>
-      <rect y="9" width="24" height="9" fill="#fff"/>
+      "ru" => <<~SVG
+      <rect width="24" height="6" fill="#fff"/>
+      <rect y="6" width="24" height="6" fill="#0039a6"/>
+      <rect y="12" width="24" height="6" fill="#d52b1e"/>
     SVG
   }.freeze
 
