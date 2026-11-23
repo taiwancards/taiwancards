@@ -112,6 +112,39 @@ RSpec.describe Huayu::EtymologyText do
     expect(described_class.normalize(text)).to(eq("Compare Jingpho (pyau, “fly”), Mizo (puŋᴴ)."))
   end
 
+  it "drops a sense label left where an etymology should be" do
+    expect(described_class.normalize("\"insurance\"")).to(eq(""))
+    expect(described_class.normalize("“fax”")).to(eq(""))
+    expect(described_class.normalize("“Jiang Zemin”")).to(eq(""))
+    expect(described_class.normalize("„Eisenbahn“")).to(eq(""))
+    expect(described_class.normalize("(food)")).to(eq(""))
+    expect(described_class.normalize("“(politics) right wing”")).to(eq(""))
+    expect(described_class.normalize("\"Macau: decree-law\"")).to(eq(""))
+  end
+
+  it "recognizes a single quoted gloss or parenthesis as a bare label" do
+    expect(described_class.bare_label?("  \"stupid\" ")).to(be(true))
+    expect(described_class.bare_label?("„Eisenbahn“")).to(be(true))
+    expect(described_class.bare_label?("(food)")).to(be(true))
+  end
+
+  it "keeps an etymology that only opens with a gloss or a parenthesis" do
+    walk = "(to take a walk): From the drug reaction after taking 五石散."
+    echo = "“Shadow and echo” (that closely follow a thing)."
+
+    expect(described_class.normalize(walk)).to(eq(walk))
+    expect(described_class.normalize(echo)).to(eq(echo))
+    expect(described_class.bare_label?(walk)).to(be(false))
+    expect(described_class.bare_label?(echo)).to(be(false))
+  end
+
+  it "does not take several quoted lines or nested parentheses for a bare label" do
+    expect(described_class.bare_label?("\"insurance\"\n\"assurance\"")).to(be(false))
+    expect(described_class.bare_label?("“bank” and “shore”")).to(be(false))
+    expect(described_class.bare_label?("(food (dish))")).to(be(false))
+    expect(described_class.bare_label?(nil)).to(be(false))
+  end
+
   it "is idempotent" do
     once = described_class.normalize("Phono-semantic compound (形聲 /形声): 甲(こう)状(じょう)腺(せん)")
 

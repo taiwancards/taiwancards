@@ -150,6 +150,7 @@ vi:
     ro: Tiếng Romania
   names:
     title: Tên người Đài Loan được cấu tạo thế nào
+    attribution: "Dữ liệu về tên người lấy từ Wikidata, đã được hiến tặng vào phạm vi công cộng theo giấy phép CC0 1.0."
     meta_description: >-
       Tên người Đài Loan gồm những gì, người Đài Loan thực sự mang những họ nào theo số liệu hộ tịch, và những chữ nào hay xuất hiện trong tên riêng.
     caveat: >-

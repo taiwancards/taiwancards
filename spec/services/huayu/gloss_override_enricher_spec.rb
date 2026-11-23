@@ -63,4 +63,12 @@ RSpec.describe Huayu::GlossOverrideEnricher do
     described_class.new(path:).call
     expect(lexeme.reload.meanings).to(eq({"en" => "above", "ru" => "сверху; выше"}))
   end
+
+  it "ships no Russian for a word whose Russian belongs to the Russian glosses file" do
+    overrides = JSON.parse(described_class::PATH.read)
+    owned = JSON.parse(Huayu::RuEnricher::PATH.read)
+    offenders = overrides.select { |text, entry| entry["ru"].to_s.strip.present? && owned.key?(text) }.keys
+
+    expect(offenders).to(be_empty, "#{offenders.size} words carry ru in both files: #{offenders.first(10).join(", ")}")
+  end
 end

@@ -200,7 +200,7 @@ module Deploy
           huayu/word_etymology_en.json
           huayu/word_etymology_ru.json
         ],
-        code: %w[app/services/huayu/etymology_translations.rb]
+        code: %w[app/services/huayu/etymology_translations.rb app/services/huayu/etymology_text.rb]
       ),
       Step.new(
         name: "phrase_drills",

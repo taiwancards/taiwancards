@@ -96,14 +96,18 @@ RSpec.describe Huayu::EtymologyTranslations do
   end
 
   it "translates the etymology of a word on the word page" do
-    word = Lexeme.create!(kind: :word, text: "東西", data: {"etymology_text" => "\"thing; stuff\""})
+    word = Lexeme.create!(
+      kind: :word,
+      text: "東西",
+      data: {"etymology_text" => "From 東 (“east”) + 西 (“west”)."}
+    )
     character("東", {"etymology_text" => "Pictogram."})
-    write({"東西" => {"text" => "“đồ vật; thứ”"}})
+    write({"東西" => {"text" => "Từ 東 (“đông”) + 西 (“tây”)."}})
 
     expect(described_class.new(path:, locale: "vi", kind: :word).call).to(include(written: 1))
     profile = Huayu::WordProfile.new(word.reload, user: nil)
-    I18n.with_locale(:vi) { expect(profile.etymology).to(eq("“đồ vật; thứ”")) }
-    I18n.with_locale(:ru) { expect(profile.etymology).to(eq("\"thing; stuff\"")) }
+    I18n.with_locale(:vi) { expect(profile.etymology).to(eq("Từ 東 (“đông”) + 西 (“tây”).")) }
+    I18n.with_locale(:ru) { expect(profile.etymology).to(eq("From 東 (“east”) + 西 (“west”).")) }
     expect(Lexeme.find_by(kind: :character, text: "東").data).not_to(have_key("etymology_i18n"))
   end
 
@@ -181,5 +185,17 @@ RSpec.describe Huayu::EtymologyTranslations do
 
     expect(described_class.new(path:).call).to(include(entries: 0))
     expect(described_class.new(path:)).not_to(be_drift)
+  end
+
+  it "skips a sense label in place of a translated etymology" do
+    word = Lexeme.create!(
+      kind: :word,
+      text: "保險",
+      data: {"etymology_text" => "From 保 (“protect”) + 險 (“danger”)."}
+    )
+    write({"保險" => {"text" => "“bảo hiểm”"}, "傳真" => {"hint" => "fax", "text" => "(fax)"}})
+
+    expect(described_class.new(path:, locale: "vi", kind: :word).call).to(include(entries: 1, written: 0))
+    expect(word.reload.data).not_to(have_key("etymology_i18n"))
   end
 end

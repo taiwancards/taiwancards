@@ -123,7 +123,7 @@
 
   = render("shared/senses", profile: @profile)
 
-  - chengyu_note = lexeme.data.dig("chengyu_note", Locales.key).presence
+  - chengyu_note = Locales.pick(lexeme.data["chengyu_note"]).presence
   - chengyu_example = lexeme.data["chengyu_example"]
   - if chengyu_note || chengyu_example.present?
     section.space-y-2
@@ -169,7 +169,7 @@
     section.space-y-2
       h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("chengyu.origin")
       .space-y-3.rounded-xl.border.border-border.p-3
-        - chengyu_origin = lexeme.data.dig("chengyu_origin", Locales.key).presence
+        - chengyu_origin = Locales.pick(lexeme.data["chengyu_origin"]).presence
         - if chengyu_origin
           p.text-sm.leading-relaxed = chengyu_origin
         - if lexeme.data["chengyu_gloss"].present?

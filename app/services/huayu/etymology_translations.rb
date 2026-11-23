@@ -62,7 +62,11 @@ module Huayu
 
     def entries
       @entries ||= JSON.parse(@path.exist? ? @path.read : "{}").filter_map do |text, fields|
-        kept = fields.slice(*FIELDS).transform_values { |value| value.to_s.strip }.compact_blank
+        kept = fields
+          .slice(*FIELDS)
+          .transform_values { |value| value.to_s.strip }
+          .compact_blank
+          .reject { |_field, value| EtymologyText.bare_label?(value) }
         [text, kept] if kept.any?
       end
     end

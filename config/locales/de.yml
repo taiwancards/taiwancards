@@ -150,6 +150,7 @@ de:
     ro: Rumänisch
   names:
     title: Wie ein taiwanischer Name aufgebaut ist
+    attribution: "Namensdaten aus Wikidata, unter CC0 1.0 der Gemeinfreiheit überlassen."
     meta_description: Woraus taiwanische Namen bestehen, welche Familiennamen in Taiwan laut Haushaltsregister wirklich vorkommen und welche Zeichen in Vornamen auftauchen.
     caveat: Gezählt aus %{people} Namen von Menschen mit Bezug zu Taiwan. In den Daten sind Menschen überrepräsentiert, die bekannt genug sind, dass über sie geschrieben wird. Sie zeigen also, wie im letzten Jahrhundert Namen vergeben wurden, nicht, wie Kinder in diesem Jahr heißen.
     percent: "%{value} %"

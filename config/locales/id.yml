@@ -150,6 +150,7 @@ id:
     ro: Bahasa Rumania
   names:
     title: Bagaimana nama Taiwan disusun
+    attribution: "Data nama berasal dari Wikidata, dilepaskan ke domain publik dengan lisensi CC0 1.0."
     meta_description: Dari apa nama Taiwan tersusun, marga apa yang benar-benar dipakai di Taiwan — dihitung dari catatan kependudukan — dan hanzi apa yang muncul dalam nama diri.
     caveat: Dihitung dari %{people} nama orang yang berkaitan dengan Taiwan. Data ini condong ke orang yang cukup terkenal untuk ditulis tentangnya, jadi yang tergambar adalah kebiasaan memberi nama selama seabad terakhir, bukan nama yang diberikan kepada anak-anak tahun ini.
     percent: "%{value}%"

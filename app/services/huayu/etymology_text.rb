@@ -24,6 +24,7 @@ module Huayu
     HEADING = /\A;+\s*/
     INDENT = /\A:+\s*/
     LONG_HEADING = 90
+    BARE_LABEL = /\A(?:["“„][^"“”„\n]*["”“]|\([^()\n]*\))\z/
 
     module_function
 
@@ -32,7 +33,12 @@ module Huayu
       return body if body.empty?
 
       body = WORDING.reduce(body) { |carry, (pattern, wording)| carry.gsub(pattern, wording) }
-      unlist(body.gsub(PLACEHOLDER, "").gsub(GAP, "").gsub(LINK, ""))
+      cleaned = unlist(body.gsub(PLACEHOLDER, "").gsub(GAP, "").gsub(LINK, ""))
+      bare_label?(cleaned) ? "" : cleaned
+    end
+
+    def bare_label?(text)
+      text.to_s.strip.match?(BARE_LABEL)
     end
 
     def unlist(body)

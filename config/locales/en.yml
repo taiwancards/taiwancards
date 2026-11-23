@@ -151,6 +151,7 @@ en:
     ro: Romanian
   names:
     title: How a Taiwanese name is built
+    attribution: "Name data from Wikidata, dedicated to the public domain under CC0 1.0."
     meta_description: >-
       What Taiwanese names are made of, which surnames Taiwan actually uses — counted in the household
       register — and which characters turn up in given names.
