@@ -386,6 +386,13 @@ module Deploy
         $stdout.puts(order.call.to_s)
         :ran
       },
+      "reading_overrides" => -> {
+        overrides = Huayu::ReadingOverrides.new
+        next :skipped unless overrides.drift?
+
+        overrides.call
+        :ran
+      },
       "sense_order" => -> {
         order = Lexemes::SenseOrder.new
         next :skipped unless order.drift?

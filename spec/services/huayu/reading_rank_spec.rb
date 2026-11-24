@@ -164,4 +164,16 @@ RSpec.describe Huayu::ReadingRank do
 
     expect(described_class.new.order(ba.reload).first["zhuyin"]).to(eq("˙ㄅㄚ"))
   end
+
+  it "follows a curated override over the usage weights, keeping unnamed readings after it" do
+    word("品質", "zhí", 300, level: "A2")
+    word("本質", "zhí", 900)
+    word("素質", "zhí", 2000)
+    zhi.update_columns(
+      data: zhi.data.merge("readings" => zhi.data["readings"] + [{"pinyin" => "zhǐ", "zhuyin" => "ㄓˇ"}])
+    )
+    rank = described_class.new(overrides: {"質" => [{"pinyin" => "zhì", "zhuyin" => "ㄓˋ"}]})
+
+    expect(rank.order(zhi.reload).map { |r| r["zhuyin"] }).to(eq(%w[ㄓˋ ㄓˊ ㄓˇ]))
+  end
 end

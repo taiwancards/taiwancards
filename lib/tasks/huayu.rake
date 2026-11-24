@@ -144,6 +144,11 @@ namespace(:huayu) do
     pp(Lexemes::ReadingOrder.new.call)
   end
 
+  desc("Set the curated readings of data/huayu/reading_overrides.json on every matching lexeme (idempotent)")
+  task(reading_overrides: :environment) do
+    pp(Huayu::ReadingOverrides.new.call)
+  end
+
   desc("Collapse full-width and stray whitespace in stored readings to a single space (idempotent)")
   task(normalize_readings: :environment) do
     scope = Lexeme.where.not(kind: :sentence)
@@ -265,6 +270,7 @@ namespace(:huayu) do
         "huayu:import_common_words",
         "huayu:compute_difficulty",
         "huayu:reorder_readings",
+        "huayu:reading_overrides",
         "huayu:normalize_readings",
         "huayu:rebuild_search",
         "huayu:flag_restricted"
@@ -286,6 +292,7 @@ namespace(:huayu) do
         "textbook:import_lexemes",
         "textbook:enrich_vocab_ru",
         "huayu:reorder_readings",
+        "huayu:reading_overrides",
         "huayu:normalize_readings",
         "huayu:rebuild_search",
         "huayu:flag_restricted"

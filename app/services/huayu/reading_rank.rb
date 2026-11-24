@@ -38,6 +38,10 @@ module Huayu
       "隶" => {"ㄉㄞˋ" => 10.0}
     }.freeze
 
+    def initialize(overrides: ReadingOverrides.for_kind(:character))
+      @overrides = overrides
+    end
+
     def weights
       @weights ||= begin
         table = Hash.new { |all, id| all[id] = {} }
@@ -55,6 +59,8 @@ module Huayu
 
     def order(lexeme, usage = weights[lexeme.id])
       readings = lexeme.reading_set
+      override = @overrides[lexeme.text]
+      return ReadingOverrides.arrange(override, readings) if override
       return readings if readings.size < 2
 
       floors = SPOKEN[lexeme.text] || COMPONENTS[lexeme.text] || {}

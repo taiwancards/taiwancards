@@ -67,6 +67,12 @@ RSpec.describe Deploy::SyncSteps do
     end
   end
 
+  it "re-asserts the curated readings right after the usage order has been applied" do
+    names = described_class::ALWAYS.keys
+
+    expect(names.index("reading_overrides")).to(eq(names.index("reading_order") + 1))
+  end
+
   it "keeps a step that only warms apart from one that rewrites content" do
     expect(described_class::ALWAYS.keys - described_class::WARMING).not_to(be_empty)
     expect(described_class::ALWAYS.keys).to(include(*described_class::ACCOUNT))
