@@ -1962,7 +1962,7 @@ vi:
     title: Thanh điệu
     lede: Phần thứ tư của ngữ âm, thiếu nó thì ba phần kia không hoạt động. Bạn đã có sẵn sáu thanh của tiếng Hà Nội — ở đây là cách dựng bốn thanh và thanh nhẹ của tiếng Quan thoại Đài Loan từ chính đôi tai ấy, và những chỗ tiếng Việt sẽ đánh lừa bạn.
     why_title: Bạn đã có sẵn tai nghe thanh điệu
-    why_body: Người học châu Âu phải được thuyết phục rằng thanh điệu là một phần của âm tiết. Bạn thì không cần — “ma, mà, má, mả, mã, mạ” là sáu từ khác nhau, và bạn nghe ra điều đó mà không cần nghĩ. Tiếng Quan thoại cũng vậy, chỉ ít thanh hơn. Không tính thanh điệu, ngôn ngữ này có khoảng bốn trăm âm tiết phân biệt được; tính cả thanh điệu thì khoảng một nghìn ba trăm. Ưu thế của bạn là có thật, và các nghiên cứu cho thấy người Việt nắm thanh 2 và thanh 3 nhanh hơn nhiều người học khác.
+    why_body: Bạn không cần ai thuyết phục rằng thanh điệu là một phần của âm tiết — “ma, mà, má, mả, mã, mạ” là sáu từ khác nhau, và bạn nghe ra điều đó mà không cần nghĩ. Tiếng Quan thoại cũng vậy, chỉ ít thanh hơn. Không tính thanh điệu, ngôn ngữ này có khoảng bốn trăm âm tiết phân biệt được; tính cả thanh điệu thì khoảng một nghìn ba trăm. Ưu thế của bạn là có thật, và các nghiên cứu cho thấy người Việt nắm thanh 2 và thanh 3 nhanh hơn nhiều người học khác.
     myth_title: Cái bẫy “thanh nào cũng có sẵn trong tiếng Việt”
     myth_body: Rất dễ muốn gán mỗi thanh Quan thoại cho một thanh tiếng Việt — nhiều sách và trang học tiếng trên mạng làm đúng như vậy. Nhưng chỉ có một cặp thực sự khớp — thanh 2 và thanh sắc. Các cặp còn lại đánh lừa bạn, và lỗi được ghi nhận nhiều nhất ở người Việt chính là nhầm thanh 1 với thanh 4, kéo dài cả sau một năm rưỡi học. Lời khuyên phổ biến “thanh 4 là thanh huyền” là nguyên nhân hàng đầu của lỗi đó. Hãy dùng thanh tiếng Việt làm mốc để thấy chỗ khác, đừng dùng để thay thế.
     cannot_title: Giọng Hà Nội không chỉ có cao độ
@@ -2267,7 +2267,7 @@ vi:
     rules:
       truncation:
         title: Chữ số đứng cuối chỉ đơn vị liền dưới
-        body: Đây là chỗ hay gây nhầm lẫn nhất với người học châu Âu, nhưng người Việt đã quen sẵn. Một chữ số đứng một mình ở cuối không được cộng vào số — nó nhân với đơn vị liền dưới, đơn vị đó chỉ được lược đi. Giống hệt khi bạn nói “một trăm hai” là 120 hay “hai nghìn ba” là 2.300. Vì vậy 三百五 là 350 chứ không phải 305.
+        body: Chỗ này trông dễ nhầm, nhưng người Việt đã quen sẵn. Một chữ số đứng một mình ở cuối không được cộng vào số — nó nhân với đơn vị liền dưới, đơn vị đó chỉ được lược đi. Giống hệt khi bạn nói “một trăm hai” là 120 hay “hai nghìn ba” là 2.300. Vì vậy 三百五 là 350 chứ không phải 305.
         rows:
           - huayu: 三百五
             value: "350"
