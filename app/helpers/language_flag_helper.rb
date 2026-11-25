@@ -16,6 +16,10 @@ module LanguageFlagHelper
       <rect width="24" height="9" fill="#ce1126"/>
       <rect y="9" width="24" height="9" fill="#fff"/>
     SVG
+      "ja" => <<~SVG,
+      <rect width="24" height="18" fill="#fff"/>
+      <circle cx="12" cy="9" r="5.4" fill="#bc002d"/>
+    SVG
       "de" => <<~SVG,
       <rect width="24" height="6" fill="#000"/>
       <rect y="6" width="24" height="6" fill="#dd0000"/>

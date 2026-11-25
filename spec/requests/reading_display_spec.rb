@@ -52,21 +52,13 @@ RSpec.describe "Reading display" do
     expect(response.body).to(match(/<html[^>]*class="[^"]*no-pinyin/))
   end
 
-  it "keeps the China word hidden until it is asked for" do
-    get(character_path(text: "和"))
-    expect(response.body).not_to(match(/<html[^>]*class="[^"]*show-china/))
-
+  it "has no China switch in the header and ignores the old cookie" do
     cookies[:show_china] = "1"
     get(character_path(text: "和"))
-    expect(response.body).to(match(/<html[^>]*class="[^"]*show-china/))
-  end
-
-  it "never shows the China word or its switch to a Vietnamese reader" do
-    cookies[:show_china] = "1"
-    get("/vi/characters/#{CGI.escape("和")}")
 
     expect(response.body).not_to(match(/<html[^>]*class="[^"]*show-china/))
-    expect(response.body).not_to(include(I18n.t("nav.china_toggle", locale: :vi)))
+    expect(response.body).not_to(include("pref-mark-china"))
+    expect(response.body).not_to(include("data-controller=\"audio-rate\""))
   end
 
   it "uses the kai face by default and drops it when the cookie says sans" do

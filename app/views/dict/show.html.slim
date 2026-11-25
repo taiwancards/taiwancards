@@ -73,6 +73,7 @@
         - else
           h1.text-4xl.font-bold lang="zh-TW" = hanzi(lexeme.text)
         = render("shared/speak", lexeme:)
+        = render("shared/audio_speed")
       - reading = zhuyin.present? ? @profile.pinyin_label : @profile.reading_label
       - if reading.present?
         .text-base.font-medium.text-muted-foreground class=(zhuyin.present? ? "pinyin" : nil) = reading
@@ -85,8 +86,11 @@
       - if @profile.show_flat_meaning? && @profile.meaning.present?
         p.text-base = @profile.meaning
       = render("shared/short_form", lexeme:)
+      - if Locales.kanji_bridge?
+        = render("kanji/word_badge", text: lexeme.text, note: true)
       - if @variants.present?
         = render("shared/variant_forms", variants: @variants, current: @spelling)
+      = render("shared/erhua_note", text: lexeme.text)
 
   - hokkien = lexeme.data["hokkien"]
   - if hokkien.present?

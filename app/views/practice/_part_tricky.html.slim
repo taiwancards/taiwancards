@@ -35,6 +35,7 @@ section.space-y-4.rounded-2xl.border.border-border.p-5
   .space-y-3.rounded-xl.border.border-amber-400.p-4 class="bg-amber-500/5"
     h3.text-sm.font-semibold.text-amber-700 = t("practice.series.hard_title")
     p.text-sm.leading-relaxed.text-amber-700 = t("practice.series.hard_body")
+    = regional_note("blocks", "series_hard", css: nil)
     = render "practice/series", sets: Huayu::ZhuyinTrainer::COLUMNS, tone: :columns
 
   = link_to zhuyin_training_path(set: "all_nine", from: "tricky"),

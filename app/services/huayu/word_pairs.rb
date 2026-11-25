@@ -16,7 +16,7 @@ module Huayu
     Example = Data.define(:zh, :translations) do
       include LessonData::Localized
 
-      def translation(locale) = pick(translations, locale)
+      def translation(locale) = Locales.sentence(translations, locale)
     end
 
     Use = Data.define(:word, :notes, :examples) do

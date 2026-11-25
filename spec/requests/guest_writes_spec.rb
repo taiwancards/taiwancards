@@ -24,6 +24,8 @@ RSpec.describe "Writing routes for a visitor with no account", :no_auth do
 
   def token_guarded = %w[reminders#run]
 
+  def script_only = %w[scans#create]
+
   def framework = %w[rails/ active_storage action_mailbox turbo]
 
   def writing_routes
@@ -60,7 +62,7 @@ RSpec.describe "Writing routes for a visitor with no account", :no_auth do
   it "sends a visitor to the login page from every writing route that is not deliberately open" do
     create(:lexeme, text: "學校")
     routes = writing_routes.reject { |_, _, endpoint|
-      open_endpoints.include?(endpoint) || token_guarded.include?(endpoint)
+      open_endpoints.include?(endpoint) || token_guarded.include?(endpoint) || script_only.include?(endpoint)
     }
 
     expect(routes.size).to(be > 70)
@@ -69,6 +71,18 @@ RSpec.describe "Writing routes for a visitor with no account", :no_auth do
 
       expect(response).to(have_http_status(:found), "#{verb.upcase} #{path} (#{endpoint}) answered #{response.status}")
       expect(URI(response.location).path).to(match(%r{\A(/\w\w)?/login\z}), "#{endpoint} went to #{response.location}")
+      expect(written).to(be_empty, "#{endpoint} wrote #{written.first}")
+    end
+  end
+
+  it "answers a script-only endpoint with a refusal instead of a login page, without writing anything" do
+    routes = writing_routes.select { |_, _, endpoint| script_only.include?(endpoint) }
+
+    expect(routes.map(&:last)).to(match_array(script_only))
+    routes.each do |verb, path, endpoint|
+      written = writes { answer(verb, path) }
+
+      expect(response.status).to(be_in([401, 403]), "#{endpoint} answered #{response.status}")
       expect(written).to(be_empty, "#{endpoint} wrote #{written.first}")
     end
   end

@@ -13,7 +13,7 @@ RSpec.describe Offline::Renderer do
   end
 
   it "refuses a page that only an account may open" do
-    expect { renderer.call("/desk", :en) }.to(raise_error(described_class::Refused, %r{/en/desk answered 302}))
+    expect { renderer.call("/profile", :en) }.to(raise_error(described_class::Refused, %r{/en/profile answered 302}))
   end
 
   it "refuses a page that answers with a session of its own" do

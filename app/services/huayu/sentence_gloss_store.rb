@@ -4,11 +4,11 @@ module Huayu
   class SentenceGlossStore < JsonlStore
     PATH = AppData.path("huayu/sentence_glosses.jsonl")
 
-    Entry = Data.define(:text, :en, :ru, :vi, :de, :ind)
+    Entry = Data.define(:text, :en, :ru, :vi, :de, :ind, :ja)
 
-    def self.put(text, en:, ru:, vi: nil, de: nil, ind: nil)
+    def self.put(text, en:, ru:, vi: nil, de: nil, ind: nil, ja: nil)
       entries = index
-      if [en, ru, vi, de, ind].all?(&:blank?)
+      if [en, ru, vi, de, ind, ja].all?(&:blank?)
         entries.delete(text)
       else
         entries[text] = Entry.new(
@@ -17,7 +17,8 @@ module Huayu
           ru: ru.presence,
           vi: vi.presence,
           de: de.presence,
-          ind: ind.presence
+          ind: ind.presence,
+          ja: ja.presence
         )
       end
 

@@ -120,10 +120,21 @@ module Deploy
         code: %w[app/services/huayu/reading_stories.rb app/models/reading_text.rb]
       ),
       Step.new(
+        name: "transcript_corrections",
+        task: "huayu:correct_transcripts",
+        paths: %w[huayu/transcript_corrections.json],
+        code: %w[app/services/huayu/sentence_correction_repair.rb app/services/huayu/transcript_corrections.rb]
+      ),
+      Step.new(
         name: "voiced_sentences",
         task: "huayu:mark_voiced",
+        paths: %w[huayu/listening_excluded.json huayu/transcript_corrections.json huayu/sentence_rejects.jsonl],
         media_paths: %w[listening/manifest.json],
-        code: %w[app/services/huayu/voiced_sentences.rb app/services/huayu/listening_clips.rb]
+        code: %w[
+          app/services/huayu/voiced_sentences.rb
+          app/services/huayu/listening_clips.rb
+          app/services/huayu/sentence_reject_store.rb
+        ]
       ),
       Step.new(
         name: "common_words",
@@ -193,10 +204,12 @@ module Deploy
           huayu/etymology_vi.json
           huayu/etymology_de.json
           huayu/etymology_ind.json
+          huayu/etymology_ja.json
           huayu/etymology_en.json
           huayu/word_etymology_vi.json
           huayu/word_etymology_de.json
           huayu/word_etymology_ind.json
+          huayu/word_etymology_ja.json
           huayu/word_etymology_en.json
           huayu/word_etymology_ru.json
         ],
@@ -242,6 +255,13 @@ module Deploy
         name: "ind_glosses",
         task: "huayu:enrich_id",
         paths: %w[huayu/ind_glosses.json huayu/sense_glosses.jsonl huayu/collocation_glosses.jsonl] +
+          CURATED_PAGE_SOURCES,
+        code: %w[app/services/huayu/locale_gloss_enricher.rb app/services/huayu/curated_glosses.rb]
+      ),
+      Step.new(
+        name: "ja_glosses",
+        task: "huayu:enrich_ja",
+        paths: %w[huayu/ja_glosses.json huayu/sense_glosses.jsonl huayu/collocation_glosses.jsonl] +
           CURATED_PAGE_SOURCES,
         code: %w[app/services/huayu/locale_gloss_enricher.rb app/services/huayu/curated_glosses.rb]
       ),
@@ -311,7 +331,7 @@ module Deploy
       Step.new(
         name: "pruned_rejected_sentences",
         task: "huayu:prune_rejected_sentences",
-        paths: %w[huayu/sentence_rejects.jsonl],
+        paths: %w[huayu/sentence_rejects.jsonl huayu/sentence_glosses.jsonl huayu/authored_sentences.json],
         code: %w[
           app/services/huayu/sentence_reject_pruner.rb
           app/services/huayu/reject_store.rb
@@ -400,6 +420,13 @@ module Deploy
         order.call
         :ran
       },
+      "concised_senses" => -> {
+        repair = Huayu::ConcisedSenseRepair.new
+        next :skipped unless repair.drift?
+
+        $stdout.puts(repair.call.to_s)
+        :ran
+      },
       "gloss_text" => -> {
         repair = Huayu::GlossRepair.new
         next :skipped unless repair.drift?
@@ -433,6 +460,13 @@ module Deploy
       },
       "sentence_brackets" => -> {
         repair = Huayu::SentenceBracketRepair.new
+        next :skipped unless repair.drift?
+
+        $stdout.puts(repair.call.to_s)
+        :ran
+      },
+      "sentence_markup" => -> {
+        repair = Huayu::SentenceMarkupRepair.new
         next :skipped unless repair.drift?
 
         $stdout.puts(repair.call.to_s)

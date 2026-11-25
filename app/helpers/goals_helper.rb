@@ -5,9 +5,12 @@ module GoalsHelper
 
   def goal_icon(goal) = GOAL_ICONS.fetch(goal.to_s, :study)
 
-  GOAL_PICKER_SKIPS = %w[onboarding study_sessions starter_lessons].freeze
+  GOAL_PICKER_SKIPS = %w[onboarding study_sessions starter_lessons doors].freeze
 
   def goal_picker?
-    authenticated? && !impersonating? && !current_user.goal_chosen? && GOAL_PICKER_SKIPS.exclude?(controller_path)
+    authenticated? &&
+      !impersonating? &&
+      GOAL_PICKER_SKIPS.exclude?(controller_path) &&
+      Onboarding::Entry.new(user: current_user).questionnaire?
   end
 end

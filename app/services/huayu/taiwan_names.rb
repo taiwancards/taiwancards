@@ -33,6 +33,7 @@ module Huayu
       :vi,
       :de,
       :ind,
+      :ja,
       :fields,
       :cohorts,
       :lean
@@ -93,6 +94,7 @@ module Huayu
             vi: row["vi"],
             de: row["de"],
             ind: row["ind"],
+            ja: row["ja"],
             fields: Array(row["fields"]),
             cohorts: (row["cohorts"] || {}),
             lean: row["lean"]
@@ -142,6 +144,7 @@ module Huayu
               "vi",
               "de",
               "ind",
+              "ja",
               "fields",
               "lean",
               "cohorts"

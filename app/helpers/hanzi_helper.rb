@@ -40,15 +40,16 @@ module HanziHelper
     "⿻" => "overlap"
   }.freeze
 
-  SCRIPT = /[\p{Han}\p{Bopomofo}]/
-  SCRIPT_RUN = /([\p{Han}\p{Bopomofo}]+)/
-
   def mark_script(text)
     return "" if text.blank?
 
-    safe_join(
-      text.to_s.split(SCRIPT_RUN).map { |part| part.match?(SCRIPT) ? tag.span(part, lang: "zh-TW") : part }
-    )
+    safe = text.html_safe?
+    pieces = HanScript.parse(text).pieces.map do |piece, mandarin|
+      piece = piece.html_safe if safe
+      mandarin ? tag.span(piece, lang: "zh-TW") : piece
+    end
+
+    safe_join(pieces)
   end
 
   def hanzi(text, skip: nil, css: "rounded transition-colors hover:bg-primary/15 hover:text-primary")

@@ -49,6 +49,11 @@ namespace(:huayu) do
     pp(Huayu::VoicedSentences.new.call)
   end
 
+  desc("Correct misspelt sentence transcripts listed in data/huayu/transcript_corrections.json (idempotent)")
+  task(correct_transcripts: :environment) do
+    pp(Huayu::SentenceCorrectionRepair.new(io: $stdout).call)
+  end
+
   desc("Tag every character with its Cangjie 5 code and build the input lookup (idempotent, offline)")
   task(import_cangjie: :environment) do
     pp(Huayu::CangjieImporter.new.call)
@@ -94,6 +99,11 @@ namespace(:huayu) do
     pp(Huayu::LocaleGlossEnricher.new(locale: "id").call)
   end
 
+  desc("Apply the Japanese glosses of the dictionary and its senses from ja_glosses.json")
+  task(enrich_ja: :environment) do
+    pp(Huayu::LocaleGlossEnricher.new(locale: "ja").call)
+  end
+
   desc("Backfill missing English + Russian glosses from the curated gloss_overrides.json (non-destructive)")
   task(enrich_gloss_overrides: :environment) do
     pp(Huayu::GlossOverrideEnricher.new.call)
@@ -101,8 +111,9 @@ namespace(:huayu) do
 
   desc(
     "Apply the curated etymology translations " \
-      "(etymology_ru.json, etymology_vi.json, etymology_de.json, etymology_ind.json, etymology_en.json, " \
-      "word_etymology_vi.json, word_etymology_de.json, word_etymology_ind.json, " \
+      "(etymology_ru.json, etymology_vi.json, etymology_de.json, etymology_ind.json, etymology_ja.json, " \
+      "etymology_en.json, word_etymology_vi.json, word_etymology_de.json, word_etymology_ind.json, " \
+      "word_etymology_ja.json, " \
       "word_etymology_en.json, word_etymology_ru.json)"
   )
   task(translate_etymologies: :environment) do

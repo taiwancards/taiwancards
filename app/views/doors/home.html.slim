@@ -1,0 +1,12 @@
+- content_for(:title, t("doors.home.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight class="sm:text-3xl" = t("doors.home.heading")
+    p.max-w-2xl.text-sm.leading-relaxed.text-muted-foreground = t("doors.lede")
+
+  = render("doors/doors")
+
+  p.text-sm.leading-relaxed.text-muted-foreground
+    => t("doors.home.account")
+    = link_to t("auth.login"), login_path, class: "font-medium text-primary underline-offset-2 hover:underline"

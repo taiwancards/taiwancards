@@ -1,0 +1,9 @@
+- path = local_assigns.fetch(:path)
+- if Locales.kanji_bridge? && Huayu::KanjiBridge.words_available?
+  .flex.flex-wrap.items-center.gap-2
+    span.text-xs.text-muted-foreground = t("kanji_bridge.filter.label")
+    - ([nil] + Huayu::KanjiBridge::WORD_KINDS).each do |kind|
+      - label = kind ? t("kanji_bridge.meanings.kinds.#{kind}") : t("kanji_bridge.filter.all")
+      = link_to label, path.call(kind), aria: {current: (bridge_kind == kind ? "page" : nil)},
+        class: class_names("rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+          bridge_kind == kind ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted")

@@ -54,12 +54,14 @@ RSpec.describe "Query budget" do
     end
 
     words.each_with_index { |word, index| 3.times { |n| sentence!("#{word.text}的句子#{index}#{n}。", word) } }
+    3.times { |n| sentence!("長的句子#{n}。", chars.first) }
   end
 
   {
     "/" => 4,
     "/characters" => 8,
-    "/characters/%E9%95%B7" => 14,
+    "/characters/%E9%95%B7" => 15,
+    "/characters/%E8%A9%B1" => 18,
     "/dict" => 10,
     "/dict/%E5%AD%B8%E7%94%9F" => 22
   }.each do |path, budget|

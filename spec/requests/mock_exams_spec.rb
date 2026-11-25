@@ -59,6 +59,7 @@ RSpec.describe "Mock exams" do
         vi: nil,
         de: nil,
         ind: nil,
+        ja: nil,
         emoji: "🏫",
         emoji_word: "學校",
         emoji_category: "place"
@@ -72,6 +73,7 @@ RSpec.describe "Mock exams" do
         vi: nil,
         de: nil,
         ind: nil,
+        ja: nil,
         emoji: "🏦",
         emoji_word: "銀行",
         emoji_category: "place"
@@ -85,6 +87,7 @@ RSpec.describe "Mock exams" do
         vi: nil,
         de: nil,
         ind: nil,
+        ja: nil,
         emoji: "🚉",
         emoji_word: "車站",
         emoji_category: "place"

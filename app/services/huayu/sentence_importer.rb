@@ -121,10 +121,11 @@ module Huayu
 
     def gate(slice, source, stats)
       slice.filter_map do |raw|
-        text = normalize(raw)
-        next if text.blank?
+        original = normalize(raw)
+        next if original.blank?
 
-        if @listed.include?(text)
+        text = TranscriptCorrections.apply(original)
+        if @listed.include?(original) || @listed.include?(text)
           stats["#{source.slug}_listed"] += 1
           next
         end

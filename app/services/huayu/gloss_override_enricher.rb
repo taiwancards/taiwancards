@@ -4,7 +4,7 @@ module Huayu
   class GlossOverrideEnricher
     PATH = AppData.path("huayu/gloss_overrides.json")
 
-    OWNED_ELSEWHERE = %i[measure_word radical].freeze
+    OWNED_ELSEWHERE = %i[measure_word radical particle grammar].freeze
 
     def initialize(path: PATH)
       @path = Pathname(path)

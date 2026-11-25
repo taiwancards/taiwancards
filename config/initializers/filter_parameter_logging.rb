@@ -10,5 +10,8 @@ Rails.application.config.filter_parameters += [
   :otp,
   :ssn,
   :cvv,
-  :cvc
+  :cvc,
+  /\Aphotos?\z/,
+  /\Areading_text\.body\z/,
+  /\Ahandover\./
 ]

@@ -94,6 +94,33 @@ RSpec.describe Huayu::SentenceImporter do
     end
   end
 
+  describe "transcript corrections" do
+    before do
+      allow(Huayu::TranscriptCorrections).to(
+        receive(:all).and_return({"他倒底想要什麼東西呢？" => "他到底想要什麼東西呢？"})
+      )
+    end
+
+    it "stores the corrected text of a misspelt sentence" do
+      source(slug: "corpus", register: :colloquial)
+      write("corpus", ["他倒底想要什麼東西呢？"])
+
+      run
+
+      expect(Lexeme.where(kind: :sentence).pluck(:text)).to(eq(["他到底想要什麼東西呢？"]))
+    end
+
+    it "still drops a misspelt sentence the reject list names" do
+      source(slug: "corpus", register: :colloquial)
+      listed("他倒底想要什麼東西呢？")
+      write("corpus", ["他倒底想要什麼東西呢？"])
+
+      run
+
+      expect(Lexeme.where(kind: :sentence)).to(be_empty)
+    end
+  end
+
   describe "attribution" do
     it "attaches an existing sentence to a second source instead of duplicating it" do
       first = source(slug: "one", register: :colloquial)

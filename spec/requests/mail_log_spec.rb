@@ -108,13 +108,97 @@ RSpec.describe "Mail log" do
     expect(event.summary).not_to(include("<", "http"))
   end
 
-  it "keeps the history after the account is deleted", :no_auth do
-    user = create(:user)
-    email = user.email
+  describe "after the account is deleted", :no_auth do
+    let(:user) { create(:user, email: "gone@example.com", time_zone: "Asia/Taipei") }
+    let(:other) { create(:user, email: "stays@example.com") }
 
-    user.destroy!
+    def journal(user)
+      MailEvent.log(user, list: "reminders", event: "sent", letter: "still_due", count: 20, summary: "Twenty cards")
+      MailEvent.log(
+        user,
+        list: "reminders",
+        event: "failed",
+        letter: "last_call",
+        detail: "Net::SMTPFatalError: 550 5.1.1 <#{user.email}> unknown"
+      )
+      MailEvent.log(user, list: "newsletter", event: "clicked", letter: "News", detail: "/ru/desk")
+      MailEvent.log(user, list: "reminders", event: "scheduled", source: "profile", detail: "1,5|8|Asia/Taipei")
+    end
 
-    expect(MailEvent.where(email:).pluck(:user_id, :event)).to(eq([[nil, "subscribed"], [nil, "subscribed"]]))
+    def traces_of(email)
+      MailEvent.where("email = :email OR detail ILIKE :like OR summary ILIKE :like", email:, like: "%#{email}%")
+    end
+
+    before do
+      journal(user)
+      journal(other)
+    end
+
+    it "keeps every row for the statistics but nothing that leads back to the person" do
+      kept = MailEvent.where(user:).count
+
+      user.destroy!
+
+      forgotten = MailEvent.where(email: nil).order(:id)
+      expect(forgotten.count).to(eq(kept))
+      expect(forgotten.pluck(:user_id).uniq).to(eq([nil]))
+      expect(traces_of("gone@example.com")).to(be_empty)
+      expect(forgotten.pluck(:list, :event, :letter, :detail, :count)).to(
+        include(
+          ["reminders", "sent", "still_due", "", 20],
+          ["reminders", "failed", "last_call", "Net::SMTPFatalError", nil],
+          ["newsletter", "clicked", "News", "/ru/desk", nil],
+          ["reminders", "scheduled", "", "1,5|8", nil]
+        )
+      )
+    end
+
+    it "leaves the journal of every other account as it was" do
+      before = MailEvent.where(user: other).order(:id).pluck(:email, :detail)
+
+      user.destroy!
+
+      expect(MailEvent.where(user: other).order(:id).pluck(:email, :detail)).to(eq(before))
+    end
+
+    it "forgets the address when the learner deletes the account from the profile" do
+      sign_in(user)
+
+      delete(profile_account_path)
+
+      expect(User.exists?(user.id)).to(be(false))
+      expect(traces_of("gone@example.com")).to(be_empty)
+    end
+
+    it "shows the rows in the admin as a deleted account" do
+      user.destroy!
+      sign_in(create(:user, :admin))
+
+      get(admin_mail_path(event: "failed"))
+
+      expect(response.body).to(include(I18n.t("admin.mail.deleted"), "Net::SMTPFatalError", "stays@example.com"))
+      expect(response.body).not_to(include("gone@example.com"))
+    end
+
+    it "repairs the rows of accounts deleted before, and only those" do
+      require Rails.root.join("db/migrate/20261124190001_anonymize_mail_journal_of_deleted_accounts")
+
+      MailEvent.where(user:).update_all(user_id: nil)
+      User.where(id: user.id).delete_all
+      MailEvent.log(nil, email: "owner@example.com", list: "alerts", event: "sent", letter: "scan key")
+
+      AnonymizeMailJournalOfDeletedAccounts.new.tap { |migration| migration.verbose = false }.up
+
+      expect(traces_of("gone@example.com")).to(be_empty)
+      expect(MailEvent.where(email: nil).pluck(:detail)).to(include("Net::SMTPFatalError", "1,5|8"))
+      expect(MailEvent.where(email: "owner@example.com")).to(exist)
+      expect(MailEvent.where(user: other).where.not(email: nil).count).to(eq(MailEvent.where(user: other).count))
+    end
+
+    it "never writes a row that names no one" do
+      expect(MailEvent.log(nil, list: "reminders", event: "sent")).to(be_nil)
+      expect(MailEvent.where(email: nil)).to(be_empty)
+    end
   end
 
   describe "in the admin area" do

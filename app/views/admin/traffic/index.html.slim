@@ -30,10 +30,14 @@
           p.text-sm.text-muted-foreground = t("admin.activity_empty")
         ul.space-y-1
           - top = rows.values.max.to_i
+          - pages = visited_pages(rows.keys) if key == :paths
           - rows.each do |label, views|
             li.space-y-1
               .flex.items-baseline.justify-between.gap-2.text-sm
-                span.min-w-0.truncate = label.presence || "—"
+                - if pages && label.present?
+                  = visited_page_link(pages.fetch(label), class: "min-w-0 truncate")
+                - else
+                  span.min-w-0.truncate = label.presence || "—"
                 span.shrink-0.tabular-nums.text-muted-foreground
                   = number_with_delimiter(views)
                   - if key == :paths && (count = signups[label.to_s.delete_prefix(PageView::SITE)]).to_i.positive?

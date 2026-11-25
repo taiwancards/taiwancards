@@ -45,6 +45,50 @@ RSpec.describe Huayu::ListeningClips do
     FileUtils.remove_entry(path.dirname)
   end
 
+  describe "rejected transcripts" do
+    let(:rejects) { path.dirname.join("sentence_rejects.jsonl") }
+
+    before { allow(Huayu::SentenceRejectStore).to(receive(:path).and_return(rejects)) }
+
+    def reject(text, reason)
+      Huayu::SentenceRejectStore.append([Huayu::SentenceRejectStore::Entry.new(text:, reason:)])
+    end
+
+    it "withholds the clip of a transcript rejected without condition" do
+      reject("他喝咖啡。", "garbled")
+
+      expect(described_class.for_text("他喝咖啡。")).to(be_nil)
+      expect(described_class.by_clip("b.mp3")).to(be_nil)
+      expect(described_class.all.map(&:clip)).to(eq(%w[a.mp3 c.mp3]))
+    end
+
+    it "keeps the clip of a transcript rejected for a soft reason" do
+      reject("他喝咖啡。", "fragment")
+
+      expect(described_class.for_text("他喝咖啡。")&.clip).to(eq("b.mp3"))
+    end
+
+    it "takes a clip out once its transcript is rejected later" do
+      expect(described_class.for_text("經濟成長很快。")).to(be_present)
+
+      reject("經濟成長很快。", "pun")
+
+      expect(described_class.for_text("經濟成長很快。")).to(be_nil)
+      expect(described_class.pool(max_level: 9).map(&:clip)).to(eq(%w[a.mp3 b.mp3]))
+    end
+  end
+
+  it "shows the corrected transcript and keeps the recording and translations" do
+    allow(Huayu::TranscriptCorrections).to(receive(:all).and_return({"他喝咖啡。" => "她喝咖啡。"}))
+    described_class.reset!
+
+    row = described_class.for_text("她喝咖啡。")
+
+    expect(row.clip).to(eq("b.mp3"))
+    expect(row.en).to(eq("He drinks coffee."))
+    expect(described_class.for_text("他喝咖啡。")).to(be_nil)
+  end
+
   it "indexes clips by sentence text" do
     row = described_class.for_text("我去學校。")
 

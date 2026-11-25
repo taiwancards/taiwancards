@@ -14,13 +14,19 @@
 = render "landing/nav"
 
 main.pb-16
+  section#doors.border-b.border-border
+    .mx-auto.w-full.max-w-5xl.px-4.pt-8.pb-10 class="md:pt-14"
+      p.text-xs.font-medium.uppercase.tracking-widest.text-brand lang="zh-TW" = t("landing.hero.eyebrow")
+      h1.mt-3.text-3xl.font-bold.leading-tight.tracking-tight class="sm:text-4xl md:text-5xl" = t("landing.hero.heading")
+      p.mt-3.max-w-2xl.text-base.leading-relaxed.text-muted-foreground = t("doors.lede")
+      .mt-6
+        = render("doors/doors")
+
   section.relative.overflow-hidden.border-b.border-border
     .relative.mx-auto.w-full.max-w-5xl.px-4.py-10 class="md:py-20"
       .grid.items-center.gap-12 class="lg:grid-cols-[1.15fr_1fr]"
         div
-          p.text-xs.font-medium.uppercase.tracking-widest.text-brand lang="zh-TW" = t("landing.hero.eyebrow")
-          h1.mt-3.text-3xl.font-bold.leading-tight.tracking-tight class="sm:text-4xl md:text-5xl" = t("landing.hero.heading")
-          .mt-3.max-w-xl.text-sm.leading-snug.text-muted-foreground class="space-y-2"
+          .max-w-xl.text-sm.leading-snug.text-muted-foreground class="space-y-2"
             - %w[variety life audience behind].each do |block|
               - lines = Array(t("landing.hero.lede.#{block}")).map { |line| tag.span(with_glossary(mark_script(line)), class: "sm:block") }
               p class=("text-foreground/80" if block == "variety") = safe_join(lines, " ")

@@ -41,7 +41,7 @@ RSpec.describe "Deleting an account" do
     cookies[DetailLevelHelper::DETAIL_COOKIE] = "brief"
     victim.destroy!
 
-    get("/en/desk")
+    get("/en/progress")
 
     expect(response).to(redirect_to(login_path))
     expect(cookies[:user_id]).to(be_blank)

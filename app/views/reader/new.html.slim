@@ -4,6 +4,7 @@
   header.space-y-1
     h1.text-2xl.font-bold.tracking-tight = t("reader.new_text")
     p.text-sm.text-muted-foreground = t("reader.new_hint")
+    = link_to t("scan.from_reader"), new_scan_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-2 hover:underline md:min-h-8"
 
   = form_with model: @text, url: reader_path, method: :post, scope: :reading_text, class: "space-y-4" do |form|
     .space-y-1

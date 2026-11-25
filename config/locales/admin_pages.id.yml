@@ -1,0 +1,6 @@
+id:
+  admin_pages:
+    own_text: Teks sendiri (disembunyikan)
+    own_deck: Dek sendiri (disembunyikan)
+    own_group: Grup dek sendiri (disembunyikan)
+    hidden_note: Ini milik pribadi pelajar, jadi hanya jenis halamannya yang ditampilkan

@@ -16,8 +16,10 @@
     .flex.items-center.justify-between.gap-3
       p.min-w-0.truncate.text-sm.font-semibold
         = t("starter.title", number: @lesson.number, title: @lesson.title_for(I18n.locale))
-      = link_to desk_path, class: "inline-flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted md:size-9", aria: {label: t("starter.leave")}, title: t("starter.leave") do
-        span.text-xl aria-hidden="true" = "×"
+      .flex.shrink-0.items-center.gap-1
+        = render("shared/audio_speed")
+        = link_to desk_path, class: "inline-flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted md:size-9", aria: {label: t("starter.leave")}, title: t("starter.leave") do
+          span.text-xl aria-hidden="true" = "×"
     .h-1.5.overflow-hidden.rounded-full.bg-muted
       .h-full.rounded-full.bg-primary.transition-all style="width: 0%" data-starter-lesson-target="bar"
 

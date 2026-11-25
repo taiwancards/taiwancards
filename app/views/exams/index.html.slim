@@ -1,36 +1,50 @@
 - content_for(:title, t("exams.title"))
-.py-6.space-y-6
+.py-6.space-y-6 data-controller="exam-history" data-exam-history-template-value=t("exams.best", score: "%{score}", total: "%{total}")
   header.space-y-2
     h1.text-2xl.font-bold.tracking-tight = t("exams.title")
     p.text-sm.leading-relaxed.text-muted-foreground = t("exams.lede")
+    = link_to t("doors.exam.lists"), tocfl_levels_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-2 hover:underline md:min-h-8"
 
-  .rounded-xl.border.border-amber-400.px-4.py-3.text-sm.leading-relaxed class="bg-amber-500/10"
-    = t("exams.notice")
+  p.rounded-xl.border.border-border.px-4.py-3.text-xs.leading-relaxed.text-muted-foreground class="bg-muted/30"
+    = t("exams.credit")
 
-  - if @by_band.empty?
+  - if @papers.empty?
     p.rounded-lg.border.border-dashed.border-border.px-4.py-10.text-center.text-sm.text-muted-foreground
       = t("exams.empty")
 
   - Huayu::TocflPapers::BANDS.each do |band|
-    - papers = @by_band[band].to_a
+    - papers = @by_band[band].to_a.sort_by { |paper| [paper.set, Huayu::TocflPapers::SKILLS.index(paper.skill).to_i] }
     - next if papers.empty?
     section.space-y-3
-      h2.flex.items-baseline.gap-2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
-        = t("exams.band", band: band)
-        span.text-xs.font-normal.tabular-nums = "· #{papers.size}"
-      .grid.gap-3 class="sm:grid-cols-2"
-        - papers.sort_by { |paper| [paper.set, paper.skill] }.each do |paper|
+      .space-y-1
+        h2.flex.flex-wrap.items-baseline.gap-x-2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground
+          = band == "Novice" ? band : t("exams.band", band: band)
+          span.text-xs.font-normal.normal-case = papers.first.level
+        p.text-sm.leading-relaxed = t("exams.bands.#{band}")
+      details.rounded-xl.border.border-border.px-4.py-2.text-sm
+        summary.cursor-pointer.font-medium = t("exams.format_title")
+        .mt-2.space-y-3
+          - Huayu::TocflPapers::SKILLS.each do |skill|
+            - sample = papers.select { |paper| paper.skill == skill }.filter_map { |paper| Huayu::TocflBundles.find(paper.slug) }.max_by(&:minutes)
+            - next unless sample
+            .space-y-1
+              p.font-medium
+                = t("exams.format_line", skill: t("exams.skills.#{skill}"), questions: t("exams.questions", count: sample.count), minutes: sample.minutes)
+              ul.space-y-0.5.text-xs.leading-relaxed.text-muted-foreground
+                - sample.parts.each do |part|
+                  li lang=I18n.locale = exam_part_line(part, listening: skill == "listening")
+      .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+        - papers.each do |paper|
+          - bundle = Huayu::TocflBundles.find(paper.slug)
           - best = @scores["#{ExamsController::SLUG_PREFIX}#{paper.slug}"]
           = link_to exam_path(paper), class: "block min-w-0 rounded-xl border border-border bg-card p-4 hover:bg-muted" do
             .flex.items-baseline.justify-between.gap-3
               span.text-xs.text-muted-foreground = paper.label
-              - if best
-                span.shrink-0.text-xs.text-emerald-600 = "#{best.score}/#{best.total}"
+              span.shrink-0.text-xs.font-medium.text-emerald-700 class="dark:text-emerald-400" data-exam-history-target="best" data-slug=paper.slug hidden=best.nil?
+                = exam_best_label(best, bundle) if best
             .mt-1.text-base.font-semibold = t("exams.skills.#{paper.skill}")
             .mt-1.flex.flex-wrap.gap-x-3.text-xs.text-muted-foreground
-              span.tabular-nums = t("exams.questions", count: paper.count)
-              span = paper.level
-              - if paper.clips.any?
-                span.tabular-nums = t("exams.clips", count: paper.clips.size)
-              - if paper.interactive.positive?
-                span.tabular-nums.text-emerald-600 = t("exams.interactive", count: paper.interactive)
+              span.tabular-nums = t("exams.questions", count: bundle.count)
+              - if bundle.minutes.positive?
+                span.tabular-nums = t("exams.minutes", count: bundle.minutes)
+              span = bundle.levels.map { |level| exam_level_name(level) }.join(" · ")

@@ -1,0 +1,92 @@
+- data = Huayu::KanjiBridge.readings
+- nasals = data.fetch("nasals", {})
+- endings = data.fetch("endings", [])
+- entering = data.fetch("entering_tones", {})
+- voicing = data.fetch("voicing_tones", {})
+
+p.max-w-3xl.text-sm.leading-relaxed = t("kanji_bridge.readings.lede", count: number_with_delimiter(data["characters"].to_i))
+
+section.space-y-3
+  h2.text-lg.font-semibold = t("kanji_bridge.readings.nasals_title")
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("kanji_bridge.readings.nasals_lede")
+  .grid.gap-3 class="sm:grid-cols-2"
+    - { "n" => "nasal_n", "long" => "nasal_long" }.each do |cue, label|
+      - row = nasals[cue]
+      - next unless row
+      - hits = row["codas"].to_h.fetch(cue == "n" ? "n" : "ng", 0)
+      article.space-y-2.rounded-xl.border.border-border.bg-card.p-3
+        .flex.flex-wrap.items-center.justify-between.gap-2
+          h3.font-semibold = t("kanji_bridge.readings.#{label}")
+          = kanji_rule_label(row["reliability"])
+        p.text-sm.text-muted-foreground = t("kanji_bridge.readings.share", hits:, total: row["total"], percent: kanji_percent(row["reliability"]))
+        - if row["exceptions"].present?
+          .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1.text-sm
+            span.text-xs.text-muted-foreground = t("kanji_bridge.readings.exceptions")
+            - row["exceptions"].each do |item|
+              = kanji_example(item)
+
+section.space-y-3
+  h2.text-lg.font-semibold = t("kanji_bridge.readings.endings_title")
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("kanji_bridge.readings.endings_lede")
+  .divide-y.divide-border.rounded-xl.border.border-border.bg-card
+    - endings.each do |row|
+      .space-y-1.p-3
+        .flex.flex-wrap.items-center.justify-between.gap-2
+          h3.font-medium = t("kanji_bridge.readings.endings.#{row["ending"]}")
+          .flex.items-center.gap-2
+            span.text-sm.text-muted-foreground = t("kanji_bridge.readings.share", hits: row["hits"], total: row["total"], percent: kanji_percent(row["reliability"]))
+            = kanji_rule_label(row["reliability"])
+        .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1.text-sm
+          span.text-xs.text-muted-foreground = t("kanji_bridge.readings.examples")
+          - row["examples"].first(4).each do |item|
+            = kanji_example(item)
+        - if row["exceptions"].present?
+          .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1.text-sm
+            span.text-xs.text-muted-foreground = t("kanji_bridge.readings.exceptions")
+            - row["exceptions"].first(4).each do |item|
+              = kanji_example(item)
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("kanji_bridge.readings.long_vowel_note")
+
+- if entering.any?
+  - entering_total = entering.values.sum
+  section.space-y-2
+    h2.text-lg.font-semibold = t("kanji_bridge.readings.entering_title")
+    p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("kanji_bridge.readings.entering_lede")
+    .flex.flex-wrap.gap-2.text-sm
+      - entering.sort_by { |tone, _| tone.to_i }.each do |tone, count|
+        span.rounded-full.bg-muted.px-3.py-1
+          = t("kanji_bridge.readings.tone", tone:)
+          span.ml-1.text-muted-foreground = kanji_percent(kanji_share(count, entering_total))
+
+- if voicing["voiced"] && voicing["plain"]
+  section.space-y-2
+    h2.text-lg.font-semibold = t("kanji_bridge.readings.voicing_title")
+    p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground
+      = t("kanji_bridge.readings.voicing_lede",
+        voiced: kanji_percent(kanji_share(voicing["voiced"]["1"], voicing["voiced"].values.sum)),
+        plain: kanji_percent(kanji_share(voicing["plain"]["1"], voicing["plain"].values.sum)))
+
+section.space-y-3
+  h2.text-lg.font-semibold = t("kanji_bridge.readings.initials_title")
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("kanji_bridge.readings.initials_lede")
+  .divide-y.divide-border.rounded-xl.border.border-border.bg-card
+    - data.fetch("initials", []).each do |row|
+      .space-y-2.p-3
+        .flex.flex-wrap.items-center.justify-between.gap-2
+          h3.font-medium lang="ja" = kanji_row_label(row["row"])
+          .flex.items-center.gap-2
+            span.text-sm.text-muted-foreground = t("kanji_bridge.readings.characters", count: row["total"])
+            = kanji_rule_label(kanji_top_share(row))
+        .flex.flex-wrap.gap-2.text-sm
+          - kanji_initial_shares(row).each do |group, share|
+            span.inline-flex.items-baseline.gap-1.rounded-full.bg-muted.px-3.py-1
+              = kanji_group_label(group)
+              span.ml-1.font-medium = kanji_percent(share)
+        - examples = row["examples"].to_h.values.flat_map { |items| items.first(2) }.first(6)
+        - if examples.any?
+          .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1.text-sm
+            span.text-xs.text-muted-foreground = t("kanji_bridge.readings.examples")
+            - examples.each do |item|
+              = kanji_example(item)
+
+p.max-w-3xl.text-xs.leading-relaxed.text-muted-foreground = t("kanji_bridge.readings.method")

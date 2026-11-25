@@ -9,12 +9,27 @@ class RemindersController < ApplicationController
     given = request.authorization.to_s.delete_prefix("Bearer ")
     return head(:unauthorized) if expected.empty? || !ActiveSupport::SecurityUtils.secure_compare(given, expected)
 
-    render(json: {queued: Reminders::Dispatch.new.call.size, newsletters_resumed: Newsletters::Dispatch.resume})
+    render(
+      json: {
+        queued: Reminders::Dispatch.new.call.size,
+        newsletters_resumed: Newsletters::Dispatch.resume,
+        scan_watch: watch_scans
+      }
+    )
   end
 
   def enable
     current_user.mailing_source = "prompt"
     current_user.update!(reminders: true)
     redirect_to(referring_path || desk_path, notice: t("reminders.session.enabled"))
+  end
+
+  private
+
+  def watch_scans
+    ScanWatchJob.perform_later
+    true
+  rescue StandardError
+    false
   end
 end

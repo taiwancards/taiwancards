@@ -83,26 +83,7 @@ module Huayu
     end
 
     def apply(keep)
-      analyzer = TextAnalyzer.new
-      difficulty = SentenceDifficulty.new
-
-      keep.each_slice(BATCH) do |slice|
-        replacements = slice.to_h { |id, _, cleaned| [id, cleaned] }
-
-        Lexeme.where(id: replacements.keys).each do |lexeme|
-          cleaned = replacements[lexeme.id]
-          next if cleaned.blank?
-
-          tokens = analyzer.segment(cleaned)
-          lexeme.text = cleaned
-          lexeme.data = lexeme.data.merge(
-            "length" => cleaned.scan(/\p{Han}/).length,
-            "segments" => tokens,
-            "difficulty" => difficulty.call(cleaned, tokens: tokens)
-          )
-          lexeme.save!
-        end
-      end
+      SentenceRewrite.new.call(keep.to_h { |id, _, cleaned| [id, cleaned] })
     end
 
     def report(rows, keep, removable, studied)

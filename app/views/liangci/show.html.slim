@@ -38,8 +38,8 @@
           = link_to path, class: "flex min-w-0 items-baseline justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2 transition-colors hover:border-primary/50 hover:bg-muted" do
             .min-w-0
               .flex.items-baseline.gap-2
-                span.text-lg.font-semibold lang="zh-TW"
-                  span.text-primary = @entry.text
+                span.inline-flex.items-baseline.gap-1.text-lg.font-semibold lang="zh-TW"
+                  span.text-base.font-normal.text-primary = @entry.text
                   span = noun.text
                 span.text-xs.text-muted-foreground = noun.readings["pinyin"]
               .truncate.text-sm.text-muted-foreground = noun.meaning
@@ -61,6 +61,8 @@
               p.text-sm.text-muted-foreground = example.sentence.meaning
             - else
               p.text-xs.text-muted-foreground
-                span lang="zh-TW" = "#{@entry.text}#{example.noun.text}"
+                span.inline-flex.items-baseline.gap-1 lang="zh-TW"
+                  span.text-primary = @entry.text
+                  span = example.noun.text
                 span>  —
                 = example.noun.meaning

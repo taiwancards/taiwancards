@@ -1,0 +1,5 @@
+- content_for(:title, t("language_step.heading"))
+
+.mx-auto.max-w-xl.space-y-4.py-8
+  = render("shared/language_step")
+  p.text-sm.leading-relaxed.text-muted-foreground = t("doors.language_then.#{@entry.door}")

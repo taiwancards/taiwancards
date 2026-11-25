@@ -5,16 +5,25 @@ class NoticesController < ApplicationController
   publicly_cacheable
 
   def index
-    @categories = Huayu::TaiwanNotices.categories
-    @category = params[:category].presence_in(@categories)
-    @notices = @category ? Huayu::TaiwanNotices.in_category(@category) : Huayu::TaiwanNotices.all
-    @tokens = tokens_for(@notices)
+    legacy = legacy_situation
+    return redirect_to(notices_situation_path(situation: legacy), status: :moved_permanently) if legacy
+
+    @groups = Huayu::TaiwanNotices.by_situation
+  end
+
+  def show
+    @situations = Huayu::TaiwanNotices.situations
+    @situation = params[:situation].presence_in(@situations)
+    raise ActiveRecord::RecordNotFound if @situation.nil?
+
+    @notices = Huayu::TaiwanNotices.in_situation(@situation)
+    @tokens = Huayu::TextAnalyzer.new(locale: I18n.locale).analyze_map(@notices.flat_map(&:texts))
   end
 
   private
 
-  def tokens_for(notices)
-    lines = notices.flat_map { |notice| [notice.zh, *notice.items.map(&:zh)] }.compact
-    Huayu::TextAnalyzer.new(locale: I18n.locale).analyze_map(lines)
+  def legacy_situation
+    category = params[:category].presence_in(Huayu::TaiwanNotices.categories)
+    category && Huayu::TaiwanNotices.in_category(category).first.situation
   end
 end

@@ -1,0 +1,108 @@
+{
+  "v": 1,
+  "slug": "a-set1-listening",
+  "band": "A",
+  "set": 1,
+  "skill": "listening",
+  "levels": ["Level 1", "Level 2"],
+  "minutes": 60,
+  "count": 3,
+  "audio": "mock_BandA_mp3_en",
+  "opening_clips": ["001.mp3"],
+  "closing_clips": ["005.mp3"],
+  "parts": [
+    {
+      "id": 1,
+      "title": "看圖回答",
+      "plays": 2,
+      "pause_seconds": 5,
+      "intro": { "clips": ["002.mp3"], "text": "請看圖回答。", "image": null },
+      "groups": [
+        {
+          "id": "g1",
+          "clips": ["003.mp3"],
+          "repeat_in_clip": true,
+          "context": { "text": null, "image": null },
+          "transcript": "女：這是什麼？",
+          "items": [
+            {
+              "n": 1,
+              "stem": { "text": null, "image": "img/q01.webp" },
+              "options": [
+                { "k": "A", "text": null, "image": null },
+                { "k": "B", "text": null, "image": null },
+                { "k": "C", "text": null, "image": null }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "短文理解",
+      "plays": 1,
+      "pause_seconds": 0,
+      "intro": { "clips": [], "text": null, "image": null },
+      "groups": [
+        {
+          "id": "g2",
+          "clips": ["004.mp3", "003.mp3"],
+          "repeat_in_clip": false,
+          "pause_in_clip": true,
+          "context": { "text": null, "image": null },
+          "transcript": "男：今天很熱。",
+          "items": [
+            {
+              "n": 2,
+              "stem": { "text": "今天怎麼樣？", "image": null },
+              "options": [
+                { "k": "A", "text": "很熱", "image": null },
+                { "k": "B", "text": "很冷", "image": null }
+              ]
+            },
+            {
+              "n": 3,
+              "stem": { "text": "他說什麼？", "image": null },
+              "options": [
+                { "k": "A", "text": "好", "image": null },
+                { "k": "B", "text": "不好", "image": null }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "key": { "1": "B", "2": "A", "3": "Z" },
+  "scale": {
+    "max": 80,
+    "table": [
+      [0, 0],
+      [1, 30],
+      [2, 60],
+      [3, 80]
+    ],
+    "thresholds": [
+      { "level": "Level 1", "min": 41 },
+      { "level": "Level 2", "min": 60 }
+    ]
+  },
+  "editions": {
+    "en": { "paper": "ls.pdf", "audio": "mock_BandA_mp3_en", "base": true },
+    "vi": {
+      "paper": "ls_vie.pdf",
+      "audio": "mock_BandA_mp3_vie",
+      "intros": {
+        "1": { "clips": ["007.mp3"], "text": null, "image": "img/q01.webp" }
+      },
+      "opening_clips": ["001.mp3"],
+      "closing_clips": ["009.mp3"],
+      "clips": {}
+    }
+  },
+  "source": {
+    "holder": "國家華語測驗推動工作委員會",
+    "kind": "official mock test"
+  }
+}

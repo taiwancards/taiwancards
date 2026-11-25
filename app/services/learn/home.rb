@@ -11,7 +11,7 @@ module Learn
       @user = user
     end
 
-    def layout = user.goal || "guided"
+    def layout = user.goal || (user.entry_door ? "classes" : "guided")
 
     def on_desk
       @on_desk ||= LexemeMemory.active.owned_by(user).joins(:lexeme).distinct.count(:lexeme_id)

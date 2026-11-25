@@ -1,0 +1,10 @@
+section#setup-offer.space-y-3.rounded-2xl.border.border-border.bg-card.p-4 class="sm:p-5" aria-labelledby="setup-offer-title"
+  .flex.flex-wrap.items-baseline.justify-between.gap-x-3.gap-y-1
+    h2#setup-offer-title.text-base.font-semibold = t("doors.setup.title")
+    span.text-xs.text-muted-foreground = t("doors.setup.optional")
+  p.text-sm.leading-relaxed.text-muted-foreground = t("doors.setup.body")
+  .flex.flex-wrap.gap-2
+    = link_to t("doors.setup.start"), onboarding_start_path,
+      class: "inline-flex min-h-11 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+    = link_to t("doors.setup.roadmap"), roadmap_path,
+      class: "inline-flex min-h-11 items-center rounded-xl border border-border px-4 text-sm font-medium hover:bg-muted md:min-h-9"

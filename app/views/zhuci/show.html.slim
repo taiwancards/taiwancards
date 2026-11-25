@@ -32,6 +32,7 @@
   - force = @entry.data.dig("force", locale).presence
   - if force
     p.rounded-xl.border.px-4.py-3.text-sm.leading-relaxed class="border-primary/30 bg-primary/5" = force
+  = regional_note("particles", @entry.text, css: nil)
 
   - body = Array(@entry.data.dig("body", locale))
   - if body.any?

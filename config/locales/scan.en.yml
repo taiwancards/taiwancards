@@ -1,0 +1,227 @@
+en:
+  scan:
+    title: Scan a photo
+    lede: >-
+      Photograph a textbook page, a notice, a menu or a medicine bag, or paste a screenshot of a chat. The Chinese in it
+      comes back as text you can correct, then turn into a deck or open in the reader.
+    from_reader: Or scan a photo or a screenshot
+    remaining:
+      one: "%{count} of %{daily} scans left today"
+      other: "%{count} of %{daily} scans left today"
+    drop: Drop a photo or a screenshot here
+    drop_hint: >-
+      You can also paste a screenshot with Ctrl+V or ⌘V. Photos are made smaller on your device before they are sent.
+    camera: Take a photo
+    choose: Choose a file
+    text_label: Recognized text
+    text_hint: Compare it with the photo and fix any misread character before you go on.
+    title_label: Name
+    default_title: "Scan, %{time}"
+    make_deck: Make a deck
+    open_reader: Open in the reader
+    again: Scan another
+    privacy_note: >-
+      The photo is sent to Anthropic, whose model reads the text, and it is not stored here. The text that comes back
+      is kept for %{hours} hours so you can finish, then deleted.
+    client:
+      preparing: Getting the photo ready…
+      sending: Sending…
+      reading: Reading the text. This takes a few seconds.
+      generic: Something went wrong. Please try again in a moment.
+      offline: No connection. Check the network and try again.
+      not_image: That file is not a picture. Choose a photo or a screenshot.
+      too_small: That picture is too small to read.
+      too_large: That picture is too large. Try a screenshot or a smaller photo.
+    refusals:
+      missing: Choose a photo first.
+      not_image: That file is not a picture. Choose a photo or a screenshot.
+      too_small: That picture is too small to read.
+      too_large: That picture is too large. Try a screenshot or a smaller photo.
+      quota: That was the last scan for today. New ones open tomorrow.
+      client: There have been too many scans from this network today. Please try again tomorrow.
+      busy: Several photos are being read right now. Please try again in a minute.
+      paused: Scanning is resting for a while. Please try again later.
+      unavailable: Scanning is not available right now.
+    failures:
+      interrupted: The reading was interrupted. This scan was not counted, so please try again.
+      timeout: Reading took too long. This scan was not counted, so please try again.
+      unavailable: The reading service did not answer. This scan was not counted. Please try again later.
+      key: Scanning is resting for a while. This scan was not counted.
+      rate_limited: Too many photos are being read at once. This scan was not counted. Try again in a few minutes.
+      busy: Several photos are being read right now. This scan was not counted. Try again in a minute.
+      refused: This picture could not be read.
+      too_much: There is more text in this picture than one scan can take. Photograph a smaller part of the page.
+    notes:
+      blurred: >-
+        Part of the photo was blurred, so some characters may be missing or wrong. Compare with the photo, or take a
+        sharper one.
+      unreadable: The photo is too blurred or too dark to read. Try again in better light, holding the phone still.
+      no_text: No Chinese text was found in this picture.
+      gaps: Characters marked □ could not be read. Fill them in from the photo before you go on.
+      changed: "Simplified characters were changed to traditional: %{chars}"
+    closed:
+      title: Scanning is paused
+      unavailable: >-
+        Reading text from photos is not available right now. Paste the text instead, or draw a character you cannot
+        read in the search box.
+      paused: >-
+        It will be back shortly. Until then, paste the text, or draw a character you cannot read in the search box.
+    privacy:
+      heading: Photos you scan
+      items:
+        - >-
+          When you scan a photo or a screenshot, your device first makes it smaller, and the app sends it to Anthropic,
+          whose model reads the Chinese text in it. Anthropic processes it under its commercial terms, as a service
+          provider to this app.
+        - The image itself is never stored by the app. Nothing else from your account is sent with it.
+        - >-
+          The text read from it is kept for 24 hours so you can correct it and turn it into a deck or a reader text,
+          then deleted. A deck or a reader text you make from it stays in your account like any other.
+        - >-
+          For the daily limit, the app keeps the date of each scan, its outcome and its size, and for 24 hours a
+          one-way fingerprint of the network address it came from, never the address itself.
+    admin:
+      title: Scans
+      lede: >-
+        Photo scans: %{daily} per learner per day, recognized text kept %{kept} hours. Cost is estimated from the
+        tokens each scan used and the model's list price.
+      ceilings: Ceilings
+      state: State
+      open: Open
+      paused: "Paused (%{reason}) until %{until}"
+      no_key: No API key
+      model: Model
+      unpriced: no price on record
+      today: Scans today, all learners
+      in_flight: Being read now
+      per_client: Per network, 24 hours
+      at_quota: Learners at today's limit
+      by_day: By day
+      total: Total
+      columns:
+        day: Day
+        scans: Scans
+        failed: Failed
+        refunded: Not counted
+        input: Input tokens
+        output: Output tokens
+        cost: Cost
+      footnote: "Learners in this window: %{learners}. Average reading time: %{latency} ms."
+      failures: Failures
+      pauses: Pauses
+      key:
+        title: API key
+        status:
+          missing: No key
+          unchecked: Not checked yet
+          ok: Working
+          rejected: Rejected by Anthropic
+        rejected_since: "Rejected since %{at}. Learners see that scanning is not available, and nothing is counted."
+        unreadable: >-
+          The saved key cannot be decrypted with this server's encryption keys. Save the key again or remove it.
+        hint: Key
+        source: Source
+        sources:
+          stored: Saved here
+          environment: Environment variable
+        set_at: Saved
+        last_check: Last successful check
+        expiry: Expires
+        never: no date given
+        expires_today: today
+        expires_in:
+          one: "in %{count} day"
+          other: "in %{count} days"
+        expired:
+          one: "%{count} day ago"
+          other: "%{count} days ago"
+        new_key: New key
+        expires_on: Expiry date, optional
+        save: Save and check
+        check: Check now
+        remove: Remove saved key
+        remove_confirm: >-
+          Remove the saved key? Scanning goes back to the key in the environment variable, if there is one.
+        reopen: Reopen now
+        note: >-
+          A saved key takes the place of the environment variable, and Anthropic checks it before it is stored. Reopen
+          ends every pause except the daily ceiling.
+        no_encryption: >-
+          This server has no Active Record encryption keys, so an API key cannot be saved here. Set the three
+          ACTIVE_RECORD_ENCRYPTION variables, or use ANTHROPIC_API_KEY.
+        too_fast: Too many changes in a short time. Wait a few minutes and try again.
+        reopened: "Pauses ended: %{count}. The daily ceiling, if reached, still holds."
+        saved:
+          ok: "Anthropic accepted the key …%{hint}. It is saved and scanning is open."
+          rejected: Anthropic rejected this key. Nothing was saved.
+          no_model: This key works but has no access to the scan model. Nothing was saved.
+          unreachable: Anthropic could not be reached to check the key. Nothing was saved. Try again in a minute.
+          malformed: This does not look like an Anthropic API key. Nothing was saved.
+          no_encryption: This server has no encryption keys. Nothing was saved.
+        checked:
+          ok: The key works.
+          rejected: Anthropic rejected the key. Scanning stays off until a check succeeds.
+          no_model: The key works but has no access to the scan model.
+          unreachable: Anthropic could not be reached. The state of the key has not changed.
+          missing: There is no key to check.
+        forgotten:
+          ok: The saved key was removed. The key from the environment variable works and is in use.
+          rejected: The saved key was removed. Anthropic rejected the key from the environment variable.
+          no_model: The saved key was removed. The key from the environment variable has no access to the scan model.
+          unreachable: The saved key was removed. The key from the environment variable could not be checked yet.
+          missing: The saved key was removed. There is no key now, so scanning is off.
+      health:
+        marker: Needs attention
+        missing: "Scanning is off: there is no API key."
+        rejected: "Scanning is off: Anthropic rejected the API key."
+        expiring: The scan API key expires soon. Save a new one.
+        credit: "Scanning is paused: the Anthropic credit has run out."
+      model_choice:
+        label: Model for scans
+        environment: "From SCAN_MODEL: %{model}"
+        save: Check and use
+        saved:
+          ok: "Anthropic gives this key access to %{model}. Scans now use it."
+          rejected: Anthropic rejected the key. The model was not changed.
+          no_model: "This key has no access to %{model}. The model was not changed."
+          unreachable: Anthropic could not be reached. The model was not changed. Try again in a minute.
+          missing: There is no API key to check the model with. The model was not changed.
+          unknown: That model is not on the price list. The model was not changed.
+    alerts:
+      learners_heading: What learners see now
+      action_heading: What to do
+      open_admin: Open the scan page
+      rejected:
+        subject: "Scanning is off: Anthropic rejected the API key"
+        happened: "On %{at}, Anthropic answered that the scan API key is invalid, expired or revoked. Scanning stopped at once."
+        learners: >-
+          The scan page says that scanning is not available right now and suggests pasting the text instead. Uploads are
+          refused and count against nobody's daily limit.
+        action: >-
+          Create a new key in the Anthropic Console and save it on the scan page. It is checked first, and scanning
+          reopens as soon as Anthropic accepts it.
+      credit:
+        subject: "Scanning is paused: the Anthropic credit has run out"
+        happened: >-
+          On %{at}, Anthropic refused a scan because the account has no credit left or has reached its spend limit.
+        learners: >-
+          Scanning rests for six hours. Learners see that it will be back shortly, and the failed scans are not counted.
+        action: >-
+          Add credit or raise the spend limit in the Anthropic Console, then press Reopen now on the scan page.
+      ceiling:
+        subject: Scanning is paused for today
+        happened: >-
+          On %{at}, learners together reached the daily ceiling of scans. Scanning is paused until midnight, Taiwan time.
+        learners: Learners see that scanning is resting and will be back. Nothing more is counted today.
+        action: >-
+          Nothing has to be done. If the demand is real, raise SCAN_GLOBAL_DAILY. The ceiling resets at midnight.
+      expiring:
+        subject: The scan API key expires tomorrow
+        happened: "As of %{at}, the saved scan API key is a day or less from the expiry date you entered."
+        learners: >-
+          Nothing changes for learners yet. When the key expires, scanning stops and they see that it is not available.
+        action: Create a new key in the Anthropic Console and save it on the scan page before the old one expires.
+  admin:
+    mail:
+      lists:
+        alerts: Alerts

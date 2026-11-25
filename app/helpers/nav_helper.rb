@@ -30,7 +30,7 @@ module NavHelper
 
   LEARN_ORDER = {
     nil => %i[course roadmap today decks reader graded placement plan triage],
-    "tocfl" => %i[today plan mock placement course decks graded reader triage roadmap],
+    "tocfl" => %i[today plan mock exams placement course decks graded reader triage roadmap],
     "classes" => %i[today decks triage reader graded course placement plan roadmap],
     "guided" => %i[today course roadmap graded reader decks placement plan triage]
   }.freeze
@@ -46,11 +46,12 @@ module NavHelper
       placement: [:stats, t("nav.placement"), placement_path],
       plan: [:stats, t("nav.plan"), study_plan_path],
       triage: [:study, t("nav.triage"), triage_path],
-      mock: [:stats, t("nav.mock"), mock_exams_path]
+      mock: [:stats, t("nav.mock"), mock_exams_path],
+      exams: [:stats, t("nav.exams"), exams_path]
     }
   end
 
-  GUEST_LEARN = %i[course placement graded mock].freeze
+  GUEST_LEARN = %i[course placement graded mock exams].freeze
 
   def learn_items
     catalog = learn_catalog
@@ -61,7 +62,6 @@ module NavHelper
       items << [:book, t("nav.textbook"), textbook_path]
       items << [:sentences, t("nav.phrase_drills"), textbook_phrases_path]
       items << [:book, t("nav.stories"), stories_path]
-      items << [:stats, t("nav.exams"), exams_path]
     end
 
     items
@@ -92,6 +92,7 @@ module NavHelper
       [:book, t("nav.grammar"), grammar_path],
       [:book, t("nav.word_pairs"), word_pairs_path],
       ([:characters, t("nav.variants"), variants_path] if Locales.compares_china?),
+      ([:characters, t("kanji_bridge.nav"), kanji_path] if Locales.kanji_bridge?),
       [:book, t("nav.names"), names_path]
     ].compact
   end
@@ -106,7 +107,8 @@ module NavHelper
       [:keyboard, t("nav.typing"), practice_typing_path],
       [:speaker, t("nav.dictation"), practice_dictation_path],
       [:keyboard, t("nav.cangjie"), cangjie_path],
-      [:stats, t("nav.mock"), mock_exams_path]
+      [:stats, t("nav.mock"), mock_exams_path],
+      [:stats, t("nav.exams"), exams_path]
     ]
   end
 

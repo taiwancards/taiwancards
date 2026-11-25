@@ -197,6 +197,44 @@ RSpec.describe Huayu::SentenceRejectPruner do
     end
   end
 
+  %w[garbled pun crude false].each do |reason|
+    it "removes a #{reason} reject even when it is the only translated example of its word" do
+      last = rejected(meanings: {"en" => "It was."}, reason:)
+
+      expect(pruner.call).to(include(spared: 0, removed: 1))
+      expect(present?(last)).to(be(false))
+    end
+  end
+
+  %w[fragment ambiguous off_corpus].each do |reason|
+    it "keeps the floor for a #{reason} reject" do
+      kept = rejected(meanings: {"en" => "It was."}, reason:)
+
+      expect(pruner.call).to(include(spared: 1, removed: 0))
+      expect(present?(kept)).to(be(true))
+    end
+  end
+
+  it "still protects an unconditional reject someone studies" do
+    studied = rejected(reason: "crude")
+    LexemeMemory.create!(lexeme: studied, user: nil, facet: :recognition, activated_at: Time.current)
+
+    expect(pruner.call).to(include(protected: 1, removed: 0))
+    expect(present?(studied)).to(be(true))
+  end
+
+  it "counts an unconditional removal against the floor before sparing soft rejects" do
+    examples(2, meanings: {"en" => "It is."})
+    pun = rejected(meanings: {"en" => "A joke."}, reason: "pun")
+    fragment = rejected(meanings: {"en" => "A scrap."})
+
+    plan = pruner.plan
+
+    expect(plan.removable).to(eq([pun.id]))
+    expect(plan.spared).to(eq([fragment.id]))
+    expect(plan.unconditional).to(eq([pun.id]))
+  end
+
   it "leaves the entries listed as off_taiwan to the other task" do
     political = rejected(of: [], reason: "off_taiwan")
 

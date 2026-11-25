@@ -26,7 +26,7 @@ Rails.application.configure do
     policy.form_action(:self, *sign_in)
     policy.script_src(:self)
     policy.style_src(:self, :unsafe_inline)
-    policy.img_src(:self, :data, :blob)
+    policy.img_src(:self, :data, :blob, *assets)
     policy.font_src(:self, :data, *assets)
     policy.media_src(:self, :data, :blob, *media)
     policy.connect_src(:self, *assets)

@@ -1,0 +1,8 @@
+- content_for(:title, t("scan.title"))
+
+.py-6.space-y-5
+  header.space-y-1
+    h1.text-2xl.font-bold.tracking-tight = t("scan.title")
+    p.max-w-prose.text-sm.text-muted-foreground = t("scan.lede")
+
+  = render("scans/panel", panel: @panel)

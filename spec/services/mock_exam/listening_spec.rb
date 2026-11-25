@@ -13,6 +13,7 @@ RSpec.describe MockExam::Listening do
       vi: nil,
       de: nil,
       ind: nil,
+      ja: nil,
       emoji:,
       emoji_word: emoji ? text[0, 2] : nil,
       emoji_category: category

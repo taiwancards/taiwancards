@@ -32,6 +32,7 @@ RSpec.describe Deploy::ContentTables do
     end
 
     expect(described_class.names).not_to(include("users", "lexeme_memories", "lexeme_reviews", "activity_events"))
+    expect(described_class.names).not_to(include("scan_credentials", "scan_pauses", "scans"))
   end
 
   it "compares a wholesale-rebuilt table on its natural key" do

@@ -4,10 +4,12 @@
       div
         h3.font-semibold = t("practice.blocks.#{bundle.key}.title")
         p.text-sm.text-muted-foreground = t("practice.blocks.#{bundle.key}.body")
+        = regional_note("blocks", bundle.key)
+        = standard_contrast("blocks", bundle.key, css: "mt-2 text-sm")
       - if bundle.drillable?
         span.shrink-0.text-lg.tracking-wide.text-muted-foreground lang="zh-TW" = bundle.symbols.join(" ")
 
-    = render "practice/phonetics_table", rows: bundle.rows
+    = render "practice/phonetics_table", rows: bundle.rows, section: part
 
     - if bundle.drillable?
       = link_to zhuyin_training_path(block: bundle.key, from: part),

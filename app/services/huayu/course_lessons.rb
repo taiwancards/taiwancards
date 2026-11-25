@@ -14,7 +14,7 @@ module Huayu
       def translated(locale) = Locales.pick(Locales::STORED.to_h { |key| [key, public_send(key)] }, locale)
     end
 
-    Line = Data.define(:who, :zh, :en, :ru, :vi, :de, :ind, :zhuyin, :pinyin, :grammar) do
+    Line = Data.define(:who, :zh, :en, :ru, :vi, :de, :ind, :ja, :zhuyin, :pinyin, :grammar) do
       include Localized
       include Translated
 
@@ -23,7 +23,7 @@ module Huayu
       def syllables = zhuyin.to_s.split(/[[:space:]]+/).reject(&:empty?)
     end
 
-    Word = Data.define(:zh, :zhuyin, :pinyin, :pos, :en, :ru, :vi, :de, :ind, :register, :note) do
+    Word = Data.define(:zh, :zhuyin, :pinyin, :pos, :en, :ru, :vi, :de, :ind, :ja, :register, :note) do
       include Localized
       include Translated
 
@@ -42,7 +42,7 @@ module Huayu
       def note_for(locale) = pick(note, locale)
     end
 
-    Usage = Data.define(:street, :standard, :en, :ru, :vi, :de, :ind) do
+    Usage = Data.define(:street, :standard, :en, :ru, :vi, :de, :ind, :ja) do
       include Localized
       include Translated
 
@@ -115,7 +115,7 @@ module Huayu
       def exercise_payload(locale) = exercises.map { |exercise| exercise.payload(locale) }
     end
 
-    Stage = Data.define(:slug, :band, :order, :zh, :en, :ru, :vi, :de, :ind, :exam) do
+    Stage = Data.define(:slug, :band, :order, :zh, :en, :ru, :vi, :de, :ind, :ja, :exam) do
       include Localized
 
       def to_param = slug
@@ -164,6 +164,7 @@ module Huayu
               vi: row["vi"] || {},
               de: row["de"] || {},
               ind: row["ind"] || {},
+              ja: row["ja"] || {},
               exam: build_exercises(row, "exam")
             )
           end
@@ -204,6 +205,7 @@ module Huayu
             vi: line["vi"],
             de: line["de"],
             ind: line["ind"],
+            ja: line["ja"],
             zhuyin: line["zhuyin"],
             pinyin: line["pinyin"],
             grammar: Array(line["grammar"]).freeze
@@ -223,6 +225,7 @@ module Huayu
             vi: word["vi"],
             de: word["de"],
             ind: word["ind"],
+            ja: word["ja"],
             register: word["register"] || "standard",
             note: word["note"]
           )
@@ -242,7 +245,8 @@ module Huayu
             ru: entry["ru"],
             vi: entry["vi"],
             de: entry["de"],
-            ind: entry["ind"]
+            ind: entry["ind"],
+            ja: entry["ja"]
           )
         end
       end

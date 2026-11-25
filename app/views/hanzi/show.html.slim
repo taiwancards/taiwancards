@@ -115,7 +115,7 @@
             .flex.flex-wrap.items-baseline.gap-x-3
               span.text-3xl.font-semibold lang="zh-TW" = row["char"]
               span.pinyin.text-sm.text-muted-foreground = row["pinyin"]
-              span.text-xs.text-muted-foreground
+              span.text-xs.text-muted-foreground lang="zh-TW"
                 = "#{row["semantic"]} + #{row["phonetic"]}"
               - unless row["works"]
                 span.ml-auto.shrink-0.rounded-full.border.border-amber-500.px-2.text-xs.text-amber-600 class="py-0.5"

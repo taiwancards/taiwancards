@@ -7,6 +7,7 @@ class ActivityEvent < ApplicationRecord
   TRACKED_KEYS = 16_384
   SWEEP_INTERVAL = 1.hour
   SWEEP_BATCH = 5_000
+  PATH_LIMIT = 255
 
   belongs_to :user, optional: true
 
@@ -19,7 +20,14 @@ class ActivityEvent < ApplicationRecord
       return if user.nil? || SKIPPED_CONTROLLERS.include?(controller)
       return unless fresh?(user, controller, action)
 
-      event = create!(user:, controller:, action:, verb:, path: path.to_s.first(255), created_at: Time.current)
+      event = create!(
+        user:,
+        controller:,
+        action:,
+        verb:,
+        path: StoredPath.clip(path, PATH_LIMIT),
+        created_at: Time.current
+      )
       sweep
       event
     rescue => e

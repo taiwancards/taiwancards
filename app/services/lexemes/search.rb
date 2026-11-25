@@ -45,7 +45,7 @@ module Lexemes
     end
 
     def tier_for(lexeme, parsed)
-      return EXACT if lexeme.text == parsed.raw || Huayu::VariantForms.tai_twins(parsed.raw).include?(lexeme.text)
+      return EXACT if exact_texts(parsed).include?(lexeme.text)
 
       forms = forms_for(lexeme)
       if parsed.reading?
@@ -116,12 +116,16 @@ module Lexemes
       )
     end
 
+    def exact_texts(parsed)
+      [*Huayu::ErhuaSpellings.spellings(parsed.raw), *Huayu::VariantForms.tai_twins(parsed.raw)]
+    end
+
     def bindings(parsed)
       {
         kinds: Lexeme.kinds.values_at(*kinds),
         include_restricted: @user&.restricted_access? || false,
         raw: parsed.raw,
-        exact: [parsed.raw, *Huayu::VariantForms.tai_twins(parsed.raw)],
+        exact: exact_texts(parsed),
         prefix: "#{parsed.raw}%",
         contains: "%#{parsed.lower}%",
         tokens: parsed.tokens.map { |token| Huayu::ReadingForms.reading_token(token) }.presence || [""]

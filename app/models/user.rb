@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_many :lexeme_reviews, dependent: :delete_all
   has_many :lexeme_memories, dependent: :delete_all
   has_many :reading_texts, dependent: :destroy
+  has_many :scans, dependent: :delete_all
   has_many :collections, dependent: :destroy
   has_many :collection_groups, dependent: :delete_all
   has_many :deck_shares, dependent: :delete_all
@@ -41,6 +42,7 @@ class User < ApplicationRecord
   attr_accessor :mailing_source
 
   before_save :settle_admin
+  before_destroy :forget_mail_journal, prepend: true
   after_create_commit :log_mailing_signup
   after_update_commit :log_mailing_changes
 
@@ -204,8 +206,17 @@ class User < ApplicationRecord
   preference :goal, one_of: GOALS, allow_nil: true
   preference :signup_from
   preference :language_chosen
+  preference :entry_door, one_of: Onboarding::Entry::DOORS, allow_nil: true
+  preference :door_reached_at
 
   def language_chosen? = language_chosen.present?
+
+  def reach_door!(door)
+    return if entry_door.nil? || entry_door != door.to_s || door_reached_at.present?
+
+    self.door_reached_at = Time.current.iso8601
+    update_columns(prefs:)
+  end
 
   def language_step? = !goal_chosen? && !language_chosen?
 
@@ -250,7 +261,10 @@ class User < ApplicationRecord
     goal
     signup_from
     language_chosen
-  ].freeze
+    entry_door
+    door_reached_at
+  ]
+    .freeze
 
   LEVELS = %w[zero phonetics 1 2 3 4 5 6 7].freeze
   START_LEVELS = %w[zero phonetics zhuyin characters experienced].freeze
@@ -322,6 +336,8 @@ class User < ApplicationRecord
   end
 
   private
+
+  def forget_mail_journal = mail_events.anonymize!
 
   def settle_admin
     self.admin = admin?

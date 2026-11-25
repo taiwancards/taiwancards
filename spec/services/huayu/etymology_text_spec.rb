@@ -112,6 +112,20 @@ RSpec.describe Huayu::EtymologyText do
     expect(described_class.normalize(text)).to(eq("Compare Jingpho (pyau, “fly”), Mizo (puŋᴴ)."))
   end
 
+  it "drops the pipe a removed placeholder pair leaves behind but keeps alternate readings" do
+    text = "perhaps also Old Turkic [script needed]|[Term?] (*-lan); from 倚 (MC 'jeX|'jeH, “to lean”)."
+
+    expect(described_class.normalize(text)).to(
+      eq("perhaps also Old Turkic (*-lan); from 倚 (MC 'jeX|'jeH, “to lean”).")
+    )
+  end
+
+  it "drops list items whose quotation was stripped" do
+    text = "Attested earliest in the Tao Te Ching:\n*\n:*\nCompare 然."
+
+    expect(described_class.normalize(text)).to(eq("Attested earliest in the Tao Te Ching:\nCompare 然."))
+  end
+
   it "drops a sense label left where an etymology should be" do
     expect(described_class.normalize("\"insurance\"")).to(eq(""))
     expect(described_class.normalize("“fax”")).to(eq(""))

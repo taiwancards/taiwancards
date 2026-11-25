@@ -55,7 +55,7 @@ RSpec.describe Huayu::NoticeImporter do
 
   it "reports drift when a stored translation no longer matches the file" do
     run
-    zh = Huayu::TaiwanNotices.all.first.items.first.zh
+    zh = Huayu::TaiwanNotices.all.flat_map(&:items).find { |item| item.names["vi"].present? }.zh
     sentence = Lexeme.find_by(kind: :sentence, text: zh)
     sentence.update!(meanings: sentence.meanings.merge("vi" => "bản dịch cũ"))
 

@@ -13,6 +13,7 @@ RSpec.describe MockExam::Pictures do
       vi: "vi #{text}",
       de: nil,
       ind: nil,
+      ja: nil,
       emoji:,
       emoji_word: word,
       emoji_category: category

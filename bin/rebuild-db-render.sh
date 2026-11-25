@@ -89,11 +89,11 @@ rm -f "$DUMP"
 printf "  dumping %s → %s\n" "$LOCAL_DB" "$DUMP"
 began=$(date +%s)
 if command -v pv > /dev/null 2>&1; then
-  pg_dump --format=custom --compress=6 --no-owner --no-privileges \
+  pg_dump --format=custom --compress=6 --no-owner --no-privileges --exclude-table-data=scan_credentials \
     --host="$LOCAL_HOST" --port="$LOCAL_PORT" "$LOCAL_DB" |
     pv -N "dump" > "$DUMP"
 else
-  pg_dump --format=custom --compress=6 --no-owner --no-privileges \
+  pg_dump --format=custom --compress=6 --no-owner --no-privileges --exclude-table-data=scan_credentials \
     --host="$LOCAL_HOST" --port="$LOCAL_PORT" --file="$DUMP" "$LOCAL_DB"
 fi
 [ -s "$DUMP" ] || die "the dump is empty"

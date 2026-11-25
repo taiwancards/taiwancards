@@ -6,8 +6,17 @@ module Offline
 
     Result = Data.define(:paths, :entries)
 
-    Entry = Data.define(:text, :zhuyin, :pinyin, :en, :ru, :vi, :de, :ind, :path, :kind) do
-      def to_row = [text, zhuyin, pinyin, en, ru, path, kind, *[vi, de, ind].map { |gloss| gloss == en ? "" : gloss }]
+    Entry = Data.define(:text, :zhuyin, :pinyin, :en, :ru, :vi, :de, :ind, :ja, :path, :kind) do
+      def to_row = [
+        text,
+        zhuyin,
+        pinyin,
+        en,
+        ru,
+        path,
+        kind,
+        *[vi, de, ind, ja].map { |gloss| gloss == en ? "" : gloss }
+      ]
     end
 
     CORE_PATHS = %w[
@@ -83,6 +92,7 @@ module Offline
         vi: pair.gist(:vi).to_s,
         de: pair.gist(:de).to_s,
         ind: pair.gist(:id).to_s,
+        ja: HanScript.plain(pair.gist(:ja)),
         path: word_pair_path(id: pair.to_param),
         kind: "grammar"
       )
@@ -98,6 +108,7 @@ module Offline
         vi: lesson.title(:vi).to_s,
         de: lesson.title(:de).to_s,
         ind: lesson.title(:id).to_s,
+        ja: HanScript.plain(lesson.title(:ja)),
         path: grammar_lesson_path(id: lesson.to_param),
         kind: "grammar"
       )
@@ -126,6 +137,7 @@ module Offline
         vi: text.title(:vi).to_s,
         de: text.title(:de).to_s,
         ind: text.title(:id).to_s,
+        ja: HanScript.plain(text.title(:ja)),
         path: graded_text_path(tier: text.tier, id: text.id),
         kind: "text"
       )
@@ -149,12 +161,16 @@ module Offline
         vi: lesson.title_for(:vi).to_s,
         de: lesson.title_for(:de).to_s,
         ind: lesson.title_for(:id).to_s,
+        ja: HanScript.plain(lesson.title_for(:ja)),
         path: cangjie_lesson_path(id: lesson.to_param),
         kind: "text"
       )
     end
 
-    def taiwan = Result.new(paths: TAIWAN_PATHS, entries: [])
+    def taiwan
+      notices = Huayu::TaiwanNotices.situations.map { |situation| notices_situation_path(situation: situation) }
+      Result.new(paths: TAIWAN_PATHS + notices, entries: [])
+    end
 
     def reference
       lexemes = Lexeme.where(kind: %i[radical measure_word particle]).to_a
@@ -255,6 +271,7 @@ module Offline
         vi: lexeme.meanings["vi"].to_s,
         de: lexeme.meanings["de"].to_s,
         ind: lexeme.meanings["ind"].to_s,
+        ja: lexeme.meanings["ja"].to_s,
         path: lexeme_path_for(lexeme),
         kind: lexeme.kind.to_s
       )
@@ -270,6 +287,7 @@ module Offline
         vi: lexeme.meanings["vi"].to_s,
         de: lexeme.meanings["de"].to_s,
         ind: lexeme.meanings["ind"].to_s,
+        ja: lexeme.meanings["ja"].to_s,
         path: sentence_path(id: lexeme.to_param),
         kind: "sentence"
       )

@@ -129,7 +129,10 @@ module Huayu
         return text if text
       end
 
-      sources.filter_map { |source| source.data["etymology_text"].presence }.first
+      sources
+        .reject { |source| EtymologyTranslations.withheld?(source, "text") }
+        .filter_map { |source| source.data["etymology_text"].presence }
+        .first
     end
 
     def character

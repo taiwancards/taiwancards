@@ -39,6 +39,21 @@ RSpec.describe Huayu::SenseMeaningFiller do
     expect(lexeme.senses.map { |sense| sense.reload.meanings }).to(all(eq({})))
   end
 
+  it "matches a stored translation whose Chinese definition still carries the Ministry numbering" do
+    lexeme = sense_for("母親", ["稱謂。對媽媽的稱呼。", "比喻孕育的根源。"])
+    store = Rails.root.join("tmp/spec-sense-glosses-numbering.jsonl")
+    store.write(
+      JSON.generate({word: "母親", zh: "2.比喻孕育的根源。", en: "source, origin", ru: "источник"})
+    )
+    stub_const("#{Huayu::SenseGlossStore}::PATH", store)
+
+    described_class.new(io: StringIO.new).call
+
+    expect(lexeme.senses.map { |sense| sense.reload.meaning("en") }).to(eq([nil, "source, origin"]))
+  ensure
+    store&.delete if store&.exist?
+  end
+
   it "applies our own stored translations, matching by word and Chinese definition" do
     lexeme = sense_for("多義", ["第一義。", "第二義。"])
     store = Rails.root.join("tmp/spec-sense-glosses.jsonl")

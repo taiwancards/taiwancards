@@ -179,12 +179,84 @@ RSpec.describe Huayu::EtymologyTranslations do
     end
   end
 
-  it "ignores entries whose fields are blank" do
+  it "ignores entries without fields" do
     character("味", {"etymology" => {"hint" => "mouth"}})
-    write({"味" => {"hint" => "  ", "text" => ""}})
+    write({"味" => {"hint" => nil}, "龘" => {}})
 
     expect(described_class.new(path:).call).to(include(entries: 0))
     expect(described_class.new(path:)).not_to(be_drift)
+  end
+
+  it "clears a stored translation whose field is emptied and falls back to English" do
+    lexeme = character("味", {"etymology" => {"hint" => "mouth"}})
+    write({"味" => {"hint" => "рот"}})
+    described_class.new(path:).call
+    write({"味" => {"hint" => "  "}})
+
+    expect(described_class.new(path:)).to(be_drift)
+    expect(described_class.new(path:).call).to(include(entries: 1, written: 1))
+    expect(lexeme.reload.data.dig("etymology_i18n", "ru")).to(eq({"hint" => ""}))
+    expect(described_class.new(path:)).not_to(be_drift)
+    I18n.with_locale(:ru) { expect(Huayu::CharacterProfile.new(lexeme, user: nil).etymology_hint).to(eq("mouth")) }
+  end
+
+  it "withholds the source etymology of a character where the English override is empty" do
+    lexeme = character(
+      "區",
+      {
+        "etymology" => {"hint" => "A place 匸 where many mouths 品 live"},
+        "etymology_text" => "Phonetic substitution for 蛆."
+      }
+    )
+    write({"區" => {"text" => ""}})
+    described_class.new(path:, locale: "en").call
+    write({"區" => {"text" => "Ortsbezeichnung."}})
+    described_class.new(path:, locale: "de").call
+    profile = Huayu::CharacterProfile.new(lexeme.reload, user: nil)
+
+    expect(lexeme.data.dig("etymology_i18n", "en")).to(eq({"text" => ""}))
+    expect(described_class.new(path:, locale: "de")).not_to(be_drift)
+    I18n.with_locale(:en) do
+      expect(profile.etymology_text).to(be_nil)
+      expect(profile.etymology_hint).to(eq("A place 匸 where many mouths 品 live"))
+    end
+
+    I18n.with_locale(:ru) { expect(profile.etymology_text).to(be_nil) }
+    I18n.with_locale(:ja) { expect(profile.etymology_text).to(be_nil) }
+    I18n.with_locale(:de) { expect(profile.etymology_text).to(eq("Ortsbezeichnung.")) }
+  end
+
+  it "withholds the source hint where the English hint override is empty" do
+    lexeme = character("社", {"etymology" => {"hint" => "spirit; 礻 gives the sound"}})
+    write({"社" => {"hint" => ""}})
+    described_class.new(path:, locale: "en").call
+    profile = Huayu::CharacterProfile.new(lexeme.reload, user: nil)
+
+    I18n.with_locale(:en) { expect(profile.etymology_hint).to(be_nil) }
+    I18n.with_locale(:vi) { expect(profile.etymology_hint).to(be_nil) }
+  end
+
+  it "withholds the source etymology of a word and of its character" do
+    word = Lexeme.create!(kind: :word, text: "搭", data: {"etymology_text" => "Glottalisation of 代."})
+    character("搭", {"etymology_text" => "Glottalisation of 代."})
+    write({"搭" => {"text" => ""}})
+    described_class.new(path:, locale: "en").call
+    described_class.new(path:, locale: "en", kind: :word).call
+    profile = Huayu::WordProfile.new(word.reload, user: nil)
+
+    I18n.with_locale(:en) { expect(profile.etymology).to(be_nil) }
+    I18n.with_locale(:id) { expect(profile.etymology).to(be_nil) }
+  end
+
+  it "applies a word etymology to a collocation of the same text" do
+    collocation = Lexeme.create!(kind: :collocation, text: "以卵投石", data: {"etymology_text" => "From Mozi:"})
+    write({"以卵投石" => {"text" => "From Mozi."}})
+
+    expect(described_class.new(path:, locale: "en", kind: :word).call).to(include(written: 1))
+    expect(described_class.new(path:, locale: "en", kind: :word)).not_to(be_drift)
+    I18n.with_locale(:en) {
+      expect(Huayu::WordProfile.new(collocation.reload, user: nil).etymology).to(eq("From Mozi."))
+    }
   end
 
   it "skips a sense label in place of a translated etymology" do

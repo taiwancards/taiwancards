@@ -5,7 +5,9 @@
     div
       h1.text-2xl.font-bold.tracking-tight = t("mock.listening_title", band: t("mock.bands.#{@paper.band}"))
       p.text-sm.text-muted-foreground = t("mock.listening_paper_lede", count: @paper.count, minutes: @paper.minutes)
-    .rounded-xl.border.border-border.px-4.py-2.text-xl.font-bold.tabular-nums data-countdown-target="display"
+    .flex.items-center.gap-2
+      = render("shared/audio_speed")
+      .rounded-xl.border.border-border.px-4.py-2.text-xl.font-bold.tabular-nums data-countdown-target="display"
 
   = form_with url: grade_mock_listening_path, method: :post, data: {countdown_target: "form", turbo: false} do |form|
     = form.hidden_field :band, value: @paper.band

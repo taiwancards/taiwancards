@@ -51,7 +51,7 @@ module Huayu
         .where(lexeme_id: lexemes.keys)
         .pluck(:id, :lexeme_id, :gloss_zh, :meanings)
         .filter_map do |id, lexeme_id, gloss_zh, stored|
-          entry = by_key[lexemes[lexeme_id]]&.find { |candidate| candidate.zh == gloss_zh }
+          entry = matching(by_key[lexemes[lexeme_id]], gloss_zh)
           next if entry.nil?
 
           meanings = stored.merge({"en" => entry.en.presence, "ru" => entry.ru.presence}.compact)
@@ -61,6 +61,13 @@ module Huayu
         end
 
       Bulk.patch(target: "lexeme_senses", columns: {"meanings" => "jsonb"}, rows: rows)
+    end
+
+    def matching(candidates, gloss_zh)
+      return nil if candidates.nil? || gloss_zh.blank?
+
+      candidates.find { |candidate| candidate.zh == gloss_zh } ||
+        candidates.find { |candidate| ConcisedMarkup.definition(candidate.zh) == ConcisedMarkup.definition(gloss_zh) }
     end
   end
 end

@@ -1,0 +1,14 @@
+- content_for(:title, t("doors.text.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    p.text-xs.font-medium.uppercase.tracking-widest.text-brand = t("doors.text.door")
+    h1.text-2xl.font-bold.tracking-tight class="sm:text-3xl" = t("doors.text.title")
+    p.max-w-2xl.text-sm.leading-relaxed.text-muted-foreground = t("doors.text.lede")
+
+  = render("doors/paste_form", door: "text")
+
+  section.min-w-0.space-y-3 aria-labelledby="door-example"
+    h2#door-example.text-sm.font-semibold = t("doors.example_title")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("doors.text.example_lede")
+    = render("shared/annotated_text", lines: @lines, known_ids: Set.new)

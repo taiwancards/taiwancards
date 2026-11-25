@@ -1,0 +1,32 @@
+- door = local_assigns.fetch(:door)
+- field = "w-full rounded-lg border border-border bg-card px-3 py-2"
+
+.min-w-0.space-y-3 *door_stash_attributes(door)
+  = form_with url: door_continue_path(door:), method: :get, class: "space-y-4",
+    data: {turbo: false, door_stash_target: "form", action: "submit->door-stash#keep"} do
+    .space-y-1
+      label.text-sm.font-medium for="door-name" = t("doors.#{door}.name_label")
+      input#door-name.min-h-11.text-sm[
+        type="text" class=field maxlength=DoorsController::NAME_LIMIT autocomplete="off"
+        placeholder=t("doors.#{door}.name_placeholder") data-door-stash-target="name" ]
+
+    .space-y-1
+      .flex.flex-wrap.items-baseline.justify-between.gap-2
+        label.text-sm.font-medium for="door-text" = t("doors.#{door}.text_label")
+        button.inline-flex.min-h-11.cursor-pointer.items-center.text-sm.font-medium.text-primary.underline-offset-2[
+          type="button" class="hover:underline md:min-h-8" data-action="door-stash#example" ]
+          = t("doors.use_example")
+      textarea#door-text.text-base.leading-relaxed[
+        rows=(door == "words" ? 7 : 10) class=field lang="zh-TW" dir="auto" maxlength=DoorsController::TEXT_LIMIT
+        placeholder=t("doors.#{door}.text_placeholder") data-door-stash-target="text" ]
+      p.text-xs.leading-relaxed.text-muted-foreground = t("doors.#{door}.text_hint")
+
+    p.rounded-lg.border.border-amber-400.px-3.py-2.text-sm class="bg-amber-500/10" role="alert" data-door-stash-target="message" hidden=true
+
+    .space-y-2
+      button.inline-flex.min-h-11.cursor-pointer.items-center.rounded-xl.bg-primary.px-6.text-sm.font-semibold.text-primary-foreground[
+        type="submit" class="hover:opacity-90" ]
+        = t("doors.#{door}.submit")
+      p.text-xs.leading-relaxed.text-muted-foreground = t("doors.handover_note")
+
+  = render("doors/more_ways", door:)

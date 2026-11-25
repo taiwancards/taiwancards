@@ -1,0 +1,258 @@
+de:
+  scan:
+    title: Foto scannen
+    lede: >-
+      Fotografiere eine Seite aus dem Lehrbuch, einen Aushang, eine Speisekarte oder eine Medikamententüte aus der
+      Apotheke, oder füge einen Screenshot aus einem Chat ein. Die chinesischen Schriftzeichen darauf kommen als Text
+      zurück: Du kannst ihn korrigieren und dann einen Stapel daraus machen oder ihn unter „Texte lesen“ öffnen.
+    from_reader: Oder ein Foto bzw. einen Screenshot scannen
+    remaining:
+      one: "Heute noch %{count} von %{daily} Scans übrig"
+      other: "Heute noch %{count} von %{daily} Scans übrig"
+    drop: Foto oder Screenshot hierher ziehen
+    drop_hint: >-
+      Einen Screenshot kannst du auch mit Strg+V oder ⌘V einfügen. Fotos werden schon auf deinem Gerät verkleinert,
+      bevor sie verschickt werden.
+    camera: Foto aufnehmen
+    choose: Datei auswählen
+    text_label: Erkannter Text
+    text_hint: Vergleiche ihn mit dem Foto und korrigiere falsch gelesene Zeichen, bevor du weitermachst.
+    title_label: Name
+    default_title: "Scan, %{time}"
+    make_deck: Stapel erstellen
+    open_reader: Unter „Texte lesen“ öffnen
+    again: Noch ein Foto scannen
+    privacy_note: >-
+      Das Foto geht an Anthropic, dessen Modell den Text liest, und wird hier nicht gespeichert. Der erkannte Text
+      bleibt %{hours} Stunden erhalten, damit du in Ruhe fertig wirst, und wird dann gelöscht.
+    client:
+      preparing: Foto wird vorbereitet …
+      sending: Wird gesendet …
+      reading: Der Text wird gelesen. Das dauert ein paar Sekunden.
+      generic: Das hat leider nicht geklappt. Versuch es bitte gleich noch einmal.
+      offline: Keine Verbindung. Prüf dein Netz und versuch es noch einmal.
+      not_image: Diese Datei ist kein Bild. Wähle ein Foto oder einen Screenshot.
+      too_small: Das Bild ist zu klein, um es zu lesen.
+      too_large: Das Bild ist zu groß. Versuch es mit einem Screenshot oder einem kleineren Foto.
+    refusals:
+      missing: Wähle zuerst ein Foto.
+      not_image: Diese Datei ist kein Bild. Wähle ein Foto oder einen Screenshot.
+      too_small: Das Bild ist zu klein, um es zu lesen.
+      too_large: Das Bild ist zu groß. Versuch es mit einem Screenshot oder einem kleineren Foto.
+      quota: Das war der letzte Scan für heute. Morgen gibt es neue.
+      client: Aus diesem Netz kamen heute zu viele Scans. Versuch es bitte morgen wieder.
+      busy: Gerade werden mehrere Fotos gelesen. Versuch es bitte in einer Minute noch einmal.
+      paused: Das Scannen macht gerade eine Pause. Versuch es bitte später noch einmal.
+      unavailable: Das Scannen ist gerade nicht verfügbar.
+    failures:
+      interrupted: Das Lesen wurde unterbrochen. Dieser Scan wurde nicht gezählt, versuch es also bitte noch einmal.
+      timeout: Das Lesen hat zu lange gedauert. Dieser Scan wurde nicht gezählt, versuch es also bitte noch einmal.
+      unavailable: >-
+        Der Lesedienst hat nicht geantwortet. Dieser Scan wurde nicht gezählt. Versuch es bitte später noch einmal.
+      key: Das Scannen macht gerade eine Pause. Dieser Scan wurde nicht gezählt.
+      rate_limited: >-
+        Gerade werden zu viele Fotos gleichzeitig gelesen. Dieser Scan wurde nicht gezählt. Versuch es in ein paar
+        Minuten noch einmal.
+      busy: >-
+        Gerade werden mehrere Fotos gelesen. Dieser Scan wurde nicht gezählt. Versuch es in einer Minute noch einmal.
+      refused: Dieses Bild konnte nicht gelesen werden.
+      too_much: >-
+        Auf diesem Bild steht mehr Text, als ein einzelner Scan schafft. Fotografiere einen kleineren Ausschnitt der
+        Seite.
+    notes:
+      blurred: >-
+        Ein Teil des Fotos ist unscharf, deshalb können einige Zeichen fehlen oder falsch sein. Vergleiche mit dem Foto
+        oder mach ein schärferes.
+      unreadable: Das Foto ist zu unscharf oder zu dunkel. Versuch es bei besserem Licht noch einmal und halte das Handy ruhig.
+      no_text: Auf diesem Bild wurde kein chinesischer Text gefunden.
+      gaps: Mit □ markierte Zeichen ließen sich nicht lesen. Ergänze sie anhand des Fotos, bevor du weitermachst.
+      changed: "Kurzzeichen wurden in Langzeichen umgewandelt: %{chars}"
+    closed:
+      title: Scannen pausiert
+      unavailable: >-
+        Text aus Fotos lesen geht gerade nicht. Füge den Text stattdessen ein, oder zeichne ein Zeichen, das du nicht
+        lesen kannst, ins Suchfeld.
+      paused: >-
+        Es geht bald weiter. Bis dahin füge den Text ein, oder zeichne ein Zeichen, das du nicht lesen kannst, ins
+        Suchfeld.
+    privacy:
+      heading: Fotos, die du scannst
+      items:
+        - >-
+          Wenn du ein Foto oder einen Screenshot scannst, verkleinert dein Gerät es zuerst, und die App schickt es an
+          Anthropic, dessen Modell den chinesischen Text darin liest. Anthropic verarbeitet es nach seinen kommerziellen
+          Bedingungen als Dienstleister dieser App.
+        - Das Bild selbst speichert die App nie. Nichts anderes aus deinem Konto wird mitgeschickt.
+        - >-
+          Der daraus gelesene Text bleibt 24 Stunden gespeichert, damit du ihn korrigieren und einen Stapel oder einen
+          Lesetext daraus machen kannst, und wird dann gelöscht. Ein Stapel oder Lesetext, den du daraus erstellst,
+          bleibt wie jeder andere in deinem Konto.
+        - >-
+          Für das Tageslimit speichert die App Datum, Ergebnis und Größe jedes Scans und 24 Stunden lang einen nicht
+          umkehrbaren Fingerabdruck der Netzwerkadresse, von der er kam – nie die Adresse selbst.
+    admin:
+      title: Scans
+      lede: >-
+        Foto-Scans: %{daily} pro Person und Tag, erkannter Text bleibt %{kept} Stunden gespeichert. Die Kosten werden
+        aus den Tokens jedes Scans und dem Listenpreis des Modells geschätzt.
+      ceilings: Obergrenzen
+      state: Status
+      open: Offen
+      paused: "Pausiert (%{reason}) bis %{until}"
+      no_key: Kein API-Schlüssel
+      model: Modell
+      unpriced: kein Preis hinterlegt
+      today: Scans heute, alle Lernenden
+      in_flight: Wird gerade gelesen
+      per_client: Pro Netzwerk, 24 Stunden
+      at_quota: Lernende am Tageslimit
+      by_day: Nach Tag
+      total: Gesamt
+      columns:
+        day: Tag
+        scans: Scans
+        failed: Fehlgeschlagen
+        refunded: Nicht gezählt
+        input: Eingabe-Tokens
+        output: Ausgabe-Tokens
+        cost: Kosten
+      footnote: "Lernende in diesem Zeitraum: %{learners}. Durchschnittliche Lesezeit: %{latency} ms."
+      failures: Fehlschläge
+      pauses: Pausen
+      key:
+        title: API-Schlüssel
+        status:
+          missing: Kein Schlüssel
+          unchecked: Noch nicht geprüft
+          ok: Funktioniert
+          rejected: Von Anthropic abgelehnt
+        rejected_since: "Abgelehnt seit %{at}. Lernende sehen, dass Scannen nicht verfügbar ist, und nichts wird gezählt."
+        unreadable: >-
+          Der gespeicherte Schlüssel lässt sich mit den Verschlüsselungsschlüsseln dieses Servers nicht entschlüsseln.
+          Speichern Sie ihn erneut oder entfernen Sie ihn.
+        hint: Schlüssel
+        source: Quelle
+        sources:
+          stored: Hier gespeichert
+          environment: Umgebungsvariable
+        set_at: Gespeichert
+        last_check: Letzte erfolgreiche Prüfung
+        expiry: Läuft ab
+        never: kein Datum angegeben
+        expires_today: heute
+        expires_in:
+          one: "in %{count} Tag"
+          other: "in %{count} Tagen"
+        expired:
+          one: "vor %{count} Tag"
+          other: "vor %{count} Tagen"
+        new_key: Neuer Schlüssel
+        expires_on: Ablaufdatum, optional
+        save: Speichern und prüfen
+        check: Jetzt prüfen
+        remove: Gespeicherten Schlüssel entfernen
+        remove_confirm: >-
+          Gespeicherten Schlüssel entfernen? Scannen nutzt dann wieder den Schlüssel aus der Umgebungsvariable, falls es
+          einen gibt.
+        reopen: Jetzt wieder öffnen
+        note: >-
+          Ein gespeicherter Schlüssel ersetzt die Umgebungsvariable, und Anthropic prüft ihn, bevor er gespeichert wird.
+          „Jetzt wieder öffnen“ beendet jede Pause außer der Tagesobergrenze.
+        no_encryption: >-
+          Dieser Server hat keine Active-Record-Verschlüsselungsschlüssel, daher kann hier kein API-Schlüssel gespeichert
+          werden. Setzen Sie die drei Variablen ACTIVE_RECORD_ENCRYPTION oder nutzen Sie ANTHROPIC_API_KEY.
+        too_fast: Zu viele Änderungen in kurzer Zeit. Warten Sie ein paar Minuten und versuchen Sie es erneut.
+        reopened: "Beendete Pausen: %{count}. Eine erreichte Tagesobergrenze gilt weiter."
+        saved:
+          ok: "Anthropic hat den Schlüssel …%{hint} angenommen. Er ist gespeichert, Scannen ist offen."
+          rejected: Anthropic hat diesen Schlüssel abgelehnt. Nichts wurde gespeichert.
+          no_model: Der Schlüssel funktioniert, hat aber keinen Zugriff auf das Scan-Modell. Nichts wurde gespeichert.
+          unreachable: >-
+            Anthropic war für die Prüfung nicht erreichbar. Nichts wurde gespeichert. Versuchen Sie es in einer Minute
+            erneut.
+          malformed: Das sieht nicht nach einem API-Schlüssel von Anthropic aus. Nichts wurde gespeichert.
+          no_encryption: Dieser Server hat keine Verschlüsselungsschlüssel. Nichts wurde gespeichert.
+        checked:
+          ok: Der Schlüssel funktioniert.
+          rejected: Anthropic hat den Schlüssel abgelehnt. Scannen bleibt aus, bis eine Prüfung gelingt.
+          no_model: Der Schlüssel funktioniert, hat aber keinen Zugriff auf das Scan-Modell.
+          unreachable: Anthropic war nicht erreichbar. Der Zustand des Schlüssels ist unverändert.
+          missing: Es gibt keinen Schlüssel zum Prüfen.
+        forgotten:
+          ok: Der gespeicherte Schlüssel ist entfernt. Der Schlüssel aus der Umgebungsvariable funktioniert und ist in Gebrauch.
+          rejected: Der gespeicherte Schlüssel ist entfernt. Anthropic hat den Schlüssel aus der Umgebungsvariable abgelehnt.
+          no_model: >-
+            Der gespeicherte Schlüssel ist entfernt. Der Schlüssel aus der Umgebungsvariable hat keinen Zugriff auf das
+            Scan-Modell.
+          unreachable: >-
+            Der gespeicherte Schlüssel ist entfernt. Der Schlüssel aus der Umgebungsvariable konnte noch nicht geprüft
+            werden.
+          missing: Der gespeicherte Schlüssel ist entfernt. Es gibt jetzt keinen Schlüssel, Scannen ist aus.
+      health:
+        marker: Braucht Aufmerksamkeit
+        missing: "Scannen ist aus: Es gibt keinen API-Schlüssel."
+        rejected: "Scannen ist aus: Anthropic hat den API-Schlüssel abgelehnt."
+        expiring: Der API-Schlüssel für Scans läuft bald ab. Speichern Sie einen neuen.
+        credit: "Scannen ist pausiert: Das Guthaben bei Anthropic ist aufgebraucht."
+      model_choice:
+        label: Modell für Scans
+        environment: "Aus SCAN_MODEL: %{model}"
+        save: Prüfen und verwenden
+        saved:
+          ok: "Anthropic gibt diesem Schlüssel Zugriff auf %{model}. Scans nutzen es ab jetzt."
+          rejected: Anthropic hat den Schlüssel abgelehnt. Das Modell wurde nicht geändert.
+          no_model: "Dieser Schlüssel hat keinen Zugriff auf %{model}. Das Modell wurde nicht geändert."
+          unreachable: >-
+            Anthropic war nicht erreichbar. Das Modell wurde nicht geändert. Versuchen Sie es in einer Minute erneut.
+          missing: Es gibt keinen API-Schlüssel, um das Modell zu prüfen. Das Modell wurde nicht geändert.
+          unknown: Dieses Modell steht nicht in der Preisliste. Das Modell wurde nicht geändert.
+    alerts:
+      learners_heading: Was Lernende jetzt sehen
+      action_heading: Was zu tun ist
+      open_admin: Scan-Seite öffnen
+      rejected:
+        subject: "Scannen ist aus: Anthropic hat den API-Schlüssel abgelehnt"
+        happened: >-
+          Am %{at} hat Anthropic geantwortet, dass der API-Schlüssel für Scans ungültig, abgelaufen oder widerrufen ist.
+          Scannen wurde sofort angehalten.
+        learners: >-
+          Die Scan-Seite sagt, dass Scannen gerade nicht verfügbar ist, und schlägt vor, den Text einzufügen. Uploads
+          werden abgelehnt und zählen bei niemandem zum Tageslimit.
+        action: >-
+          Erstellen Sie in der Anthropic Console einen neuen Schlüssel und speichern Sie ihn auf der Scan-Seite. Er wird
+          zuerst geprüft, und Scannen öffnet wieder, sobald Anthropic ihn annimmt.
+      credit:
+        subject: "Scannen ist pausiert: Das Guthaben bei Anthropic ist aufgebraucht"
+        happened: >-
+          Am %{at} hat Anthropic einen Scan abgelehnt, weil das Konto kein Guthaben mehr hat oder sein Ausgabenlimit
+          erreicht ist.
+        learners: >-
+          Scannen ruht sechs Stunden. Lernende sehen, dass es bald zurück ist, und die fehlgeschlagenen Scans werden
+          nicht gezählt.
+        action: >-
+          Laden Sie Guthaben auf oder erhöhen Sie das Ausgabenlimit in der Anthropic Console und drücken Sie dann auf der
+          Scan-Seite „Jetzt wieder öffnen“.
+      ceiling:
+        subject: Scannen ist für heute pausiert
+        happened: >-
+          Am %{at} haben die Lernenden zusammen die Tagesobergrenze für Scans erreicht. Scannen ist bis Mitternacht
+          taiwanischer Zeit pausiert.
+        learners: Lernende sehen, dass Scannen ruht und wiederkommt. Heute wird nichts mehr gezählt.
+        action: >-
+          Es ist nichts zu tun. Wenn der Bedarf echt ist, erhöhen Sie SCAN_GLOBAL_DAILY. Die Obergrenze gilt ab Mitternacht
+          neu.
+      expiring:
+        subject: Der API-Schlüssel für Scans läuft morgen ab
+        happened: >-
+          Stand %{at} ist der gespeicherte API-Schlüssel höchstens einen Tag von dem Ablaufdatum entfernt, das Sie
+          eingetragen haben.
+        learners: >-
+          Für Lernende ändert sich noch nichts. Wenn der Schlüssel abläuft, hält Scannen an und sie sehen, dass es nicht
+          verfügbar ist.
+        action: >-
+          Erstellen Sie in der Anthropic Console einen neuen Schlüssel und speichern Sie ihn auf der Scan-Seite, bevor der
+          alte abläuft.
+  admin:
+    mail:
+      lists:
+        alerts: Warnungen

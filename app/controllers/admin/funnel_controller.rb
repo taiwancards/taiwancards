@@ -8,6 +8,7 @@ module Admin
       funnel = Admin::Funnel.new
       @cohorts = funnel.cohorts
       @sources = funnel.sources
+      @doors = funnel.doors
     end
   end
 end

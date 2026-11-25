@@ -192,6 +192,8 @@ class Lexeme < ApplicationRecord
   def note(locale = I18n.locale) = Locales.pick(data["note"], locale)
 
   def meaning(locale = I18n.locale)
+    return Locales.sentence(meanings, locale) if sentence?
+
     value = Locales.pick(meanings, locale).presence || meanings.values.find(&:present?)
     value.is_a?(Array) ? value.join("; ") : value
   end

@@ -1,21 +1,28 @@
 # frozen_string_literal: true
 
 module Locales
-  ALL = %w[en ru vi de id].freeze
+  Fallback = Class.new(String)
+
+  ALL = %w[en ru vi de id ja].freeze
   KEYS = {"id" => "ind"}.freeze
   STORED = ALL.map { |code| KEYS.fetch(code, code) }.freeze
   LEGACY = {"in" => "id"}.freeze
   DEFAULT = "en"
   PATTERN = Regexp.union(ALL)
-  OPEN_GRAPH = {"en" => "en_US", "ru" => "ru_RU", "vi" => "vi_VN", "de" => "de_DE", "id" => "id_ID"}.freeze
+  OPEN_GRAPH = {"en" => "en_US", "ru" => "ru_RU", "vi" => "vi_VN", "de" => "de_DE", "id" => "id_ID", "ja" => "ja_JP"}.freeze
   SEGMENT = /\A(#{ALL.join("|")})\z/
   TAIWAN_ONLY = %w[vi].freeze
+  HAN_PROSE = %w[ja].freeze
+  OWN_SENTENCES_ONLY = %w[ja].freeze
   CHINA_COMPARISONS = %w[/variants].freeze
+  KANJI_READERS = %w[ja].freeze
+  KANJI_BRIDGE = %w[/kanji].freeze
   COUNTRIES = {
     "VN" => "vi",
     **%w[RU UA BY KZ KG UZ TJ TM AM AZ MD].to_h { |country| [country, "ru"] },
     **%w[DE AT CH LI LU].to_h { |country| [country, "de"] },
-    "ID" => "id"
+    "ID" => "id",
+    "JP" => "ja"
   }.freeze
   COUNTRY_VETOES = {"CH" => %w[fr it rm], "LU" => %w[fr]}.freeze
 
@@ -25,14 +32,34 @@ module Locales
 
   def compares_china?(locale = I18n.locale) = !TAIWAN_ONLY.include?(locale.to_s)
 
-  def serves?(path, locale) = compares_china?(locale) || !CHINA_COMPARISONS.include?(path)
+  def writes_han?(locale = I18n.locale) = HAN_PROSE.include?(locale.to_s)
+
+  def kanji_bridge?(locale = I18n.locale) = KANJI_READERS.include?(locale.to_s)
+
+  def serves?(path, locale)
+    return kanji_bridge?(locale) if KANJI_BRIDGE.include?(path)
+
+    compares_china?(locale) || !CHINA_COMPARISONS.include?(path)
+  end
 
   def key(locale = I18n.locale) = KEYS.fetch(locale.to_s, locale.to_s)
 
   def pick(source, locale = I18n.locale)
     return nil if source.blank?
 
-    source[key(locale)].presence || source[DEFAULT]
+    source[key(locale)].presence || fallback(source[DEFAULT], locale)
+  end
+
+  def sentence(source, locale = I18n.locale)
+    return pick(source, locale) unless OWN_SENTENCES_ONLY.include?(locale.to_s)
+
+    source.to_h[key(locale)].presence
+  end
+
+  def fallback(text, locale = I18n.locale)
+    return text unless text.is_a?(String) && writes_han?(locale)
+
+    Fallback.new(text)
   end
 
   def resolve(url:, stored: nil, header: nil, country: nil)
@@ -83,9 +110,9 @@ module Locales
     ALL.to_h { |code| [code, swap(url, code)] }
   end
 
-  BARE = %r{\A/(?:up|auth|audio|manifest|configurations|assets|rails|locale|time_zone|sitemap|sitemaps|
+  BARE = %r{\A/(?:up|auth|audio|manifest|\.well-known|configurations|assets|rails|locale|time_zone|sitemap|sitemaps|
     textbook/audio|listening/clips|word_clips|export|tones/refill|n|l|u|hit|unsubscribe|reminders/run|newsletter_images|letter_opener|
-    characters/[^/]+/strokes|
+    characters/[^/]+/strokes|scans|
     pronunciation/(?:health|grade|thresholds|templates))(?:/|\.|\z|\?)}x
 
   def prefixable?(path)

@@ -18,6 +18,7 @@
           p.text-xs.text-muted-foreground = t("characters.several_readings", count: @profile.readings.size)
         - if lexeme.meaning.present?
           p.text-base = lexeme.meaning
+        = render("shared/erhua_note", text: lexeme.text)
         = render("shared/pronounce", lexeme:)
     .flex.flex-wrap.items-center.text-xs class="gap-1.5 sm:max-w-sm sm:justify-end"
       - if detailed?
@@ -62,6 +63,9 @@
       - if @word
         = link_to t("liangci.as_word"), dict_entry_path(lexeme.text),
           class: "rounded-full border border-border px-2.5 py-1 text-muted-foreground hover:bg-muted"
+
+  - if Locales.kanji_bridge?
+    = render("kanji/character", text: lexeme.text)
 
   - if @profile.strokes_available?
     section.rounded-2xl.border.border-border.bg-card.p-4[
@@ -138,7 +142,7 @@
                       - if meaning.present?
                         span = meaning
                       - else
-                        span.text-muted-foreground lang="zh-TW" = sense.gloss_zh
+                        span.text-muted-foreground lang="zh-TW" = Huayu::ConcisedMarkup.definition(sense.gloss_zh)
           .flex.flex-wrap.gap-2
             - group.words.each do |word|
               = render("characters/word_card", word: word)

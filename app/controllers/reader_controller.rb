@@ -28,14 +28,13 @@ class ReaderController < ApplicationController
     return redirect_to(new_reader_text_path, alert: t("reader.empty_body")) if body.blank?
     return redirect_to(new_reader_text_path, alert: too_long_message) if body.length > ReadingText::LEARNER_LIMIT
 
-    text = ReadingText.create!(
+    text = ReadingText.pasted!(
       user: current_user,
-      kind: params.dig(:reading_text, :kind).presence_in(%w[article graded]) || "article",
-      title: params.dig(:reading_text, :title).presence || t("reader.untitled"),
-      level_tag: params.dig(:reading_text, :level_tag).presence,
-      source: "manual",
       body:,
-      body_data: {"changed_chars" => changed}
+      changed:,
+      title: params.dig(:reading_text, :title).presence || t("reader.untitled"),
+      kind: params.dig(:reading_text, :kind).presence_in(%w[article graded]) || "article",
+      level_tag: params.dig(:reading_text, :level_tag).presence
     )
     redirect_to(reader_text_path(text), notice: t("reader.created"))
   end

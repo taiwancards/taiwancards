@@ -1,0 +1,28 @@
+doctype html
+html lang=I18n.locale
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"
+    meta name="theme-color" content=WebManifest::COLOR
+    title = "#{t("offline.fallback.title")} · #{t("app.name")}"
+    link rel="icon" href="/icon.svg?v=6" type="image/svg+xml"
+    style
+      | :root{color-scheme:light dark;--bg:#fff;--fg:#171717;--muted:#737373;--line:#e5e5e5}
+        @media (prefers-color-scheme:dark){:root{--bg:#0a0a0a;--fg:#fafafa;--muted:#a3a3a3;--line:#262626}}
+        *{box-sizing:border-box}
+        body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:24px 16px;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+        main{width:100%;max-width:28rem;text-align:center}
+        img{width:72px;height:72px}
+        h1{margin:16px 0 8px;font-size:1.5rem;letter-spacing:-.01em}
+        p{margin:0 0 24px;color:var(--muted)}
+        nav{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+        a{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--line);color:var(--fg);text-decoration:none;font-weight:500}
+        a.primary{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+  body
+    main
+      img src="/icon.svg?v=6" alt="" width="72" height="72"
+      h1 = t("offline.fallback.title")
+      p = t("offline.fallback.body")
+      nav
+        a.primary href="" = t("offline.fallback.retry")
+        a href=offline_browse_path = t("offline.action.browse")

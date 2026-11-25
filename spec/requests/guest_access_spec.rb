@@ -37,11 +37,14 @@ RSpec.describe "Guest access", :no_auth do
     /tones/drill
     /syllables
     /names
+    /desk
+    /doors/words
+    /doors/text
+    /exams
   ]
     .freeze
 
   GATED_PAGES = %w[
-    /desk
     /study
     /desks
     /triage

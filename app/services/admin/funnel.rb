@@ -11,6 +11,18 @@ module Admin
     end
 
     Source = Data.define(:path, :signups, :studied)
+    Door = Data.define(:door, :signups, :reached, :saved, :studied)
+
+    DOOR_ORDER = [*Onboarding::Entry::DOORS, nil].freeze
+    DOOR = "NULLIF(prefs->>'entry_door', '')"
+    STUDIED = "EXISTS (SELECT 1 FROM lexeme_reviews r WHERE r.user_id = users.id)"
+    SAVED = <<~SQL
+      EXISTS (SELECT 1 FROM collections c JOIN collection_items i ON i.collection_id = c.id WHERE c.user_id = users.id)
+      OR EXISTS (SELECT 1 FROM reading_texts t WHERE t.user_id = users.id)
+      OR EXISTS (SELECT 1 FROM course_completions cc WHERE cc.user_id = users.id)
+      OR EXISTS (SELECT 1 FROM lexeme_memories m WHERE m.user_id = users.id)
+    SQL
+      .squish
 
     def initialize(now: Time.current)
       @now = now
@@ -77,6 +89,21 @@ module Admin
           Arel.sql("COUNT(*) FILTER (WHERE EXISTS (SELECT 1 FROM lexeme_reviews r WHERE r.user_id = users.id))")
         )
         .map { |path, signups, studied| Source.new(path:, signups:, studied:) }
+    end
+
+    def doors
+      User
+        .where(admin: false, created_at: since..)
+        .group(Arel.sql(DOOR))
+        .pluck(
+          Arel.sql(DOOR),
+          Arel.sql("COUNT(*)"),
+          Arel.sql("COUNT(*) FILTER (WHERE prefs->>'door_reached_at' IS NOT NULL)"),
+          Arel.sql("COUNT(*) FILTER (WHERE #{SAVED})"),
+          Arel.sql("COUNT(*) FILTER (WHERE #{STUDIED})")
+        )
+        .map { |door, signups, reached, saved, studied| Door.new(door:, signups:, reached:, saved:, studied:) }
+        .sort_by { |row| DOOR_ORDER.index(row.door) || DOOR_ORDER.size }
     end
 
     private

@@ -20,8 +20,8 @@ module Huayu
       LexemeLink => %i[parent_id child_id]
     }.freeze
 
-    Plan = Data.define(:removable, :spared, :protected)
-    Candidate = Data.define(:id, :languages)
+    Plan = Data.define(:removable, :spared, :protected, :unconditional)
+    Candidate = Data.define(:id, :languages, :unconditional)
     Tally = Struct.new(:total, :translated)
 
     def initialize(io: $stdout)
@@ -48,16 +48,30 @@ module Huayu
     private
 
     def listed
-      @listed ||= SentenceRejectStore.read.reject { |entry| entry.reason == HANDLED_ELSEWHERE }.map(&:text).uniq
+      @listed ||= entries.map(&:text).uniq
+    end
+
+    def entries
+      @entries ||= SentenceRejectStore.read.reject { |entry| entry.reason == HANDLED_ELSEWHERE }
+    end
+
+    def unconditional_texts
+      @unconditional_texts ||= entries
+        .select { |entry| SentenceRejectStore.unconditional?(entry.reason) }
+        .to_set(&:text)
     end
 
     def found
       @found ||= listed.each_slice(LOOKUP).flat_map do |texts|
         Lexeme
           .where(kind: :sentence, text: texts)
-          .pluck(:id, *Locales::STORED.map { |key| Arel.sql(format(PRESENT_SQL, key)) })
-          .map { |id, *flags|
-            Candidate.new(id:, languages: Locales::STORED.select.with_index { |_, index| flags[index] })
+          .pluck(:id, :text, *Locales::STORED.map { |key| Arel.sql(format(PRESENT_SQL, key)) })
+          .map { |id, text, *flags|
+            Candidate.new(
+              id:,
+              languages: Locales::STORED.select.with_index { |_, index| flags[index] },
+              unconditional: unconditional_texts.include?(text)
+            )
           }
       end
     end
@@ -66,12 +80,13 @@ module Huayu
       protected_ids = protected_among(found.map(&:id))
       candidates = found
         .reject { |candidate| protected_ids.include?(candidate.id) }
-        .sort_by { |candidate| [candidate.languages.empty? ? 0 : 1, candidate.id] }
+        .sort_by { |candidate| [candidate.unconditional ? 0 : 1, candidate.languages.empty? ? 0 : 1, candidate.id] }
       removable, spared = decide(candidates)
       Plan.new(
         removable: removable.freeze,
         spared: spared.freeze,
-        protected: found.map(&:id).select { |id| protected_ids.include?(id) }.sort.freeze
+        protected: found.map(&:id).select { |id| protected_ids.include?(id) }.sort.freeze,
+        unconditional: candidates.select(&:unconditional).map(&:id).freeze
       )
     end
 
@@ -92,6 +107,9 @@ module Huayu
       candidates.each_with_object([[], []]) do |candidate, (removable, spared)|
         words = links.fetch(candidate.id, [])
         if !visible.include?(candidate.id) || words.empty?
+          removable << candidate.id
+        elsif candidate.unconditional
+          words.each { |word| release(tallies.fetch(word), candidate.languages) }
           removable << candidate.id
         elsif words.all? { |word| spareable?(tallies.fetch(word), candidate.languages) }
           words.each { |word| release(tallies.fetch(word), candidate.languages) }
@@ -159,6 +177,13 @@ module Huayu
         )
       )
       @io.puts(format("  kept, someone uses them: %d", result[:protected]))
+      @io.puts(
+        format(
+          "  removed whatever the floor says (%s): %d",
+          SentenceRejectStore::UNCONDITIONAL.join(", "),
+          plan.unconditional.size
+        )
+      )
       @io.puts(format("  kept, last examples of a word: %d", result[:spared]))
       @io.puts(format("  %s %d", dry_run ? "to remove" : "removed", result[:removed]))
     end

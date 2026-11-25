@@ -25,7 +25,12 @@ class OmniauthCallbacksController < ApplicationController
       reset_session
       start_new_session_for(user)
       PlacementTest.adopt(guest_test, user)
-      session[:fresh_account] = true unless existing
+      unless existing
+        session[:fresh_account] = true
+        door = Onboarding::Entry.door_behind(return_path)
+        Onboarding::Entry.admit(user, door:, language_settled: page_answers_language?)
+      end
+
       language = existing ? user.locale : interface_locale
       notice = t(existing ? "auth.signed_in" : "auth.signed_up", locale: language)
       redirect_to(return_path || desk_path(locale: language), notice:)
@@ -57,6 +62,13 @@ class OmniauthCallbacksController < ApplicationController
 
   def signing_in? = request.env["omniauth.params"].to_h["intent"] == SIGN_IN
 
+  def page_answers_language?
+    page = request.env["omniauth.params"].to_h["locale"].to_s
+    return false unless Locales.known?(page) && interface_locale == page
+
+    page != Locales::DEFAULT || [cookies[:locale], Locales.from_header(browser_locale)].include?(page)
+  end
+
   def origin_path
     origin = params[:origin].to_s
     own_path?(origin) ? origin : desk_path
@@ -64,6 +76,6 @@ class OmniauthCallbacksController < ApplicationController
 
   def signup_source
     path = session[:return_to].presence || referring_path
-    path && Locales.strip(path.split("?").first).first(PageView::PATH_LIMIT)
+    path && StoredPath.clip(Locales.strip(path.split("?").first), PageView::PATH_LIMIT)
   end
 end

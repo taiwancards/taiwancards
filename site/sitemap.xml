@@ -5,6 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
   </url>
@@ -13,6 +14,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
   </url>
@@ -21,6 +23,16 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/ja/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
   </url>
@@ -29,6 +41,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
   </url>
@@ -37,6 +50,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/"/>
   </url>
@@ -45,6 +59,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/licenses"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/licenses"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
   </url>
@@ -53,6 +68,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/licenses"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/licenses"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
   </url>
@@ -61,6 +77,16 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/licenses"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/ja/licenses</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/licenses"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/licenses"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
   </url>
@@ -69,6 +95,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/licenses"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/licenses"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
   </url>
@@ -77,6 +104,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/licenses"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/licenses"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/licenses"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/licenses"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/licenses"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/licenses"/>
   </url>
@@ -85,6 +113,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/privacy"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/privacy"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
   </url>
@@ -93,6 +122,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/privacy"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/privacy"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
   </url>
@@ -101,6 +131,16 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/privacy"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/ja/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/privacy"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/privacy"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
   </url>
@@ -109,6 +149,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/privacy"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/privacy"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
   </url>
@@ -117,6 +158,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/privacy"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/privacy"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/privacy"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/privacy"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/privacy"/>
   </url>
@@ -125,6 +167,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/terms"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/terms"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/terms"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
   </url>
@@ -133,6 +176,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/terms"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/terms"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/terms"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
   </url>
@@ -141,6 +185,16 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/terms"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/terms"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/terms"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
+  </url>
+  <url>
+    <loc>https://taiwancards.app/ja/terms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/terms"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/terms"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/terms"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
   </url>
@@ -149,6 +203,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/terms"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/terms"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/terms"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
   </url>
@@ -157,6 +212,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taiwancards.app/en/terms"/>
     <xhtml:link rel="alternate" hreflang="vi" href="https://taiwancards.app/vi/terms"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://taiwancards.app/id/terms"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://taiwancards.app/ja/terms"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://taiwancards.app/de/terms"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://taiwancards.app/ru/terms"/>
   </url>

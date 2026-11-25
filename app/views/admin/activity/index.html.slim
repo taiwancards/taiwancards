@@ -63,6 +63,7 @@
       p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
         = t("admin.activity_empty")
     - else
+      - pages = visited_pages(@events.map { |event| [event.path, event.verb] })
       .divide-y.divide-border.rounded-xl.border.border-border
         - @events.each do |event|
           .flex.flex-wrap.items-baseline.gap-x-3.gap-y-1.px-3.py-2.text-sm
@@ -72,5 +73,5 @@
             - else
               span.min-w-0.flex-1.truncate.font-medium = "—"
             span.shrink-0.rounded.bg-muted.px-1.text-xs.text-muted-foreground = event.verb
-            span.min-w-0.truncate.text-xs.text-muted-foreground class="basis-full sm:basis-auto" = event.path
+            = visited_page_link(pages.fetch(event.path, event.verb), class: "min-w-0 truncate text-xs text-muted-foreground basis-full sm:basis-auto")
       = render("shared/pager", page: @page, pages: @pages, path: -> (n) { base.call(page: n) })

@@ -12,6 +12,8 @@ module Site
 
     REQUIRED = %w[SITE_URL APP_URL ASSETS_BASE_URL].freeze
 
+    ASSET_LINKS = ".well-known/assetlinks.json"
+
     def initialize(root: Rails.root.join("site"), io: $stdout)
       @root = Pathname(root)
       @io = io
@@ -27,6 +29,7 @@ module Site
         I18n.available_locales.each { |locale| PAGES.each_key { |path| write(path, locale) } }
         copy_assets
         copy_public
+        write_asset_links
         write_sitemap
         write_root_fallback
         write_legacy_copies
@@ -71,6 +74,7 @@ module Site
       html = collect_and_keep_assets(html)
       html = refuse_server_forms(html, path)
       html = absolutize_links(html, locale)
+      html = absolutize_forms(html)
       html = canonicalise(html, locale, path)
       html.sub("</head>", "#{behavior}\n</head>")
     end
@@ -156,6 +160,10 @@ module Site
 
         "href=\"#{href}\""
       end
+    end
+
+    def absolutize_forms(html)
+      html.gsub(/action="(\/[^"]*)"/) { "action=\"#{app_url}#{Regexp.last_match(1)}\"" }
     end
 
     def local(path, locale)
@@ -250,6 +258,14 @@ module Site
       end
     end
 
+    def write_asset_links
+      return unless AndroidApp.configured?
+
+      target = @root.join(ASSET_LINKS)
+      target.dirname.mkpath
+      target.write(AndroidApp.asset_links.to_json)
+    end
+
     def write_root_fallback
       @root.join("index.html").write(
         <<~HTML
@@ -335,7 +351,7 @@ module Site
     end
 
     def report
-      files = @root.glob("**/*").select(&:file?)
+      files = Site.files(@root)
       @io.puts(format("site: %d files, %.1f KB in %s", files.length, files.sum(&:size) / 1024.0, @root))
       files.sort.each { |file| @io.puts("  #{file.relative_path_from(@root)}") }
       files

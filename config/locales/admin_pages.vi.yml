@@ -1,0 +1,6 @@
+vi:
+  admin_pages:
+    own_text: Văn bản riêng (đã ẩn)
+    own_deck: Bộ thẻ riêng (đã ẩn)
+    own_group: Nhóm bộ thẻ riêng (đã ẩn)
+    hidden_note: Đây là nội dung riêng của người học nên chỉ hiện loại trang

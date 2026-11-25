@@ -16,7 +16,7 @@ en:
     policy_after: and its Limited Use requirements. Google account data is never used for advertising, never sold, and never shared beyond what is described here.
   privacy:
     title: Privacy Policy
-    effective: "Effective date: 2026-10-10"
+    effective: "Effective date: 2026-11-24"
     purpose:
       heading: What this app does
       body: TaiwanCards is a free, ad-free web app for learning Taiwanese Mandarin. It provides flashcards with spaced repetition, dictionary lookups, pronunciation practice and vocabulary lists. It is run by one independent developer, not by a company.
@@ -55,7 +55,7 @@ en:
       body: The application and its database run on Render in Singapore. Traffic passes through Cloudflare, audio files are served from Cloudflare R2, and newsletters are sent through Resend, a US company, from its servers in Japan. These providers process data only in order to host the service and deliver its mail. If you use the Google Drive backup, that copy sits in your own Google account.
     retention:
       heading: Retention and deletion
-      body: Your data is kept while your account exists. Write to the address below to have the account and everything in it deleted; server logs age out on their own. Deleting your account here does not touch a backup file you created on your own Google Drive — that file is yours to delete.
+      body: "Your data is kept while your account exists. You can delete the account and everything in it yourself at any time under Profile → Backups → Delete account, or write to the address below and it will be deleted for you; server logs age out on their own. When an account is deleted, the record of its emails described above stays for statistics but loses everything that leads back to you: the address and the link to the account are removed, an undelivered email keeps only the type of error without the mail server's message, and a reminder schedule keeps its days and hour but not the time zone. What is left is the date, which email it was and how many cards it offered, what happened to it (sent, not delivered, link followed, unsubscribed and the like) and which page a followed link opened. Deleting your account here does not touch a backup file you created on your own Google Drive — that file is yours to delete."
     choices:
       heading: Your choices
       items:
@@ -139,6 +139,7 @@ en:
     vi: Tiếng Việt
     de: Deutsch
     id: Bahasa Indonesia
+    ja: 日本語
   language_step:
     heading: Choose the language of the app and its lessons
     edition: "Not a word-for-word translation of another language, but an edition of its own. Taiwanese Mandarin is explained from an English speaker's point of view: sounds, grammar and culture."
@@ -279,7 +280,7 @@ en:
       example_surname: surname
       example_given: given name
       compact: >-
-        The surname is one inherited character; the given name is one or two characters chosen by the
+        The surname is inherited and usually one character, occasionally two (歐陽, 張簡, 范姜); the given name is one or two characters chosen by the
         family. The order never changes, whatever the Latin letters on a passport do.
     surnames:
       heading: The surnames Taiwan uses
@@ -317,7 +318,7 @@ en:
       textbook: "Book"
       textbook-phrases: "Drills"
       stories: "Stories"
-      exams: "Papers"
+      exams: "Exam hall"
       radicals: "Radicals"
       characters: "Hanzi"
       dict: "Words"
@@ -346,7 +347,7 @@ en:
       mock: "Mock"
       everyday: "Daily"
       phrases: "Phrases"
-      notices: "Signs"
+      notices: "Paperwork"
       metro: "Metro"
       calendar: "Calendar"
       medicine: "Medicine"
@@ -388,10 +389,6 @@ en:
     script_setup_hint: >-
       How the language is shown: face, pinyin, audio speed, China's word, how much a dictionary page shows — and the
       language you read the site in.
-    china_toggle: Show China's word
-    china_hint: >-
-      The word used in China. On: a small line on the card shows what China says instead. Off: nothing
-      extra. Off by default — this app teaches the Taiwanese word; China's is for reference only.
     readings_hint: >-
       Readings above the characters, in three steps: zhuyin alone, zhuyin with pinyin, and nothing at all.
       Pinyin never comes without zhuyin — Taiwan reads by zhuyin. Zhuyin alone by default, and whatever you
@@ -401,7 +398,7 @@ en:
     phrase_drills: Phrases
     stories: Reading room
     course: Course
-    exams: Real TOCFL papers
+    exams: "TOCFL exam hall"
     my_desks: My decks
     reader: Read texts
     graded: Graded reader
@@ -429,7 +426,7 @@ en:
     liangci: Measure words 量詞
     zhuci: Mood particles 語氣詞
     phrases: "Phrasebook"
-    notices: Notice board
+    notices: Taiwan on paper
     everyday: Everyday life
     variants: Vocabulary differences
     names: Taiwanese names
@@ -474,7 +471,7 @@ en:
       textbook: 'Lesson summaries from the book, with a breakdown and a "lesson known" mark.'
       textbook-phrases: "Phrase drills from the book — pattern substitutions, aloud and against the clock."
       stories: "The reading room: whole texts with the same breakdown the reader gives."
-      exams: "Real TOCFL papers with the answer key, the PDF and the audio."
+      exams: "The official TOCFL mock papers with their audio, marked on your device."
       radicals: "The 214 Kangxi radicals — stroke count, meaning, and the words they turn up in."
       characters: "Characters in full: readings, strokes, writing animation, etymology, words by reading."
       dict: "Words and collocations: numbered senses, thesaurus, measure words, corpus examples."
@@ -503,7 +500,7 @@ en:
       mock: "A mock TOCFL — plain, picture and audio formats, reproducible from a seed."
       everyday: "Vocabulary by scene: food, drinks, transport, paperwork, weather, slang."
       phrases: "186 patterns across 17 scenes, including the half you only need to understand."
-      notices: "The signs and announcements you meet on the street and on public transit."
+      notices: "Medicine bags, payslips, bills, leases, contact books and building notices, read field by field."
       metro: "The Taipei metro map, every station with its meaning and reading."
       calendar: "The lunar calendar, festivals, seasonal words and two date converters."
       medicine: "How to make yourself understood at the pharmacy and the hospital."
@@ -629,31 +626,99 @@ en:
       pair: Match the pairs
 
   exams:
-    title: Real TOCFL papers
-    lede: The official mock papers published free by the Steering Committee for the Test of Proficiency-Huayu, with their audio, their transcripts and their answer keys. Take a paper, fill in your sheet and let the app score it against the official key.
-    notice: These are the exam committee's own materials, kept for personal study only. They are visible to you alone, are never published by this app, and are not reproduced anywhere in the public sections.
-    empty: No official papers have been downloaded onto this machine yet.
+    title: "TOCFL exam hall"
+    lede: "The official TOCFL mock papers, sat the way the real test runs: practice at your own pace, or take a paper under exam conditions with the official audio, order and timing. Everything happens on your device and is marked against the official key."
+    credit: "The papers are official TOCFL mock tests © 國家華語測驗推動工作委員會 (Steering Committee for the Test of Proficiency – Huayu), offered here free for study."
+    empty: "No paper is ready yet. They are being prepared one by one."
     band: "Band %{band}"
     set: "Set %{number}"
     skills:
-      reading: Reading
-      listening: Listening
+      reading: "Reading"
+      listening: "Listening"
     questions:
       one: "%{count} question"
       other: "%{count} questions"
-    clips:
-      one: "%{count} clip"
-      other: "%{count} clips"
+    minutes: "%{count} min"
     best: "best %{score}/%{total}"
-    percent: "%{value}%% correct"
-    open_paper: Open the paper
-    open_transcript: Listening transcript
-    audio: Audio
-    correct_answer: correct
-    interactive: "%{count} on screen"
-    answer_sheet: Answer sheet
-    check: Grade my sheet
-    check_hint: Graded against the official answer key; your best score is kept.
+    bands:
+      Novice: "Novice 1–2 (準備級): the first months of study, with short, picture-led questions."
+      A: "Levels 1–2 (入門級 and 基礎級), roughly A1–A2: everyday situations and short texts."
+      B: "Levels 3–4 (進階級 and 高階級), roughly B1–B2: longer dialogues, notices and articles."
+      C: "Levels 5–6 (流利級 and 精通級), roughly C1–C2: talks, reports and demanding prose."
+    format_title: "How the paper is built"
+    format_line: "%{skill}: %{questions}, %{minutes} min"
+    plays_once: "heard once"
+    plays_twice: "heard twice"
+    plays_many: "heard %{count} times"
+    setup_title: "How do you want to sit it?"
+    practice_hint: "Move freely between questions, replay the audio as often as you like and check any answer as you go."
+    exam_hint_listening: "As on the day: the recording runs by itself in the official order, with the official number of plays and pauses. No pausing, skipping or replaying, but you can still mark answers while it moves on."
+    exam_hint_reading: "As on the day: the whole paper under a %{minutes}-minute countdown. Move around the paper freely; it is handed in automatically when time runs out."
+    exam_hint_reading_untimed: "As on the day: the whole paper at once. This paper does not state its time, so there is no countdown; hand it in when you are done."
+    adaptive_label: "Ten-second rule (exam mode only)"
+    adaptive_hint: "The computer-based test taken in Taiwan gives you ten seconds after each recording and never lets you go back. This switch copies that timing only: the questions are still this paper's, and the score stays on this paper's scale."
+    start: "Start"
+    start_hint: "In exam mode the audio starts as soon as you tap."
+    resume: "Resume"
+    discard: "Start over"
+    loading: "Loading the paper…"
+    load_failed: "The paper could not be loaded. Check your connection and try again."
+    retry: "Try again"
+    close: "Close"
+    player:
+      practice: "Practice"
+      exam: "Exam"
+      adaptive: "Exam · ten-second rule"
+      part: "Part %{n}"
+      question: "Question %{n}"
+      questions_range: "Questions %{from}–%{to}"
+      opening: "Opening"
+      closing: "Closing"
+      instructions: "Instructions"
+      play: "Play"
+      stop: "Stop"
+      play_of: "play %{n} of %{total}"
+      pause: "Pause · %{seconds} s"
+      answer_window: "Answer now · %{seconds} s"
+      locked: "Closed — no going back"
+      now_playing: "Now playing: %{label}"
+      go: "Go there"
+      previous: "Previous"
+      next: "Next"
+      check: "Check"
+      original: "Original"
+      zoom: "Zoom"
+      finish: "Hand in"
+      finish_confirm: "Hand in now? Unanswered: %{count}."
+      finish_yes: "Hand in"
+      finish_no: "Keep going"
+      answered: "%{count}/%{total} answered"
+      audio_error: "A recording could not be played; the paper moves on."
+      resume_note: "Unfinished attempt on this device (%{mode}): %{count} of %{total} answered."
+      result_title: "Your result"
+      raw: "%{score} of %{total} answers correct"
+      scale: "Scale score: %{score} of %{max}"
+      scale_only: "Scale score: %{score}"
+      level: "Level reached: %{level}"
+      no_level: "Below the first level this paper certifies."
+      no_scale: "There is no official conversion table for this paper, so only the raw score is shown."
+      by_part: "By part"
+      review: "Review"
+      your_answer: "your answer"
+      correct_answer: "correct answer"
+      no_answer: "No answer given."
+      revealed: "Checked during practice."
+      transcript: "Transcript"
+      again: "Take it again"
+      all_papers: "All papers"
+      saved: "Saved to your account. Your best: %{best}/%{total}."
+      save_failed: "The result could not be saved to your account; it is kept on this device."
+      device_note: "This result is kept on this device. Sign in to keep your best scores in your account."
+      history: "On this device"
+      level_n: "Level %{n}"
+      novice_n: "Novice %{n}"
+      level_source: "Pass marks from the TOCFL brochure published by the board; the mock-test tables do not print them."
+    paper_link: "Open the original paper (PDF)"
 
   common:
     search: Search…
@@ -1019,7 +1084,7 @@ en:
       hint: Once or twice a month at most, only what is new. No ads.
     admin:
       title: Newsletters
-      lede: "Recipients: everyone who signed in with Google and has not unsubscribed, plus you, always. Currently %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German and %{id} in Indonesian. Each gets the version in their interface language."
+      lede: "Recipients: everyone who signed in with Google and has not unsubscribed, plus you, always. Currently %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian and %{ja} in Japanese. Each gets the version in their interface language."
       new: New newsletter
       empty: No newsletters yet.
       draft: Draft
@@ -1048,7 +1113,7 @@ en:
       sample_sent: "Sent to %{email} only. It is the real email: its links count clicks and its unsubscribe link works."
       failed: "Could not send: %{error}"
       deliver: "Send (%{count})"
-      deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian)? It cannot be recalled."
+      deliver_confirm: "Send this newsletter to %{count} people (%{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian, %{ja} in Japanese)? It cannot be recalled."
       no_recipients: Nobody matches the chosen recipients.
       audience: Recipients
       audience_modes:
@@ -1061,8 +1126,8 @@ en:
       audience_search: Find by email
       audience_seen: "seen %{ago} ago"
       audience_count:
-        one: "1 recipient: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian"
-        other: "%{count} recipients: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian"
+        one: "1 recipient: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian, %{ja} in Japanese"
+        other: "%{count} recipients: %{en} in English, %{ru} in Russian, %{vi} in Vietnamese, %{de} in German, %{id} in Indonesian, %{ja} in Japanese"
       resume: "Send the remaining %{count}"
       resume_confirm: "Send the newsletter to the %{count} people who haven't received it yet?"
       dispatched: Sending has started in the background. Refresh the page to follow it.
@@ -1249,10 +1314,6 @@ en:
     song_note: >-
       Lyrics come from the open LRCLIB database and belong to their authors. Nothing but the word list stays
       here.
-    photo_soon: Photo import is still being built
-    photo_hint: >-
-      Reading characters off a photo is not ready yet. Until it is, draw a character you cannot read straight
-      into the search box and the app will name it.
   progress:
     title: Progress
     tabs:
@@ -1530,7 +1591,7 @@ en:
     examples: In real sentences
     also_title: Where the rest lives
     also_grammar_html: 嗎, 了 and 的 also close sentences, but they are grammar rather than mood — a question marker, a change of state, a focus frame. They have their own lessons in the grammar section.
-    also_elsewhere: 唄, 咯, 嘞 and 咩 are real particles, but of Beijing and Cantonese speech. You will read them in subtitles and hear them from speakers from China; nobody in Taiwan says them, so they have no cards here.
+    also_elsewhere: 唄 and 嘞 are real particles, but of Beijing and Cantonese speech. You will read them in subtitles and hear them from speakers from China; hardly anyone in Taiwan says them, so they have no cards here. 咯 is the particle Taiwan writes 囉, which has its own card, and 咩 does turn up in casual Taiwanese speech (真的咩？), though far less often than the particles on this page.
     families:
       core: Everyday core
       mood: Mood and warmth
@@ -1598,7 +1659,7 @@ en:
     data_pron: Pronunciation
     data_pron_none: Nothing recorded yet.
     data_pron_line: "%{syllables} syllables, %{attempts} attempts, average %{average}"
-    data_excluded: "Not exported: the page-visit log, your password and Google tokens — those are credentials, not progress."
+    data_excluded: "Not exported: the page-visit log and your Google tokens — those are credentials, not progress."
     export_full: Download all my data
     mobile_tabs: Bottom bar on your phone
     google_backup_hint: Connect your Google account to sign in with one tap. Drive backup is a separate step you can take later on the backup tab.
@@ -1789,7 +1850,7 @@ en:
     found: "Found: %{count}"
     found_capped: More than %{count} — showing the first %{count}
     field_text: Writing or meaning
-    field_text_hint: Hanzi, or a word in English or Russian
+    field_text_hint: Hanzi, or a word in any of the site's languages
     field_pinyin: Pinyin
     field_pinyin_hint: "Tones as marks or as digits, spaced or not: nǐhǎo = ni3hao3 = ni hao"
     field_zhuyin: Zhuyin
@@ -1983,6 +2044,11 @@ en:
       new: New
       learning: Learning
       known: Known
+  standards:
+    taipei: Taipei
+    beijing: Beijing
+    taipei_hint: Taiwan's standard — this is what you are learning.
+    beijing_hint: The Beijing standard, shown only for comparison.
   tones:
     names:
       "1": "First tone"
@@ -1999,68 +2065,67 @@ en:
       taipei: Taipei
       reference: Beijing
       aria: "%{tone}: pitch contour"
-      taipei_note: How the tones sound in Taiwan. There are several differences from the norm in China; they are listed below.
+      taipei_note: "How the tones sound in Taiwan — this is the one to learn."
       reference_note: The norm in China, for comparison. The figures are the conventional prescriptive notation.
-      scale: "Five notional pitch steps, low to high. Read each line left to right: where it starts and where it goes. No figures are given for Taipei on purpose — there is no settled prescriptive notation for the Taiwanese realization, and we will not invent one."
+      beijing: Beijing
+      beijing_note: "The Beijing standard, for comparison only."
+      scale: "Five pitch steps, from low to high. Read each line left to right: where the voice starts and where it goes. Real speech moves a little around these lines."
     hacks_title: What actually helps
     hacks:
-      low: The third tone is simply a low tone, the opposite of the first. It only produces the deep dip-and-rise in isolation and at the end of an utterance; in Taiwan the rise is almost never pronounced. Do not try to draw a check mark — just go low and stay there.
+      low: "The third tone is simply a low tone, the opposite of the first. The dip-and-rise appears only in isolation and before a pause, and in Taiwan even there the rise is slight and often missing. Do not try to draw a check mark — just go low and stay there."
       pair: "Treat the first and third as a pair: one high level, one low level. That is easier to hold on to than 'level versus dipping'."
       start: "The second and third are the ones most often confused. The cue is not where the tone ends up but where it begins: the second starts mid and rises, the third starts low and stays low."
       after_third: "When a second tone follows a third, the low of the third is your run-up: you are already at the bottom, and the second rises straight from there. Do not climb back to the middle between the syllables — that is what breaks the link."
-      fourth: "The fourth usually comes easiest: it is the intonation of a firm statement, sharply top to bottom. If it sounds too soft, you probably did not start high enough."
+      fourth: "The fourth usually comes easiest: it is the fall of a firm statement, sharply downward. Keep that fall in the middle of a sentence too, where English would not fall. If it sounds too soft, you probably did not start high enough."
       relative: Pitch is relative, not absolute. The five steps are measured inside your own vocal range, not against musical notes. A low voice is no obstacle to tones.
-      neutral: "A neutral syllable has no pitch of its own — it takes one from the syllable before. After a first tone it lands mid, after a fourth it lands low. There is nothing to learn separately: it comes out right if the preceding tone is right."
+      neutral: "A neutral syllable is short and light. In Taiwan it lands mid-low whatever tone comes before it, so there is little to learn separately: say the tone before it correctly and let the neutral syllable drop away."
     title: Tones
     lede: The fourth part of the phonetics, without which the first three do not work. What a tone is, how it behaves in Taiwan, and why you cannot simply skip it.
+    what_title: "What a tone is"
+    what_body: "A tone is the melody of a single syllable: how high the voice sits and where it moves while the syllable lasts. English uses melody too, but on whole sentences: 'Really?' and 'Really.' are the same word said with two melodies, and the melody tells you the speaker's attitude. In Mandarin the melody belongs to the word itself: 買 mǎi, said low, is 'buy'; 賣 mài, said falling, is 'sell'. Height is measured inside your own voice, not against musical notes, so a deep voice or 'no ear for music' is no obstacle: the ear for tones is trained, and even a short spell of listening practice brings a lasting gain. What takes the real work is remembering which tone each word has — so learn the tone together with the word, never afterwards."
     why_title: A tone is not decoration
     why_body: In Mandarin the tone belongs to the syllable just as much as its consonants and vowels do. Ignore tone and the language has roughly four hundred distinguishable syllables; count it and there are about thirteen hundred. Dropping tone cuts the distinctions available to you by two thirds and multiplies the number of words that sound identical coming out of your mouth.
     myth_title: On the myth that context will carry you
     myth_body: Context genuinely helps, and words never occur in a vacuum. But context corrects what the listener has already heard; it does not stand in for hearing. A native speaker parses tone automatically, before any interpretation, and a wrong tone is not received as an absent tone. It is received as a different tone — so it misleads actively rather than passively.
     cannot_title: Not producing a tone is not an option
-    cannot_body: This point is technical rather than motivational. Any syllable you utter has a pitch and a pitch movement, or it would not have sounded at all. The only question is whether that contour matches the one required. Skipping tone work does not give you neutral speech; it gives you speech with random tones. The tone may not exist for your ear, but it always exists for the person listening.
+    cannot_body: "This point is technical rather than motivational. Any syllable you utter has a pitch and a pitch movement, or it would not have sounded at all. The only question is whether that contour matches the one required. Skipping tone work does not give you neutral speech; it gives you English intonation laid over Mandarin syllables — a rise at the end of every question, a fall at the end of every statement, extra height on whatever you stress, and weak syllables swallowed the way English swallows them. Each of those is heard as a tone. The tone may not exist for your ear, but it always exists for the person listening."
     cumulative_title: It is not really about minimal pairs
     cumulative_body: "Tones are usually introduced through 媽 麻 馬 罵, which leaves the impression that the risk is limited to rare collisions. In practice the damage is cumulative rather than lexical: with systematically wrong tones each individual word may still be guessable, while a whole sentence is not, because the listener has to try alternatives faster than you are speaking."
     four_title: The four tones
-    four_lede: The figures in parentheses are Chao's five-point pitch notation, from 1 (low) to 5 (high).
+    four_lede: "The numbers in brackets show the pitch, from 1 (low) to 5 (high)."
     tones:
       t1:
         name: First — high level
-        contour: "55"
+        contour: "44"
         zhuyin: no mark
-        note: Held at one pitch. Zhuyin marks it with nothing at all — the absence of a mark is the first tone.
+        note: "Held high and level, like one sustained sung note; it must not sag at the end. English has no word melody like it. Zhuyin marks it with nothing at all — the absence of a mark is the first tone."
       t2:
         name: Second — rising
         contour: "35"
         zhuyin: ˊ
-        note: Travels upward, much like the intonation of an English question.
+        note: "Rises. The nearest English melody is the rise of a surprised 'What?' — but treat that only as a starting point: in Taiwan the rise is gentle and begins with a slight dip."
       t3:
         name: Third — low
-        contour: 214 / 21
+        contour: "21 / 312"
         zhuyin: ˇ
-        note: Textbooks draw a dip that rises again, but the rise is mostly audible on an isolated syllable or at the end of an utterance. In running speech the third tone usually stays low and does not come back up.
+        note: "Low. Textbooks draw a dip that rises again, but in running speech the third tone simply goes to the bottom of the voice and stays there. Learn it as the low tone, not as the dipping one."
       t4:
         name: Fourth — falling
-        contour: "51"
+        contour: "42"
         zhuyin: ˋ
-        note: Sharply from top to bottom, short and decisive.
+        note: "Falls, short and decisive, like a firm 'No!'. English falls like this only at the end of a statement; in Mandarin the fall belongs to the word wherever it stands, the middle of a sentence included."
     neutral_title: The fifth, or rather the neutral one
-    neutral_body: "Strictly it is not a fifth tone but the absence of a tone of its own: the syllable loses its contour, shortens, and takes its pitch from the syllable before it. Zhuyin marks it with a dot ˙ and, unlike pinyin, places it BEFORE the syllable: ˙ㄉㄜ. There is no point testing it in a drill — by ear it is simply a very short unstressed syllable."
-    neutral_taiwan: "And here is an important Taiwanese difference: the neutral tone is markedly less common in Taiwan than in the norm used in China. Many words whose second syllable is reduced in China keep their full tone here."
+    neutral_body: "Strictly it is not a fifth tone but the absence of a tone of its own: the syllable loses its contour, shortens, and in Taiwan settles at a mid-low pitch whatever comes before it. Zhuyin marks it with a dot ˙ which, unlike the other tone marks, is placed before the syllable: ˙ㄉㄜ. There is no point testing it in a drill — by ear it is simply a very short unstressed syllable."
     taiwan_title: How tones differ in Taiwan
-    taiwan_body: The differences are not in the system — there are the same four tones — but in how they are realized.
-    taiwan_points:
-      range: The range overall is lower and narrower. Taiwanese speech fits into a smaller pitch interval than speech in China, which is why the tones sound restrained rather than flat.
-      second: The second tone does not rise as high. It also often picks up a slight dip at the start, coming to resemble the prescriptive third tone in shape.
-      third: The third tone does not come back up out of the low, creaky range. The full 214 contour is essentially not produced in Taiwan.
-      neutral: The neutral tone occurs less often, and final syllables generally keep their own tone.
-      erhua: Erhua — the 兒 suffix — is very rare in Taiwanese Mandarin.
-      merge: The second and third tones come closer together by ear than in broadcast pronunciation. This is the norm, not a speech defect.
+    taiwan_body: "The system is the same — four tones and a neutral one — but each tone is realized differently. The green line is what you will hear in Taipei."
+    words_title: Same word, different tone
+    words_lede: The two standards give some everyday words a different dictionary tone. Learn the Taiwanese one.
+    words_word: Word
     sandhi_title: Two rules that change the tone
-    sandhi_lede: "One tone is written and another is spoken. The written tone does not change: the dictionary, the zhuyin and the pinyin all keep the original."
+    sandhi_lede: "One tone is written and another is spoken. For the third tone the written form does not change: the dictionary, the zhuyin and the pinyin all keep the original. For 一 and 不 practice varies: dictionaries keep the base tone, while textbooks often write the changed one, as the examples below do."
     third_title: A third tone before a third tone
     third_body: When two third tones follow each other, the first is pronounced as a second. 你好 is written ㄋㄧˇ ㄏㄠˇ but sounds like ní hǎo. The rule works on what is spoken rather than on the dictionary form, so it applies across word boundaries too.
-    third_three: "With three third tones in a row the result depends on how the phrase divides in meaning. 我很好 usually comes out as wó hén hǎo, because 很好 holds together more tightly. There is nothing to memorize: the rule applies to whichever syllables you actually group together."
+    third_three: "With three third tones in a row the result depends on how the phrase divides in meaning. In 我很好 the pair 很好 holds together, so 很 changes and 我 stays low before it: wǒ hén hǎo; said quickly, 我 often rises too, giving wó hén hǎo. Where the first two syllables belong together, as in 展覽館, both change: zhán lán guǎn. There is nothing to memorize: the rule applies to whichever syllables you actually group together."
     yi_title: 一 and 不
     yi_body: The tone of these two syllables depends on what follows.
     yi_rules:
@@ -2452,7 +2517,7 @@ en:
       origin: The symbols were devised by Zhang Binglin, who took regularized forms of ancient Chinese characters whose readings contain the sound in question. That is why ㄅ, ㄆ and ㄇ look like characters — they once were.
       adopted: Taiwan adopted the system in 1945, and it remains the principal way Mandarin pronunciation is taught in elementary school.
       size: Thirty-seven symbols and five tone marks are enough to write any sound in Mandarin. The first tone is usually left unmarked, and a dot above stands for the neutral tone.
-      today: Today zhuyin is the most common way in Taiwan to type characters on a computer or phone and to look them up in a dictionary. Textbooks print it as ruby annotation above the line.
+      today: Today zhuyin is the most common way in Taiwan to type characters on a computer or phone and to look them up in a dictionary. Textbooks print it to the right of each character (in horizontal text the official handbook also allows it above).
       hokkien: Twenty-three further symbols were created for Taiwanese Hokkien — the same system extended to another language of Taiwan.
     practice_now:
       title: Practice it right away
@@ -2484,17 +2549,11 @@ en:
     initials_lede: "Twenty-one symbols — everything a syllable can begin with. The button plays Taiwan's Ministry of Education recording: listen before you read the breakdown."
     series:
       title: The three rows everyone confuses
-      body: >-
-        Nine initials that look alike in pinyin but are made in three different places in the mouth. Drill
-        them row by row first — within a row the place is the same and only the breath changes.
+      body: "Nine initials that look alike in pinyin but are made in three different places in the mouth. Drill them row by row first — within a row the place is the same and only the release changes: no puff, a puff, a steady hiss."
       rows_hint: one row
       columns_hint: three rows at once
       hard_title: This one is genuinely hard
-      hard_body: >-
-        Take a column instead of a row and the sounds become almost indistinguishable: in pinyin they are
-        written almost the same, with zhi, zi and ji a single letter apart. The only difference is where
-        the tongue sits — curled to the roof, at the lower teeth, or pressed to the hard palate. This is
-        the one to listen to carefully, and getting it wrong at first is normal.
+      hard_body: "Take a column instead of a row and the sounds become almost indistinguishable: in pinyin they are written almost the same, with zhi, zi and ji a single letter apart. The only difference is the shape and place of the tongue — tip curled back toward the roof, tongue flat with its edge at the teeth, or tip down and the blade pressed to the hard palate. This is the one to listen to carefully, and getting it wrong at first is normal."
       all_nine: All nine mixed together
       sets:
         zhi_chi_shi: zhi chi shi
@@ -2513,38 +2572,38 @@ en:
         body: The tongue presses behind the upper teeth. 的, 他, 你 and 了 all start here.
       velar:
         title: Back of the tongue
-        body: Made further back than the English equivalents. ㄏ is softer than an English h — closer to a breath.
+        body: "The back of the tongue meets the soft palate, where English makes k and g. ㄏ is made there too, which gives it more friction than an English h — like a gentle ch in Scottish 'loch'."
       palatal:
         title: Only before ㄧ and ㄩ
         body: They appear only with ㄧ and ㄩ, so they can never be confused with ㄓㄔㄕ if you watch what follows.
       retroflex:
         title: Curled tongue
-        body: The tip curls up toward the roof of the mouth. Taiwan says these softer than China's textbooks do — nearly ㄗㄘㄙ.
+        body: "The tip curls up toward the roof of the mouth."
       sibilant:
-        title: Whistling
-        body: Tongue at the lower teeth, air in a narrow stream. The counterparts of the three above.
+        title: "Hissing"
+        body: "The tongue lies flat with its front edge at the teeth, air in a narrow stream — a plain s-like hiss. The flat counterparts of the three above."
       medial:
         title: Medials
         body: They sit between initial and final, becoming i, u and ü in pinyin — or y and w at the start of a syllable.
       open:
         title: Plain vowels
-        body: Four clean sounds everything else is built from. ㄝ never stands alone — only after ㄧ and ㄩ.
+        body: "Four clean sounds everything else is built from. ㄝ almost never stands alone — it follows ㄧ and ㄩ."
       diphthong:
         title: Diphthongs
         body: "Two sounds in one syllable: the tongue glides from one position to the next without breaking the syllable."
       nasal:
         title: Nasals
-        body: ㄢ/ㄤ and ㄣ/ㄥ differ in where the tongue ends. Taiwan often blurs it, but the dictionary keeps it.
+        body: "ㄢ/ㄤ and ㄣ/ㄥ differ in where the tongue ends; the dictionary keeps both pairs apart."
       rhotic:
         title: One of a kind
-        body: A syllable in its own right, found in 二, 兒 and 耳. Not the r-ending China tacks onto other words.
+        body: "A syllable in its own right, found in 二, 兒 and 耳."
       compound:
         title: Compound finals
         body: A medial plus a final. They need no drill of their own — they are built from symbols you have already practiced.
-    finals_lede: "Everything left in the syllable after the initial consonant: a vowel, a diphthong, or a vowel with a nasal. For compound finals the individual symbols are voiced — run together they do not sound like the two parts in sequence."
+    finals_lede: "Everything left in the syllable after the initial consonant: a vowel, a diphthong, or a vowel with a nasal. For compound finals the recording plays the symbols one by one — run together they do not sound like the two parts in sequence."
     why_title: Why this is not a detail
     why_body: "You can read pinyin without any preparation, and that is exactly what makes it dangerous: the letters drag your English reading along with them, and the error sets in silently. There is nothing behind a zhuyin symbol but the sound you teach it. That is precisely why Taiwan annotates readings with it."
-    compound_audio: "A compound final: the individual symbols are voiced. Run together it does not sound like the two parts in sequence — see the notes on the right."
+    compound_audio: "A compound final: the recording plays the symbols one by one. Run together it does not sound like the two parts in sequence — see the notes on the right."
     play_symbol: Play %{symbol}
     phonetics_card: "The full sound chart: zhuyin, pinyin, IPA, an anchor in English, and examples."
     phonetics_title: Zhuyin and pinyin
@@ -2575,7 +2634,7 @@ en:
       title: Zhuyin ↔ pinyin
       direction_zhuyin: Zhuyin → pinyin
       direction_pinyin: Pinyin → zhuyin
-      systems_html: "Zhuyin is 37 symbols that Taiwan uses to write sounds. Each one always reads the same way, and you cannot invent a reading for it — you simply learn how it sounds. Pinyin writes those same sounds with Latin letters; it is there as a prop, nothing more. What to do: work through the charts below until you can recognize the symbols by ear."
+      systems_html: "Zhuyin is 37 symbols that Taiwan uses to write sounds. Each one stands for one sound, with only a few shifts inside compound finals (ㄧㄢ is the main one), and you cannot invent a reading for it — you simply learn how it sounds. Pinyin writes those same sounds with Latin letters; it is there as a prop, nothing more. What to do: work through the charts below until you can recognize the symbols by ear."
       stage_hint: "Work through it in order: consonants first, then the vowels and glides, then the full rimes, and only then whole syllables."
       stages:
         consonants: Consonants
@@ -2633,9 +2692,9 @@ en:
         weng:
           pinyin: weng / -ong
           zhuyin: ㄨㄥ
-          why: Two different pinyin spellings for one and the same rime, depending on whether a consonant precedes it. In zhuyin it is ㄨㄥ either way.
+          why: "Two pinyin spellings for what zhuyin treats as one rime: -ong after a consonant, weng standing alone. They do not sound quite the same, but they never compete for the same position, so zhuyin writes ㄨㄥ either way."
       mismatch_more_title: What to take away
-      mismatch_more_body: "A pinyin reader is constantly making silent corrections: here o is really u, here a vowel is missing, here i is not a vowel at all, here u is really ü. Every one of those corrections is a place where a wrong pronunciation can set in, and usually the learner never notices, because the spelling looks perfectly reasonable. Zhuyin asks for none of them: what is written is what is said."
+      mismatch_more_body: "A pinyin reader is constantly making silent corrections: here o is really u, here a vowel is missing, here i is not a vowel at all, here u is really ü. Every one of those corrections is a place where a wrong pronunciation can set in, and usually the learner never notices, because the spelling looks perfectly reasonable. Zhuyin asks for almost none of them: with rare exceptions such as ㄧㄢ, what is written is what is said."
     tones_title: Tones & sounds
     tones_card: Say syllables aloud and get tone-by-tone feedback until they're right.
     dictation_title: Dictation
@@ -2651,7 +2710,7 @@ en:
     tone_names:
       "1": 1st · high ˉ
       "2": 2nd · rising ˊ
-      "3": 3rd · dipping ˇ
+      "3": "3rd · low ˇ"
       "4": 4th · falling ˋ
       "5": neutral ·
   layers:
@@ -3013,7 +3072,7 @@ en:
       resumed: Automatic emails are on again.
     mail:
       title: Mail
-      lede: "The full log for every account: which email went out and when, whether it failed, clicks on links in emails, and every unsubscribe or subscribe with where it came from. Kept forever; when an account is deleted its rows stay with the address."
+      lede: "The full log for every account: which email went out and when, whether it failed, clicks on links in emails, and every unsubscribe or subscribe with where it came from. Kept forever; when an account is deleted its rows stay, without the address or anything else that leads back to the person."
       account_title: Mail and subscriptions
       full_log: Full log
       for_account: "Log for"
@@ -3269,6 +3328,10 @@ en:
     absent:
       title: Not in your downloads
       body: This page belongs to a pack you have not downloaded. It opens as usual once you are back online.
+    fallback:
+      title: You are offline
+      body: This page needs a connection and opens as soon as you are back online. Whatever you downloaded for offline reading is still here.
+      retry: Try again
   syllables:
     title: Every Mandarin syllable, spoken
     meta_description: >-
@@ -3322,8 +3385,8 @@ en:
       makemeahanzi: Stroke-order graphics, radical decomposition and character etymology.
       hanzi_writer: The stroke-by-stroke writing and animation engine used in writing practice.
       hanzilookup: Handwriting recognition that turns your drawn strokes into a character, fully offline. Its recognition data (mmah.json) is derived from Make Me a Hanzi stroke data and carries that project's LGPL / Arphic PL terms, not the MIT of the engine itself.
-      unihan: The Unicode Han database — canonical readings and character properties.
-      opencc: The STCharacters table, used to convert simplified characters into traditional ones when you paste in text. Every substitution it makes is listed back to you.
+      unihan: The Unicode Han database — canonical readings and character properties, plus the Japanese readings, new-form variants and Jōyō and Jinmeiyō kanji lists the Japanese edition is built on. © 1991–2026 Unicode, Inc., under the Unicode License V3.
+      opencc: The STCharacters table, used to convert simplified characters into traditional ones when you paste in text. Every substitution it makes is listed back to you. Its Japanese variant tables (JPVariants, JPShinjitaiCharacters) pair Taiwan's characters with their Japanese forms for the Japanese edition.
       roboto: The interface face, used for Latin text and for pinyin. Self-hosted rather than loaded from Google, so no request leaves for a third party when you open a page.
       noto_sans_tc: The default face for traditional characters. Also self-hosted.
       tw_kai: "Taiwan's own kaishu brush face from the CNS11643 全字庫, published by 數位發展部. This is the face behind the handwriting option, and its 臺 outline is what the site logo is drawn from. We ship a subset of it: the file is reduced to the characters this app actually uses, and the logo embeds outlines taken from it, so the copy here is modified rather than original."
@@ -3416,7 +3479,6 @@ en:
     abbr_label: people say
     capital_label: capital
     full_label: full form
-    china_says: "in China:"
     taiwan_marked: Taiwan-marked
     pick_scenario: Pick a situation and get the words it actually calls for.
     all_scenarios: All situations
@@ -3746,7 +3808,7 @@ en:
         note: "Red and Black write the same pieces with different characters."
       go:
         title: "Go, also called weiqi"
-        body: "Go and weiqi are one game: 圍棋 means the surrounding game, Japanese calls it go, and Taiwan uses both words. Stones are placed on intersections and never moved, a group with two real eyes lives, and Taiwan counts by area rather than by territory."
+        body: "Go and weiqi are one game: 圍棋 means the surrounding game, and Japanese calls it go. Stones are placed on intersections and never moved, a group with two real eyes lives, and Taiwan counts by area rather than by territory."
         note: "Many terms came from Japanese but are written with their own characters."
       tabletop:
         title: "Board games, cards and street games"
@@ -3971,6 +4033,7 @@ en:
       entry or add it to a deck.</p><p>Hollow dots are transfer stations — the card lists every line that station
       belongs to. The map is drawn from the stations' real coordinates, so each one sits where it actually is.</p>
     games_html: "<p>The vocabulary of Taiwanese mahjong, Chinese official mahjong, xiangqi, go and board games, each word explained by what it does inside the game. This is not a rulebook: the aim is to follow the talk at the table and to read signs, apps and streams.</p><p>The tabs split the vocabulary by game and, inside each, by role: tiles and pieces, how a game runs, calls, patterns, strategy, what players say. A green dot marks what is said differently outside Taiwan, and where China uses another word it is shown beside the entry. Meanings are checked against the Ministry of Education dictionary, the Taiwanese sixteen-tile rules and the 1998 Chinese official rules.</p>"
+    notices_html: "<p>The documents a newcomer to Taiwan has to read, sorted by where you meet them: at the clinic, at work, at the bank and the post office, at home, at school. Each one is drawn as a sample with invented details, but the field labels and stock phrases are the real ones, so what you learn here is what you will see on the real paper.</p><p>Under every field is what it means and what to do with it; the line that matters most — the dose, the amount you take home, the payment deadline — is marked. Tap any word for its reading and meaning, or turn on zhuyin in the header to see the reading above every character.</p>"
     medicine_html: >-
       <p>Western medicine as Taiwan actually speaks it: the body and the organs, the diseases a doctor
       names and the words a family uses at home, the vaccines on the CDC schedule, and the signs you follow
@@ -4010,8 +4073,7 @@ en:
       <p>Full example sentences drawn from the lessons. Each word in a sentence is a link to its dictionary
       entry, so you can tap anything unfamiliar. Use the source filter to focus on one book or lesson.</p>
     search_html: >-
-      <p>Three fields that stack. <strong>Writing or meaning</strong> takes hanzi or a word in English or
-      Russian. <strong>Pinyin</strong> and <strong>zhuyin</strong> take a reading; tones may be written
+      <p>Three fields that stack. <strong>Writing or meaning</strong> takes hanzi or a word in any of the site's languages: English, Russian, Vietnamese, German, Indonesian or Japanese. <strong>Pinyin</strong> and <strong>zhuyin</strong> take a reading; tones may be written
       as marks, as digits after each syllable, or left out — <code>nǐhǎo</code>, <code>ni3hao3</code> and
       <code>ni hao</code> all reach the same word. When you do write tones, the entries with exactly those
       tones come first, and only then the rest.</p><p>Check <strong>search the sentence bank</strong> and
@@ -4293,9 +4355,9 @@ en:
           Not a game — no XP, no badges, no leaderboards and no cartoon animal guilt-tripping
           you into coming back tomorrow
         machine: >-
-          No AI content — and there never will be. Every meaning, example and label has passed through
-          a person, and every phrase traces back to a verifiable source. Most apps show you what a
-          model generated; this one never does
+          No unchecked AI content. Every meaning, example and label has passed through
+          a person, and every phrase traces back to a verifiable source. Most apps show you whatever a
+          model generated; this one does not
         decks: >-
           Not a pile of shared decks where nobody can tell you who made them, from which textbook, or
           whether the readings are even right for Taiwan
@@ -4368,8 +4430,8 @@ en:
         human:
           title: A person behind every entry
           body: >-
-            Meanings, examples and links are read through by hand. Everything is human-verified —
-            nothing generated, nothing machine-translated.
+            Meanings, examples and links are read through by hand. Translations are prepared with machine
+            help and are still being reviewed.
         written:
           title: Written for an English speaker
           body:
@@ -4568,10 +4630,7 @@ en:
         training_only: drills, not scored
     complement:
       heading: Your teacher's right hand
-      limits: >-
-        Pronunciation is best built with a live teacher, and this does not replace real classes. What you get
-        is tone and pronunciation checking — there is no conversation partner and no listening comprehension
-        here, and the app does not set out to provide them.
+      limits: "Pronunciation is best built with a live teacher, and this does not replace real classes. What you get is tone and pronunciation checking, listening practice and the official TOCFL mock papers with their audio — but there is no conversation partner here, and the app does not set out to provide one."
     honest:
       heading: Why this exists
       body: >-
@@ -4649,7 +4708,7 @@ en:
     limits:
       heading: What to expect, and what not to
       body: The app will explain how to read and how to write, show you zhuyin and pinyin, and decide what you study next. You can load any words and any texts into it, drill them, watch your progress, and sharpen your pronunciation, tones and vocabulary.
-      gap: "But pronunciation is best built with a native teacher, and none of this replaces real classes. What you get here is tone and pronunciation checking — and no live conversation, no speaking with another person, and no listening comprehension: the app does not set out to do those. Treat it as a teacher's right hand rather than a substitute for one."
+      gap: "But pronunciation is best built with a native teacher, and none of this replaces real classes. What you get here is tone and pronunciation checking, listening practice and the official TOCFL mock papers with their audio — but no live conversation and no speaking with another person: the app does not set out to do those. Treat it as a teacher's right hand rather than a substitute for one."
     path:
       done_cta: To the home screen and your cards →
       back: "← Back to the step list"
@@ -4693,11 +4752,11 @@ en:
           title: How the tones work
           body: >-
             Four tones plus the neutral one — and the Taiwanese details that China's textbooks leave out:
-            the third tone stays low instead of dipping back up, and 一 and 不 shift tone depending on what
+            the third tone usually stays low instead of dipping back up, and 一 and 不 shift tone depending on what
             follows. Read it, then go straight to the drill from that same page.
         tones:
           title: "Hear the four tones"
-          body: "Taiwanese tones are not the textbook ones from China: the third stays low and never rises. Train on studio recordings of every syllable, alternating a male and a female voice."
+          body: "Taiwanese tones are not the textbook ones from China: the third usually stays low and does not rise. Train on studio recordings of every syllable, alternating a male and a female voice."
         phrases:
           title: "Learn what people actually say"
           body: "Patterns that carry a day in Taiwan, including the half you only have to understand: what the cashier asks you."
@@ -4726,20 +4785,42 @@ en:
           title: A plan for your exam
           body: If you need TOCFL, name the level and the date and the app works out a daily quota. If you do not, skip it.
   notices:
-    title: Notice board
+    title: Taiwan on paper
     subject: "Subject:"
     explanation: "Details:"
     seal: "seal"
     all: All
-    subtitle: The paper notices that hang in the lobby of every Taiwanese building — the wording, the layout and the vocabulary you actually meet on the wall. Tap any word to look it up.
-    disclaimer: These are templates written after the conventions of Taiwanese residential notices. No real community, address, telephone number or person appears in them.
-    categories:
-      safety: Safety
-      building: The building
-      festival: Festivals
-      utilities: Water and power
-      daily: Everyday life
-      committee: Committee
-      health: Health
+    contents: On this page
+    key_line: The line that matters
+    subtitle: The paper you have to read living in Taiwan — medicine bags, payslips, bills, leases, contact books, receipts and the notices in your building — drawn field by field, with what each line means and what to do about it. Tap any word to look it up.
+    disclaimer: Every sample is drawn in this app's own style from the real field labels and stock wording. The names, numbers, dates and addresses are invented, and ○○ stands where a real hospital, bank, company or residential community would print its name.
+    situations:
+      health:
+        name: Health
+        lede: The medicine bag, the registration slip, the health card, the refill prescription and the posters in the clinic.
+      work:
+        name: Work and pay
+        lede: The payslip, the shift roster, the leave form, the contract's key clauses and the safety signs at work.
+      money:
+        name: Money and post
+        lede: Bank slips for deposits, withdrawals and transfers, paying a bill at the convenience store, and the notice that a parcel is waiting for you.
+      home:
+        name: Home and bills
+        lede: Power and water bills, the lease, the rental listing, garbage sorting and the notices about water cuts.
+      building:
+        name: In your building
+        lede: The notice board in the lobby — maintenance, typhoons, festivals, the residents' committee.
+      school:
+        name: School and children
+        lede: The contact book and the school notice with the reply slip a parent signs and sends back.
+      transport:
+        name: Getting around
+        lede: Train tickets and the parking bill tucked under the windshield wiper.
+      residence:
+        name: Residence papers
+        lede: The resident certificate and the dates on it that decide how long you may stay.
+      shops:
+        name: Shops and food
+        lede: The receipt with its lottery number, the order sheet at a breakfast shop and the sugar and ice choices at a drink stand.
   glosses:
     measure_word: "measure word:"

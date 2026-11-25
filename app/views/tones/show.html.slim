@@ -5,14 +5,16 @@
     p.mt-1.max-w-3xl.text-sm.text-muted-foreground = t("tones.lede")
 
   section.space-y-4
-    - %w[why myth cannot cumulative].each do |key|
+    - %w[what why myth cannot cumulative].each do |key|
       .rounded-2xl.border.border-border.bg-card.p-5
         h2.font-semibold = t("tones.#{key}_title")
         p.mt-2.text-sm.leading-relaxed.text-muted-foreground = t("tones.#{key}_body")
+        = regional_note("tones", key, css: "mt-2")
 
   section.space-y-3
     h2.text-lg.font-semibold = t("tones.four_title")
     p.text-sm.text-muted-foreground = t("tones.four_lede")
+    = standard_legend
     .rounded-2xl.border.p-5.space-y-3 class="border-2 border-emerald-500/70 bg-emerald-500/10 shadow-sm"
       .flex.flex-wrap.items-baseline.gap-2
         h3.text-base.font-bold.text-emerald-700 = t("tones.chart.taipei")
@@ -22,18 +24,30 @@
           .rounded-xl.border.p-3.text-center class="border-emerald-500/50 bg-background text-emerald-600"
             = tone_chart("taipei", key)
             .mt-1.text-xs.font-semibold.text-foreground = t("tones.tones.#{key}.name")
+            code.mt-1.inline-block.rounded.px-1.font-mono.text-emerald-700 class="text-[0.8em] bg-emerald-500/15" = ToneChartHelper::CONTOURS.dig("taipei", key, :label)
 
-    .rounded-2xl.border.border-dashed.p-5.space-y-3 class="border-rose-500/45 bg-rose-500/[0.06]"
+    - if (reference = tone_reference)
+      .rounded-2xl.border.border-border.bg-card.p-5.space-y-3 data-tone-reference=reference
+        .flex.flex-wrap.items-baseline.gap-2
+          h3.text-base.font-semibold.text-foreground = t("tones.chart.reference")
+          span.text-xs.text-muted-foreground = t("tones.chart.reference_note")
+        - contours = ToneChartHelper::CONTOURS.fetch(reference)
+        .grid.gap-3 class=(contours.size > 4 ? "grid-cols-3 sm:grid-cols-6" : "grid-cols-2 sm:grid-cols-4")
+          - contours.each do |key, contour|
+            .rounded-xl.border.border-border.p-3.text-center class="text-foreground/70"
+              = tone_chart(reference, key)
+              code.mt-1.inline-block.rounded.bg-muted.px-1.font-mono class="text-[0.8em]" = contour[:label]
+        = regional_note("tones", "reference", css: nil)
+
+    .rounded-xl.border.border-dashed.p-3.space-y-2 class="border-rose-500/40 bg-rose-500/[0.05]" data-tone-beijing=true
       .flex.flex-wrap.items-baseline.gap-2
-        h3.text-base.font-semibold class="text-rose-700/85" = t("tones.chart.reference")
-        span.text-xs class="text-rose-700/70" = t("tones.chart.reference_note")
-      - reference = tone_reference
-      - contours = ToneChartHelper::CONTOURS.fetch(reference)
-      .grid.gap-3 class=(contours.size > 4 ? "grid-cols-3 sm:grid-cols-6" : "grid-cols-2 sm:grid-cols-4")
-        - contours.each do |key, contour|
-          .rounded-xl.border.p-3.text-center class="border-rose-500/35 opacity-85 text-rose-600/85"
-            = tone_chart(reference, key)
-            code.mt-1.inline-block.rounded.px-1.font-mono class="text-[0.8em] bg-rose-500/10" = contour[:label]
+        h3.text-xs.font-semibold class="text-rose-700/80" = t("tones.chart.beijing")
+        span class="text-[11px] text-rose-700/65" = t("tones.chart.beijing_note")
+      .flex.flex-wrap.gap-2
+        - ToneChartHelper::CONTOURS.fetch("beijing").each do |key, contour|
+          .rounded-lg.border.text-center class="p-1.5 border-rose-500/30 text-rose-600/75"
+            = tone_chart("beijing", key, size: :small)
+            code.inline-block.rounded.px-1.font-mono class="text-[10px] bg-rose-500/10" = contour[:label]
 
     p.text-xs.text-muted-foreground = t("tones.chart.scale")
 
@@ -44,20 +58,22 @@
             span.font-semibold = t("tones.tones.#{key}.name")
             span.text-lg lang=(key == "t1" ? I18n.locale : "zh-TW") = t("tones.tones.#{key}.zhuyin")
           p.mt-2.text-sm.leading-relaxed.text-muted-foreground = t("tones.tones.#{key}.note")
+          = regional_note("tones", key, css: "mt-2")
+          = standard_contrast("tones", key, css: "mt-2 text-sm")
 
     .rounded-2xl.border.border-dashed.border-border.p-5.space-y-2
       h3.font-semibold = t("tones.neutral_title")
       p.text-sm.leading-relaxed.text-muted-foreground = t("tones.neutral_body")
-      p.text-sm.leading-relaxed = t("tones.neutral_taiwan")
+      = standard_contrast("tones", "neutral", css: "text-sm")
 
   section.space-y-3.rounded-2xl.border.border-brand.p-5 class="bg-brand-soft"
     h2.text-lg.font-semibold = t("tones.taiwan_title")
     p.text-sm.text-muted-foreground = t("tones.taiwan_body")
     ul.space-y-2
-      - %w[range second third neutral erhua merge].each do |key|
+      - taiwan_tone_points.each do |point|
         li.flex.items-start.gap-2.text-sm.leading-relaxed
           span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
-          span = t("tones.taiwan_points.#{key}")
+          div = point
 
   section.space-y-3.rounded-2xl.border.border-border.bg-card.p-5
     h2.text-lg.font-semibold = t("tones.segments_title")
@@ -66,7 +82,10 @@
       - %w[retroflex nasal].each do |key|
         li.flex.items-start.gap-2.text-sm.leading-relaxed
           span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
-          span = t("tones.segments.#{key}")
+          div
+            span = t("tones.segments.#{key}")
+            = regional_note("tones", key)
+            = standard_contrast("tones", key)
 
   section.space-y-4
     h2.text-lg.font-semibold = t("tones.sandhi_title")
@@ -86,12 +105,19 @@
             span.mt-2.size-1 class="shrink-0 rounded-full bg-foreground"
             span = t("tones.yi_rules.#{key}")
 
+  - if Huayu::StandardContrasts.words.any?
+    section.rounded-2xl.border.border-border.bg-card.p-5.space-y-3
+      h2.text-lg.font-semibold = t("tones.words_title")
+      p.text-sm.text-muted-foreground = t("tones.words_lede")
+      = standard_words
+
   section.space-y-3
     h2.text-lg.font-semibold = t("tones.hacks_title")
     .grid.gap-3 class="md:grid-cols-2"
       - %w[low pair start after_third fourth relative neutral].each do |key|
         .rounded-2xl.border.border-border.bg-card.p-4
           p.text-sm.leading-relaxed = t("tones.hacks.#{key}")
+          = regional_note("tones", key, css: "mt-2")
 
   section.space-y-3
     h2.text-lg.font-semibold = t("tones.practice_title")

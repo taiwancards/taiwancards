@@ -13,6 +13,8 @@
         data-action="click->syllable-chart#choose"
         class="hover:bg-muted aria-pressed:bg-primary aria-pressed:text-primary-foreground"]
         = t("syllables.voices.#{voice}")
+    .ml-auto
+      = render("shared/audio_speed")
 
   - @groups.each do |group|
     section.space-y-2

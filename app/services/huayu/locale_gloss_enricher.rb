@@ -2,7 +2,7 @@
 
 module Huayu
   class LocaleGlossEnricher
-    OWNED_ELSEWHERE = %i[sentence measure_word radical].freeze
+    OWNED_ELSEWHERE = %i[sentence measure_word radical particle grammar].freeze
 
     def self.path_for(locale) = AppData.path("huayu/#{Locales.key(locale)}_glosses.json")
 
@@ -50,8 +50,11 @@ module Huayu
       rows = senses.flat_map do |lexeme_id, rows_for|
         text = ids[lexeme_id]
         wanted = by_text.fetch(text, {})
+        cleaned = wanted.to_h { |zh, value| [ConcisedMarkup.definition(zh), value] }
         rows_for.filter_map do |id, _lexeme_id, gloss_zh, stored|
-          fresh = wanted[gloss_zh].presence || (glosses[text].presence if rows_for.one?)
+          fresh = wanted[gloss_zh].presence ||
+            (cleaned[ConcisedMarkup.definition(gloss_zh)].presence if gloss_zh.present?) ||
+            (glosses[text].presence if rows_for.one?)
           next if fresh.blank? || stored[@key] == fresh
 
           [id, stored.merge(@key => fresh.strip)]

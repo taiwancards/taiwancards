@@ -15,7 +15,7 @@ id:
     policy_after: beserta persyaratan Limited Use (penggunaan terbatas) di dalamnya. Data akun Google tidak pernah dipakai untuk iklan, tidak pernah dijual, dan tidak pernah dibagikan di luar yang dijelaskan di sini.
   privacy:
     title: Kebijakan privasi
-    effective: "Berlaku sejak: 10 Oktober 2026"
+    effective: "Berlaku sejak: 24 November 2026"
     purpose:
       heading: Apa yang dilakukan aplikasi ini
       body: TaiwanCards adalah aplikasi web gratis tanpa iklan untuk belajar bahasa Mandarin Taiwan. Isinya kartu hafalan dengan pengulangan berjarak, kamus, latihan pelafalan, dan daftar kosakata. Aplikasi ini dikelola oleh satu pengembang independen, bukan oleh perusahaan.
@@ -54,7 +54,7 @@ id:
       body: Aplikasi dan basis datanya berjalan di Render di Singapura. Lalu lintas melewati Cloudflare, file audio disajikan dari Cloudflare R2, dan buletin dikirim lewat Resend, perusahaan Amerika Serikat, dari servernya di Jepang. Penyedia ini memproses data hanya untuk menjalankan layanan dan mengirimkan emailnya. Jika kamu memakai cadangan Google Drive, salinan itu tersimpan di akun Google-mu sendiri.
     retention:
       heading: Penyimpanan dan penghapusan
-      body: Datamu disimpan selama akunmu ada. Kirim email ke alamat di bawah agar akun dan seluruh isinya dihapus; log server terhapus sendiri seiring waktu. Menghapus akun di sini tidak menyentuh file cadangan yang kamu buat di Google Drive-mu sendiri — file itu milikmu dan kamu sendiri yang menghapusnya.
+      body: "Datamu disimpan selama akunmu ada. Kamu bisa menghapus akun beserta seluruh isinya sendiri kapan saja lewat Profil → Cadangan → Hapus akun, atau kirim email ke alamat di bawah agar dihapuskan untukmu; log server terhapus sendiri seiring waktu. Jika akun dihapus, catatan email yang dijelaskan di atas tetap disimpan untuk statistik, tetapi kehilangan semua hal yang mengarah kembali kepadamu: alamat email dan kaitannya dengan akun dihapus, email yang gagal terkirim hanya menyimpan jenis galatnya tanpa pesan dari server email, dan jadwal pengingat hanya menyimpan hari dan jamnya tanpa zona waktu. Yang tersisa adalah tanggal, email yang mana dan berapa kartu yang ditawarkannya, apa yang terjadi padanya (terkirim, gagal terkirim, tautan dibuka, berhenti berlangganan, dan sebagainya), serta halaman mana yang dibuka oleh tautan. Menghapus akun di sini tidak menyentuh file cadangan yang kamu buat di Google Drive-mu sendiri — file itu milikmu dan kamu sendiri yang menghapusnya."
     choices:
       heading: Pilihanmu
       items:
@@ -138,6 +138,7 @@ id:
     vi: Tiếng Việt
     de: Deutsch
     id: Bahasa Indonesia
+    ja: 日本語
   language_step:
     heading: Pilih bahasa aplikasi dan pelajarannya
     edition: "Bukan terjemahan kata per kata dari bahasa lain, melainkan edisi tersendiri. Bahasa Mandarin Taiwan dijelaskan dari sudut pandang penutur bahasa Indonesia: bunyi, tata bahasa, dan budaya."
@@ -250,7 +251,7 @@ id:
     shape:
       example_surname: marga
       example_given: nama diri
-      compact: Marga adalah satu hanzi warisan; nama diri terdiri atas satu atau dua hanzi yang dipilih keluarga. Urutannya tidak pernah berubah, bagaimanapun huruf Latin di paspor menuliskannya.
+      compact: Marga diwariskan dan biasanya satu hanzi, kadang dua (歐陽, 張簡, 范姜); nama diri terdiri atas satu atau dua hanzi yang dipilih keluarga. Urutannya tidak pernah berubah, bagaimanapun huruf Latin di paspor menuliskannya.
     surnames:
       heading: Marga yang dipakai di Taiwan
       note: "%{shown} marga paling umum dari total %{total}, dihitung dari %{people} orang dalam catatan kependudukan."
@@ -282,7 +283,7 @@ id:
       textbook: Buku
       textbook-phrases: Latihan
       stories: Cerita
-      exams: Soal asli
+      exams: "Ruang ujian"
       radicals: Radikal
       characters: Hanzi
       dict: Kata
@@ -311,7 +312,7 @@ id:
       mock: Simulasi
       everyday: Sehari-hari
       phrases: Frasa
-      notices: Papan
+      notices: Dokumen
       metro: MRT
       calendar: Kalender
       medicine: Medis
@@ -340,15 +341,13 @@ id:
     detail_toggle: Kelengkapan halaman kamus
     detail_hint: "Seberapa banyak yang ditampilkan halaman kamus. 詳 — semua yang kami punya: skor kelangkaan, sebaran ragam bahasa, kartu pengingat, tesaurus, kisah asal-usul. 簡 — yang dipakai sehari-hari: bacaan, arti, kelas kata, kata penggolong, sinonim dan antonim, latihan goresan, beberapa kalimat. Awalnya 簡 sampai kamu melewati TOCFL Novice, lalu 詳; setelah itu tetap seperti yang kamu pilih."
     script_setup_hint: "Cara bahasa ditampilkan: gaya huruf, pinyin, kecepatan audio, kata versi Tiongkok, kelengkapan halaman kamus — dan bahasa yang kamu pakai untuk membaca situs ini."
-    china_toggle: Tampilkan kata versi Tiongkok
-    china_hint: "Kata yang dipakai di Tiongkok. Aktif: baris kecil di kartu menunjukkan kata yang dipakai di Tiongkok. Nonaktif: tidak ada tambahan. Nonaktif secara bawaan — aplikasi ini mengajarkan kata Taiwan; kata Tiongkok hanya sebagai rujukan."
     readings_hint: "Bacaan di atas hanzi, dalam tiga pilihan: zhuyin saja, zhuyin dengan pinyin, atau tidak ada sama sekali. Pinyin tidak pernah tampil tanpa zhuyin — Taiwan membaca dengan zhuyin. Bawaannya zhuyin saja, dan pilihanmu berlaku di semua halaman sampai kamu mengubahnya."
     locale_switch: ID
     textbook: Pelajaran buku
     phrase_drills: Latihan frasa
     stories: Ruang baca
     course: Kursus
-    exams: Soal TOCFL asli
+    exams: "Ruang ujian TOCFL"
     my_desks: Dekku
     reader: Baca teks
     graded: Bacaan bertingkat
@@ -376,7 +375,7 @@ id:
     liangci: Kata penggolong 量詞
     zhuci: Partikel nuansa 語氣詞
     phrases: Buku frasa
-    notices: Papan pengumuman
+    notices: Dokumen sehari-hari
     everyday: Kehidupan sehari-hari
     variants: Perbedaan kosakata
     names: Nama Taiwan
@@ -421,7 +420,7 @@ id:
       textbook: Ringkasan pelajaran dari buku, dengan uraian dan tanda “pelajaran sudah dikuasai”.
       textbook-phrases: Latihan frasa dari buku — substitusi pola, diucapkan keras-keras sambil berpacu dengan waktu.
       stories: "Ruang baca: teks utuh dengan uraian yang sama seperti di pembaca teks."
-      exams: Soal TOCFL asli dengan kunci jawaban, PDF, dan audionya.
+      exams: "Soal latihan resmi TOCFL lengkap dengan audionya, dinilai langsung di perangkatmu."
       radicals: 214 radikal Kangxi — jumlah goresan, arti, dan kata-kata tempat radikal itu muncul.
       characters: "Hanzi selengkapnya: bacaan, goresan, animasi penulisan, etimologi, kata menurut bacaan."
       dict: "Kata dan kolokasi: arti bernomor, tesaurus, kata penggolong, contoh dari korpus."
@@ -450,7 +449,7 @@ id:
       mock: Simulasi TOCFL — format biasa, bergambar, dan audio, bisa diulang persis dari seed.
       everyday: "Kosakata per situasi: makanan, minuman, transportasi, urusan dokumen, cuaca, bahasa gaul."
       phrases: 186 pola dalam 17 situasi, termasuk separuh yang cukup kamu pahami saja.
-      notices: Papan dan pengumuman yang kamu temui di jalan dan di transportasi umum.
+      notices: Kantong obat, slip gaji, tagihan, kontrak sewa, buku penghubung, dan pengumuman gedung, dibaca kolom demi kolom.
       metro: Peta MRT Taipei, setiap stasiun dengan arti dan bacaannya.
       calendar: Kalender lunar, festival, kata-kata musiman, dan dua pengonversi tanggal.
       medicine: Cara menyampaikan keluhanmu di apotek dan rumah sakit.
@@ -575,31 +574,99 @@ id:
       order: Susun kalimatnya
       pair: Jodohkan pasangannya
   exams:
-    title: Soal TOCFL asli
-    lede: Soal latihan resmi yang diterbitkan gratis oleh Steering Committee for the Test of Proficiency-Huayu, lengkap dengan audio, transkrip, dan kunci jawabannya. Kerjakan satu set soal, isi lembar jawabanmu, dan biarkan aplikasi menilainya dengan kunci resmi.
-    notice: Ini materi milik panitia ujian sendiri, disimpan hanya untuk belajar pribadi. Hanya kamu yang bisa melihatnya, aplikasi ini tidak pernah menerbitkannya, dan materi ini tidak ditampilkan di bagian publik mana pun.
-    empty: Belum ada soal resmi yang diunduh ke mesin ini.
-    band: Band %{band}
-    set: Set %{number}
+    title: "Ruang ujian TOCFL"
+    lede: "Soal latihan resmi TOCFL, dikerjakan seperti ujian sungguhan: berlatih dengan tempomu sendiri, atau kerjakan satu set dalam mode ujian dengan audio, urutan, dan waktu resmi. Semuanya berjalan di perangkatmu dan dinilai dengan kunci jawaban resmi."
+    credit: "Soal-soal ini adalah soal latihan resmi TOCFL © 國家華語測驗推動工作委員會 (Steering Committee for the Test of Proficiency – Huayu), disediakan gratis di sini untuk belajar."
+    empty: "Belum ada soal yang siap. Soal sedang disiapkan satu per satu."
+    band: "Band %{band}"
+    set: "Set %{number}"
     skills:
-      reading: Membaca
-      listening: Mendengarkan
+      reading: "Membaca"
+      listening: "Mendengarkan"
     questions:
       one: "%{count} soal"
       other: "%{count} soal"
-    clips:
-      one: "%{count} klip"
-      other: "%{count} klip"
-    best: terbaik %{score}/%{total}
-    percent: "%{value}%% benar"
-    open_paper: Buka soal
-    open_transcript: Transkrip soal mendengarkan
-    audio: Audio
-    correct_answer: benar
-    interactive: "%{count} di layar"
-    answer_sheet: Lembar jawaban
-    check: Nilai lembar jawabanku
-    check_hint: Dinilai dengan kunci jawaban resmi; skor terbaikmu disimpan.
+    minutes: "%{count} menit"
+    best: "terbaik %{score}/%{total}"
+    bands:
+      Novice: "Novice 1–2 (準備級): bulan-bulan pertama belajar, soal pendek dengan banyak gambar."
+      A: "Level 1–2 (入門級 dan 基礎級), kira-kira A1–A2: situasi sehari-hari dan teks pendek."
+      B: "Level 3–4 (進階級 dan 高階級), kira-kira B1–B2: dialog yang lebih panjang, pengumuman, dan artikel."
+      C: "Level 5–6 (流利級 dan 精通級), kira-kira C1–C2: ceramah, laporan, dan teks yang menantang."
+    format_title: "Susunan soal"
+    format_line: "%{skill}: %{questions}, %{minutes} menit"
+    plays_once: "diputar sekali"
+    plays_twice: "diputar dua kali"
+    plays_many: "diputar %{count} kali"
+    setup_title: "Mau mengerjakan dengan cara apa?"
+    practice_hint: "Pindah antarsoal dengan bebas, putar ulang audionya sesukamu, dan cek jawaban kapan saja."
+    exam_hint_listening: "Seperti saat ujian: rekaman berjalan sendiri sesuai urutan resmi, dengan jumlah pemutaran dan jeda resmi. Rekaman tidak bisa dijeda, dilompati, atau diputar ulang, tetapi kamu tetap bisa menandai jawaban selagi rekaman berlanjut."
+    exam_hint_reading: "Seperti saat ujian: seluruh soal dengan hitung mundur %{minutes} menit. Kamu bebas berpindah antarsoal; saat waktu habis, jawabanmu dikumpulkan otomatis."
+    exam_hint_reading_untimed: "Seperti saat ujian: seluruh soal sekaligus. Set ini tidak mencantumkan waktu pengerjaan, jadi tidak ada hitung mundur; kumpulkan setelah kamu selesai."
+    adaptive_label: "Aturan sepuluh detik (hanya mode ujian)"
+    adaptive_hint: "Tes berbasis komputer di Taiwan memberi sepuluh detik setelah setiap rekaman dan tidak membolehkan kembali ke soal sebelumnya. Pilihan ini hanya meniru pengaturan waktunya: soalnya tetap dari set ini, dan skornya tetap memakai skala set ini."
+    start: "Mulai"
+    start_hint: "Dalam mode ujian, audio langsung diputar begitu kamu mengetuk."
+    resume: "Lanjutkan"
+    discard: "Mulai dari awal"
+    loading: "Memuat soal…"
+    load_failed: "Soal tidak bisa dimuat. Periksa koneksimu, lalu coba lagi."
+    retry: "Coba lagi"
+    close: "Tutup"
+    player:
+      practice: "Latihan"
+      exam: "Ujian"
+      adaptive: "Ujian · aturan sepuluh detik"
+      part: "Bagian %{n}"
+      question: "Soal %{n}"
+      questions_range: "Soal %{from}–%{to}"
+      opening: "Pembukaan"
+      closing: "Penutup"
+      instructions: "Petunjuk"
+      play: "Putar"
+      stop: "Berhenti"
+      play_of: "pemutaran %{n} dari %{total}"
+      pause: "Jeda · %{seconds} detik"
+      answer_window: "Jawab sekarang · %{seconds} detik"
+      locked: "Ditutup — tidak bisa kembali"
+      now_playing: "Sedang diputar: %{label}"
+      go: "Ke sana"
+      previous: "Sebelumnya"
+      next: "Berikutnya"
+      check: "Cek"
+      original: "Asli"
+      zoom: "Perbesar"
+      finish: "Kumpulkan"
+      finish_confirm: "Kumpulkan sekarang? Belum dijawab: %{count}."
+      finish_yes: "Kumpulkan"
+      finish_no: "Lanjut mengerjakan"
+      answered: "%{count}/%{total} dijawab"
+      audio_error: "Satu rekaman tidak bisa diputar; ujian tetap berlanjut."
+      resume_note: "Ada percobaan yang belum selesai di perangkat ini (%{mode}): %{count} dari %{total} soal sudah dijawab."
+      result_title: "Hasilmu"
+      raw: "%{score} dari %{total} jawaban benar"
+      scale: "Skor skala: %{score} dari %{max}"
+      scale_only: "Skor skala: %{score}"
+      level: "Level yang dicapai: %{level}"
+      no_level: "Di bawah level pertama yang diukur set ini."
+      no_scale: "Set ini tidak punya tabel konversi resmi, jadi hanya jumlah jawaban benar yang ditampilkan."
+      by_part: "Per bagian"
+      review: "Pembahasan"
+      your_answer: "jawabanmu"
+      correct_answer: "jawaban benar"
+      no_answer: "Tidak dijawab."
+      revealed: "Dicek saat latihan."
+      transcript: "Transkrip"
+      again: "Kerjakan lagi"
+      all_papers: "Semua soal"
+      saved: "Tersimpan di akunmu. Skor terbaikmu: %{best}/%{total}."
+      save_failed: "Hasil tidak bisa disimpan ke akunmu; hasilnya tetap tersimpan di perangkat ini."
+      device_note: "Hasil ini tersimpan di perangkat ini. Masuk agar skor terbaikmu tersimpan di akun."
+      history: "Di perangkat ini"
+      level_n: "Level %{n}"
+      novice_n: "Novice %{n}"
+      level_source: "Nilai kelulusan diambil dari brosur TOCFL terbitan panitia; tabel konversi soal latihan tidak mencantumkannya."
+    paper_link: "Buka soal asli (PDF)"
   common:
     search: Cari…
     save: Simpan
@@ -964,7 +1031,7 @@ id:
       hint: Paling banyak sekali atau dua kali sebulan, hanya hal baru. Tanpa iklan.
     admin:
       title: Newsletter
-      lede: "Penerima: semua yang masuk dengan Google dan belum berhenti berlangganan, ditambah kamu, selalu. Saat ini %{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, dan %{id} berbahasa Indonesia. Masing-masing menerima versi dalam bahasa antarmukanya."
+      lede: "Penerima: semua yang masuk dengan Google dan belum berhenti berlangganan, ditambah kamu, selalu. Saat ini %{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, %{id} berbahasa Indonesia, dan %{ja} berbahasa Jepang. Masing-masing menerima versi dalam bahasa antarmukanya."
       new: Newsletter baru
       empty: Belum ada newsletter.
       draft: Draf
@@ -993,7 +1060,7 @@ id:
       sample_sent: "Terkirim hanya ke %{email}. Ini email sungguhan: tautannya menghitung klik dan tautan berhenti berlangganannya berfungsi."
       failed: "Tidak bisa dikirim: %{error}"
       deliver: Kirim (%{count})
-      deliver_confirm: Kirim newsletter ini ke %{count} orang (%{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, %{id} berbahasa Indonesia)? Pengiriman tidak bisa dibatalkan.
+      deliver_confirm: Kirim newsletter ini ke %{count} orang (%{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, %{id} berbahasa Indonesia, %{ja} berbahasa Jepang)? Pengiriman tidak bisa dibatalkan.
       no_recipients: Tidak ada yang cocok dengan penerima yang dipilih.
       audience: Penerima
       audience_modes:
@@ -1006,8 +1073,8 @@ id:
       audience_search: Cari lewat email
       audience_seen: terakhir aktif %{ago} lalu
       audience_count:
-        one: "1 penerima: %{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, %{id} berbahasa Indonesia"
-        other: "%{count} penerima: %{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, %{id} berbahasa Indonesia"
+        one: "1 penerima: %{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, %{id} berbahasa Indonesia, %{ja} berbahasa Jepang"
+        other: "%{count} penerima: %{en} berbahasa Inggris, %{ru} berbahasa Rusia, %{vi} berbahasa Vietnam, %{de} berbahasa Jerman, %{id} berbahasa Indonesia, %{ja} berbahasa Jepang"
       resume: Kirim %{count} sisanya
       resume_confirm: Kirim newsletter ke %{count} orang yang belum menerimanya?
       dispatched: Pengiriman sudah dimulai di latar belakang. Muat ulang halaman untuk memantaunya.
@@ -1182,8 +1249,6 @@ id:
     song_hint: "Cari lagunya, dan kata-katanya menjadi dek. Liriknya sendiri tidak disimpan: lirik diambil, dipecah menjadi kata, lalu dibuang."
     song_words: Ambil lagu ini
     song_note: Lirik berasal dari basis data terbuka LRCLIB dan milik para penciptanya. Yang tersimpan di sini hanya daftar katanya.
-    photo_soon: Impor dari foto masih dibuat
-    photo_hint: Membaca hanzi dari foto belum siap. Sambil menunggu, gambar hanzi yang tidak bisa kamu baca langsung di kotak pencarian, nanti aplikasi menyebutkannya.
   progress:
     title: Progres
     tabs:
@@ -1461,7 +1526,7 @@ id:
     examples: Dalam kalimat nyata
     also_title: Di mana yang lainnya
     also_grammar_html: 嗎, 了, dan 的 juga menutup kalimat, tetapi ketiganya urusan tata bahasa, bukan nuansa — penanda tanya, perubahan keadaan, bingkai penegas. Masing-masing punya pelajaran sendiri di bagian tata bahasa.
-    also_elsewhere: 唄, 咯, 嘞, dan 咩 memang partikel sungguhan, tetapi milik logat Beijing dan bahasa Kanton. Kamu akan membacanya di subtitle dan mendengarnya dari penutur asal Tiongkok; di Taiwan tidak ada yang memakainya, jadi di sini tidak ada kartunya.
+    also_elsewhere: 唄 dan 嘞 memang partikel sungguhan, tetapi milik logat Beijing dan bahasa Kanton. Kamu akan membacanya di subtitle dan mendengarnya dari penutur asal Tiongkok; di Taiwan hampir tidak ada yang memakainya, jadi di sini tidak ada kartunya. 咯 adalah partikel yang di Taiwan ditulis 囉 (punya kartu sendiri), sedangkan 咩 tetap terdengar dalam percakapan santai di Taiwan (真的咩？), meski jauh lebih jarang daripada partikel di halaman ini.
     families:
       core: Inti sehari-hari
       mood: Nuansa dan kehangatan
@@ -1529,7 +1594,7 @@ id:
     data_pron: Pelafalan
     data_pron_none: Belum ada rekaman.
     data_pron_line: "%{syllables} suku kata, %{attempts} percobaan, rata-rata %{average}"
-    data_excluded: "Tidak ikut diekspor: catatan kunjungan halaman, kata sandimu, dan token Google — itu data akses, bukan progres."
+    data_excluded: "Tidak ikut diekspor: catatan kunjungan halaman dan token Google — itu data akses, bukan progres."
     export_full: Unduh semua dataku
     mobile_tabs: Bilah bawah di ponselmu
     google_backup_hint: Hubungkan akun Google-mu untuk masuk dengan sekali ketuk. Cadangan ke Drive adalah langkah terpisah yang bisa kamu lakukan nanti di tab cadangan.
@@ -1717,7 +1782,7 @@ id:
     found: "Ditemukan: %{count}"
     found_capped: Lebih dari %{count} — menampilkan %{count} pertama
     field_text: Tulisan atau arti
-    field_text_hint: Hanzi, atau kata dalam bahasa Indonesia atau Inggris
+    field_text_hint: Hanzi, atau kata dalam salah satu bahasa situs ini
     field_pinyin: Pinyin
     field_pinyin_hint: "Nada boleh ditulis sebagai tanda atau angka, dengan atau tanpa spasi: nǐhǎo = ni3hao3 = ni hao"
     field_zhuyin: Zhuyin
@@ -1907,6 +1972,11 @@ id:
       new: Baru
       learning: Sedang dipelajari
       known: Sudah dikuasai
+  standards:
+    taipei: Taipei
+    beijing: Beijing
+    taipei_hint: Standar Taiwan — inilah yang kamu pelajari.
+    beijing_hint: Standar Beijing — hanya sebagai pembanding.
   tones:
     names:
       "1": Nada pertama
@@ -1923,68 +1993,67 @@ id:
       taipei: Taipei
       reference: Beijing
       aria: "%{tone}: kontur nada"
-      taipei_note: Beginilah bunyi nada di Taiwan. Ada beberapa perbedaan dari norma di Tiongkok; semuanya dirinci di bawah.
+      taipei_note: "Beginilah bunyi nada di Taiwan — inilah yang perlu kamu pelajari."
       reference_note: Norma di Tiongkok, sebagai pembanding. Angkanya adalah notasi preskriptif yang lazim.
-      scale: "Lima tingkat tinggi nada sebagai patokan, dari rendah ke tinggi. Baca setiap garis dari kiri ke kanan: dari mana ia mulai dan ke mana ia bergerak. Untuk Taipei sengaja tidak diberi angka — belum ada notasi preskriptif yang mapan untuk pelafalan Taiwan, dan kami tidak mau mengarangnya."
+      beijing: Beijing
+      beijing_note: "Standar Beijing, hanya sebagai pembanding."
+      scale: "Lima tingkat tinggi nada, dari rendah ke tinggi. Baca setiap garis dari kiri ke kanan: suara mulai dari mana dan bergerak ke mana. Dalam ucapan sungguhan, suara sedikit bergeser di sekitar garis ini."
     hacks_title: Yang benar-benar membantu
     hacks:
-      low: Nada ketiga sebenarnya hanya nada rendah, kebalikan nada pertama. Lekukan turun-naik yang dalam hanya muncul kalau suku katanya berdiri sendiri atau di akhir ujaran; di Taiwan naiknya hampir tidak pernah diucapkan. Jangan berusaha menggambar tanda centang — cukup turun ke bawah dan bertahan di sana, seperti “Hmm…” yang ragu.
+      low: "Nada ketiga sebenarnya hanya nada rendah, kebalikan nada pertama. Lekukan turun-naik hanya muncul kalau suku katanya berdiri sendiri atau sebelum jeda, dan di Taiwan bahkan di situ naiknya kecil dan sering tidak ada. Jangan berusaha menggambar tanda centang — cukup rendahkan suara dan tahan di sana, kira-kira seperti “Hmm…” yang ragu."
       pair: "Anggap nada pertama dan ketiga sebagai pasangan: satu tinggi datar, satu rendah datar. Ini lebih mudah dipegang daripada “datar lawan melengkung”."
       start: "Nada kedua dan ketiga paling sering tertukar. Petunjuknya bukan di mana nada itu berakhir, melainkan di mana ia mulai: nada kedua mulai dari tengah lalu naik, nada ketiga mulai rendah dan tetap rendah."
       after_third: "Kalau nada kedua datang sesudah nada ketiga, posisi rendah nada ketiga itulah ancang-ancangmu: kamu sudah di bawah, dan nada kedua langsung naik dari sana. Jangan naik dulu ke tengah di antara kedua suku kata — justru itulah yang memutus sambungannya."
-      fourth: "Nada keempat biasanya paling mudah: ini intonasi perintah yang tegas, tajam dari atas ke bawah, seperti “Awas!” atau “Bukan!”. Kalau terdengar terlalu lembek, mungkin kamu memulainya kurang tinggi."
+      fourth: "Nada keempat biasanya paling mudah: ini intonasi perintah yang tegas, turun tajam dalam satu suku kata, seperti “Hus!” atau “Sah!”. Pertahankan turunnya juga di tengah kalimat: dalam bahasa Mandarin turunnya milik kata, bukan milik akhir kalimat. Kalau terdengar terlalu lembek, mungkin kamu memulainya kurang tinggi."
       relative: Tinggi nada itu relatif, bukan mutlak. Kelima tingkatnya diukur di dalam rentang suaramu sendiri, bukan terhadap not musik. Suara yang rendah bukan halangan untuk nada.
-      neutral: "Suku kata bernada netral tidak punya tinggi nada sendiri — ia meminjamnya dari suku kata sebelumnya. Sesudah nada pertama ia jatuh di tengah, sesudah nada keempat ia jatuh rendah. Tidak ada yang perlu dihafal tersendiri: hasilnya akan benar kalau nada sebelumnya benar."
+      neutral: "Suku kata bernada netral itu pendek dan ringan. Di Taiwan ia jatuh di tengah-bawah suara, apa pun nada sebelumnya, jadi hampir tidak ada yang perlu dihafal tersendiri: ucapkan nada sebelumnya dengan benar dan biarkan suku kata netral itu melemah dengan sendirinya."
     title: Nada
     lede: Bagian keempat fonetik, yang tanpanya tiga bagian lain tidak jalan. Apa itu nada, bagaimana nada berperilaku di Taiwan, dan mengapa kamu tidak bisa melewatkannya begitu saja.
+    what_title: "Apa itu nada"
+    what_body: "Nada adalah lagu satu suku kata: seberapa tinggi suara berada dan ke mana suara itu bergerak selama suku kata diucapkan. Bahasa Indonesia juga memakai lagu, tetapi pada kalimat utuh: “Sudah?” dan “Sudah.” adalah kata yang sama dengan dua lagu, dan lagunya memberi tahu apakah orang bertanya atau menyatakan. Dalam bahasa Mandarin lagu itu milik kata itu sendiri: 買 mǎi, yang diucapkan rendah, berarti ‘membeli’; 賣 mài, yang diucapkan turun, berarti ‘menjual’. Tinggi nada diukur di dalam suaramu sendiri, bukan terhadap not musik, jadi suara yang berat atau perasaan “tidak berbakat musik” bukan halangan: telinga untuk nada bisa dilatih, dan latihan mendengar yang singkat pun sudah memberi kemajuan yang bertahan lama. Yang benar-benar menuntut usaha adalah mengingat nada setiap kata — jadi pelajari nadanya bersama katanya, jangan belakangan."
     why_title: Nada bukan hiasan
     why_body: Dalam bahasa Mandarin, nada adalah bagian dari suku kata, sama seperti konsonan dan vokalnya. Tanpa nada, bahasa ini hanya punya sekitar empat ratus suku kata yang bisa dibedakan; dengan nada, jumlahnya sekitar seribu tiga ratus. Kalau nada dibuang, dua pertiga pembeda yang tersedia bagimu hilang, dan kata yang terdengar sama dari mulutmu jadi berlipat ganda.
     myth_title: Tentang mitos “nanti juga paham dari konteks”
     myth_body: Konteks memang membantu, dan kata tidak pernah muncul di ruang hampa. Tetapi konteks hanya membetulkan apa yang sudah didengar pendengar; konteks tidak menggantikan pendengaran. Penutur asli menangkap nada secara otomatis, sebelum menafsirkan apa pun, dan nada yang salah tidak diterima sebagai nada yang kosong. Ia diterima sebagai nada lain — jadi ia aktif menyesatkan, bukan sekadar kurang jelas.
     cannot_title: Tidak bernada itu mustahil
-    cannot_body: Ini soal teknis, bukan soal motivasi. Setiap suku kata yang kamu ucapkan punya tinggi nada dan gerak nada — kalau tidak, suku kata itu tidak akan berbunyi sama sekali. Pertanyaannya hanya apakah konturnya cocok dengan yang seharusnya. Melewatkan latihan nada tidak membuat ucapanmu netral; hasilnya ucapan dengan nada acak. Bagi telingamu nada itu mungkin tidak ada, tetapi bagi pendengarmu nada itu selalu ada.
+    cannot_body: "Ini soal teknis, bukan soal motivasi. Setiap suku kata yang kamu ucapkan punya tinggi nada dan gerak nada — kalau tidak, suku kata itu tidak akan berbunyi sama sekali. Pertanyaannya hanya apakah konturnya cocok dengan yang seharusnya. Melewatkan latihan nada tidak membuat ucapanmu netral; hasilnya ucapan dengan nada acak. Biasanya yang muncul adalah lagu kalimat bahasa Indonesia: suara naik di akhir pertanyaan dan turun di akhir pernyataan, sehingga nada suku kata terakhir ikut berubah. Bagi telingamu nada itu mungkin tidak ada, tetapi bagi pendengarmu nada itu selalu ada."
     cumulative_title: Sebenarnya ini bukan soal pasangan minimal
     cumulative_body: "Nada biasanya diperkenalkan lewat 媽 麻 馬 罵, sehingga kesannya risikonya terbatas pada tabrakan langka. Dalam praktik, kerusakannya menumpuk, bukan per kata: dengan nada yang terus-menerus salah, tiap kata mungkin masih bisa ditebak, tetapi satu kalimat utuh tidak, karena pendengar harus mencoba berbagai kemungkinan lebih cepat daripada kamu berbicara."
     four_title: Empat nada
-    four_lede: Angka di dalam kurung adalah notasi tinggi nada lima tingkat dari Chao, dari 1 (rendah) sampai 5 (tinggi).
+    four_lede: "Angka di dalam kurung menunjukkan tinggi nada, dari 1 (rendah) sampai 5 (tinggi)."
     tones:
       t1:
         name: Pertama — tinggi datar
         contour: "55"
         zhuyin: tanpa tanda
-        note: Ditahan di satu ketinggian, seperti satu not yang dinyanyikan panjang. Zhuyin sama sekali tidak menandainya — tidak adanya tanda itulah nada pertama.
+        note: "Ditahan tinggi dan datar, seperti satu not yang dinyanyikan panjang; ujungnya tidak boleh melorot. Bahasa Indonesia tidak punya kata dengan lagu tetap seperti ini. Zhuyin sama sekali tidak menandainya — tidak adanya tanda itulah nada pertama."
       t2:
         name: Kedua — naik
         contour: "35"
         zhuyin: ˊ
-        note: Bergerak ke atas, mirip “Hah?” atau “Masa?” yang terkejut.
+        note: "Naik. Yang paling dekat dalam bahasa Indonesia adalah naiknya “Hah?” yang terkejut — tetapi itu perbandingan kasar untuk permulaan. Lagu tanya dalam bahasa Indonesia milik seluruh kalimat, sedangkan nada kedua milik satu suku kata dan tetap naik di tengah kalimat apa pun. Di Taiwan naiknya pun landai dan diawali lekukan kecil ke bawah."
       t3:
         name: Ketiga — rendah
         contour: 214 / 21
         zhuyin: ˇ
-        note: Buku pelajaran menggambarnya sebagai lekukan yang naik lagi, tetapi naiknya kebanyakan hanya terdengar pada suku kata yang berdiri sendiri atau di akhir ujaran. Dalam ucapan yang mengalir, nada ketiga biasanya tetap rendah dan tidak naik kembali.
+        note: "Rendah. Buku pelajaran menggambarnya sebagai lekukan yang naik lagi, tetapi dalam ucapan yang mengalir nada ketiga turun ke dasar suara dan bertahan di sana. Pelajarilah sebagai nada rendah, bukan sebagai nada yang melengkung."
       t4:
         name: Keempat — turun
         contour: "51"
         zhuyin: ˋ
-        note: Tajam dari atas ke bawah, pendek dan tegas.
+        note: "Turun, pendek dan tegas, seperti “Ya!” yang diucapkan dengan mantap. Perbandingan ini berhenti di situ: dalam bahasa Indonesia lagu turun seperti itu milik ujaran, sedangkan dalam bahasa Mandarin turunnya milik kata itu sendiri di mana pun ia berada, juga di tengah kalimat."
     neutral_title: Yang kelima, atau tepatnya nada netral
-    neutral_body: "Sebenarnya ini bukan nada kelima, melainkan ketiadaan nada sendiri: suku katanya kehilangan konturnya, memendek, dan mengambil tinggi nada dari suku kata sebelumnya — ringan seperti “-lah” atau “-nya” yang tidak bertekanan. Zhuyin menandainya dengan titik ˙ dan, berbeda dengan pinyin, menaruhnya SEBELUM suku kata: ˙ㄉㄜ. Tidak ada gunanya mengujinya dalam latihan — di telinga, ini hanya suku kata yang sangat pendek dan tidak bertekanan."
-    neutral_taiwan: "Dan inilah perbedaan penting di Taiwan: nada netral jauh lebih jarang di Taiwan daripada dalam norma yang dipakai di Tiongkok. Banyak kata yang suku kata keduanya dilemahkan di Tiongkok tetap mempertahankan nada penuhnya di sini."
+    neutral_body: "Sebenarnya ini bukan nada kelima, melainkan ketiadaan nada sendiri: suku katanya kehilangan konturnya dan memendek, dan di Taiwan jatuh di tengah-bawah suara, apa pun nada sebelumnya — ringan seperti “-lah” atau “-nya” yang tidak bertekanan. Zhuyin menandainya dengan titik ˙ dan, berbeda dengan tanda nada lainnya, menaruhnya sebelum suku kata: ˙ㄉㄜ. Tidak ada gunanya mengujinya dalam latihan — di telinga, ini hanya suku kata yang sangat pendek dan tidak bertekanan."
     taiwan_title: Bedanya nada di Taiwan
-    taiwan_body: Perbedaannya bukan pada sistemnya — nadanya tetap empat yang sama — melainkan pada cara pengucapannya.
-    taiwan_points:
-      range: Rentang nadanya secara keseluruhan lebih rendah dan lebih sempit. Ucapan orang Taiwan muat dalam rentang tinggi nada yang lebih kecil daripada ucapan di Tiongkok, karena itulah nadanya terdengar terkendali, bukan datar.
-      second: Nada kedua tidak naik setinggi itu. Ia juga sering mendapat sedikit lekukan di awal, sehingga bentuknya mirip nada ketiga versi preskriptif.
-      third: Nada ketiga tidak naik kembali dari wilayah rendah yang agak serak. Kontur 214 yang penuh praktis tidak diucapkan di Taiwan.
-      neutral: Nada netral lebih jarang muncul, dan suku kata terakhir umumnya tetap mempertahankan nadanya sendiri.
-      erhua: Erhua — akhiran 兒 — sangat jarang dalam bahasa Mandarin Taiwan.
-      merge: Di telinga, nada kedua dan ketiga lebih berdekatan daripada dalam lafal penyiar. Ini normal, bukan cacat bicara.
+    taiwan_body: "Sistemnya sama — empat nada dan satu nada netral — tetapi setiap nada diucapkan dengan cara lain. Garis hijau adalah yang akan kamu dengar di Taipei."
+    words_title: Kata yang sama, nada yang berbeda
+    words_lede: Beberapa kata sehari-hari punya nada kamus yang berbeda di kedua standar. Pelajari yang Taiwan.
+    words_word: Kata
     sandhi_title: Dua aturan yang mengubah nada
-    sandhi_lede: "Yang ditulis satu nada, yang diucapkan nada lain. Nada tertulisnya tidak berubah: kamus, zhuyin, dan pinyin tetap memakai nada asalnya."
+    sandhi_lede: "Yang ditulis satu nada, yang diucapkan nada lain. Untuk nada ketiga, bentuk tertulisnya tidak berubah: kamus, zhuyin, dan pinyin tetap memakai nada asalnya. Untuk 一 dan 不 penulisannya tidak seragam: kamus mempertahankan nada asal, sedangkan buku pelajaran sering menuliskan nada yang sudah berubah, seperti pada contoh di bawah."
     third_title: Nada ketiga sebelum nada ketiga
     third_body: Kalau dua nada ketiga berurutan, yang pertama diucapkan sebagai nada kedua. 你好 ditulis ㄋㄧˇ ㄏㄠˇ, tetapi terdengar ní hǎo. Aturan ini berlaku pada apa yang diucapkan, bukan pada bentuk kamus, jadi juga berlaku melintasi batas kata.
-    third_three: "Kalau ada tiga nada ketiga berturut-turut, hasilnya bergantung pada pengelompokan maknanya. 我很好 biasanya diucapkan wó hén hǎo, karena 很好 lebih erat menyatu. Tidak ada yang perlu dihafal: aturannya berlaku pada suku kata mana pun yang memang kamu kelompokkan."
+    third_three: "Kalau ada tiga nada ketiga berturut-turut, hasilnya bergantung pada pengelompokan maknanya. Dalam 我很好, 很好 lebih erat menyatu, jadi hanya 很 yang berubah dan 我 tetap rendah di depannya: wǒ hén hǎo; dalam ucapan cepat 我 sering ikut naik, menjadi wó hén hǎo. Kalau dua suku kata pertama yang menyatu, seperti dalam 展覽館, keduanya berubah: zhán lán guǎn. Tidak ada yang perlu dihafal: aturannya berlaku pada suku kata mana pun yang memang kamu kelompokkan."
     yi_title: 一 dan 不
     yi_body: Nada dua suku kata ini bergantung pada suku kata yang mengikutinya.
     yi_rules:
@@ -2390,11 +2459,11 @@ id:
     initials_lede: "Dua puluh satu simbol — semua bunyi yang bisa mengawali suku kata. Tombolnya memutar rekaman Kementerian Pendidikan Taiwan: dengarkan dulu sebelum membaca penjelasannya."
     series:
       title: Tiga deret yang selalu tertukar
-      body: Sembilan konsonan awal yang tampak mirip dalam pinyin, tetapi dibentuk di tiga tempat berbeda di mulut. Latih dulu deret demi deret — dalam satu deret tempatnya sama, yang berbeda hanya embusan napasnya.
+      body: "Sembilan konsonan awal yang tampak mirip dalam pinyin, tetapi dibentuk di tiga tempat berbeda di mulut. Latih dulu deret demi deret — dalam satu deret tempatnya sama, yang berbeda hanya cara udaranya keluar: letupan tanpa embusan, letupan dengan embusan kuat, atau desis tanpa letupan."
       rows_hint: satu deret
       columns_hint: tiga deret sekaligus
       hard_title: Yang ini memang sulit
-      hard_body: "Ambil satu kolom, bukan satu deret, dan bunyinya jadi hampir tidak bisa dibedakan: dalam pinyin tulisannya pun nyaris sama, zhi, zi, dan ji hanya beda satu huruf. Bedanya cuma letak lidah — ditarik ke belakang ke arah langit-langit, di gigi bawah, atau menempel di langit-langit keras. Inilah yang perlu didengarkan baik-baik, dan wajar kalau awalnya masih salah."
+      hard_body: "Ambil satu kolom, bukan satu deret, dan bunyinya jadi hampir tidak bisa dibedakan: dalam pinyin tulisannya pun nyaris sama, zhi, zi, dan ji hanya beda satu huruf. Bedanya cuma letak lidah — ujungnya melengkung ke belakang ke arah langit-langit, lidah rata dengan tepi depannya di gigi, atau ujungnya turun dan daun lidah menempel di langit-langit keras. Inilah yang perlu didengarkan baik-baik, dan wajar kalau awalnya masih salah."
       all_nine: Kesembilannya dicampur
       sets:
         zhi_chi_shi: zhi chi shi
@@ -2419,32 +2488,32 @@ id:
         body: Bunyi ini hanya muncul bersama ㄧ dan ㄩ, jadi tidak akan tertukar dengan ㄓㄔㄕ kalau kamu memperhatikan bunyi sesudahnya. ㄐ mirip c pada “cinta”, ㄒ mirip sy pada “syukur”.
       retroflex:
         title: Lidah ditarik ke belakang
-        body: Ujung lidah terangkat dan ditarik ke belakang, ke arah langit-langit mulut. Di Taiwan bunyinya lebih lembut daripada di buku pelajaran Tiongkok — hampir ㄗㄘㄙ.
+        body: "Ujung lidah terangkat dan ditarik ke belakang, ke arah langit-langit mulut."
       sibilant:
         title: Desis
-        body: Lidah di gigi bawah, udara keluar dalam aliran sempit. Pasangan dari tiga bunyi di atas. ㄗ adalah “ts” tanpa embusan napas, ㄘ “ts” yang sama dengan embusan napas kuat — pinyin menulisnya c, tetapi bunyinya bukan c bahasa Indonesia.
+        body: "Lidah rata dengan tepi depannya di gigi, udara keluar dalam aliran sempit. Pasangan dari tiga bunyi di atas. ㄗ adalah “ts” tanpa embusan napas, ㄘ “ts” yang sama dengan embusan napas kuat — pinyin menulisnya c, tetapi bunyinya bukan c bahasa Indonesia."
       medial:
         title: Medial
         body: Letaknya di antara konsonan awal dan bagian akhir; dalam pinyin menjadi i, u, dan ü — atau y dan w di awal suku kata.
       open:
         title: Vokal tunggal
-        body: Empat bunyi bersih yang menjadi bahan semua bunyi lain. ㄝ tidak pernah berdiri sendiri — hanya sesudah ㄧ dan ㄩ.
+        body: "Empat bunyi bersih yang menjadi bahan semua bunyi lain. ㄝ hampir tidak pernah berdiri sendiri — biasanya hanya sesudah ㄧ dan ㄩ."
       diphthong:
         title: Diftong
         body: "Dua bunyi dalam satu suku kata: lidah meluncur dari satu posisi ke posisi berikutnya tanpa memutus suku katanya, seperti “ai” pada “pantai” yang diucapkan dengan cermat."
       nasal:
         title: Sengau
-        body: ㄢ/ㄤ dan ㄣ/ㄥ berbeda di posisi akhir lidah, seperti “makan” dan “orang”. Di Taiwan bedanya sering kabur, tetapi kamus tetap membedakannya.
+        body: "ㄢ/ㄤ dan ㄣ/ㄥ berbeda di posisi akhir lidah, seperti “makan” dan “orang”; kamus membedakan kedua pasangan itu."
       rhotic:
         title: Satu-satunya
-        body: Suku kata tersendiri, ada pada 二, 兒, dan 耳. Bukan akhiran r yang di Tiongkok ditempelkan pada kata lain.
+        body: "Suku kata tersendiri, ada pada 二, 兒, dan 耳."
       compound:
         title: Bagian akhir gabungan
         body: Medial ditambah bagian akhir. Tidak perlu latihan tersendiri — semuanya tersusun dari simbol yang sudah kamu latih.
-    finals_lede: "Semua yang tersisa dalam suku kata setelah konsonan awal: vokal, diftong, atau vokal dengan bunyi sengau. Untuk bagian akhir gabungan, yang disuarakan adalah tiap simbolnya — kalau dirangkai, bunyinya tidak sama dengan kedua bagian yang diucapkan berurutan."
+    finals_lede: "Semua yang tersisa dalam suku kata setelah konsonan awal: vokal, diftong, atau vokal dengan bunyi sengau. Untuk bagian akhir gabungan, yang diputar adalah bunyi tiap simbolnya — kalau dirangkai, bunyinya tidak sama dengan kedua bagian yang diucapkan berurutan."
     why_title: Mengapa ini bukan hal sepele
     why_body: "Pinyin bisa kamu baca tanpa persiapan apa pun, dan justru itulah bahayanya: huruf-hurufnya menyeret kebiasaan membaca bahasa Indonesia — c dibaca seperti pada “cari”, j seperti pada “jalan”, b seperti pada “baju” — dan kesalahannya tertanam diam-diam. Di balik simbol zhuyin tidak ada apa-apa selain bunyi yang kamu ajarkan kepadanya. Karena itulah Taiwan menandai bacaan dengan zhuyin."
-    compound_audio: "Bagian akhir gabungan: yang disuarakan adalah tiap simbolnya. Kalau dirangkai, bunyinya tidak sama dengan kedua bagian yang diucapkan berurutan — lihat catatan di kanan."
+    compound_audio: "Bagian akhir gabungan: yang diputar adalah bunyi tiap simbolnya. Kalau dirangkai, bunyinya tidak sama dengan kedua bagian yang diucapkan berurutan — lihat catatan di kanan."
     play_symbol: Putar %{symbol}
     phonetics_card: "Tabel bunyi lengkap: zhuyin, pinyin, IPA, padanan bunyi dalam bahasa Indonesia, dan contoh."
     phonetics_title: Zhuyin dan pinyin
@@ -2459,7 +2528,7 @@ id:
     title: Dasar
     intro: Pelajari bunyi bahasa Mandarin dari dasar — sistem bacaannya dulu, baru pelafalan.
     initials: Konsonan awal (inisial)
-    finals: Bagian akhir (vokal)
+    finals: "Bagian akhir (final)"
     play: Putar
     col_pinyin: Pinyin
     col_palladius: Palladius
@@ -2475,7 +2544,7 @@ id:
       title: Zhuyin ↔ pinyin
       direction_zhuyin: Zhuyin → pinyin
       direction_pinyin: Pinyin → zhuyin
-      systems_html: "Zhuyin adalah 37 simbol yang dipakai Taiwan untuk menuliskan bunyi. Setiap simbol selalu dibaca sama, dan kamu tidak bisa mengarang bacaannya — kamu cukup mempelajari bunyinya. Pinyin menuliskan bunyi yang sama dengan huruf Latin; pinyin hanya alat bantu, tidak lebih. Yang perlu kamu lakukan: kerjakan tabel-tabel di bawah sampai kamu bisa mengenali simbolnya lewat pendengaran."
+      systems_html: "Zhuyin adalah 37 simbol yang dipakai Taiwan untuk menuliskan bunyi. Setiap simbol mewakili satu bunyi, dengan hanya sedikit pergeseran di dalam bagian akhir gabungan (yang utama ㄧㄢ), dan kamu tidak bisa mengarang bacaannya — kamu cukup mempelajari bunyinya. Pinyin menuliskan bunyi yang sama dengan huruf Latin; pinyin hanya alat bantu, tidak lebih. Yang perlu kamu lakukan: kerjakan tabel-tabel di bawah sampai kamu bisa mengenali simbolnya lewat pendengaran."
       stage_hint: "Kerjakan berurutan: konsonan dulu, lalu vokal dan bunyi luncur, lalu bagian akhir lengkap, baru kemudian suku kata utuh."
       stages:
         consonants: Konsonan
@@ -2491,7 +2560,7 @@ id:
       see_chart_pinyin: Tabel pinyin
       card: Cocokkan zhuyin dengan pinyin dua arah, dengan menggeser kartu.
       syllable_title: Susunan suku kata bahasa Mandarin Taiwan
-      syllable_body: Setiap suku kata paling banyak terdiri atas tiga slot. Hanya slot terakhir yang wajib — 一 hanya bagian akhir saja, 四 konsonan awal tanpa vokal tertulis sama sekali. Zhuyin menuliskan setiap slot; pinyin sering menggabungkan atau menghilangkannya.
+      syllable_body: "Setiap suku kata paling banyak terdiri atas tiga slot. Hanya slot terakhir yang wajib — 一 hanya berupa bagian akhir, 四 konsonan awal tanpa vokal tertulis sama sekali. Zhuyin menuliskan setiap slot; pinyin sering menggabungkan atau menghilangkannya."
       slots:
         initial_label: Konsonan awal 聲母
         initial_glyph: ㄓ
@@ -2535,7 +2604,7 @@ id:
           zhuyin: ㄨㄥ
           why: Dua ejaan pinyin yang berbeda untuk bagian akhir yang sama persis, tergantung ada tidaknya konsonan di depannya. Dalam zhuyin, keduanya ㄨㄥ.
       mismatch_more_title: Yang perlu diingat
-      mismatch_more_body: "Pembaca pinyin terus-menerus membuat koreksi diam-diam: di sini o sebenarnya u, di sini ada vokal yang hilang, di sini i sama sekali bukan vokal, di sini u sebenarnya ü. Setiap koreksi itu adalah tempat pelafalan yang salah bisa tertanam, dan biasanya pelajar tidak pernah menyadarinya, karena ejaannya tampak masuk akal. Zhuyin tidak meminta satu koreksi pun: yang ditulis itulah yang diucapkan."
+      mismatch_more_body: "Pembaca pinyin terus-menerus membuat koreksi diam-diam: di sini o sebenarnya u, di sini ada vokal yang hilang, di sini i sama sekali bukan vokal, di sini u sebenarnya ü. Setiap koreksi itu adalah tempat pelafalan yang salah bisa tertanam, dan biasanya pelajar tidak pernah menyadarinya, karena ejaannya tampak masuk akal. Zhuyin hampir tidak meminta koreksi apa pun: dengan pengecualian langka seperti ㄧㄢ, yang ditulis itulah yang diucapkan."
     tones_title: Nada dan bunyi
     tones_card: Ucapkan suku kata dengan suara dan dapatkan umpan balik nada demi nada sampai benar.
     dictation_title: Dikte
@@ -2908,7 +2977,7 @@ id:
       resumed: Email otomatis aktif lagi.
     mail:
       title: Email
-      lede: "Log lengkap untuk setiap akun: email apa yang terkirim dan kapan, apakah gagal, klik pada tautan di email, serta setiap berhenti berlangganan atau berlangganan beserta asalnya. Disimpan selamanya; kalau akun dihapus, barisnya tetap ada bersama alamatnya."
+      lede: "Log lengkap untuk setiap akun: email apa yang terkirim dan kapan, apakah gagal, klik pada tautan di email, serta setiap berhenti berlangganan atau berlangganan beserta asalnya. Disimpan selamanya; kalau akun dihapus, barisnya tetap ada, tetapi tanpa alamat dan tanpa apa pun yang mengarah ke orangnya."
       account_title: Email dan langganan
       full_log: Log lengkap
       for_account: Log untuk
@@ -3155,6 +3224,10 @@ id:
     absent:
       title: Tidak ada di unduhanmu
       body: Halaman ini termasuk paket yang belum kamu unduh. Halaman akan terbuka seperti biasa begitu kamu online lagi.
+    fallback:
+      title: Kamu sedang offline
+      body: Halaman ini butuh koneksi dan akan terbuka begitu kamu online lagi. Apa pun yang sudah kamu unduh untuk dibaca offline tetap tersedia.
+      retry: Coba lagi
   syllables:
     title: Semua suku kata Mandarin, lengkap dengan suaranya
     meta_description: Semua %{clips} rekaman suku kata Mandarin yang dipakai di Taiwan, dalam zhuyin dan pinyin, dengan dua suara studio.
@@ -3204,8 +3277,8 @@ id:
       makemeahanzi: Grafik urutan goresan, penguraian radikal, dan etimologi hanzi.
       hanzi_writer: Mesin penulisan dan animasi goresan demi goresan yang dipakai dalam latihan menulis.
       hanzilookup: Pengenalan tulisan tangan yang mengubah goresanmu menjadi hanzi, sepenuhnya offline. Data pengenalnya (mmah.json) diturunkan dari data goresan Make Me a Hanzi dan tunduk pada ketentuan LGPL / Arphic PL proyek itu, bukan MIT seperti mesinnya sendiri.
-      unihan: Database Han dari Unicode — bacaan kanonis dan properti hanzi.
-      opencc: Tabel STCharacters, dipakai untuk mengubah hanzi sederhana menjadi hanzi tradisional saat kamu menempelkan teks. Setiap penggantian yang dilakukannya ditampilkan kembali kepadamu.
+      unihan: Database Han dari Unicode — bacaan kanonis dan properti hanzi, serta bacaan Jepang, bentuk baru, dan daftar kanji Jōyō dan Jinmeiyō yang menjadi dasar edisi bahasa Jepang. © 1991–2026 Unicode, Inc., dengan lisensi Unicode License V3.
+      opencc: Tabel STCharacters, dipakai untuk mengubah hanzi sederhana menjadi hanzi tradisional saat kamu menempelkan teks. Setiap penggantian yang dilakukannya ditampilkan kembali kepadamu. Tabel varian Jepangnya (JPVariants, JPShinjitaiCharacters) memasangkan hanzi Taiwan dengan bentuk Jepangnya untuk edisi bahasa Jepang.
       roboto: Fon antarmuka, dipakai untuk huruf Latin dan pinyin. Kami hosting sendiri, tidak dimuat dari Google, jadi tidak ada permintaan yang terkirim ke pihak ketiga saat kamu membuka halaman.
       noto_sans_tc: Fon bawaan untuk hanzi tradisional. Juga kami hosting sendiri.
       tw_kai: "Fon kuas kaishu milik Taiwan dari CNS11643 全字庫, diterbitkan oleh 數位發展部. Fon inilah yang dipakai untuk opsi tulisan tangan, dan garis 臺 darinya menjadi dasar logo situs. Kami hanya menyertakan sebagiannya: berkasnya dikurangi menjadi hanzi yang benar-benar dipakai aplikasi ini, dan logonya memuat garis yang diambil dari fon itu, jadi salinan di sini sudah diubah, bukan asli."
@@ -3279,7 +3352,6 @@ id:
     abbr_label: orang bilang
     capital_label: ibu kota
     full_label: bentuk lengkap
-    china_says: "di Tiongkok:"
     taiwan_marked: khas Taiwan
     pick_scenario: Pilih situasi dan dapatkan kata-kata yang memang dibutuhkan di sana.
     all_scenarios: Semua situasi
@@ -3609,7 +3681,7 @@ id:
         note: Pihak Merah dan Hitam menulis bidak yang sama dengan hanzi yang berbeda.
       go:
         title: Go, disebut juga weiqi
-        body: "Go dan weiqi adalah satu permainan: 圍棋 berarti permainan mengepung, dalam bahasa Jepang namanya go, dan di Taiwan kedua nama itu dipakai. Batu diletakkan di titik potong dan tidak pernah dipindah, kelompok batu dengan dua mata sejati akan hidup, dan Taiwan menghitung dengan sistem area, bukan teritori."
+        body: "Go dan weiqi adalah satu permainan: 圍棋 berarti permainan mengepung, dan dalam bahasa Jepang namanya go. Batu diletakkan di titik potong dan tidak pernah dipindah, kelompok batu dengan dua mata sejati akan hidup, dan Taiwan menghitung dengan sistem area, bukan teritori."
         note: Banyak istilahnya berasal dari bahasa Jepang, tetapi ditulis dengan hanzinya sendiri.
       tabletop:
         title: Permainan papan, kartu, dan permainan jalanan
@@ -3697,13 +3769,14 @@ id:
     calendar_html: "<p>Dua belas hari raya yang benar-benar membentuk setahun di Taiwan, masing-masing dengan aturan yang menentukan tanggalnya, bukan sekadar tanggal yang harus kamu cari lagi tahun depan.</p><p>Bagian kalender lunar menjelaskan cara hitungnya — kenapa 初五 berarti seperti itu, dan kenapa 春節 berpindah-pindah. Kedua konverter berjalan di browser: konverter 民國 hanya hitungan sederhana, dan konverter lunar memakai tabel yang sudah dicek dengan Hong Kong Observatory.</p><p>Kata-kata yang terkait dengan tiap hari raya bisa langsung ditambahkan ke bahan belajarmu dari daftar, kalau kamusnya sudah memuatnya.</p>"
     metro_html: "<p>Semua jalur jaringan MRT Taipei dan New Taipei, dengan stasiun-stasiunnya dalam urutan resmi. Ketuk sebuah stasiun, dan kartu di atas menampilkan zhuyin, pinyin, dan artinya; dari situ kamu bisa membuka entri kamus lengkap atau menambahkannya ke dek.</p><p>Titik kosong adalah stasiun transit — kartunya mencantumkan semua jalur yang melewati stasiun itu. Petanya digambar dari koordinat asli tiap stasiun, jadi letak setiap stasiun sesuai dengan letak sebenarnya.</p>"
     games_html: "<p>Kosakata mahjong Taiwan, mahjong resmi Tiongkok, xiangqi, go, dan permainan papan, tiap kata dijelaskan lewat fungsinya di dalam permainan. Ini bukan buku aturan: tujuannya supaya kamu bisa mengikuti obrolan di meja serta membaca papan petunjuk, aplikasi, dan siaran langsung.</p><p>Tab membagi kosakata menurut permainan, dan di dalam tiap permainan menurut perannya: ubin dan bidak, jalannya permainan, seruan, pola, strategi, ucapan para pemain. Titik hijau menandai kata yang diucapkan berbeda di luar Taiwan, dan kalau Tiongkok memakai kata lain, kata itu ditampilkan di samping entrinya. Arti dicek dengan kamus Kementerian Pendidikan, aturan enam belas ubin Taiwan, dan aturan resmi Tiongkok tahun 1998.</p>"
+    notices_html: "<p>Dokumen yang harus dibaca pendatang baru di Taiwan, dikelompokkan menurut tempat kamu menemuinya: di klinik, di tempat kerja, di bank dan kantor pos, di rumah, di sekolah. Setiap dokumen digambar sebagai contoh dengan data karangan, tetapi nama kolom dan kalimat bakunya asli, jadi yang kamu pelajari di sini sama dengan yang akan kamu lihat di kertas sungguhan.</p><p>Di bawah setiap kolom ada artinya dan apa yang perlu kamu lakukan; baris yang paling penting — dosis obat, gaji yang kamu terima, batas waktu pembayaran — diberi tanda. Ketuk kata mana pun untuk melihat cara baca dan artinya, atau nyalakan zhuyin di bagian atas untuk melihat cara baca di atas setiap karakter.</p>"
     medicine_html: "<p>Kedokteran modern seperti yang benar-benar diucapkan di Taiwan: tubuh dan organ, penyakit yang disebut dokter dan kata-kata yang dipakai keluarga di rumah, vaksin dalam jadwal CDC Taiwan, serta papan petunjuk yang kamu ikuti di rumah sakit — 掛號, 批價, 領藥. Ketuk label mana pun di gambar untuk melihat cara bacanya, lalu buka entri kamus lengkapnya.</p><p>Kalau istilah medis punya padanan sehari-hari (闌尾炎 di samping 盲腸炎), pasangan itu ditampilkan berdampingan. Istilah yang berbeda dari pemakaian di Tiongkok diberi tanda, dan kata serapan dari bahasa Hokkien Taiwan disertai bacaan Tâi-lô. Semuanya dicek dengan kamus MOE dan otoritas kesehatan Taiwan sendiri.</p>"
     dict_html: "<p>Satu kamus: kata tunggal dan ungkapan baku sama-sama menjadi entri di sini, tanpa dipisahkan. Batasnya memang sembarang — 便利商店 dan 超商 artinya sama, dan mencarinya di dua daftar terpisah tidak masuk akal.</p><p>Tombol <strong>level TOCFL</strong> menyaring ke satu tingkat ujian, baris tingkat ke skala TBCL, dan filter progres hanya menampilkan entri yang baru, sedang dipelajari, atau sudah dikuasai.</p><p>Di dalam satu level, entri diurutkan menurut <strong>frekuensi</strong> — yang paling umum muncul lebih dulu. Ganti urutannya untuk membandingkan frekuensi murni. Ketuk entri mana pun untuk melihat artikel lengkapnya, atau pakai tombol <strong>+</strong> untuk langsung memasukkannya ke dek.</p>"
     chengyu_html: "<p>成語 adalah ungkapan baku empat suku kata yang berasal dari teks klasik dan cerita perumpamaan. Makna harfiahnya sering jauh sekali dari maksudnya: 雪中送炭 secara harfiah berarti “mengirim arang di tengah salju”, tetapi maksudnya “menolong tepat saat pertolongan paling dibutuhkan”. Karena itu setiap ungkapan di sini tidak hanya diberi terjemahan, tetapi juga <strong>nuansa</strong> — memuji, netral, atau mencela. Menyebut sesuatu 十拿九穩 dan menyebutnya 莫名其妙 bedanya bagai langit dan bumi.</p><p>Daftarnya diambil dari kamus: sebagian ungkapan ditandai berdasarkan label kamus, sebagian lagi dicek secara manual — yang ini disertai catatan kapan sebenarnya dipakai, ditambah contoh nyata. Ketuk sebuah ungkapan untuk melihat entri lengkap dengan audio, uraian hanzi, dan contoh kalimat.</p>"
     tbcl_html: "<p>TBCL (臺灣華語文能力基準) adalah skala yang benar-benar dipakai untuk mengajar bahasa Mandarin di Taiwan: tujuh tingkat, dari satu sampai tujuh. Susunannya berbeda dari ujian TOCFL — mengikuti kurikulum pengajaran, bukan format tes.</p><p>Di dalam satu tingkat, entri diurutkan dari yang paling sering sampai yang paling jarang. Bilahnya menunjukkan berapa banyak isi tingkat itu yang sudah kamu kuasai — semua yang sudah dipelajari di bagian mana pun di aplikasi ikut dihitung, bukan hanya di sini.</p>"
     characters_html: "<p>4.808 hanzi tradisional umum dari daftar resmi Kementerian Pendidikan. Tiap kotak menampilkan hanzinya; ketuk untuk melihat cara baca (zhuyin + pinyin), urutan goresan, etimologi, kata-kata tempat hanzi itu muncul, dan seberapa kuat ingatanmu.</p><p>Hanzi diurutkan menurut frekuensi, jadi yang paling sering kamu temui muncul lebih dulu.</p>"
     sentences_html: "<p>Contoh kalimat lengkap yang diambil dari pelajaran. Setiap kata dalam kalimat menautkan ke entri kamusnya, jadi kamu bisa mengetuk apa pun yang belum dikenal. Pakai filter sumber untuk fokus pada satu buku atau satu pelajaran.</p>"
-    search_html: "<p>Tiga kolom yang bisa dipakai bersamaan. <strong>Tulisan atau arti</strong> menerima hanzi atau kata dalam bahasa Inggris atau Rusia. <strong>Pinyin</strong> dan <strong>zhuyin</strong> menerima cara baca; nada boleh ditulis dengan tanda, dengan angka setelah tiap suku kata, atau tidak ditulis sama sekali — <code>nǐhǎo</code>, <code>ni3hao3</code>, dan <code>ni hao</code> semuanya menemukan kata yang sama. Kalau kamu menulis nadanya, entri dengan nada yang persis sama muncul lebih dulu, baru kemudian sisanya.</p><p>Centang <strong>cari di bank kalimat</strong>, maka pembagian jenis entri disingkirkan: setiap hasil berupa kalimat dengan katamu ditandai di dalamnya, sepuluh per halaman, disaring menurut level dan gaya. Kalau ada dua kata di kueri, halaman ini juga memberi tahu apakah keduanya biasa dipakai bersama.</p>"
+    search_html: "<p>Tiga kolom yang bisa dipakai bersamaan. <strong>Tulisan atau arti</strong> menerima hanzi atau kata dalam salah satu bahasa situs ini: Indonesia, Inggris, Rusia, Vietnam, Jerman, atau Jepang. <strong>Pinyin</strong> dan <strong>zhuyin</strong> menerima cara baca; nada boleh ditulis dengan tanda, dengan angka setelah tiap suku kata, atau tidak ditulis sama sekali — <code>nǐhǎo</code>, <code>ni3hao3</code>, dan <code>ni hao</code> semuanya menemukan kata yang sama. Kalau kamu menulis nadanya, entri dengan nada yang persis sama muncul lebih dulu, baru kemudian sisanya.</p><p>Centang <strong>cari di bank kalimat</strong>, maka pembagian jenis entri disingkirkan: setiap hasil berupa kalimat dengan katamu ditandai di dalamnya, sepuluh per halaman, disaring menurut level dan gaya. Kalau ada dua kata di kueri, halaman ini juga memberi tahu apakah keduanya biasa dipakai bersama.</p>"
     radicals_html: "<p>214 radikal Kangxi — bahan dasar yang menjadi tempat setiap hanzi dikelompokkan. Ketuk sebuah radikal untuk melihat hanzi yang memuatnya.</p>"
     zhuci_html: "<p>Partikel yang digantungkan bahasa Mandarin Taiwan di akhir kalimat: 啦, 喔, 耶, 嘛, 齁, dan lainnya. Partikel ini sama sekali tidak menambah arti kamus, tetapi menentukan seluruh nada bicara — kehangatan, ketidaksabaran, peringatan yang ramah, pura-pura kesal. Penutur bahasa Indonesia sebenarnya sudah punya nalurinya, berkat kan, dong, sih, deh, dan lho — meski tidak ada yang sama persis. Kartu diurutkan menurut seberapa sering tiap partikel benar-benar menutup klausa dalam korpus Taiwan kami; buka salah satunya untuk melihat seluruh rentang rasa yang dibawanya, dengan contoh yang diterjemahkan supaya suasananya tetap terasa.</p>"
     liangci_html: "<p>Kata penggolong (量詞, disebut juga kata satuan) dalam bahasa Mandarin Taiwan adalah kata kecil di antara angka dan kata benda, seperti “sebuah” dan “seekor” dalam bahasa Indonesia: 一<b>本</b>書, 三<b>隻</b>貓. Tiap entri menunjukkan apa yang dihitungnya, kata benda mana yang benar-benar memakainya, dan bagaimana tampilannya dalam kalimat nyata. Daftarnya berasal dari 教育部國語辭典簡編本, CC-CEDICT, dan korpus Taiwan kami. Ada juga permainan untuk mencocokkan kata penggolong yang tepat.</p>"
@@ -3913,7 +3986,7 @@ id:
       heading: Apa yang bukan TaiwanCards
       items:
         game: Bukan game — tanpa XP, lencana, papan peringkat, dan tanpa binatang kartun yang membuatmu merasa bersalah supaya kembali besok
-        machine: Tanpa konten bahasa Mandarin buatan AI — dan tidak akan pernah. Setiap arti, contoh, dan label sudah melewati tangan manusia, dan setiap frasa bisa dilacak ke sumber yang dapat diverifikasi. Edisi bahasa Indonesia untuk antarmuka dan penjelasannya disusun dengan bantuan mesin dan masih terus ditinjau
+        machine: Tanpa konten bahasa Mandarin buatan AI yang belum diperiksa. Setiap arti, contoh, dan label sudah melewati tangan manusia, dan setiap frasa bisa dilacak ke sumber yang dapat diverifikasi. Edisi bahasa Indonesia untuk antarmuka dan penjelasannya disusun dengan bantuan mesin dan masih terus ditinjau
         decks: Bukan tumpukan dek bersama yang tidak jelas siapa pembuatnya, dari buku pelajaran mana, atau apakah bacaannya benar untuk Taiwan
         china: Bukan kursus dari Tiongkok yang hanzinya ditukar menjadi tradisional — kosakata, bacaan, dan separuh kehidupan sehari-harinya pun berbeda
         words: Kursus dari Tiongkok kecil kemungkinan akan lama membahas 自由, 民主, atau 人權. Di sini kata seperti itu berlimpah, dan tidak ada satu daftar pun yang melewatkannya
@@ -3954,7 +4027,7 @@ id:
           body: Kamus negara, daftar level dan tabel frekuensi resmi, peraturan perundang-undangan, berita kota.
         human:
           title: Ada manusia di balik setiap entri
-          body: Arti, contoh, dan tautan dibaca satu per satu oleh manusia. Bagian bahasa Mandarinnya diverifikasi manusia — tidak ada yang dibuat mesin. Edisi bahasa Indonesia masih terus ditinjau.
+          body: Arti, contoh, dan tautan dibaca satu per satu oleh manusia. Bagian bahasa Mandarinnya diverifikasi manusia. Edisi bahasa Indonesia masih terus ditinjau.
         written:
           title: Edisi untuk penutur bahasa Indonesia
           body: "Bukan terjemahan dari bahasa Inggris, melainkan edisi tersendiri yang ditulis khusus untuk penutur bahasa Indonesia: bunyi, tata bahasa, dan budaya dijelaskan lewat bahasa dan keseharian kita — dari jebakan ejaan pinyin bagi lidah Indonesia sampai kata serapan Hokkien yang kita pakai setiap hari."
@@ -4124,7 +4197,7 @@ id:
         training_only: latihan, tanpa skor
     complement:
       heading: Tangan kanan gurumu
-      limits: Pelafalan paling baik dibangun bersama guru secara langsung, dan aplikasi ini tidak menggantikan kelas sungguhan. Yang kamu dapat adalah pemeriksaan nada dan pelafalan — di sini tidak ada teman bercakap dan tidak ada latihan pemahaman mendengarkan, dan aplikasi ini memang tidak bermaksud menyediakannya.
+      limits: "Pelafalan paling baik dibangun bersama guru secara langsung, dan aplikasi ini tidak menggantikan kelas sungguhan. Yang kamu dapat adalah pemeriksaan nada dan pelafalan, latihan mendengarkan, serta soal latihan resmi TOCFL lengkap dengan audionya — tetapi di sini tidak ada teman bercakap, dan aplikasi ini memang tidak bermaksud menyediakannya."
     honest:
       heading: Kenapa aplikasi ini ada
       body: Saya ahli bahasa, saya tinggal di Taiwan, dan inilah aplikasi yang terus saya dambakan selama belajar bahasa ini di sini. Aplikasi ini lahir dari tesis magister di bidang linguistik komputasional dan banyak latihan sehari-hari yang biasa saja — papan nama, menu, bertanya lagi kalau saya tidak menangkapnya. Tidak ada iklan dan tidak akan pernah ada, dan itu separuh alasan aplikasi ini ada.
@@ -4191,7 +4264,7 @@ id:
     limits:
       heading: Apa yang bisa diharapkan, dan apa yang tidak
       body: Aplikasi ini menjelaskan cara membaca dan menulis, menampilkan zhuyin dan pinyin, dan memutuskan apa yang kamu pelajari berikutnya. Kamu bisa memasukkan kata dan teks apa pun, melatihnya, memantau progresmu, serta mengasah pelafalan, nada, dan kosakatamu.
-      gap: "Namun, pelafalan paling baik dibangun bersama guru penutur asli, dan semua ini tidak menggantikan kelas sungguhan. Yang kamu dapat di sini adalah pemeriksaan nada dan pelafalan — tanpa percakapan langsung, tanpa berbicara dengan orang lain, dan tanpa latihan pemahaman mendengarkan: aplikasi ini memang tidak bermaksud menyediakannya. Anggap saja aplikasi ini tangan kanan guru, bukan penggantinya."
+      gap: "Namun, pelafalan paling baik dibangun bersama guru penutur asli, dan semua ini tidak menggantikan kelas sungguhan. Yang kamu dapat di sini adalah pemeriksaan nada dan pelafalan, latihan mendengarkan, serta soal latihan resmi TOCFL lengkap dengan audionya — tanpa percakapan langsung dan tanpa berbicara dengan orang lain: aplikasi ini memang tidak bermaksud menyediakannya. Anggap saja aplikasi ini tangan kanan guru, bukan penggantinya."
     path:
       done_cta: Ke beranda dan kartumu →
       back: "← Kembali ke daftar langkah"
@@ -4224,10 +4297,10 @@ id:
           body: "Mulailah dengan melihat isi sebuah suku kata: bisa diawali apa, bisa diakhiri apa, dan apa fungsi nadanya. Simbolnya dikelompokkan, dan tiap kelompok punya tombol sendiri untuk melatih kelompok itu saja, tidak lebih."
         tones_theory:
           title: Cara kerja nada
-          body: "Empat nada plus nada netral — dan detail khas Taiwan yang dilewatkan buku pelajaran Tiongkok: nada 3 tetap rendah dan tidak naik kembali, sedangkan 一 dan 不 berubah nada tergantung suku kata sesudahnya. Baca dulu, lalu langsung berlatih dari halaman yang sama."
+          body: "Empat nada plus nada netral — dan detail khas Taiwan yang dilewatkan buku pelajaran Tiongkok: nada 3 biasanya tetap rendah dan tidak naik kembali, sedangkan 一 dan 不 berubah nada tergantung suku kata sesudahnya. Baca dulu, lalu langsung berlatih dari halaman yang sama."
         tones:
           title: Dengarkan empat nada
-          body: "Nada di Taiwan berbeda dari nada buku pelajaran Tiongkok: nada 3 tetap rendah dan tidak pernah naik. Berlatihlah dengan rekaman studio setiap suku kata, bergantian suara pria dan wanita."
+          body: "Nada di Taiwan berbeda dari nada buku pelajaran Tiongkok: nada 3 biasanya tetap rendah dan tidak naik. Berlatihlah dengan rekaman studio setiap suku kata, bergantian suara pria dan wanita."
         phrases:
           title: Pelajari yang benar-benar diucapkan orang
           body: "Pola kalimat yang menemanimu seharian di Taiwan, termasuk separuh yang cukup kamu pahami saja: apa yang ditanyakan kasir kepadamu."
@@ -4256,20 +4329,42 @@ id:
           title: Rencana ujianmu
           body: Kalau kamu butuh TOCFL, sebutkan level dan tanggalnya, lalu aplikasi menghitung target harianmu. Kalau tidak, lewati saja.
   notices:
-    title: Papan pengumuman
+    title: Dokumen sehari-hari di Taiwan
     subject: "Perihal:"
     explanation: "Keterangan:"
     seal: cap
     all: Semua
-    subtitle: Pengumuman kertas yang tertempel di lobi setiap gedung di Taiwan — susunan kata, tata letak, dan kosakata yang benar-benar kamu temui di dinding. Ketuk kata mana pun untuk mencari artinya.
-    disclaimer: Ini templat yang ditulis mengikuti kebiasaan pengumuman perumahan di Taiwan. Tidak ada kompleks, alamat, nomor telepon, atau orang sungguhan di dalamnya.
-    categories:
-      safety: Keselamatan
-      building: Gedung
-      festival: Hari raya
-      utilities: Air dan listrik
-      daily: Sehari-hari
-      committee: Pengurus gedung
-      health: Kesehatan
+    contents: Di halaman ini
+    key_line: Baris terpenting
+    subtitle: Kertas-kertas yang harus kamu baca selama tinggal di Taiwan — kantong obat, slip gaji, tagihan, kontrak sewa, buku penghubung sekolah, struk belanja, dan pengumuman di gedungmu — digambar kolom demi kolom, lengkap dengan arti setiap baris dan apa yang perlu kamu lakukan. Ketuk kata mana pun untuk mencari artinya.
+    disclaimer: Semua contoh digambar dengan gaya aplikasi ini berdasarkan nama kolom dan kalimat baku yang asli. Nama, nomor, tanggal, dan alamatnya karangan; ○○ ada di tempat rumah sakit, bank, perusahaan, atau kompleks hunian sungguhan akan mencetak namanya.
+    situations:
+      health:
+        name: Kesehatan
+        lede: Kantong obat, slip pendaftaran berobat, kartu asuransi kesehatan, resep berulang untuk penyakit kronis, dan poster di klinik.
+      work:
+        name: Kerja dan gaji
+        lede: Slip gaji, jadwal sif, formulir izin, pasal-pasal penting kontrak kerja, dan rambu keselamatan di tempat kerja.
+      money:
+        name: Uang dan pos
+        lede: Slip bank untuk setor, tarik tunai, dan transfer, membayar tagihan di minimarket, dan pemberitahuan bahwa paketmu menunggu diambil.
+      home:
+        name: Rumah dan tagihan
+        lede: Tagihan listrik dan air, kontrak sewa, iklan sewa, pemilahan sampah, dan pengumuman air mati.
+      building:
+        name: Di gedungmu
+        lede: Papan pengumuman di lobi — perawatan gedung, topan, hari raya, pengurus gedung.
+      school:
+        name: Sekolah dan anak
+        lede: Buku penghubung dan surat edaran sekolah dengan slip balasan yang ditandatangani orang tua lalu dikembalikan.
+      transport:
+        name: Transportasi
+        lede: Tiket kereta dan tagihan parkir yang diselipkan di wiper mobil.
+      residence:
+        name: Dokumen izin tinggal
+        lede: Kartu izin tinggal dan tanggal-tanggal di dalamnya yang menentukan berapa lama kamu boleh tinggal.
+      shops:
+        name: Belanja dan makanan
+        lede: Struk dengan nomor undian, lembar pesanan di warung sarapan, serta pilihan gula dan es di kedai minuman.
   glosses:
     measure_word: "kata penggolong:"

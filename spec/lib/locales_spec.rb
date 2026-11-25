@@ -46,16 +46,26 @@ RSpec.describe Locales do
     end
   end
 
+  describe ".serves?" do
+    it "serves the kanji bridge to Japanese readers alone" do
+      expect(described_class::ALL.select { |code| described_class.serves?("/kanji", code) }).to(eq(%w[ja]))
+    end
+
+    it "still keeps the China comparison from Vietnamese readers only" do
+      expect(described_class::ALL.reject { |code| described_class.serves?("/variants", code) }).to(eq(%w[vi]))
+    end
+  end
+
   describe ".key and .pick" do
     it "stores Indonesian under ind so it never meets an identifier" do
       expect(described_class.key("id")).to(eq("ind"))
       expect(described_class.key(:id)).to(eq("ind"))
-      expect(described_class::STORED).to(eq(%w[en ru vi de ind]))
+      expect(described_class::STORED).to(eq(%w[en ru vi de ind ja]))
       expect(described_class::ALL.map { |code| described_class.key(code) }).to(eq(described_class::STORED))
     end
 
     it "keeps every other locale code as its own storage key" do
-      %w[en ru vi de].each { |code| expect(described_class.key(code)).to(eq(code)) }
+      %w[en ru vi de ja].each { |code| expect(described_class.key(code)).to(eq(code)) }
     end
 
     it "reads Indonesian from ind, not from a row's identifier" do
@@ -102,5 +112,45 @@ RSpec.describe Locales do
     expect(described_class::OPEN_GRAPH.fetch("de")).to(eq("de_DE"))
     expect(described_class.compares_china?("de")).to(be(true))
     expect(described_class.serves?("/variants", "de")).to(be(true))
+  end
+
+  describe "Japanese" do
+    it "takes Japanese from Japan and from a Japanese browser" do
+      expect(described_class.guess(header: "en-US,en;q=0.9", country: "JP")).to(eq("ja"))
+      expect(described_class.guess(header: "ja-JP,ja;q=0.9", country: "TW")).to(eq("ja"))
+    end
+
+    it "keeps ja as both the URL prefix and the storage key, with its Open Graph locale" do
+      expect(described_class.key("ja")).to(eq("ja"))
+      expect(described_class.prefix("/ja/grammar")).to(eq("ja"))
+      expect(described_class::OPEN_GRAPH.fetch("ja")).to(eq("ja_JP"))
+    end
+
+    it "shows a sentence only in its own translation, while the other editions fall back to English" do
+      row = {"en" => "I drink tea.", "vi" => "Tôi uống trà."}
+
+      expect(described_class.sentence(row, "ja")).to(be_nil)
+      expect(described_class.sentence(row.merge("ja" => "お茶を飲みます。"), "ja")).to(
+        eq("お茶を飲みます。")
+      )
+      expect(described_class.sentence(row, "de")).to(eq("I drink tea."))
+      expect(described_class.sentence(row, "vi")).to(eq("Tôi uống trà."))
+    end
+
+    it "shows a sentence only in its own translation, while the other editions fall back to English" do
+      row = {"en" => "I drink tea.", "vi" => "Tôi uống trà."}
+
+      expect(described_class.sentence(row, "ja")).to(be_nil)
+      expect(described_class.sentence(row.merge("ja" => "お茶を飲みます。"), "ja")).to(
+        eq("お茶を飲みます。")
+      )
+      expect(described_class.sentence(row, "de")).to(eq("I drink tea."))
+      expect(described_class.sentence(row, "vi")).to(eq("Tôi uống trà."))
+    end
+
+    it "compares with China and is the one edition whose own prose is written in Han characters" do
+      expect(described_class.compares_china?("ja")).to(be(true))
+      expect(described_class::ALL.select { |code| described_class.writes_han?(code) }).to(eq(%w[ja]))
+    end
   end
 end

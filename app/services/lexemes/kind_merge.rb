@@ -24,6 +24,16 @@ module Lexemes
 
     def drift? = duplicated.any?
 
+    def absorb(keeper, loser)
+      ActiveRecord::Base.transaction do
+        OWNED.each { |table, keys| repoint(table, keys, keeper, loser) }
+        LOOSE.each { |table| move(table, keeper, loser) }
+        relink(keeper, loser)
+        adopt(keeper, loser)
+        loser.destroy!
+      end
+    end
+
     private
 
     def duplicated
@@ -38,16 +48,6 @@ module Lexemes
       rows.each { |loser| absorb(keeper, loser) }
       keeper.save! if keeper.changed?
       rows.size
-    end
-
-    def absorb(keeper, loser)
-      ActiveRecord::Base.transaction do
-        OWNED.each { |table, keys| repoint(table, keys, keeper, loser) }
-        LOOSE.each { |table| move(table, keeper, loser) }
-        relink(keeper, loser)
-        adopt(keeper, loser)
-        loser.destroy!
-      end
     end
 
     def repoint(table, keys, keeper, loser)

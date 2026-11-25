@@ -1,0 +1,230 @@
+vi:
+  scan:
+    title: Quét ảnh
+    lede: >-
+      Chụp một trang giáo trình, một tờ thông báo, thực đơn hay túi thuốc, hoặc dán ảnh chụp màn hình đoạn chat. Chữ Hán
+      trong ảnh sẽ trở về thành văn bản để bạn sửa, rồi tạo bộ thẻ hoặc mở trong công cụ đọc.
+    from_reader: Hoặc quét ảnh chụp hay ảnh chụp màn hình
+    remaining:
+      other: "Hôm nay còn %{count}/%{daily} lượt quét"
+    drop: Thả ảnh chụp hoặc ảnh chụp màn hình vào đây
+    drop_hint: >-
+      Bạn cũng có thể dán ảnh chụp màn hình bằng Ctrl+V hoặc ⌘V. Ảnh được thu nhỏ ngay trên thiết bị của bạn trước khi
+      gửi đi.
+    camera: Chụp ảnh
+    choose: Chọn tệp
+    text_label: Văn bản nhận dạng được
+    text_hint: Hãy đối chiếu với ảnh và sửa những chữ bị đọc sai trước khi làm tiếp.
+    title_label: Tên
+    default_title: "Bản quét, %{time}"
+    make_deck: Tạo bộ thẻ
+    open_reader: Mở trong công cụ đọc
+    again: Quét ảnh khác
+    privacy_note: >-
+      Ảnh được gửi tới Anthropic để mô hình của họ đọc chữ, và không được lưu ở đây. Văn bản trả về được giữ %{hours} giờ
+      để bạn kịp làm xong, sau đó sẽ bị xóa.
+    client:
+      preparing: Đang chuẩn bị ảnh…
+      sending: Đang gửi…
+      reading: Đang đọc chữ. Việc này mất vài giây.
+      generic: Đã có lỗi xảy ra. Vui lòng thử lại sau giây lát.
+      offline: Không có kết nối. Hãy kiểm tra mạng rồi thử lại.
+      not_image: Tệp này không phải là ảnh. Hãy chọn ảnh chụp hoặc ảnh chụp màn hình.
+      too_small: Ảnh này quá nhỏ, không đọc được.
+      too_large: Ảnh này quá lớn. Hãy thử ảnh chụp màn hình hoặc một ảnh nhỏ hơn.
+    refusals:
+      missing: Hãy chọn ảnh trước.
+      not_image: Tệp này không phải là ảnh. Hãy chọn ảnh chụp hoặc ảnh chụp màn hình.
+      too_small: Ảnh này quá nhỏ, không đọc được.
+      too_large: Ảnh này quá lớn. Hãy thử ảnh chụp màn hình hoặc một ảnh nhỏ hơn.
+      quota: Đó là lượt quét cuối cùng của hôm nay. Ngày mai sẽ có lượt mới.
+      client: Hôm nay mạng này đã quét quá nhiều lần. Vui lòng thử lại vào ngày mai.
+      busy: Hiện có nhiều ảnh đang được đọc cùng lúc. Vui lòng thử lại sau một phút.
+      paused: Tính năng quét đang tạm nghỉ. Vui lòng thử lại sau.
+      unavailable: Tính năng quét hiện không dùng được.
+    failures:
+      interrupted: Quá trình đọc bị gián đoạn. Lượt quét này không bị tính, vui lòng thử lại.
+      timeout: Đọc quá lâu. Lượt quét này không bị tính, vui lòng thử lại.
+      unavailable: Dịch vụ đọc chữ không phản hồi. Lượt quét này không bị tính. Vui lòng thử lại sau.
+      key: Tính năng quét đang tạm nghỉ. Lượt quét này không bị tính.
+      rate_limited: >-
+        Có quá nhiều ảnh đang được đọc cùng lúc. Lượt quét này không bị tính. Hãy thử lại sau vài phút.
+      busy: Hiện có nhiều ảnh đang được đọc cùng lúc. Lượt quét này không bị tính. Hãy thử lại sau một phút.
+      refused: Không đọc được ảnh này.
+      too_much: >-
+        Ảnh này có nhiều chữ hơn mức một lượt quét xử lý được. Hãy chụp một phần nhỏ hơn của trang.
+    notes:
+      blurred: >-
+        Một phần ảnh bị mờ nên có thể thiếu hoặc sai vài chữ. Hãy đối chiếu với ảnh, hoặc chụp lại một tấm rõ
+        hơn.
+      unreadable: Ảnh quá mờ hoặc quá tối, không đọc được. Hãy thử lại ở chỗ sáng hơn và giữ yên điện thoại.
+      no_text: Không tìm thấy chữ Hán nào trong ảnh này.
+      gaps: Những chữ không đọc được được đánh dấu □. Hãy điền lại theo ảnh trước khi tiếp tục.
+      changed: "Chữ giản thể đã được đổi sang phồn thể: %{chars}"
+    closed:
+      title: Tính năng quét đang tạm dừng
+      unavailable: >-
+        Hiện chưa thể đọc chữ từ ảnh. Hãy dán văn bản vào, hoặc vẽ chữ bạn không đọc được trong ô tìm
+        kiếm.
+      paused: >-
+        Tính năng sẽ sớm trở lại. Trong lúc chờ, hãy dán văn bản vào, hoặc vẽ chữ bạn không đọc được trong ô tìm kiếm.
+    privacy:
+      heading: Ảnh bạn quét
+      items:
+        - >-
+          Khi bạn quét ảnh chụp hoặc ảnh chụp màn hình, thiết bị của bạn thu nhỏ ảnh trước, rồi ứng dụng gửi ảnh tới
+          Anthropic để mô hình của họ đọc chữ Hán trong đó. Anthropic xử lý ảnh theo điều khoản thương mại của mình, với
+          vai trò nhà cung cấp dịch vụ cho ứng dụng này.
+        - Ứng dụng không bao giờ lưu bản thân hình ảnh. Không có dữ liệu nào khác từ tài khoản của bạn được gửi kèm.
+        - >-
+          Văn bản đọc được từ ảnh được giữ 24 giờ để bạn sửa và biến thành bộ thẻ hoặc bài đọc trong công cụ đọc, sau
+          đó sẽ bị xóa. Bộ thẻ hay bài đọc bạn tạo từ đó vẫn nằm trong tài khoản của bạn như mọi bộ thẻ, bài đọc khác.
+        - >-
+          Để tính giới hạn hằng ngày, ứng dụng lưu ngày, kết quả và kích thước của mỗi lượt quét, và trong 24 giờ lưu
+          một mã băm một chiều của địa chỉ mạng gửi lượt quét đó, không bao giờ lưu chính địa chỉ ấy.
+    admin:
+      title: Lượt quét
+      lede: >-
+        Quét ảnh: %{daily} lượt mỗi người học mỗi ngày, văn bản nhận dạng được giữ %{kept} giờ. Chi phí được ước tính
+        từ số token mỗi lượt quét đã dùng và giá niêm yết của mô hình.
+      ceilings: Giới hạn
+      state: Trạng thái
+      open: Đang mở
+      paused: "Tạm dừng (%{reason}) đến %{until}"
+      no_key: Không có khóa API
+      model: Mô hình
+      unpriced: chưa có giá
+      today: Lượt quét hôm nay, mọi người học
+      in_flight: Đang đọc
+      per_client: Theo mạng, 24 giờ
+      at_quota: Người học đã hết lượt hôm nay
+      by_day: Theo ngày
+      total: Tổng
+      columns:
+        day: Ngày
+        scans: Lượt quét
+        failed: Lỗi
+        refunded: Không tính
+        input: Token đầu vào
+        output: Token đầu ra
+        cost: Chi phí
+      footnote: "Người học trong khoảng này: %{learners}. Thời gian đọc trung bình: %{latency} ms."
+      failures: Lỗi
+      pauses: Lần tạm dừng
+      key:
+        title: Khóa API
+        status:
+          missing: Chưa có khóa
+          unchecked: Chưa kiểm tra
+          ok: Đang hoạt động
+          rejected: Anthropic đã từ chối
+        rejected_since: "Bị từ chối từ %{at}. Người học thấy tính năng quét đang không dùng được, và không lượt nào bị tính."
+        unreadable: >-
+          Không giải mã được khóa đã lưu bằng khóa mã hóa của máy chủ này. Hãy lưu lại khóa hoặc xóa nó.
+        hint: Khóa
+        source: Nguồn
+        sources:
+          stored: Lưu tại đây
+          environment: Biến môi trường
+        set_at: Đã lưu
+        last_check: Lần kiểm tra thành công gần nhất
+        expiry: Hết hạn
+        never: chưa nhập ngày
+        expires_today: hôm nay
+        expires_in:
+          other: "sau %{count} ngày"
+        expired:
+          other: "%{count} ngày trước"
+        new_key: Khóa mới
+        expires_on: Ngày hết hạn, không bắt buộc
+        save: Lưu và kiểm tra
+        check: Kiểm tra ngay
+        remove: Xóa khóa đã lưu
+        remove_confirm: >-
+          Xóa khóa đã lưu? Tính năng quét sẽ quay lại dùng khóa trong biến môi trường, nếu có.
+        reopen: Mở lại ngay
+        note: >-
+          Khóa đã lưu được dùng thay cho biến môi trường, và Anthropic kiểm tra khóa trước khi lưu. “Mở lại ngay” kết thúc
+          mọi lần tạm dừng, trừ giới hạn trong ngày.
+        no_encryption: >-
+          Máy chủ này không có khóa mã hóa Active Record, nên không thể lưu khóa API ở đây. Hãy đặt ba biến
+          ACTIVE_RECORD_ENCRYPTION, hoặc dùng ANTHROPIC_API_KEY.
+        too_fast: Thay đổi quá nhiều trong thời gian ngắn. Hãy chờ vài phút rồi thử lại.
+        reopened: "Đã kết thúc %{count} lần tạm dừng. Giới hạn trong ngày, nếu đã chạm, vẫn còn hiệu lực."
+        saved:
+          ok: "Anthropic đã chấp nhận khóa …%{hint}. Khóa đã được lưu và tính năng quét đã mở."
+          rejected: Anthropic đã từ chối khóa này. Không có gì được lưu.
+          no_model: Khóa này dùng được nhưng không có quyền truy cập mô hình quét. Không có gì được lưu.
+          unreachable: Không liên lạc được với Anthropic để kiểm tra khóa. Không có gì được lưu. Hãy thử lại sau một phút.
+          malformed: Đây không giống khóa API của Anthropic. Không có gì được lưu.
+          no_encryption: Máy chủ này không có khóa mã hóa. Không có gì được lưu.
+        checked:
+          ok: Khóa đang hoạt động.
+          rejected: Anthropic đã từ chối khóa. Tính năng quét tắt cho đến khi có lần kiểm tra thành công.
+          no_model: Khóa dùng được nhưng không có quyền truy cập mô hình quét.
+          unreachable: Không liên lạc được với Anthropic. Trạng thái khóa không đổi.
+          missing: Không có khóa nào để kiểm tra.
+        forgotten:
+          ok: Đã xóa khóa đã lưu. Khóa trong biến môi trường hoạt động và đang được dùng.
+          rejected: Đã xóa khóa đã lưu. Anthropic đã từ chối khóa trong biến môi trường.
+          no_model: Đã xóa khóa đã lưu. Khóa trong biến môi trường không có quyền truy cập mô hình quét.
+          unreachable: Đã xóa khóa đã lưu. Chưa kiểm tra được khóa trong biến môi trường.
+          missing: Đã xóa khóa đã lưu. Giờ không còn khóa nào, nên tính năng quét đã tắt.
+      health:
+        marker: Cần chú ý
+        missing: "Tính năng quét đang tắt: không có khóa API."
+        rejected: "Tính năng quét đang tắt: Anthropic đã từ chối khóa API."
+        expiring: Khóa API dùng để quét sắp hết hạn. Hãy lưu khóa mới.
+        credit: "Tính năng quét đang tạm dừng: đã hết tín dụng Anthropic."
+      model_choice:
+        label: Mô hình dùng để quét
+        environment: "Theo SCAN_MODEL: %{model}"
+        save: Kiểm tra và dùng
+        saved:
+          ok: "Anthropic cho khóa này dùng %{model}. Từ giờ các lượt quét dùng mô hình này."
+          rejected: Anthropic đã từ chối khóa. Mô hình không thay đổi.
+          no_model: "Khóa này không có quyền dùng %{model}. Mô hình không thay đổi."
+          unreachable: Không liên lạc được với Anthropic. Mô hình không thay đổi. Hãy thử lại sau một phút.
+          missing: Không có khóa API để kiểm tra mô hình. Mô hình không thay đổi.
+          unknown: Mô hình này không có trong bảng giá. Mô hình không thay đổi.
+    alerts:
+      learners_heading: Người học đang thấy gì
+      action_heading: Cần làm gì
+      open_admin: Mở trang quét
+      rejected:
+        subject: "Tính năng quét đang tắt: Anthropic đã từ chối khóa API"
+        happened: >-
+          Lúc %{at}, Anthropic trả lời rằng khóa API dùng để quét không hợp lệ, đã hết hạn hoặc đã bị thu hồi. Tính năng
+          quét dừng ngay.
+        learners: >-
+          Trang quét báo rằng tính năng này hiện không dùng được và gợi ý dán văn bản thay thế. Ảnh tải lên bị từ chối và
+          không bị tính vào giới hạn trong ngày của ai.
+        action: >-
+          Tạo khóa mới trong Anthropic Console và lưu nó trên trang quét. Khóa được kiểm tra trước, và tính năng quét mở
+          lại ngay khi Anthropic chấp nhận.
+      credit:
+        subject: "Tính năng quét đang tạm dừng: đã hết tín dụng Anthropic"
+        happened: >-
+          Lúc %{at}, Anthropic từ chối một lượt quét vì tài khoản đã hết tín dụng hoặc đã chạm giới hạn chi tiêu.
+        learners: >-
+          Tính năng quét nghỉ sáu tiếng. Người học thấy rằng nó sẽ sớm quay lại, và các lượt quét lỗi không bị tính.
+        action: >-
+          Nạp thêm tín dụng hoặc nâng giới hạn chi tiêu trong Anthropic Console, rồi bấm “Mở lại ngay” trên trang quét.
+      ceiling:
+        subject: Tính năng quét tạm dừng đến hết hôm nay
+        happened: >-
+          Lúc %{at}, tổng số lượt quét của người học đã chạm giới hạn trong ngày. Tính năng quét tạm dừng đến nửa đêm
+          giờ Đài Loan.
+        learners: Người học thấy tính năng quét đang nghỉ và sẽ quay lại. Hôm nay không lượt nào bị tính thêm.
+        action: >-
+          Không cần làm gì. Nếu nhu cầu là thật, hãy nâng SCAN_GLOBAL_DAILY. Giới hạn được đặt lại lúc nửa đêm.
+      expiring:
+        subject: Khóa API dùng để quét hết hạn vào ngày mai
+        happened: "Tính đến %{at}, khóa API đã lưu chỉ còn một ngày hoặc ít hơn là đến ngày hết hạn bạn đã nhập."
+        learners: >-
+          Người học chưa thấy gì thay đổi. Khi khóa hết hạn, tính năng quét sẽ dừng và họ thấy rằng nó không dùng được.
+        action: Tạo khóa mới trong Anthropic Console và lưu nó trên trang quét trước khi khóa cũ hết hạn.
+  admin:
+    mail:
+      lists:
+        alerts: Cảnh báo

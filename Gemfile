@@ -6,11 +6,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "4.0.10"
 gem "rails", "8.1.4.1"
 
+gem "anthropic", require: false
 gem "aws-sdk-s3", require: false
 gem "bcrypt"
 gem "bootsnap", require: false
 gem "dsprb", ">= 2.0"
 gem "dtwrb", ">= 1.0"
+gem "fastimage", require: false
 gem "importmap-rails"
 gem "json", ">= 3.0"
 gem "nokolexbor", require: false

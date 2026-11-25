@@ -1,0 +1,30 @@
+- notice = local_assigns.fetch(:notice)
+- tokens = local_assigns.fetch(:tokens)
+
+article.notice-sheet.scroll-mt-28 id=notice.id
+  header.space-y-1
+    .flex.flex-wrap.items-baseline.justify-between.gap-2
+      span.notice-kind lang="zh-TW" = notice.kind
+      .text-right.text-xs.text-muted-foreground
+        - if notice.date
+          div lang="zh-TW" = notice.date
+        - if notice.doc
+          div lang="zh-TW" = notice.doc
+    h2.notice-title
+      span.notice-label lang=I18n.locale = t("notices.subject")
+      span lang="zh-TW" = render("notices/line", text: notice.zh, tokens: tokens[notice.zh])
+    = notice_text(:p, notice.names, class: "text-sm text-muted-foreground")
+
+  - unless notice.steps?
+    .notice-label.pt-1 lang=I18n.locale = t("notices.explanation")
+
+  = render("notices/items", notice: notice, tokens: tokens)
+
+  footer.space-y-1.pt-2
+    - if notice.closing
+      p.notice-closing lang="zh-TW" = notice.closing["zh"]
+    .flex.flex-wrap.items-end.justify-between.gap-2
+      p.text-xs.text-muted-foreground lang=(notice.closing && notice_lang(notice.closing)) = notice.closing_name(I18n.locale)
+      .notice-issuer
+        span lang="zh-TW" = notice.issuer["zh"]
+        span.notice-seal lang="zh-TW" title=t("notices.seal") 公告章

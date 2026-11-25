@@ -21,6 +21,10 @@ class ReadingText < ApplicationRecord
   scope :library, -> { where(kind: LIBRARY_KINDS) }
   scope :ordered, -> { order(:level_tag, :id) }
 
+  def self.pasted!(user:, body:, changed:, title:, kind: "article", level_tag: nil)
+    create!(user:, kind:, title:, level_tag:, source: "manual", body:, body_data: {"changed_chars" => changed})
+  end
+
   def lines
     synced = body_data["synced"]
     return synced.map { |row| row["line"].to_s } if synced.is_a?(Array) && synced.any?

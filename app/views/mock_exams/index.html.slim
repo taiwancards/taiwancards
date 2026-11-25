@@ -37,6 +37,7 @@
   section.space-y-2
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("mock.official_title")
     p.text-xs.leading-relaxed.text-muted-foreground = t("mock.official_lede")
+    = link_to t("exams.title"), exams_path, class: "mr-4 text-sm font-medium text-primary underline underline-offset-2 hover:opacity-80"
     = link_to "tocfl.edu.tw", Huayu::TocflExam::OFFICIAL[:papers],
       target: "_blank", rel: "noopener",
       class: "text-sm text-primary underline underline-offset-2 hover:opacity-80"

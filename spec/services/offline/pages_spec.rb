@@ -50,11 +50,14 @@ RSpec.describe Offline::Pages do
       vi: "tea",
       de: "Tee",
       ind: "teh",
+      ja: "お茶",
       path: "/dict/茶",
       kind: "word"
     )
 
-    expect(entry.to_row).to(eq(["茶", "ㄔㄚˊ", "chá", "tea", "чай", "/dict/茶", "word", "", "Tee", "teh"]))
+    expect(entry.to_row).to(
+      eq(["茶", "ㄔㄚˊ", "chá", "tea", "чай", "/dict/茶", "word", "", "Tee", "teh", "お茶"])
+    )
   end
 
   it "asks for no page twice inside one pack" do

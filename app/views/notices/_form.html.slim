@@ -1,0 +1,52 @@
+- notice = local_assigns.fetch(:notice)
+- tokens = local_assigns.fetch(:tokens)
+
+article.form-sheet.scroll-mt-28 id=notice.id
+  header.form-head
+    .flex.flex-wrap.items-start.justify-between.gap-x-3.gap-y-1
+      .min-w-0
+        - if notice.issuer["zh"].present?
+          .form-issuer lang="zh-TW" = notice.issuer["zh"]
+        h2.form-kind lang="zh-TW" = render("notices/line", text: notice.kind, tokens: tokens[notice.kind])
+      - if notice.date || notice.doc
+        .text-right.text-xs.text-muted-foreground
+          - if notice.date
+            div lang="zh-TW" = notice.date
+          - if notice.doc
+            div lang="zh-TW" = notice.doc
+    .space-y-1
+      p.flex.flex-wrap.items-baseline.gap-x-2
+        - unless notice.zh == notice.kind
+          span.form-title lang="zh-TW" = render("notices/line", text: notice.zh, tokens: tokens[notice.zh])
+        = notice_text(:span, notice.names, class: "text-sm font-medium")
+      = notice_text(:p, notice.about, class: "text-sm leading-relaxed text-muted-foreground")
+
+  - if notice.fields.any?
+    dl.form-fields
+      - notice.fields.each do |field|
+        - if field.heading?
+          .form-section
+            dt
+              span lang="zh-TW" = render("notices/line", text: field.zh, tokens: tokens[field.zh])
+              = notice_text(:span, field.names, class: "form-section-name")
+            - if field.notes.present?
+              dd = notice_text(:p, field.notes, class: "form-note")
+        - else
+          .form-row class=(field.key? ? "form-key" : nil)
+            dt.form-label
+              span lang="zh-TW" = render("notices/line", text: field.zh, tokens: tokens[field.zh])
+              = notice_text(:span, field.names, class: "form-label-name")
+            dd.form-body
+              - if field.value
+                .form-value lang="zh-TW" = render("notices/line", text: field.value, tokens: tokens[field.value])
+              - if field.key?
+                span.form-key-badge = t("notices.key_line")
+              = notice_text(:p, field.notes, class: "form-note")
+
+  - if notice.items.any?
+    = render("notices/items", notice: notice, tokens: tokens)
+
+  - if notice.closing
+    footer.form-foot
+      p lang="zh-TW" = notice.closing["zh"]
+      = notice_text(:p, notice.closing, class: "text-xs font-normal text-muted-foreground")

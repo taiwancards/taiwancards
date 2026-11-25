@@ -75,4 +75,5 @@
     .grid.gap-2 class="sm:grid-cols-2 lg:grid-cols-3"
       - [[:placement, placement_path], [:mock, mock_exams_path], [:lists, tocfl_levels_path], [:grammar, grammar_path]].each do |key, path|
         = link_to t("tocfl.exam.practice.#{key}"), path, class: "flex min-h-12 items-center rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted"
+      = link_to t("exams.title"), exams_path, class: "flex min-h-12 items-center rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-medium hover:bg-muted"
       = link_to t("tocfl.exam.practice.official"), official[:papers], target: "_blank", rel: "noopener", class: "flex min-h-12 items-center rounded-lg border border-dashed border-border px-3 py-2.5 text-sm font-medium hover:bg-muted"

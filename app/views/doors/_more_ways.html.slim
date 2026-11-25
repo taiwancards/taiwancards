@@ -1,0 +1,8 @@
+- door = local_assigns.fetch(:door)
+- ways = door == "words" ? [[t("doors.more.import"), new_desk_path(tab: "import")]] : [[t("doors.more.library"), graded_path]]
+
+.space-y-1.border-t.border-border.pt-3
+  p.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("doors.more.title")
+  ul.space-y-0.5
+    - ways.each do |label, path|
+      li = link_to label, path, class: "inline-flex min-h-11 items-center text-sm text-primary underline-offset-2 hover:underline md:min-h-8"

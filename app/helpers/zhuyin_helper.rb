@@ -87,7 +87,6 @@ module ZhuyinHelper
   READINGS_COOKIE = "readings"
   READINGS = %w[off zhuyin pinyin].freeze
   DEFAULT_READINGS = "zhuyin"
-  CHINA_COOKIE = "show_china"
 
   def hanzi_font
     value = cookies[HANZI_FONT_COOKIE].to_s
@@ -102,8 +101,7 @@ module ZhuyinHelper
     class_names(
       "font-kai" => kai_font?,
       "no-zhuyin" => !show_zhuyin?,
-      "no-pinyin" => !show_pinyin?,
-      "show-china" => show_china?
+      "no-pinyin" => !show_pinyin?
     )
   end
 
@@ -116,10 +114,6 @@ module ZhuyinHelper
   def show_zhuyin? = readings_mode != "off"
 
   def show_pinyin? = readings_mode == "pinyin"
-
-  def show_china?
-    Locales.compares_china? && cookies[CHINA_COOKIE].to_s == "1"
-  end
 
   private
 

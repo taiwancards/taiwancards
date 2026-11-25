@@ -87,15 +87,15 @@ RSpec.describe "A guest reads the language of the address", :no_auth do
       credentials: {token: "access-token", refresh_token: "refresh-token", expires_at: 2.hours.from_now.to_i}
     )
 
-    raw_get("/vi/desk")
+    raw_get("/vi/progress")
     expect(response).to(redirect_to("/vi/login"))
 
     post("/auth/google_oauth2?intent=sign_in&locale=vi")
     follow_redirect!
-    expect(response).to(redirect_to("/vi/desk"))
+    expect(response).to(redirect_to("/vi/progress"))
 
     follow_redirect!
-    expect(response).to(redirect_to("/ru/desk"))
+    expect(response).to(redirect_to("/ru/progress"))
 
     follow_redirect!
     expect(response.body).to(match(/<html[^>]*lang="ru"/))

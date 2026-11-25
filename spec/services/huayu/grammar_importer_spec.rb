@@ -16,6 +16,7 @@ RSpec.describe Huayu::GrammarImporter do
       vi: {"title" => "#{slug} bằng tiếng Việt", "body" => "thân bài", "tip" => "mẹo"},
       de: {"title" => "#{slug} auf Deutsch", "body" => "Text", "tip" => "Tipp"},
       ind: {"title" => "#{slug} dalam bahasa Indonesia", "body" => "isi", "tip" => "kiat"},
+      ja: {"title" => "#{slug}（日本語）", "body" => "本文", "tip" => "ヒント"},
       examples: [],
       excluded:,
       supplementary:,
@@ -41,6 +42,7 @@ RSpec.describe Huayu::GrammarImporter do
       )
     )
     expect(lexeme.meanings).to(include("ind" => "shi dalam bahasa Indonesia"))
+    expect(lexeme.meanings).to(include("ja" => "shi（日本語）"))
     expect(lexeme.meanings).not_to(have_key("id"))
     expect(lexeme.data).to(include("grammar_slug" => "shi", "head" => "是", "tbcl_grade" => 1))
   end

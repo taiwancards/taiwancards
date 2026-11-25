@@ -171,6 +171,7 @@ RSpec.describe "Indonesian in the data loaders" do
         vi: nil,
         de: nil,
         ind: "indah",
+        ja: nil,
         fields: [],
         cohorts: {},
         lean: nil

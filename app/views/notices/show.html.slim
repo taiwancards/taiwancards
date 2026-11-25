@@ -1,0 +1,33 @@
+- name = t("notices.situations.#{@situation}.name")
+- content_for(:title, "#{name} · #{t("notices.title")}")
+- chip = "relative inline-flex shrink-0 cursor-pointer items-center whitespace-nowrap rounded-md border border-border px-2 min-h-11 md:min-h-7 text-xs text-muted-foreground transition-colors hover:bg-muted"
+- active = "border-primary bg-primary/10 font-medium text-foreground"
+
+.py-6.space-y-5
+  header.space-y-1
+    p.text-sm
+      = link_to t("notices.title"), notices_path, class: "text-muted-foreground hover:text-foreground hover:underline"
+    h1.text-2xl.font-bold.tracking-tight = name
+    p.max-w-2xl.text-sm.text-muted-foreground = t("notices.situations.#{@situation}.lede")
+
+  nav.flex.flex-wrap.items-center.gap-1 aria-label=t("notices.title")
+    = link_to t("notices.all"), notices_path, class: chip
+    - @situations.each do |situation|
+      = link_to t("notices.situations.#{situation}.name"), notices_situation_path(situation: situation),
+        class: "#{chip} #{active if situation == @situation}", "aria-current": (situation == @situation ? "page" : nil)
+
+  - if @notices.size > 1
+    nav.flex.flex-wrap.gap-x-3.gap-y-1.text-sm aria-label=t("notices.contents")
+      - @notices.each do |notice|
+        = link_to "##{notice.id}", class: "inline-flex min-h-11 items-center gap-1 text-primary hover:underline md:min-h-0" do
+          span lang="zh-TW" = notice.zh
+
+  .space-y-6[
+    data-controller="analyzer" *analyzer_attributes ]
+    - @notices.each do |notice|
+      = render(notice.form? ? "notices/form" : "notices/sheet", notice: notice, tokens: @tokens)
+
+    .fixed.z-50.hidden.w-72.rounded-xl.border.border-border.bg-card.p-3.text-base.shadow-xl[
+      data-analyzer-target="popover" class="max-w-[85vw]" ]
+
+  p.text-xs.text-muted-foreground = t("notices.disclaimer")

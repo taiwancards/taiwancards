@@ -11,6 +11,11 @@ RSpec.describe Huayu::GlossText do
     expect(described_class.normalize("see 大名縣|大名县[Da4 ming2 Xian4]")).to(eq("see 大名縣"))
   end
 
+  it "drops a pointer to a place-name entry when the word has senses of its own" do
+    expect(described_class.normalize("see 武功縣|武功县[Wu3 gong1 Xian4]; martial art; military accomplishments"))
+      .to(eq("martial art; military accomplishments"))
+  end
+
   it "spells out the classifier list" do
     expect(described_class.normalize("blanket; quilt; CL:條|条[tiao2],床[chuang2]"))
       .to(eq("blanket; quilt; measure word: 條, 床"))
@@ -27,7 +32,7 @@ RSpec.describe Huayu::GlossText do
   end
 
   it "falls back to English for a language it does not know" do
-    expect(described_class.normalize("quilt; CL:床[chuang2]", locale: "ja"))
+    expect(described_class.normalize("quilt; CL:床[chuang2]", locale: "fr"))
       .to(eq("quilt; measure word: 床"))
   end
 

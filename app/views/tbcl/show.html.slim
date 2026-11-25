@@ -20,5 +20,6 @@
 
   = render("shared/level_download", path: tbcl_level_path(@grade, format: :csv))
 
+  = render("kanji/level_filter", path: ->(kind) { tbcl_level_path(@grade, bridge: kind) })
   = render("shared/lexeme_grid", lexemes: @lexemes, known_ids: @known_ids, started_ids: @started_ids)
-  = render("shared/pager", page: @page, pages: @pages, path: ->(n) { tbcl_level_path(@grade, page: n, mark: params[:mark].presence) })
+  = render("shared/pager", page: @page, pages: @pages, path: ->(n) { tbcl_level_path(@grade, page: n, mark: params[:mark].presence, bridge: bridge_kind) })

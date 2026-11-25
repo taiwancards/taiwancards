@@ -18,6 +18,10 @@ ARCHIVE_DIRS=(
 )
 
 MEDIA_DIRS=(moe_audio moe_audio_words cns_voice word_clips listening)
+TOCFL_BUNDLES=data/tocfl_official/bundles
+TOCFL_MANIFEST=data/huayu/tocfl_bundles.json
+TOCFL_PAPERS=data/tocfl_official/papers
+PAPER_CACHE="public, max-age=86400"
 IMMUTABLE="public, max-age=31536000, immutable"
 MANIFEST_CACHE="public, max-age=60"
 
@@ -28,8 +32,8 @@ usage() {
 usage: bin/distribute [archive|media|assets|runtime|all|pull|status] [--dry-run]
 
   archive  source corpora and the speech corpus      -> private R2 bucket
-  media    word, syllable and listening audio clips  -> public R2 bucket behind the CDN
-  assets   web fonts and browser data files          -> public assets bucket behind the CDN
+  media    word, syllable, listening and TOCFL paper audio -> public R2 bucket behind the CDN
+  assets   web fonts, browser data and TOCFL papers  -> public assets bucket behind the CDN
   runtime  everything the running app reads         -> private runtime bucket
   all      archive, media, assets, runtime
 
@@ -136,6 +140,28 @@ do_assets() {
     echo "   packs"
     do_packs
   fi
+
+  if [ -f "$TOCFL_MANIFEST" ] && [ -d "$TOCFL_PAPERS" ]; then
+    local papers=()
+    while IFS= read -r line; do papers+=("$line"); done < <(tocfl_paper_filters)
+    echo "   tocfl paper pdfs ($((${#papers[@]} / 2)))"
+    [ ${#papers[@]} -eq 0 ] || r2 sync "$TOCFL_PAPERS" "s3://$R2_ASSETS_BUCKET/tocfl_pdf" \
+      --content-type application/pdf --cache-control "$PAPER_CACHE" \
+      --exclude '*' "${papers[@]}" \
+      --no-progress ${DRY[@]+"${DRY[@]}"}
+  fi
+
+  if [ -d "$TOCFL_BUNDLES" ]; then
+    echo "   tocfl papers"
+    r2 sync "$TOCFL_BUNDLES" "s3://$R2_ASSETS_BUCKET/tocfl_papers" \
+      --content-type application/json --cache-control "$IMMUTABLE" \
+      --exclude '*' --include '*/bundle.json' \
+      --no-progress ${DRY[@]+"${DRY[@]}"}
+    r2 sync "$TOCFL_BUNDLES" "s3://$R2_ASSETS_BUCKET/tocfl_papers" \
+      --content-type image/webp --cache-control "$IMMUTABLE" \
+      --exclude '*' --include '*.webp' \
+      --no-progress ${DRY[@]+"${DRY[@]}"}
+  fi
 }
 
 do_packs() {
@@ -215,6 +241,37 @@ do_media() {
       --content-type "$(media_type "$dir")" --cache-control "$IMMUTABLE" \
       --no-progress ${DRY[@]+"${DRY[@]}"}
   done
+  do_tocfl_audio
+}
+
+tocfl_paper_filters() {
+  ruby -rjson -e '
+    papers = JSON.parse(File.read(ARGV[0])).fetch("bundles", {}).each_value.flat_map { |bundle| bundle.fetch("papers", {}).values }
+    papers.uniq.each { |paper| puts "--include", paper }
+  ' "$TOCFL_MANIFEST"
+}
+
+tocfl_clip_filters() {
+  ruby -rjson -e '
+    JSON.parse(File.read(ARGV[0])).fetch("bundles", {}).each_value do |bundle|
+      bundle.fetch("clips", []).each { |clip| puts "--include", clip }
+    end
+  ' "$TOCFL_MANIFEST"
+}
+
+do_tocfl_audio() {
+  [ -f "$TOCFL_MANIFEST" ] && [ -d media/tocfl_official ] || {
+    echo "   skip tocfl_official (no $TOCFL_MANIFEST; run bin/rails exams:bundles)"
+    return 0
+  }
+  local filters=()
+  while IFS= read -r line; do filters+=("$line"); done < <(tocfl_clip_filters)
+  echo "   tocfl_official ($((${#filters[@]} / 2)) clips)"
+  [ ${#filters[@]} -gt 0 ] || return 0
+  r2 sync media/tocfl_official "s3://$R2_MEDIA_BUCKET/tocfl_official" \
+    --content-type audio/mpeg --cache-control "$IMMUTABLE" \
+    --exclude '*' "${filters[@]}" \
+    --no-progress ${DRY[@]+"${DRY[@]}"}
 }
 
 RUNTIME_PAIRS=(

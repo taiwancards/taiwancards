@@ -10,7 +10,7 @@ module MockExam
     }.freeze
 
     Question = Data.define(:number, :mode, :text, :clip, :options, :answer, :meanings) do
-      def translation(locale) = Locales.pick(meanings, locale)
+      def translation(locale) = Locales.sentence(meanings, locale)
 
       def emoji? = mode == "emoji"
     end

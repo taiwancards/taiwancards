@@ -1,0 +1,26 @@
+- bridge = Huayu::KanjiBridge
+
+p.max-w-3xl.text-sm.leading-relaxed = t("kanji_bridge.meanings.lede")
+
+- if bridge.words_available?
+  p.text-sm.text-muted-foreground
+    = t("kanji_bridge.meanings.counts", **Huayu::KanjiBridge::WORD_KINDS.to_h { |kind| [kind.to_sym, number_with_delimiter(bridge.words_of(kind).size)] })
+
+  = render("shared/tabs", tabs: kanji_level_tabs("meanings"))
+
+  - if @shifted.empty?
+    p.text-sm.text-muted-foreground = t("kanji_bridge.meanings.empty")
+  - @shifted.each do |level, words|
+    section.space-y-2
+      - if level
+        h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("kanji_bridge.levels.level", level:)
+      .divide-y.divide-border.rounded-xl.border.border-border.bg-card
+        - words.each do |word|
+          .flex.flex-wrap.items-baseline.gap-x-4.gap-y-1.px-3.py-2
+            = link_to word.text, dict_entry_path(word.text), lang: "zh-TW", class: "text-lg font-medium hover:text-primary"
+            - if word.jp
+              span.text-sm = word.jp
+            - if word.note
+              span.basis-full.text-sm.text-muted-foreground class="sm:basis-auto" = word.note
+- else
+  p.rounded-xl.border.border-dashed.border-border.p-4.text-sm.text-muted-foreground = t("kanji_bridge.meanings.pending")

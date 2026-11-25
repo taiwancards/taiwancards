@@ -1,0 +1,92 @@
+vi:
+  doors:
+    lede: "Hãy bắt đầu từ đúng việc bạn cần. Xem thì không cần tài khoản; chỉ khi có thứ cần lưu bạn mới phải đăng nhập."
+    use_example: "Dùng ví dụ"
+    example_title: "Bạn sẽ nhận được gì"
+    handover_note: "Tiếp theo bạn đăng nhập bằng Google, chỉ một lần. Trong lúc đó văn bản được giữ lại trong trình duyệt này, và khi bạn quay lại mọi thứ đã sẵn sàng, không phải dán lại."
+    open_tool: "Mở công cụ"
+    home:
+      title: "Bắt đầu"
+      heading: "Hôm nay bạn cần gì?"
+      account: "Đã có tài khoản?"
+    exam:
+      door: "Tôi đang ôn thi TOCFL"
+      pitch: "Đề thi thử chính thức, chấm điểm ngay trên trình duyệt."
+      lists: "Danh sách từ theo cấp độ"
+      player:
+        door_save_body: "Kết quả này chỉ được giữ trong trình duyệt này. Đăng nhập để lưu nó vào tài khoản của bạn."
+        door_save_cta: "Lưu kết quả này"
+        door_saved: "Kết quả trên thiết bị này đã được lưu vào tài khoản: %{score}/%{total}. Cao nhất của bạn: %{best}."
+        door_save_failed: "Chưa lưu được kết quả trên thiết bị này. Hãy tải lại trang để thử lại."
+    words:
+      door: "Tôi học theo giáo trình hoặc ở lớp"
+      pitch: "Dán hoặc gõ từ vựng của bài học, nhận ngay một bộ thẻ để luyện."
+      title: "Biến từ vựng của bài thành bộ thẻ"
+      lede: "Dán từ vựng của bài ở dạng nào cũng được: một danh sách, bảng từ trong giáo trình, một dòng chép trên bảng. Mỗi từ đều có cách đọc, nghĩa và âm thanh, và bạn luyện chúng bằng thẻ."
+      name_label: "Tên bộ thẻ (không bắt buộc)"
+      name_placeholder: "Bài 3"
+      text_label: "Từ vựng của bài"
+      text_placeholder: "你好、請問、姓、叫…"
+      text_hint: "Chữ phồn thể hay giản thể đều được, ngăn cách thế nào cũng được. Bính âm và nghĩa nằm cùng dòng cũng không sao."
+      submit: "Tạo bộ thẻ"
+      working: "Đang tạo bộ thẻ…"
+      example_lede: "Từ vựng của bài đầu tiên, dán nguyên như vậy:"
+      example_result:
+        other: "thành một bộ %{count} thẻ"
+      deck_name: "Từ vựng bài học · %{date}"
+      built:
+        other: "Bộ thẻ đã sẵn sàng: %{count} từ."
+    text:
+      door: "Tôi muốn đọc một văn bản"
+      pitch: "Dán văn bản vào và xem nó được phân tích từng dòng."
+      title: "Đọc văn bản từng dòng"
+      lede: "Dán một bài báo, một tin nhắn hay một trang giáo trình. Chạm vào từ nào cũng thấy cách đọc và nghĩa, từng dòng một, và có thể lưu lại những từ mới."
+      name_label: "Tiêu đề (không bắt buộc)"
+      name_placeholder: "Lời nhắn của chủ nhà"
+      text_label: "Văn bản của bạn"
+      text_placeholder: "Dán văn bản tiếng Quan thoại vào đây…"
+      text_hint: "Chữ giản thể sẽ được đổi sang phồn thể."
+      submit: "Phân tích"
+      working: "Đang phân tích văn bản…"
+      example_lede: "Một đoạn ngắn, văn bản của bạn cũng sẽ trông như thế này. Hãy chạm vào một từ."
+    lookup:
+      door: "Tôi đang tìm một từ hoặc một chữ"
+      go: "Tra"
+      note: "Gõ bằng chữ Hán để mở ngay trang từ điển. Tìm theo bính âm hoặc theo nghĩa thì cần đăng nhập."
+    sign_in:
+      exam: "Đăng nhập để lưu kết quả bạn vừa làm vào tài khoản."
+      words: "Đăng nhập là bộ thẻ được tạo từ những từ bạn đã dán."
+      text: "Đăng nhập là văn bản của bạn mở ra, đã phân tích từng dòng."
+      lookup: "Tìm theo bính âm hoặc theo nghĩa cần đăng nhập. Đăng nhập xong, kết quả tìm kiếm hiện ra ngay."
+    language_then:
+      exam: "Sau đó kết quả của bạn sẽ được lưu."
+      words: "Sau đó bộ thẻ sẽ được tạo."
+      text: "Sau đó văn bản sẽ mở ra."
+      lookup: "Sau đó kết quả tìm kiếm sẽ hiện ra."
+    refused:
+      empty: "Chưa có nội dung. Hãy dán hoặc gõ vào trước."
+      too_long: "Dài quá: mỗi lần tối đa %{limit} ký tự."
+      no_hanzi: "Trong đó không có chữ Hán nào. Hãy dán từ hoặc văn bản viết bằng chữ Hán."
+      no_words: "Chưa có từ nào trong số này trong từ điển. Hãy kiểm tra xem chúng có được viết bằng chữ Hán không."
+      blocked: "Trình duyệt này không cho trang giữ văn bản trong lúc bạn đăng nhập. Hãy sao chép nó, đăng nhập rồi dán vào công cụ."
+    more:
+      title: "Sau khi đăng nhập còn có"
+      import: "Nhập danh sách từ Pleco, Anki hoặc Quizlet"
+      library: "Truyện đọc theo cấp độ, đọc được ngay"
+    setup:
+      title: "Thiết lập việc học"
+      optional: "Không bắt buộc"
+      body: "Cho chúng tôi biết mục tiêu và trình độ của bạn, màn hình chính, thứ tự từ mới và các gợi ý sẽ theo đó. Không thiết lập thì mọi thứ vẫn dùng được."
+      start: "Thiết lập"
+      roadmap: "Xem nên bắt đầu từ đâu"
+      no_goal: "chưa chọn"
+    admin:
+      title: "Lối vào"
+      lede: "Tài khoản tạo trong %{weeks} tuần gần đây, theo lối vào mà người dùng đã đi qua: có đến được kết quả của lối vào đó không, có lưu được thứ gì không (từ trong bộ thẻ, văn bản, kết quả bài thi hoặc bài học, từ đang học), có ôn thẻ nào không."
+      door: "Lối vào"
+      none: "Không qua lối vào"
+      columns:
+        signups: "Đăng ký"
+        reached: "Đến được kết quả"
+        saved: "Đã lưu gì đó"
+        studied: "Đã ôn thẻ"

@@ -1,0 +1,17 @@
+- door = @entry.door
+- content_for(:title, t("doors.#{door}.working"))
+
+.mx-auto.max-w-md.space-y-4.py-16.text-center[
+  data-controller="door-handover"
+  data-door-handover-door-value=door
+  data-door-handover-limit-value=DoorsController::TEXT_LIMIT
+  data-door-handover-fallback-value=tool_path(door) ]
+  .mx-auto.size-8.animate-spin.rounded-full.border-2.border-border.border-t-primary aria-hidden="true"
+  p.text-base.font-semibold role="status" = t("doors.#{door}.working")
+
+  = form_with url: door_handover_path(door:), method: :post, class: "hidden", data: {turbo: false, door_handover_target: "form"} do
+    input type="hidden" name="handover[name]" data-door-handover-target="name"
+    textarea name="handover[text]" hidden=true data-door-handover-target="text"
+
+  noscript
+    p.text-sm = link_to t("doors.open_tool"), tool_path(door), class: "font-medium text-primary underline-offset-2 hover:underline"

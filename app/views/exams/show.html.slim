@@ -1,78 +1,97 @@
 - content_for(:title, "#{@paper.label} · #{t("exams.skills.#{@paper.skill}")}")
-- letters = ExamsController::LETTERS.first(@paper.skill == "reading" && @paper.band != "Novice" ? 6 : 4)
-- results = (@results || []).index_by { |row| row[:number] }
+- listening = @paper.listening?
 
-.py-6.space-y-6
-  = link_to exams_path, class: "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" do
+.py-6.space-y-5[
+  data-controller="exam-player"
+  data-exam-player-bundle-value=Huayu::TocflBundles.bundle_url(@bundle)
+  data-exam-player-media-value=Huayu::TocflBundles.media_base
+  data-exam-player-slug-value=@paper.slug
+  data-exam-player-index-value=exams_path
+  data-exam-player-locale-value=I18n.locale
+  data-exam-player-thresholds-value=@bundle.thresholds.to_json
+  data-exam-player-record-value=(exam_result_path(@paper) if current_user)
+  data-exam-player-save-value=(door_continue_path(door: "exam", paper: @paper.slug) unless current_user)
+  data-exam-player-strings-value=t("exams.player").merge(t("doors.exam.player")).to_json ]
+  = link_to exams_path, class: "inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-foreground md:min-h-8" do
     span ←
     span = t("exams.title")
 
   header.space-y-2
     .flex.flex-wrap.items-center.gap-2.text-xs.text-muted-foreground
       span.rounded-full.border.border-border.px-2.py-0.5 = @paper.label
-      span = @paper.level
+      span = @bundle.levels.map { |level| exam_level_name(level) }.join(" · ")
+      span.tabular-nums = t("exams.questions", count: @bundle.count)
+      - if @bundle.minutes.positive?
+        span.tabular-nums = t("exams.minutes", count: @bundle.minutes)
       - if @best
-        span.text-emerald-600 = t("exams.best", score: @best.score, total: @best.total)
-    h1.text-2xl.font-bold.tracking-tight = t("exams.skills.#{@paper.skill}")
+        span.font-medium.text-emerald-700 class="dark:text-emerald-400" = exam_best_label(@best, @bundle)
+    .flex.items-center.justify-between.gap-3
+      h1.text-2xl.font-bold.tracking-tight = t("exams.skills.#{@paper.skill}")
+      - if @paper.skill == "listening"
+        = render("shared/audio_speed")
+    p.text-xs.leading-relaxed.text-muted-foreground = t("exams.credit")
+    - if (paper_url = Huayu::TocflBundles.paper_url(@bundle.paper_for(I18n.locale)))
+      = link_to t("exams.paper_link"), paper_url, target: "_blank", rel: "noopener", class: "inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-2 md:min-h-8"
 
-  - if @score
-    .rounded-xl.border.px-4.py-3 class=(@score * 2 >= @paper.count ? "border-emerald-500 bg-emerald-500/10" : "border-amber-400 bg-amber-500/10")
-      .text-lg.font-semibold.tabular-nums = "#{@score} / #{@paper.count}"
-      .text-sm.text-muted-foreground.tabular-nums = t("exams.percent", value: (@score * 100.0 / @paper.count).round)
+  p role="status" data-exam-player-target="handover" hidden=true
 
-  .flex.flex-wrap.gap-2
-    = link_to t("exams.open_paper"), exam_paper_path(@paper), target: "_blank", rel: "noopener", class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
-    - if @paper.transcript.present?
-      = link_to t("exams.open_transcript"), exam_transcript_path(@paper), target: "_blank", rel: "noopener", class: "rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+  p.text-sm.text-muted-foreground data-exam-player-target="loading" = t("exams.loading")
 
-  - if @paper.clips.any?
-    section.space-y-2
-      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("exams.audio")
-      .-mx-4.flex.gap-2.overflow-x-auto.px-4.pb-1
-        - @paper.clips.each do |name|
-          .shrink-0.rounded-lg.border.border-border.bg-card.p-2
-            .mb-1.text-xs.tabular-nums.text-muted-foreground = File.basename(name, ".mp3")
-            audio controls="controls" preload="none" src=exam_clip_path(@paper, name: name) class="h-8 w-44"
+  .space-y-2.rounded-xl.border.border-amber-400.px-4.py-3.text-sm class="bg-amber-500/10" data-exam-player-target="failed" hidden=true
+    p = t("exams.load_failed")
+    button.min-h-11.rounded-lg.border.border-border.bg-card.px-4.text-sm.font-medium type="button" data-action="exam-player#retry" class="md:min-h-9 hover:bg-muted"
+      = t("exams.retry")
 
-  = form_with url: grade_exam_path(@paper), method: :post, class: "space-y-4" do
-    section.space-y-3
-      h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("exams.answer_sheet")
-      - shown_context = nil
-      - @paper.numbers.each do |number|
-        - row = results[number]
-        - item = @paper.item(number)
-        - frame = row.nil? ? "border-border bg-card" : (row[:correct] ? "border-emerald-500 bg-emerald-500/10" : "border-red-500 bg-red-500/10")
-        - if item
-          - if item.context? && item.context != shown_context
-            - shown_context = item.context
-            .rounded-xl.border.border-border.bg-muted.px-4.py-3.text-base.leading-loose lang="zh-TW" class=text_flow_class
-              - item.context.split("\n").each do |paragraph|
-                p.break-words = paragraph
-          .space-y-2.rounded-lg.border.px-3.py-3 class=frame
-            .flex.items-start.gap-2
-              span.w-7.shrink-0.text-xs.tabular-nums.text-muted-foreground = number
-              p.min-w-0.break-words.text-base.leading-relaxed lang="zh-TW" = item.stem
-            .space-y-1 class="pl-9"
-              - item.letters.each do |letter|
-                label.flex.cursor-pointer.items-start.gap-2.rounded-md.px-2.py-1 class="has-[:checked]:bg-muted"
-                  input.mt-1.shrink-0 type="radio" name="answers[#{number}]" value=letter checked=(row && row[:given] == letter)
-                  span.min-w-0.break-words.text-sm
-                    span.mr-1.text-muted-foreground = "(#{letter})"
-                    span lang="zh-TW" = item.option(letter)
-                  - if row && row[:expected] == letter
-                    span.ml-auto.shrink-0.text-xs.font-medium.text-emerald-700 = t("exams.correct_answer")
-        - else
-          .flex.items-center.gap-2.rounded-lg.border.px-3.py-2 class=frame
-            span.w-7.shrink-0.text-xs.tabular-nums.text-muted-foreground = number
-            .flex.flex-wrap.gap-1
-              - letters.each do |letter|
-                label.cursor-pointer
-                  input.peer.sr-only type="radio" name="answers[#{number}]" value=letter checked=(row && row[:given] == letter)
-                  span.inline-flex.size-8.items-center.justify-center.rounded-md.border.border-border.text-sm class="peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground"
-                    = letter
-            - if row && !row[:correct]
-              span.ml-auto.shrink-0.text-xs.font-medium.text-emerald-700 = row[:expected]
+  form.space-y-4 data-exam-player-target="setup" data-action="submit->exam-player#start" hidden=true
+    .space-y-2.rounded-xl.border.px-4.py-3 class="border-primary/40 bg-primary/5" data-exam-player-target="resume" hidden=true
+      p.text-sm data-exam-player-target="resumeNote"
+      .flex.flex-wrap.gap-2
+        button.min-h-11.rounded-lg.bg-primary.px-4.text-sm.font-semibold.text-primary-foreground type="button" data-action="exam-player#resume" class="md:min-h-9 hover:opacity-90"
+          = t("exams.resume")
+        button.min-h-11.rounded-lg.border.border-border.px-4.text-sm.font-medium type="button" data-action="exam-player#discard" class="md:min-h-9 hover:bg-muted"
+          = t("exams.discard")
+
+    fieldset.space-y-2
+      legend.mb-2.text-sm.font-semibold = t("exams.setup_title")
+      label.flex.cursor-pointer.items-start.gap-3.rounded-xl.border.border-border.bg-card.p-4 class="has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+        input.mt-1.shrink-0 type="radio" name="mode" value="practice" checked=true
+        span.min-w-0.space-y-1
+          span.block.font-semibold = t("exams.player.practice")
+          span.block.text-sm.leading-relaxed.text-muted-foreground = t("exams.practice_hint")
+      label.flex.cursor-pointer.items-start.gap-3.rounded-xl.border.border-border.bg-card.p-4 class="has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+        input.mt-1.shrink-0 type="radio" name="mode" value="exam"
+        span.min-w-0.space-y-1
+          span.block.font-semibold = t("exams.player.exam")
+          span.block.text-sm.leading-relaxed.text-muted-foreground
+            - if listening
+              = t("exams.exam_hint_listening")
+            - elsif @bundle.minutes.positive?
+              = t("exams.exam_hint_reading", minutes: @bundle.minutes)
+            - else
+              = t("exams.exam_hint_reading_untimed")
+      - if listening
+        label.ml-7.flex.cursor-pointer.items-start.gap-3.rounded-xl.border.border-dashed.border-border.p-4
+          input.mt-1.shrink-0 type="checkbox" data-exam-player-target="adaptive"
+          span.min-w-0.space-y-1
+            span.block.text-sm.font-semibold = t("exams.adaptive_label")
+            span.block.text-xs.leading-relaxed.text-muted-foreground = t("exams.adaptive_hint")
 
     .flex.flex-wrap.items-center.gap-3
-      = submit_tag t("exams.check"), class: "rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
-      span.text-xs.text-muted-foreground = t("exams.check_hint")
+      button.min-h-11.rounded-lg.bg-primary.px-6.text-sm.font-semibold.text-primary-foreground type="submit" data-exam-start="" class="hover:opacity-90"
+        = t("exams.start")
+      - if listening
+        span.text-xs.text-muted-foreground = t("exams.start_hint")
+
+    .space-y-2 data-exam-player-target="history" hidden=true
+
+  .space-y-4 data-exam-player-target="stage" hidden=true
+  .space-y-4 data-exam-player-target="result" hidden=true
+
+  dialog.m-auto.max-w-none.rounded-xl.border.border-border.bg-background.p-0.text-foreground data-exam-player-target="zoom" class="max-h-[95dvh] w-[min(100vw-1rem,64rem)] backdrop:bg-black/70"
+    .flex.items-center.justify-end.gap-2.border-b.border-border.px-3.py-2
+      button.min-h-11.rounded-lg.border.border-border.px-3.text-sm.font-medium type="button" data-action="exam-player#toggleZoom" class="md:min-h-9 hover:bg-muted"
+        = t("exams.player.zoom")
+      button.min-h-11.rounded-lg.border.border-border.px-3.text-sm.font-medium type="button" data-action="exam-player#closeZoom" class="md:min-h-9 hover:bg-muted"
+        = t("exams.close")
+    .overflow-auto.bg-white.p-2 class="max-h-[calc(95dvh-4rem)]" style="touch-action: pan-x pan-y pinch-zoom"
+      .space-y-2 data-exam-player-target="zoomFrame"

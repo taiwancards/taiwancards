@@ -13,6 +13,7 @@ RSpec.describe "Dictation" do
       vi: "Tôi cũng không biết.",
       de: nil,
       ind: nil,
+      ja: nil,
       emoji: nil,
       emoji_word: nil,
       emoji_category: nil

@@ -52,7 +52,6 @@
           = link_to t("desk.exam.mock_start"), mock_exam_path(level: home.mock_level),
             class: "inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
         = link_to t("desk.exam.mock_formats"), mock_exams_path, class: link
-      - if current_user.restricted_access?
         = link_to t("desk.exam.papers"), exams_path, class: link
 
     - if (grammar = home.grammar_level)

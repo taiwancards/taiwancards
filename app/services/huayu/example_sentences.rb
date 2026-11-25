@@ -25,12 +25,18 @@ module Huayu
         Lexeme.visible_to(user).where(kind: TWIN_KINDS - [lexeme.kind.to_sym], text: lexeme.text).first
       end
 
-      def for(lexeme, user:, limit:, locale: I18n.locale)
+      def translated?(sentence, locale: I18n.locale) = sentence.meanings[Locales.key(locale)].to_s.strip.present?
+
+      def translated_first(sentences, locale: I18n.locale)
+        sentences.partition { |sentence| translated?(sentence, locale:) }.flatten
+      end
+
+      def for(lexemes, user:, limit:, locale: I18n.locale)
         Lexeme
           .where(kind: :sentence)
           .visible_to(user)
           .joins("JOIN sentence_words ON sentence_words.sentence_id = lexemes.id")
-          .where(sentence_words: {lexeme_id: lexeme.id})
+          .where(sentence_words: {lexeme_id: Array.wrap(lexemes).map(&:id)})
           .left_joins(:sentence_profile)
           .preload(:content_sources, :sentence_profile)
           .order(Arel.sql(Lexeme.sanitize_sql_array([ORDER, Locales.key(locale)])))

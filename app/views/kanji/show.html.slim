@@ -1,0 +1,9 @@
+- content_for(:title) { t("kanji_bridge.title") }
+.py-6.space-y-6 lang="ja"
+  header.space-y-2
+    h1.text-2xl.font-bold.tracking-tight = t("kanji_bridge.title")
+    p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("kanji_bridge.lede")
+
+  = render("shared/tabs", tabs: KanjiController::SECTIONS.map { |section| [t("kanji_bridge.sections.#{section}"), kanji_path(section:), @section == section] })
+
+  = render("kanji/#{@section}")

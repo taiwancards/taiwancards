@@ -65,4 +65,27 @@ RSpec.describe "Admin funnel" do
     expect(response).to(have_http_status(:ok))
     expect(response.body).to(include("Funnel", "Signup source"))
   end
+
+  it "tells the doors apart: who came through which, reached its result, saved anything, studied" do
+    reader = create(:user, prefs: {"entry_door" => "text", "door_reached_at" => Time.current.iso8601})
+    ReadingText.pasted!(user: reader, body: "你好", changed: [], title: "Note")
+    builder = create(:user, prefs: {"entry_door" => "words", "door_reached_at" => Time.current.iso8601})
+    Collection.create!(kind: :manual, name: "Lesson", user: builder).add_lexemes([create(:lexeme).id])
+    review!(builder, on: Date.current)
+    create(:user, prefs: {"entry_door" => "words"})
+    create(:user, :new_arrival)
+
+    rows = Admin::Funnel.new.doors.index_by(&:door)
+
+    expect(rows.keys.last).to(be_nil)
+    expect(rows["text"].to_h).to(include(signups: 1, reached: 1, saved: 1, studied: 0))
+    expect(rows["words"].to_h).to(include(signups: 2, reached: 1, saved: 1, studied: 1))
+    expect(rows[nil].reached).to(eq(0))
+
+    sign_in(create(:user, :admin))
+    get("/admin/funnel")
+
+    page = Nokogiri::HTML(response.body)
+    expect(page.at("#doors tr[data-door='words']").text).to(include(I18n.t("doors.words.door"), "2", "1 · 50%"))
+  end
 end

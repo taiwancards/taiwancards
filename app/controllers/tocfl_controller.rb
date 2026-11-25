@@ -7,6 +7,7 @@ class TocflController < ApplicationController
   include Paginated
   include ProgressMarks
   include MarkedEntries
+  include KanjiBridgeFilter
 
   PER_PAGE = 600
 
@@ -24,7 +25,7 @@ class TocflController < ApplicationController
 
     @stat = Huayu::TocflReadiness.new(user: current_user).stat(@collection)
     ordered = @collection.lexemes.order(Arel.sql("collection_items.position"))
-    page, = paginate(ordered, per_page: PER_PAGE, total: @stat.total)
+    page, = paginate(bridge_filtered(ordered), per_page: PER_PAGE, total: (@stat.total unless bridge_kind))
     @marked = marked_entries(ordered)
     @lexemes = page.to_a
     load_progress(@lexemes + @marked)

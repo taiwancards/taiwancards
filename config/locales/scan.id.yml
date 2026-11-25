@@ -1,0 +1,241 @@
+id:
+  scan:
+    title: Pindai foto
+    lede: >-
+      Foto halaman buku pelajaran, pengumuman, menu, atau kantong obat, atau tempel tangkapan layar obrolan. Hanzi di
+      dalamnya kembali sebagai teks yang bisa kamu perbaiki, lalu kamu jadikan dek atau buka di pembaca teks.
+    from_reader: Atau pindai foto maupun tangkapan layar
+    remaining:
+      one: "Sisa %{count} dari %{daily} pindaian hari ini"
+      other: "Sisa %{count} dari %{daily} pindaian hari ini"
+    drop: Letakkan foto atau tangkapan layar di sini
+    drop_hint: >-
+      Kamu juga bisa menempelkan tangkapan layar dengan Ctrl+V atau ⌘V. Foto diperkecil dulu di perangkatmu sebelum
+      dikirim.
+    camera: Ambil foto
+    choose: Pilih file
+    text_label: Teks yang dikenali
+    text_hint: Bandingkan dengan fotonya dan perbaiki hanzi yang salah terbaca sebelum lanjut.
+    title_label: Nama
+    default_title: "Pindaian, %{time}"
+    make_deck: Buat dek
+    open_reader: Buka di pembaca teks
+    again: Pindai lagi
+    privacy_note: >-
+      Foto dikirim ke Anthropic, yang modelnya membaca teks itu, dan tidak disimpan di sini. Teks hasilnya disimpan
+      %{hours} jam supaya kamu sempat menyelesaikannya, lalu dihapus.
+    client:
+      preparing: Menyiapkan foto…
+      sending: Mengirim…
+      reading: Membaca teks. Ini butuh beberapa detik.
+      generic: Maaf, ada yang tidak beres. Coba lagi sebentar lagi, ya.
+      offline: Tidak ada koneksi. Periksa jaringanmu, lalu coba lagi.
+      not_image: File itu bukan gambar. Pilih foto atau tangkapan layar.
+      too_small: Gambar itu terlalu kecil untuk dibaca.
+      too_large: Gambar itu terlalu besar. Coba tangkapan layar atau foto yang lebih kecil.
+    refusals:
+      missing: Pilih foto dulu.
+      not_image: File itu bukan gambar. Pilih foto atau tangkapan layar.
+      too_small: Gambar itu terlalu kecil untuk dibaca.
+      too_large: Gambar itu terlalu besar. Coba tangkapan layar atau foto yang lebih kecil.
+      quota: Itu pindaian terakhir untuk hari ini. Jatah baru dibuka besok.
+      client: Hari ini sudah terlalu banyak pindaian dari jaringan ini. Coba lagi besok, ya.
+      busy: Beberapa foto sedang dibaca saat ini. Coba lagi dalam satu menit.
+      paused: Pemindaian sedang istirahat sebentar. Coba lagi nanti.
+      unavailable: Pemindaian sedang tidak tersedia.
+    failures:
+      interrupted: Pembacaan terputus. Pindaian ini tidak dihitung, jadi coba lagi, ya.
+      timeout: Pembacaan terlalu lama. Pindaian ini tidak dihitung, jadi coba lagi, ya.
+      unavailable: Layanan pembaca tidak menjawab. Pindaian ini tidak dihitung. Coba lagi nanti.
+      key: Pemindaian sedang istirahat sebentar. Pindaian ini tidak dihitung.
+      rate_limited: >-
+        Terlalu banyak foto yang sedang dibaca bersamaan. Pindaian ini tidak dihitung. Coba lagi beberapa menit lagi.
+      busy: Beberapa foto sedang dibaca saat ini. Pindaian ini tidak dihitung. Coba lagi dalam satu menit.
+      refused: Gambar ini tidak bisa dibaca.
+      too_much: >-
+        Teks di gambar ini lebih banyak daripada yang muat dalam satu pindaian. Foto bagian halaman yang lebih kecil.
+    notes:
+      blurred: >-
+        Sebagian foto buram, jadi beberapa hanzi mungkin hilang atau salah. Bandingkan dengan fotonya, atau ambil foto
+        yang lebih tajam.
+      unreadable: >-
+        Foto terlalu buram atau terlalu gelap untuk dibaca. Coba lagi di tempat yang lebih terang dan pegang ponselmu
+        dengan stabil.
+      no_text: Tidak ditemukan teks hanzi di gambar ini.
+      gaps: Karakter yang ditandai □ tidak terbaca. Lengkapi dari foto sebelum melanjutkan.
+      changed: "Hanzi sederhana sudah diubah ke hanzi tradisional: %{chars}"
+    closed:
+      title: Pemindaian dijeda
+      unavailable: >-
+        Membaca teks dari foto sedang tidak tersedia. Tempel saja teksnya, atau gambar hanzi yang tidak bisa kamu baca
+        di kotak pencarian.
+      paused: >-
+        Fitur ini akan segera kembali. Sementara itu, tempel teksnya, atau gambar hanzi yang tidak bisa kamu baca di
+        kotak pencarian.
+    privacy:
+      heading: Foto yang kamu pindai
+      items:
+        - >-
+          Saat kamu memindai foto atau tangkapan layar, perangkatmu lebih dulu memperkecilnya, lalu aplikasi
+          mengirimkannya ke Anthropic, yang modelnya membaca teks hanzi di dalamnya. Anthropic memprosesnya berdasarkan
+          ketentuan komersialnya, sebagai penyedia layanan untuk aplikasi ini.
+        - Gambarnya sendiri tidak pernah disimpan oleh aplikasi. Tidak ada data lain dari akunmu yang ikut dikirim.
+        - >-
+          Teks yang terbaca disimpan 24 jam supaya kamu bisa memperbaikinya dan menjadikannya dek atau teks di pembaca
+          teks, lalu dihapus. Dek atau teks yang kamu buat darinya tetap ada di akunmu seperti yang lain.
+        - >-
+          Untuk batas harian, aplikasi menyimpan tanggal, hasil, dan ukuran setiap pindaian, serta selama 24 jam
+          menyimpan sidik jari satu arah dari alamat jaringan asalnya, tidak pernah alamat itu sendiri.
+    admin:
+      title: Pindaian
+      lede: >-
+        Pindaian foto: %{daily} per pelajar per hari, teks hasil pengenalan disimpan %{kept} jam. Biaya diperkirakan
+        dari token yang dipakai setiap pindaian dan harga resmi model.
+      ceilings: Batas atas
+      state: Status
+      open: Aktif
+      paused: "Dijeda (%{reason}) sampai %{until}"
+      no_key: Tidak ada kunci API
+      model: Model
+      unpriced: belum ada harga
+      today: Pindaian hari ini, semua pelajar
+      in_flight: Sedang dibaca
+      per_client: Per jaringan, 24 jam
+      at_quota: Pelajar yang mencapai batas hari ini
+      by_day: Per hari
+      total: Total
+      columns:
+        day: Hari
+        scans: Pindaian
+        failed: Gagal
+        refunded: Tidak dihitung
+        input: Token masukan
+        output: Token keluaran
+        cost: Biaya
+      footnote: "Pelajar dalam rentang ini: %{learners}. Rata-rata waktu baca: %{latency} ms."
+      failures: Kegagalan
+      pauses: Jeda
+      key:
+        title: Kunci API
+        status:
+          missing: Tidak ada kunci
+          unchecked: Belum diperiksa
+          ok: Berfungsi
+          rejected: Ditolak Anthropic
+        rejected_since: "Ditolak sejak %{at}. Pelajar melihat bahwa pemindaian tidak tersedia, dan tidak ada yang dihitung."
+        unreadable: >-
+          Kunci yang tersimpan tidak bisa didekripsi dengan kunci enkripsi server ini. Simpan ulang kunci itu atau hapus.
+        hint: Kunci
+        source: Sumber
+        sources:
+          stored: Disimpan di sini
+          environment: Variabel lingkungan
+        set_at: Disimpan
+        last_check: Pemeriksaan terakhir yang berhasil
+        expiry: Kedaluwarsa
+        never: tanggal belum diisi
+        expires_today: hari ini
+        expires_in:
+          one: "dalam %{count} hari"
+          other: "dalam %{count} hari"
+        expired:
+          one: "%{count} hari yang lalu"
+          other: "%{count} hari yang lalu"
+        new_key: Kunci baru
+        expires_on: Tanggal kedaluwarsa, opsional
+        save: Simpan dan periksa
+        check: Periksa sekarang
+        remove: Hapus kunci tersimpan
+        remove_confirm: >-
+          Hapus kunci yang tersimpan? Pemindaian kembali memakai kunci dari variabel lingkungan, jika ada.
+        reopen: Buka lagi sekarang
+        note: >-
+          Kunci yang disimpan menggantikan variabel lingkungan, dan Anthropic memeriksanya sebelum disimpan. “Buka lagi
+          sekarang” mengakhiri semua jeda kecuali batas harian.
+        no_encryption: >-
+          Server ini tidak punya kunci enkripsi Active Record, jadi kunci API tidak bisa disimpan di sini. Isi ketiga
+          variabel ACTIVE_RECORD_ENCRYPTION, atau gunakan ANTHROPIC_API_KEY.
+        too_fast: Terlalu banyak perubahan dalam waktu singkat. Tunggu beberapa menit, lalu coba lagi.
+        reopened: "Jeda yang diakhiri: %{count}. Batas harian, jika sudah tercapai, tetap berlaku."
+        saved:
+          ok: "Anthropic menerima kunci …%{hint}. Kunci sudah disimpan dan pemindaian dibuka."
+          rejected: Anthropic menolak kunci ini. Tidak ada yang disimpan.
+          no_model: Kunci ini berfungsi, tetapi tidak punya akses ke model pemindaian. Tidak ada yang disimpan.
+          unreachable: Anthropic tidak bisa dihubungi untuk memeriksa kunci. Tidak ada yang disimpan. Coba lagi semenit lagi.
+          malformed: Ini tidak tampak seperti kunci API Anthropic. Tidak ada yang disimpan.
+          no_encryption: Server ini tidak punya kunci enkripsi. Tidak ada yang disimpan.
+        checked:
+          ok: Kunci berfungsi.
+          rejected: Anthropic menolak kunci itu. Pemindaian tetap mati sampai ada pemeriksaan yang berhasil.
+          no_model: Kunci berfungsi, tetapi tidak punya akses ke model pemindaian.
+          unreachable: Anthropic tidak bisa dihubungi. Status kunci tidak berubah.
+          missing: Tidak ada kunci untuk diperiksa.
+        forgotten:
+          ok: Kunci tersimpan sudah dihapus. Kunci dari variabel lingkungan berfungsi dan sedang dipakai.
+          rejected: Kunci tersimpan sudah dihapus. Anthropic menolak kunci dari variabel lingkungan.
+          no_model: Kunci tersimpan sudah dihapus. Kunci dari variabel lingkungan tidak punya akses ke model pemindaian.
+          unreachable: Kunci tersimpan sudah dihapus. Kunci dari variabel lingkungan belum bisa diperiksa.
+          missing: Kunci tersimpan sudah dihapus. Sekarang tidak ada kunci, jadi pemindaian mati.
+      health:
+        marker: Perlu perhatian
+        missing: "Pemindaian mati: tidak ada kunci API."
+        rejected: "Pemindaian mati: Anthropic menolak kunci API."
+        expiring: Kunci API untuk pemindaian segera kedaluwarsa. Simpan kunci baru.
+        credit: "Pemindaian dijeda: kredit Anthropic sudah habis."
+      model_choice:
+        label: Model untuk pemindaian
+        environment: "Dari SCAN_MODEL: %{model}"
+        save: Periksa dan gunakan
+        saved:
+          ok: "Anthropic memberi kunci ini akses ke %{model}. Pemindaian sekarang memakainya."
+          rejected: Anthropic menolak kunci itu. Model tidak diubah.
+          no_model: "Kunci ini tidak punya akses ke %{model}. Model tidak diubah."
+          unreachable: Anthropic tidak bisa dihubungi. Model tidak diubah. Coba lagi semenit lagi.
+          missing: Tidak ada kunci API untuk memeriksa model. Model tidak diubah.
+          unknown: Model itu tidak ada di daftar harga. Model tidak diubah.
+    alerts:
+      learners_heading: Yang dilihat pelajar sekarang
+      action_heading: Yang perlu dilakukan
+      open_admin: Buka halaman pemindaian
+      rejected:
+        subject: "Pemindaian mati: Anthropic menolak kunci API"
+        happened: >-
+          Pada %{at}, Anthropic menjawab bahwa kunci API untuk pemindaian tidak valid, kedaluwarsa, atau dicabut.
+          Pemindaian langsung berhenti.
+        learners: >-
+          Halaman pemindaian menyatakan bahwa pemindaian sedang tidak tersedia dan menyarankan menempelkan teks saja.
+          Unggahan ditolak dan tidak mengurangi batas harian siapa pun.
+        action: >-
+          Buat kunci baru di Anthropic Console dan simpan di halaman pemindaian. Kunci diperiksa dulu, dan pemindaian
+          dibuka lagi begitu Anthropic menerimanya.
+      credit:
+        subject: "Pemindaian dijeda: kredit Anthropic sudah habis"
+        happened: >-
+          Pada %{at}, Anthropic menolak sebuah pemindaian karena kredit akun sudah habis atau batas pengeluarannya
+          tercapai.
+        learners: >-
+          Pemindaian beristirahat enam jam. Pelajar melihat bahwa fitur ini akan segera kembali, dan pemindaian yang
+          gagal tidak dihitung.
+        action: >-
+          Tambah kredit atau naikkan batas pengeluaran di Anthropic Console, lalu tekan “Buka lagi sekarang” di halaman
+          pemindaian.
+      ceiling:
+        subject: Pemindaian dijeda sampai akhir hari ini
+        happened: >-
+          Pada %{at}, para pelajar bersama-sama mencapai batas harian pemindaian. Pemindaian dijeda sampai tengah malam
+          waktu Taiwan.
+        learners: Pelajar melihat bahwa pemindaian sedang beristirahat dan akan kembali. Hari ini tidak ada lagi yang dihitung.
+        action: >-
+          Tidak ada yang perlu dilakukan. Jika permintaannya memang nyata, naikkan SCAN_GLOBAL_DAILY. Batas ini direset
+          pada tengah malam.
+      expiring:
+        subject: Kunci API untuk pemindaian kedaluwarsa besok
+        happened: "Per %{at}, kunci API yang tersimpan tinggal sehari atau kurang dari tanggal kedaluwarsa yang kamu isi."
+        learners: >-
+          Belum ada yang berubah bagi pelajar. Saat kunci kedaluwarsa, pemindaian berhenti dan mereka melihat bahwa fitur
+          ini tidak tersedia.
+        action: Buat kunci baru di Anthropic Console dan simpan di halaman pemindaian sebelum kunci lama kedaluwarsa.
+  admin:
+    mail:
+      lists:
+        alerts: Peringatan

@@ -43,7 +43,8 @@ module Huayu
           "ru" => lesson.title(:ru),
           "vi" => lesson.vi["title"],
           "de" => lesson.de["title"],
-          "ind" => lesson.ind["title"]
+          "ind" => lesson.ind["title"],
+          "ja" => lesson.ja["title"]
         }.compact_blank
       )
       lexeme.data = lexeme.data.merge(

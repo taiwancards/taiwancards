@@ -44,7 +44,10 @@ RSpec.describe Huayu::AuthoredSentenceImporter do
   it "keeps translations whole in every language" do
     rows.each do |row|
       expect(row.values_at("zh", *Locales::STORED)).to(all(be_present))
-      expect(row.values_at(*Locales::STORED).join).not_to(match(/\p{Han}/))
+      expect(row.values_at(*Locales::STORED.reject { |key| Locales.writes_han?(key) }).join).not_to(match(/\p{Han}/))
+      expect(row.values_at(*Locales::HAN_PROSE).join.chars.select { |char| HanScript.differs.include?(char) }).to(
+        eq([])
+      )
     end
   end
 
@@ -58,6 +61,26 @@ RSpec.describe Huayu::AuthoredSentenceImporter do
     again = run
     expect(again.imported).to(eq(0))
     expect(again.retired).to(eq(1))
+  end
+
+  it "agrees with the sentence gloss store wherever both carry a sentence" do
+    glosses = AppData
+      .path("huayu/sentence_glosses.jsonl")
+      .each_line
+      .filter_map do |line|
+        row = JSON.parse(line)
+        [row["text"], row] if row["text"]
+      end
+      .to_h
+
+    clashes = rows.flat_map do |row|
+      stored_row = glosses[row["zh"]] || {}
+      Locales::STORED.filter_map do |key|
+        [row["zh"], key] if row[key].present? && stored_row[key].present? && row[key] != stored_row[key]
+      end
+    end
+
+    expect(clashes).to(eq([]))
   end
 
   it "does nothing while the source is not registered" do

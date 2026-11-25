@@ -1,0 +1,53 @@
+- credential = health.credential
+- key = credential.api_key
+- field = "min-h-11 w-full rounded-lg border border-border bg-card px-3 text-sm md:min-h-9"
+- primary = "min-h-11 cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 md:min-h-9"
+- secondary = "min-h-11 cursor-pointer rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted md:min-h-9"
+- tone = {"ok" => "text-brand", "unchecked" => "text-foreground", "rejected" => "text-destructive", "missing" => "text-destructive"}
+
+section#scan-key.rounded-xl.border.border-border.p-4.space-y-4
+  .flex.flex-wrap.items-baseline.justify-between.gap-2
+    h2.text-sm.font-semibold = t("scan.admin.key.title")
+    span.text-sm.font-semibold class=tone.fetch(health.status) = t("scan.admin.key.status.#{health.status}")
+
+  - if health.status == "rejected" && credential.rejected_at
+    p.text-sm.text-destructive = t("scan.admin.key.rejected_since", at: scan_moment(credential.rejected_at))
+  - if credential.unreadable?
+    p.text-sm.text-destructive = t("scan.admin.key.unreadable")
+
+  dl.grid.gap-x-6.gap-y-2.text-sm class="grid-cols-2 lg:grid-cols-5"
+    - rows = [[t("scan.admin.key.hint"), key ? "…#{key.hint}" : "—"],
+      [t("scan.admin.key.source"), key ? t("scan.admin.key.sources.#{key.source}") : "—"],
+      [t("scan.admin.key.set_at"), scan_moment(credential.stored_key && credential.set_at)],
+      [t("scan.admin.key.last_check"), scan_moment(credential.last_check_at)],
+      [t("scan.admin.key.expiry"), credential.stored_key ? scan_key_expiry(health.days_left) : "—", health.expiring?]]
+    - rows.each do |label, value, warning|
+      .min-w-0
+        dt.text-xs.uppercase.tracking-wide.text-muted-foreground = label
+        dd.font-medium.tabular-nums class=("text-destructive" if warning) = value
+
+  - if ScanCredential.encryption_ready?
+    = form_with url: admin_scan_key_path, method: :post, class: "grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end" do
+      label.grid.min-w-0.gap-1
+        span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("scan.admin.key.new_key")
+        = password_field_tag :secret, nil, autocomplete: "off", autocapitalize: "off", spellcheck: false, required: true, placeholder: "sk-ant-…", class: field
+      label.grid.gap-1
+        span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("scan.admin.key.expires_on")
+        = date_field_tag :expires_on, nil, class: field
+      = submit_tag t("scan.admin.key.save"), name: nil, class: primary
+  - else
+    p.text-sm.text-destructive = t("scan.admin.key.no_encryption")
+
+  = form_with url: admin_scan_model_path, method: :post, class: "grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end" do
+    label.grid.min-w-0.gap-1
+      span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("scan.admin.model_choice.label")
+      = select_tag :model, options_for_select(scan_model_options, credential.chosen_model), include_blank: t("scan.admin.model_choice.environment", model: Scans::Settings.environment_model), class: field
+    = submit_tag t("scan.admin.model_choice.save"), name: nil, class: primary
+
+  .flex.flex-wrap.items-center.gap-2
+    - if key
+      = button_to t("scan.admin.key.check"), check_admin_scan_key_path, class: secondary
+    - if credential.stored_key || credential.unreadable?
+      = button_to t("scan.admin.key.remove"), admin_scan_key_path, method: :delete, form: {data: {turbo_confirm: t("scan.admin.key.remove_confirm")}}, class: secondary
+    = button_to t("scan.admin.key.reopen"), admin_scans_reopen_path, class: secondary
+  p.text-xs.text-muted-foreground = t("scan.admin.key.note")

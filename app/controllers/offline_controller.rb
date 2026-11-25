@@ -2,7 +2,7 @@
 
 class OfflineController < ApplicationController
   allow_unauthenticated_access
-  publicly_cacheable only: %i[show browse]
+  publicly_cacheable only: %i[show browse fallback]
   skip_after_action :verify_same_origin_request, only: :worker
 
   WORKER = Rails.root.join("app/javascript/service_worker.js")
@@ -11,6 +11,10 @@ class OfflineController < ApplicationController
   end
 
   def browse
+  end
+
+  def fallback
+    render(layout: false)
   end
 
   def worker

@@ -5,6 +5,7 @@
 .py-6.space-y-6
   nav.flex.items-center.justify-between.gap-3.text-sm
     = link_to "← #{t("grammar.title")}", grammar_path, class: "text-muted-foreground hover:text-foreground"
+    = render("shared/audio_speed")
 
   header.space-y-3
     h1.text-2xl.font-bold.tracking-tight = @lesson.title(I18n.locale)
@@ -64,6 +65,7 @@
       .rounded-xl.border.border-amber-400.px-4.py-3.text-sm class="bg-amber-500/10"
         strong.mr-1 = t("grammar.tip")
         = grammar_prose(@lesson.tip(I18n.locale), @lesson, seen: seen, entries: @entries)
+    = regional_note("grammar", @lesson.slug, css: nil)
 
   section.space-y-3
     h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("grammar.examples")

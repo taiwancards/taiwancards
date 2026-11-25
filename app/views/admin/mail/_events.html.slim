@@ -4,6 +4,7 @@
   p.rounded-lg.border.border-dashed.border-border.px-4.py-8.text-center.text-sm.text-muted-foreground
     = t("admin.mail.empty")
 - else
+  - pages = visited_pages(events.select { |event| event.event == "clicked" }.map(&:detail).compact_blank)
   .divide-y.divide-border.rounded-xl.border.border-border
     - events.each do |event|
       .space-y-1.px-3.py-2.text-sm
@@ -13,7 +14,7 @@
             - if event.user
               = link_to event.email, admin_user_path(event.user), class: "min-w-0 max-w-64 truncate font-medium underline underline-offset-2"
             - else
-              span.min-w-0.max-w-64.truncate.font-medium.text-muted-foreground title=t("admin.mail.deleted") = event.email
+              span.min-w-0.max-w-64.truncate.font-medium.text-muted-foreground = event.email || t("admin.mail.deleted")
           span.shrink-0.rounded.px-1.5.text-xs.font-medium class=tones.fetch(event.event, tones["sent"]) = t("admin.mail.events.#{event.event}")
           span.shrink-0.text-xs.text-muted-foreground = t("admin.mail.lists.#{event.list}")
           - if event.letter.present?
@@ -22,7 +23,9 @@
             span.shrink-0.rounded.bg-muted.px-1.5.text-xs.tabular-nums = t("admin.mail.cards", count: event.count)
           - if event.source.present?
             span.shrink-0.text-xs.text-muted-foreground = t("admin.mail.sources.#{event.source}", default: event.source)
-          - if event.detail.present?
+          - if event.detail.present? && event.event == "clicked"
+            = visited_page_link(pages.fetch(event.detail), class: "min-w-0 truncate text-xs text-muted-foreground basis-full sm:basis-auto")
+          - elsif event.detail.present?
             span.min-w-0.truncate.text-xs.text-muted-foreground class="basis-full sm:basis-auto" title=event.detail = mail_event_detail(event)
         - if event.summary.present?
           p.line-clamp-3.text-xs.leading-relaxed.text-muted-foreground title=event.summary = event.summary

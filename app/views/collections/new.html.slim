@@ -55,6 +55,5 @@
     p.text-xs.leading-relaxed.text-muted-foreground = t("desks.song_note")
 
   - else
-    .rounded-xl.border.border-dashed.border-border.px-4.py-10.text-center.space-y-2
-      p.text-sm.font-medium = t("desks.photo_soon")
-      p.mx-auto.max-w-md.text-sm.text-muted-foreground = t("desks.photo_hint")
+    p.max-w-prose.text-sm.text-muted-foreground = t("scan.lede")
+    = render("scans/panel", panel: @scan_panel)

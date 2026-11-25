@@ -47,9 +47,25 @@ RSpec.describe "mood particle data" do
     expect(thin).to(be_empty)
   end
 
+  def mandarin_of(node)
+    case node
+    when Hash
+      node
+        .map { |key, value|
+          japanese = key == "ja" || key.end_with?("_ja")
+          japanese ? value.to_json.scan(HanScript::MARKED).join : mandarin_of(value)
+        }
+        .join
+    when Array
+      node.map { |value| mandarin_of(value) }.join
+    else
+      node.to_s
+    end
+  end
+
   it "holds only traditional characters used in Taiwan" do
     offenders = entries.filter_map { |entry|
-      found = entry.to_json.each_char.select { |char| simplified.include?(char) }.uniq
+      found = mandarin_of(entry).each_char.select { |char| simplified.include?(char) }.uniq
       "#{entry["text"]}: #{found.join}" if found.any?
     }
 

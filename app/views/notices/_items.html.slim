@@ -1,0 +1,16 @@
+- notice = local_assigns.fetch(:notice)
+- tokens = local_assigns.fetch(:tokens)
+
+ol.notice-items class=(notice.steps? ? "notice-steps" : nil)
+  - notice.items.each do |item|
+    li.notice-item class=(item.indent? ? "notice-sub" : nil)
+      - if item.head
+        span.notice-step lang="zh-TW"
+          span.notice-step-number = item.mark
+          span.notice-step-head = item.head
+      - elsif item.mark.present?
+        span.notice-mark lang="zh-TW" = item.mark
+      .min-w-0.flex-1.space-y-1
+        .notice-zh lang="zh-TW" = render("notices/line", text: item.zh, tokens: tokens[item.zh])
+        = notice_text(:p, item.names, class: "text-sm text-muted-foreground")
+        = notice_text(:p, item.notes, class: "notice-note")

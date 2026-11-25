@@ -2,65 +2,47 @@
 
 class ExamsController < ApplicationController
   SLUG_PREFIX = "tocfl:"
-  LETTERS = %w[A B C D E F].freeze
 
-  before_action :require_restricted_access
-  before_action :set_paper, only: %i[show grade paper transcript clip]
+  allow_unauthenticated_access only: %i[index show]
+  publicly_cacheable only: %i[index show]
+  before_action :set_paper, only: %i[show record]
 
   def index
-    @by_band = Huayu::TocflPapers.by_band
-    @scores = CourseCompletion.owned_by(current_user).where("slug LIKE ?", "#{SLUG_PREFIX}%").index_by(&:slug)
+    @papers = Huayu::TocflPapers.all.select { |paper| Huayu::TocflBundles.available?(paper.slug) }
+    @by_band = @papers.group_by(&:band)
+    @scores = recorded_scores
   end
 
   def show
-    @best = CourseCompletion.owned_by(current_user).find_by(slug: completion_slug)
+    @bundle = Huayu::TocflBundles.find(@paper.slug)
+    @best = current_user && CourseCompletion.owned_by(current_user).find_by(slug: completion_slug)
   end
 
-  def grade
-    given = submitted_answers
-    @results = @paper.numbers.map do |number|
-      expected = @paper.answer(number)
-      {number:, given: given[number], expected:, correct: given[number] == expected}
-    end
-
-    @score = @results.count { |row| row[:correct] }
-    @best = CourseCompletion.record(user: current_user, slug: completion_slug, score: @score, total: @paper.count)
-    render(:show)
-  end
-
-  def paper
-    send_official(Huayu::TocflPapers.paper_file(@paper.paper), "application/pdf")
-  end
-
-  def transcript
-    send_official(Huayu::TocflPapers.paper_file(@paper.transcript), "application/pdf")
-  end
-
-  def clip
-    name = params[:name].to_s
-    raise ActiveRecord::RecordNotFound unless @paper.clips.include?(name)
-
-    send_official(Huayu::TocflPapers.clip_file(@paper.audio, name), "audio/mpeg")
+  def record
+    score = @paper.mark(submitted_answers)
+    best = CourseCompletion.record(user: current_user, slug: completion_slug, score:, total: @paper.count)
+    current_user.reach_door!("exam")
+    render(json: {score:, total: @paper.count, best: best.score})
   end
 
   private
 
   def set_paper
     @paper = Huayu::TocflPapers.find(params[:slug])
-    raise ActiveRecord::RecordNotFound if @paper.nil?
+    raise ActiveRecord::RecordNotFound unless @paper && Huayu::TocflBundles.available?(@paper.slug)
   end
 
   def completion_slug = "#{SLUG_PREFIX}#{@paper.slug}"
 
-  def send_official(path, type)
-    raise ActiveRecord::RecordNotFound if path.nil?
+  def recorded_scores
+    return {} if current_user.nil?
 
-    send_file(path, type:, disposition: "inline")
+    CourseCompletion.owned_by(current_user).where("slug LIKE ?", "#{SLUG_PREFIX}%").index_by(&:slug)
   end
 
   def submitted_answers
     allowed = @paper.numbers.map(&:to_s)
     raw = params.fetch(:answers, {}).permit(*allowed).to_h
-    raw.to_h { |number, letter| [number.to_i, LETTERS.include?(letter) ? letter : nil] }
+    raw.to_h { |number, letter| [number.to_i, Huayu::TocflPapers::LETTERS.include?(letter) ? letter : nil] }
   end
 end

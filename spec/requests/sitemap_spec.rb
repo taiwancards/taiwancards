@@ -39,6 +39,13 @@ RSpec.describe "Sitemap", :no_auth do
     expect(response.body).to(include("hreflang=\"id\" href=\"http://www.example.com/id/dict\""))
   end
 
+  it "lists the kanji bridge under its Japanese address alone" do
+    get("/sitemaps/pages.xml")
+
+    expect(response.body).to(include("<loc>http://www.example.com/ja/kanji</loc>"))
+    expect(response.body).not_to(include("http://www.example.com/en/kanji"))
+  end
+
   it "carries an entry for a character that has a reading and skips one that has nothing" do
     create(:lexeme, kind: :character, text: "水", readings: {"zhuyin" => "ㄕㄨㄟˇ"})
     create(:lexeme, kind: :character, text: "㐀")

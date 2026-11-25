@@ -1,0 +1,92 @@
+id:
+  doors:
+    lede: "Mulai dari keperluanmu sendiri. Melihat-lihat tidak perlu akun; kamu baru masuk kalau ada yang perlu disimpan."
+    use_example: "Pakai contoh"
+    example_title: "Yang kamu dapat"
+    handover_note: "Setelah ini kamu masuk dengan Google, cukup sekali. Sampai saat itu teksmu disimpan di browser ini, dan begitu kamu kembali semuanya sudah siap tanpa perlu menempel ulang."
+    open_tool: "Buka alatnya"
+    home:
+      title: "Mulai di sini"
+      heading: "Apa yang kamu perlukan hari ini?"
+      account: "Sudah punya akun?"
+    exam:
+      door: "Aku sedang persiapan TOCFL"
+      pitch: "Soal latihan resmi, dinilai langsung di browser."
+      lists: "Daftar kata per level"
+      player:
+        door_save_body: "Hasil ini hanya tersimpan di browser ini. Masuk, dan hasilnya tersimpan di akunmu."
+        door_save_cta: "Simpan hasil ini"
+        door_saved: "Hasil dari perangkat ini sudah tersimpan di akunmu: %{score} dari %{total}. Skor terbaikmu: %{best}."
+        door_save_failed: "Hasil dari perangkat ini belum bisa disimpan. Muat ulang halaman untuk mencoba lagi."
+    words:
+      door: "Aku belajar dari buku atau di kelas"
+      pitch: "Tempel atau ketik kosakata pelajaranmu, lalu dapatkan dek untuk dilatih."
+      title: "Kosakata pelajaranmu jadi dek"
+      lede: "Tempel kosakata pelajaranmu dalam bentuk apa saja: daftar, tabel kosakata dari buku, satu baris dari papan tulis. Setiap kata dilengkapi cara baca, arti, dan audio, lalu kamu melatihnya dengan kartu."
+      name_label: "Nama dek (opsional)"
+      name_placeholder: "Pelajaran 3"
+      text_label: "Kosakata pelajaranmu"
+      text_placeholder: "你好、請問、姓、叫…"
+      text_hint: "Hanzi tradisional atau sederhana, pemisah apa saja. Pinyin dan terjemahan di baris yang sama tidak mengganggu."
+      submit: "Buat dekku"
+      working: "Sedang membuat dek…"
+      example_lede: "Kosakata pelajaran pertama, ditempel apa adanya:"
+      example_result:
+        other: "menjadi dek berisi %{count} kartu"
+      deck_name: "Kosakata pelajaran · %{date}"
+      built:
+        other: "Dekmu sudah siap: %{count} kata."
+    text:
+      door: "Aku ingin membaca teks"
+      pitch: "Tempel teks dan lihat uraiannya baris demi baris."
+      title: "Baca teks baris demi baris"
+      lede: "Tempel artikel, pesan, atau satu halaman bukumu. Ketuk kata mana saja untuk melihat cara baca dan artinya, baris demi baris, lalu simpan kata-kata baru."
+      name_label: "Judul (opsional)"
+      name_placeholder: "Pesan dari pemilik kos"
+      text_label: "Teksmu"
+      text_placeholder: "Tempel teks bahasa Mandarin di sini…"
+      text_hint: "Hanzi sederhana diubah menjadi hanzi tradisional."
+      submit: "Uraikan"
+      working: "Sedang menguraikan teksmu…"
+      example_lede: "Teks pendek, seperti nanti teksmu akan tampil. Ketuk salah satu kata."
+    lookup:
+      door: "Aku mencari kata atau hanzi"
+      go: "Cari"
+      note: "Ketik dengan hanzi, dan halaman kamusnya langsung terbuka. Pencarian lewat pinyin atau arti bisa dipakai setelah masuk."
+    sign_in:
+      exam: "Masuk, dan hasil yang baru kamu dapat tersimpan di akunmu."
+      words: "Masuk, dan dekmu dibuat dari kata-kata yang kamu tempel."
+      text: "Masuk, dan teksmu terbuka, sudah diuraikan baris demi baris."
+      lookup: "Pencarian lewat pinyin atau arti hanya untuk yang sudah masuk. Masuk, dan pencarianmu langsung jalan."
+    language_then:
+      exam: "Setelah itu hasilmu disimpan."
+      words: "Setelah itu dekmu dibuat."
+      text: "Setelah itu teksmu terbuka."
+      lookup: "Setelah itu pencarianmu dijalankan."
+    refused:
+      empty: "Belum ada teks. Tempel atau ketik dulu."
+      too_long: "Terlalu panjang: paling banyak %{limit} karakter sekaligus."
+      no_hanzi: "Tidak ada hanzi di dalamnya. Tempel kata atau teksnya dalam hanzi."
+      no_words: "Tidak ada satu pun kata ini di kamus. Periksa apakah semuanya ditulis dalam hanzi."
+      blocked: "Browser ini tidak mengizinkan halaman menyimpan teksmu selama kamu masuk. Salin teksnya, masuk, lalu tempel di alatnya."
+    more:
+      title: "Setelah masuk juga ada"
+      import: "Impor daftar dari Pleco, Anki, atau Quizlet"
+      library: "Bacaan bertingkat yang siap dibaca"
+    setup:
+      title: "Atur belajarmu"
+      optional: "Opsional"
+      body: "Beri tahu tujuan dan levelmu, lalu layar utama, urutan kata baru, dan saran akan menyesuaikan. Tanpa itu pun semuanya tetap jalan."
+      start: "Atur"
+      roadmap: "Lihat mulai dari mana"
+      no_goal: "belum dipilih"
+    admin:
+      title: "Pintu masuk"
+      lede: "Akun yang dibuat dalam %{weeks} minggu terakhir, menurut pintu masuk yang dilewati: apakah sampai ke hasil pintu itu, apakah menyimpan sesuatu (kata dalam dek, teks, hasil ujian atau pelajaran, kata yang dipelajari), apakah mengulang kartu."
+      door: "Pintu masuk"
+      none: "Tanpa pintu masuk"
+      columns:
+        signups: "Pendaftaran"
+        reached: "Sampai ke hasil"
+        saved: "Menyimpan sesuatu"
+        studied: "Mengulang kartu"

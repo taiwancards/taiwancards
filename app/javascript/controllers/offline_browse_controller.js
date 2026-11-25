@@ -132,10 +132,12 @@ export default class extends Controller {
     link.querySelector('[data-field="text"]').textContent = row[0];
     link.querySelector('[data-field="reading"]').textContent =
       row[1] || row[2] || "";
+    const own = { ru: row[4], vi: row[7], de: row[8], id: row[9], ja: row[10] }[
+      this.labelsValue.locale
+    ];
+    const ownOnly = this.labelsValue.ownSentencesOnly && row[6] === "sentence";
     link.querySelector('[data-field="gloss"]').textContent =
-      { ru: row[4], vi: row[7], de: row[8], id: row[9] }[
-        this.labelsValue.locale
-      ] || row[3];
+      own || (ownOnly ? "" : row[3]);
 
     return node;
   }

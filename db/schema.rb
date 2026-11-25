@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_190001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension("pg_catalog.plpgsql")
   enable_extension("pg_trgm")
@@ -344,7 +344,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
 
   create_table("mail_events", force: :cascade) do |t|
     t.bigint("user_id")
-    t.string("email", null: false)
+    t.string("email")
     t.string("list", null: false)
     t.string("event", null: false)
     t.string("letter", default: "", null: false)
@@ -422,6 +422,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
     t.string("subject_ind", default: "", null: false)
     t.string("preheader_ind", default: "", null: false)
     t.text("body_ind", default: "", null: false)
+    t.string("subject_ja", default: "", null: false)
+    t.string("preheader_ja", default: "", null: false)
+    t.text("body_ja", default: "", null: false)
   end
 
   create_table("page_views", force: :cascade) do |t|
@@ -542,6 +545,64 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
     t.datetime("updated_at", null: false)
     t.index(["created_at"], name: "index_reminder_deliveries_on_created_at")
     t.index(["user_id", "created_at"], name: "index_reminder_deliveries_on_user_id_and_created_at")
+  end
+
+  create_table("scan_credentials", force: :cascade) do |t|
+    t.text("secret")
+    t.string("hint")
+    t.datetime("set_at")
+    t.date("expires_on")
+    t.date("expiry_warned_on")
+    t.string("state", default: "unchecked", null: false)
+    t.string("checked_digest")
+    t.datetime("checked_at")
+    t.datetime("rejected_at")
+    t.string("model")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.check_constraint("id = 1", name: "scan_credentials_single_row")
+    t.check_constraint(
+      "state::text = ANY (ARRAY['unchecked'::character varying, 'ok'::character varying, 'rejected'::character varying]::text[])",
+      name: "scan_credentials_state"
+    )
+  end
+
+  create_table("scan_pauses", force: :cascade) do |t|
+    t.string("reason", null: false)
+    t.datetime("resumes_at", null: false)
+    t.datetime("created_at", null: false)
+    t.index(["resumes_at"], name: "index_scan_pauses_on_resumes_at")
+  end
+
+  create_table("scans", force: :cascade) do |t|
+    t.bigint("user_id", null: false)
+    t.date("day", null: false)
+    t.string("client_digest")
+    t.integer("state", default: 0, null: false)
+    t.boolean("counted", default: true, null: false)
+    t.string("failure")
+    t.string("legibility")
+    t.text("text")
+    t.string("changed_chars", default: [], null: false, array: true)
+    t.string("model")
+    t.integer("bytes", null: false)
+    t.integer("width", null: false)
+    t.integer("height", null: false)
+    t.integer("input_tokens")
+    t.integer("output_tokens")
+    t.integer("latency_ms")
+    t.datetime("started_at")
+    t.datetime("finished_at")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(
+      ["client_digest", "created_at"],
+      name: "index_scans_on_client_digest_and_created_at",
+      where: "(client_digest IS NOT NULL)"
+    )
+    t.index(["created_at"], name: "index_scans_in_flight", where: "(state = ANY (ARRAY[0, 1]))")
+    t.index(["created_at"], name: "index_scans_on_created_at")
+    t.index(["user_id", "day"], name: "index_scans_on_user_id_and_day")
   end
 
   create_table("sense_examples", force: :cascade) do |t|
@@ -753,6 +814,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
   add_foreign_key("reading_texts", "users")
   add_foreign_key("register_samples", "content_sources", on_delete: :cascade)
   add_foreign_key("reminder_deliveries", "users", on_delete: :cascade)
+  add_foreign_key("scans", "users", on_delete: :cascade)
   add_foreign_key("sense_examples", "content_sources")
   add_foreign_key("sense_examples", "lexeme_senses")
   add_foreign_key("sense_examples", "lexemes")

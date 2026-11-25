@@ -43,7 +43,7 @@ RSpec.describe Pronunciation::Calibration do
   end
 
   it "falls back to English for a language it does not speak" do
-    expect(described_class.prompts_for("ja-JP")).to(eq(described_class.prompts_for("en")))
+    expect(described_class.prompts_for("fr-FR")).to(eq(described_class.prompts_for("en")))
     expect(described_class.prompts_for("ru-RU")).to(eq(described_class.prompts_for("ru")))
   end
 end

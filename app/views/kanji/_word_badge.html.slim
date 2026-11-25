@@ -1,0 +1,12 @@
+- word = Huayu::KanjiBridge.word(local_assigns.fetch(:text))
+- if word
+  - if local_assigns.fetch(:note, false) && (word.note || (word.shift? && word.jp))
+    .flex.flex-wrap.items-baseline.gap-x-2.gap-y-1.text-sm class=local_assigns[:css]
+      = kanji_word_badge(word)
+      - if word.jp
+        span lang="ja" = word.jp
+      - if word.note
+        span.text-muted-foreground = word.note
+  - else
+    .flex class=local_assigns[:css]
+      = kanji_word_badge(word)

@@ -1,0 +1,80 @@
+- content_for(:title) { t("scan.admin.title") }
+- totals = @usage.totals
+- money = -> (value) { number_to_currency(value, unit: "$", precision: (value.to_f < 1 ? 4 : 2)) }
+- cell = "px-2 py-1.5 text-right tabular-nums"
+
+.py-6.space-y-6
+  header.space-y-2
+    = render "admin/nav"
+    h1.text-2xl.font-bold.tracking-tight = t("scan.admin.title")
+    p.max-w-3xl.text-sm.text-muted-foreground = t("scan.admin.lede", daily: Scan::DAILY, kept: Scan::KEPT_FOR.in_hours.to_i)
+
+  = render "admin/scans/key", health: scan_health
+
+  .flex.flex-wrap.items-center.gap-x-3.gap-y-1
+    span.text-xs.uppercase.tracking-wide.text-muted-foreground = t("admin.window")
+    - Admin::ScanUsage::WINDOWS.each do |days|
+      = link_to t("admin.days", count: days), admin_scans_path(days:), class: "text-sm #{@days == days ? "font-semibold" : "text-muted-foreground hover:text-foreground"}"
+
+  section.rounded-xl.border.border-border.p-4.space-y-3
+    h2.text-sm.font-semibold = t("scan.admin.ceilings")
+    dl.grid.gap-x-6.gap-y-2.text-sm class="sm:grid-cols-2 lg:grid-cols-3"
+      - pause = @usage.pause
+      - rows = [[t("scan.admin.state"), scan_state_label(scan_health, pause)],
+        [t("scan.admin.model"), Scans::Settings.model + (Scans::Pricing.known?(Scans::Settings.model) ? "" : " · #{t("scan.admin.unpriced")}")],
+        [t("scan.admin.today"), "#{@usage.today} / #{Scans::Settings.global_daily}"],
+        [t("scan.admin.in_flight"), "#{@usage.in_flight} / #{Scans::Settings.concurrency}"],
+        [t("scan.admin.per_client"), Scans::Settings.client_daily],
+        [t("scan.admin.at_quota"), @usage.at_quota]]
+      - rows.each do |label, value|
+        .min-w-0
+          dt.text-xs.uppercase.tracking-wide.text-muted-foreground = label
+          dd.font-medium = value
+
+  section.rounded-xl.border.border-border.p-4.space-y-2
+    h2.text-sm.font-semibold = t("scan.admin.by_day")
+    - if @usage.days.empty?
+      p.text-sm.text-muted-foreground = t("admin.activity_empty")
+    - else
+      .overflow-x-auto
+        table.w-full.text-sm
+          thead
+            tr.text-xs.uppercase.tracking-wide.text-muted-foreground
+              th.px-2.py-1.5.text-left = t("scan.admin.columns.day")
+              - %w[scans failed refunded input output cost].each do |key|
+                th class=cell = t("scan.admin.columns.#{key}")
+          tbody.divide-y.divide-border
+            - (@usage.days + [totals]).each do |row|
+              tr class=(row.day ? nil : "font-semibold")
+                td.px-2.py-1.5 = row.day ? l(row.day, format: :short) : t("scan.admin.total")
+                td class=cell = row.scans
+                td class=cell = row.failed
+                td class=cell = row.refunded
+                td class=cell = number_with_delimiter(row.input_tokens)
+                td class=cell = number_with_delimiter(row.output_tokens)
+                td class=cell = money.call(row.cost)
+      p.text-xs.text-muted-foreground
+        = t("scan.admin.footnote", learners: @usage.learners, latency: @usage.average_latency || "—")
+
+  .grid.gap-4.md:grid-cols-2
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("scan.admin.failures")
+      - failures = @usage.failures
+      - if failures.empty?
+        p.text-sm.text-muted-foreground = t("admin.activity_empty")
+      ul.space-y-1
+        - failures.each do |code, count|
+          li.flex.justify-between.gap-2.text-sm
+            span = code
+            span.tabular-nums.text-muted-foreground = count
+
+    section.rounded-xl.border.border-border.p-4.space-y-2
+      h2.text-sm.font-semibold = t("scan.admin.pauses")
+      - pauses = @usage.pauses.to_a
+      - if pauses.empty?
+        p.text-sm.text-muted-foreground = t("admin.activity_empty")
+      ul.space-y-1
+        - pauses.each do |row|
+          li.flex.justify-between.gap-2.text-sm
+            span = row.reason
+            span.tabular-nums.text-muted-foreground = "#{l(row.created_at, format: :short)} → #{l(row.resumes_at, format: :short)}"

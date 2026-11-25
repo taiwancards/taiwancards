@@ -25,4 +25,23 @@ RSpec.describe "Offline packs", :no_auth do
 
     expect(response.headers["cache-control"]).not_to(include("31536000"))
   end
+
+  it "keeps a self-contained fallback page in every language without a session" do
+    Locales::ALL.each do |code|
+      raw_get("/#{code}/offline/fallback")
+
+      expect(response).to(have_http_status(:ok))
+      expect(response.headers["Set-Cookie"]).to(be_blank)
+      expect(response.headers["cache-control"]).to(include("public", "s-maxage"))
+      expect(response.body).to(include("<html lang=\"#{code}\"", "href=\"/#{code}/offline/browse\""))
+      expect(response.body).not_to(include("<script", "stylesheet"))
+    end
+  end
+
+  it "has the worker store the fallback for every language it knows" do
+    raw_get("/sw.js")
+
+    expect(response.body).to(include("/offline/fallback", "tc-fallback"))
+    Locales::ALL.each { expect(response.body).to(include("\"#{it}\"")) }
+  end
 end

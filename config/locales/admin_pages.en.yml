@@ -1,0 +1,6 @@
+en:
+  admin_pages:
+    own_text: Own text (hidden)
+    own_deck: Own deck (hidden)
+    own_group: Own deck group (hidden)
+    hidden_note: Private to the learner, so only the kind of page is shown

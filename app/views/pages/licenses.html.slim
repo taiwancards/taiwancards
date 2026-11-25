@@ -5,7 +5,7 @@
     ["Make Me a Hanzi", "https://github.com/skishore/makemeahanzi", "LGPL / Arphic PL", "https://github.com/skishore/makemeahanzi/blob/master/LICENSE", :makemeahanzi], \
     ["Hanzi Writer", "https://hanziwriter.org/", "MIT", "https://github.com/chanind/hanzi-writer/blob/master/LICENSE", :hanzi_writer], \
     ["HanziLookupJS", "https://github.com/gugray/HanziLookupJS", "MIT", "https://github.com/gugray/HanziLookupJS/blob/master/LICENSE", :hanzilookup], \
-    ["Unicode Unihan", "https://www.unicode.org/charts/unihan.html", "Unicode License", "https://www.unicode.org/license.txt", :unihan], \
+    ["Unicode Unihan", "https://www.unicode.org/charts/unihan.html", "Unicode License V3", "https://www.unicode.org/license.txt", :unihan], \
     ["#{Huayu::MoeAudio::ATTRIBUTION}", Huayu::MoeAudio::SOURCE_URL, "CC BY-ND 3.0 TW", "https://creativecommons.org/licenses/by-nd/3.0/tw/legalcode", :moe_audio], \
     ["OpenCC", "https://github.com/BYVoid/OpenCC", "Apache-2.0", "https://github.com/BYVoid/OpenCC/blob/master/LICENSE", :opencc] \
   ]
@@ -101,5 +101,7 @@
         .rounded-xl.border.border-border.p-4
           = link_to name, url, link_opts
           p.mt-1.text-sm.text-muted-foreground = t("licenses.items.#{key}")
+          - if key == :tocfl
+            p.mt-2.text-sm = t("exams.credit")
 
   p.text-sm.text-muted-foreground = t("licenses.outro")

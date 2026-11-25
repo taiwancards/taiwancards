@@ -1,0 +1,33 @@
+- entry = Huayu::KanjiBridge.character(local_assigns.fetch(:text))
+- if entry
+  section.space-y-2 lang="ja"
+    h2.text-sm.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("kanji_bridge.character.heading")
+    = render("kanji/word_badge", text: entry.text, note: true)
+    .flex.flex-wrap.items-center.gap-x-6.gap-y-3.rounded-xl.border.border-border.bg-card.px-4.py-3.text-sm
+      - if entry.unused?
+        .space-y-1
+          p.flex.items-center.gap-2.font-semibold
+            span.rounded-full.bg-primary/10.px-2.5.py-1.text-xs.font-medium.text-primary = t("kanji_bridge.character.unused")
+          p.text-muted-foreground = t("kanji_bridge.character.unused_hint")
+      - else
+        .flex.items-end.gap-4
+          .text-center
+            .text-xs.text-muted-foreground = t(entry.same? ? "kanji_bridge.character.both" : "kanji_bridge.character.taiwan")
+            = taiwan_glyph(entry.text, css: "text-3xl")
+          - if entry.differs?
+            .pb-1.text-xl.text-muted-foreground ／
+            .text-center
+              .text-xs.text-muted-foreground = t("kanji_bridge.character.japan")
+              = japan_glyph(entry.jp, css: "text-3xl")
+        .min-w-0.space-y-1
+          p = t(entry.same? ? "kanji_bridge.character.same" : (entry.small? ? "kanji_bridge.character.small" : "kanji_bridge.character.differs"))
+          - if entry.on.present?
+            p
+              span.text-muted-foreground = t("kanji_bridge.character.on")
+              span.ml-2.font-medium lang="ja" = entry.on
+          - pattern = Huayu::KanjiBridge.pattern(entry.pattern) if entry.pattern
+          - if pattern
+            p = link_to kanji_path(anchor: "pattern-#{pattern.id}"), class: "text-primary underline-offset-2 hover:underline" do
+              = t("kanji_bridge.character.pattern_html", pattern: kanji_pattern_label(pattern))
+          - elsif entry.differs?
+            p = link_to t("kanji_bridge.character.guide"), kanji_path, class: "text-primary underline-offset-2 hover:underline"

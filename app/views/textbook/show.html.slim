@@ -6,6 +6,7 @@
       = link_to textbook_path, class: "text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground" do
         = t("textbook.back_to_curriculum")
       .flex.items-center.gap-1
+        = render("shared/audio_speed")
         - if @neighbors[:previous]
           = link_to t("textbook.previous"), textbook_lesson_path(*@neighbors[:previous]),
             class: "rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"

@@ -11,7 +11,6 @@ module PubliclyCacheable
   PERSONAL = [
     ZhuyinHelper::HANZI_FONT_COOKIE,
     ZhuyinHelper::READINGS_COOKIE,
-    ZhuyinHelper::CHINA_COOKIE,
     DetailLevelHelper::DETAIL_COOKIE
   ].freeze
 

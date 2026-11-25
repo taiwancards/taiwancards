@@ -27,7 +27,7 @@ module Site
     end
 
     def files(base)
-      base.glob("**/*").select(&:file?).map { |path| path.relative_path_from(base).to_s }.to_set
+      Site.files(base).map { |path| path.relative_path_from(base).to_s }.to_set
     end
 
     def identical?(left, right)

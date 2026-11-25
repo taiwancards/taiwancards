@@ -32,6 +32,7 @@ RSpec.describe Huayu::VoicedSentences do
       vi: nil,
       de: nil,
       ind: nil,
+      ja: nil,
       emoji: nil,
       emoji_word: nil,
       emoji_category: nil

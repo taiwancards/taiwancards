@@ -35,7 +35,7 @@ RSpec.describe "Public caching" do
   end
 
   def addresses(patterns, fixtures)
-    patterns.filter_map { |pattern| pattern.match?(/[:*(]/) ? fixtures[pattern] : pattern }
+    patterns.filter_map { |pattern| fixtures.fetch(pattern) { pattern unless pattern.match?(/[:*(]/) } }
   end
 
   def fixture_addresses
@@ -48,7 +48,8 @@ RSpec.describe "Public caching" do
       "/tocfl/:id" => "/tocfl/#{collection.id}",
       "/dict/:text" => "/dict/#{CGI.escape("學校")}",
       "/characters/:text" => "/characters/#{CGI.escape("學")}",
-      "/sentences/:id" => "/sentences/#{sentence.to_param}"
+      "/sentences/:id" => "/sentences/#{sentence.to_param}",
+      "/kanji" => "/ja/kanji"
     }
   end
 

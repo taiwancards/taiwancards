@@ -4,7 +4,7 @@ module Huayu
   class RuEnricher
     PATH = AppData.path("huayu/ru_glosses.json")
 
-    OWNED_ELSEWHERE = %i[sentence].freeze
+    OWNED_ELSEWHERE = %i[sentence particle grammar].freeze
 
     def initialize(path: PATH, curated: CuratedGlosses.new)
       @path = Pathname(path)

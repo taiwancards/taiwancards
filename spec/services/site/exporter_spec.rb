@@ -11,6 +11,9 @@ RSpec.describe Site::Exporter do
 
   let(:site_url) { "https://taiwancards.example" }
 
+  let(:android_package) { nil }
+  let(:android_fingerprints) { nil }
+
   before do
     allow(ENV).to(receive(:[]).and_call_original)
     allow(ENV).to(receive(:fetch).and_call_original)
@@ -19,6 +22,8 @@ RSpec.describe Site::Exporter do
     allow(ENV).to(receive(:[]).with("APP_URL").and_return(app_url))
     allow(ENV).to(receive(:fetch).with("SITE_URL").and_return(site_url))
     allow(ENV).to(receive(:fetch).with("APP_URL").and_return(app_url))
+    allow(ENV).to(receive(:[]).with("ANDROID_PACKAGE_NAME").and_return(android_package))
+    allow(ENV).to(receive(:[]).with("ANDROID_CERT_FINGERPRINTS").and_return(android_fingerprints))
     SharedAssets.forget_stamps!
     described_class.new(root: root, io: io).call
   end
@@ -62,6 +67,10 @@ RSpec.describe Site::Exporter do
         "id/licenses/index.html",
         "id/privacy/index.html",
         "id/terms/index.html",
+        "ja/index.html",
+        "ja/licenses/index.html",
+        "ja/privacy/index.html",
+        "ja/terms/index.html",
         "licenses/index.html",
         "privacy/index.html",
         "terms/index.html"
@@ -146,6 +155,16 @@ RSpec.describe Site::Exporter do
     expect(page("en", "licenses", "index.html")).not_to(include("data-search-target=input"))
   end
 
+  it "opens the four doors into the app, the lookup box included" do
+    html = page("ru", "index.html")
+
+    expect(html).to(
+      include("href=\"#{app_url}/ru/exams\"", "href=\"#{app_url}/ru/doors/words\"", "href=\"#{app_url}/ru/doors/text\"")
+    )
+    expect(html).to(include("action=\"#{app_url}/ru/lookup\""))
+    expect(html).not_to(match(/action="\//))
+  end
+
   it "leaves no form that needs a server to answer it" do
     root.glob("**/*.html").each { |page| expect(page.read).not_to(include("method=\"post\"")) }
   end
@@ -202,5 +221,33 @@ RSpec.describe Site::Exporter do
     expect(page("en", "index.html")).to(
       include(ActiveSupport::NumberHelper.number_to_delimited(Lexeme.unrestricted.where(kind: :character).count))
     )
+  end
+
+  it "publishes no asset links while the Android app is not configured" do
+    expect(root.join(described_class::ASSET_LINKS)).not_to(exist)
+  end
+
+  context("when the Android app is configured") do
+    let(:android_package) { "app.taiwancards" }
+    let(:android_fingerprints) { "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF" }
+
+    it "trusts the app from the static site with the very statement the app serves" do
+      links = root.join(".well-known", "assetlinks.json")
+
+      expect(links.read).to(eq(AndroidApp.asset_links.to_json))
+      expect(JSON.parse(links.read).first).to(
+        include(
+          "relation" => ["delegate_permission/common.handle_all_urls"],
+          "target" => include("namespace" => "android_app", "package_name" => "app.taiwancards")
+        )
+      )
+    end
+
+    it "lists the asset links among the files it published, so a stale copy counts as drift" do
+      expect(Site.files(root).map { |file| file.relative_path_from(root).to_s }).to(
+        include(".well-known/assetlinks.json")
+      )
+      expect(io.string).to(include(".well-known/assetlinks.json"))
+    end
   end
 end

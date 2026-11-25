@@ -44,7 +44,8 @@ class DictController < ApplicationController
     entry = find_entry(@text)
 
     if entry.nil?
-      neighbor = Lexeme.visible_to(current_user).find_by(kind: %i[character radical], text: @text)
+      spellings = Huayu::ErhuaSpellings.spellings(@text)
+      neighbor = Lexeme.visible_to(current_user).find_by(kind: %i[character radical], text: spellings)
       neighbor ||= Lexeme.visible_to(current_user).find_by(id: @text) if @text.match?(/\A\d+\z/)
       return redirect_to(lexeme_page_path(neighbor)) if neighbor
 
@@ -87,7 +88,9 @@ class DictController < ApplicationController
   end
 
   def find_entry(text)
-    Lexeme.visible_to(current_user).where(kind: KINDS).index_by_spelling([text], preference: KINDS)[text.to_s]
+    spellings = Huayu::ErhuaSpellings.spellings(text)
+    found = Lexeme.visible_to(current_user).where(kind: KINDS).index_by_spelling(spellings, preference: KINDS)
+    found.values_at(*spellings).compact.first
   end
 
   def level_lexeme_ids(level)

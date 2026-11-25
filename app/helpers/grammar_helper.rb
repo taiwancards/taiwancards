@@ -2,20 +2,32 @@
 
 module GrammarHelper
   HAN_RUN = /(\p{Han}+)/
-  QUOTES = {"ru" => ["«", "»"], "en" => ["“", "”"], "de" => ["„", "“"], "id" => ["“", "”"]}.freeze
-  ZH_RUN = /[\p{Han}][\p{Han}\p{Latin}0-9，、：；？！。…（）]*/
+  QUOTES = {
+    "ru" => ["«", "»"],
+    "en" => ["“", "”"],
+    "de" => ["„", "“"],
+    "id" => ["“", "”"],
+    "ja" => ["「", "」"]
+  }.freeze
+  ZH_RUN = /〘?[\p{Han}][\p{Han}\p{Latin}0-9，、：；？！。…（）]*〙?/
   GLOSS = /«[^»]+»|“[^”]+”|„[^“]+“|"[^"]+"/
+  KAGI_GLOSS = /「[^」]+」|#{GLOSS}/
   SEPARATOR = /\s*(?:[—–-]\s*)?/
   INLINE_MAX = 3
   CONTINUATION = /\A[[:lower:]]/
   SENTENCE_END = /(?<=[.!?？！。])\s+/
-  STANDALONE_RUN = /\p{Han}(?:[\p{Han}，、：；]*\p{Han})?[？！。…]*/
+  STANDALONE_RUN = /〘?\p{Han}(?:[\p{Han}，、：；]*\p{Han})?[？！。…]*〙?/
   HAN = /\p{Han}/
   EXAMPLE_MIN = INLINE_MAX + 1
   EXAMPLE_LINE = /
     (?:(?<zh>#{ZH_RUN})#{SEPARATOR}(?<gloss>#{GLOSS}))
     |
     (?:(?<gloss>#{GLOSS})\s*[—–]\s*(?<zh>#{ZH_RUN}))
+  /x
+  KAGI_EXAMPLE_LINE = /
+    (?:(?<zh>#{ZH_RUN})#{SEPARATOR}(?<gloss>#{KAGI_GLOSS}))
+    |
+    (?:(?<gloss>#{KAGI_GLOSS})\s*[—–]\s*(?<zh>#{ZH_RUN}))
   /x
 
   PRACTICE = {"numbers" => :practice_numbers_path}.freeze
@@ -118,7 +130,7 @@ module GrammarHelper
 
   def grammar_quote(text, locale = I18n.locale)
     open, close = QUOTES.fetch(locale.to_s, QUOTES["en"])
-    body = text.to_s.strip.sub(/\A[«"“„]/, "").sub(/[»"”“]\z/, "")
+    body = text.to_s.strip.sub(/\A[«"“„「]/, "").sub(/[»"”“」]\z/, "")
     tag.em("#{open}#{body}#{close}", class: "grammar-gloss")
   end
 
@@ -172,9 +184,10 @@ module GrammarHelper
     blocks = []
     cursor = 0
 
-    text.to_enum(:scan, EXAMPLE_LINE).each do
+    text.to_enum(:scan, Locales.writes_han? ? KAGI_EXAMPLE_LINE : EXAMPLE_LINE).each do
       match = Regexp.last_match
       next if match[:zh].scan(HAN).size < EXAMPLE_MIN
+      next unless HanScript.mandarin_piece?(match[:zh], context: text)
 
       prose = text[cursor...match.begin(0)]
       blocks.concat(grammar_prose_blocks(prose, blocks.empty?)) if prose.present?
@@ -194,6 +207,7 @@ module GrammarHelper
     prose.to_enum(:scan, STANDALONE_RUN).each do
       match = Regexp.last_match
       next if match[0].scan(HAN).size < EXAMPLE_MIN
+      next unless HanScript.mandarin_piece?(match[0], context: prose)
 
       before = prose[cursor...match.begin(0)]
       blocks << [:prose, grammar_tidy(before, first && blocks.empty?)] if before.present?
@@ -212,6 +226,7 @@ module GrammarHelper
   end
 
   def grammar_example_line(chinese, gloss, note, lesson, seen, entries)
+    chinese = HanScript.plain(chinese)
     seen << chinese
     reading = (lesson.reading(chinese) || lesson.reading(chinese.gsub(/\P{Han}/, ""))).to_h
 
@@ -228,13 +243,13 @@ module GrammarHelper
   end
 
   def grammar_run(text, lesson, seen, entries)
-    safe_join(
-      text.split(HAN_RUN).map do |chunk|
-        next chunk unless chunk.match?(/\p{Han}/)
+    pieces = HanScript.parse(text).pieces.flat_map do |piece, mandarin|
+      next [piece] unless mandarin
 
-        grammar_term(chunk, lesson, seen, entries)
-      end
-    )
+      piece.split(HAN_RUN).map { |chunk| chunk.match?(HAN) ? grammar_term(chunk, lesson, seen, entries) : chunk }
+    end
+
+    safe_join(pieces)
   end
 
   def grammar_term(run, lesson, seen, entries)

@@ -1,0 +1,19 @@
+- content_for(:title, t("doors.words.title"))
+
+.py-6.space-y-6
+  header.space-y-2
+    p.text-xs.font-medium.uppercase.tracking-widest.text-brand = t("doors.words.door")
+    h1.text-2xl.font-bold.tracking-tight class="sm:text-3xl" = t("doors.words.title")
+    p.max-w-2xl.text-sm.leading-relaxed.text-muted-foreground = t("doors.words.lede")
+
+  .grid.items-start.gap-6 class="lg:grid-cols-2"
+    = render("doors/paste_form", door: "words")
+
+    aside.min-w-0.space-y-3.rounded-2xl.border.border-border.p-4 class="bg-muted/30" aria-labelledby="door-example"
+      h2#door-example.text-sm.font-semibold = t("doors.example_title")
+      p.text-xs.leading-relaxed.text-muted-foreground = t("doors.words.example_lede")
+      p.rounded-lg.border.border-border.bg-background.px-3.py-2.text-base lang="zh-TW" = DoorsHelper::WORDS_EXAMPLE
+      p.text-xs.font-medium.uppercase.tracking-wide.text-muted-foreground = t("doors.words.example_result", count: @examples.size)
+      .grid.gap-1.5 class="sm:grid-cols-2"
+        - @examples.each do |lexeme|
+          = render("shared/word_tile", lexeme:, tier: nil)

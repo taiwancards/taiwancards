@@ -26,9 +26,9 @@ RSpec.describe "Interface locale" do
   end
 
   it "falls back to English when the browser asks for a language we do not have", :no_auth do
-    sign_in_with_google(email: "jp@example.com", uid: "jp-uid", accept_language: "ja-JP,ja;q=0.9")
+    sign_in_with_google(email: "kr@example.com", uid: "kr-uid", accept_language: "ko-KR,ko;q=0.9")
 
-    expect(User.find_by(email: "jp@example.com").locale).to(eq("en"))
+    expect(User.find_by(email: "kr@example.com").locale).to(eq("en"))
     expect(I18n.default_locale).to(eq(:en))
   end
 
@@ -82,7 +82,7 @@ RSpec.describe "Interface locale" do
   end
 
   it "keeps the language on every page that asks for an account", :no_auth do
-    %w[/desk /study /desks /triage /practice /pronunciation /writing /reader /progress /profile].each do |path|
+    %w[/study /desks /triage /practice /pronunciation /writing /reader /progress /profile].each do |path|
       raw_get("/ru#{path}")
 
       expect(response.location).to(start_with("http://www.example.com/ru/"), "#{path} left the Russian pages")

@@ -1,0 +1,6 @@
+ja:
+  admin_pages:
+    own_text: 自分のテキスト（非表示）
+    own_deck: 自分のデッキ（非表示）
+    own_group: 自分のデッキグループ（非表示）
+    hidden_note: 学習者の個人的な内容のため、ページの種類だけを表示しています

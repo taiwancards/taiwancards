@@ -2,15 +2,16 @@ const FRAGMENTS = "tc-fragments";
 const SHELLS = "tc-shells";
 const ASSETS = "tc-assets";
 const META = "tc-meta";
+const FALLBACK = "tc-fallback";
 
-const KEPT = [FRAGMENTS, SHELLS, ASSETS, META];
+const KEPT = [FRAGMENTS, SHELLS, ASSETS, META, FALLBACK];
 
 const TITLE_SLOT = "§TITLE§";
 const MAIN_SLOT = "§MAIN§";
 const CSS_SLOT = "§CSS§";
 const JS_SLOT = "§JS§";
 
-const LOCALES = ["en", "ru", "vi", "de", "id"];
+const LOCALES = ["en", "ru", "vi", "de", "id", "ja"];
 const LANG = LOCALES.join("|");
 const SHELL_KEYS = ["page", "narrow", "medium", "wide"];
 
@@ -39,14 +40,16 @@ const ASSET_PATHS = [
   /^\/icon/,
   /^\/favicon/,
   /^\/apple-touch-icon/,
-  /^\/manifest$/,
 ];
 
 const NEVER = [/^\/auth\//, new RegExp(`^/(${LANG})/login$`), /^\/up$/];
 
 const PACKS = /\/packs\//;
 
-self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+  event.waitUntil(keepFallbacks());
+});
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
@@ -114,11 +117,57 @@ async function page(request, url) {
   try {
     return await fetch(request);
   } catch (error) {
-    const stored = await stale(url);
+    const stored = (await stale(url)) || (await fallback(url));
     if (stored) return stored;
 
     throw error;
   }
+}
+
+function fallbackPath(locale) {
+  return `/${locale}/offline/fallback`;
+}
+
+async function keepFallbacks() {
+  const cache = await caches.open(FALLBACK);
+
+  await Promise.all(
+    LOCALES.map(async (locale) => {
+      try {
+        const response = await fetch(fallbackPath(locale), {
+          credentials: "omit",
+          cache: "no-cache",
+        });
+        if (response.ok) await cache.put(fallbackPath(locale), response);
+      } catch (error) {
+        return;
+      }
+    }),
+  );
+}
+
+function spokenLocales() {
+  return (self.navigator.languages || [])
+    .map((tag) => tag.toLowerCase().split("-")[0])
+    .map((code) => (code === "in" ? "id" : code))
+    .filter((code) => LOCALES.includes(code));
+}
+
+async function fallback(url) {
+  const cache = await caches.open(FALLBACK);
+  const order = [
+    localeOf(url.pathname),
+    await storedLocale(),
+    ...spokenLocales(),
+    ...LOCALES,
+  ].filter(Boolean);
+
+  for (const locale of new Set(order)) {
+    const hit = await cache.match(fallbackPath(locale));
+    if (hit) return hit;
+  }
+
+  return null;
 }
 
 function localeOf(pathname) {

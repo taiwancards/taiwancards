@@ -6,8 +6,11 @@ module Huayu
 
     DATA = JsonData.new("huayu/grammar_lessons.json", default: [], watch: true)
 
-    Example = Data.define(:zh, :en, :ru, :vi, :de, :ind, :zhuyin, :pinyin, :sentence, :segments) do
-      def translation(locale) = (Locales.known?(locale) && public_send(Locales.key(locale))).presence || en
+    Example = Data.define(:zh, :en, :ru, :vi, :de, :ind, :ja, :zhuyin, :pinyin, :sentence, :segments) do
+      def translation(locale) = Locales.sentence(
+        Locales::STORED.to_h { |key| [key, public_send(key)] },
+        Locales.known?(locale) ? locale : Locales::DEFAULT
+      )
 
       def annotated? = zhuyin.present?
 
@@ -26,6 +29,7 @@ module Huayu
       :vi,
       :de,
       :ind,
+      :ja,
       :examples,
       :excluded,
       :supplementary,
@@ -61,7 +65,7 @@ module Huayu
 
       def text_for(locale, key)
         source = Locales.known?(locale) ? public_send(Locales.key(locale)) : en
-        source[key].presence || en[key]
+        source[key].presence || Locales.fallback(en[key], locale)
       end
     end
 
@@ -137,6 +141,7 @@ module Huayu
               vi: row["vi"] || {},
               de: row["de"] || {},
               ind: row["ind"] || {},
+              ja: row["ja"] || {},
               examples: Array(row["examples"]).map do |example|
                 Example.new(
                   zh: example["zh"],
@@ -145,6 +150,7 @@ module Huayu
                   vi: example["vi"],
                   de: example["de"],
                   ind: example["ind"],
+                  ja: example["ja"],
                   zhuyin: example["zhuyin"],
                   pinyin: example["pinyin"],
                   sentence: example["sentence"],

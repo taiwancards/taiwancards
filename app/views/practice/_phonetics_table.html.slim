@@ -38,6 +38,8 @@
               .mt-1.text-muted-foreground = phon_markup(phon_analogy(row))
               - if (note = phon_note(row)).present?
                 .mt-1.text-xs.text-amber-600 = phon_markup(note)
+              = regional_note(section, row["pinyin"])
+              = standard_contrast(section, row["pinyin"])
             td.px-3.py-2 class="min-w-[7rem]"
               - example = row["example"]
               - if example.present?

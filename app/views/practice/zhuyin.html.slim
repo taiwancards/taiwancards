@@ -11,6 +11,9 @@
         span.mr-1.opacity-60 = index + 1
         = t("practice.parts.#{part}")
 
+  - if %w[initials finals tricky].include?(@part)
+    = standard_legend
+
   = render("practice/palladius_note")
 
   = render "practice/part_#{@part}"

@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class DesksController < ApplicationController
+  allow_unauthenticated_access only: :show
+  publicly_cacheable only: :show
+
   def show
+    return render("doors/home") unless authenticated?
+
+    @entry = Onboarding::Entry.new(user: current_user)
     @home = Learn::Home.new(current_user)
     @next_step = Learn::NextStep.new(current_user).call
     @start_path = recommended_path

@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   include Voiced
   include ReadOnlyImpersonation
   include PubliclyCacheable
+  include MandarinLang
 
   allow_browser versions: :modern, unless: :any_browser?
 

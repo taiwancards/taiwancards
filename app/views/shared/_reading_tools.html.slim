@@ -8,6 +8,7 @@
     span.rounded-lg.bg-muted.px-3.py-1.5.text-xs.font-medium.tabular-nums
       = t("reading.my_words_html", saved: tag.span(saved, data: {reading_target: "saved"}), total:)
   .ml-auto.flex.flex-wrap.items-center.justify-end.gap-2
+    = render("shared/audio_speed")
     button.inline-flex.min-h-11.items-center.gap-1.rounded-lg.border.border-border.px-3.text-xs.font-medium.text-muted-foreground.transition-colors[
       type="button" data-action="reading#cycleSize" title=t("reading.size") aria-label=t("reading.size") class="md:min-h-8 hover:bg-muted" ]
       span Aa

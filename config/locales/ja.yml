@@ -1,0 +1,4371 @@
+---
+ja:
+  audio:
+    play: 再生
+    source_whole: 教育部 — 単語まるごとの録音
+  privacy_google:
+    heading: Googleでのログインとデータの扱い
+    body: アカウントはGoogleでログインすると作成されます。別途の会員登録やパスワードはありません。
+    signin: Googleでログインすると、TaiwanCardsはメールアドレスとプロフィールの名前を受け取ります。これらはアカウントの作成と、学習状況をアカウントにひも付けるために使います。
+    drive: "「Googleドライブにバックアップ」ボタンを別途押した場合に限り、アプリはドライブに学習状況のバックアップファイルを1つ作成し、そのファイルだけを読み込み・上書きできます。"
+    limits: アクセス範囲はdrive.fileスコープに限られ、アプリが自分で作成したファイルにしか触れられません。TaiwanCardsがドライブ内のほかのファイルを見たり開いたりすることはできません。バックアップは自動では作られず、ボタンを押したときだけ作成されます。
+    privacy: プライバシーポリシー
+    terms: 利用規約
+    policy_before: Google APIから受け取った情報の利用は、
+    policy_name: Google APIサービスのユーザーデータに関するポリシー
+    policy_after: "（限定使用の要件を含む）に従います。Googleアカウントのデータを広告に使うこと、販売すること、ここに記載した範囲を超えて共有することは一切ありません。"
+  privacy:
+    title: プライバシーポリシー
+    effective: 施行日：2026年11月24日
+    purpose:
+      heading: このアプリについて
+      body: TaiwanCardsは、台湾華語を学ぶための無料・広告なしのウェブアプリです。間隔反復のフラッシュカード、辞書検索、発音練習、単語リストを提供しています。運営は企業ではなく、個人の開発者1名です。
+    stored:
+      heading: 保存する情報
+      items:
+        - メールアドレス、表示名、表示言語。
+        - パスワードは保存しません。アカウントはGoogleを通じて作成され、アプリがパスワードを尋ねることはありません。
+        - 学習データ：デッキ、カード、復習履歴、学習状況、練習の設定。
+        - 発音練習の録音と、そこから得た測定値。
+        - リクエストのサーバーログ。安定運用と不正利用の防止のために保管します。
+        - 1日ごとのページ閲覧数の集計：ページ、参照元サイト、端末の種類、国、表示言語。アプリ自身が集計しており、Cookie、IPアドレスは使わず、アカウントとのひも付けもありません。
+    never:
+      heading: 行わないこと
+      items:
+        - 個人データを販売したり、貸し出したりしません。
+        - 広告を表示せず、広告用のトラッカーも使いません。
+        - 第三者のアクセス解析ツールは使いません。
+        - 本人の学習状況を表示する以外の目的で、プロファイリングは行いません。
+    cookies:
+      heading: Cookie
+      body: Cookieは2つだけで、どちらも動作に不可欠なものです。ログイン状態を保つ署名付きのセッションCookieと、表示言語を覚えておくCookieです。広告やトラッキング用のCookieはありません。
+    emails:
+      heading: メール
+      items:
+        - アプリの新機能などを短くまとめたお知らせを、アカウントのメールアドレスに多くても月1〜2回お送りします。広告や第三者からの内容は含みません。
+        - 復習のリマインダー：カードが待っているときだけ、いつも学習している時間帯に、多くても1日1通お送りします。初期設定ではオンで、ワンクリックまたはプロフィールから、お知らせメールとは別にオフにできます。
+        - すべてのメールにワンクリックの配信停止リンクがあり、プロフィールからもオフにできます。配信を停止しても、アカウントのほかの部分には何の影響もありません。
+        - 各メールの送信日時、メール内のリンクから初めてアプリに戻った日時とその回数、配信停止の日時を記録します。メールが届かなかった場合は、メールサーバーのエラーメッセージを保管します。開封は追跡しません。メールにトラッキングピクセルは含まれず、画像はメール本体に添付されています。
+        - メールはメール配信サービスのResendに渡されます。Resendが受け取るのはメールアドレスとメッセージだけで、配信のためにのみ使われます。
+    donation:
+      heading: 寄付ボタン
+      body: "「サイトを応援する」ページには、外部サービスBuy Me a Coffeeへの通常のリンクがあります。リンクを開くまで外部からは何も読み込まれず、アカウントのデータも送信されません。寄付は任意です。"
+    where:
+      heading: データの保管場所
+      body: アプリとデータベースは、シンガポールにあるRenderのサーバーで動いています。通信はCloudflareを経由し、音声ファイルはCloudflare R2から配信されます。お知らせメールは米国企業Resendの日本にあるサーバーから送信されます。これらの事業者がデータを扱うのは、サービスの運用とメール配信のためだけです。Googleドライブへのバックアップを使う場合、そのコピーはご自身のGoogleアカウント内に保存されます。
+    retention:
+      heading: 保管期間と削除
+      body: データはアカウントがある間保管されます。アカウントとその中のすべてのデータは、プロフィール → バックアップ → アカウントを削除 からいつでもご自身で削除できます。下記のアドレスにご連絡いただければ、こちらで削除することもできます。サーバーログは一定期間で自動的に消えます。アカウントを削除すると、上記のメールの記録は統計のために残りますが、個人につながる情報はすべて取り除かれます。メールアドレスとアカウントとの結びつきは削除され、届かなかったメールはメールサーバーのメッセージを消してエラーの種類だけを残し、リマインダーの予定は曜日と時刻だけを残してタイムゾーンを消します。残るのは、日時、どのメールで何枚のカードを提案したか、そのメールがどうなったか（送信、不達、リンクのクリック、配信停止など）、クリックされたリンクがどのページを開いたかです。ここでアカウントを削除しても、ご自身のGoogleドライブに作成したバックアップファイルは削除されません。そのファイルはご自身で削除してください。
+    choices:
+      heading: ご自身でできること
+      items:
+        - 辞書、文法、各種資料、台湾に関するページは、アカウントなしでも読めます。
+        - Googleアカウントの権限ページから、アプリのGoogleへのアクセスをいつでも取り消せます。
+        - データのコピー、訂正、完全な削除を依頼できます。
+    children:
+      heading: お子さまについて
+      body: このアプリは13歳未満のお子さまを対象としておらず、13歳未満と知りながらアカウントを作成することはありません。
+    changes:
+      heading: 変更について
+      body: このポリシーを変更した場合は、上記の施行日も更新します。
+    contact:
+      heading: お問い合わせ
+      body: ご質問、データに関するご依頼、削除のご依頼はこちらへ：
+    related:
+      heading: 関連リンク
+  terms:
+    title: 利用規約
+    effective: 施行日：2025年3月1日
+    service:
+      heading: サービスについて
+      body: TaiwanCardsは台湾華語を学ぶためのウェブアプリで、個人の開発者1名が運営しています。無料で利用でき、広告はなく、現状のまま提供されます。機能は変更または削除されることがあります。
+    account:
+      heading: アカウント
+      items:
+        - アカウント情報は正確に登録し、ログイン情報は他人に教えないでください。
+        - 1つのアカウントは1人で使ってください。ご自身のアカウントで行われたことには、ご自身が責任を負います。
+        - 下記のアドレスにご連絡いただければ、いつでもアカウントを削除できます。
+    use:
+      heading: 禁止事項
+      items:
+        - 権限のないデータ、システム、他人のアカウントにアクセスしようとしないでください。
+        - サイトを大量にスクレイピングしたり、通常の学習の範囲を超える自動アクセスで負荷をかけたりしないでください。
+        - 違法なコンテンツや悪意のあるコンテンツをアップロードしないでください。
+        - ライセンスページに記載している辞書、コーパス、フォントのライセンスを守ってください。
+    yours:
+      heading: ご自身が作成したもの
+      body: 作成したデッキ、メモ、学習状況はご自身のものです。こちらに許諾いただくのは、それらを保存して本人に表示するために必要な範囲だけです。学習状況はいつでもエクスポートでき、ご自身のGoogleドライブにも保存できます。
+    ours:
+      heading: 当サイトが使用するもの
+      body: アプリのコードとオリジナルの文章の権利は作者にあります。辞書、コーパス、音声、フォントは第三者のもので、それぞれのライセンスに基づいて使用しており、ライセンスページに一つずつ記載しています。この規約は、これらのライセンスを超えて第三者の素材に関する権利を付与するものではありません。
+    availability:
+      heading: 提供について
+      body: 本サービスは「現状のまま」かつ「提供可能な範囲で」提供されます。中断なく動作することも、言語データに誤りがないことも保証しません。本サービスは学習の補助ツールであり、言語に関する権威ある典拠ではありません。
+    suspension:
+      heading: 利用停止
+      body: この規約に違反したアカウントや、サービスを危険にさらすアカウントは、停止または削除することがあります。
+    liability:
+      heading: 免責
+      body: 法律で認められる最大の範囲で、開発者は本サービスの利用によって生じた間接的、付随的、結果的な損害について責任を負いません。
+    changes:
+      heading: 変更について
+      body: この規約は更新されることがあります。更新した場合は上記の施行日も変わり、その日以降も利用を続けることで、改定後の規約に同意したものとみなされます。
+    contact:
+      heading: お問い合わせ
+      body: この規約に関するご質問はこちらへ：
+    related:
+      heading: 関連リンク
+  glossary_labels:
+    fsrs: FSRS-6
+    tocfl: TOCFL
+    tbcl: TBCL
+    zhuyin: 注音
+    pinyin: ピンイン
+    putonghua: 普通話
+    hokkien: 台湾語
+    hanzi: 繁体字
+  glossary:
+    fsrs: 間隔反復のアルゴリズム。自分でつけた評価から、カードを忘れかけるタイミングを予測し、ちょうどそのときに出題します。
+    tocfl: 台湾の国家試験である華語文能力測験（TOCFL）と、そのレベル体系。準備級からBand Cまであります。
+    tbcl: 台湾華語文能力基準（TBCL）。第二言語としての華語教育のために台湾が定めた、7段階の国家基準です。
+    zhuyin: 台湾の発音記号〘ㄅㄆㄇㄈ〙（注音符号、ボポモフォ）。台湾の子どもはピンインではなく注音で読み方を学び、スマホやパソコンの文字入力にも使われています。
+    pinyin: 華語の音節をローマ字で書き表す方式。中国では中心的に使われますが、台湾では補助的な役割にとどまります。
+    putonghua: 中国で標準とされている共通語。
+    hokkien: 台湾語（台語）。台湾の人口の大きな割合が話すビン南語系の言語で、華語の方言ではなく、独立した別の言語です。
+    hanzi: 台湾・香港・マカオで使われている、省略しない字体の漢字。中国で使われている簡体字に対して言います。
+  locales:
+    en: English
+    ru: Русский
+    vi: Tiếng Việt
+    de: Deutsch
+    id: Bahasa Indonesia
+    ja: 日本語
+  language_step:
+    heading: アプリとレッスンの言語を選んでください
+    edition: 他の言語版をそのまま訳したものではなく、日本語話者のために作った独自の版です。発音、文法、文化まで、台湾華語を日本語話者の目線で解説します。
+    later: あとでメニューから変更できます。
+  app:
+    name: TaiwanCards
+  languages:
+    zh-TW: 台湾華語
+    ja: 日本語
+    ro: ルーマニア語
+  names:
+    title: 台湾の名前のしくみ
+    attribution: 名前のデータはWikidataによるもので、CC0 1.0でパブリックドメインとして提供されています。
+    meta_description: 台湾の名前は何でできているのか。戸籍の集計からわかる、台湾で実際に使われている姓と、名前によく使われる字を紹介します。
+    caveat: 台湾にゆかりのある%{people}人の名前から集計しています。記録は記事になるほど著名な人に偏っているため、今年生まれた子どもの名づけではなく、この100年ほどの名づけの傾向を表しています。
+    percent: "%{value}%"
+    young: 0〜14歳：%{value}%
+    pmi: PMI %{value}
+    tone: 第%{n}声
+    tabs:
+      pick: 名前を選ぶ
+      learn: 名前のしくみ
+    assistant:
+      privacy_title: 入力した内容はこの端末の外に出ません
+      privacy_body: 計算はすべてブラウザ内で行われ、通信は一切発生しません。ブラウザの開発者ツールのネットワークパネルで確認できます。
+      loading: データを読み込み中…
+      your_surname: 姓（ローマ字）
+      your_given: 名（ローマ字）
+      age: 世代
+      gender: 性別の印象
+      gender_any: こだわらない
+      length: 名の字数
+      two_characters: 2字
+      one_character: 1字
+      qualities: 名前に込めたいイメージ
+      qualities_note: 1つか2つ。3つ選ぶと候補がかなり減ります。
+      strokes: 字の画数
+      rarity: よく使われる字か
+      any: こだわらない
+      simple: シンプル
+      complex: 画数が多め
+      common: なじみのある字
+      unique: 珍しめの字
+      closeness: 自分の名前に近い ⟷ 台湾らしい
+      official: 台湾の公的な書類にも使う
+      submit: 候補を見る
+      badge_pair: 組み合わせPMI
+      badge_contour: 声調パターン
+      badge_repeat: 同じ声調の連続（ふつうは避ける）
+      badge_strokes: 画
+      disclaimer: これは完成した名前でも、個人に向けたおすすめでもありません。戸籍の統計、つまりどの字や組み合わせがよく現れるかを示したものです。名前は、その言語の中で育った人と一緒に決めるものです。このリストは、その相談のための材料として使ってください。
+      results_note: 候補は5つで、それぞれ理由つきです。答えを変えるとリストが作り直されます。
+      why_heading: この組み合わせがいい理由
+      vibes:
+        light: 明るさ
+        virtue: 誠実さ
+        wisdom: 学び
+        strength: 芯の強さ
+        nature: 自然の力
+        prosperity: 繁栄
+        peace: 穏やかさ
+        aspiration: 大きな志
+      why:
+        meaning_two: ひとつの名前に、%{first}と%{second}というふたつの意味が込められています。
+        meaning_one: 2字がどちらも%{first}を表していて、名前全体にまとまりがあります。
+        meaning_single: 意味を担うのは%{text}（%{first}）で、もう1字は響きのために選ばれています。
+        meaning_solo: 1字の名前で、テーマは%{first}。台湾では名が1字の人は少なめなので、印象に残ります。
+        meaning_plain: 辞書から拾ってきた字の組み合わせではありません。台湾の人はこうした名前を、文としてではなく雰囲気として受け取ります。
+        sound_common: "%{tones}という声調の並びは、台湾の名前でもごくありふれた形で、つかえずに口にできます。"
+        sound_rare: "%{tones}という声調の並びは珍しく、個性がありながら言いやすい名前です。"
+        sound_repeat: 同じ声調が2つ続く形は、台湾では避けられがちです。続けると平板に聞こえます。
+        pair_strong: この2字は本当によく組み合わされます。戸籍では偶然から予想されるよりはるかに多く現れるので、寄せ集めではない、実在しそうな名前に聞こえます。
+        pair_fresh: 戸籍には決まった組み合わせがないので、リストから借りてきた名前ではなく、自分だけの名前として受け取られます。
+        era_match: どちらの字も同世代によくある字で、祖父母世代の名前らしくも、赤ちゃんの名前らしくもありません。
+        era_older: 字の印象は同世代より上で、親の世代らしい名前です。台湾ではそれが落ち着きや堅実さとして受け取られがちです。
+        era_recent: 最近生まれた子どもに多い名前なので、かなり若い印象になります。
+        rare_char: "%{text}は珍しい字です。名前はすぐに覚えてもらえますが、どう書くのかは聞かれるでしょう。"
+        gender_male: 耳で聞くと、はっきり男性の名前です。
+        gender_female: 耳で聞くと、はっきり女性の名前です。
+        gender_neutral: 性別を感じさせない名前です。台湾ではこうした名前は男女どちらにも使われます。
+        echo: 本名と響きが似ているので、自己紹介したときにつながりがすぐ伝わります。
+        official: 書類にもきれいに印字できます。どちらの字も標準の字体セットに含まれています。
+    cohorts:
+      elder: 1960年より前の生まれ
+      middle: 1960〜1979年生まれ
+      young: 1980〜1994年生まれ
+      recent: 1995年以降の生まれ
+    cohort_note: その世代での1,000人あたりの出現数の多い順。名づけの流行は移り変わりが速く、名の2字目によく使われる上位30字のうち、いちばん上といちばん下の世代で共通するのは2字だけです。
+    filters:
+      all: すべて
+    positions:
+      first: 1字目に多い
+      second: 2字目に多い
+    leans:
+      first: 1字目寄り
+      second: 2字目寄り
+      any: どちらにも
+    fields:
+      light: 光
+      virtue: 徳
+      wisdom: 学び
+      strength: 強さ
+      nature: 自然
+      prosperity: 繁栄
+      peace: 穏やかさ
+      aspiration: 志
+    pairs:
+      heading: よく組み合わされる2字
+      body: 自己相互情報量（PMI）の順。この2字が偶然から予想されるよりどれだけ多く一緒に現れるかを示します。スコアが高いほど、偶然ではなく定着した組み合わせです。
+    shape:
+      example_surname: 姓
+      example_given: 名
+      compact: 姓は代々受け継ぐもので、たいてい1字、まれに2字です（〘歐陽〙、〘張簡〙、〘范姜〙）。名は家族が選ぶ1字か2字です。パスポートのローマ字表記がどうであれ、姓・名の順番は変わりません。
+    surnames:
+      heading: 台湾で使われている姓
+      note: 戸籍に登録された%{people}人を数えた、全%{total}姓のうち上位%{shown}姓。
+    characters:
+      heading: 名に使われる字
+      body: 戸籍に登録された名に出てくる回数の順。どの字も辞書の項目にリンクしているので、本当の意味を確かめられます。
+      caution: 字には、辞書上の意味、音、そしてよく一緒に使われる字があります。意味だけでは良い名前になりません。同音異義語、言葉の格、姓との組み合わせもすべて関わってきます。だからこのページでは、おすすめではなくデータを示しています。
+      none: 条件をすべて満たす字はありません。
+    given:
+      heading: 記録に残る名
+      note: 登録数の多い名と、それぞれに記録された性別。
+    sex:
+      male: 男性
+      female: 女性
+  nav:
+    for_you: おすすめ
+    filter_placeholder: セクションを探す
+    filter_empty: 見つかりませんでした。別の言葉で試してください。
+    tab:
+      desk: 今日
+      desks: デッキ
+      course: コース
+      path: スタート
+      reader: 読む
+      graded: 多読
+      placement: 診断
+      plan: 計画
+      triage: 仕分け
+      textbook: 教科書
+      textbook-phrases: ドリル
+      stories: 読み物
+      exams: 公式模試
+      radicals: 部首
+      characters: 漢字
+      dict: 単語
+      sentences: 例文
+      chengyu: "〘成語〙"
+      liangci: "〘量詞〙"
+      tbcl: TBCL
+      tocfl: TOCFL
+      practice-zhuyin: 音のしくみ
+      syllables: 音節
+      tones: 声調
+      hanzi: 字の構造
+      cangjie-lessons: 倉頡入力
+      practice-numbers: 数字
+      grammar: 文法
+      zhuci: "〘語氣詞〙"
+      variants: 言葉の違い
+      names: 名前
+      practice-zhuyin-trainer: 注音
+      practice-drill: 音ドリル
+      tones-drill: 声調を聞く
+      pronunciation: 発音
+      writing: 書き取り
+      practice-typing: タイピング
+      cangjie: 倉頡練習
+      mock: 模擬試験
+      everyday: 暮らし
+      phrases: フレーズ
+      notices: 書類
+      metro: MRT
+      calendar: 暦
+      medicine: 医療
+      culture: 文化
+      games: ゲーム
+      profile: プロフィール
+      progress: 学習状況
+      settings-edit: 設定
+    mock: TOCFL模擬試験
+    more: もっと見る
+    radicals: 部首
+    today: 今日
+    typing: 注音タイピング練習
+    dictation: ディクテーション
+    group_taiwan: 台湾
+    group_sounds: 音
+    progress: 学習状況
+    settings: 設定
+    language: 言語
+    interface_language: 画面と、その中のすべての内容の言語です。切り替わるのはボタンやメニューだけではありません。単語の意味、メモ、文法の解説や文の分析もすべて各言語で書かれていて、一緒に切り替わります。
+    hanzi_font_toggle: 漢字の書体
+    hanzi_font_hint: 漢字の書体。オン：楷書体。手で書いたときの筆画がわかる、毛筆の書体です。オフ：シンプルなゴシック体。初期設定はオンです。
+    readings_toggle: 注音とピンイン
+    audio_rate_toggle: 音声の速さ
+    audio_rate_hint: 再生速度は3段階：標準、¾、½。音の高さを変えずに引き延ばすので、声調はそのままです。変更するまで、すべての再生ボタンに適用されます。
+    detail_toggle: 辞書ページの表示量
+    detail_hint: 辞書ページの表示量。〘詳〙：手元にある情報をすべて表示（珍しさのスコア、文体の内訳、暗記カード、類語辞典、字の由来）。〘簡〙：よく使う情報だけ（読み、意味、品詞、量詞、類義語と対義語、書き順の練習、例文いくつか）。TOCFLの準備級を越えるまでは〘簡〙、その後は〘詳〙から始まり、一度切り替えればその設定が保たれます。
+    script_setup_hint: 言葉の表示方法：書体、ピンイン、音声の速さ、中国での言い方、辞書ページの表示量、そしてサイトを読む言語。
+    readings_hint: 漢字の上に出す読みを、注音のみ、注音とピンイン、表示なしの3段階で切り替えます。台湾では注音で読むので、ピンインだけを表示することはありません。初期設定は注音のみで、選んだ設定は変更するまで全ページで保たれます。
+    locale_switch: JA
+    textbook: 教科書のレッスン
+    phrase_drills: フレーズ
+    stories: 読書室
+    course: コース
+    exams: TOCFL公式模試
+    my_desks: マイデッキ
+    reader: テキストを読む
+    graded: レベル別多読
+    songs: 歌
+    placement: レベル診断テスト
+    numbers: 数字
+    triage: クイック仕分け
+    roadmap: どこから始めるか
+    plan: 試験までの計画
+    hanzi: 漢字の成り立ち
+    characters: 漢字
+    study: 今すぐ学習
+    handwriting: 手書きで検索
+    writing: 漢字の書き取り
+    pronunciation: 発音チェック
+    tocfl: TOCFL単語リスト
+    tbcl: TBCL単語リスト
+    grammar: 文法
+    chengyu: 故事成語（〘成語〙）
+    word_pairs: まぎらわしい言葉
+    dict: 単語・フレーズ
+    cangjie: 倉頡入力の練習
+    cangjie_book: 倉頡入力（第5代）
+    sentences: 例文
+    liangci: "〘量詞〙（助数詞）"
+    zhuci: "語気助詞（〘語氣詞〙）"
+    phrases: フレーズ集
+    notices: 書類と掲示
+    everyday: 台湾の暮らし
+    variants: 台湾と中国の言葉の違い
+    names: 台湾の名前
+    metro: 台北MRT
+    calendar: 祝祭日と暦
+    medicine: 薬局と病院
+    culture: 台湾カルチャーノート
+    games: ボードゲーム
+    sounds_drill: 注音 ↔ ピンイン
+    group_learn: マイ学習
+    group_learn_guest: コースとテスト
+    group_dictionary: 辞書
+    group_practice: 練習
+    group_basics: 基礎
+    pinyin: ピンイン
+    phonetics: 注音とピンイン
+    syllables: 音節表
+    tones: 声調
+    zhuyin_trainer: 注音の聞き取り
+    zhuyin: 注音（ボポモフォ）
+    tones_sounds: 声調と発音
+    practice_progress: 発音練習の記録
+    group_language: 言葉のしくみ
+    group_settings: 設定
+    group_lede:
+      learn: 毎日の学習、デッキ、リーダー、レベル診断テスト、試験までの計画。
+      dictionary: 漢字、単語、コーパスの例文、成語、量詞、レベル別リスト。
+      language: 注音とその音、声調、漢字の成り立ち、数字、文法、台湾での読み方。
+      practice: 音と声調のドリル、発音、手書き、タイピング、倉頡（そうけつ）入力、模擬試験。
+      taiwan: 暮らしの単語、よく使うフレーズ、台北MRT、暦。
+      settings: プロフィール、統計、表示の設定、ヘルプ。
+    item_lede:
+      course: "「こんにちは」からB1までの60課。会話、単語、文法、練習問題。"
+      path: 自分用のロードマップ。何をどの順で進めるか、今どこにいるかがわかります。
+      desk: 今日の画面。復習と新しいカードの数、そして今やるべきことへのボタンが1つ。
+      desks: テキスト、ファイル、歌、レッスンから作るマイデッキ。グループ分けや共有リンクも。
+      reader: 好きなテキストを貼り付けると単語に区切られ、知らない単語には注音が付きます。
+      graded: 辞書で止まらずに最後まで読める、レベル別多読の文章。
+      placement: 答えに合わせて問題が変わるテストで、スタートのレベルを決め、すでに知っている単語に印を付けます。
+      plan: TOCFLのレベルと日付を決めると、1日に必要な新しい学習量を計算します。
+      triage: カードを開かずに、単語をスワイプで「知っている」と「これから覚える」に仕分けます。
+      textbook: 教科書の各課のまとめ。文の分析と「この課は習得済み」の印つき。
+      textbook-phrases: 教科書のフレーズドリル。文型の置き換えを、声に出して時間内に。
+      stories: 読書室：リーダーと同じ分析つきで、まとまった文章を読めます。
+      exams: TOCFL公式模試を音声つきで。採点は自分の端末で行います。
+      radicals: 康熙字典の214部首。画数、意味、その部首が出てくる単語。
+      characters: 漢字のすべて：読み、画数、書き順アニメーション、字源、読みごとの単語。
+      dict: 単語とコロケーション：番号付きの語義、類語、量詞、コーパスの例文。
+      sentences: 例文コーパス。レベル、文体、レベル判定の確かさで絞り込めます。
+      chengyu: "〘成語〙を声調、タイプ、難易度で絞り込めます。"
+      liangci: 量詞：どんな名詞と組むか、生きた例文、覚えるためのゲーム。
+      tbcl: 7段階のTBCL単語リスト。自分の進み具合がひと目でわかります。
+      tocfl: レベル別のTOCFL単語リスト。自分の進み具合がひと目でわかります。
+      practice-zhuyin: 音節は何でできているか。声母、韻母、声調、そしてよくある混同。
+      syllables: 華語の音節表の全体。実際に存在する組み合わせがわかります。
+      tones: 4つの声調と軽声、台湾ならではの特徴、声調変化のルール。
+      hanzi: 漢字の成り立ち：〘六書〙、部品、音符でつながる字のグループ、書き順。
+      cangjie-lessons: 倉頡（そうけつ）入力の教科書。1つのキーから字の分解ルールまで、40課のドリルと字のリストつき。
+      practice-numbers: 数字、お金、日付、民国暦、そして〘零〙と〘兩〙のひっかけ。
+      grammar: レベル別の582の文型。それぞれ解説、コーパスの例文、関連項目つき。
+      zhuci: 語気助詞〘語氣詞〙：〘吧〙、〘啊〙、〘呢〙、〘嘛〙が文にどんなニュアンスを加えるか。
+      variants: 台湾と中国で違うところ：読み方、字形、語彙。
+      names: 台湾の名前のしくみ。戸籍から集計した姓のランキングつき。
+      practice-zhuyin-trainer: 注音をグループごとに耳で覚えます。今のグループを覚えるまで、次のグループには進みません。
+      practice-drill: 注音とピンインをすばやく対応づける練習。苦手な記号ほど多く出ます。
+      tones-drill: スタジオ録音で声調を聞き分けます。男性と女性の声が交互に出ます。
+      pronunciation: マイクで録音すると、声調と音がどこでずれたかを音節ごとに表示します。
+      writing: ヒントなしで漢字を記憶から書きます。結果は「書き」の記録に反映されます。
+      practice-typing: 台湾の注音キー配列を、指が覚えるまで練習します。
+      cangjie: 倉頡（そうけつ）入力：漢字を部品に分けて、そのコードを打ちます。
+      mock: TOCFL模擬試験。通常問題、イラスト問題、音声問題の3形式で、シードを指定すれば同じ問題を再現できます。
+      everyday: 場面別の単語：食べ物、飲み物、交通、手続き、天気、スラング。
+      phrases: 17の場面に186の文型。聞いてわかれば十分な半分も含みます。
+      notices: 薬袋、給与明細、請求書、賃貸契約書、連絡帳、マンションの掲示を、項目ごとに読み解きます。
+      metro: 台北MRTの路線図。全駅の名前の意味と読み方つき。
+      calendar: 旧暦、祝祭日、季節の言葉、2つの日付変換ツール。
+      medicine: 薬局や病院で言いたいことを伝えるために。
+      culture: シフト表からレシート、祝祭日まで、台湾の暮らしのしくみを短く解説します。
+      games: 台湾華語で遊ぶボードゲーム：用語、ルール、ゲーム中の会話。
+      profile: 表示言語、注音の位置、モバイルのタブ、レベル、エクスポートとバックアップ。
+      progress: 概要、復習履歴、項目別の記憶の定着度、苦手カードの一覧。
+      settings-edit: FSRSのパラメーターを自分で調整：目標保持率、最大間隔、学習ステップ。
+    tones_drill: 声調の聞き取り
+    profile: プロフィール
+  phrase_drills:
+    title: フレーズ
+    subtitle:
+      one: 声に出して言う文が1つあります。やさしい順に並び、自分にだけ表示されます。
+      other: 声に出して言う文が%{count}あります。やさしい順に並び、自分にだけ表示されます。
+    empty: まだ何もありません。インポートを実行すると、ここに文が表示されます。
+    level: レベル
+    level_n: レベル%{n}
+    level_hint: 難易度スコア：%{score}／1000
+    any_level: すべてのレベル
+    search_placeholder: 漢字か訳文で文を検索
+    curriculum: カリキュラム
+    any_grade: すべて
+    grade_hint: "%{scheme}レベル%{level}"
+    approximate: "* そのレベルの語彙で単語の約90%をカバー（すべてではありません）"
+    any_book: 両方
+    book_hint: 文の出典
+  textbook:
+    marked_known: 習得済みにした語：%{count}
+    mark_known_hint: 単語は消えずに、復習の間隔が長くなります
+    mark_known_confirm: この課の単語をすべて習得済みにしますか？
+    mark_known: この課はもう知っている
+    title: 教科書
+    empty: まだレッスンがありません。
+    book: 第%{number}冊
+    lessons_count:
+      one: 1課
+      other: "%{count}課"
+    words_count:
+      zero: 単語なし
+      one: 1語
+      other: "%{count}語"
+    lesson_label: 第%{book}冊 第%{lesson}課
+    back_to_curriculum: "← カリキュラム"
+    previous: "← 前へ"
+    next: 次へ →
+    tabs:
+      summary: まとめ
+      vocabulary: 単語
+    study_lesson: この課を学習
+    no_summary: この課のまとめはありません。
+    play_audio: 音声を再生
+  course:
+    why_grammar: 文法
+    title: コース
+    lede: はじめての「こんにちは」からTOCFLのBand Bまで、1課ずつ進むコースです。各課には、台北や新北のリアルな暮らしから取った本文、その単語、土台になる文法、街で聞く言い方と試験で求められる言い方の違いのメモ、そして自動で採点される練習問題があります。
+    empty: コースはまだ読み込まれていません。
+    resume: 続きから始める
+    lesson_number: 第%{number}課
+    dialogue: 会話
+    passage: 本文
+    vocabulary: 単語
+    characters: 新しい漢字
+    characters_hint: この課で初めて出てくる字と、それぞれの成り立ち。
+    in_word_html: "%{word}に出てくる"
+    sound_family: 同じ音符を持つ字：
+    grammar: 文法
+    usage: 街と試験
+    culture: 台湾のこと
+    exercises: 練習
+    make_deck: デッキを作る
+    deck_prefix: コース%{number}
+    save_progress: 進み具合を保存
+    save_hint: 問題をひと通り解くと、スコアが保存されます。
+    you_will_say: この課で言えるようになること
+    sign_in: ログイン
+    sign_in_hint_html: "%{link}すると、スコアを保存して、この課の単語をカードにできます。"
+    stage_lessons: "%{count}課"
+    saved: 進み具合を保存しました。
+    check: 答え合わせ
+    again: もう一度
+    right: 正解
+    wrong: おしい
+    on_the_street: 街で聞く言い方
+    in_the_exam: 試験で書く言い方
+    details: 詳しく
+    level_progress: "%{level}の進み具合"
+    bar_lessons: レッスン
+    bar_words: 単語
+    bar_grammar: 文法
+    bar_exercises: 問題
+    bar_each_lesson: 1課 ≈ レベルの%{share}%
+    progress_title: 進み具合とペース
+    progress_lede: コースでTOCFLの各レベルをどこまで進んだか、どのくらいのペースで進んでいるか、このペースならいつ到達するかを表示します。
+    whole_course: コース全体
+    by_level: レベル別
+    pace_speed: ペース
+    pace_per_week: 週%{count}課
+    pace_window: 計測期間
+    pace_days: "%{days}日間で%{lessons}課"
+    pace_finish_course: コース修了の見込み
+    pace_unknown: 2課終えると、ここにペースと修了予定日が表示されます。
+    each_lesson_worth: 1課でこのレベルの%{share}%に相当します。
+    level_finish_by: このペースなら%{date}に到達
+    level_done: レベル修了
+    level_exam: レベル確認テスト
+    level_exam_hint: レベル全体から%{count}問
+    exam_lede: このレベルの全%{lessons}課から出題される、さまざまな形式の%{count}問。単語、穴埋め、並べ替え、組み合わせ。
+    exam_tasks: テスト
+    exam_disclaimer: これはコースの内容の確認テストで、TOCFLの問題ではありません。本番の試験形式で練習したい場合はこちら：
+    exam_disclaimer_link: TOCFL模擬試験
+    registers:
+      spoken: 話し言葉のみ
+      written: 書き言葉のみ
+    tasks:
+      meaning: 意味は？
+      word: 華語でどう言う？
+      reading: この読み方の単語はどれ？
+      cloze: 空欄を埋めよう
+      reply: どう返す？
+      street: 実際に耳にするのはどれ？
+      order: 単語を並べ替えて文にしよう
+      pair: ペアを組み合わせよう
+  exams:
+    title: "TOCFL公式模試"
+    lede: "TOCFL公式模試を、本番と同じ流れで受けられます。自分のペースで練習するか、公式の音声・出題順・時間配分で本番と同じ条件で受けるかを選べます。すべて自分の端末上で行い、公式の解答で採点します。"
+    credit: "問題はTOCFL公式模試です。© 〘國家華語測驗推動工作委員會〙（国家華語測験推進工作委員会）。学習用として無料で掲載しています。"
+    empty: "まだ準備できた試験はありません。1回分ずつ準備しています。"
+    band: "Band %{band}"
+    set: "第%{number}回"
+    skills:
+      reading: "読解"
+      listening: "リスニング"
+    questions:
+      one: "%{count}問"
+      other: "%{count}問"
+    minutes: "%{count}分"
+    best: "最高%{score}/%{total}"
+    bands:
+      Novice: "〘準備級〙（Novice 1〜2）：学習を始めて数か月のレベル。イラスト中心の短い問題です。"
+      A: "〘入門級〙・〘基礎級〙（レベル1〜2）、おおむねA1〜A2相当：日常の場面と短い文章。"
+      B: "〘進階級〙・〘高階級〙（レベル3〜4）、おおむねB1〜B2相当：長めの会話、お知らせ、記事。"
+      C: "〘流利級〙・〘精通級〙（レベル5〜6）、おおむねC1〜C2相当：講演、レポート、手ごわい文章。"
+    format_title: "試験の構成"
+    format_line: "%{skill}：%{questions}・%{minutes}分"
+    plays_once: "音声1回"
+    plays_twice: "音声2回"
+    plays_many: "音声%{count}回"
+    setup_title: "どの形式で受けますか？"
+    practice_hint: "問題を自由に行き来でき、音声は何度でも再生でき、解答はいつでも確認できます。"
+    exam_hint_listening: "本番と同じ：音声は公式の順番どおりに自動で流れ、再生回数も間の取り方も公式どおりです。一時停止・スキップ・聞き直しはできませんが、音声が進む間も解答は選べます。"
+    exam_hint_reading: "本番と同じ：%{minutes}分のカウントダウンで全問を解きます。問題は自由に行き来でき、時間切れになると自動で提出されます。"
+    exam_hint_reading_untimed: "本番と同じ：全問をまとめて解きます。この試験には制限時間の記載がないため、カウントダウンはありません。解き終わったら提出してください。"
+    adaptive_label: "10秒ルール（本番モードのみ）"
+    adaptive_hint: "台湾で受けるコンピューター版の試験では、各音声のあとに解答時間が10秒あり、前の問題には戻れません。このスイッチで再現するのはそのタイミングだけです。問題はこの試験のもので、スコアもこの試験の尺度のままです。"
+    start: "始める"
+    start_hint: "本番モードでは、タップするとすぐに音声が始まります。"
+    resume: "再開"
+    discard: "最初からやり直す"
+    loading: "試験を読み込み中…"
+    load_failed: "試験を読み込めませんでした。接続を確認して、もう一度お試しください。"
+    retry: "もう一度"
+    close: "閉じる"
+    player:
+      practice: "練習"
+      exam: "本番"
+      adaptive: "本番・10秒ルール"
+      part: "第%{n}部"
+      question: "第%{n}問"
+      questions_range: "第%{from}〜%{to}問"
+      opening: "開始"
+      closing: "終了"
+      instructions: "説明"
+      play: "再生"
+      stop: "停止"
+      play_of: "%{total}回中%{n}回目"
+      pause: "間・%{seconds}秒"
+      answer_window: "解答時間・%{seconds}秒"
+      locked: "締め切り（戻れません）"
+      now_playing: "再生中：%{label}"
+      go: "移動"
+      previous: "前へ"
+      next: "次へ"
+      check: "答え合わせ"
+      original: "原本"
+      zoom: "拡大"
+      finish: "提出"
+      finish_confirm: "提出しますか？未解答：%{count}問"
+      finish_yes: "提出"
+      finish_no: "続ける"
+      answered: "%{count}/%{total}問 解答済み"
+      audio_error: "音声を再生できなかったため、次へ進みます。"
+      resume_note: "この端末に途中の解答があります（%{mode}）：%{total}問中%{count}問 解答済み。"
+      result_title: "結果"
+      raw: "%{total}問中%{score}問正解"
+      scale: "換算スコア：%{score}／%{max}"
+      scale_only: "換算スコア：%{score}"
+      level: "到達レベル：%{level}"
+      no_level: "この試験で認定される最初のレベルに届きませんでした。"
+      no_scale: "この試験には公式の換算表がないため、素点のみ表示しています。"
+      by_part: "パート別"
+      review: "見直し"
+      your_answer: "自分の解答"
+      correct_answer: "正解"
+      no_answer: "未解答。"
+      revealed: "練習中に答えを確認済み。"
+      transcript: "スクリプト"
+      again: "もう一度受ける"
+      all_papers: "すべての試験"
+      saved: "アカウントに保存しました。自己ベスト：%{best}/%{total}"
+      save_failed: "結果をアカウントに保存できませんでした。この端末には保存されています。"
+      device_note: "この結果はこの端末に保存されています。ログインすると、ベストスコアをアカウントに残せます。"
+      history: "この端末の記録"
+      level_n: "レベル%{n}"
+      novice_n: "準備級%{n}"
+      level_source: "合格点は実施委員会が発行するTOCFLのパンフレットによるものです。模試の換算表には載っていません。"
+    paper_link: "試験の原本を開く（PDF）"
+  common:
+    search: 検索…
+    save: 保存
+    cancel: キャンセル
+    edit: 編集
+    confirm: よろしいですか？
+    someone: ある人
+  desk:
+    next_step:
+      starter: 次はこれ：はじめの一歩レッスン
+      zhuyin: 次はこれ：注音の音に慣れる
+      drill: 次はこれ：音を聞き分ける練習
+      typing: 次はこれ：注音でタイピング
+      study: 次はこれ：今日のカード
+    on_desk: 待機中
+    due: 今日の復習
+    unseen: 新しいカード
+    start: 学習する
+    start_count:
+      one: 学習する（1枚）
+      other: 学習する（%{count}枚）
+    road:
+      to_next:
+        one: "%{level}修了まであと1語"
+        other: "%{level}修了まであと%{count}語"
+    goal_label: モード
+    goal_change: 変更
+    streak_more: 学習状況をすべて見る
+    levels:
+      title: TOCFLレベル別の準備度
+      all: レベル別リスト
+      target: 目標
+    exam:
+      goal: 目標：%{level}・%{date}
+      days_left:
+        one: 試験まであと%{count}日
+        other: 試験まであと%{count}日
+      quota:
+        one: 新しいカード：1日%{count}枚
+        other: 新しいカード：1日%{count}枚
+      no_plan_title: 試験日はまだ決まっていません
+      no_plan_body: 目標のレベルと日付を決めれば、間に合うために1日にどれだけ新しく学べばいいかを計算します。
+      set_plan: レベルと日付を決める
+      readiness: "%{level}の語彙"
+      edit_plan: 計画を変更
+      mock_title: "%{level}模擬試験"
+      mock_body: TOCFL形式の問題を自動で採点します。毎回新しい問題が出ます。
+      mock_start: 模擬試験を受ける
+      mock_formats: イラスト・音声問題
+      papers: TOCFL公式模試
+      grammar_title: "%{level}の文法"
+      grammar_body:
+        one: このレベルの文法%{count}項目を、例文つきで解説。
+        other: このレベルの文法%{count}項目を、例文つきで解説。
+      grammar_open: このレベルの文法を開く
+    classes:
+      review:
+        one: 復習（%{count}）
+        other: 復習（%{count}）
+      study: マイデッキを学習
+      hint: サイトの順番ではなく、自分のデッキの単語だけ
+      empty_title: 授業用のデッキから始めましょう
+      empty_body: 授業の単語リストや本文を貼り付けたり、教科書のページを撮影したり、Pleco・Anki・Quizletからデッキをインポートしたりできます。
+      empty_cta: デッキを作成
+      decks_title: マイデッキ
+      decks_all:
+        one: すべてのデッキ（%{count}）
+        other: すべてのデッキ（%{count}）
+      decks_empty: まだデッキがありません。
+      deck_size:
+        one: "%{count}語"
+        other: "%{count}語"
+      deck_used: "%{ago}前に使用"
+      add_title: 授業の単語を追加
+      add_body: 授業でやった内容を、1分でカードに。
+      add_text: テキストやリストを貼り付け
+      add_import: Pleco・Anki・Quizletからインポート
+      add_photo: ページを撮影
+      add_triage: 知っている単語に印を付ける
+    guided:
+      path_label: ロードマップ・%{total}ステップ中%{done}完了
+      path_all: ロードマップ全体
+      lesson_label: コース・%{stage}
+      lesson_title: 第%{number}課 %{title}
+      stage_progress: このステージ：%{total}課中%{done}課
+      lesson_open: レッスンを開く
+      course_all: すべてのレッスン
+      course_done_title: コース修了
+      course_done_body: 60課をやり遂げました。次はレベル別多読と、毎日のカードです。
+      course_done_cta: レベル別多読
+      course_title: ステージ別コース
+      course_overall: "%{percent}%完了"
+      practice_title: ドリル
+      practice_body: カードに加えて、音と書きの練習を10分。
+      level_title: 現在のレベル
+      graded: レベル別多読
+  discovery:
+    title: こちらもおすすめ
+    kinds:
+      grammar: 文法
+      graded: 読み物
+      phrases: フレーズ
+      culture: 文化
+      pronunciation: 発音
+    grammar:
+      body: 今のカードと同じ%{level}の、短い文法レッスン。
+    graded:
+      body: もう知っている単語だけで読める短いお話。
+    phrases:
+      body: 台湾の人がこんな場面で実際に言うこと。
+    culture:
+      body: 台湾の暮らしのあれこれが実際どうなっているか、2分で。
+    pronunciation:
+      title: いくつか声に出してみましょう
+      body: マイクに向かって1分話すと、声調がどう出ているかがわかります。
+  next_step:
+    starter:
+      title: はじめの一歩レッスン
+      body: 3〜5分で、注音を耳で覚え、台湾の暮らしで使う単語に触れます。
+    zhuyin:
+      title: 注音の音を覚える
+      body: まずは音から。音がわかれば、そのあとの学習がずっと速く進みます。
+    drill:
+      title: 注音を耳で練習
+      body: 覚えたての記号を、記憶が新しいうちに耳で定着させましょう。
+    typing:
+      title: 注音で入力
+      body: 注音で入力していると、記号が指に染み込んでいきます。
+    review:
+      title: 今日の復習
+      body: 忘れかけているカードです。今の数分で、あとで覚え直す手間が省けます。
+    study:
+      title: 今日のカード
+      body: まず今日の復習、それから今日の分の新しい単語。
+    lesson:
+      title: コースの次のレッスン
+      body: 短い会話と、その単語、文法1項目を学んで、すぐに練習します。
+    graded:
+      title: レベル別多読の文章を読む
+      body: コースは修了しました。次は、自分のレベルに合ったまとまった文章を読みましょう。
+    grammar:
+      title: 自分のレベルの文法
+      body: 今日の新しい単語は終わりました。次の10分は、受験レベルの文法を1項目学ぶのがおすすめです。
+    decks:
+      title: マイデッキを学習
+      body: 自分のデッキの復習と新しい単語だけを学習します。
+    practice:
+      title: 最新のデッキを練習
+      body: デッキの復習はすべて終わりました。最新のデッキをもう一度ひと通りやって、忘れないようにしましょう。
+    add_words:
+      title: 授業の単語を追加
+      body: 前回の授業の単語、テキスト、ページの写真を貼り付ければ、カードになります。
+  starter:
+    title: 第%{number}課・%{title}
+    deck: はじめての単語
+    leave: レッスンを終了
+    new_symbol: 新しい記号
+    which_symbol: 聞こえた記号はどれ？
+    capsule: 2行でわかる
+    got_it: わかった
+    new_word: 新しい単語
+    which_meaning: 意味は？
+    phrase: 実際に使えるフレーズ
+    next: 次へ
+    right: 正解！
+    wrong: これではありません。もう一度聞いてみましょう。
+    tones:
+      first: 第一声：高く平らに。時報の「ピー」のように、高さを保ったまま伸ばします。
+      second: 第二声：上がる音。驚いて聞き返す「えっ？」のように。
+      third: 第三声：低く。低くつぶやく「うん…」のように、声を低く沈めます。
+      fourth: 第四声：一気に下がる音。きっぱり言う「はい！」のように。
+      neutral: 軽声：短く、軽く。
+    tone_shift_third: 第三声が2つ続くと、前の第三声は第二声のように上がります。ひと息で言ってみましょう。%{word}
+    tone_shift: この単語の中では声調が変わります。ひと息で言ってみましょう。%{word}
+    say_it: 声に出して言う
+    say_hint: やらなくても大丈夫ですが、一度声に出すだけで、ずっと覚えやすくなります。
+    finish_kicker: 完了
+    finish_title:
+      one: 新しい単語を%{count}語覚えました
+      other: 新しい単語を%{count}語覚えました
+    finish_body: 単語は「はじめての単語」デッキに入り、忘れかけるちょうどそのころに、アプリがまた出題します。
+    finish: レッスンを終える
+    done_kicker: "%{total}課中%{done}課"
+    done_title: レッスン完了
+    done_body:
+      one: この単語がデッキに入りました
+      other: "%{count}語がデッキに入りました"
+    done_tomorrow: 明日、カードとして出てきます。1〜2分で終わります。
+    next_lesson: 次：%{title}
+    track_done: はじめのレッスンはすべて完了しました。ここからはコースに進みます。
+    to_course: コースを開く
+    home: ホームに戻る
+    hero_kicker: はじめの一歩・%{total}課中%{number}課目
+    hero_body: 3〜5分、理論を読む必要はありません。まず耳で音を覚え、それから今日すぐ使える単語へ。
+    hero_start: レッスンを始める
+  mail_links:
+    note: このメールのリンクを開くと、アカウントにログインした状態でTaiwanCardsが開き、ワンクリックで目的のページに移動できます。このメールは転送しないでください。
+    opening:
+      title: TaiwanCardsを開いています…
+      body: ログインして、目的のページを開いています。
+      button: 続ける
+    inactive:
+      title: このリンクは無効になっています
+      body: ログインすると、同じページが開きます。
+      sign_in: ログイン
+    unsubscribe:
+      title: 配信を停止しています…
+      working: "%{email}へのTaiwanCardsのメールをすべて停止しています。"
+      button: すべてのメールを停止
+      done_title: すべてのメールの配信を停止しました
+      done: "%{email}には、今後TaiwanCardsからリマインダーやお知らせは届きません。"
+      undo: 気が変わったら、プロフィールからメールをオンに戻せます。
+      invalid_title: リンクを認識できませんでした
+      invalid: リンクの一部しかコピーされていない可能性があります。配信停止はプロフィールからもできます。
+      settings: プロフィールを開く
+  reminders:
+    profile:
+      title: メール
+      label: 学習リマインダー
+      hint: お知らせメールとは別のものです。ここで、またはリマインダーのメール内のリンク1つでオフにできます。
+      when: 通知のタイミング
+      auto:
+        title: 自動
+        hint: いつもの学習時間に、カードが待っているときだけ、2日、7日、21日空いたタイミングでお送りします。1日に1通まで。3通続けて反応がなければ、それ以上はお送りしません。
+      fixed:
+        title: 自分で決めた曜日と時間
+        hint: 選んだ曜日のその時間に、ちょうどいい量のカードを添えて1通お送りします。ほかのリマインダーは届きません。その日すでに学習済みか、待っているカードがなければ、メールは送りません。
+      days: 曜日
+      hour: 時間
+      zone: タイムゾーン：%{zone}
+      no_days: 曜日が選ばれていないため、リマインダーは届きません。
+    mail:
+      why: TaiwanCardsのプロフィールでリマインダーがオンになっているため、このメールをお送りしています。曜日と時間を自分で決めれば、そのときだけお送りします。
+      "off": すべてのメールを停止
+      schedule: 曜日と時間を選ぶ
+      settings: メールの設定
+      welcome:
+        subject: TaiwanCardsへようこそ
+        preheader: 辞書、カード、文法、読解、発音がひとつのしくみに。
+        title: ようこそ！
+        body:
+          - TaiwanCardsは、台湾華語に必要なものをひとつにまとめたサイトです。辞書、カード、文法、読解、発音は、別々の素材を寄せ集めたものではなく、ひとつのしくみとして作られています。レッスンに出てきた単語は、辞書の項目もカードも音声も同じものです。
+          - だから、辞書とAnkiといくつもの練習アプリを使い分ける必要はありません。学習の記録は1か所にたまり、復習はすでに学んだことを把握しています。
+        features:
+          - title: カード
+            text: どの単語も、忘れかけるちょうどそのころにまた出てきます。サイトの学習プランに沿って進めても、TOCFL対策に使っても、授業の単語を持ち込んでもかまいません。
+          - title: 辞書
+            text: 繁体字、注音、台湾での読み方、ネイティブの音声、実際の文章から取った例文。
+          - title: 発音
+            text: 単語を声に出して言うと、声調と音についてフィードバックが返ってきます。
+          - title: 文法と読解
+            text: 文法レッスン、日常のフレーズ、レベル別多読の文章。はじめての単語から上級まで。
+        outro: ホーム画面に、今日どこから始めればいいかが表示されます。たいていは数分で終わります。
+        button: TaiwanCardsを開く
+        why: TaiwanCardsのアカウントを作成されたため、このメールをお送りしています。ウェルカムメールはこの1通だけです。今後は復習するカードがあるときだけ、1日に多くても1通お送りします。リマインダーの曜日と時間はプロフィールで選べます。
+      first_cards:
+        subject: 最初の学習は数分で終わります
+        preheader: どこから始めるかはホーム画面に表示されます。音からでも、自分のレベルの単語からでも。
+        title: 数分だけ、始めてみませんか？
+        body: アカウントの準備はできています。最初の学習は短く終わります。音から始めるか、自分のレベルの単語からすぐ始めるか、ホーム画面に表示されます。
+        button: 最初の学習を始める
+      due_cards:
+        subject:
+          one: 今日のカード1枚、約1分
+          other: 今日のカード%{count}枚、約%{minutes}分
+        preheader: タイミングよく復習すると、単語はずっと長く記憶に残ります。
+        title:
+          one: 今日のカード
+          other: 今日のカード
+        body: 今ちょうど復習のタイミングを迎えた単語です。約%{minutes}分。タイミングよく復習すると、ずっと長く記憶に残ります。
+        button: 復習を始める
+      still_due:
+        subject: 単語はまだここにあります
+        preheader: 短い復習、約%{minutes}分。
+        title:
+          one: リズムを取り戻すためのカード
+          other: リズムを取り戻すためのカード
+        body: 1週間空くこともあります。学習の記録はちゃんと残っています。特に大事なカードを少しだけ選びました。約%{minutes}分です。残りは少しずつ出てきます。
+        button: 単語に戻る
+      last_call:
+        subject: これまで覚えたことは、すべて残っています
+        preheader: 最後のお知らせです。これ以降はご連絡しません。
+        title:
+          one: 気軽に再開するためのカード
+          other: 気軽に再開するためのカード
+        body:
+          - 3週間はけっこうな休みですが、単語はどこにも行っていません。少しだけから始めましょう。約%{minutes}分です。
+          - リマインダーはこれが最後です。またご自身で戻ってくるまで、こちらからはご連絡しません。
+        button: 学習に戻る
+      scheduled:
+        subject:
+          one: 学習の時間です：%{count}枚、約%{minutes}分
+          other: 学習の時間です：%{count}枚、約%{minutes}分
+        preheader: 自分で決めた時間です。短いセットを1つやれば、今日はおしまい。
+        title:
+          one: 今日のカード
+          other: 今日のカード
+        body: この時間にお知らせするよう設定されています。今日にちょうどいい量で、約%{minutes}分です。残りはこの先数日で少しずつ出てきます。
+        button: 学習を始める
+        why: TaiwanCardsのプロフィールでリマインダーの曜日と時間を設定されたため、このメールをお送りしています。ほかのリマインダーはお送りしません。
+    session:
+      "on": 明日戻ってこなかったら、リマインダーを1通お送りします。
+      fixed: 設定したスケジュールでお知らせします：%{schedule}
+      no_days: リマインダーのスケジュールに曜日が選ばれていません。
+      settings: 設定
+      enable: 明日お知らせする
+      enabled: 設定しました。明日戻ってこなかったら、お知らせします。
+  goals:
+    saved: "「%{goal}」モードになりました。プロフィールで変更できます。"
+    current: 現在のモード
+    profile:
+      title: モードとレベル
+      lede: モードはホーム画面と「学習」メニューの並び順を決め、レベルは新しいカードをどこから始めるかを決めます。切り替えても学習状況は失われません。
+    options:
+      tocfl:
+        title: TOCFL対策
+        short: TOCFL
+        tagline: 試験と日付を決めれば、残り日数と1日の学習量を計算
+        body: 受ける試験と日付が決まっている方向け。ホーム画面に、残り日数、1日の学習量、レベルごとの準備度が表示されます。
+        home:
+          - 試験までのカウントダウンと今日の学習量
+          - 準備級（Novice 1）からB1までのレベル別準備度
+          - 自分のレベルの模擬試験と文法
+      classes:
+        title: 自分の単語で学ぶ
+        short: 自分の単語
+        tagline: 授業や教科書の単語を、Ankiの代わりに
+        body: 授業や教科書、自分で作ったリストの単語をカードにします。AnkiやMemriseのように使えて、さらに注音、ネイティブの音声、自分に合わせた復習のタイミングつき。サイトのレッスン順は邪魔をしません。
+        home:
+          - 自分のデッキの復習
+          - 授業の単語を、テキスト・写真・インポートで追加
+          - 今週の間違いと連続記録
+      guided:
+        title: サイトのプランで学ぶ
+        short: おまかせ
+        tagline: まだ自分のやり方がない方に、一歩ずつご案内
+        body: 自分のやり方がまだない方へ。まず音、それからコースのレッスンとカードを正しい順番で、一歩ずつご案内し、毎日何をすればいいかをお伝えします。
+        home:
+          - 次のステップ：発音の基礎かコースのレッスン
+          - プランに沿った今日のカード
+          - 発音・声調・手書きのドリル
+  newsletters:
+    mail:
+      from_name: TaiwanCardsの丹丹
+      why: TaiwanCardsにGoogleでログインされたため、このメールをお送りしています。
+      promise: お送りするのは多くても月1〜2回、アプリの新しい情報だけです。広告はなく、メールアドレスを販売したり、広告のために誰かに渡したりすることはありません。
+      unsubscribe: すべてのメールを停止
+      settings: メールの設定
+      reply: このメールに返信していただくだけでも大丈夫です。すべて読んでいます。
+    unsubscribe:
+      title: 配信を停止しています…
+      working: "%{email}をTaiwanCardsのお知らせメールの配信先から外しています…"
+      button: 配信停止
+      done_title: 配信を停止しました
+      done: "%{email}には、今後TaiwanCardsからメールは届きません。アカウントと学習状況はそのままです。"
+      undo: 気が変わったら、プロフィールからメールをオンに戻せます。
+      invalid_title: このリンクは使えません
+      invalid: リンクが途中で切れている可能性があります。メールはプロフィールからもオフにできます。
+      settings: プロフィールを開く
+    profile:
+      label: アプリのお知らせをメールで受け取る
+      hint: 多くても月1〜2回、新しい情報だけ。広告はありません。
+    admin:
+      title: お知らせメール
+      lede: 配信先：Googleでログインし、配信を停止していない全員と、常に自分自身。現在、英語%{en}人、ロシア語%{ru}人、ベトナム語%{vi}人、ドイツ語%{de}人、インドネシア語%{id}人、日本語%{ja}人。それぞれの表示言語の版が届きます。
+      new: 新しいお知らせ
+      empty: まだお知らせはありません。
+      draft: 下書き
+      sent_on: "%{at}に送信"
+      back: "← すべてのお知らせ"
+      subject: 件名
+      subject_hint: 50文字程度まで、具体的に。開封されるかどうかは件名で決まります。
+      preheader: プレビューテキスト
+      preheader_hint: 受信トレイで件名のあとに表示される灰色の1行。件名を繰り返さず、補う1文にします。
+      body: 本文
+      body_hint: 1通につき1テーマ、短い段落、スクリーンショットは1〜3枚。スクリーンショットは本文に貼り付けるかドロップしてください。1200pxに縮小され、メールに埋め込まれます。
+      buttons: ボタン
+      buttons_hint: 本文のあとに3つまで。最初のボタンがメインです。本文中で1行に単独で置いたリンクもボタンになります。%{host}へのリンクはクリック数を数え、それ以外のリンクはそのままです。
+      button_label: ボタンのテキスト
+      save: 保存
+      autosaved: 保存済み
+      autosave_failed: 保存できませんでした。接続を確認してください
+      image_failed: 画像をアップロードできませんでした（PNG、JPEG、GIF、縮小後1MBまで）。
+      preview: プレビュー・%{lang}
+      preview_hint: メールのテンプレートが実際に描画するとおりの表示
+      saved: 保存しました。
+      deleted: 下書きを削除しました。
+      locked: 送信済みのお知らせは編集できません。
+      send_title: 送信
+      sample: 自分にだけ送信（%{email}、%{lang}）
+      sample_sent: "%{email}にだけ送信しました。本番と同じメールで、リンクのクリック数も数えられ、配信停止リンクも機能します。"
+      failed: 送信できませんでした：%{error}
+      deliver: 送信（%{count}）
+      deliver_confirm: このお知らせを%{count}人（英語%{en}人、ロシア語%{ru}人、ベトナム語%{vi}人、ドイツ語%{de}人、インドネシア語%{id}人、日本語%{ja}人）に送信しますか？送信後は取り消せません。
+      no_recipients: 選んだ条件に合う配信先がいません。
+      audience: 配信先
+      audience_modes:
+        all: すべての購読者
+        filtered: レベルと目標で絞り込む
+        picked: 個別に選ぶ
+      audience_filter_hint: 空欄の行は、その項目の全員を対象にします。
+      audience_levels: レベル
+      audience_goals: 目標
+      audience_search: メールアドレスで検索
+      audience_seen: "%{ago}前にアクセス"
+      audience_count:
+        one: 配信先1人：英語%{en}人、ロシア語%{ru}人、ベトナム語%{vi}人、ドイツ語%{de}人、インドネシア語%{id}人、日本語%{ja}人
+        other: 配信先%{count}人：英語%{en}人、ロシア語%{ru}人、ベトナム語%{vi}人、ドイツ語%{de}人、インドネシア語%{id}人、日本語%{ja}人
+      resume: 残りの%{count}人に送信
+      resume_confirm: まだ届いていない%{count}人にお知らせを送信しますか？
+      dispatched: バックグラウンドで送信を始めました。ページを再読み込みすると進み具合を確認できます。
+      incomplete: まず、選んだ配信先が読むすべての言語で、件名と本文を入力してください。
+      not_configured: メール配信が設定されていません（SMTP_ADDRESSなどが未設定）。まだ何も送信できません。
+      send_hint: 1日の上限は%{limit}通で、そのうち%{reserve}通はリマインダーとウェルカムメール用に確保しています。今すぐ送れるのは%{budget}通で、残りは上限に空きが出しだい自動で送信されます。送信に失敗したメールは「残りに送信」を待ちます。
+      delete: 下書きを削除
+      delete_confirm: この下書きを削除しますか？
+      stat_sent: "%{total}通中%{sent}通送信"
+      stat_clicked: アプリに来た人：%{count}（クリック：%{clicks}）
+      stat_unsubscribed: 配信停止：%{count}
+      stat_failed: 失敗：%{count}
+      unsubscribed_title: 配信停止（%{count}）
+      unsubscribed_none: 配信停止した人はいません。
+      col_email: メール
+      col_locale: 言語
+      col_sent: 送信
+      col_clicked: アプリに来た
+      col_unsubscribed: 配信停止
+      failed_short: エラー
+      waiting: 待機中
+  imports:
+    lede: ほかのアプリから単語リストを移せます。移るのは単語だけで、意味・例文・ピンインは引き継ぎません。このサイトのカードはすべて、確認済みの台湾のデータを使っているためです。
+    source_label: 移行元
+    file_label: エクスポートしたファイル
+    file_hint: ".txt、.tsv、.csv、.xml、2MBまで。ファイルは一度読み込むだけで、保存しません。"
+    text_label: "…またはテキストを貼り付け"
+    text_placeholder: エクスポートしたテキストをここに貼り付け
+    name_label: デッキ名
+    check: 単語をチェック
+    pick_source: リストの移行元のアプリを選んでください。
+    too_big: ファイルが%{limit}MBを超えています。小さく分けてエクスポートしてください。
+    unreadable: 漢字の単語が見つかりませんでした。選んだアプリからエクスポートしたファイルか確認してください。
+    default_name: "%{source}から"
+    sources:
+      pleco:
+        name: Pleco
+        steps: Plecoで Flashcards → Import / Export → Export Cards を開きます。カードかカテゴリーを選んでテキストファイル（またはXML）として保存し、そのファイルをここにアップロードしてください。
+      anki:
+        name: Anki
+        steps: パソコン版のAnkiで、ファイル → エクスポート → Notes in Plain Text (.txt) を選び、デッキを選んでメディアのチェックは外したままにします。漢字の列は自動で見つけます。
+      quizlet:
+        name: Quizlet
+        steps: quizlet.comでセットを開き、⋯メニュー → エクスポート → テキストをコピー の順に進んで、下に貼り付けてください。漢字はどちらの面にあってもかまいません。
+    preview:
+      title: "%{source}からインポート"
+      lede: 台湾の辞書と照合しました。デッキを作成するまで、何も保存されません。
+      ready: 追加される語
+      converted: 繁体字に変換
+      choices: 選択が必要
+      china: 中国での言い方
+      missing: 辞書にない語
+      duplicates: 重複
+      skipped: 漢字のない行
+      truncated: ファイルは%{total}行ありますが、読み込んだのは最初の%{limit}行だけです。
+      capped: 1つのデッキに入るのは%{limit}語までなので、最初の%{limit}語だけが追加されます。残りが必要ならリストを分けてください。
+      choices_lede: 1つの簡体字の表記が、繁体字の複数の単語に対応しています。意図した方を選んでください。
+      skip_choice: 追加しない
+      china_lede: 台湾では別の言い方をする単語です。これらは追加されません。代わりに台湾の言い方を確認して追加してください。
+      taiwan_says: 台湾では：%{words}
+      no_taiwan_word: まだ辞書にありません
+      converted_lede: 簡体字で書かれていましたが、どれも辞書に台湾の表記が1つだけあったものです。
+      missing_lede: 辞書にない単語です。たいていはフレーズ、固有名詞、入力ミスです。これらは追加されません。
+      duplicates_lede: 同じ単語が複数回出てきました。追加は1回だけです。
+      list_title: デッキに入る単語（%{count}）
+      covered: 学習中、またはほかのデッキにある語
+      skip_covered:
+        one: 学習中またはほかのデッキにある%{count}語を除く
+        other: 学習中またはほかのデッキにある%{count}語を除く
+      create: デッキを作成
+      again: 別のファイルを選ぶ
+    created:
+      one: "%{count}語のデッキを作成しました。"
+      other: "%{count}語のデッキを作成しました。"
+  desks:
+    panel_empty: テキスト中の単語をタップすると、ここに表示されます。
+    panel_include: デッキに入れる
+    panel_exclude: デッキから外す
+    panel_tocfl: TOCFL
+    panel_tbcl: TBCL
+    panel_freq: 頻度順位
+    panel_score: 難易度スコア
+    panel_fresh: 初めて見る語
+    panel_none: "—"
+    reorder: 並べ替え
+    reorder_hint: ハンドルをドラッグして並べ替えます。
+    paste_hint: 1行に1語でも、カンマ区切りでも、お好きな方で。ふつうの文章を貼り付けても、自動で単語に区切ります。訳は辞書から入るので、入力する必要はありません。
+    file_label: "…またはリストのファイルをアップロード"
+    stat_cards: "%{count}枚のカード"
+    stat_duplicates: 重複%{count}件を削除
+    stat_known: "%{count}語は学習済み"
+    stat_missing: "%{count}語は見つかりませんでした"
+    stat_selected_html: "%{count}語を選択中"
+    stat_overlap: 手持ちの単語と%{percent}%%が重複（%{count}語）
+    stat_in_decks: "%{count}語はすでにデッキにあります"
+    in_deck: デッキにあり
+    too_fast: 続けてテキストを送りすぎています。1分ほど待ってから、もう一度お試しください。
+    truncated: 読み込んだのは最初の%{limit}字だけです。テキストを分けて、もう1つデッキを作ってください。
+    cap_reached: 1つのデッキに入るのは%{limit}枚までです。%{soft}枚あたりを超えると復習の効率が落ちるので、分けましょう。
+    created_capped: "%{kept}枚のデッキを作成しました。残りは上限の%{limit}枚に収まりませんでした。"
+    full: このデッキはすでに上限の%{limit}枚に達しています。
+    filters_title: 入れる単語を選ぶ
+    filter_level: レベル
+    filter_freq: よく使う単語を除く
+    filter_drop_top: 上位%{count}語を除く
+    filter_any: すべて
+    filter_skip_known: 知っている単語を除く
+    filter_skip_in_decks: すでにデッキにある単語を除く
+    select_all: すべて選択
+    select_none: 選択を解除
+    text_title: テキスト
+    text_hint: 単語をクリックすると、デッキに入れたり外したりできます。同じ単語はほかの箇所も一緒に切り替わります。
+    list_title: 単語リスト（%{count}）
+    add_cards_title: カードを追加
+    add_cards_hint: テキストを貼り付けると、その単語がこのデッキに加わります。
+    add_cards_action: このデッキに追加
+    added_cards: "%{count}枚のカードを追加しました。"
+    remove_selected: 選択した単語を削除
+    removed_cards: "%{count}枚のカードを削除しました。"
+    share: 共有
+    ungrouped: グループなし
+    missing_title: 辞書にない語
+    missing_hint: まだ辞書にない単語です。入力ミス、簡体字の表記、ごくまれな語などが考えられます。デッキには入りません。
+    order_hint: 難易度順で、やさしい単語が先。不要なものはチェックを外してください。
+    known_title: もう全部知っていますか？
+    known_action: 学習済みにする
+    redo_hint: 知っているかどうかに関係なく、デッキのすべての項目をひと通り出題します。記録は残りますが、よく覚えている単語の復習間隔はほとんど変わりません。
+    redo_all: 全部もう一度
+    title: マイデッキ
+    new: デッキを作成
+    create: デッキを作成
+    preview: 単語を確認
+    preview_hint:
+      one: 1語見つかりました。不要なものはチェックを外してください。
+      other: "%{count}語見つかりました。不要なものはチェックを外してください。"
+    name_label: 名前
+    name_placeholder: "空欄なら「Random #N」"
+    paste_label: テキストを貼り付け
+    paste_placeholder: 華語のテキストなら何でも：看板、チャット、記事…
+    empty: まだデッキがありません。好きなテキストから作れます。
+    empty_text: このテキストには、辞書にある単語が見つかりませんでした。
+    created: デッキを作成しました。
+    updated: デッキを更新しました。
+    deleted: デッキを削除しました。
+    delete_confirm: このデッキを削除しますか？単語の学習状況は残ります。
+    items_count:
+      zero: 単語なし
+      one: 1語
+      other: "%{count}語"
+    study: 学習
+    cram_all: 全部まとめて復習
+    open: 開く
+    back: "← マイデッキ"
+    facets_label: 練習する内容
+    facets_hint: このデッキに含める練習を選びます。「声調」と「手書き」を選ぶと、「話す」と「書く」のボタンが加わります。
+    facets_create_hint: このデッキで何を練習するかを選びます。あとでデッキのページから変更できます。今は聞いて言えればいいだけなら、「手書き」はオフのままにしておきましょう。
+    presets_label: よく使う組み合わせ：
+    presets:
+      all: すべて
+      spoken: 音と意味
+      meaning: 意味だけ
+    quick_add: デッキに追加
+    quick_added: "%{name}に追加しました"
+    quick_add_failed: この単語を追加できませんでした。
+    pick_desk: デッキを選ぶ
+    new_desk_option: 新しいデッキ…
+    tabs:
+      text: テキストかリスト
+      import: Pleco・Anki・Quizlet
+      song: 歌
+      photo: 写真
+    song_hint: 曲を探すと、その単語がデッキになります。歌詞そのものは保存しません。取得して単語に区切ったら、破棄します。
+    song_words: この曲にする
+    song_note: 歌詞はオープンデータベースLRCLIBから取得しており、著作権は作者にあります。ここに残るのは単語リストだけです。
+  progress:
+    title: 学習状況
+    tabs:
+      summary: 概要
+      history: 履歴
+      data: データ
+  stats:
+    title: 統計
+    lede: 覚えたこと、遅れ気味のスキル、これからの予定。
+    streak: 連続記録
+    streak_today: "%{date}から連続（今日を含む）"
+    streak_pending: "%{date}から連続。今日はまだ復習していません"
+    streak_none: 今は連続記録がありません
+    streak_resting: "%{date}から。今はお休み中で、連続記録は続いています"
+    streak_rest_used: お休みは使い切りました。今日復習すれば連続記録が続きます。
+    streak_rest_left: 今回の休みで残っているお休みの日：%{count}日
+    streak_rest_allowed:
+      one: 1日休んでも、この連続記録は途切れません。
+      other: "%{count}日まで休んでも、この連続記録は途切れません。"
+    streak_rest_ahead:
+      one: あと1日続けると、最大%{days}日まで休めるようになります。
+      other: あと%{count}日続けると、最大%{days}日まで休めるようになります。
+    streak_rest_earn:
+      one: あと1日続けると、最大%{days}日のお休みが連続記録に数えられるようになります。
+      other: あと%{count}日続けると、最大%{days}日のお休みが連続記録に数えられるようになります。
+    streak_rests:
+      one: この連続記録中のお休みの日：1日（%{date}）。
+      other: この連続記録中のお休みの日：%{count}日（直近は%{date}）。
+    activity_rest: "%{date}：お休みの日（連続記録は継続）"
+    streak_longest: 最長記録
+    streak_days: 復習した日数
+    streak_zone: 1日あたりの復習数。日付の区切りはタイムゾーン（%{zone}）に従います
+    activity_less: 少
+    activity_more: 多
+    known_words: 覚えた単語
+    known_words_hint: 少なくとも1つのスキルが長期の復習に入った語
+    retention: 定着率（目標%{target}）
+    retention_hint: 過去30日、復習段階のカード
+    due_today: 今日の復習
+    due_week:
+      one: 今後7日間の復習：%{count}回
+      other: 今後7日間の復習：%{count}回
+    mature_hint: 3週間以上定着しているスキル
+    of: "%{known} / %{total}"
+    peak: 最大%{count}
+    coverage_tocfl: TOCFLレベル
+    coverage_tbcl: TBCLの段階
+    coverage_hint: 濃い色は習得済み、薄い色は学習中
+    skills: スキル
+    skills_hint: スキルごとの、始めたもののうち覚えた数
+    nothing_yet: まだ何も始めていません。
+    learned_by_week: 週ごとの習得数
+    learned_hint: 初めて1日以上記憶に残った単語
+    forecast: 今後7日間
+    forecast_hint: 各日の復習予定数。期限を過ぎたものは今日に数えます
+    reviews_hint: 過去2週間に行った復習
+    leeches_hint: 何度も忘れてしまう単語。改めて見直す価値があります
+    answer_time: 平均解答時間
+    mature: 定着
+    reviews_by_day: 1日ごとの復習数
+    breakdown: デッキの記憶状態
+    states:
+      unseen: 新しいカード
+      learning: 学習中
+      young: 短期
+      mature: 定着
+    leeches: 苦手カード（8回以上忘れた）
+  settings:
+    title: 設定
+    updated: 設定を保存しました。
+    desired_retention: 目標保持率
+    desired_retention_hint: FSRSが復習時点で目指す想起確率。高くするほど復習の回数が増えます。初期値は0.9。
+    daily_new_limit: 1日の新しいカード数
+    session_size: 1回のカード数
+    session_size_hint: 1回のセッションで出すカードの枚数。出し終わるとセッションがそれを知らせ、そのまま続けることもできます。
+    learn_ahead_minutes: 先取り学習の時間枠（分）
+    scope_hint: この設定は自分にだけ適用されます。ほかの人はサイトの初期設定のままです。
+    as_default: サイト全体の初期設定としても保存
+    restored: 設定を初期設定に戻しました。
+    restore: 初期設定に戻す
+    export_title: LLMプロンプト用のエクスポート
+    export_hint: 覚えた単語と学習中の単語のJSONです。生成用のプロンプトに貼り付ければ、知っている語彙だけで例文を作れます。
+    export_link: エクスポートをダウンロード
+  groups:
+    reorder: 並べ替え
+    reorder_hint: ハンドルをドラッグしてグループを並べ替えます。
+    title: グループ
+    default_name: グループ%{count}
+    new: 新しいグループ
+    name_label: グループ名
+    create: グループを作成
+    created: グループを作成しました。
+    updated: グループ名を変更しました。
+    deleted: グループを削除しました。中のデッキは残っています。
+    delete_confirm: このグループを削除しますか？中のデッキはマイデッキに残ります。
+    too_many: グループはすでに上限の数に達しています。
+    empty: まだグループがありません。1つのデッキを複数のグループに入れることもできます。
+    decks_count:
+      zero: デッキなし
+      one: 1デッキ
+      other: "%{count}デッキ"
+    add_deck: デッキを追加
+    add_deck_hint: 1つのデッキを複数のグループに入れられます。
+    remove_deck: グループから外す
+    no_available: デッキはすべて、すでにこのグループに入っています。
+    back: "← マイデッキ"
+  shares:
+    title: 共有リンク
+    share_deck: このデッキを共有
+    share_group: このグループを共有
+    created: リンクができました。ログインしている人なら誰でも、開いて自分のデッキにコピーできます。
+    copied: コピーしました。%{count}枚のカードが自分のものになりました。
+    nothing_copied: コピーするものはありませんでした。すべてすでに持っています。
+    revoked: リンクを無効にしました。
+    revoke: 無効にする
+    missing: このデッキまたはグループはもう存在しません。
+    too_many: 続けて共有しすぎています。しばらくしてからもう一度お試しください。
+    offer_deck: "%{name}さんがデッキを共有しました"
+    offer_group: "%{name}さんがデッキのグループを共有しました"
+    accept: マイデッキにコピー
+    accept_only_new: 持っていない単語だけコピー
+    cards_count:
+      zero: カードなし
+      one: 1枚
+      other: "%{count}枚"
+    overlap: すでに%{percent}%%を持っています（%{total}語中%{count}語）。
+    fresh: 新しい語：%{count}
+    independent: コピーは自分だけのものです。共有した人があとで編集しても、こちらには反映されません。
+    expires: リンクの有効期限：%{date}まで
+    accepted_count:
+      zero: まだ誰もコピーしていません
+      one: 1回コピーされました
+      other: "%{count}回コピーされました"
+    my_shares: 自分のリンク
+    empty: 有効なリンクはありません。
+    link_label: リンク
+    mine: これは自分のリンクです。
+  memories:
+    listening: リスニング
+    recognition: 理解
+    production: 想起
+    reading: 読み
+    tone: 声調
+    writing: 書き
+    short:
+      recognition: 理
+      production: 想
+  characters:
+    series:
+      title: 同じ音符を持つ字
+      payoff: この音符を持つ字は%{count}字。そのうち%{percent}%%は今も%{rime}と読みます。
+      diverged: 中古漢語では同じ韻（%{group}のグループ）でしたが、その後に読みが分かれました。1字ずつ覚えましょう。
+    confusable:
+      title: まぎらわしい字
+      note: 部品は同じでも、別の字です。よく見比べましょう。
+    by_component: 意符
+    found:
+      one: "%{count}字"
+      other: "%{count}字"
+    play_reading: この読みを再生
+    title: 漢字
+    subtitle: 繁体字%{count}字（教育部の常用国字標準字体表4808字）。タップすると、読み、字源、単語、学習状況が見られます。
+    search: 検索
+    search_placeholder: 漢字を検索…
+    clear: クリア
+    radical: 部首
+    all_radicals: すべての部首
+    empty: 該当する漢字はありません。
+    page: "%{page} / %{pages}"
+    back: 漢字
+    strokes:
+      one: "%{count}画"
+      other: "%{count}画"
+    moe_index: "教育部 #%{number}"
+    moe_index_hint: 教育部の頻度リストでの順位。小さいほどよく使われます
+    not_studied: まだ学習していません。
+    not_in_dictionary: この字はまだ常用字の辞書に入っていません。
+    cangjie: 倉頡入力
+    stroke_order: 書き順
+    animate: アニメーション
+    practice: 書く練習
+    practicing: 筆画を書いてください…
+    practice_done: "✓ よくできました"
+    due: 次の復習：%{when}
+    etymology: 字源
+    etymology_translated: TaiwanCardsによる翻訳。
+    etymology_types:
+      pictographic: 象形文字
+      ideographic: 会意文字
+      pictophonetic: 形声文字
+    decomposition: 字の分解
+    ids:
+      left_right: 左・右
+      top_bottom: 上・下
+      left_mid_right: 左・中・右
+      top_mid_bottom: 上・中・下
+      surround: 囲み
+      surround_top: 上から囲む
+      surround_bottom: 下から囲む
+      surround_left: 左から囲む
+      surround_tl: 左上を囲む
+      surround_tr: 右上を囲む
+      surround_bl: 左下を囲む
+      overlap: 重なり
+    semantic: 意符
+    phonetic: 音符
+    readings: 読み
+    several_readings:
+      one: "〘破音字〙（多音字）：この字には読み方が%{count}つあり、それぞれ意味と単語が異なります"
+      other: "〘破音字〙（多音字）：この字には読み方が%{count}つあり、それぞれ意味と単語が異なります"
+    reading_unknown: 読みは未確定
+    words: 単語
+    top_words: この字を使うよくある単語
+    no_words: まだリンクされた単語はありません。
+    phrases: フレーズと例文
+    states:
+      unseen: 新しいカード
+      learning: 学習中
+      review: 復習
+      relearning: 再学習
+  pos:
+    tocfl:
+      "n": 名詞
+      v: 動詞
+      vi: 自動詞
+      vs: 状態動詞
+      vst: 他動的な状態動詞
+      vp: 変化動詞
+      vpt: 他動的な変化動詞
+      v_sep: 離合詞
+      vp_sep: 離合詞（変化動詞）
+      vs_sep: 離合詞（状態動詞）
+      vs_attr: 連体修飾にだけ使う状態動詞
+      vs_pred: 述語にだけ使う状態動詞
+      vaux: 助動詞
+      adv: 副詞
+      conj: 接続詞
+      det: 限定詞
+      m: 量詞
+      ptc: 助詞
+      prep: 介詞
+    moe:
+      名: 名詞
+      動: 動詞
+      形: 形容詞
+      副: 副詞
+      代: 代名詞
+      助: 助詞
+      介: 介詞
+      連: 接続詞
+      歎: 感動詞
+      嘆: 感動詞
+      擬: 擬声語
+      量: 量詞
+      綴: 接辞
+  thesaurus:
+    title: 類語
+    synonyms: 類義語
+    antonyms: 対義語
+    related: 意味の近い語
+    collocates: よく一緒に使われる語
+  zhuci:
+    title: "語気助詞（〘語氣詞〙）"
+    all: すべて
+    back: 語気助詞
+    not_found: この語気助詞の解説はまだありません。
+    order_hint: "%{count}の語気助詞を、よく使われる順に並べています。数字は、台湾のコーパスでそれぞれが節の終わりに現れる回数です。"
+    corpus_count: コーパスに%{count}回
+    from_grammar: 表す語気
+    as_particle: 語気助詞として
+    as_character: 漢字として
+    as_word: 単語として
+    as_grammar: 文法項目
+    variants: ほかの表記
+    examples: 実際の文の中で
+    also_title: ほかの文末の語はこちら
+    also_grammar_html: "〘嗎〙、〘了〙、〘的〙も文末に来ますが、語気ではなく文法の役割を担います。それぞれ疑問、状態の変化、焦点を示す枠組みです。文法セクションにそれぞれのレッスンがあります。"
+    also_elsewhere: "〘唄〙と〘嘞〙も本物の語気助詞ですが、北京の話し言葉や広東語のものです。字幕で目にしたり、中国出身の人から聞いたりすることはあっても、台湾ではほとんど使われないので、ここにはカードがありません。〘咯〙は台湾で〘囉〙と書く語気助詞と同じもので（〘囉〙には専用のカードがあります）、〘咩〙は台湾のくだけた話し言葉でも聞かれます（〘真的咩？〙）。ただし、このページの語気助詞よりずっとまれです。"
+    families:
+      core: 日常の基本
+      mood: 語気とやわらかさ
+      taiwan: 台湾らしいもの
+      limiting: "「〜だけ」"
+      cluster: 組み合わせ
+  liangci:
+    title: "〘量詞〙（助数詞）"
+    subtitle: 台湾華語の量詞（日本語の助数詞にあたるもの）。それぞれが何を数えるか、どの名詞と組むか、実際の文でどう使われるか。
+    all: すべて
+    play: 再生
+    game_title: 量詞ゲーム
+    game_hint: 名詞を正しい量詞の方へスワイプしてください（矢印キーも使えます）。
+    game_prompt: 量詞はどれ？
+    back: 量詞
+    used_with: 数える名詞
+    used_with_hint: "%{count}の名詞、やさしい順。"
+    examples: 例文
+    examples_hint: コーパスから、簡単な文の順に。「数＋量詞＋名詞」の部分を強調しています。
+    as_character: 漢字として
+    as_word: 単語として
+    as_measure_word: 量詞として
+    for_noun: この名詞に使う量詞
+    main_short: ふつう
+    moe_gloss: "〘教育部國語辭典簡編本〙による定義"
+    next: 次へ
+    empty: まだ量詞が読み込まれていません。
+    not_found: 登録されている量詞ではありません。
+    categories:
+      individual: 個体
+      collective: 集合
+      container: 容器
+      partition: 部分
+      temporary: 臨時
+      verbal: 動作
+      measurement: 単位
+      time: 時間
+    category_hints:
+      individual: 1つ1つのもの、人、動物を数えます。
+      collective: グループ、セット、束を数えます。
+      container: 入れ物で数えます。カップ、箱、スプーンなど。
+      partition: 全体の一部、かけら、取り分を数えます。
+      temporary: 臨時の量詞：ふつうの物を単位として借ります。ひと抱え、ひとつかみ、顔いっぱいの何か、など。
+      verbal: 物ではなく動作を数えます。何回、何往復など。
+      measurement: 長さ、重さ、お金、面積の単位。
+      time: 時間の単位。
+  auth:
+    data_hint: すべて自分のデータで、1つのファイルにまとめて書き出せます。
+    data_since: "%{date}から利用中"
+    data_rows:
+      memories: 記憶中のカード
+      reviews: 復習
+      syllables: 練習した音節
+      attempts: 発音の練習回数
+      collections: デッキ
+      reading_texts: 自分のテキスト
+      study_plans: 学習計画
+      placement_tests: レベル診断テスト
+    data_voice: 声
+    data_voice_none: まだウォームアップをしていません。声調は、声の高さの絶対値を使わずに判定されます。
+    data_voice_range: 音域%{low}〜%{high}Hz、中心%{median}Hz
+    data_voice_frames: 音声%{count}フレームから算出
+    data_voice_redo: ウォームアップをやり直す
+    data_voice_start: ウォームアップをする
+    data_pron: 発音
+    data_pron_none: まだ記録はありません。
+    data_pron_line: "%{syllables}音節、%{attempts}回、平均%{average}"
+    data_excluded: 書き出さないもの：ページ閲覧ログとGoogleのトークン。これらは学習の記録ではなく、認証情報だからです。
+    export_full: すべてのデータをダウンロード
+    mobile_tabs: スマホの下部バー
+    google_backup_hint: Googleアカウントを連携すると、ワンタップでログインできます。ドライブへのバックアップは別の手順で、あとから「バックアップ」タブで設定できます。
+    font_recommendation: 漢字の書体とピンインの切り替えは、上部バーに移りました。〘臺〙ボタンで毛筆の楷書体とシンプルなゴシック体を切り替え、〘ㄅ〙aボタンでピンインの表示・非表示を切り替えます。どちらもこのブラウザに記憶されます。初期設定は楷書体で、そのままがおすすめです。手で書いたときの字の形がわかり、台湾の学校で教える字形もこれです。
+    security: アクセス
+    save_failed: 保存できませんでした
+    saved: 保存しました
+    tabs:
+      show: アカウント
+      display: 表示
+      guide: 使い方
+      backup: バックアップ
+    level_field: 今のレベル
+    level_test: レベル診断テストを受けてみてください
+    level_change:
+      up: 学習を始めた単語の記録は残ります。「%{level}」とそれ以下はすべて修了扱いになり、ときどき「%{level}」のいちばん難しい単語だけを確認します。新しい単語と文法は「%{next}」のはじめから始まります。
+      down: 上のレベルの単語の記録はすべて残り、学習を始めたカードの復習も続きます。ただし新しい単語と文法は、「%{next}」のはじめから順番に出てきます。レベルを1つずつ進めるのがいちばんです。上のレベルの新しい単語はしばらく出てきませんが、自然にそこまでたどり着きます。
+      beyond: TBCLの範囲を超える、ごくまれな語
+    level_note: 合格した試験か、だいたいの今のレベルを選んでください。たとえばTOCFL A1を選ぶと、A1はすでに身についているものとして、新しい単語と文法はA2のやさしいものから始まります。自分のレベルのいちばん難しい単語はときどき確認し、忘れかけていたり思い出すのに時間がかかったりすれば、その頻度を上げます。よくわからない場合は、
+    levels:
+      zero: ゼロから始める
+      phonetics: ピンインと注音はわかる
+    mobile_tabs_hint: よく使う%{count}か所を選んでください。「もっと見る」は常に最後のタブです。
+    interface_language: 表示言語
+    login_title: ログイン
+    login_subtitle: ログインして学習を続けましょう。
+    login_pitch: 無料で、広告もありません。辞書、言葉の解説、台湾のセクションはアカウントなしで読めます。ログインすると、ドリル、カード、個人の学習状況を記録する機能がすべて使えるようになります。
+    login: ログイン
+    logout: ログアウト
+    email: メールアドレス
+    name: 名前
+    profile: プロフィール
+    account: アカウント
+    save: 保存
+    progress: 学習状況
+    progress_counts: 記録中のスキル%{memories}・復習%{reviews}回
+    export: 学習状況をエクスポート
+    import: インポート
+    import_done: インポートしました：スキル%{memories}、復習%{reviews}回（%{skipped}件をスキップ）。
+    import_no_file: インポートするファイルを選んでください。
+    import_bad: このファイルは、正しい学習状況のエクスポートではありません。
+    signed_in: おかえりなさい。
+    signed_up: アカウントを作成しました。ゼロからスタートです。
+    account_deleted: アカウントを削除しました。データは何も残っていません。
+    delete_account: アカウントを削除
+    delete_account_hint: 学習状況、デッキ、テキスト、発音の練習記録、統計、そしてアカウント自体を、すべて削除します。元に戻すことはできず、もう一度ログインすると、まっさらなプロフィールが新しく作られます。コピーを残したい場合は、先に上の項目からエクスポートしてください。
+    delete_account_confirm: アカウントとすべてのデータを削除しますか？元には戻せません。
+    signed_out: ログアウトしました。
+    profile_saved: プロフィールを保存しました。
+    reading_title: 華語のテキストの表示
+    zhuyin_position: 注音の位置
+    zhuyin_positions:
+      right: 各字の右側
+      over: 各字の上
+    text_direction: 文字の向き
+    text_directions:
+      horizontal: 横書き（左から右）
+      vertical: 縦書き（上から下、行は右から左）
+    email_locked: メールアドレスは変更できません。
+    continue_google: Googleで続ける
+    google_only_note: アカウントは初回ログイン時に作成されます。会員登録もパスワードも必要ありません。
+    google: Googleアカウント
+    link_google: Googleを連携
+    google_connected: "%{email}で連携中。"
+    google_linked: Googleアカウントを連携しました。
+    oauth_failed: Googleでのログインがうまくいきませんでした。もう一度お試しください。
+    drive_backup: Googleドライブにバックアップ
+    drive_restore: ドライブから復元
+    drive_restore_confirm: ドライブの最新のバックアップから復元しますか？足りない学習記録が追加されます。
+    drive_saved: ドライブに%{name}としてバックアップしました。
+    drive_needs_consent: 先にGoogleドライブへのアクセスを許可してください。
+    drive_connect: Googleドライブを連携
+    drive_connect_hint: Googleから、ドライブにバックアップファイルを1つ置く許可を求められます。アプリが触れられるのはそのファイルだけで、ほかには一切アクセスしません。
+    drive_connected: Googleドライブを連携しました。
+    drive_declined: Googleドライブは連携されませんでした。許可するまで、バックアップと復元は使えません。
+    drive_error: Googleドライブのエラー：%{message}
+    reset: 学習状況をすべてリセット
+    reset_confirm: 学習状況をすべて削除しますか？元には戻せません。迷ったら先にバックアップしてください。
+    reset_hint: 記憶データと復習履歴を消去します。辞書やレッスンはそのままです。
+    reset_done: 学習状況をリセットしました。
+  hanzi:
+    evolution_title: 字形の移り変わり
+    evolution_lede: 同じ字の3,000年にわたる姿。絵がまっすぐな筆画の組み合わせへと整っていく様子を見れば、古い象形文字にはまだ物の形が見えるのに、現代の字形ではもう見えない理由がわかります。
+    evolution_gap: 隷書は、オープンライセンスの字形があるものだけを表示しています。ダッシュは画像がないという意味で、その字形が存在しなかったわけではありません。
+    era:
+      modern: 現在
+      oracle: 甲骨文
+      oracle_zh: "〘甲骨文〙"
+      bronze: 金文
+      bronze_zh: "〘金文〙"
+      seal: 篆書
+      seal_zh: "〘篆書〙"
+      clerical: 隷書
+      clerical_zh: "〘隸書〙"
+    show_all_with: "%{component}を含む字をすべて表示"
+    title: 漢字の成り立ち
+    empty: 資料はまだ読み込まれていません。
+    why_title: 漢字は筆画の寄せ集めではない
+    categories_title: 漢字の6つの分類〘六書〙
+    semantics_title: 意符
+    semantics_lede: 意符は意味の分野を決めます。単独の形の横にある詰まった形が、字の中で実際に現れる姿です。
+    series_title: 同じ音符を持つ字
+    series_lede: 音符が共通する字のグループ。読みが保たれているところと、ずれていくところに注目しましょう。
+    phonetic_label: 音符
+    walkthrough_title: 初めて見る字を読み解く
+    misses: ここでは当てはまらない
+    strokes_title: 筆画と書き順
+    strokes_basic: 基本の筆画
+    strokes_compound: 複合の筆画
+    yongzi_title: 永字八法：〘永〙に含まれる8つの筆法
+    watch_title: 字が組み上がる様子を見る
+    watch_lede: 書き順は、読むより一度見るほうがよくわかります。〘永〙は、8つの基本の筆法を教えるときに使われる字です。
+    order_title: 書く順番
+    limits_title: ここでは扱わないこと
+  history:
+    title: 学習履歴
+    subtitle: 最近学んだことと、漢字や単語がどれだけ身についているか。
+    ago: 前
+    empty: この期間に学習した記録はまだありません。
+    ranges:
+      today: 今日
+      yesterday: 昨日
+      week: 7日間
+      month: 30日間
+      all: 全期間
+    overview:
+      strong: 定着
+      familiar: 慣れてきた
+      learning: 学習中
+      weak: 苦手
+      due: 今日の復習
+    summary:
+      reviews: 復習回数
+      entities: 項目数
+      accuracy: 正答率
+      breakdown: わからない · 間違えた · わかった · 簡単
+    table:
+      entity: 項目
+      meaning: 意味
+      facets: スキル
+      reps: 回数
+      last: 最終学習
+    strength:
+      strong: 定着
+      familiar: 慣れてきた
+      learning: 学習中
+      weak: 要練習
+      new: 新しいカード
+    facets:
+      recognition: 理解
+      production: 想起
+      reading: 読み
+      tone: 声調
+      writing: 書き
+    facet_short:
+      recognition: 理解
+      production: 想起
+      reading: 読み
+      tone: 声調
+      writing: 書き
+  sketch:
+    title: ことばの組み合わせ
+    relations:
+      modifier: 形容することば
+      modified: 修飾する名詞
+      manner: どのように
+      complement: その結果
+      degree: 程度の表現と
+      resultative: 補語と
+      aspect: アスペクト助詞と
+      negated: 否定のしかた
+      preposition: 介詞のあとで
+      disposal: "〘把〙構文で"
+      passive: 受け身の動作主として
+      classifier: 数えるときの量詞
+      construction: 構文の中で
+  search:
+    title: 検索
+    grammar_title: 文法
+    placeholder: 漢字・ピンイン・注音・意味、なんでも検索…
+    prompt: 漢字、ピンイン（声調はあってもなくても）、注音、または意味を入力してください。
+    empty: "「%{query}」に一致するものは見つかりませんでした。"
+    show_all: すべて表示
+    showing_best: 近いもの%{count}件を表示しています
+    found: "%{count}件"
+    found_capped: "%{count}件以上あります。最初の%{count}件を表示しています"
+    field_text: 表記または意味
+    field_text_hint: 漢字、またはサイトのどの言語の単語でも
+    field_pinyin: ピンイン
+    field_pinyin_hint: 声調は記号でも数字でもOK、スペースの有無も自由：nǐhǎo = ni3hao3 = ni hao
+    field_zhuyin: 注音
+    field_zhuyin_hint: 声調記号を付けるとその声調だけを探します。付けなければすべての声調が対象です。
+    keyboard: キーボード
+    backspace: 1字消す
+    space: スペース
+    enter: Enter
+    clear_field: クリア
+    sentences_only: 例文だけを検索する
+    sentences_only_hint: 上の種類の指定は無視され、結果はすべて例文になります。検索した単語は文中で強調表示されます。
+    order:
+      easy: やさしい順
+      corpus: コーパス順
+    compatibility: この組み合わせは自然？
+    pair_is_collocation: "— 決まった言い方として辞書に載っています："
+    pair_never_together: "— コーパスでは一度も並んで出てきません。"
+    pair_together: "— %{count}文で並んで使われています。"
+    pair_capped: 検索の上限で数えるのを止めました。実際はもっと多いかもしれません。
+    register_gap: 文体が合いません。%{left}は主に%{left_style}（%{left_share}%）、%{right}は主に%{right_style}（%{right_share}%）で使われます。組み合わせると不自然に聞こえます。
+    classifier_main: "%{measure}は%{noun}を数えるときのいちばん一般的な量詞です。"
+    classifier_ok: "%{measure}で%{noun}を数えられます。辞書にもこの組み合わせが載っています。"
+    classifier_not_listed: "%{measure}は%{noun}の量詞として辞書に載っていません。"
+    classifier_instead: 辞書にある量詞：%{list}
+    kind:
+      character: 漢字
+      word: 単語
+      phrase: フレーズ
+      radical: 部首
+      sentence: 例文
+      collocation: コロケーション
+      measure_word: 量詞
+    pad:
+      open: 注音・ピンイン・手書き
+      zhuyin: 注音
+      pinyin: ピンイン
+      draw: 手書き
+      pinyin_hint: アルファベットは自分で入力し、声調記号はここをタップして付けます。
+      done: 完了
+  errors:
+    not_found:
+      title: ページが見つかりません
+      hint: アドレスが間違っているようです。辞書には台湾華語の基本的な語彙が収録されています。つづりを確かめて、もう一度お試しください。
+      home: ホームへ
+  sentences:
+    in_grammar: 文法レッスンでの例
+    back: 例文一覧に戻る
+    browse: 例文を見る
+    missing_title: この例文は見つかりません
+    missing_hint: リンクが古いか、アドレスが間違っています。コーパスの整理で削除されたか、出典のライセンスの都合で非表示になった可能性もあります。
+    at_most_hint: 以下
+    any_level: すべて
+    guaranteed_only: レベルが確定したものだけ
+    apply: 表示
+    reset: リセット
+    found: "%{count}件"
+    empty: 条件に合う例文はありません。
+    register: 文体
+    top_n: 上位%{n}
+    approximate_hint: レベル外の語：%{count}
+    difficulty: 難易度%{value}
+    source_link: 出典
+    open: 例文を開く
+    grammar_title: 文法
+    by_word: 単語別
+    by_character: 漢字別
+    by_character_hint: やさしい順：まずレベル、次に頻度で並べています。
+    not_in_dictionary: 辞書に未収録
+    grade: 第%{n}級
+    prev: 前へ
+    next: 次へ
+    page_of: "%{page} / %{pages}"
+    schemes:
+      tocfl: TOCFL
+      tbcl: TBCL
+      freq: 頻度
+    sort_label: 並び順：
+    sort:
+      easy: やさしい順
+      mine: 学習状況に合わせる
+      long: 長い順
+    sort_mine_hint: 最近学習した単語を使っている例文が先に出ます。
+    add_to_deck: デッキに追加
+    title: 例文
+    subtitle: 文として完結した例文集。文中の単語から辞書の項目に移動できます。
+    all_sources: すべて
+    search: 検索
+    search_placeholder: 本文や意味で検索…
+    page: "%{page} / %{pages}"
+  collocations:
+    words: 構成する単語
+    appears_in: この組み合わせが出てくる辞書項目
+  dict:
+    revised:
+      title: 大辞典にも収録
+      note: 出典：%{source}。このサイトの項目にまだ語義がなく、かつ準備級より上のレベルの単語にだけ表示しています。
+    title: 単語・フレーズ
+    back: 辞書に戻る
+    found: 辞書に%{count}項目
+    search_placeholder: 単語・フレーズ・意味で検索…
+  chengyu:
+    title: 故事成語 〘成語〙
+    found: "%{count}件の成語"
+    search_placeholder: 成語や意味で検索…
+    usage: 使い方
+    origin: 由来
+    source_label: 出典
+    examples: 例文
+    synonyms: 類義
+    antonyms: 対義
+    moe_credit: 語義・由来・用例：〘教育部《成語典》〙
+    filter_level: レベル
+    filter_tone: ニュアンス
+    filter_kind: 種類
+    filter_band: 難しさ
+    tones:
+      all: すべて
+      positive: よい意味
+      neutral: 中立
+      negative: 悪い意味
+    kinds:
+      all: すべて
+      classic: "〘成語〙（古典由来）"
+      colloquial: "〘慣用語〙（口語）"
+    grades:
+      all: すべて
+      advanced: シラバス外
+    bands:
+      all: すべて
+      easy: やさしめ
+      medium: ふつう
+      hard: 難しめ
+  tbcl:
+    title: TBCL語彙リスト
+    back: 級の一覧に戻る
+    grade: 第%{n}級
+    badge: TBCL %{n}
+    approximate: "≈TBCL %{n}"
+    approximate_hint: TBCLのリストにはない単語です。使われている漢字から推定しました。第%{n}級の段階で、その漢字はもう十分に習っています。
+    words_count: 辞書に%{count}語
+  words:
+    pronounce: 発音
+    filters: 絞り込み
+    filters_none: 全レベル
+    hokkien_source: 台湾語：
+    taigi_native: この漢字は華語の読み方では読みません。台湾語での書き表し方で、話されるのも台湾語です。見出し語の横に、華語でのおおよその発音を示しています。
+    taigi_phonetic: 漢字は意味ではなく音で選ばれた、いわば当て字です。ふつうの華語の読みで読むと台湾語の単語になり、漢字そのものの意味は関係ありません。
+    taigi_say: おおよその発音
+    no_corpus: 書き言葉のデータなし
+    no_corpus_hint: 話し言葉で使われる単語です。このサイトの書き言葉コーパスには出てこないため、コーパス頻度は測定していません。
+    collocations: コロケーション
+    senses: 語義
+    senses_source: 語義の順序と例文は〘教育部《國語辭典簡編本》〙に基づいています。訳はこのサイト独自のものです。
+    etymology: 成り立ち
+    taiwan_specific: 台湾特有
+    taiwan_specific_hint: 台湾で特に使われる単語として登録されています
+    variant_forms: 表記：
+    variant_main: 主
+    score_hint: 辞書全体での難易度の順位：1がもっともやさしく頻度が高い単語、999がもっともまれで難しい単語です
+    register_mix: 文体の分布
+    register_mix_note: どの文体もバランスの取れたコーパスと同じ重みになるよう、比率を補正しています。すべて%{neutral}%で横並びなら、文体的に中立な単語です。%{count}回の出現をもとに算出しました。
+    register_mix_thin: 出現数が少ないため、分布は中立寄りに補正されています。
+    register_mix_missing: この文体のコーパスがないため推定していません
+    register_mix_sentence_note: 文中の単語の文体を合わせて算出しています。特定の文体に結びついた単語ほど票が重く、どこでも使われる単語は票を持ちません。票を持った語：%{count}。すべて%{neutral}%で横並びなら、文体的に中立な文です。
+    all_sentences: この単語を使った例文をすべて見る →
+    all_levels: すべて
+    tocfl_levels: TOCFLレベル
+    school_levels: TBCLレベル
+    grade: 第%{n}級
+    sort_label: 並べ替え
+    sort:
+      level: レベル順
+      freq: 頻度順
+    search: 検索
+    search_placeholder: 単語や意味で検索…
+    empty: 該当する単語はありません。
+    page: "%{page} / %{pages}"
+    back: 単語
+    characters: 漢字
+    sentences: 例文・フレーズ
+    add_study: 学習に追加
+    added: 学習リストに追加しました。
+    not_studied: まだ学習していません。
+    not_in_dictionary: この単語はまだ辞書に収録されていません。
+    progress:
+      all: すべて
+      new: 新しいカード
+      learning: 学習中
+      known: 習得済み
+  standards:
+    taipei: 台北
+    beijing: 北京
+    taipei_hint: 台湾の標準です。ここで学ぶのはこちらです。
+    beijing_hint: 北京の標準です。比較のためだけに示します。
+  tones:
+    names:
+      "1": 第一声
+      "2": 第二声
+      "3": 第三声
+      "4": 第四声
+    segments_title: 声調だけではありません
+    segments_lede: 音そのものにも、ふだんからよく耳にする違いが二つあります。最初から知っておくと役に立ちます。
+    segments:
+      retroflex: 台湾の話し言葉では、そり舌音〘ㄓ ㄔ ㄕ〙が〘ㄗ ㄘ ㄙ〙と重なることがよくあります。ふだんの会話では〘知〙と〘資〙が同じように聞こえることもあります。
+      nasal: 韻母の-ingと-engは、-inと-enにほぼ合流しています。これは定着した特徴で、発音がいい加減なわけではありません。ただし注音では書き分けます。
+    practice_cta: 声調ドリルを開く →
+    chart:
+      taipei: 台北
+      reference: 北京
+      aria: "%{tone}：音の高さの動き"
+      taipei_note: "台湾での声調の聞こえ方で、覚えるのはこちらです。"
+      reference_note: 比較のための中国の規範です。数字は慣例となっている規範的な表記です。
+      beijing: 北京
+      beijing_note: "北京の標準で、比較のためだけに示します。"
+      scale: "低から高までの5段階です。線は左から右へ、声がどこから始まりどこへ向かうかを見てください。実際の発音は、この線の前後で少し揺れます。"
+    hacks_title: 本当に役に立つコツ
+    hacks:
+      low: "第三声は、ただの低い声調です。第一声のちょうど反対だと考えてください。深く下がってまた上がる形になるのは、単独で言うときとポーズの前だけで、台湾ではそこでも上昇はわずかで、聞こえないことも多いくらいです。チェックマークを描こうとせず、低くつぶやく「うん…」のように、低く入ってそのまま低く保ちましょう。"
+      pair: 第一声と第三声はペアで覚えましょう。一方は高くて平ら、もう一方は低くて平ら。「平らか、くぼむか」と覚えるより、ずっとつかみやすくなります。
+      start: いちばん混同しやすいのは第二声と第三声です。手がかりは終わりではなく始まりの高さ。第二声は中くらいから上がり、第三声は低く始まって低いままです。
+      after_third: 第三声のあとに第二声が来るときは、第三声の低さが助走になります。もう底にいるので、第二声はそこからまっすぐ上がるだけ。音節のあいだで中くらいの高さに戻らないでください。そこで流れが切れてしまいます。
+      fourth: "第四声はたいていいちばん楽に出せます。きっぱり言い切る「はい！」のように、上から下へ鋭く落とします。文の途中でも、一語ごとにこの下がり方を保ちましょう。弱く聞こえるなら、出だしが十分に高くないのかもしれません。"
+      relative: 音の高さは絶対的なものではなく、相対的なものです。5段階は楽譜の音ではなく、自分の声の幅の中で測ります。声が低くても、声調の妨げにはなりません。
+      neutral: "軽声は短く軽い音節です。台湾では、前の声調が何であっても、中くらいより少し低いところに落ち着きます。別に覚えることはほとんどありません。前の声調を正しく言って、軽声はそのまま軽く落としましょう。"
+    title: 声調
+    lede: 発音編の4つめ。これがないと最初の3つも生きてきません。声調とは何か、台湾ではどう現れるか、そしてなぜ飛ばせないのか。
+    what_title: "声調とは"
+    what_body: "声調とは、一つの音節の中での声の高さと、その動きのことです。日本語にも、高さで単語を区別するしくみはすでにあります。「箸」と「橋」がその例です。ただし日本語の高低は単語全体にかかる型で、段階は高と低の二つだけ、高さが切り替わるのは拍と拍の境目です。華語では音節の一つひとつに声調があり、高さはその音節の中で動きます。〘買〙 mǎi は低く言うと「買う」、〘賣〙 mài は高いところから下げて言うと「売る」です。高さは音符で決まるものではなく、自分の声の範囲の中での高い・低いなので、声が低いことも「音痴」であることも妨げにはなりません。声調を聞き分ける耳は練習で育ちます。短い期間の聞き取り練習でも、効果は長く続きます。本当に手間がかかるのは、どの単語がどの声調かを覚えることです。声調は、あとからではなく、単語といっしょに覚えましょう。"
+    why_title: 声調は飾りではありません
+    why_body: 日本語の高低アクセントは単語全体にかかりますが、華語では音節の一つひとつに声調があり、子音や母音と同じく音節の一部です。声調を無視すると区別できる音節はおよそ400、声調を数えると約1300になります。声調を落とせば使える区別の3分の2を捨てることになり、口から出たときに同じに聞こえる単語が何倍にも増えてしまいます。
+    myth_title: "「文脈でなんとかなる」という思い込み"
+    myth_body: "文脈は確かに助けになりますし、ことばが文脈なしで使われることもありません。でも文脈が直せるのは、聞き手がすでに聞き取ったものだけで、聞き取りの代わりにはなりません。ネイティブは意味を考えるより先に、自動的に声調を聞き分けています。間違った声調は「声調がない」のではなく「別の声調」として受け取られます。つまり、ただ伝わらないだけでなく、かえって別の意味に受け取られてしまうのです。"
+    cannot_title: "「声調を出さない」という選択肢はありません"
+    cannot_body: これは気持ちの話ではなく、仕組みの話です。声に出した音節には必ず高さと高さの動きがあります。なければそもそも音になりません。問題は、その形が求められている形と合っているかどうかだけです。声調の練習を飛ばしても中立な発音にはならず、でたらめな声調の発音になるだけです。自分の耳には声調が存在しなくても、聞く人にとってはいつも存在しています。
+    cumulative_title: 問題はミニマルペアだけではありません
+    cumulative_body: 声調はたいてい〘媽 麻 馬 罵〙で紹介されるので、危ないのはまれな取り違えだけだという印象が残りがちです。実際の害は単語単位ではなく、積み重なって表れます。声調がいつもずれていると、一語ずつならまだ推測できても、文全体になるとお手上げです。聞き手は、こちらが話すより速く候補を試し続けなければならないからです。
+    four_title: 4つの声調
+    four_lede: "かっこ内の数字は音の高さを表し、1が低く、5が高い音です。"
+    tones:
+      t1:
+        name: 第一声 — 高く平ら
+        contour: "55"
+        zhuyin: 記号なし
+        note: "高く平らに、同じ高さを保ちます。時報の「ピー」のイメージです。日本語の高い拍も平らなので出発点にはなりますが、日本語話者の第一声は終わりで下がりがちだと報告されています。最後まで下げずに伸ばしましょう。注音では何も付けません。記号がないこと自体が第一声のしるしです。"
+      t2:
+        name: 第二声 — 上がる
+        contour: "35"
+        zhuyin: "〘ˊ〙"
+        note: "上がる声調です。驚いて「えっ？」と聞き返すときの上がり方が出発点になりますが、あくまで出発点です。台湾では始めに少しくぼんでから、ゆるやかに上がります。ゆるやかとはいえ、平らにしてしまうと別の声調に聞こえます。日本語話者に多いのがこの平らな第二声なので、一つの音節の中で高さを動かすことを意識しましょう。"
+      t3:
+        name: 第三声 — 低い
+        contour: 214 / 21
+        zhuyin: "〘ˇ〙"
+        note: "低い声調です。教科書では下がってまた上がる形に描かれますが、会話の中の第三声は声のいちばん下まで下がって、そのまま低くとどまります。くぼむ声調ではなく、低い声調として覚えましょう。日本語話者は第三声を第二声のように上げてしまいがちだと報告されています。2音節の単語では、第三声＋第三声、第一声＋第三声、第三声＋軽声の組み合わせがとくに難しいとされています。"
+      t4:
+        name: 第四声 — 下がる
+        contour: "51"
+        zhuyin: "〘ˋ〙"
+        note: "下がる声調で、短くきっぱりと言います。日本語でいちばん近いのは、アクセントの高から低への下がり目です。ただし日本語の下がり目は拍と拍のあいだで起こり、第四声は一つの音節の中で下がります。文の終わりでも、軽声のように短く消えてしまわないようにしましょう。"
+    neutral_title: 5つめ、というより軽声
+    neutral_body: "厳密には第五の声調ではなく、自分の声調がない状態です。音節は形を失って短くなり、台湾では前の声調が何であっても、中くらいより少し低い高さに落ち着きます。注音では点〘˙〙で表し、ほかの声調記号と違って音節の前に書きます。たとえば〘˙ㄉㄜ〙。ドリルで試す意味はありません。耳には、とても短く弱い音節として聞こえるだけです。"
+    taiwan_title: 台湾の声調はどう違うか
+    taiwan_body: "体系は同じで、4つの声調と軽声があります。違うのは、それぞれの声調の実際の現れ方です。緑の行が、台北で耳にする発音です。"
+    words_title: 同じ単語でも声調が違う
+    words_lede: 日常のことばの中には、2つの標準で辞書の声調が違うものがあります。台湾のほうを覚えましょう。
+    words_word: 単語
+    sandhi_title: 声調が変わる2つのルール
+    sandhi_lede: "書くときの声調と言うときの声調が違う場合です。第三声では書く声調は変わりません。辞書も注音もピンインも、元の声調のままです。〘一〙と〘不〙は書き方が分かれます。辞書は元の声調のままですが、教科書では下の例のように、変わったあとの声調で書くことがよくあります。"
+    third_title: 第三声＋第三声
+    third_body: 第三声が2つ続くと、前の第三声は第二声で発音します。〘你好〙は〘ㄋㄧˇ ㄏㄠˇ〙と書きますが、聞こえ方はní hǎoです。このルールは辞書の形ではなく実際の発音にかかるので、単語の境目をまたいでも働きます。
+    third_three: "第三声が3つ続くときは、意味のまとまり方で結果が変わります。〘我很好〙では〘很好〙がひとまとまりなので、〘很〙が変わり、その前の〘我〙は低いまま、wǒ hén hǎoになります。速く言うと〘我〙も上がって、wó hén hǎoになることがよくあります。〘展覽館〙のように前の2音節がひとまとまりのときは、両方が変わってzhán lán guǎnになります。暗記することはありません。実際にひとまとまりで言う音節にルールが働くだけです。"
+    yi_title: "〘一〙と〘不〙"
+    yi_body: この2つの声調は、後ろに来る音で変わります。
+    yi_rules:
+      yi_alone: "〘一〙を単独で言うとき、文末、序数では第一声：yī、〘第一〙 dì yī。"
+      yi_before4: 第四声の前の〘一〙は第二声：〘一定〙 yí dìng、〘一樣〙 yí yàng。
+      yi_other: 第一声・第二声・第三声の前の〘一〙は第四声：〘一天〙 yì tiān、〘一年〙 yì nián、〘一起〙 yì qǐ。
+      bu_before4: 第四声の前の〘不〙は第二声：〘不是〙 bú shì、〘不要〙 bú yào。
+      bu_other: それ以外の〘不〙は第四声：〘不好〙 bù hǎo、〘不能〙 bù néng。
+    practice_title: 練習
+    practice_body: 下は聞き取りのドリルです。音節が流れたら、声調を答えてください。学習状況には記録されず、復習にも影響しません。純粋な練習なので、いつやめてもかまいません。
+    practice_pending: 声に出して声調を練習する機能はまだありません。声調の形を台湾の基準でチェックできる音声認識をつないだら公開します。いまは耳で聞き分ける練習だけです。
+    drill:
+      title: 耳で覚える声調ドリル
+      lede: 音節が流れたら、声調を答えてください。何も記録されず、復習にも影響しません。純粋な練習なので、好きなときにやめられます。
+      back: "← 説明に戻る"
+      prompt: 何声でしょう？
+      replay: もう一度聞く
+      keys: "↑→↓←が第一声・第二声・第三声・第四声です。選択肢をタップしても答えられます。"
+      tone1: 第一声 平ら
+      tone2: 第二声 上がる
+      tone3: 第三声 低い
+      tone4: 第四声 下がる
+      score: 正解：%{total}問中%{correct}問
+      more: 続ける
+      leave: 終わる
+      empty: このドリルには音声が必要です。サーバーに録音が入りしだい表示されます。
+  dictation:
+    title: ディクテーション
+    level: レベル
+    size:
+      one: "%{count}文字"
+      other: "%{count}文字"
+    play: 聞く
+    answer: 聞こえたとおりに
+    placeholder: 漢字・ピンイン・注音
+    check: 答え合わせ
+    next: 次へ
+    show_translation: 訳
+    keyboard_hint: 画面の注音キーボードが使えます。お手持ちのキーボードでも、同じキーで注音を入力できます。
+    average: このラウンドの平均
+    again: あと10問
+    empty: このレベルの録音はまだありません。
+    you_wrote: 入力した答え：
+    open_sentence: この文を学ぶ →
+    extra: 余分
+    marks:
+      exact: 正解
+      no_tone: 声調なし
+      wrong_tone: 声調ちがい
+      sound: 別の字
+      missed: 抜け
+    how_title: 採点のしかた
+    how_body: 文の音節1つにつき1点です。正しい漢字、または正しい声調の音節なら満点。声調なしの音節は0.75点、声調が違う音節は0.5点です。同じ音の別の漢字も0.5点：耳は合っていて、書くところでつまずいただけだからです。声調は辞書の形でも実際の発音どおりでも正解なので、〘你好〙はnǐ hǎoでもní hǎoでもかまいません。漢字、ピンイン（声調記号でも数字でも）、注音、どれで書いても、混ぜて書いてもOKです。余分な音節を書くと点数が下がります。
+  word_pairs:
+    title: まぎらわしい語
+    lede: 華語を学ぶ人のほとんどがつまずく単語の組み合わせです。たとえば〘會〙と〘能〙、〘不〙と〘沒〙、〘再〙と〘又〙。どのセットにも短いルール、例文、よくある間違い、そして答えを一つずつ解説する練習問題があります。
+    empty: まだ単語のセットがありません。
+    levels: レベル
+    level_title: レベル%{level}
+    level_hint:
+      a1: 学び始めの数か月
+      a2: 簡単な文でやりとりできるようになったら
+      b1: 正確に言い分けたくなったら
+    rule: ポイント
+    uses: 使い分け
+    mistakes: よくある間違い
+    wrong: 誤
+    right: 正
+    exercises: 練習問題
+    as_pair: まぎらわしい組み合わせ
+  typing:
+    modes:
+      pinyin: ピンインから
+      hanzi: 漢字から
+    mode_hint:
+      pinyin: ローマ字のつづりを見て、注音で入力します。漢字の知識はいりません。
+      hanzi: すでに学習した漢字と単語だけが出ます。
+    fell_back: 学習した漢字がまだ少ないので、ピンインから入力します。最初の単語を覚えたら、また来てください。
+    title: 注音で入力
+    reveal: 読みを表示
+    skip: スキップ
+    hint: キーボードで読みを入力し、スペースかEnterを押してください。Backspaceで消せます。下のキーをタップしても入力できます。
+    accuracy: 正答率
+    done: 完了した単語
+    how_title: この入力方法を覚える理由
+    how_body: 台湾で売られているキーボードにはすべてこの配列が印刷されていて、台湾の人の多くがこの方法で入力しています。練習のために何かをインストールする必要はありません。台湾のキーボードと同じキーを押せば注音が出ます。声調キーは数字の列にあり、6が第二声、3が第三声、4が第四声、7が軽声です。第一声にはキーがいりません。配列が指に入ってしまえば、華語の入力はキーを探す作業ではなく体で覚えた動きになります。しかも音を入力するので、同時に読みの練習にもなります。
+  cangjie:
+    title: 倉頡入力
+    subtitle: 倉頡（そうけつ）入力の第五代〘五代〙：アルファベットのキーで台湾の繁体字を組み立てます。各漢字のカードにも倉頡コードを載せています。
+    data_missing: 倉頡（そうけつ）のデータがまだ作成されていません。次を実行してください：rake huayu:import_cangjie
+    output_placeholder: ここに倉頡コードを入力…
+    code: コード
+    hint: アルファベットでコードを組み立て、スペース（または数字）で漢字を選びます。Backspaceでコードを修正、Escで消去します。
+    open_lessons: 倉頡（そうけつ）の教科書：キーごとに学ぶ
+  cangjie_lessons:
+    title: 倉頡
+    map: キー配列
+    map_lede: 24のキーは、自然（哲理）、筆画、人体、字形の4グループに分かれています。キーを押すとそのレッスンが開きます。
+    empty: 倉頡（そうけつ）の教科書はまだ作成されていません。
+    open_trainer: キーボード練習を開く
+    trainer_cta: 倉頡キーボードで練習する
+    bank: このレッスンの漢字
+    index_title: このキーで始まる漢字一覧
+    index_lede: 標準の〘常用國字〙表（倉頡（そうけつ）コードのある4807字）を、コードの1文字めのキーで分けたものです。公式マニュアルの〘日部〙…〘卜部〙の章と同じ作り方です。並びはまずコーパスでの頻度、次にTBCLの級の順。右のバッジはTOCFLのレベルです。
+    walkthrough: 手順を追って
+    compare: 正しい分け方・間違った分け方
+    drills:
+      title: 練習
+      shape: 形
+      shape_question: この形はどのキーにありますか？
+      first: 最初のキー
+      first_question: コードはどのキーで始まりますか？
+      split: 分解
+      split_question: この漢字はどう分解しますか？
+      which: 見分け
+      which_question: この形を使っている漢字はどれですか？
+      code: 入力
+      code_question: この漢字のコードを入力してください。
+      right: 正解
+      wrong: 正解は：
+      done: 完了
+      check: 答え合わせ
+      next: 次へ
+      restart: 最初から
+      best: 最高スコア：
+    speed:
+      title: スピード入力
+      lede: ほぼすべての文に出てくる漢字です。たとえば〘的〙、〘是〙、〘在〙、〘我〙、〘不〙、〘了〙など。できるだけ速くコードを入力しましょう。頻度が高く、まだ練習の少ない漢字から出題し、ラウンドごとのペースを記録します。
+      mode_core: 頻出字
+      mode_exam: Novice 1–2とA1
+      start: スタート
+      again: もう1ラウンド
+      wrong: コードは：
+      done: ラウンド終了
+      pace: ペース
+      pace_unit: 字/分
+      rounds: ラウンド
+      delta: これまでとの比較
+    progress:
+      title: 進み具合
+      lessons: レッスン
+      keys: キー
+      chars: 入力した字数
+      pace: ペース（字/分）
+      device: 進み具合は、この端末のこのブラウザに保存されます。
+  tocfl:
+    approximate: "≈TOCFL %{n}"
+    approximate_hint_tbcl: TOCFLのリストにはない単語です。TBCLの第%{grade}級から換算しました。この級の単語は、ふつう%{n}で出てきます。
+    badge: TOCFL %{n}
+    novice: 準備級%{n}
+    approximate_hint: TOCFLのリストにはない単語です。構成する単語から推定しました。%{n}の段階で、その単語はもう十分に習っています。
+    title: TOCFLへの到達度
+    subtitle: 公式の各レベルまでの到達度です。サイトのどこで覚えた漢字や単語も数えています。
+    back: TOCFL
+    known_of: "%{known} / %{total} 習得済み"
+    readiness: 到達度%{percent}%
+    started_count: 学習中 %{count}
+    study_level: このレベルを学ぶ
+    has_audio: 音声あり
+    guide_link: 試験のしくみ
+    exam:
+      title: 華語文能力測験（TOCFL）
+      lede: 台湾で華語を学ぶ人のための能力試験で、SC-TOP（〘國家華語測驗推動工作委員會〙）が実施しています。試験当日の流れ、採点のしかた、レベルを取ると何ができるかをまとめました。
+      tests_title: 4つの試験
+      tests_body: リスニングと読解は、パソコンで一緒に受けるひとつの試験です（〘聽讀測驗〙）。スピーキング（〘口語〙）とライティング（〘寫作〙）は別の試験で、それぞれバンドごとに申し込みます。子ども向けには別の試験、CCCCがあります。
+      adaptive_title: 1回の試験で全レベルを判定
+      adaptive_body: リスニングと読解はアダプティブ方式で、レベルを選ぶ必要はありません。正解が続くと問題が難しくなり、間違えるとやさしくなって、レベルが決まった時点で試験が終わります。前の問題には戻れず、最後に画面にスコアが表示されます。
+      listening: リスニング：約50分で約35問。音声が流れたあと、10秒で答えます。絵、一問一答、短い会話、長めの文章があります。
+      reading: 読解：60分で約35問。一文の理解、絵、穴埋め、文章の読解があります。
+      scores_title: スコアとレベル
+      scores_body: スコアは最高700点に換算されます。リスニングと読解にはそれぞれ合格点があるので、2つの判定レベルが違うこともあります。
+      level: レベル
+      name: 名称
+      words: 語彙数
+      pass_listening: リスニング
+      pass_reading: 読解
+      level_n: レベル%{n}
+      band: Band %{band}
+      register_title: 申し込みと結果
+      register_body: 申し込みはオンラインのみです。台湾国内では年に数回実施され、申し込みは各試験日のおよそ4週間前に締め切られます。結果は試験の約20日後に発表され、その日から成績証明書と合格証書を申し込みシステムでダウンロードできます。
+      register_link: 日程と受験料（公式サイト）
+      uses_title: レベルを取ると何ができるか
+      uses:
+        moe: 教育部の台湾奨学金（英語で教えないプログラムの場合）：レベル3（〘進階級〙）以上。
+        huayu: 9か月以上の華語奨学金（Huayu Enrichment Scholarship）：過去2年以内のレベル3の証書、または来台後にレベル3以上で受験すること。
+        mofa: 外交部の台湾奨学金（華語で教える学位課程の場合）：リスニングと読解がレベル2（〘基礎級〙）以上。
+      uses_note: 条件は年によって変わるので、応募する奨学金の募集要項を必ず確認してください。
+      uses_link: 奨学金の条件（公式サイト）
+      practice_title: このサイトで準備する
+      practice:
+        placement: レベル診断テスト
+        mock: 本番形式の模擬試験
+        lists: レベル別の単語リスト
+        grammar: レベル別の文法
+        official: SC-TOPの公式模試（無料）
+      source: 試験形式、合格点、日程、奨学金の条件は、SC-TOPがtocfl.edu.twで公表している情報に基づいています。
+  pronunciation:
+    sections:
+      all: すべて
+      tones: 声調
+      initials: 声母
+      finals: 韻母
+      no_tone: "— 声調は採点しません"
+    not_recognized: 聞き取れませんでした
+    sounded_like: "%{key}のように聞こえました"
+    blocked: 緑になると次に進めます
+    title: 発音
+    subtitle: 単語を声に出して読みましょう。声調と音節を台湾の読みと照らし合わせて採点します。
+    another: 別の単語
+    prelisten: 先にお手本
+    prelisten_hint: まず単語を再生し、0.5秒後に録音を始めます。
+    drill: 単語全体を言いながら、ここに注意：
+    drill_skip: この単語はあとでもう一度。次に進みます。
+    empty: 練習できる読み付きの単語がまだありません。
+    record: 録音
+    alpha: アルファ版：発音の採点は開発中のため、スコアがおかしくなることがあります。
+    record_hint: 録音はボタンで始まり、自動で止まります。
+    listening: 聞いています…
+    stop: 停止
+    recording: 録音中です。どうぞ話してください。自動で止まります。
+    arming: 少々お待ちください。マイクを準備しています…
+    repeat_hint: 間を空けながら%{count}回言ってください。急がなくて大丈夫です。
+    takes_done: "%{total}回中%{done}回聞き取りました。ゆっくり、もう一度どうぞ。"
+    takes_full: "%{total}回すべて聞き取りました。採点しています。"
+    takes_finish: 完了 · %{total}回中%{done}回
+    takes_waiting: 聞いています。準備ができたら、もう一度どうぞ。
+    heard_takes: "%{count}回分の発音で採点しました。"
+    grading: 採点中…
+    retry: おしい！もう一度どうぞ…
+    silence: 声が聞き取れませんでした。録音ボタンを押したら、すぐに話し始めてください。
+    unavailable: お手本の録音がインストールされていないため、採点できません。
+    mic_denied: マイクにアクセスできません。ブラウザのサイト設定で録音を許可してください。
+    mic_missing: マイクが見つかりません。接続してからページを再読み込みしてください。
+    mic_insecure: ブラウザがマイクの使用を許可するのは、HTTPS接続かlocalhostの場合だけです。
+    network: サーバーに接続できませんでした。通信環境を確認してください。
+    error: うまく採点できませんでした。マイクに少し近づいて、少し大きめの声でもう一度お試しください。
+    busy: 採点が混み合っています。少し待ってからもう一度お試しください。
+    queued: 採点の順番待ちです。録音し直す必要はありません…
+    hint: 声調が正しい音節は緑、違う音節は赤になり、正しい形が表示されます。
+  numbers:
+    rules_title: 練習の前に知っておきたいルール
+    rules:
+      truncation:
+        title: 最後の数字は、ひとつ下の位を表す
+        body: いちばん混乱しやすいところです。末尾にぽつんと置かれた数字は、足されるのではなく、言われずに省かれたひとつ下の位を表します。だから〘三百五〙は305ではなく350です。日本語にはない言い方なので注意しましょう。
+        rows:
+          - huayu: "〘三百五〙"
+            value: "350"
+            note: 正式には〘三百五十〙。〘十〙を省略
+          - huayu: "〘兩千三〙"
+            value: "2300"
+            note: 正式には〘兩千三百〙。〘百〙を省略
+          - huayu: "〘一萬五〙"
+            value: "15,000"
+            note: 正式には〘一萬五千〙。〘千〙を省略
+      zero:
+        title: "〘零〙は間ではなく、省略を止める合図"
+        body: 305と言うには、三と五を並べるだけでは足りず、あいだに〘零〙が必要です。〘零〙は空いている位があることを知らせ、上で見た省略の読み方を打ち消します。空いている位がいくつあっても〘零〙はひとつです。日本語の「三百五」とは違うので気をつけましょう。
+        rows:
+          - huayu: "〘三百零五〙"
+            value: "305"
+            note: "〘零〙がないと350になる"
+          - huayu: "〘一千零五〙"
+            value: "1005"
+            note: 百の位も十の位も空いているが、〘零〙はひとつ
+          - huayu: "〘一千零五十〙"
+            value: "1050"
+            note: "〘十〙を言うので、一の位ではなく十の位"
+          - huayu: "〘一萬零五〙"
+            value: "10,005"
+            note: "〘零〙は〘萬〙の区切りをまたいでも働く"
+      liang:
+        title: "〘兩〙か〘二〙かは、後ろで決まる"
+        body: "〘二〙は数字そのものです。数を数えるとき、番号、〘十二〙や〘二十〙で使います。〘兩〙は「2つ分」の量を表すときに使い、量詞の前と〘百〙〘千〙〘萬〙〘億〙の前に来ます。大事な例外がひとつ。〘十〙の前は必ず〘二〙です。"
+        rows:
+          - huayu: "〘二〙"
+            value: "2"
+            note: 数を数えるときの数字そのもの
+          - huayu: "〘二十〙"
+            value: "20"
+            note: "〘十〙の前は〘兩〙にならない"
+          - huayu: "〘十二〙"
+            value: "12"
+            note: 一の位の2も〘二〙
+          - huayu: "〘兩百〙"
+            value: "200"
+            note: "〘百〙の前は〘兩〙。台湾では〘二百〙とは言わない"
+          - huayu: "〘兩千三百二十二〙"
+            value: "2322"
+            note: "〘千〙の前は〘兩〙、十の位と一の位は〘二〙。ひとつの数の中で両方"
+          - huayu: "〘兩個人〙"
+            value: 2人
+            note: 量詞の前は必ず〘兩〙
+      shi:
+        title: 先頭の〘十〙には〘一〙がいらない
+        body: 10〜19では〘十〙だけで言います。前に上の位が来たとたん、「一」が戻ってきます。
+        rows:
+          - huayu: "〘十五〙"
+            value: "15"
+            note: "〘一十五〙とは誰も言わない"
+          - huayu: "〘一百一十五〙"
+            value: "115"
+            note: ここでは〘十〙の前の〘一〙が必須（日本語の「百十五」とは違う）
+          - huayu: "〘一百一〙"
+            value: "110"
+            note: 末尾の数字のルールによる口語の省略形
+    title: 数と数字
+    keys: 矢印キーで選ぶか、選択肢をタップしてください。
+    done_title: 完了
+    restart: もう一度
+    system_title: 4桁区切りは日本語と同じ
+    system_body: 英語などは3桁ごとに区切りますが、華語は4桁ごとに区切ります。これは日本語と同じで、万・億の考え方がそのまま使えます。「百万」という独立した単位はなく、100万は〘一百萬〙、つまり百個の〘萬〙です。違うのは、字を〘萬〙と書くことと、日本語では省く「一」を付けることです。
+    col_digits: 数字
+    col_huayu: 漢字
+    col_western: 日本語では
+    western:
+      ten_thousand: 一万
+      hundred_thousand: 十万
+      million: 百万
+      ten_million: 一千万
+      hundred_million: 一億
+      billion: 十億
+    stages:
+      glyphs: 数字の漢字
+      myriads: 大きな位
+      reading: 読む
+      traps: 落とし穴
+      taiwan: "〘民國〙紀年"
+    stage_hint:
+      glyphs: 数に必要な漢字すべて：10個の数字、〘十百千萬億兆〙、そして〘兩〙。数は少なくても、全部必要です。
+      myriads: 基準になる大きな位です。華語の実際の数え方どおり、4桁ずつ区切っています。
+      reading: 漢字で書かれた数がランダムに出ます。数字で答えてください。
+      traps: いちばん間違えやすいところ：〘兩〙と〘二〙、抜けた〘零〙、数の途中の〘十〙。
+      taiwan: 民国紀年：台湾の書類、身分証、各種申込書では〘民國〙の年を使います。和暦と同じような考え方で、1911を足すと西暦になります。
+  zhuyin_trainer:
+    scoped:
+      initials: まずは声母だけ。いま読んだばかりのものです。
+      finals: まずは韻母だけ。
+      all: 全37記号
+    onward:
+      finals: 次へ：表の韻母 →
+      tricky: 次へ：まぎらわしい例 →
+      typing: 次へ：入力を覚える →
+    lede: 音を聞いて記号を選びます。アルファベットはあえて出しません。記号と音を直接結びつけるためです。
+    title: 耳で覚える注音
+    prompt: 何が聞こえましたか？
+    replay: もう一度聞く
+    replay_hint: スペースキーでもう一度再生
+    keys: 矢印キーで選ぶか、選択肢をタップしてください。
+    progress: "%{total}記号中%{done}記号をマスター"
+    block_hint: このブロックは%{total}個中%{done}個をマスター。このブロックを終えると次のブロックが開きます。
+    done_title: 完了
+    done_heading: 全記号をマスターしました
+    done_body: 次は単語と漢字へ。ここにはいつでも戻ってこられます。
+    restart: もう一周
+    leave: 単語へ
+    exit_hint: いつやめても大丈夫です。進み具合は保存され、ドリルはここで待っています。
+    blocks:
+      labial: 唇音：〘ㄅㄆㄇㄈ〙
+      alveolar: 舌尖音：〘ㄉㄊㄋㄌ〙
+      velar: 舌根音：〘ㄍㄎㄏ〙
+      palatal: 舌面音：〘ㄐㄑㄒ〙
+      retroflex: そり舌音：〘ㄓㄔㄕㄖ〙
+      sibilant: 舌歯音：〘ㄗㄘㄙ〙
+      medial: 介音：〘ㄧㄨㄩ〙
+      open: 単母音：〘ㄚㄛㄜㄝ〙
+      diphthong: 二重母音：〘ㄞㄟㄠㄡ〙
+      nasal: 鼻音で終わる韻母：〘ㄢㄣㄤㄥ〙
+      rhotic: そり舌母音：〘ㄦ〙
+  practice:
+    about_title: 注音の成り立ち
+    about:
+      origin: 記号のもとを考案したのは章炳麟で、その音を読みに含む古い漢字の形を整えて作りました。〘ㄅ〙〘ㄆ〙〘ㄇ〙が漢字のように見えるのはそのためで、もとは本当に漢字だったのです。カタカナが漢字の一部から生まれたのとよく似ています。
+      adopted: 台湾では1945年からこの方式を使っていて、いまも小学校で華語の発音を教える中心的な方法です。
+      size: 37の記号と5つの声調記号があれば、華語のどんな音でも書けます。第一声はふつう記号を付けず、軽声は点で表します。
+      today: いまの台湾では、パソコンやスマホで漢字を入力するのも、辞書で引くのも、注音がいちばん一般的です。教科書では、日本のふりがなのように各文字の右側に添えて印刷されています（横書きでは文字の上に付けることも公式の手引きで認められています）。
+      hokkien: "台湾語のためには、さらに23の記号が作られました。同じ方式を台湾のほかの言語にも広げたものです。"
+    practice_now:
+      title: すぐに練習しよう
+      initials: 21の声母を、発音する場所ごとのブロックで。耳で聞いて迷わず答えられるようになったら、先に進みましょう。
+      finals: 16の韻母。同じドリルで、画面にアルファベットは出ません。
+      tricky: ピンインが実際の韻母を隠している6つのつづり。似た形と混ぜて出題するので、注音を読んでいるのかアルファベットを読んでいるのかがわかります。
+      cta: 聞き取りドリルへ →
+    drill_progress_title: 音の練習
+    drill_progress_hint: 音の聞き分けカードと注音入力ドリルを進めると増えていきます。1周終えるごとにカウントされます。
+    voice_progress_title: 声に出す発音
+    weak_sounds: よく間違える音
+    runs:
+      drill: 音のドリルの回数
+      typing: 注音入力の回数
+      dictation: ディクテーションの回数
+      open: 開く →
+    parts_nav: このページの項目
+    parts:
+      intro: はじめに
+      initials: 声母
+      finals: 韻母
+      tricky: まぎらわしい例
+    part_next: 次へ：%{title} →
+    part_previous: "← 戻る：%{title}"
+    to_drill: 読み終えたら練習へ →
+    back_to_chart: "← 注音・ピンイン表に戻る"
+    initials_lede: 21の記号で、音節の始まりになる音はすべてです。ボタンを押すと台湾の教育部の録音が流れます。解説を読む前に、まず聞いてみましょう。
+    series:
+      title: 誰もが混同する3つの列
+      body: "ピンインでは似て見えるのに、口の中の3つの違う場所で作る9つの声母です。まずは列ごとに練習しましょう。同じ列なら場所は同じで、変わるのは音の出し方だけです。息を出さずに離す、息を伴って離す、息をこすり続ける、の3つです。"
+      rows_hint: 1列ずつ
+      columns_hint: 3列まとめて
+      hard_title: ここは本当に難しい
+      hard_body: "列ではなく縦の組で比べると、音はほとんど聞き分けられなくなります。ピンインでもほぼ同じ書き方で、zhi・zi・jiは1文字しか違いません。違いは舌の位置だけです。舌先を上あごに向けてそらすか、舌を平らにして前のふちを歯の裏に寄せるか、舌先を下げて舌の面を硬口蓋に押し当てるか。ここはじっくり耳を傾けるところで、最初は間違えて当然です。"
+      all_nine: 9つすべてを混ぜて
+      sets:
+        zhi_chi_shi: zhi chi shi
+        zi_ci_si: zi ci si
+        ji_qi_xi: ji qi xi
+        zhi_zi_ji: zhi zi ji
+        chi_ci_qi: chi ci qi
+        shi_si_xi: shi si xi
+    drill_these: "%{symbols}を練習"
+    blocks:
+      labial:
+        title: 唇
+        body: 唇で作る音です。〘ㄅ ㄆ ㄇ〙は上下の唇を合わせ、〘ㄈ〙は下唇を上の歯に当てます。日本語の「フ」とは違います。台湾の子どもが最初に習う音で、〘ㄅㄆㄇㄈ〙の歌の出だしでもあります。
+      alveolar:
+        title: 舌先
+        body: 舌先を上の歯の裏の歯ぐきに当てます。〘的〙、〘他〙、〘你〙、〘了〙はどれもここから始まります。
+      velar:
+        title: 舌の奥
+        body: "舌の奥を上あごの奥（軟口蓋）に付けて作ります。カ行・ガ行と同じ場所です。〘ㄏ〙も同じ場所で、舌の奥を付けずに近づけ、すき間で息をこすります。のどで出す日本語のハ行より摩擦のある音ですが、台湾ではハ行に近い軽い音で言うこともよくあります。"
+      palatal:
+        title: "〘ㄧ〙と〘ㄩ〙の前だけ"
+        body: "〘ㄧ〙と〘ㄩ〙の前にしか現れないので、後ろの音を見れば〘ㄓㄔㄕ〙と混同することはありません。"
+      retroflex:
+        title: そり舌
+        body: "舌先を上あごに向けて反らせます。"
+      sibilant:
+        title: 舌先と歯
+        body: "舌を平らにし、舌の前のふちを歯の裏に寄せて、息を細く通します。上の3つと対になる音です。"
+      medial:
+        title: 介音
+        body: 声母と韻母のあいだに入る音です。ピンインではi・u・ü、音節の頭ではyやwと書きます。
+      open:
+        title: 単母音
+        body: "ほかのすべての音の土台になる4つの音です。〘ㄝ〙は単独ではほとんど使わず、ふつうは〘ㄧ〙と〘ㄩ〙のあとに現れます。"
+      diphthong:
+        title: 二重母音
+        body: 1音節の中に2つの音があります。音節を切らずに、舌がひとつの位置から次の位置へなめらかに移ります。「エー」「オー」のように伸ばした音ではありません。
+      nasal:
+        title: 鼻音
+        body: "〘ㄢ〙と〘ㄤ〙、〘ㄣ〙と〘ㄥ〙は、それぞれ最後に舌がどこで止まるかが違います。日本語の「案内」の「ん」と「案外」の「ん」の違いです。辞書ではどちらの組も区別しています。"
+      rhotic:
+        title: 唯一の存在
+        body: "それだけで1音節になる音で、〘二〙、〘兒〙、〘耳〙に出てきます。"
+      compound:
+        title: 結合韻母
+        body: 介音と韻母の組み合わせです。もう練習した記号からできているので、専用のドリルはありません。
+    finals_lede: 音節から最初の子音を除いた残りすべてです。母音、二重母音、または母音＋鼻音。結合韻母では記号を1つずつ読み上げていますが、続けて発音すると、2つの音を並べただけの音にはなりません。
+    why_title: 細かい話ではない理由
+    why_body: ピンインは何の準備もなく読めてしまいます。だからこそ危ないのです。アルファベットを見るとついローマ字読みに引きずられ、気づかないうちに間違いが定着します。注音の記号の後ろには、自分で覚えた音しかありません。台湾が読みを注音で示すのは、まさにそのためです。
+    compound_audio: 結合韻母です。記号は1つずつ読み上げていますが、続けて言うと2つの音を並べた音にはなりません。右の解説を見てください。
+    play_symbol: "%{symbol}を再生"
+    phonetics_card: 音の一覧表：注音、ピンイン、IPA、日本語での目安、例語。
+    phonetics_title: 注音とピンイン
+    col_explanation: 注意点
+    col_written: 表記
+    col_real_sound: 実際の音
+    rimes_lede: いくつかの韻母では、ピンインが実際に聞こえる音どおりに書かれていません。まさにそうした場面で、注音のほうが実際の音に近いことが多いのです。どこで、なぜそうなるのかをまとめました。
+    rimes: つづりと音がずれるところ
+    study: 学ぶ
+    speak: 話す
+    write: 書く
+    title: 発音の基礎
+    intro: 華語の音を基礎から。まず読みの表記、それから発音へ。
+    initials: 声母（子音）
+    finals: 韻母（母音）
+    play: 再生
+    col_pinyin: ピンイン
+    col_palladius: パラディウス式
+    palladius_note: ""
+    col_zhuyin: 注音
+    col_ipa: IPA
+    col_analogy: 発音の目安
+    col_example: 例
+    pinyin_intro: このサイト全体で使っているローマ字表記です。各音にIPA、わかりやすい目安、例語を添えています。
+    zhuyin_intro: 台湾の発音記号です。ピンインと並べて覚えても、音から直接覚えてもかまいません。同じ表に両方を載せています。
+    drill:
+      lede: 2つの表記の対応練習です。記号を見てローマ字のつづりを答え、その逆もやります。ここでのピンインは土台ではなく、橋渡し役です。
+      title: 注音 ↔ ピンイン
+      direction_zhuyin: 注音 → ピンイン
+      direction_pinyin: ピンイン → 注音
+      systems_html: "注音は、台湾で音を書き表すための37の記号です。どの記号も決まった1つの音を表し、結合韻母の中で音が少し変わるものがわずかにあるだけです（おもな例は〘ㄧㄢ〙）。読みを推測することはできません。どんな音かを覚えるだけです。ピンインは同じ音をアルファベットで書いたもので、補助にすぎません。やることはひとつ：記号を耳で聞き分けられるようになるまで、下の表を順に進めてください。"
+      stage_hint: 順番に進めましょう。まず子音、次に母音と介音、それから韻母全体、最後に音節全体です。
+      stages:
+        consonants: 子音
+        vowels: 母音
+        finals: 韻母
+        syllables: 音節全体
+      prompt_zhuyin: ピンインではどれ？
+      prompt_pinyin: 注音ではどれ？
+      keys: 答えの方向にカードをスワイプするか、矢印キーを使ってください
+      done_title: ラウンド終了
+      restart: もう一度
+      see_chart_zhuyin: 注音の表
+      see_chart_pinyin: ピンインの表
+      card: 注音とピンインを、スワイプで双方向に対応づけます。
+      syllable_title: 台湾華語の音節のしくみ
+      syllable_body: どの音節も、多くて3つの枠でできています。必須なのは最後の枠だけ。〘一〙は韻母だけ、〘四〙は声母だけで母音を書きません。注音は枠をすべて書き出しますが、ピンインはまとめたり省いたりすることがよくあります。
+      slots:
+        initial_label: 声母（〘聲母〙）
+        initial_glyph: "〘ㄓ〙"
+        initial_body: 21の子音のどれか。なくてもかまいません。母音で始まる音節もたくさんあります。
+        medial_label: 介音（〘介音〙）
+        medial_glyph: "〘ㄨ〙"
+        medial_body: 3つのわたり音〘ㄧ ㄨ ㄩ〙のどれか。ピンインがいちばんよく隠す枠です。
+        final_label: 韻母（〘韻母〙）
+        final_glyph: "〘ㄥ〙"
+        final_body: 母音、二重母音、または母音＋-nか-ng。唯一の必須の枠です。
+      tones_title: 声調記号の位置
+      tones_body: ピンインは主母音の上に記号を付けます（mā má mǎ mà）。注音は第一声に何も付けず、〘ˊ ˇ ˋ〙を記号のあとに書きます。たとえば〘ㄇㄚ ㄇㄚˊ ㄇㄚˇ ㄇㄚˋ〙。軽声はどちらでも例外で、ピンインは記号を付けず、注音は前に点〘˙〙を書きます（〘˙ㄉㄜ〙）。縦書きでは、注音は声調記号も含めて、ふりがなのように漢字の右側に縦に並びます。
+      mismatch_title: ピンインにだまされるところ
+      mismatch_body: これは丸暗記すべき例外ではありません。理由はひとつ。つづりを短くするために、ピンインは音節の途中の母音を省き、1つの文字を違う音に使い回し、音のないところに文字を書くことさえあります。注音は発音しないものを書きません。だから注音の列を見れば、音節が本当は何でできているかがわかります。
+      mismatch_pinyin: ピンイン
+      mismatch_zhuyin: 注音
+      mismatch_why: 実際に起きていること
+      mismatch:
+        zhong:
+          pinyin: zhong
+          zhuyin: "〘ㄓㄨㄥ〙"
+          why: zhは〘ㄓ〙ですが、このoは〘ㄛ〙ではありません。-ongの実体は-ungなので、注音ではわたり音〘ㄨ〙と韻母〘ㄥ〙で書きます。
+        jiu:
+          pinyin: jiu
+          zhuyin: "〘ㄐㄧㄡ〙"
+          why: 韻母は-iouで、ピンインはつづりを短くするために真ん中の母音を省いています。注音は〘ㄧ〙と〘ㄡ〙の両方を書きます。
+        hui:
+          pinyin: hui
+          zhuyin: "〘ㄏㄨㄟ〙"
+          why: 同じしくみです。韻母は-ueiで、ピンインはeを飲み込んでいます。注音は〘ㄨ〙と〘ㄟ〙を書きます。
+        yu:
+          pinyin: yu
+          zhuyin: "〘ㄩ〙"
+          why: このyは子音ではなく、母音を載せるための飾りで、uは実はüです。音はひとつなので、注音も記号ひとつで書きます。
+        zhi:
+          pinyin: zhi
+          zhuyin: "〘ㄓ〙"
+          why: このiは母音を表していません。そらせた舌の形をそのまま保っているだけです。何もないので、注音は〘ㄓ〙のあとに何も書きません。
+        weng:
+          pinyin: weng / -ong
+          zhuyin: "〘ㄨㄥ〙"
+          why: 前に子音があるかどうかで、同じ韻母にピンインのつづりが2つあります。注音ではどちらも〘ㄨㄥ〙です。
+      mismatch_more_title: ここで覚えておきたいこと
+      mismatch_more_body: "ピンインを読む人は、たえず無意識に読みを修正しています。ここのoは実はu、ここは母音が抜けている、ここのiは母音ではない、ここのuは実はü。その修正の一つひとつが、間違った発音が定着しうる場所です。しかもつづりがもっともらしく見えるので、たいてい本人は気づきません。注音ならそんな修正はほとんどいりません。〘ㄧㄢ〙のようなわずかな例外を除けば、書いてあるとおりに言えばいいのです。"
+    tones_title: 声調と音
+    tones_card: 音節を声に出して読み、声調ごとのフィードバックを受けながら、正しく言えるまで練習します。
+    dictation_title: ディクテーション
+    dictation_card: ネイティブの録音を聞いて、漢字・ピンイン・注音で書き取ります。
+    progress_title: 練習の成果
+    progress_card: 声調と音がどれだけ身についてきたか。
+    progress_intro: 声に出した練習の記録から、得意な声調や音と、練習が必要なところをまとめています。
+    progress_empty: まだ発音の練習記録がありません。発音を練習すると、声調と音の統計がここに表示されます。
+    by_tone: 声調別
+    by_sound: 音別（声母）
+    confusions: 間違えやすい声調
+    confusions_hint: 言おうとした声調が別の声調に聞こえた組み合わせです。多い順に並べています。
+    tone_names:
+      "1": 第一声 · 高く平ら ˉ
+      "2": 第二声 · 上がる 〘ˊ〙
+      "3": "第三声 · 低い 〘ˇ〙"
+      "4": 第四声 · 下がる 〘ˋ〙
+      "5": 軽声 ·
+  layers:
+    translation: 訳
+    grammar: 文法
+    aloud: 声に出して答える
+    focus: 集中モード
+  reading:
+    size: 文字サイズ
+    my_words_html: マイ単語：%{saved} / %{total}
+    next: 次の文
+    previous: 前の文
+    translate_line: この文を訳す
+  aloud:
+    prompt: まずは華語で、声に出して答えてみましょう。それから選択肢を開いて、自分の答えにいちばん近いものを選んでください。
+    reveal: 言えた。選択肢を見る
+  graded:
+    title: レベル別多読
+    lede: 決まった語彙の範囲で書いた短いお話です。範囲を超える単語にはすべて注を付けているので、辞書なしで最後まで読めます。
+    method: 各段階は、TBCL標準語彙のうち、日常の語りでよく使われる上位N項目です。どの文章も9割以上をその段階の範囲内で書き、範囲を超える漢字や単語はすべて下に意味付きで載せています。
+    empty: まだ読み物がありません。
+    back: すべての段階
+    tier_hint: "%{count}編"
+    coverage: "%{percent}%が範囲内"
+    size: "%{lines}文 · %{chars}字"
+    notes: 範囲外の語
+    notes_hint: この段階の範囲を超える単語です。タップすると辞書が開きます。
+    panel_empty: 本文の単語をタップすると、ここにカードが表示されます。
+    quiz: 理解度チェック
+    texts_in_tier: このレベルの読み物
+    read: 読む
+    read_with_score: 読む · %{score}/%{total}
+    up_next: 次の読み物
+    shelf_done: これが最後の読み物でした。
+    sign_in: ログイン
+    sign_in_hint_html: "%{link}すると、読んだ記録を残せます。"
+    new_words_title: この文章の新しい単語：%{count}
+    new_words_hint: まとめて追加できます。一度に全部ではなく、少しずつ学習セッションに出てきます。
+    new_words_add: すべて学習に追加
+    words_added: 学習リストに追加しました：%{count}
+    done_next: 読んだ。次へ
+    done: 読了にする
+    next: 次の読み物
+    saved: 読了にしました。
+    continue: 続きを読む
+    your_level: 現在のレベル
+    tier_progress: "%{total}編中%{read}編読了"
+    tiers:
+      chars150: 基本の150字
+      chars300: 基本の300字
+      chars450: 基本の450字
+      words500: 基本の500語
+      words1000: 基本の1000語
+      words1500: 基本の1500語
+      words2000: 基本の2000語
+      words3000: 基本の3000語
+      words4808: 基本の4808語
+  mock:
+    title: TOCFL模擬試験
+    lede: 本番と同じ形式で、時間を計って練習します。問題はすべてこのサイトのコーパスから作っています。
+    disclaimer: これは非公式の練習モードです。公開されているTOCFLの形式（セクション、問題の種類、制限時間）に沿っていますが、SC-TOPとは無関係で、承認も受けていません。本番の試験問題も使っていません。公式模試は、下のSC-TOPのダウンロードを利用してください。
+    pick_band: バンドを選ぶ
+    exam_section: 読解 — 本番形式
+    exam_lede: "〘閱讀測驗〙の公式な5つの出題形式をすべて収録。毎回50問の問題バンクから新しく10問を出題します。問題はこのサイトが作成し、そのレベルの単語リストと照らし合わせています。"
+    exam_title: 読解 · %{level}
+    exam_paper_lede: "%{count}問 · %{minutes}分。時間になると自動で提出されます。"
+    levels:
+      novice1: Novice 1 〘準備級一級〙
+      novice2: Novice 2 〘準備級二級〙
+      a1: A1 〘入門級〙
+      a2: A2 〘基礎級〙
+      b1: B1 〘進階級〙
+    level_hint: "%{bank}問から%{count}問を出題 · %{minutes}分"
+    formats:
+      sentence: "〘單句理解〙 · 一文の理解"
+      sign: "〘看圖釋義〙 · 掲示や看板"
+      paragraph: "〘完成段落〙 · 段落を完成させる"
+      cloze: "〘選詞填空〙 · 語を選ぶ"
+      passage: "〘閱讀理解〙 · 長文読解"
+    short_formats:
+      sentence: "〘單句理解〙"
+      sign: "〘看圖釋義〙"
+      paragraph: "〘完成段落〙"
+      cloze: "〘選詞填空〙"
+      passage: "〘閱讀理解〙"
+    practice_section: リスニング — オリジナルの練習
+    practice_lede: これはTOCFLの形式ではありません。ネイティブの実際の録音（Common Voice、CC0）を使ったこのサイト独自の練習です。試験形式の問題には音声を付けていません。本番レベルの品質で録音する手段がないからです。
+    pictures_section: 絵
+    pictures_title: 絵 · %{band}
+    pictures_paper_lede: "%{count}問 · %{minutes}分。文を読んで、合う絵を選んでください。"
+    listening_section: リスニング
+    listening_title: リスニング · %{band}
+    listening_paper_lede: "%{count}問 · %{minutes}分。音声は何回でも再生できます。"
+    listening_hint: 音声を聞いてから答えてください。
+    bands:
+      novice: Novice 〘準備級〙
+      a: バンドA 〘入門基礎〙
+      b: バンドB 〘進階高階〙
+      c: バンドC 〘流利精通〙
+    band_hint: "%{count}問 · %{minutes}分"
+    official_title: 本物で仕上げる
+    official_lede: 試験の前に、公式模試を少なくとも1回は解いておきましょう。SC-TOPから無料で、解答と音声付きで入手できます。
+    question_n: 第%{n}問
+    submit: 終了して採点
+    abort: やめる
+    results_title: 結果
+    results_percent: 正答率%{percent}%
+    results_note: 緑が正解、赤は正解と違った自分の答えです。目安として、%{level}で安定して60〜70%%取れていれば、受験を申し込むのにいい状態です。
+    try_again: 新しい問題
+    back: すべてのレベル
+  grammar:
+    for_form: この形を使う文法項目
+    as_grammar_point: 文法項目として
+    practice_more: 数だけを練習する
+    title: 文法
+    lede: 台湾の標準に沿った文法を一項目ずつ。公式のTBCLシラバスに、そこから漏れている日常の基本を加え、わかりやすいことばで解説します。例文はこのサイトのコーパスから選んでいます。
+    level_label: レベル%{level}
+    all_levels: すべてのレベル
+    not_taught: コースでは扱いません。
+    supplementary: TBCLリスト外
+    syllabus:
+      official: 公式シラバスの項目です。
+      placed: 台湾のTBCL基準で、項目%{number}・区分%{tier}・レベル%{level}にあたります。
+      starred: 重要項目
+      beyond: 公式シラバスの範囲外です。
+      beyond_note: TBCLの項目ではありません。実際の台湾華語でいつも耳にするので取り上げています。
+    level_bands:
+      1: Novice 1
+      2: Novice 2
+      3: A1
+      4: A2
+      5: B1
+    tip: ポイント：
+    examples: 例文
+  mistakes:
+    title: 今週の間違い
+    lede: この7日間でつまずいた単語です。単語をタップするとページが開きます。まとめて1回のセッションで練習することもできます。
+    empty: この7日間に間違えた単語はありません。
+    study_button:
+      one: 1語をもう一度練習
+      other: "%{count}語をもう一度練習"
+  plan:
+    title: TOCFLプラン
+    new_title: TOCFLの学習プランを立てる
+    new_intro: 受験するレベルと試験日を選んでください。いまのレベルではなく目標のレベルです（いまのレベルはプロフィールで設定します）。覚える量と、1日あたりの量を計算します。
+    level: 受験するレベル
+    date: 試験日
+    calculate: プランを保存
+    saved: プランを保存しました。
+    none: まだプランがありません。目標のレベルと日付を決めると、1日の学習量がわかります。
+    create: プランを立てる
+    edit: プランを変更
+    by_date: "%{date}まで"
+    per_day_html: 1日に<strong>新しい項目を約%{count}個</strong>、復習を含めて<strong>1日約%{minutes}分</strong>です。
+    today_title: 今日のデッキ
+    today_counts: 復習%{due} · 新規%{fresh}
+    today_button: 今日のデッキを学習
+    overload: 今日は%{count}枚のカードがあり、かなりたまっています。プランの試験日を後ろにずらして分散させるか、一気に片付けましょう。
+    stat:
+      total: 覚える数
+      known: 習得済み
+      remaining: 残り
+      days: 残り日数
+    kinds:
+      character: 漢字
+      word: 単語
+      phrase: フレーズ
+    levels:
+      Novice1: TOCFL 準備級（Novice 1）
+      Novice2: TOCFL 準備級（Novice 2）
+      A1: TOCFL 入門級（A1）
+      A2: TOCFL 基礎級（A2）
+      B1: TOCFL 進階級（B1）
+      B2: TOCFL 高階級（B2）
+      C: TOCFL バンドC（流利級・精通級、C1–C2）
+  writing:
+    title: 書き取り
+    subtitle: 意味と読みから漢字を思い出し、一画ずつ書きましょう。
+    another: 別の字
+    empty: 筆順データのある練習用の漢字がまだありません。
+    reveal: 答えを見る
+    correct: 正しく書けました ✓
+    shaky: 書けました（少しミスあり）
+    revealed: 答えを見ました。よく見て覚えましょう
+    hint: 正しい筆順で一字ずつ書いてください。書き終えると緑になります。
+    stages:
+      label: 新しい漢字を覚える
+      watch: 見る
+      trace: なぞる
+      recall: 何も見ずに
+      replay: もう一度聞く
+      to_trace: なぞってみる
+      watch_note: 新しい漢字です。まず筆順を見て、それから輪郭をなぞりましょう。
+      trace_note: グレーの輪郭を一画ずつなぞってください。1回間違えるとヒントが出ます。ここではまだ採点しません。
+  handwriting:
+    title: 手書き検索
+    subtitle: 繁体字を一画ずつ書くと、オフラインで認識して辞書につなげます。
+    loading: 認識エンジンを読み込み中…
+    failed: データを読み込めませんでした
+    matches: 候補
+    hint: だいたい正しい筆順で書くと、認識の精度が上がります。候補をタップすると辞書の項目が開きます。
+    undo: 1画戻す
+    clear: 消去
+    data_missing: 手書きデータがまだダウンロードされていません。次を実行してください：rake lang:zh_tw:fetch
+  radicals:
+    title: 部首
+    subtitle: 康熙字典の214部首。どの漢字も、いずれかの部首に分類されています。
+    back: 部首
+    showing_first: 全%{total}字のうち、よく使う%{shown}字を表示しています。すべて見るには、パネルを〘詳〙に切り替えてください。
+    number: 部首%{number}
+    strokes_group:
+      one: "%{count}画"
+      other: "%{count}画"
+    chars_count:
+      one: "%{count}字"
+      other: "%{count}字"
+    characters:
+      one: "%{count}字"
+      other: "%{count}字"
+  triage:
+    title: 知っている単語をさっと仕分け
+    kinds:
+      character: 漢字
+      word: 単語
+    remaining: 未仕分け：あと%{count}
+    known: 知っている
+    known_hint: しばらく出題しません
+    normal: 自信がない
+    normal_hint: ふつうどおり出題します
+    keys: "→キーで「知っている」、←キーでそのまま残します。スワイプでも操作できます。"
+    done_title: 仕分け完了
+    next_batch: 次のまとまりへ
+    empty: すべて仕分けました。辞書が増えたら、また来てください。
+  study:
+    tone_quiz:
+      ask: 声調はどれ？
+      correct: 正解
+      wrong: この声調ではありません
+      hint: 答えの方向にカードをスワイプするか、矢印キーを使ってください。選択肢は声調だけが違います。
+    speech:
+      ask: 声に出して言ってみよう
+      record: 録音
+      stop: 停止
+      listening: 聞いています…
+      scoring: 採点中…
+      next: 次のカード
+      attempts: 試行回数：%{count}
+      mic_denied: マイクにアクセスできません。このチェックを受けるには、ブラウザでマイクを許可してください。
+      offline: いまは発音の採点が使えません。このまま続けてください。
+      hint: 何回でも試せます。平均点が記録されます。スコアは判定ではなく大まかな目安で、音響モデルはあえて甘めにしてあります。納得できたら次へ進みましょう。
+    writing:
+      hint: 答えを見る
+      skip: スキップ
+      correct: 何も見ずに書けました
+      hinted: 輪郭を見ながら書きました
+      skipped: スキップしました。あとでまた出ます
+      hint_help: 輪郭を表示すると「うろ覚え」、スキップすると「思い出せなかった」として扱い、カードはこのセッションの後半でもう一度出ます。正しく書ければ「覚えている」になります。
+    quota_title: 今日の分は完了。目標の%{multiple}倍です
+    quota_body: 今日の新しいカードは%{count}枚（目標は%{quota}枚）。
+    quota_warning: 間隔反復は、一度に長くやるより、毎日短く続けるほうが効果的です。続けたければもちろんどうぞ。止めるものは何もありません。
+    continue: 次の%{count}枚に進む
+    continue_anyway: それでも続ける
+    next_heading: 次にやること
+    play: 再生
+    grade_help:
+      again: 初めて見た、またはまったく思い出せなかった。同じセッションの中でもう一度出ます
+      hard: 一部だけ思い出せた。意味はわかるけれど、読みや声調でつまずいた。間隔はほとんど延びません
+      good: 少し考えて正しく答えられた。ふつうに一歩前進です
+      easy: 見た瞬間に、苦労せずわかった。間隔が大きく延び、出てくる回数がぐっと減ります
+    hint: カードをタップすると答えが表示されます。スワイプ、ボタン、矢印キーのどれでも評価できます。ボタンはスワイプする方向に並んでいます。
+    title: 学習
+    subtitle: まとまりを一度スワイプで通しましょう。間違えたものだけがまた出てきます。
+    open_entry: 辞書の項目を開く
+    open_lesson: 文法レッスンを開く
+    drill_tone: マイクで確かめる →
+    drill_writing: 筆順を練習する →
+    ask:
+      grammar: この文型、わかりますか？
+      listening: 何が聞こえましたか？
+      recognition: 意味は？
+      production: どの単語？
+      reading: 読み方は？
+      tone: 声に出して言ってみよう
+      writing: 漢字を書いてみよう
+    grade:
+      again: わからない
+      hard: 間違えた
+      good: わかった
+      easy: 簡単
+    progress:
+      done: "%{done} / %{total} 完了"
+      remaining:
+        one: 残り%{count}
+        other: 残り%{count}
+    modes:
+      daily: 毎日のデッキ
+      cram: 新しく覚える
+      collection: セット
+      today: 今日
+      desk: デッキ
+      decks: マイデッキ
+      redo: もう一度
+      mistakes: 今週の間違い
+    all_again: すべてわからない
+    all_easy: すべて簡単
+    next: 次へ
+    done_title: ひとまず完了です
+    summary:
+      reviews: 今日の復習
+      new: 新しい単語
+      streak: 日連続
+      tomorrow:
+        one: 明日は1枚のカードが待っています。
+        other: 明日は%{count}枚のカードが待っています。
+      tomorrow_none: 明日の復習はまだありません。
+    done_body: このセッションのカードはもうありません。あとでまた来るか、モードを切り替えてください。
+    back_to_desk: デッキに戻る
+    counts:
+      due: 復習
+      fresh: 新しいカード
+      total: セット内
+  access:
+    language_denied: この言語はお使いのアカウントでは有効になっていません。
+    restricted_denied: このセクションはお使いのアカウントではご利用いただけません。
+    admin_denied: 管理者専用です。
+  admin:
+    console: 管理
+    reminders:
+      title: リマインダー
+      lede: 各学習者のタイムゾーンで、学習時刻の中央値に送信します（履歴がなければ%{hour}:00）。送信間隔は最低%{quiet}時間。メールが%{stop}通無視されたら、次に訪問するまで送りません。トリガー：登録から%{signup}日たっても復習がない、復習待ちのカードがあるまま%{away}日訪問がない、登録直後のウェルカムメール。メールで提案する量は、最後のセッションまでの%{habit}日間のうち%{regular}日以上学習していればその人のいつもの1日分（中央値を四捨五入）、そうでなければ%{starter}枚です。スケジュール：config/reminders.yml。配信停止：%{off}。
+      trigger: トリガー
+      columns:
+        sent: 送信
+        clicked: クリック
+        returned: 2日以内に復帰
+        click_hours: クリックまでの時間（中央値）
+        failed: 失敗
+      recent: 最近のメール
+      feed:
+        user: 学習者
+        trigger: トリガー
+        count: カード
+        sent: 送信
+        clicked: クリック
+        returned: 復帰
+      after: "%{hours}時間後"
+      pending: 送信待ち
+      running: 自動メールは有効です
+      paused_since: 自動メールは%{date}から停止中です
+      pause_hint: このスイッチは、ウェルカムメールとすべての自動リマインダーを止めます。学習者が自分で選んだスケジュールのメールと、手動のニュースレターはそのまま送られます。再開しても過去の分はさかのぼって送らず、次の節目で多くても1通だけ送ります。
+      pause: 停止
+      resume: 再開
+      paused: 自動メールを停止しました。
+      resumed: 自動メールを再開しました。
+    mail:
+      title: メール
+      lede: 全アカウントの完全なログです。どのメールをいつ送ったか、失敗したか、メール内リンクのクリック、そして配信停止・登録のすべてとその経路。永久に保存し、アカウントを削除しても記録は残りますが、メールアドレスなど本人につながる情報は消えます。
+      account_title: メールと購読
+      full_log: 全ログ
+      for_account: 対象アカウント
+      subscribed_now: "%{list}：購読中"
+      enabled: 有効
+      off_since: "%{date}から無効"
+      deleted: アカウント削除済み
+      empty: メールや購読の変更はまだありません。
+      search: アカウントのメールアドレス
+      all_lists: すべてのリスト
+      all_events: すべてのイベント
+      apply: 表示
+      reset: リセット
+      cards:
+        one: "%{count}枚"
+        other: "%{count}枚"
+      schedule_auto: 自動
+      schedule_none: 曜日の指定なし
+      lists:
+        reminders: リマインダー
+        newsletter: ニュースレター
+      events:
+        sent: 送信
+        failed: 失敗
+        clicked: クリック
+        unsubscribed: 配信停止
+        subscribed: 購読登録
+        scheduled: スケジュール
+        paused: 自動送信停止
+        resumed: 自動送信再開
+      sources:
+        admin: 管理画面で
+        signup: 登録時に
+        profile: プロフィールで
+        prompt: アプリ内の案内から
+        email_link: メール内のリンクから
+        one_click: メールアプリのボタンから
+        login: リンクでログイン
+        session: ログイン済み
+        inactive: リンクは無効
+        visit: サイトを訪問
+      letters:
+        welcome: ウェルカム
+        first_cards: 最初のカード
+        due_cards: カードが待っています（2日）
+        still_due: カードが待っています（7日）
+        last_call: 最後のリマインダー（21日）
+        scheduled: 学習者のスケジュールで
+    traffic:
+      title: トラフィック
+      lede: "%{days}日間で%{count}ページビュー。ブラウザ側で計測しているため、JavaScriptを実行しないボットは含みません。site:で始まるパスは静的サイトです。"
+      by_day: 日別のページビュー
+      sections: セクション
+      sources: 参照元
+      paths: ページ
+      devices: デバイス
+      countries: 国
+      locales: 表示言語
+      signups:
+        one: 登録1件
+        other: 登録%{count}件
+    funnel:
+      title: ファネル
+      lede: 初回訪問のISO週ごとの登録コホート。直近%{weeks}週、管理者は除外。定着：初日に%{reviews}回以上復習。復帰の列は、1日目、7〜13日目、30〜59日目のいずれかの訪問を数えます。「…」はまだ判断できないほど新しいコホートです。
+      week: 週
+      columns:
+        size: 登録数
+        started: 開始地点を選択
+        studied: 0日目に復習
+        committed: 0日目に定着
+        day_one: 1日目に復帰
+        week_two: 2週目に復帰
+        month_two: 2か月目に復帰
+      sources: 登録の経路
+      sources_lede: 新しいアカウントが「ログイン」を押したときにいたページと、そのうち一度でもカードを復習した数。
+      source: ページ
+      direct: 直接ログインページへ
+    activity: アクティビティ
+    activity_intro: 直近%{days}日間のイベント%{count}件。ログは%{retention}日間保存されます。
+    activity_empty: まだ記録がありません。
+    window: 期間
+    days: "%{count}日"
+    clear_filter: "%{email}で絞り込み中 — 全員を表示"
+    users_intro: アカウント数：%{count}
+    sort_label: 並べ替え
+    sorts:
+      seen: 最終アクセス
+      joined: 新しい順
+      email: メールアドレス
+    joined_at: 登録 %{at}
+    seen_at: 最終アクセス %{at}
+    never: なし
+    visits: 訪問%{count}回
+    interface_language: 表示言語：%{language}
+    cards: カード%{count}枚
+    reviews_window: 復習%{count}回 / %{days}日
+    decks: デッキ%{count}個
+    account: アカウント
+    joined: 登録日
+    last_seen: 最終アクセス
+    visits_label: 訪問回数
+    where: アクセス元
+    verified: メール確認済み
+    yes_label: はい
+    no_label: いいえ
+    study_profile: 学習プロフィール
+    level: レベル
+    start_level: 開始レベル
+    display: ルビと文字の向き
+    path_steps: ロードマップの完了ステップ
+    practice_runs: 練習の回数
+    plan: プラン
+    placement: レベル診断テスト
+    numbers: 数字
+    decks_label: デッキ
+    cards_label: 学習中のカード
+    reviews_label: 復習
+    reviews_recent_label: 復習 / %{days}日
+    pronunciation_label: 発音の試行
+    texts_label: テキスト
+    events_label: イベント
+    last_review: 最後の復習
+    facets: 練習しているスキル（%{days}日）
+    by_user: 人別
+    by_section: セクション別
+    by_day: 日別
+    recent: 最近のアクティビティ
+    impersonate: このユーザーとして表示
+    impersonating: アカウント%{email}を閲覧専用で開きました。
+    impersonation_read_only: 閲覧専用のため、この変更は保存されませんでした。
+    impersonating_banner_html: アカウント%{email} · 閲覧専用。ここでの操作は何も変更しません。
+    impersonation_stop: 自分のアカウントに戻る
+    impersonation_stopped: 自分のアカウントに戻りました。
+    impersonate_self: これはすでに自分のアカウントです。
+    sources:
+      title: コンテンツの出典
+      intro: 単語や漢字は言語そのものに属するので、出典はありません。出典があるのは例文、訳、音声で、ここでオフにできます。「全員に表示」を外すと、その出典の素材がすべてのユーザーから消えます。「管理者には残す」をオンにすると、自分のアカウントでは表示されたままになります。
+      saved: 出典「%{name}」を保存しました。
+      enabled: 全員に表示
+      enabled_for_admins: 管理者には残す
+      false: オフ
+      commercial_ok: 商用利用可
+      commercial_no: 商用利用は未確認
+      measurement_hint: "%{count}件の出典は商用利用の許可が確認できていません。再構築の際に頻度・文体・難易度の測定にだけ使い、例文はデータベースに一切保存しません。"
+      counts:
+        sentences: 例文
+        collocations: コロケーション
+        audio: 音声
+        translations: 訳
+      registers:
+        colloquial: 口語
+        literary: 文学
+        publicistic: 報道
+        official: 公文書
+        academic: 学術
+        internet: ネット
+        subtitles: 字幕
+    delete: 削除
+    delete_confirm: "%{email}と、そのデータ（学習状況、デッキ、テキスト、プラン）をすべて完全に削除しますか？元に戻せません。"
+    deleted: "%{email}とそのデータをすべて削除しました。"
+    delete_self: ここでは自分のアカウントを削除できません。
+    demote_self: ここでは自分の管理者権限を外せません。
+    save_failed: 変更を保存できませんでした。
+    unverified: 未確認
+    title: ユーザー
+    intro: アカウントごとに表示する言語と、制限付き（オープンソースでない）コンテンツや音声へのアクセスを切り替えます。
+    is_admin: 管理者
+    restricted: 制限付きコンテンツ＋音声
+    languages: 有効な言語
+    save: 保存
+    saved: "%{email}を保存しました"
+  footer:
+    made: 台北でつくっています
+    by: 制作：
+    licenses: ライセンスとクレジット
+    privacy: プライバシー
+    terms: 利用規約
+    support: サイトを支援する
+  support:
+    title: サイトを支援する
+    lede: TaiwanCardsは無料で、広告もなく、何も売っていません。これからもそのままです。
+    body: ただひとつ無料にならないのが、サーバー代です。アプリとデータベースは24時間動いていて、ここで学ぶ人が増えるほど費用もかさみます。このサイトが役に立っていて、応援したいと思ってくださるなら、下のボタンからどうぞ。支援しても何かが買えたり、機能が開放されたりはしません。どちらにしても、みんな同じサイトを使えます。だから、このページを閉じて二度と思い出さなくても、まったく気にしないでください。
+    button: サーバー代を支援する
+    outside: ボタンを押すと、別のサービスであるBuy Me a Coffeeが新しいタブで開きます。
+  offline:
+    title: オフライン
+    lede: セクションをダウンロードすると、通信なしで読めます。ここにあるのは、アカウントなしで見られる内容だけです。カード、学習状況、音声は含みません。
+    install_title: ホーム画面に追加
+    install_hint: アプリとして追加すると、ダウンロードした内容はずっと残ります。ブラウザのタブのままだと、Safariは1週間アクセスがないと削除してしまいます。
+    install_action: 追加
+    storage: "%{quota}中%{used}を使用"
+    persisted: 保存領域は自動削除から保護されています。
+    unsupported: このブラウザはページをオフライン用に保存できません。
+    megabyte: MB
+    unavailable: パックはまだ公開されていません。
+    warn_large: "%{size}をダウンロードします。よろしいですか？"
+    packs:
+      core: 基本
+      grammar: 文法
+      graded: レベル別多読
+      cangjie: 倉頡入力
+      taiwan: 台湾
+      reference: 資料リスト
+      chengyu: 成語
+    groups:
+      core: 必須
+      texts: 読み物とレッスン
+      reference: 資料
+      dictionary: レベル別の辞書
+    summaries:
+      core: メニュー、ヘルプ、発音の表、そしてほかのページから戻ってくるページ。
+      texts: レッスンと読み物を、セクションごとまとめて。
+      reference: 部首、量詞、語気助詞、レベル別リスト。
+      dictionary: 見出し語と、それを構成する漢字、そのレベルに紐づいた例文。
+    state:
+      missing: 未ダウンロード
+      ready: ダウンロード済み
+      stale: 更新あり
+      working: "%{total}中%{done}"
+    action:
+      download: ダウンロード
+      update: 更新
+      remove: 削除
+      browse: ダウンロードした内容を開く
+    browse:
+      title: ダウンロード済み
+      lede: ダウンロードしたパックの全内容です。検索は通信なしでも使えます。
+      placeholder: 漢字・注音・ピンイン・意味
+      empty: まだ何もダウンロードしていません。
+      none: 一致するものはありません。
+      count: "%{count}件"
+      all: すべて
+      kind:
+        character: 漢字
+        word: 単語
+        phrase: フレーズ
+        collocation: コロケーション
+        sentence: 例文
+        radical: 部首
+        measure_word: 量詞
+        particle: 語気助詞
+        grammar: 文法
+        text: 読み物
+    absent:
+      title: ダウンロードしていないページです
+      body: このページは、まだダウンロードしていないパックに含まれています。オンラインに戻れば、いつもどおり開けます。
+    fallback:
+      title: オフラインです
+      body: このページは通信が必要です。オンラインに戻りしだい開きます。オフライン用にダウンロードした内容は、そのまま使えます。
+      retry: 再試行
+  syllables:
+    title: 華語の全音節を音声で
+    meta_description: 台湾で使われる華語の音節の録音、全%{clips}件。注音とピンイン付き、スタジオ録音の2つの声で。
+    lede: "%{bases}の音節と%{clips}件の録音。各音節に実際にある声調をすべて収録しています。音声はCNS11643コーパスのスタジオ録音で、声は2種類。声調をタップすると聞けます。"
+    voice: 声
+    voices:
+      female: 女性
+      male: 男性
+    play: "%{syllable}、第%{tone}声"
+    credit: 音声：%{attribution}。政府資料オープンデータライセンス（Open Government Data License）。
+  levels:
+    marked: マーク済み
+    download: このリストをダウンロード（CSV）
+    download_note: 無料、メールアドレスの登録も不要です。出典とライセンスはすべてファイル内に記載しています。
+  licenses:
+    moe_notice: "〘使用說明〙 — ライセンスの定めにより、公式の利用上の注意を全文掲載しています"
+    title: ライセンスとクレジット
+    intro: TaiwanCardsは、自由なライセンスで公開されたオープンな資源と、台湾の公式な言語データに感謝しつつ作られています。それぞれ出典とライセンスへのリンクを付けています。
+    projects_title: わたしたち自身のオープンな成果
+    projects_note: TaiwanCardsは、台湾華語についてのオープンな言語研究の積み重ねの上に成り立っています。データを作るコーパス処理の仕組み、データを台湾のものに保つための出自の分析、発音採点を支える信号処理ライブラリ、そして公開済みのデータセット。このアプリ自体も含め、すべてがオープンです。
+    groups:
+      app: アプリとデータの準備
+      pipeline: コーパスの構築と出自の分析
+      gems: 信号処理ライブラリ
+      datasets: 公開データセット
+    works:
+      taiwancards: 学習アプリのすべて：Rails、インポーター、間隔反復、発音採点、模擬試験。隠しているものは何もありません。
+      corpora: 辞書のもとになるすべての資料のダウンロード、処理、整形、調整、クリーニング、分析。
+      twpipeline: 台湾華語のコーパス構築：生のクロールデータから、分かち書きと頻度情報の付いたコーパスまでの9段階のJSONL処理。
+      twfilter: 出自の分析：文字の目録、正書法、語彙や文法のマーカーから、台湾華語を中国・香港・東南アジアの用法と見分けます。
+      dsprb: 純粋なRubyで書いた音声信号処理：WAVのデコード、FFTパワースペクトル、MFCC、YINによるピッチ追跡。発音の採点に使っています。
+      dtwrb: Sakoe-Chibaバンド付きの動的時間伸縮（DTW）と、DBAによる重心平均。録音をお手本の音の高さの動きと比べています。
+      twngrams: 台湾華語コーパスから集計した単語と文字のn-gram頻度。パブリックドメインで公開。
+      twsyllables: 注音、ピンイン、コーパス内での声調の分布を付けた音節の目録。
+      twfilter_tables: twfilterが出自を判定するのに使う参照表：表記の対応、語彙のマーカー、文字の目録。
+    open_source_title: オープンソース
+    fonts_title: フォント
+    fonts_note: 3つとも自前のサーバーから配信しています。そのうち2つは改変して配布しており、その旨を下に記しています。
+    corpora_title: コーパスと辞書
+    corpora_note: データベースにあるすべてのテキストコーパスと、それぞれのライセンスです。ここで公開しているのは、無料利用と商用利用の両方を許可している出典だけです。それ以外は統計にだけ使い、文は一切保存していません。
+    data_title: 参照データ
+    data_note: このアプリが土台にしている参照資料（レベル別リスト、筆画の一覧、漢字の標準、暦の表、分類の尺度）を公表している機関です。これらは創作物ではなく事実の一覧なので、ライセンスではなくクレジットとして記載しています。機関が特定のライセンスで公開している場合は、そのライセンスを明記しています。
+    outro: 華語のコンテンツはすべて台湾の繁体字で書かれ、教育部の辞典と照合しています。名称、ブランド、教材の本文は、それぞれの権利者に帰属します。
+    items:
+      moe_audio: 漢字と単語の音声。台湾教育部による録音、データ版20260626。ファイルは改変せずに配信し、アプリは見出し語の部分だけを再生するようにしています。
+      cc_cedict: 有志による中英辞典。読み、意味、繁体字と簡体字の対応。
+      makemeahanzi: 筆順の図、部首への分解、漢字の成り立ち。
+      hanzi_writer: 書き取り練習で使っている、一画ずつ書くためのエンジンとアニメーション。
+      hanzilookup: 書いた筆画を漢字に変換する手書き認識。完全にオフラインで動きます。認識データ（mmah.json）はMake Me a Hanziの筆画データから作られているため、エンジン本体のMITではなく、そのプロジェクトのLGPL／Arphic PLの条件に従います。
+      unihan: UnicodeのHanデータベース。標準的な読みと漢字の属性に加え、日本語版の土台になっている日本語の読み、新字体との対応、常用漢字・人名用漢字の一覧。© 1991–2026 Unicode, Inc.、Unicode License V3による。
+      opencc: STCharactersの表。テキストを貼り付けたときに簡体字を繁体字に変換するのに使います。変換した箇所はすべて表示します。日本語の異体字表（JPVariants、JPShinjitaiCharacters）は、日本語版で台湾の字と日本の字形を対応づけるのに使っています。
+      roboto: ラテン文字とピンインに使っているUIフォント。Googleから読み込まず自前で配信しているので、ページを開いても第三者にリクエストが送られることはありません。
+      noto_sans_tc: 繁体字の標準フォント。こちらも自前で配信しています。
+      tw_kai: 台湾独自の楷書体フォントで、〘數位發展部〙が公開している〘CNS11643 全字庫〙のものです。「手書き風」表示の書体で、サイトのロゴもこのフォントの〘臺〙の字形から描いています。配布しているのはサブセットです。ファイルはこのアプリで実際に使う文字だけに絞り、ロゴにはそこから取った字形を埋め込んでいるため、ここにあるのは原本ではなく改変版です。
+      moe: 教育部の標準字体、常用字4808字、漢字の頻度。
+      bopomofo_audio: 注音記号の録音。教育部の〘國語注音符號手冊〙オープン部品パッケージから取ったもので、別途CC BY 4.0で公開されています。2017 © 〘教育部,國語注音符號手冊-開放部件〙。
+      tocfl: TOCFLの公式レベル別語彙リスト。
+      naer: 国家教育研究院。TBCL基準、COCTコーパス、一般語彙頻度表。
+      moe_strokes: 基本筆画と複合筆画の一覧のもとになっている、筆画名の規範リスト。
+      moe_idioms: "〘成語〙の公式辞典。すべての成語について語義、古典の出典、由来の故事、用例を収録。原文は改変せず、そのまま表示しています（ライセンスで翻案が禁じられているため）。各言語版の訳と注は、このサイトが独自に書いたものです。"
+      cwa: 雨量の階級、台風の強さの区分、紫外線指数の段階。
+      tbrs: 台湾の品種の茶の分類、製茶工程、発酵度。
+      hko: 祝祭日の日付を計算するための旧暦と二十四節気の表。
+      xiaoxuetang: 古代の字形（甲骨文、金文、篆書）をトレースしたもの。パブリックドメインで公開。
+  help:
+    title: ヘルプ
+    intro: このサイトでできることを、ざっと紹介します。辞書、レッスン、リストなどはみんなで共有していますが、学習状況は自分だけのものです。
+    sections:
+      search:
+        title: 検索
+        body: 上の検索ボックスで、すべてをまとめて検索できます。意味、ピンイン（声調はあってもなくても、xiao3のような数字でも）、注音、さらには打ち間違えた漢字でもかまいません。結果は近い順に並び、いちばん近いものが先頭に来ます。
+      study:
+        title: デッキと学習
+        body: デッキは、いま学習中のカードの山です。カードを追加すると、「学習」で間隔反復（FSRS）が始まります。スワイプで自己評価しましょう。カードは、ちょうど忘れかけるタイミングで戻ってきます。
+      dictionary:
+        title: 辞書
+        body: 漢字、単語、例文、コロケーション、量詞、部首を見られます。どの項目にも、読み（注音＋ピンイン）、意味、そしてどれだけ覚えているかが表示されます。
+      tocfl:
+        title: TOCFL
+        body: レベル別の公式語彙リストです。各バンドへの到達度を確かめ、どのレベルでも直接学習できます。
+      pronunciation:
+        title: スピーキング
+        body: マイクに向かって単語を言うと、音節ごとに声調と音のフィードバックが返ってきます。オートモードでは、正しく言えたら次へ進み、言えるまでマイクを開いたままにします。
+      writing:
+        title: 書き取りと手書き検索
+        body: 書き取りでは、意味と読みから漢字を一字ずつ書きます。手書き検索は書いた字を認識し、倉頡（そうけつ）入力ではコードを練習します。
+      history:
+        title: 学習履歴と統計
+        body: 学習履歴は最近のタイムラインで、何を学び、どれだけ定着しているかがわかります。統計では、記憶の保持率、学習量、苦手なところの推移を見られます。
+      profile:
+        title: プロフィールとバックアップ
+        body: 名前を変えたり、学習状況をすべてファイルに書き出したりできます。データベースを作り直したあとにそのファイルを読み込めば、中断したところからそのまま再開できます。
+  phrases:
+    dialogue:
+      kicker: 場面を演じる
+      open: 場面を演じる
+      open_hint: 短いやりとりの中で何と言うかを選び、その理由を学びます。
+      hint: 自分なら何と言うかを選んでください。どの選択肢にも解説があります。
+      goal: 自分の番：
+      choose: 何と言いますか？
+      you: 自分
+      next: 続ける
+      score: "%{total}問中%{right}問を一度で正解"
+      done: 場面のすべての選択肢に解説を付けているので、2回目はもっとスムーズに進めます。
+      again: もう一度
+      back: この場面のフレーズ
+    title: 台湾フレーズ集
+    intro: 台湾の人が実際に使う言い回しと、聞き取れないと困るもう半分、つまりお店の人が返してくることばです。
+    empty: まだフレーズがありません。
+    replies: 自分の返事
+    roles:
+      all: すべて
+      you: 自分が言う
+      staff: 相手が言う
+  everyday:
+    origin_hint: この単語が台湾華語にどこから入ってきたか。
+    title: 台湾の日常語
+    intro: 台湾で実際に使われているのに、試験の単語リストでは教わらないことば。
+    empty: まだ項目がありません。
+    all: すべて
+    study: これを学習する
+    abbr_label: 略して
+    capital_label: 首都
+    full_label: 正式名
+    taiwan_marked: 台湾特有
+    pick_scenario: 場面を選ぶと、そこで本当に必要なことばが出てきます。
+    all_scenarios: すべての場面
+    by_origin: 由来別
+    tier_core: 基本
+    play: 音声を再生
+    other: その他
+    word_count:
+      one: "%{count}語"
+      other: "%{count}語"
+    groups:
+      daily: 毎日の暮らし
+      errands: 用事
+      moving: 外に出る
+      society: 人と社会
+    scenarios:
+      food: 外食
+      drinks: お茶とコーヒー
+      breakfast: 朝ごはん屋さんで
+      produce: 食材の買い物
+      life: 毎日の暮らし
+      health: 病院と薬局
+      money: 銀行で
+      payments: レジで払う
+      housing: 部屋探し
+      admin: 役所の手続き
+      work: 職場で
+      transport: 街の移動
+      places: 台湾めぐり
+      nature: 天気と風景
+      travel: 海外へ
+      people: 人と家族
+      slang: ふだんの話し方
+      civics: ニュースと社会
+      leisure: お出かけ
+      faith: お寺とお祭り
+    tea:
+      title: お茶：六大茶類と台湾茶の発酵度
+      hint: 茶類の違いは茶の木ではなく、葉に施した加工で決まります。パーセントは一般的な目安で、決まった値ではありません。
+      scale: 発酵度の低い順に並べた台湾茶
+      notes:
+        hongcha_black: "〘紅茶〙はなぜ紅茶で、〘黑茶〙はなぜ紅茶ではないのか"
+        qingcha_wulong: "〘青茶〙と〘烏龍茶〙：分類名とふだんの呼び名"
+        fajiao_oxidation: "〘發酵〙が指すのは微生物の発酵ではなく酸化"
+        two_axes: 発酵と焙煎、2つの独立した軸
+        taiwan_focus: 台湾といえばウーロン茶、その理由
+    sort_label: 並び順：
+    sorts:
+      category: カテゴリ順
+      freq: 頻度順
+      difficulty: やさしい順
+    tags:
+      大樓: マンションと宅配
+      設備: 設備と家電
+      房屋問題: 住まいのトラブル
+      程度: 強調のことば
+      稱讚: ほめ言葉とリアクション
+      外來語: 会話に混じる英語
+      茶種: お茶の種類
+      茶行: 茶葉店とお茶の文化
+      咖啡: コーヒー
+      咖啡店: カフェとチェーン店
+      唱歌: 歌とカラオケ（KTV）
+      爬山: 山歩きとハイキング
+      泡湯: 温泉
+      其他: そのほかの遊び
+      夜市: 夜市で
+      點菜: メニューを読んで注文する
+      下雨: 雨と湿気
+      太陽: 日差しと日焼け対策
+      安全: 注意書きと安全
+      飲料店: ドリンクスタンドとチェーン店
+      飲品種類: メニューにあるもの
+      配料: トッピング
+      點餐說法: 注文の決まり文句
+      早餐店: いつもの朝ごはん屋さん
+      超商: コンビニ
+      付款: レジでの支払い
+      夜市小吃: 夜市の屋台グルメ
+      中元節: 鬼月と中元節
+      媽祖: "〘媽祖〙と巡行"
+      拜拜: お参りとお供え
+      清明節: 清明節の墓参り
+      端午節: 端午節の風習
+      元宵節: 元宵節（ランタンフェスティバル）
+      教師節: 孔子と教師節
+      過年: 旧正月の風習
+      冬至: 冬至
+      節慶食物: 行事の食べ物
+      飯類: ご飯ものと弁当
+      點餐: 注文する
+      外食場合: 外食：お店と場面
+      調味與口感: たれ・調味料・食感
+      小菜滷味: 小皿料理と煮込み
+      甜點冰品: スイーツ、ゼリー、かき氷
+      根莖瓜類: 根菜とウリ・カボチャ類
+      葉菜類: 葉もの野菜
+      水果: 果物
+      海鮮: 魚と海鮮
+      交通: 交通
+      卡片: 交通系ICカード
+      居家: 住まいと賃貸
+      買東西: 用事と買い物
+      證件: 身分証と書類
+      學校: 学校と勉強
+      上班: 仕事
+      上網: ネット生活
+      電腦: パソコンと周辺機器
+      罵人: ののしり言葉
+      口頭禪: 口ぐせ
+      心情: 気分と不運
+      評價: 人を評することば
+      討厭鬼: 関わりたくない人
+      沒骨氣: 弱腰とマザコン
+      網路用語: ネットスラング
+      人生勝負: 勝ち組と負け組
+      帳戶: 口座の開設と利用
+      錢包: 財布の中身
+      發票報稅: レシートと税金
+      電子支付: 決済アプリと電子マネー
+      銀行: 台湾の銀行
+      找房子: 部屋探し
+      房型: 建物の種類
+      租屋: 部屋を借りる
+      政府: 政府
+      總統: 歴代総統
+      權利: 権利と自由
+      政黨: 政党
+      歷史: 歴史
+      族群: エスニックグループ
+      居留證: 居留証
+      簽證: ビザと出入国
+      辦手續: 窓口と申請
+      搭飛機: 飛行機
+      路線: 路線と交通網
+      景點: 観光スポット
+      離島: 離島
+      縣市: 県と市
+      麵食: 麺類と餃子
+      豆漿店: 豆乳の朝ごはん屋さん
+      地方名產: 地方の名産と食べ物のおみやげ
+      蛋餅: 台湾風卵クレープ
+      冰塊: 氷と温度
+      甜度: 甘さ
+      文湖線: ブラウンライン（文湖線）
+      淡水信義線: レッドライン（淡水信義線）
+      松山新店線: グリーンライン（松山新店線）
+      中和新蘆線: オレンジライン（〘中和新蘆線〙）
+      板南線: ブルーライン（板南線）
+      環狀線: イエローライン（環状線）
+      淡海輕軌: 淡海ライトレール
+      安坑輕軌: 安坑ライトレール
+      搭車: 移動
+      邦交國: 国交のある国
+      亞洲: アジア
+      中東: 中東
+      歐洲: ヨーロッパ
+      美洲: 南北アメリカ
+      非洲: アフリカ
+      大洋洲: オセアニア
+      城市: 世界の都市
+      外交: 外交
+      前蘇聯: 旧ソ連の国々
+      海域: 海と海峡
+      河川: 川
+      水庫: ダム湖
+      地震: 地震
+      颱風: 台風
+      政治: 政治
+      同志: LGBT
+      原住民族: 原住民族
+      兩岸: 台湾と中国の関係
+      醫院: 病院とクリニック
+      看病: 診察を受ける
+      大學: 大学
+      火鍋: 鍋料理と冬の薬膳鍋
+      吐司三明治: トーストとサンドイッチ
+      菇類: きのこ
+      市場: 伝統市場で
+      疫苗: ワクチン
+      疾病: 病気と感染症
+      症狀: 症状
+      電器行: 家電の買い物
+      書店: 書店
+      圖書館: 図書館
+      速食店: ファストフード店
+    make_deck:
+      one: この1語でデッキを作る
+      other: この%{count}語でデッキを作る
+    make_deck_hint: 先にリストを絞り込むと、いま表示されている単語がそのままデッキになります。
+    make_deck_button: デッキを作成
+    scales:
+      title: 甘さと氷：多い順から、なしまで
+      hint: ドリンクスタンドでは、どこでも甘さと氷の量の両方を聞かれます。どちらも段階が決まっているので、各行から1語ずつ選んで答えればOKです。
+      sugar: 甘さ 〘甜度〙
+      ice: 氷 〘冰塊〙
+      note: チェーン店によって違いがあります。〘50嵐〙は〘不要太甜〙を〘九分糖〙と表示し、〘常溫〙・〘溫〙・〘熱〙を別々の3段階にしているのは北部の店舗だけです。〘微冰〙は〘少冰〙より氷が多いのではなく、少ないので注意しましょう。
+      sugar_levels:
+        full: 通常の甘さ。〘正常甜〙と書く店もあります
+        nine: 甘さ控えめ。実際に1段階あり、90%
+        less: 少なめ、約70%
+        half: 半分、約50%
+        light: ほんのり甘い、約30%
+        one: 10%。頼まないと出てきません
+        none: 砂糖なし
+      ice_levels:
+        normal: 通常の氷の量（標準）
+        less: 氷少なめ
+        little: 氷ほんの少し
+        none: 氷なし。でも冷たいドリンク
+        room: 常温、冷やさない
+        warm: 温かい
+        hot: ホット
+    domains:
+      food: 食べ物と飲み物
+      drinks: ドリンクスタンドとお茶
+      breakfast: 朝ごはん
+      produce: 市場と食材
+      life: 日々の暮らし
+      slang: スラング
+      people: 人
+      work: 仕事と勉強
+      transport: 交通
+      money: お金と銀行
+      payments: 支払い
+      housing: 部屋を借りる
+      civics: 国と社会のしくみ
+      nature: 大地と海と天気
+      places: 台湾の地名
+      travel: 旅行と世界
+      admin: 手続きと居留
+      health: 健康と医療
+      leisure: レジャーとお出かけ
+      faith: お寺とお祭り
+    origins:
+      hokkien: 台湾語から
+      japanese: 日本語から
+      internet: ネット
+      abbreviation: 略語
+      taiwanese_mandarin: 台湾華語
+    registers:
+      neutral: ふつう
+      casual: くだけた
+      vulgar: きつい言葉
+  variants:
+    title: 台湾とほかの地域の違い
+    word: 語
+    reading: 読み
+    meaning: 意味
+    taiwan: 台湾
+    china: 中国
+    hongkong: 香港
+    singapore: シンガポール／マレーシア
+    checked: 読みは教育部の辞典と、語彙は教育部の両岸対照表や各地域の資料と照合しています。形に異論がある場合や標準が変わった場合は、どちらかの側に立つのではなく、注でそのことを説明しています。
+    sections:
+      reading: 同じ漢字で、読みが違う
+      glyph: 同じ単語で、字が違う
+      word: 語そのものが違う
+    intro:
+      reading: 台湾と中国で同じように書くのに、読み方が違う単語です。誰もが気づくのが〘垃圾〙で、台北でlājīと言えば、どこで華語を習ったかがすぐにわかります。注意が必要な項目が2つあります。接続詞の〘和〙をhànと読むのは本当に教育部の辞典に載っている読みですが、使うのは年配の人やニュース放送に限られつつあるので、自分で使うより聞いてわかればいい読みとして扱いましょう。また〘說服〙は台湾では確かにshuìfúですが、中国が何かを変えたからではありません。2019年に広まった「読みが改訂された」という話は、公式に否定されています。
+      glyph: 台湾も香港も繁体字を使いますが、いつも同じ字を選ぶわけではありません。これらはフォントの違いではなくUnicode上の別の文字なので、画面でも実際に違って見えます。いちばんよく出会うのは〘著〙です。台湾ではどの読みでも〘著〙と書きますが、香港と中国では〘着〙と使い分けます。そのうち2つは、台湾の中でも公式の標準とふだんの手書きが食い違う例です。標準の字形は〘汙〙と〘脣〙ですが、街では〘污〙と〘唇〙をよく見かけます。
+      word: 地域によって、まったく別の単語を使う例です。香港の列は、華語の変種というより、ほとんどが漢字で書いた広東語の語彙だという点に注意してください。華語話者が〘雪櫃〙を声に出して読んでも、それは広東語の単語を読んでいることになります。この表でいちばんの落とし穴は〘土豆〙です。台湾ではピーナッツ、中国ではジャガイモ。もとは別々の2つの単語が、書くと同じになってしまったのです。
+  metro:
+    title: 台北・新北のMRT
+    hint: 駅をタップすると読み方が表示されます。
+    open_entry: 辞書で詳しく見る
+    close: 閉じる
+    station_count:
+      one: 1駅
+      other: "%{count}駅"
+    attribution: 地図は公開されている駅の座標から作成しています。出典はOpenStreetMapの協力者と、台北メトロの運営会社（Taipei Rapid Transit Corporation）が台湾の政府オープンデータライセンスのもとで公開している駅データです。駅の位置は実際のとおりで、白抜きの丸は乗換駅です。支線は別の区間として描いているため、同じ色の線が途切れていても線路が欠けているのではなく、支線の分かれ目です。
+  culture:
+    title: 台湾カルチャーノート
+    lede: 台湾の毎日が実際どう回っているのかを伝える、コースの短いノート60本です。どれもいずれかのレッスンに付いていて、レッスンは最初のひとことからB1まで続きます。
+    stages: コースの段階
+    empty: ノートはまだありません。
+    from_lesson: 第%{number}課
+  medicine:
+    title: 医療と病院
+    hint: イラストのラベルをタップすると、その単語の読み方が表示されます。
+    open_entry: 辞書で詳しく見る
+    close: 閉じる
+    empty: 医療の語彙はまだ取り込まれていません。
+    folk_label: 日常会話では：
+    formal_label: 医学用語：
+    categories:
+      body: からだ
+      organs: 臓器と器官系
+      symptoms: 症状
+      diseases: 病気
+      vaccines: ワクチン
+      hospital: 病院で
+      departments: 診療科
+      treatment: 検査と治療
+      people: 医療スタッフ
+      nhi: 全民健康保険（健保）
+    diagrams:
+      hospital: 台湾の一般的な病院
+      body: 人体
+      extremities: 手・背中・足
+      organs: 内臓
+    insets:
+      hand: 手の甲
+      back: 背面
+      foot: 足
+  games:
+    title: 台湾のボードゲーム
+    empty: ボードゲームの語彙はまだ取り込まれていません。
+    boards:
+      mahjong: 麻雀
+      mcr: 中国公式ルール
+      xiangqi: シャンチー
+      go: 囲碁
+      tabletop: ボードゲーム・カード
+    leads:
+      mahjong:
+        title: 台湾麻雀
+        body: 16枚で打つこの麻雀は台湾のもので、中華圏共通のルールではありません。アガリは5面子1雀頭。役の点数は「台」という単位で足し算され、日本の麻雀の翻のように倍々にはなりません。8枚の花牌はそれだけで点になり、一晩の勝ち負けは親の連荘で決まります。一翻縛りのような最低条件はなく、0台の手でもアガれます。
+        note: ここで扱うのは用語とその意味で、ルールブックではありません。
+      mcr:
+        title: 中国公式ルール麻雀
+        body: 1998年に中国で定められた競技ルールです。手は13枚、役は81種類で、8点縛りがあります。それより安い手はアガリになりません。点数の単位は台ではなく「番」で、台湾の卓ではまず見かけない役もたくさんあります。
+        note: 台湾では大会でこのルールを使い、家では台湾のルールで打ちます。
+      xiangqi:
+        title: シャンチー（中国将棋）
+        body: 駒はマス目の中ではなく、線の交点に置きます。将と士は九宮から出られず、象は河を渡れません。馬はすぐ隣に駒があると進めず、砲は間に駒を1つはさんだときだけ相手の駒を取れます。動かせる手がなくなった側は負けで、王手を延々と続けることは禁止です。
+        note: 赤と黒で、同じ駒を別の漢字で書き分けます。
+      go:
+        title: 囲碁
+        body: 囲碁と〘圍棋〙は同じゲームです。〘圍棋〙は「囲む碁」という意味で、日本語の「囲碁」とほぼ同じ発想の名前です。石は交点に置いたら動かさず、本物の眼が2つある石は生きます。地と取った石で数える日本のルールと違い、台湾では盤上の石と地を合わせて数えます。
+        note: 用語の多くは日本語から入ったものですが、台湾では独自の漢字で書かれます。
+      tabletop:
+        title: ボードゲーム、トランプ、街の遊び
+        body: 台湾では現代のボードゲームを〘桌遊〙と呼び、時間制のボードゲームカフェで遊びます。そのそばには地元で定番のトランプ遊びがあります。〘大老二〙、〘十三支〙、〘心臟病〙、そして街で遊ばれる〘暗棋〙。〘暗棋〙は盤の半分を使い、駒を伏せたまま遊ぶシャンチーです。
+        note: どの卓でも使う言葉も集めています。手番、点数の計算、チップ、席決めなど。
+    categories:
+      game: ゲームの名前
+      board: 盤
+      piece: パイ・駒・石
+      equipment: 道具と場所
+      roles: 席と役割
+      procedure: ゲームの進行
+      meld: 面子
+      call: 鳴きとアガリの宣言
+      wait: 待ち
+      scoring: 点数の単位
+      pattern: 役・形
+      tactic: 戦術
+      opening: 序盤
+      endgame: 終盤
+      strategy: 戦略
+      rule: ルール
+      rank: 段級位
+      talk: 対局中のひとこと
+  calendar:
+    title: 年中行事と旧暦
+    year_label: 年
+    today: 今日は%{date}、旧暦では%{lunar}です。
+    day_off: 祝日
+    observed: 振替休日
+    aka: 別名
+    rule: 日付の決まり方
+    food: 食べるもの
+    words_heading: この行事のことば
+    no_lexeme: 辞書に未収録
+    sources: 出典
+    lunar:
+      title: 旧暦のしくみ
+      months_html: "<p>旧暦の1か月は新月の日に始まり、次の新月まで続きます。その長さは約29.53日なので、1か月は<strong>29</strong>日か<strong>30</strong>日のどちらかです。31日の月はなく、暗記できる決まった長さもありません。12か月で約354日となり、太陽の1年より11日ほど短くなります。</p><p>この差がすべての出発点です。何も手を打たなければ、新年は季節をさかのぼってずれていき、いずれ〘春節〙が夏に来てしまいます。</p>"
+      days_html: "<p>旧暦の日付は数字だけでは書きません。最初の10日は<strong>〘初〙</strong>を付けて〘初一〙、〘初二〙、〘初三〙…〘初十〙。11日から19日は〘十〙を使って〘十一〙、〘十二〙…〘十九〙、20日は〘二十〙です。21日からは<strong>〘廿〙</strong>を付けて〘廿一〙、〘廿二〙…〘廿九〙となり、30日ある月は〘三十〙で終わります。</p><p>つまり<strong>〘初五〙</strong>は単に「その月の5日」のことです。〘正月初五〙と言えば旧暦1月5日のことで、年は付かず、新暦の日付も意味しません。</p>"
+      drift_html: "<p>だから〘春節〙は、2年続けて新暦の同じ日になることがありません。旧暦の1年は太陽の1年より11日ほど短いため、新年は毎年少しずつ早まります。早まりすぎると丸1か月が挿入され、また遅い日付に戻ります。1950年から2050年の間では、1月21日から2月20日の範囲を行き来します。</p>"
+      leap_html: "<p>このずれを直すのが<strong>うるう月</strong>、〘閏月〙です。19年に7回ほど1か月が追加され、その年は13か月、約384日になります。年末に付け足すのではなく、既存の月のあとに入り、その月の番号を引き継ぎます。6月のあとに入るうるう月は〘閏六月〙で、その年には〘六月〙と〘閏六月〙の両方があります。</p><p>どの月が重なるかは、唱えて覚えられる決まりではなく太陽で決まります。二十四節気がどこに来るかしだいです。2025年には〘閏六月〙があり、2033年には珍しい〘閏十一月〙があります。</p>"
+      terms_html: "<p>ここにある行事のうち2つは、そもそも旧暦の行事ではありません。<strong>〘清明〙</strong>と<strong>〘冬至〙</strong>は<em>二十四節気</em>、つまり太陽の1年の通り道の上の点です。旧暦の行事が新暦の上を動き回るなか、この2つがほとんど同じ日にとどまるのはそのためです。</p>"
+    minguo:
+      title: "〘民國〙紀年の換算"
+      gregorian: 西暦
+      minguo: "〘民國〙紀年"
+      note: 西暦%{gregorian}年は〘民國〙%{minguo}年です。
+      before: "〘民國〙紀年は1912年に始まるため、この年には〘民國〙の年数がありません。"
+      explain_html: "<p>台湾の公文書は<strong>〘民國〙</strong>紀年で日付を書きます。中華民国が建国された<strong>1912年</strong>を〘民國〙元年とする数え方で、計算は<strong>〘民國〙＝西暦−1911</strong>だけ。逆算も同じです。身分証、列車の切符、レシート、契約書、賞味期限などで目にし、ふつうは2025年ではなく114.09.28のように書かれます。和暦に慣れている人には、元号の感覚で読めるはずです。</p>"
+    converter:
+      title: 旧暦⇔新暦 日付換算
+      to_gregorian: 旧暦 → 新暦
+      to_lunar: 新暦 → 旧暦
+      lunar_year: 旧暦の年
+      lunar_month: 月
+      lunar_day: 日
+      date: 日付
+      gregorian_result: "%{date}（%{weekday}）"
+      lunar_result: "%{year} %{month}%{day}"
+      out_of_range: 対応している範囲外です。
+      bounds: 対応範囲は%{from}〜%{to}です。換算表は香港天文台の「新暦・旧暦対照表」をもとにしており、すべての日付をその出典と照合しています。
+  page_help:
+    word_pairs_html: "<p>日本語なら同じ一語で済んでしまうために混同しやすい、2〜3語の組み合わせを集めました。「できる」にあたる〘會〙・〘能〙・〘可以〙、「〜ない」にあたる〘不〙と〘沒〙、「また」にあたる〘再〙と〘又〙などです。まずルール、次にそれぞれの単語の例文、最後によくある間違いを紹介します。</p><p>下の練習問題は記録されません。答えるとすぐに、なぜその単語が正しいのかがわかります。これらの単語の辞書ページからも、それぞれのセットに移動できます。</p>"
+    dictation_html: "<p>本物の録音を聞いて、聞こえたとおりに書き取ります。声はすべて台湾のネイティブスピーカーで、文は語彙のレベル順に並んでいます。1がいちばんやさしいレベルです。</p><p>何度でも聞き直せます。速すぎるときは、横のボタンで速度を落としましょう。どうしても聞き取れないときは、訳を表示すると意味がわかります。</p><p>注音はこの画面で直接入力できます。〘ㄅㄆㄇ〙をオンにして、台湾の注音配列のキーか画面上のボタンを押してください。声調は6・3・4・7のキーで、第一声には何も付けません。</p>"
+    desk_html: "<p>ホーム画面の内容は、選んだモードによって変わります。<strong>TOCFL</strong>では試験までのカウントダウン、レベル別の到達度、模擬試験、そのレベルの文法。<strong>自分の単語</strong>では自作デッキの復習と、授業で習った単語をさっと追加する入口。<strong>おすすめの順番</strong>では発音かコースの次のステップと、その日のカード。モードはプロフィールか、見出しの横の「変更」から切り替えられます。</p><p>数字の見方：<strong>今日の復習</strong>はFSRSのスケジュールで今日出てきたカードの数、<strong>新しいカード</strong>はそれに加えてアプリが出してもよいと判断した未学習の量です（上限は学習プランから、プランがなければ設定から決まります）。<strong>学習中</strong>は出題の対象になっているカードの総数です。大きなボタンを押せば、いつでもいちばん自然な続きに進めます。</p>"
+    progress_html: "<p><strong>連続記録</strong>は、復習した日が何日続いているかです。1日の区切りは端末のタイムゾーンの0時から0時まで。旅行中でも、すでに数えた日はそのまま残ります。30日続くと2日までの中断では記録が途切れなくなり、お休みなしで90日続くと4日までの中断が許されます。お休みの日は日数に加算されず、お休みを使うと次のお休みまでのカウントは最初からになります。<strong>定着率</strong>は、FSRSが復習どきと判断したカードのうち「わかった」以上で答えた割合です。設定の目標値を大きく下回っているなら、間隔が長すぎるということです。</p><p>カードの状態：<strong>未学習</strong>はまだ一度も出ていないもの、<strong>学習中</strong>は学習ステップの途中のもの、<strong>定着途中</strong>は間隔が3週間未満のもの、<strong>定着</strong>は3週間以上のものです。<strong>苦手カード</strong>は何度も忘れてしまうカードで、スケジュールに任せて回し続けるより、手で覚え直したほうが早く済みます。</p>"
+    plan_html: "<p>目標のTOCFLレベルと期日を決めると、その日までにレベルを終えるには1日にどれだけ新しく学べばよいかを計算します。1日のノルマはすでに覚えた量から毎日計算し直すので、1日休んでもプランは崩れず、ノルマが少し増えるだけです。</p><p>ノルマが現実的でない量になると、オレンジ色で表示されます。その期日ではレベルを終えられないので、期日を延ばすか、目標をひとつ下のレベルにしましょう。</p>"
+    cangjie_lessons_html: "<p>〘倉頡〙は、繁体字を音ではなく形で入力する台湾の入力方式です。字を目に見える部品に分け、部品ひとつをアルファベットのキーひとつで打ちます。この教科書は第5世代（〘倉頡五代〙）だけを扱い、Cangjie 3や簡易版のCangjieは扱いません。</p><p>構成は次のとおりです。まずコードの組み立て方を4レッスン、次に26個のキーを1レッスンずつ、そのあと分解のルールと例外の一覧。最後は台湾独自の字と、準備級（Novice 1・2）の字すべてで締めくくります。</p><p>どのレッスンにも練習が付いています。形からキーを答える、字の最初のキーを答える、正しい分け方を選ぶ、コードを全部打つ、の4種類です。自由に打つ練習は別にあり、「練習」の中の<strong>〘倉頡〙トレーナー</strong>でできます。</p>"
+    names_html: "<p>このセクションでは、台湾人の名前がどう組み立てられているかを説明し、戸籍の記録から数えた、台湾で実際に使われている名前を紹介します。名前を作ってあげることはしません。名前選びは個人的なことで、ふつうは台湾の友人や先生と一緒に決めるものだからです。</p><p><strong>姓</strong>は1文字で、親から受け継ぎ、名の前に書きます。2文字の姓もありますが、まれです。<strong>名</strong>は家族が選ぶ1〜2文字で、2文字がふつうです。順番は変わりません。パスポートの表記がどうであれ、華語では姓が前に来ます。相手から別の呼び方を勧められるまでは、姓に肩書きを付けて呼びましょう。</p><p>「名前を選ぶ」タブでは、2つ目のタブと同じ集計をもとに字を順位づけします。世代ごとの使用頻度、声調の組み合わせ、2字の結びつきの強さ、画数です。理由付きで5つの候補を出すので、候補を絞るときに具体的に話し合えます。</p>"
+    desks_html: "<p>デッキは、貼り付けたものから作れます。1行に1語のリストでも、カンマ区切りでも、ふつうの文章でもかまいません。システムが判断します。ファイルをアップロードしたり、歌詞から単語を取り出したりもできます。</p><p>Ankiとのいちばんの違いは、<strong>訳を入力する必要がまったくない</strong>ことです。読み、意味、字の分解、音声はすべてこのサイトの辞書から入ります。用意するのは単語だけです。</p><p>デッキを作る前にプレビューが表示されます。カードが何枚できるか、どれが重複していたか、どれが辞書にないか。単語はやさしい順に並びます。リストをもう全部知っているなら、ボタンひとつで新しいカードの列ではなく、間隔の長い復習に回せます。</p>"
+    hanzi_html: このページでは字を部品に分解し、その部品をどう活かすかを示します。意符は意味の分野を、音符はおおよその読みを教えてくれます。このサイトのデータでは、音符から韻母が当たるのは5回に4回ほど。知らない字でも、最初の推測で読めることがよくあります。セクションはひとつずつ開いてみてください。
+    triage_html: "<p>ある程度わかっている人が、自分の位置をすばやく確かめるための機能です。知っている字なら右に、自信がなければ左にスワイプしてください。</p><p><strong>知ってる</strong>を選ぶと、その項目は先の復習に回ります。だいたい3週間後以降で、1日に集中しないよう分散されます。完全に消えてしまうものはありません。</p><p><strong>自信がない</strong>を選ぶと、ほかの項目と同じふつうの順番で出てきます。</p><p>実際に学習したことのある項目は、この仕分けの対象外で、何も変わりません。</p>"
+    zhuyin_trainer_html: "<p>ここでは注音を、ローマ字に頼らずひとつの文字体系として覚えます。音を聞いて記号を選ぶ練習で、画面にはあえてピンインを出しません。出してしまうと、身につくのは「〘ㄅ〙＝この音」ではなく「〘ㄅ〙＝アルファベットのb」になってしまうからです。</p><p>記号は表の順ではなく、調音位置ごとのブロックで出てきます。前のブロックを終えると次のブロックが開きます。選択肢はあえて紛らわしくしてあります。形の似た記号や、同じ調音位置の音です。でたらめな選択肢では、上達したような錯覚しか生まれません。</p><p>3回続けて、しかもすばやく正解すると、その記号は習得したことになります。正解でも時間がかかるのは、見てわかっているのではなく考えて解いているということなので、カウントは進みません。いつでも途中でやめられます。</p>"
+    numbers_html: "<p>数字に必要な漢字はほんの少しで、どれも欠かせません。ただ、つまずくのは字よりも桁のほうです。</p><p>華語の数は4桁ごとに区切ります。〘萬〙が1万で、それより大きい数はすべてその上に積み上がります。だから100万は〘一百萬〙、10億は〘十億〙。この区切り方は日本語と同じなので、日本語話者には心強いところです。ただし〘一百萬〙のように、〘百〙の前にも〘一〙を付けるのが日本語との違いです。下の5つのセクションは字から始まって落とし穴まで進み、最後は台湾のあらゆる書類に出てくる〘民國〙紀年を扱います。</p>"
+    practice_phonetics_html: "<p><strong>注音</strong>（〘ㄅㄆㄇㄈ〙、ボポモフォとも呼ばれます）は発音記号です。記号は37個で、どれも華語の音ひとつに対応し、それに声調記号が加わります。記号そのものには意味がないので、思い込みで読み間違えることもありません。台湾の辞書や学校の教科書で読み方を示すのに使われ、このサイトでの入力にも使います。</p><p><strong>ピンイン</strong>は正書法、つまり同じ音を独自のルールでラテン文字を使って書く方法です。そのルールは正確さより簡潔さを優先して作られています。1つの文字が別々の音を表したり、綴りから母音が抜け落ちたりします。便利な補助ですが、ローマ字読みした瞬間に間違えます。</p><p>下の表では、まず<strong>アンカー</strong>、つまり「まずはこう言ってみる」という一行が来ます。次に調音、つまり口や舌がどう動くか。各行の最後のオレンジ色の部分が、避けたい間違いです。</p>"
+    roadmap_html: "<p>ゼロから始める人のための、このアプリのおすすめの進め方です。必須のものはありません。どれもメニューから開けます。</p><p>練習とつながっているステップは自動でチェックが付きます。音の練習を1回終えたら、単語を10個正しく入力したら、復習を20回したら、という具合です。それ以外は、次に進めそうだと感じたら自分でチェックしてください。</p><p>任意のステップは飛ばしてもかまいません。それがなくても、ルートは完了したことになります。</p>"
+    label: このページの使い方
+    typing_html: "<p>ここに表示されているのは台湾の注音キー配列です。台湾で売られているキーボードに印字されていて、台湾のほとんどの人が使っています。インストールは不要で、同じキーを押せば注音が出ます。</p><p>表示された単語の読みを入力し、スペースかEnterで答え合わせします。声調キーは6（〘ˊ〙）、3（〘ˇ〙）、4（〘ˋ〙）、7（〘˙〙）。第一声の音節には声調キーはいりません。</p><p>単語は辞書から学習順に出てくるので、読みと入力を同時に練習できます。</p>"
+    reader_html: "<p>辞書を組み込んだ状態で、本物の華語を読めます。すでに知っている単語は薄く表示され、新しい単語はレベルごとの色と下線付きで、上に読みが表示されます。</p><p>単語をタップすると、辞書の全項目と音声、学習を始めるボタンが出ます。文章全体をワンクリックでデッキにすることもできます。</p><p>好きな文章を貼り付けたり、歌詞を取り込んだりできます。簡体字は必ず先に繁体字に変換されます。</p>"
+    placement_html: "<p>5分ほどでレベルを判定するアダプティブテストです。終わると、そのレベル以下をすべて習得済みにするか提案します。</p><p>正解が続くと問題が難しくなり、間違えるとやさしくなります。判定はあえて大まかにしてあり、適用する前に結果画面で調整できます。</p><p>習得済みにしても心配はいりません。すでに学習中のものは進み具合がそのまま残り、追加された項目はこの先数週間に分散されるので、復習が一度に押し寄せることはありません。</p>"
+    phrases_html: "<p>単語ではなく、ひとまとまりの発話です。どのカードも空欄のある文型になっていて、空欄は辞書から埋めます。だから一行でドリンクスタンドの注文が百通りこなせます。</p><p><strong>相手のセリフ</strong>のカードは、どのフレーズ集にも載っていない半分、つまりカウンターで店員から次々に飛んでくる質問です。完璧な文を言えることより、こちらを聞き取れることのほうが大切です。</p><p>中国の言い方でも通じるけれど外から来た表現に聞こえる場合は、台湾の言い方を示し、もう一方には取り消し線を引いています。</p>"
+    everyday_html: "<p>どの試験の語彙リストにも入っていない、台湾ならではの語彙です。ドリンク注文の略語、台湾語から来たスラング、中国とは違う台湾の言い方など。</p><p>生活の場面や単語の由来で絞り込めます。きつい言葉と表示されているものは、本当にきつい言葉です。中国に対応する単語がある場合は並べて示すので、ひとつの形を暗記するのではなく、違いを見比べられます。</p>"
+    variants_html: "<p>台湾が中国、香港、シンガポールと分かれるところを集めました。単語の読み方、書く字、そもそもどの単語を選ぶか、の違いです。</p><p>こうした違いで、華語をどこで学んだかがわかってしまいます。議論のあるものや最近変わったものは、確定した事実のようには書かず、本文で注記しています。</p>"
+    calendar_html: "<p>台湾の1年を実際に形づくっている12の行事です。来年また調べ直す必要のある日付ではなく、日付を決めるルールと一緒に紹介します。</p><p>旧暦のセクションでは数え方そのものを説明します。〘初五〙がなぜその意味になるのか、〘春節〙がなぜ毎年動くのか。2つの換算ツールはどちらもブラウザの中で動きます。〘民國〙紀年のほうは単純な計算で、旧暦のほうは香港天文台の表と照合した換算表を使っています。</p><p>行事にまつわる単語は、辞書に収録されていれば一覧からそのまま学習に追加できます。</p>"
+    metro_html: "<p>台北・新北のMRTの全路線と、公式の順番に並んだ駅です。駅をタップすると、上のカードに注音、ピンイン、意味が表示されます。そこから辞書の項目を開いたり、デッキに追加したりできます。</p><p>白抜きの丸は乗換駅で、カードにはその駅を通るすべての路線が出ます。地図は駅の実際の座標から描いているので、どの駅も本当にある場所に置かれています。</p>"
+    games_html: "<p>台湾麻雀、中国公式ルール麻雀、シャンチー、囲碁、ボードゲームの語彙を、それぞれの単語がゲームの中でどんな働きをするかで説明します。ルールブックではありません。卓での会話についていき、看板やアプリ、配信を読めるようになるのが目的です。</p><p>タブでゲームごとに分かれ、その中は役割別に並んでいます。パイや駒、ゲームの進行、鳴き、役、戦略、対局中のひとこと。緑の点は台湾の外では別の言い方をするもので、中国で別の単語を使う場合はその単語を横に示しています。意味は教育部の辞典、台湾の16枚麻雀のルール、1998年の中国公式ルールと照合済みです。</p>"
+    notices_html: "<p>台湾に来たばかりの人が読む必要のある書類を、出会う場所ごとにまとめました。診療所、職場、銀行と郵便局、住まい、学校です。どれも架空の内容で作った見本ですが、項目名や決まり文句は本物どおりなので、ここで覚えたことがそのまま実物の書類で役立ちます。</p><p>各項目の下には、その意味と何をすればよいかを書いています。いちばん大事な行、たとえば薬の量、手取り額、支払い期限には印を付けています。単語をタップすると読みと意味が出ます。ヘッダーで注音をオンにすれば、すべての字の上に読みが表示されます。</p>"
+    medicine_html: "<p>台湾で実際に話されている西洋医学の言葉です。からだと臓器、医師が使う病名と家庭で使う呼び方、台湾CDC（疾病管制署）の接種スケジュールにあるワクチン、病院内でたどる表示（〘掛號〙、〘批價〙、〘領藥〙）。イラストのラベルをタップすると読みが表示され、そこから辞書の項目を開けます。</p><p>医学用語に日常の言い方がある場合は（〘闌尾炎〙と〘盲腸炎〙。日本語の「虫垂炎」と「盲腸」と同じ関係です）、2つを並べて示します。中国と使い方が違う用語には印を付け、台湾語から入った単語には台湾語ローマ字（Tâi-lô）の読みを添えています。すべて教育部の辞典と台湾の保健当局の資料で確認しています。</p>"
+    dict_html: "<p>辞書はひとつです。単語も決まった言い回しも、ここではすべて同じ項目として扱い、分けていません。もともと境界はあいまいです。〘便利商店〙と〘超商〙は同じ意味なのに、別々のリストで探すのは意味がありませんでした。</p><p><strong>TOCFLレベル</strong>のボタンで試験の1段階に絞り込み、級の列でTBCLの級に、学習状況のフィルターで新しい語・学習中・習得済みだけに絞れます。</p><p>同じレベルの中では<strong>頻度</strong>順に並び、よく使う単語ほど先に来ます。並べ替えを切り替えれば、純粋な頻度で比べられます。項目をタップすると詳しい解説が開き、<strong>＋</strong>ボタンを押せばそのままデッキに入ります。</p>"
+    chengyu_html: "<p>〘成語〙は、古典や寓話から生まれた4音節の決まった表現で、日本語の四字熟語にあたります。字面どおりの意味と実際の意味がかけ離れていることも多く、たとえば〘雪中送炭〙は字面では「雪の中に炭を送る」ですが、意味は「いちばん助けが必要なときに助ける」です。そのため、ここの成語には訳だけでなく<strong>ニュアンス</strong>も付けています。ほめる・中立・けなす、のどれか。何かを〘十拿九穩〙と言うのと〘莫名其妙〙と言うのとでは、まったく違います。</p><p>リストは辞書から作っています。辞書の表示からタグを付けたものと、人の手で確認したものがあり、後者には実際にどんな場面で言うかの注と、本物の例文が付いています。成語をタップすると、音声、字の分解、例文付きの全項目が開きます。</p>"
+    tbcl_html: "<p>TBCL（〘臺灣華語文能力基準〙）は、台湾で華語を教えるときに実際に使われている基準で、1級から7級までの7段階です。TOCFL試験とは作りが違い、試験の形式ではなく教育カリキュラムに沿っています。</p><p>同じ級の中では、よく使う語から珍しい単語の順に並びます。バーはその級をどれだけ知っているかを示し、ここだけでなくアプリのどこで覚えたものも数えます。</p>"
+    characters_html: "<p>教育部の常用国字標準字体表にある、よく使う繁体字4808字です。各タイルには字が表示され、タップすると読み（注音＋ピンイン）、筆順、字源、その字を含む単語、そしてどれだけしっかり覚えているかが出ます。</p><p>字は頻度順に並んでいるので、よく目にする字ほど先に出てきます。</p>"
+    sentences_html: "<p>レッスンから集めた例文です。文中の単語はそれぞれ辞書の項目へのリンクになっているので、知らない単語はタップして確かめられます。出典フィルターで、1冊の本やひとつのレッスンに絞り込めます。</p>"
+    search_html: "<p>3つの欄を組み合わせて検索します。<strong>表記・意味</strong>には漢字か、このサイトの言語（日本語・英語・ロシア語・ベトナム語・ドイツ語・インドネシア語）の単語を入れます。<strong>ピンイン</strong>と<strong>注音</strong>には読みを入れます。声調は記号でも、各音節のあとの数字でも、省略してもかまいません。<code>nǐhǎo</code>、<code>ni3hao3</code>、<code>ni hao</code>のどれでも同じ単語にたどり着きます。声調を書いた場合は、その声調がぴったり合う項目が先に出て、そのあとに残りが続きます。</p><p><strong>例文バンクを検索</strong>にチェックを入れると、種類の区別はなくなります。ヒットはすべて検索語に印の付いた例文で、1ページに10件ずつ、レベルと文体で絞り込めます。2語で検索すると、その2語がいっしょに使われるかどうかもわかります。</p>"
+    radicals_html: "<p>康熙字典の214の部首です。どの字もいずれかの部首の下に分類されています。部首をタップすると、それを含む字が表示されます。</p>"
+    zhuci_html: "<p>台湾華語が文末に付ける語気助詞です。〘啦〙、〘喔〙、〘耶〙、〘嘛〙、〘齁〙など。辞書的な意味はまったく足さず、そのかわり口調のすべてを担います。親しみ、じれったさ、やさしい注意、ふざけた憤慨。日本語の「ね」「よ」「さ」のような終助詞に近い働きですが、一対一には対応しません。カードは、台湾のコーパスでそれぞれの助詞が実際に節を締めくくる頻度の順に並んでいます。開くとその助詞が表す気持ちの幅がすべてわかり、例文は気分が伝わるように訳してあります。</p>"
+    liangci_html: "<p>台湾華語の量詞（〘量詞〙）は、数と名詞の間に入る小さな単語で、日本語の助数詞にあたります。〘一〙<b>〘本〙</b>〘書〙、〘三〙<b>〘隻〙</b>〘貓〙のように使います。ただし〘本〙は細長いものではなく本を数え、〘隻〙は猫も鳥も数えるなど、日本語の感覚とずれるものもあります。各項目では、何を数えるか、実際にどの名詞と組むか、実際の文でどう使われるかを示します。リストは〘教育部國語辭典簡編本〙、CC-CEDICT、台湾のコーパスから作っています。正しい量詞を選ぶゲームもあります。</p>"
+    tocfl_html: "<p>TOCFLの公式レベルそれぞれに向けた到達度です。ここだけでなく、アプリのどこで覚えた字や単語も数えます。レベルを開けば、そのまま学習したり、あと何が残っているかを確かめたりできます。</p>"
+    study_html: "<p>まず全部のカードを一度ずつスワイプします。間違えたカードは戻ってきて、わかったカードは抜けていきます。<strong>右にスワイプ</strong>＝「わかった」、<strong>左</strong>＝「わからない」、<strong>上</strong>＝「簡単」、<strong>下</strong>＝「間違えた」。矢印キーも使え、カードをタップすると裏返ります。</p><p>新しいカードは少しずつまとめて登場し、今日の復習分と混ざって出てきます。スケジュールはFSRSなので、カードはちょうど忘れかけたころに戻ってきます。</p>"
+    pronunciation_html: "<p>マイクに向かって単語を発音してください。音節ごとに<strong>声調</strong>と<strong>声母・韻母</strong>が採点されます。緑は正解、オレンジは惜しい、赤は外れです。オートモードでは、正解すると次に進み、正解するまでマイクはオンのままです。標準的な発音も台湾式の発音も、どちらも正解として扱います。</p>"
+    writing_html: "<p>意味と読みから字を思い出し、一画ずつ書きます。筆画は順番どおりかチェックされ、間違った画はやさしく戻されます。よく間違える字が先に出て、残りはやさしい順に出てきます。</p>"
+    handwriting_html: "<p>繁体字を一画ずつ書くと、オフラインで認識します。通信は不要で、データが端末の外に出ることはありません。形はわかるのに読みがわからないとき、さっと調べるのに便利です。</p>"
+    cangjie_html: "<p>台湾の繁体字を形で打つ入力方式、倉頡（そうけつ）の第5版です。字を構成するアルファベットのキーを打つと、字が組み立てられます。各字のページにも倉頡コードが載っています。</p>"
+    history_html: "<p>最近学習したものと、それぞれがどれだけ定着しているかの一覧です。点は側面ごと（見てわかる、読み、声調、書き）の記憶の強さを表します。復習日が来る前に、忘れかけているものを見つけるのに使いましょう。</p>"
+    practice_drill_html: "<p>2つの発音表記を互いに照らし合わせて練習するカードです。方向を選び（注音記号を見てピンインを思い出す、またはその逆）、わかったら右に、わからなかったら左にスワイプします。</p><p>間違えたものはラウンドの後半にもう一度出てきて記録されるので、次のラウンドは苦手な音から始まります。声母と韻母は別々に練習できます。</p>"
+    practice_progress_html: "<p>2つの別のものを1か所にまとめていて、それぞれ別の練習から集計されています。</p><p><strong>音の練習</strong>は、聞き分けカードと注音入力練習を何回こなしたかを数え、よく間違える記号を表示します。最初の1回を終えるとすぐに表示されます。</p><p><strong>発音</strong>はマイクでの発音から作られ、どの声調や声母が安定して出せていて、どれがまだかを示します。マイクに向かって話すまでこの欄は空のままですが、それで正常です。カードとはつながっていません。</p>"
+  placement:
+    china:
+      title: 中国の普通話を学んだ方へ
+      body: 正直にお伝えすると、このサイトには簡体字も中国の語彙も一切ありません。〘簡體〙から〘正體〙へ段階的に移る手助けもしません。見せるのは、いつも台湾の側だけです。
+      traditional: 表示した繁体字のうち、%{percent}%%が読めました。
+      offer: うれしいことに、ほとんどすべてがそのまま活かせます。話し言葉としては同じ言語で、変わるのは文字と数百の単語だけです。まずこの2つから始めれば、ほかの語彙はそのまま一緒に持っていけます。
+      variants: 違いを見る
+      phrases: 台湾での言い方を聞く
+    start_short: 短縮版（%{count}問）
+    play: 再生
+    skip: この問題をとばす
+    by_axis: 分野別の結果
+    result_split: 2つのレベルに分かれました
+    split_hint: 読むより聞くほうがかなり進んでいるので、ひとつの数字にまとめると実態とずれてしまいます。アプリをどちらに合わせるか選んでください。
+    axes:
+      listening: リスニング
+      tones: 声調
+      characters: 漢字
+      lexis: 語彙
+      sentences: 文
+      traditional: 繁体字
+      writing: 書き
+    sides:
+      listening: 聞く力
+      reading: 読む力
+    intake:
+      experience:
+        question: 華語を勉強したことはありますか？
+        options:
+          none: ない
+          some: 少しだけ
+          year: 1〜2年
+          more: それ以上
+      script:
+        question: どの発音表記を知っていますか？
+        options:
+          none: どちらも知らない
+          pinyin: ピンイン
+          zhuyin: 注音
+          both: 両方
+      characters:
+        question: 繁体字はどうですか？
+        options:
+          none: 読めない
+          few: 少しならわかる
+          read: 読める
+          write: 読めるし書ける
+      variety:
+        question: 学んだのはどちらですか？
+        options:
+          taiwan: 台湾華語
+          china: 中国の普通話
+          unsure: よくわからない
+          none: どちらでもない（これから始める）
+    what_to_expect: テストについて
+    expect_length: 最大%{max}問。分野ごとに判定がつき次第終わります
+    expect_time: 所要時間は約5分、毎回4択です
+    expect_skip: あとから受け直したり、結果を調整したりできます
+    later: あとで
+    title: レベル診断テスト
+    intro: 短いアダプティブテストです。単語や字が少しずつ出題され、ついていけている間は難しく、つまずくとやさしくなります。所要時間は約5分。最後に、自分のレベル以下をすべて習得済みにできるので、基礎をゼロから教わり直す必要はありません。
+    start: テストを始める
+    retake: もう一度受ける
+    progress: 第%{n}問
+    answered:
+      one: 1問回答済み
+      other: "%{count}問回答済み"
+    kinds:
+      word: この単語の意味は？
+      character: この字の意味は？
+      reading: この字の読みは？
+      measure: 合う量詞はどれ？
+    result_title: 推定レベル
+    result_level: TBCL %{grade} · TOCFL %{band}
+    result_zero: まったくの初心者
+    adjust_label: ずれていると思ったら調整してください
+    apply: このレベル以下をすべて習得済みにする
+    apply_hint: このレベル以下の単語と字は「軽く覚えている」状態になり、新しく教わるのではなく、ときどき復習に出てきます。すでに学習中のものには手を加えません。
+    applying: 反映中…
+    guest:
+      title: ログインしてこのレベルを活かす
+      body: アカウントがあれば、このレベル以下の単語と字が習得済みになり、新しいカードは次のレベルから始まります。習得済みのうち難しいものは、ときどき確認のために出てきます。今回の回答も、そのままアカウントに引き継がれます。
+      sign_in: ログイン
+      course: 先にコースを見てみる
+    applied:
+      zero: 新しく反映するものはありません。このレベルはすでに学習状況に含まれています。
+      one: 1件を習得済みにしました。
+      other: "%{count}件を習得済みにしました。"
+    already_applied:
+      zero: 習得済みにした項目はありません。
+      one: 1件が習得済みになっています。
+      other: "%{count}件が習得済みになっています。"
+    keyboard_hint: ヒント：1〜4のキーでも答えられます。
+  setup:
+    title: まだ終わっていない設定：
+    level: レベルを設定
+  reader:
+    panel_empty: 本文の単語をタップすると、ここにカードが表示されます。
+    title: リーダー
+    new_text: 文章を貼り付ける
+    new_hint: 華語の文章なら何でもOKです。記事、チャット、本の1ページなど。簡体字は自動で繁体字に変換されます。
+    title_label: タイトル
+    kind_label: 種類
+    level_label: レベル（任意）
+    body_label: 本文
+    body_placeholder: ここに華語の文章を貼り付けてください…
+    save: 保存して読む
+    untitled: 無題の文章
+    created: 文章を保存しました。
+    deleted: 文章を削除しました。
+    delete_confirm: この文章を削除しますか？単語の学習状況はそのまま残ります。
+    empty_body: 保存する文章がありませんでした。
+    empty: まだ読むものがありません。文章を貼り付けるか、歌を取り込みましょう。
+    back: リーダー
+    build_desk: デッキにする
+    normalized_hint: 簡体字を繁体字に変換しました：%{chars}
+    legend_known: 薄い表示＝もう知っている語
+    legend_unknown: 色＋下線＝新しい語（色はレベル）
+    tabs:
+      all: すべて
+      article: 記事
+      song: 歌
+      news: ニュース
+      graded: レベル別多読
+    attribution_pts: 出典：〘公視〙 PTS（個人の学習目的で利用しています）
+    fetched: ニュースを%{count}件取得しました。
+    add: 学習に追加
+    sign_in_to_save: ログインするとこの単語を保存できます
+    added: 追加しました ✓
+  stories:
+    title: 読書室
+    lede: このアプリのために台湾の繁体字で書いた短い文章です。日常の場面、実用的な書類、寓話、古典の詩など。どの行にも訳が付いています。
+    all: すべて
+    empty: まだ文章がありません。
+    previous: 前の文章
+    next: 次の文章
+    categories:
+      everyday: 日常
+      practical: 実用
+      fable: 寓話
+      poetry: 詩と名言
+  songs:
+    search: 検索
+    search_placeholder: アーティスト名か曲名（〘五月天〙、〘周杰倫〙…）
+    no_results: 見つかりませんでした。アーティスト名を漢字で入力してみてください。
+    error_network: 歌詞サービスに接続できませんでした。少ししてからもう一度お試しください。
+  meta:
+    title: TaiwanCards — 注音と繁体字で学ぶ台湾華語
+    share_description: 繁体字、注音、間隔反復、辞書、発音、TOCFLレベル。
+    share_title: TaiwanCards — 台湾華語
+    description: TaiwanCardsは、台湾華語（台湾の中国語）を学ぶための広告なしの単語カードアプリです。繁体字、すべての読みに添えた注音、TOCFLレベル、間隔反復、そして台湾での毎日の暮らしに合わせた語彙リスト。
+  landing:
+    open_app: アプリを開く
+    hero:
+      eyebrow: "〘臺灣華語〙 · 〘正體字〙 · 〘注音〙 · 〘成語〙 · 〘華語文能力測驗〙"
+      heading: 台湾華語のすべてが、ここにひとつ
+      lede:
+        variety:
+          - 中国の普通話を繁体字に置き換えただけのものではありません。
+          - 中国、香港、シンガポール、マレーシアの語彙は入っていません。
+          - 注音（〘ㄅㄆㄇㄈ〙）をすべてに。台湾独自の発音表記です。
+          - 読みも使い方も規範も、台湾のものだけ。
+          - ここにあるのは、まるごと台湾です。
+        life:
+          - 単語も文も場面も、すべて台湾の本当の暮らしから：
+          - コンビニ、ドリンクスタンド、麺の店、MRT、診療所、台風休み。
+        audience:
+          - ゼロから始める人にも、もう勉強している人にも、
+          - これから台湾に住む人にも、もう住んでいる人にも。
+        behind:
+          - その裏には、計量言語学と確かな出典、
+          - 独自の教授法と膨大な手作業、
+          - "そして台湾への尽きない愛があります \U0001F1F9\U0001F1FC"
+      cta: 学習を始める
+      secondary: 中身を見てみる
+      note: 無料で使えます。広告はありません。これからもずっと。
+      specimen:
+        meaning: パイナップル
+        caption: 1つの単語に、覚えることが5つ。それぞれに別々の復習日があります。
+    is:
+      heading: TaiwanCardsとは
+      items:
+        taiwan: 台湾の華語だけ。繁体字、注音、TOCFLのレベル、そして台湾独自のTBCLの級
+        decks: Ankiに似ていますが、知らない誰かのデッキも、自分で入力して終わる夜もありません。しかもここでは1つの単語が「わかる／わからない」の1回のスワイプではなく、5つの別々の記憶です
+        dictionary: Plecoに似ていますが、ただの辞書ではありません。同じ項目が練習にも、次に何を見るかを決めるスケジュールにもつながり、台湾は脚注ではなく常に最初に来ます
+        writing: Skritterに似ていますが、書き取りは別アプリの別リストではありません。今週覚えている字をそのまま書き、それが同じ学習状況に反映されます
+        reading: Du Chineseに似ていますが、文章は自分で選べます。好きな歌、ニュース、授業のプリント、メッセージ。貼り付ければ単語に区切られて戻ってきて、そのままデッキにできます
+        photo: 壁のメニューや街の看板を撮れば、読めなかった字が単語に区切られて戻ってきて、そのままデッキにできます
+        speaking: "「合っている／いない」だけを返す音声認識ではありません。発音した音節の一つひとつを、19の音響的な特徴で採点します。基準は中国の発音ではなく、台湾の発音です"
+        everyday: どのコースも教えない台湾：ドリンクスタンドでの注文、統一発票の抽選、部屋探し、診療所、台風休み
+        corpus: 例文はどれも、台湾の誰かが実際に書いた文です。出典とライセンスも一緒に記録しています
+        measured: 当て推量はひとつもありません。単語の頻度、難しさ、どのレベルに属するかは、すべて実際の台湾のコーパスを数えて出しています
+        memory: どの画面の裏にも、学習記録はひとつだけ。リーダーで覚えた単語は、辞書にも練習にも書き取りにも反映されます
+    isnt:
+      heading: TaiwanCardsではないもの
+      items:
+        game: ゲームではありません。経験値もバッジもランキングもなく、アニメの動物が「明日も来てね」と罪悪感をあおることもありません
+        machine: 華語の中身に、確認していないAIの生成物は使っていません。意味、例文、ラベルはすべて人の目を通っていて、どのフレーズも確かめられる出典にさかのぼれます。なお、この日本語版の文章は機械の助けを借りて作成したもので、現在も見直しを続けています
+        decks: 作ったのが誰か、どの教科書からか、読みが台湾で正しいのかさえ誰にもわからない、共有デッキの山ではありません
+        china: 中国のコースの字を繁体字に差し替えただけのものではありません。語彙も読みも、日常生活の半分も違うからです
+        words: 中国のコースが〘自由〙、〘民主〙、〘人權〙に時間を割くことはあまりないでしょう。ここにはそうした単語がたっぷりあり、それが抜けているリストもありません
+        course: 最初のレッスンから最後まで順番に受けるカリキュラムではありません。今いるところから始めて、必要なものを取り、いらないものは飛ばせます
+        teacher: 先生の代わりではありません。これは授業と授業の間にやる半分、誰にも見られずにやる半分、そして上達できるかどうかを決める半分です
+        hsk: HSK対策ではありません。たとえ繁体字で受験するとしても、語彙も読みも、言葉の背後にある世界も違います
+        simplified: 簡体字はどこにもなく、表示に切り替えるスイッチもありません。辞書でも例文でも練習でも、あるのは台湾の側だけです
+        ads: 広告収入には頼っていませんし、これからも頼りません。ちらつくものも割り込んでくるものもなく、勉強にも、ちょっとした調べものにも集中できます
+        tracking: 利用者を監視しません。外部のアクセス解析も、どんな種類のトラッカーもありません。学習記録はいつでもファイルに書き出して、手元に保存できます
+    counts:
+      heading: すでにそろっているもの
+      radicals: 康熙部首
+      characters: 漢字
+      words: 辞書の項目
+      collocations: 成語とコロケーション
+      sentences: 文と例文
+    science:
+      heading: 中身は計量言語学
+      body: すべては測定に基づいています。コーパスでの頻度と分布、コロケーションの強さ、調整済みの難易度尺度、全音節の音響的な基準。見えているのは氷山の一角で、その下には何年もかけたデータの収集・測定・検証があり、独自のライブラリやデータセットは研究コミュニティに公開しています。すべてオープンです。知識はみんなのものだからです。
+      points:
+        corpus:
+          title: 当て推量ではなく、測定
+          body: レベル、難しさ、単語の並び順は、自分たちで構築し測定した台湾のコーパスから出しています。頻度、分布、コロケーションの強さ、文体。
+        open:
+          title: 誰でも確かめられる
+          body: コーパスの集計表、音節の一覧、その裏のライブラリはデータセットとして公開し、このアプリもオープンソースです。出典とライセンスはすべてクレジットのページに載っています。
+        linked:
+          title: ひとつの場所で、すべてがつながる
+          body: 字からその字を含む語へ、語から実際の文へ、文からその文法ポイントへ。そして出会ったものは何でも、そのままデッキに入れられます。
+    quality:
+      heading: 品質を支えるもの
+      items:
+        audio:
+          title: 公式の録音
+          body: 字と単語の音声は、台湾の教育部の辞典のために録音されたものです。合成音声でも、寄せ集めの投稿でもありません。
+        sources:
+          title: 台湾の出典
+          body: 教育部の辞典、公式のレベル別語彙リストと頻度表、法令、各都市のニュース。
+        human:
+          title: どの項目にも人の目
+          body: 華語の意味、例文、リンクはすべて人が読んで確認しています。日本語版の文章は機械の助けを借りて用意したもので、いまも見直しを続けています。
+        written:
+          title: 日本語話者のための独自版
+          body: 英語版の直訳ではありません。説明は日本語の音や、すでに知っている漢字と音読みから出発し、日本語話者がつまずきやすいところを先回りして示します。
+    tools:
+      heading: ふつうならアプリ5つ分の機能を、ひとつに
+      lede: 開けば全部そろっています。設定も、探しものもいりません。
+      items:
+        study:
+          title: 単語カード
+          body: 今日の復習すべてと、ほどよい量の新しいカード
+        speaking:
+          title: 発音
+          body: 声に出して、どの音節がどれだけずれたかを確かめる
+        writing:
+          title: 手書き
+          body: 字を思い出して、筆順どおりに一画ずつ書く
+        zhuyin:
+          title: 注音
+          body: 耳と手で、記号を意識しなくなるまで
+        tones:
+          title: 声調
+          body: 聞いて、描いて、声に出す。1音節ずつ
+        typing:
+          title: タイピング
+          body: 注音とCangjie。台湾の人と同じ打ち方で
+        reader:
+          title: リーダー
+          body: 記事を貼り付ければ、辞書を開いた状態で読める
+        everyday:
+          title: 台湾の暮らし
+          body: 食事の注文、部屋探し、銀行、各種手続き。授業では扱わないこと
+        placement:
+          title: レベル診断テスト
+          body: 5分で、どこから続ければいいかがわかる
+        plan:
+          title: 試験プラン
+          body: TOCFLのレベルと日付を決めれば、1日のノルマは自動で決まる
+    core:
+      heading: 1語を調べれば、全体が見える
+      lede: 部首が字を作り、字が単語を作り、単語が文を作ります。どのページにも、その網の残りが表示されます。単語が何でできているか、どこに出てくるか、そしてその一つひとつをどれだけしっかり覚えているか。
+      layers:
+        radicals: 部首
+        characters: 漢字
+        words: 語
+      facets_note: 単語を「知っている」といっても、中身はひとつではありません。見れば読めるのに、いざ言おうとすると出てこないことがあります。だから単語ごとに5種類の記憶を別々に記録し、忘れかけたものだけを出題します。
+      facets:
+        recognition: 見てわかる
+        production: 意味から単語が出てくる
+        reading: 正しく音読できる
+        tone: 声調の形が崩れない（音声でチェック）
+        writing: 何も見ずに一画ずつ書ける
+    progress:
+      heading: 今どこにいるか、いつでもわかる
+      lede: 同じ知識を3つの物差しで測ります。自分にとって意味のあるものを見てください。
+      items:
+        tocfl:
+          title: TOCFLのレベル別
+          body: 次の試験に実際どこまで近づいているか
+        school:
+          title: TBCLの級別
+          body: 台湾の国の基準が、その段階の学習者に求めていること
+        frequency:
+          title: 頻度別
+          body: ふつうの文章をすでにどれだけ読めるか
+    bring:
+      heading: 気になったものは、何でもデッキに
+      lede: 文章を貼り付けると、単語に区切られ、辞書で引かれ、デッキになります。そのデッキもほかと同じ学習状況にまとめられます。
+      soon: 近日公開
+      items:
+        menu:
+          title: カフェのメニューや街の看板
+          body: 写真を撮れば、読めなかった字が単語に区切られて戻ってくる
+        textbook:
+          title: 教科書や授業の新出単語
+          body: リストをまるごと貼り付けるだけ。訳を手で打ち込む必要はありません
+        song:
+          title: 好きな歌
+          body: 歌詞を語ごとに並べ、読み・声調・意味を添えて
+        feed:
+          title: ニュース、本の一章、Threadsのコメント
+          body: 辞書を手元に置いて読み、新しい単語はそのままデッキへ
+    instead:
+      heading: すでに使っているアプリと比べると
+      lede: どのアプリも、それぞれの仕事はしっかりこなします。困るのは、何のつながりもないまま5つも開いておかなければならないことです。
+      closing: 調べる、確かめる、デッキに入れる、レベルが上がるのを見る、TOCFLに備える。それを5つのタブではなく、ひとつの場所で。
+      note: HSK対策にはなりません。たとえ繁体字で受験するとしても、語彙もその背後にある世界も違うからです。
+    compare:
+      heading: すでに使っているアプリと比べると
+      summary: 華語を教えるアプリのほとんどは中国の普通話を教えていて、優れた汎用ツールは難しい判断を利用者に任せます。どのデッキにするか、次はどの語か、どのくらいの頻度で。TaiwanCardsはあえて対象を絞り、そうした判断をアプリ自身が行います。
+      honest: "だからといって、ほかのアプリが悪いわけではありませんし、その多くはそもそも台湾華語を教えようとしていません。Ankiのエコシステムに並ぶものはありません。Plecoの辞書はここよりはるかに充実しています。Skritterの画単位の手書き採点はこの分野で最高です。そして「明日もまた開かせる」ことにかけては、Duolingoの右に出るものはいません。台北で生まれたばかりのZhong Chineseは、中国ではなく台湾の華語を教えている、ここ以外で唯一の場所で、見ていて楽しいアプリです。教材は1冊の教科書に沿っていて辞書は小さめですが、入っているものは本物です。〘嗨嗨〙 \U0001F44B\U0001F3FB"
+      toggle: 比較表をすべて表示
+      checked: 2026年8月に、公式ドキュメントとストアの掲載情報で確認しました。機能や価格は変わることがあります。大事な点はご自身でお確かめください。
+      rows:
+        target: 台湾華語が対象
+        traditional: 繁体字
+        zhuyin: 注音
+        tocfl: TOCFLとTBCLのレベル
+        order: 次に学ぶものを決めてくれる
+        facets: 1項目ごとに記録するスキル
+        tone: 声による声調のフィードバック
+        handwriting: 一画ずつの手書きチェック
+        placement: レベル診断テスト
+        scheduler: スケジュール
+        price: 価格
+      notes:
+        all_of_it: すべて
+        simplified: 簡体字
+        generic: 汎用エンジン
+        deck: デッキ次第
+        chinese_wide: 中華圏全般
+        only: のみ
+        unclear: 記載なし
+        with_pinyin: ピンインと併用
+        instead_of_pinyin: ピンインの代わりに
+        seven_bands: 7段階
+        cefr: CEFR
+        community_decks: 共有デッキ
+        some_decks: 一部のデッキ
+        community_imports: ユーザー提供データ
+        level_freq: レベル→頻度順
+        fixed_path: 決まった順番
+        five: 5つ
+        four: 4つ
+        one: 1つ
+        if_configured: 設定すれば
+        configurable: 設定可能
+        companion_service: 連携サービス
+        speech_no_tone: 音声認識あり、声調採点なし
+        addon_no_tone: アドオン、声調なし
+        drawn_not_spoken: 描くのみ、発声なし
+        addons: アドオン
+        best_in_class: 分野で最高
+        lookup_only: 検索のみ
+        fsrs6: FSRS-6
+        fsrs_builtin: FSRS内蔵
+        proprietary: 独自方式
+        leitner: ライトナー方式
+        not_published: 非公開
+        no_charge: 無料
+        freemium: フリーミアム
+        free_tier: 20枚まで無料
+        free_paid_ios: 無料（iOSは有料）
+        per_year: 年額$99.99〜
+        one_time: 買い切り$29.99〜
+    wider:
+      heading: ほかのアプリも見てみると
+      lede: AndroidとiOSで人気の中国語学習アプリに、同じ質問をしてみました。「？」は、その機能があるともないとも書かれていないという意味です。書かれていないだけで、ないとは限りません。
+      checked: 2026年8月に、各製品のストア掲載情報または公式サイトをもとにまとめました。宣伝文にしか書かれていない機能は「公称」と記しています。
+      product: アプリ
+      type: 種類
+      types:
+        course: コース
+        reader: 読み物
+        dictionary: 辞書
+        trainer: ドリル
+        audio: 音声コース
+      notes:
+        hsk: 代わりにHSK
+        cefr: 代わりにCEFR
+        no_exam: 記載なし
+        ios_only: iOS版の掲載のみ
+        tw_textbooks: 台湾の教科書にも対応
+        tagging: 語彙のタグ付け
+        claimed: 公称
+        simplified_implied: 簡体字と思われる
+        no_srs: スケジュールなし
+        training_only: 練習のみ、採点なし
+    complement:
+      heading: 先生の右腕として
+      limits: 発音は生身の先生と一緒に身につけるのがいちばんで、このアプリは本物の授業の代わりにはなりません。ここでできるのは、声調と発音のチェック、リスニング練習、そして音声付きのTOCFL公式模試です。会話の相手はここにはいませんし、このアプリはそれを提供しようともしていません。
+    honest:
+      heading: このアプリが生まれた理由
+      body: わたしは言語学者で、台湾に住んでいます。これは、台湾で華語を学びながらずっと欲しいと思っていたアプリです。計算言語学の修士論文と、看板を読み、メニューを読み、聞き取れなければもう一度聞き返す、そんなふつうの毎日の練習から生まれました。広告はありませんし、これからも入れません。それがこのアプリがある理由の半分です。
+    final:
+      heading: まずはひとつの質問から
+      body: 華語は初めて？それなら音から始めます。少し勉強したことがある？5分あれば、どこから続ければいいかがわかります。
+      cta: アカウントを作成
+    gold_card: 台湾ゴールドカード
+    disclaimer_html: TaiwanCardsは、ひとりの人間が作り、運営しています。人生の半分を台湾とともに過ごし、財布には%{gold_card}が入っている言語学者です。省庁、試験、出版物の名前は、データの出典を示すためだけに挙げています。このプロジェクトはそのいずれとも提携しておらず、推奨も受けていません。間違いがある可能性があり、正確さ、利用可能性、特定の目的への適合性は保証しません。学習の補助として使い、学習記録は自分でも書き出して保存しておいてください。
+  onboarding:
+    goal_question: どんなふうに学びたいですか？
+    goal_hint: ホーム画面とメニューの内容が変わります。いつでも切り替えられます。
+    step: ステップ%{step}／%{total}
+    next: 次へ
+    back: 戻る
+    begin: 始める
+    title: どこから始める？
+    lede: 質問は2つだけ。答えに合わせて、ホーム画面と最初の数週間の内容を整えます。どちらもあとからいつでも変えられます。
+    pick_one: どれかひとつを選んでください。
+    level_question:
+      tocfl: 今のレベルはどれくらいですか？
+      guided: 今のレベルは？
+      classes: 今のレベルは？
+    level_hint:
+      tocfl: これから受けるレベルではありません。それは試験プランで選びます。
+      guided: 新しい単語はひとつ上のレベルから始まります。
+      classes: 参考までに伺っています。飛ばしてもかまいません。
+    scale:
+      guide: 自分のレベルの見分け方
+      zero:
+        title: ゼロから
+        short: ほとんどの人はここから
+        body: 準備級1（Novice 1）より前。勉強したことがない、または一言二言だけ知っている。ほとんどの人はここから始めます。
+      hsk: "≈ HSK %{level}"
+      items: "≈ 語と字 %{count}個"
+      can:
+        "1": あいさつ、自己紹介、数字・時刻・値段のやりとりができる。
+        "2": 自分や家族、食べ物、買い物について短いフレーズで話せる。
+        "3": 交通機関、お店、カフェなど、毎日の生活に困らず、簡単なお知らせが読める。
+        "4": 仕事、勉強、予定について話せる。ゆっくりした話や簡単な文章が理解できる。
+        "5": 身近な話題について話し合え、わかりやすい記事が読め、たいていの会話についていける。
+        "6": 自由に話せ、ニュースが読め、字幕付きで映画が見られる。
+        "7": 華語で仕事や勉強ができ、複雑な文章や専門的な文章が読める。
+      unknown:
+        test:
+          title: わからない
+          chip: テストを受ける
+          body: 短いレベル診断テストで、どこから始めればいいかがわかります。
+        skip:
+          title: スキップ
+          chip: あとで設定
+          body: レベルはあとからプロフィールで設定できます。
+    known_question: すでに知っているものはありますか？
+    known:
+      zero:
+        title: まだ何も
+        body: まっさらな状態から始めます。
+      phonetics:
+        title: ピンイン
+        body: ピンインは読めるけれど、注音は初めて。
+      zhuyin:
+        title: 注音
+        body: 注音は読めるけれど、単語はほとんど知らない。
+    limits:
+      heading: できること、できないこと
+      body: このアプリは読み方と書き方を説明し、注音とピンインを示し、次に何を学ぶかを決めます。好きな単語や文章を何でも取り込んで練習し、学習状況を見ながら、発音、声調、語彙を磨けます。
+      gap: ただし、発音はネイティブの先生と一緒に身につけるのがいちばんで、ここにあるものは本物の授業の代わりにはなりません。ここでできるのは、声調と発音のチェック、リスニング練習、そして音声付きのTOCFL公式模試です。生の会話や、ほかの人と話す練習はありません。このアプリはそれを目指していません。先生の代わりではなく、先生の右腕だと考えてください。
+    path:
+      done_cta: ホーム画面とカードへ →
+      back: "← ステップ一覧に戻る"
+      title: 学習ルート
+      lede: おすすめの順番です。アプリを使うと自動でチェックが付きますが、自分でチェックすることもできます。
+      counter: "%{done}／%{total}完了"
+      optional: 任意
+      now: 今ここ
+      open: 開く
+      mark_done: 完了にする
+      undo: 完了を取り消す
+      progress: 復習 %{done}／%{target}回
+      kinds:
+        theory: 解説
+        practice: 練習
+      done_heading: ルート完了
+      done_body: 基礎ができました。最初のカードが待っています。ここから先は、何をどの順番で見せるかをアプリが決めます。
+      after_heading: この先は
+      after_body: 基礎ができたら、何を見せるかはアプリが決めます。まずレベル、同じレベルの中では頻度の順です。ほかは必要に応じてどうぞ。リーダー、発音、手書き、そしてどんな文章からでも作れる自分のデッキ。
+      change: 開始レベルを変更
+      steps:
+        hanzi:
+          title: 漢字のしくみ
+          body: 字をまとめて覚え始める前に、字が何でできているかを見ておくと得をします。部首が意味を、音符が音を担い、筆順の決まりはどの字にも共通です。漢字に慣れている日本語話者でも、繁体字の部品を見直しておくと、日本の字との違いがすっと頭に入ります。
+        course:
+          title: コースの最初のレッスン
+          body: ここからは、ばらばらの単語よりレッスンに沿って進むほうが楽です。どのレッスンも台北の暮らしの会話で、下に語彙と文法、理解を確かめる練習問題が付いています。ボタンひとつでレッスンをデッキにできます。最初のレッスンを終えると、このステップは完了です。
+        zhuyin_theory:
+          title: 音のしくみ
+          body: まず音節が何でできているかを見ましょう。何で始まり、何で終わり、声調が何をしているか。記号はグループに分かれていて、グループごとに、そのグループだけを練習するボタンがあります。
+        tones_theory:
+          title: 声調のしくみ
+          body: 4つの声調と軽声、そして中国の教科書が書かない台湾の細かい点。第三声はふつう低いままで、最後はほとんど上がりません。また〘一〙と〘不〙は、うしろに来る音によって声調が変わります。読んだら、同じページからそのまま練習に進めます。
+        tones:
+          title: 4つの声調を聞き分ける
+          body: 台湾の声調は、中国の教科書どおりではありません。第三声はふつう低いままで、最後はほとんど上がりません。すべての音節のスタジオ録音で、男性と女性の声を交互に聞いて練習します。
+        phrases:
+          title: 実際に使われる言い方を覚える
+          body: 台湾での1日を乗り切るための文型です。聞き取れれば十分な半分、つまりレジで店員に聞かれることも含みます。
+        bridge:
+          title: ピンインから注音へ
+          body: 音はもう知っているはずです。ここではその音を、台湾で使う記号に結びつけ、落とし穴を示します。空韻、yとw、省略して書く韻母iu・ui・un。
+        readings:
+          title: 台湾の読み方に直す
+          body: 台湾では中国と読み方が違う単語や、教科書が軽声にしているところを台湾では本来の声調で読む単語です。
+        placement:
+          title: レベル診断テスト
+          body: リスニング、声調、漢字、語彙、文をまたぐ短いアダプティブテストです。開始レベルを決め、すでに知っているものを習得済みにします。
+        zhuyin:
+          title: 注音（〘ㄅㄆㄇㄈ〙）
+          body: 台湾の発音表記で、記号37個と声調記号4つです。ピンインがあるのに、最初は余計な手間に見えるかもしれません。でも台湾の辞書や教科書で読み方を示すのは注音で、このサイトでの入力も注音です。台湾のふりがなだと思って一度覚えれば、あとはずっと楽になります。
+        drill:
+          title: 音を聞き分ける
+          body: 声母、韻母、声調を、考えずにわかるようになるまで練習します。1回終えればこのステップは完了ですが、何度でも戻ってくる価値があります。
+        typing:
+          title: 注音で入力する
+          body: 台湾のキーボードに印字されている配列そのものです。これがないとメッセージも検索語も打てません。単語を10個正しく入力すると、このステップは完了です。
+        first_cards:
+          title: 最初の字と語
+          body: 字はあと回しにせず、すぐに始めます。いちばんよく使う字からです。20回復習すれば、このステップは完了です。
+        plan:
+          title: 試験に向けたプラン
+          body: TOCFLを受けるなら、レベルと日付を決めれば、アプリが1日のノルマを計算します。受けないなら飛ばしてください。
+  notices:
+    title: 紙で見る台湾
+    subject: 件名：
+    explanation: 内容：
+    seal: 印
+    all: すべて
+    contents: このページの内容
+    key_line: 大事な行
+    subtitle: 台湾で暮らすと読まなければならない紙。薬袋、給与明細、請求書、賃貸契約書、連絡帳、レシート、建物の掲示。項目ごとに描き、各行の意味と、どうすればいいかを添えています。単語をタップすると辞書で引けます。
+    disclaimer: 見本はすべて、実際の項目名や決まった言い回しをもとに、このアプリ独自のスタイルで描いたものです。名前、番号、日付、住所は架空で、本物の病院、銀行、会社、マンションの名前が入るところには○○と書いています。
+    situations:
+      health:
+        name: 健康
+        lede: 薬袋、受付票、健保カード、リフィル処方箋、診療所の掲示。
+      work:
+        name: 仕事と給与
+        lede: 給与明細、シフト表、休暇届、契約書の重要な条項、職場の安全標識。
+      money:
+        name: お金と郵便
+        lede: 預け入れ・引き出し・振り込みの銀行伝票、コンビニでの料金の支払い、荷物が届いているというお知らせ。
+      home:
+        name: 住まいと請求書
+        lede: 電気・水道の請求書、賃貸契約書、賃貸物件の広告、ごみの分別、断水のお知らせ。
+      building:
+        name: 建物の中
+        lede: ロビーの掲示板。点検、台風、行事、管理委員会のお知らせ。
+      school:
+        name: 学校と子ども
+        lede: 連絡帳と、保護者が署名して返す返信欄付きの学校のお知らせ。
+      transport:
+        name: 移動
+        lede: 列車の切符と、ワイパーにはさまれた駐車料金の請求書。
+      residence:
+        name: 在留の書類
+        lede: 居留証（ARC）と、そこに書かれた、いつまで滞在できるかを決める日付。
+      shops:
+        name: お店と食べ物
+        lede: 抽選番号付きのレシート（統一発票）、朝ごはん屋の注文用紙、ドリンクスタンドの甘さと氷の選び方。
+  glosses:
+    measure_word: 量詞：

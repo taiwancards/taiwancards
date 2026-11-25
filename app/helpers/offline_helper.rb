@@ -48,7 +48,8 @@ module OfflineHelper
       count: t("offline.browse.count", count: "%{count}"),
       empty: t("offline.browse.empty"),
       none: t("offline.browse.none"),
-      locale: I18n.locale.to_s
+      locale: I18n.locale.to_s,
+      ownSentencesOnly: Locales::OWN_SENTENCES_ONLY.include?(I18n.locale.to_s)
     }
   end
 end

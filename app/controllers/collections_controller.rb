@@ -36,6 +36,7 @@ class CollectionsController < ApplicationController
     @query = params[:q].to_s.strip
     @songs = @tab == "song" && @query.present? ? Songs::LrclibClient.new.search(@query) : []
     flash.now[:alert] = t("songs.no_results") if @tab == "song" && @query.present? && @songs.empty?
+    @scan_panel = Scans::Panel.new(current_user) if @tab == "photo"
   end
 
   def song

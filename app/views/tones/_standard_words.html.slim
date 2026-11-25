@@ -1,0 +1,17 @@
+.max-w-full.overflow-x-auto.rounded-xl.border.border-border class="w-fit"
+  table.w-auto.text-sm data-standard-words=true
+    thead.bg-muted
+      tr.text-left
+        th.px-3.py-2.font-semibold.text-foreground = t("tones.words_word")
+        th.px-3.py-2 = standard_badge("taipei")
+        th.px-3.py-2 = standard_badge("beijing")
+    tbody
+      - words.each do |word|
+        tr.border-t.border-border.align-baseline
+          td.px-3.py-2
+            = link_to word["text"], dict_entry_path(word["text"]), lang: "zh-TW",
+              class: "text-lg text-foreground underline-offset-4 hover:underline"
+          td.px-3.py-2.text-emerald-700
+            span lang="zh-TW" = word.dig("taipei", "zhuyin")
+            span.ml-2 class="text-[11px]" = word.dig("taipei", "pinyin")
+          td.px-3.py-2 class="text-[11px] text-rose-700/70" = word["beijing"]

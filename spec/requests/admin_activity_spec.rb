@@ -36,6 +36,37 @@ RSpec.describe "Admin activity" do
     expect(response.body).to(include(I18n.t("admin.by_section")))
   end
 
+  it "shows what the learner looked at instead of encoded addresses, in a fixed number of queries" do
+    sign_in(create(:user, :admin))
+    member = create(:user)
+    sentence = create(:lexeme, :sentence, text: "我們明天見。")
+    seed = -> (paths) do
+      ActivityEvent.insert_all(
+        paths.each_with_index.map do |path, n|
+          {user_id: member.id, controller: "x", action: "show", verb: "GET", path:, created_at: n.seconds.ago}
+        end
+      )
+    end
+
+    seed.call(["/characters/%E9%9B%B6", "/dict/%E5%85%A7"])
+    plain = count_queries { get(admin_activity_path) }
+    seed.call(
+      [
+        "/sentences/#{sentence.public_id}",
+        "/grammar/zhe-na-na",
+        *create_list(:lexeme, 5, :sentence).map { |row| "/sentences/#{row.public_id}" }
+      ]
+    )
+    labeled = count_queries { get(admin_activity_path) }
+
+    expect(response.body).to(
+      include("/characters/零", "/dict/內", "我們明天見。", Huayu::GrammarLessons.find("zhe-na-na").pattern)
+    )
+    expect(response.body).not_to(include("<span>/characters/%E9%9B%B6</span>"))
+    expect(response.body).to(include("target=\"_blank\"", "rel=\"noopener\""))
+    expect(labeled.count).to(eq(plain.count + 1))
+  end
+
   it "is closed to non-admins" do
     sign_in(create(:user))
 

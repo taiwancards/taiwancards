@@ -20,6 +20,8 @@ module Huayu
       /\A(?:Simplified|Traditional) Chinese is mainly used in .+\z/
     ].freeze
     GAP = /\s*\[(?:script needed|Term\?)\]/
+    STRAY_PIPE = /(?<=\S)\|(?=\s|\z)/
+    EMPTY_ITEM = /\A[:*]*\*\z/
     LINK = %r{\s*https?://\S+?(?=[.,;)]*(?:\s|\z))}
     HEADING = /\A;+\s*/
     INDENT = /\A:+\s*/
@@ -33,7 +35,7 @@ module Huayu
       return body if body.empty?
 
       body = WORDING.reduce(body) { |carry, (pattern, wording)| carry.gsub(pattern, wording) }
-      cleaned = unlist(body.gsub(PLACEHOLDER, "").gsub(GAP, "").gsub(LINK, ""))
+      cleaned = unlist(body.gsub(PLACEHOLDER, "").gsub(GAP, "").gsub(STRAY_PIPE, "").gsub(LINK, ""))
       bare_label?(cleaned) ? "" : cleaned
     end
 
@@ -48,7 +50,10 @@ module Huayu
     end
 
     def filler?(line)
-      line.empty? || line.match?(/\A[:;]+\z/) || REDIRECT.any? { |pattern| line.match?(pattern) }
+      line.empty? ||
+        line.match?(/\A[:;]+\z/) ||
+        line.match?(EMPTY_ITEM) ||
+        REDIRECT.any? { |pattern| line.match?(pattern) }
     end
 
     def plain(line, following)

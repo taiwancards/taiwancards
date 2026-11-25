@@ -4,6 +4,8 @@
   header.flex.flex-wrap.items-center.justify-between.gap-3
     div
       = render("shared/page_help", key: "study", title: t("study.modes.#{@mode}"))
+    .flex.items-center.gap-2
+      = render("shared/audio_speed")
     nav.flex.gap-1.text-sm
       - %w[daily cram].each do |mode|
         = link_to t("study.modes.#{mode}"), study_path(mode: mode),

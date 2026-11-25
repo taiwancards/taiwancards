@@ -153,6 +153,7 @@ RSpec.describe "German in the data loaders" do
         vi: nil,
         de: "schön",
         ind: nil,
+        ja: nil,
         fields: [],
         cohorts: {},
         lean: nil

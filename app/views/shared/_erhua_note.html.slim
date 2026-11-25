@@ -1,0 +1,3 @@
+- forms = Huayu::ErhuaSpellings.forms(text)
+- if forms.any?
+  p.text-xs.text-muted-foreground = t("words.erhua_note", spelling: forms.join("、"))

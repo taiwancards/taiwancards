@@ -12,6 +12,7 @@
           data-action="click->audio#play" class="hover:bg-muted hover:text-foreground"
           aria-label=t("study.play") ]
           = icon(:speaker, css: "size-5")
+        = render("shared/audio_speed")
 
     - if @sentence.meaning.present?
       p.mt-2.text-base.leading-relaxed.text-muted-foreground = @sentence.meaning

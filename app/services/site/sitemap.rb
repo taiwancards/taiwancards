@@ -38,6 +38,7 @@ module Site
       /calendar
       /metro
       /variants
+      /kanji
       /mock
       /course
       /graded
@@ -127,10 +128,12 @@ module Site
     end
 
     def localized(path)
+      served = locales_for(path)
+      home = served.include?(Locales::DEFAULT) ? Locales::DEFAULT : served.first
       {
-        loc: url(path, Locales::DEFAULT),
-        alternates: locales_for(path).map { |code| [code, url(path, code)] },
-        default: url(path, Locales::DEFAULT)
+        loc: url(path, home),
+        alternates: served.map { |code| [code, url(path, code)] },
+        default: url(path, home)
       }
     end
 
@@ -155,7 +158,11 @@ module Site
       end
     end
 
-    def optional_pages = (Huayu::TaiwanNames.available? ? ["/names"] : []) + cangjie_paths + pair_paths + course_paths
+    def optional_pages
+      (Huayu::TaiwanNames.available? ? ["/names"] : []) + cangjie_paths + pair_paths + course_paths + notice_paths
+    end
+
+    def notice_paths = Huayu::TaiwanNotices.situations.map { |situation| "/notices/#{situation}" }
 
     def course_paths = Huayu::CourseLessons.lessons.map { |lesson| "/course/#{lesson.slug}" }
 

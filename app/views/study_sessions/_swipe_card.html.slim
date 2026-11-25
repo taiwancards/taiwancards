@@ -82,6 +82,8 @@
                 .text-5xl.font-semibold lang="zh-TW" = lexeme.text
                 - if readings_label.present?
                   .text-xl.font-medium = readings_label
+              - if lexeme.word? && Locales.kanji_bridge?
+                = render("kanji/word_badge", text: lexeme.text, note: true, css: "justify-center")
               - if lexeme.word? && (example = card_example(lexeme))
                 = render("study_sessions/example", sentence: example, highlight: lexeme.text)
               - if (audio = audio_for(lexeme))

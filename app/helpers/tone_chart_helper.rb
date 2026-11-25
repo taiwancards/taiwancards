@@ -3,10 +3,10 @@
 module ToneChartHelper
   CONTOURS = {
     "taipei" => {
-      "t1" => {points: [[0, 4], [1, 4]], label: nil},
-      "t2" => {points: [[0, 3], [0.45, 2.4], [1, 3.4]], label: nil},
-      "t3" => {points: [[0, 3], [0.5, 1], [1, 1]], label: nil},
-      "t4" => {points: [[0, 5], [1, 2]], label: nil}
+      "t1" => {points: [[0, 4], [1, 4]], label: "44"},
+      "t2" => {points: [[0, 3], [0.4, 2], [1, 3]], label: "323"},
+      "t3" => {points: [[0, 3], [0.55, 1], [1, 2]], label: "312"},
+      "t4" => {points: [[0, 4.3], [1, 2]], label: "42"}
     }.freeze,
     "beijing" => {
       "t1" => {points: [[0, 5], [1, 5]], label: "55"},
@@ -25,22 +25,23 @@ module ToneChartHelper
   }.freeze
 
   REFERENCE = {"vi" => "hanoi"}.freeze
+  SIZES = {regular: "h-24 w-22", small: "h-14 w-13"}.freeze
 
   WIDTH = 88
   HEIGHT = 96
   PAD_X = 14
   PAD_Y = 12
 
-  def tone_reference = REFERENCE.fetch(I18n.locale.to_s, "beijing")
+  def tone_reference = REFERENCE[I18n.locale.to_s]
 
-  def tone_chart(variant, tone)
+  def tone_chart(variant, tone, size: :regular)
     contour = CONTOURS.fetch(variant).fetch(tone)
     name = variant == "hanoi" ? contour[:label] : t("tones.tones.#{tone}.name")
 
     tag.svg(
       viewBox: "0 0 #{WIDTH} #{HEIGHT}",
       role: "img",
-      class: "h-24 w-22",
+      class: SIZES.fetch(size),
       "aria-label": t("tones.chart.aria", tone: name)
     ) do
       safe_join([tone_staff, tone_path(contour[:points]), tone_dot(contour[:points].last)])

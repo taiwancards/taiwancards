@@ -5,6 +5,7 @@ module Huayu
     TWIN = /(\p{Han}+)\|\p{Han}+/
     READING = /(?<=\p{Han})[[:blank:]]*\[[A-Za-z][A-Za-z[:blank:]]*\d[A-Za-z0-9[:blank:]]*\]/
     CLASSIFIER = /\bCL:([^;]+)/
+    PLACE_REFERENCE = /\Asee \p{Han}+[縣市區鎮鄉旗州省盟]\z/
 
     module_function
 
@@ -15,7 +16,13 @@ module Huayu
       body = body.gsub(TWIN) { Regexp.last_match(1) }
       body = body.gsub(READING, "")
       body = body.gsub(CLASSIFIER) { measure_words(Regexp.last_match(1), locale) }
-      TraditionalOnly.normalize(body)
+      without_place_references(TraditionalOnly.normalize(body))
+    end
+
+    def without_place_references(body)
+      senses = body.split("; ")
+      kept = senses.grep_v(PLACE_REFERENCE)
+      kept.empty? ? body : kept.join("; ")
     end
 
     def measure_words(list, locale)

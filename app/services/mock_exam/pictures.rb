@@ -8,7 +8,7 @@ module MockExam
     }.freeze
 
     Question = Data.define(:number, :text, :clip, :options, :answer, :meanings) do
-      def translation(locale) = Locales.pick(meanings, locale)
+      def translation(locale) = Locales.sentence(meanings, locale)
     end
 
     Paper = Data.define(:band, :seed, :minutes, :questions) do

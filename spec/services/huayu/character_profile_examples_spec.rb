@@ -79,6 +79,69 @@ RSpec.describe Huayu::CharacterProfile do
     end
   end
 
+  def written_with(text, *characters)
+    word = Lexeme.create!(kind: :word, text:, meanings: {"en" => text})
+    characters.each { |child| LexemeLink.create!(parent: word, child:) }
+    word
+  end
+
+  def example_of(word, text, gdex:, meanings: {})
+    sentence = example(text, gdex:, meanings:)
+    SentenceWord.where(sentence:).update_all(lexeme_id: word.id)
+    sentence
+  end
+
+  it "fills a bound character's short list with the examples of the words written with it" do
+    bound = Lexeme.create!(kind: :character, text: "啡", meanings: {"en" => "(in coffee)"})
+    coffee = written_with("咖啡", bound)
+    first = example_of(coffee, "我想喝咖啡", gdex: 9)
+    second = example_of(coffee, "這杯咖啡很香", gdex: 5)
+
+    expect(described_class.new(bound, user: nil).phrases.map(&:id)).to(eq([first.id, second.id]))
+  end
+
+  it "keeps what the character has of its own and lists no sentence twice" do
+    bound = Lexeme.create!(kind: :character, text: "啡", meanings: {"en" => "(in coffee)"})
+    coffee = written_with("咖啡", bound)
+    cafe = written_with("咖啡廳", bound)
+    shared = example_of(coffee, "咖啡廳的咖啡很貴", gdex: 9)
+    SentenceWord.create!(sentence: shared, lexeme: cafe, gdex: 9)
+    own = example("啡字怎麼寫", gdex: 1)
+    SentenceWord.where(sentence: own).update_all(lexeme_id: bound.id)
+
+    expect(described_class.new(bound, user: nil).phrases.map(&:id)).to(contain_exactly(own.id, shared.id))
+  end
+
+  it "puts the borrowed examples the reader can read before its own untranslated ones" do
+    bound = Lexeme.create!(kind: :character, text: "啡", meanings: {"en" => "(in coffee)"})
+    coffee = written_with("咖啡", bound)
+    own = example("啡字怎麼寫", gdex: 50)
+    SentenceWord.where(sentence: own).update_all(lexeme_id: bound.id)
+    borrowed = example_of(coffee, "我想喝咖啡", gdex: 1, meanings: {"vi" => "Tôi muốn uống cà phê."})
+
+    I18n.with_locale(:vi) do
+      expect(described_class.new(bound, user: nil).phrases.map(&:id)).to(eq([borrowed.id, own.id]))
+    end
+  end
+
+  it "borrows nothing once the character has three examples the reader can read" do
+    leave = written_with("離開", character)
+    example_of(leave, "他離開了", gdex: 99, meanings: {"en" => "He left."})
+    own = [3, 2, 1].map { |gdex| example("離#{gdex}", gdex:, meanings: {"en" => "part #{gdex}"}) }
+
+    expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq(own.map(&:id)))
+  end
+
+  it "borrows when its own examples are not in the reader's language" do
+    leave = written_with("離開", character)
+    borrowed = example_of(leave, "他離開了", gdex: 1, meanings: {"vi" => "Anh ấy đi rồi."})
+    own = [3, 2, 1].map { |gdex| example("離#{gdex}", gdex:, meanings: {"en" => "part #{gdex}"}) }
+
+    I18n.with_locale(:vi) do
+      expect(described_class.new(character, user: nil).phrases.map(&:id)).to(eq([borrowed.id, *own.map(&:id)]))
+    end
+  end
+
   it "borrows the standard form's examples for a variant character that has none" do
     standard = Lexeme.create!(kind: :character, text: "裡", meanings: {"en" => "inside"})
     variant = Lexeme.create!(kind: :character, text: "裏", meanings: {"en" => "inside"})

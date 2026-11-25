@@ -3,6 +3,32 @@
 @import "../../../vendor/javascript/tw-animate-css.css";
 @import "../stylesheets/fonts.css";
 
+@font-face {
+  font-family: "Han TC";
+  font-weight: 100 549;
+  src:
+    local("PingFangTC-Regular"), local("PingFang TC Regular"),
+    local("MicrosoftJhengHeiRegular"), local("Microsoft JhengHei"),
+    local("NotoSansCJKtc-Regular"), local("Noto Sans CJK TC Regular"),
+    local("NotoSansTC-Regular"), local("Noto Sans TC Regular");
+  unicode-range:
+    U+2E80-2FDF, U+3000-303F, U+3100-312F, U+31A0-31EF, U+3400-4DBF,
+    U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF, U+20000-3134F;
+}
+
+@font-face {
+  font-family: "Han TC";
+  font-weight: 550 900;
+  src:
+    local("PingFangTC-Semibold"), local("PingFang TC Semibold"),
+    local("MicrosoftJhengHeiBold"), local("Microsoft JhengHei Bold"),
+    local("NotoSansCJKtc-Bold"), local("Noto Sans CJK TC Bold"),
+    local("NotoSansTC-Bold"), local("Noto Sans TC Bold");
+  unicode-range:
+    U+2E80-2FDF, U+3000-303F, U+3100-312F, U+31A0-31EF, U+3400-4DBF,
+    U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF, U+20000-3134F;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -174,7 +200,7 @@
   }
 
   [lang]:not(:lang(zh)) {
-    font-family: var(--font-sans);
+    font-family: var(--font-prose);
   }
 
   .no-pinyin .pinyin:not(.pinyin-locked):not(.pinyin-locked *) {
@@ -191,23 +217,6 @@
 
   .no-zhuyin .zy-right ruby.zy:not(.zhuyin-locked *) {
     margin-right: 0;
-  }
-
-  .china-note {
-    display: none;
-  }
-
-  .show-china .china-note {
-    display: inline;
-  }
-
-  .pref-mark-china {
-    opacity: 0.3;
-    transition: opacity 150ms ease;
-  }
-
-  .show-china .pref-mark-china {
-    opacity: 1;
   }
 
   .pref-mark-kai {
@@ -489,6 +498,165 @@
     text-align: center;
     transform: rotate(-8deg);
     opacity: 0.75;
+  }
+
+  .notice-note {
+    border-radius: 0.375rem;
+    background: color-mix(in oklch, var(--brand) 7%, transparent);
+    padding: 0.375rem 0.625rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
+  .form-sheet {
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--card);
+    padding: 1rem;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+  }
+
+  .form-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--foreground);
+    padding-bottom: 0.75rem;
+  }
+
+  .form-issuer {
+    font-family: var(--font-hanzi);
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .form-kind {
+    font-family: var(--font-hanzi);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    line-height: 1.3;
+  }
+
+  .form-title {
+    font-family: var(--font-hanzi);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.9;
+  }
+
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-row {
+    display: grid;
+    gap: 0.25rem 1rem;
+    border-bottom: 1px solid var(--border);
+    padding: 0.625rem 0;
+  }
+
+  .form-key {
+    border-inline-start: 3px solid var(--brand);
+    background: color-mix(in oklch, var(--brand) 5%, transparent);
+    padding-inline: 0.625rem;
+  }
+
+  .form-label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+    font-family: var(--font-hanzi);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.9;
+  }
+
+  .form-label-name,
+  .form-section-name {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted-foreground);
+  }
+
+  .form-body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .form-value {
+    --font-hanzi:
+      "Roboto", "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC",
+      "Noto Sans TC", sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.95;
+  }
+
+  .font-kai .form-value {
+    --font-hanzi:
+      "Roboto", "TW Kai", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC",
+      serif;
+  }
+
+  .form-key-badge {
+    border-radius: 9999px;
+    background: var(--brand);
+    padding: 0 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    color: var(--background);
+  }
+
+  .form-note {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--muted-foreground);
+  }
+
+  .form-section {
+    margin-top: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--muted);
+    padding: 0.25rem 0.625rem;
+    font-family: var(--font-hanzi);
+    font-weight: 700;
+    line-height: 1.9;
+  }
+
+  .form-section dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+  }
+
+  .form-foot {
+    margin-top: 0.75rem;
+    font-family: var(--font-hanzi);
+    font-weight: 600;
+    text-align: center;
+  }
+
+  @media (min-width: 48rem) {
+    .form-sheet {
+      padding: 1.25rem 1.5rem;
+    }
+
+    .form-row {
+      grid-template-columns: 12rem minmax(0, 1fr);
+    }
+
+    .form-label {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 
   .sentence-tags {
@@ -804,8 +972,18 @@
 }
 
 @layer base {
+  :root {
+    --font-prose:
+      "Roboto", "Han TC", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+      sans-serif;
+  }
+
+  :lang(ja) {
+    --font-prose: var(--font-sans);
+  }
+
   html {
-    font-family: var(--font-sans);
+    font-family: var(--font-prose);
   }
 
   [lang="zh-TW"],

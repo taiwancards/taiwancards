@@ -70,12 +70,26 @@ module Huayu
     end
 
     SENTENCE_LIMIT = 10
+    SENTENCE_FLOOR = 3
 
     def phrases
       @phrases ||= begin
-        own = ExampleSentences.for_entry(lexeme, user: @user, limit: SENTENCE_LIMIT)
-        own.empty? && standard_form ? ExampleSentences.for(standard_form, user: @user, limit: SENTENCE_LIMIT) : own
+        own = own_phrases
+        own.count { |sentence| ExampleSentences.translated?(sentence) } < SENTENCE_FLOOR ? with_borrowed(own) : own
       end
+    end
+
+    def own_phrases
+      own = ExampleSentences.for_entry(lexeme, user: @user, limit: SENTENCE_LIMIT)
+      own.empty? && standard_form ? ExampleSentences.for(standard_form, user: @user, limit: SENTENCE_LIMIT) : own
+    end
+
+    def with_borrowed(own)
+      words = top_words
+      return own if words.empty?
+
+      borrowed = ExampleSentences.for(words, user: @user, limit: SENTENCE_LIMIT * 2)
+      ExampleSentences.translated_first((own + borrowed).uniq).first(SENTENCE_LIMIT)
     end
 
     def standard_form
@@ -98,11 +112,11 @@ module Huayu
     end
 
     def etymology_hint
-      translated("hint") || etymology&.dig("hint").presence
+      translated("hint") || (etymology&.dig("hint").presence unless withheld?("hint"))
     end
 
     def etymology_text
-      translated("text") || lexeme.data["etymology_text"].presence
+      translated("text") || (lexeme.data["etymology_text"].presence unless withheld?("text"))
     end
 
     def etymology_type
@@ -165,6 +179,10 @@ module Huayu
 
     def translated(field)
       EtymologyTranslations.translated(lexeme, field)
+    end
+
+    def withheld?(field)
+      EtymologyTranslations.withheld?(lexeme, field)
     end
   end
 end

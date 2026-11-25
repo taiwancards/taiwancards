@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   get("characters/:text/strokes", to: "characters#strokes", as: :character_strokes, constraints: {text: /[^\/]+/})
   get("pronunciation/health", to: "pronunciation#health", defaults: {format: :json})
   post("pronunciation/grade", to: "pronunciation#grade", defaults: {format: :json})
+  post("scans", to: "scans#create", as: :scans, defaults: {format: :json})
+  get("scans/:id", to: "scans#show", as: :scan, defaults: {format: :json}, constraints: {id: /\d+/})
   get("pronunciation/thresholds", to: "pronunciation#thresholds", defaults: {format: :json})
   get(
     "pronunciation/templates/:key",
@@ -27,6 +29,12 @@ Rails.application.routes.draw do
     constraints: {key: /[a-z]+[1-5]/}
   )
   get("listening/clips/:id", to: "media_clips#show", defaults: {collection: "listening"}, as: :listening_clip)
+  if Rails.env.development?
+    mount(Rack::Files.new(Huayu::TocflBundles.source_root.to_s), at: "/#{Huayu::TocflBundles::ASSET_MOUNT}")
+    mount(Rack::Files.new(Huayu::TocflBundles.audio_root.to_s), at: "/#{Huayu::TocflBundles::MEDIA_MOUNT}")
+    mount(Rack::Files.new(Huayu::TocflBundles.papers_root.to_s), at: "/#{Huayu::TocflBundles::PAPER_MOUNT}")
+  end
+
   get("word_clips/:id", to: "media_clips#show", defaults: {collection: "words"}, as: :word_clip)
   get("n/:token", to: "newsletter_clicks#show", as: :newsletter_click, constraints: {token: /[^\/]+/})
   get("l/:token", to: "mail_links#show", as: :mail_link, constraints: {token: /[^\/]+/})
@@ -45,7 +53,8 @@ Rails.application.routes.draw do
   get("newsletter_images/:id", to: "admin/newsletter_images#show", as: :newsletter_image, constraints: {id: /\d+/})
   mount(LetterOpenerWeb::Engine, at: "/letter_opener") if Rails.env.development?
   get("tones/refill", to: "tones#refill", as: :tones_refill, defaults: {format: :json})
-  get("manifest", to: "rails/pwa#manifest", as: :pwa_manifest, defaults: {format: :json})
+  get("manifest", to: "web_manifests#show", as: :pwa_manifest, defaults: {format: :json})
+  get(".well-known/assetlinks.json", to: "asset_links#show", as: :asset_links, format: false)
   get("sw.js", to: "offline#worker", as: :service_worker)
   get("sitemap", to: "sitemaps#index", as: :sitemap, defaults: {format: :xml})
   get(
@@ -87,6 +96,7 @@ Rails.application.routes.draw do
     get("menu", to: "pages#menu")
     get("offline", to: "offline#show", as: :offline)
     get("offline/browse", to: "offline#browse", as: :offline_browse)
+    get("offline/fallback", to: "offline#fallback", as: :offline_fallback)
     post("prefs/detail", to: "detail_prefs#update", as: :detail_pref)
 
     namespace(:admin) do
@@ -99,6 +109,10 @@ Rails.application.routes.draw do
       patch("reminders", to: "reminders#update")
       get("mail", to: "mail#index")
       get("traffic", to: "traffic#index")
+      get("scans", to: "scans#index")
+      post("scans/reopen", to: "scans#reopen", as: :scans_reopen)
+      resource(:scan_key, only: %i[create destroy]) { post(:check) }
+      resource(:scan_model, only: :create)
       resources(:newsletters, only: %i[index create edit update destroy]) do
         member do
           post(:sample)
@@ -177,11 +191,13 @@ Rails.application.routes.draw do
     get("phrases", to: "phrases#index", as: :phrases)
     get("phrases/:scene/dialogue", to: "phrases#dialogue", as: :phrase_dialogue, constraints: {scene: /[a-z_]+/})
     get("notices", to: "notices#index", as: :notices)
+    get("notices/:situation", to: "notices#show", as: :notices_situation, constraints: {situation: /[a-z]+/})
     get("calendar", to: "calendar#show", as: :calendar)
     get("medicine", to: "medicine#show", as: :medicine)
     get("culture", to: "culture#index", as: :culture)
     get("games", to: "games#show", as: :games)
     get("variants", to: "variants#show", as: :variants)
+    get("kanji", to: "kanji#show", as: :kanji)
     get("metro", to: "metro#show", as: :metro)
     get("radicals", to: "radicals#index", as: :radicals)
     get("radicals/:text", to: "radicals#show", as: :radical, constraints: {text: /[^\/]+/})
@@ -297,11 +313,25 @@ Rails.application.routes.draw do
 
     get("reader", to: "reader#index", as: :reader)
     get("reader/new", to: "reader#new", as: :new_reader_text)
+    get("scan", to: "scans#new", as: :new_scan)
     post("reader", to: "reader#create")
     post("reader/activate", to: "reader#activate", as: :reader_activate)
     get("reader/:id", to: "reader#show", as: :reader_text)
     delete("reader/:id", to: "reader#destroy")
     post("reader/:id/desk", to: "reader#create_desk", as: :reader_text_desk)
+
+    get("lookup", to: "doors#lookup", as: :lookup)
+    scope("doors") do
+      get("words", to: "doors#words", as: :words_door)
+      get("text", to: "doors#text", as: :text_door)
+      get(
+        ":door/continue",
+        to: "doors#continue",
+        as: :door_continue,
+        constraints: {door: Regexp.union(Onboarding::Entry::DOORS)}
+      )
+      post(":door", to: "doors#create", as: :door_handover)
+    end
 
     get("stories", to: "stories#index", as: :stories)
     get("stories/:id", to: "stories#show", as: :story, constraints: {id: /\d+/})
@@ -309,10 +339,7 @@ Rails.application.routes.draw do
     scope("exams", constraints: {slug: /[a-z0-9-]+/}) do
       get("", to: "exams#index", as: :exams)
       get(":slug", to: "exams#show", as: :exam)
-      post(":slug", to: "exams#grade", as: :grade_exam)
-      get(":slug/paper", to: "exams#paper", as: :exam_paper)
-      get(":slug/transcript", to: "exams#transcript", as: :exam_transcript)
-      get(":slug/audio", to: "exams#clip", as: :exam_clip)
+      post(":slug/result", to: "exams#record", as: :exam_result, defaults: {format: :json})
     end
 
     scope("starter", constraints: {slug: /[a-z0-9-]+/}) do

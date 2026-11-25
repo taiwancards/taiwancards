@@ -2,7 +2,7 @@
 
 class LocaleParity
   PLURAL_KEYS = %w[zero one two few many other].to_set
-  FILES = %w[%s.yml pron.%s.yml].freeze
+  FILES = %w[%s.yml pron.%s.yml scan.%s.yml doors.%s.yml].freeze
   PAIRS = FILES
     .product(Locales::ALL - [Locales::DEFAULT])
     .map { |file, code|

@@ -80,6 +80,17 @@ RSpec.describe Huayu::LocaleGlossEnricher do
     expect(second.reload.meanings).not_to(have_key("vi"))
   end
 
+  it "finds a sense whose Ministry numbering or synonym mark the store and the database disagree on" do
+    lexeme = create(:lexeme, kind: :character, text: "正", meanings: {"en" => "straight"})
+    numbered = LexemeSense.create!(lexeme:, position: 0, gloss_zh: "7.數目大於零的。", meanings: {})
+    marked = LexemeSense.create!(lexeme:, position: 1, gloss_zh: "居中的。", meanings: {})
+
+    run(senses: {"正" => {"數目大於零的。" => "dương", "居中的。　△中正" => "ở giữa"}})
+
+    expect(numbered.reload.meanings["vi"]).to(eq("dương"))
+    expect(marked.reload.meanings["vi"]).to(eq("ở giữa"))
+  end
+
   it "gives a lone sense the gloss of its entry" do
     lexeme = create(:lexeme, kind: :word, text: "便宜", meanings: {"en" => "cheap"})
     sense = LexemeSense.create!(lexeme:, position: 0, gloss_zh: "價錢低。", meanings: {"en" => "cheap"})

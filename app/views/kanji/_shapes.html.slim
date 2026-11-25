@@ -1,0 +1,72 @@
+- bridge = Huayu::KanjiBridge
+- leveled = bridge.entries(level: @level)
+- relations = leveled.map(&:relation).tally
+- patterns = bridge.patterns_at(level: @level)
+- covered = patterns.sum { |pattern| pattern.members.size }
+- singletons = bridge.singletons(level: @level)
+- small = bridge.small_print(level: @level)
+- unused = bridge.unused(level: @level)
+
+= render("shared/tabs", tabs: kanji_level_tabs("shapes"))
+
+p.max-w-3xl.text-sm.leading-relaxed
+  = t(@level ? "kanji_bridge.shapes.summary_level" : "kanji_bridge.shapes.summary", level: @level, total: leveled.size, same: relations.fetch("same", 0), differs: relations.fetch("differs", 0), unused: relations.fetch("unused", 0))
+p.text-xs.text-muted-foreground = t("kanji_bridge.legend_html", example: kanji_pair("學", "学"))
+
+section.space-y-3
+  h2.text-lg.font-semibold = t("kanji_bridge.shapes.patterns_title")
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground
+    = t("kanji_bridge.shapes.patterns_lede", patterns: patterns.size, covered:, singletons: singletons.size + small.size)
+  - if patterns.empty?
+    p.text-sm.text-muted-foreground = t("kanji_bridge.shapes.empty")
+  - else
+    .grid.gap-3 class="sm:grid-cols-2 lg:grid-cols-3"
+      - patterns.each do |pattern|
+        article.space-y-2.rounded-xl.border.border-border.bg-card.p-3 id="pattern-#{pattern.id}"
+          h3.flex.items-baseline.justify-between.gap-2
+            span.text-xl = kanji_pattern_label(pattern)
+            - if pattern.small?
+              span.rounded-full.bg-muted.px-2.py-0.5.text-xs.text-muted-foreground = t("kanji_bridge.shapes.small_badge")
+          .flex.flex-wrap.gap-x-3.gap-y-1.text-lg
+            - pattern.members.each do |member|
+              - entry = bridge.character(member)
+              = link_to character_path(member), class: "hover:text-primary" do
+                = kanji_pair(member, entry.jp)
+
+section.space-y-3
+  h2.text-lg.font-semibold = t("kanji_bridge.shapes.singletons_title")
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground = t("kanji_bridge.shapes.singletons_lede")
+  - if singletons.empty?
+    p.text-sm.text-muted-foreground = t("kanji_bridge.shapes.empty")
+  - else
+    .flex.flex-wrap.gap-x-4.gap-y-2.text-lg
+      - singletons.each do |entry|
+        = link_to character_path(entry.text), class: "hover:text-primary" do
+          = kanji_pair(entry.text, entry.jp)
+
+section.space-y-2
+  h2.text-lg.font-semibold = t("kanji_bridge.shapes.small_title")
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground
+    = t("kanji_bridge.shapes.small_lede")
+    |
+    = t("kanji_bridge.shapes.unified")
+  - if small.any?
+    p.flex.flex-wrap.gap-x-3.gap-y-1
+      - small.each do |entry|
+        = link_to character_path(entry.text), class: "hover:text-primary" do
+          = kanji_pair(entry.text, entry.jp)
+
+section.space-y-3
+  h2.text-lg.font-semibold = t("kanji_bridge.shapes.unused_title")
+  p.max-w-3xl.text-sm.leading-relaxed.text-muted-foreground
+    = t("kanji_bridge.shapes.unused_lede_html", examples: safe_join(%w[們 嗎 呢].map { |char| taiwan_glyph(char) }, "・"))
+  - if unused.empty?
+    p.text-sm.text-muted-foreground = t("kanji_bridge.shapes.empty")
+  - else
+    - unused.group_by(&:level).sort.each do |level, group|
+      .space-y-1
+        - unless @level
+          h3.text-xs.font-semibold.uppercase.tracking-wide.text-muted-foreground = t("kanji_bridge.levels.level", level:)
+        .flex.flex-wrap.gap-x-1.gap-y-1.text-xl
+          - group.each do |entry|
+            = link_to entry.text, character_path(entry.text), lang: "zh-TW", class: "rounded px-1 hover:bg-muted hover:text-primary"
